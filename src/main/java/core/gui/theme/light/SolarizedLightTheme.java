@@ -68,14 +68,14 @@ public class SolarizedLightTheme extends BaseTheme {
             // League Details
             addColor(HOColorName.SHOW_MATCH, defaults.getColor("palette.forest"));
             addColor(HOColorName.DOWNLOAD_MATCH, defaults.getColor("palette.red"));
-            addColor(HOColorName.LEAGUEHISTORY_GRID_FG, defaults.getColor("background").darker());
+//            addColor(HOColorName.LEAGUEHISTORY_GRID_FG, defaults.getColor("background").darker());
             addColor(HOColorName.LEAGUEHISTORY_CROSS_FG, defaults.getColor("background").darker());
             addColor(HOColorName.HOME_TEAM_FG, new Color(179,60,180));
             addColor(HOColorName.SELECTED_TEAM_FG, new Color(36,175,235));
             addColor(HOColorName.LEAGUE_PANEL_BG, defaults.getColor("background").brighter());
 
             // Lineup
-            addColor(HOColorName.LINEUP_RATING_BORDER, Color.BLACK);
+//            addColor(HOColorName.LINEUP_RATING_BORDER, Color.BLACK);
             addColor(HOColorName.RATING_BORDER_BELOW_LIMIT, new Color(255, 0, 0));
             addColor(HOColorName.RATING_BORDER_ABOVE_LIMIT, new Color(0, 0, 225));
             addColor(HOColorName.START_ASSISTANT, defaults.getColor("palette.forest"));

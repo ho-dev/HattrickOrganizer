@@ -66,7 +66,7 @@ public class SolarizedDarkTheme extends DarkTheme {
             addColor(HOColorName.TRANSFER_OUT_COLOR, defaults.getColor("palette.red"));
 
             // Lineup
-            addColor(HOColorName.LINEUP_RATING_BORDER, Color.GRAY);
+//            addColor(HOColorName.LINEUP_RATING_BORDER, Color.GRAY);
             addColor(HOColorName.LINEUP_PLAYER_SELECTED, new Color(0, 0, 0));
             addColor(HOColorName.LINEUP_PLAYER_SUB, new Color(10, 9, 79));
             addColor(HOColorName.RATING_BORDER_BELOW_LIMIT, defaults.getColor("palette.red"));
@@ -81,7 +81,7 @@ public class SolarizedDarkTheme extends DarkTheme {
             addColor(HOColorName.MATCHTYPE_BG, new Color(60, 60, 60));
             addColor(HOColorName.MATCHTYPE_FRIENDLY_BG, new Color(60, 63, 65));
             addColor(HOColorName.MATCHTYPE_INTFRIENDLY_BG, new Color(60, 63, 65));
-            addColor(HOColorName.MATCHTYPE_INT_BG, new Color(50, 67, 67));
+//            addColor(HOColorName.MATCHTYPE_INT_BG, new Color(50, 67, 67));
             addColor(HOColorName.MATCHTYPE_CUP_BG, new Color(56, 76, 53));
             addColor(HOColorName.MATCHTYPE_QUALIFIKATION_BG, new Color(83, 45, 45));
             addColor(HOColorName.MATCHTYPE_MASTERS_BG, new Color(80, 70, 43));
@@ -150,7 +150,7 @@ public class SolarizedDarkTheme extends DarkTheme {
             // League Details
             addColor(HOColorName.SHOW_MATCH, defaults.getColor("palette.lime"));
             addColor(HOColorName.DOWNLOAD_MATCH, defaults.getColor("palette.red"));
-            addColor(HOColorName.LEAGUEHISTORY_GRID_FG, defaults.getColor("background").brighter());
+//            addColor(HOColorName.LEAGUEHISTORY_GRID_FG, defaults.getColor("background").brighter());
             addColor(HOColorName.LEAGUEHISTORY_CROSS_FG, defaults.getColor("background").brighter());
             addColor(HOColorName.HOME_TEAM_FG, new Color(252, 99, 153));
             addColor(HOColorName.SELECTED_TEAM_FG, new Color(82, 179, 217));

@@ -15,12 +15,7 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JTabbedPane;
+import javax.swing.*;
 
 /**
  * A dialog for all HO options/preferences
@@ -54,10 +49,24 @@ public class OptionenDialog extends JDialog {
 			dispose();
 		});
 
+		setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				save();
+				if (OptionManager.instance().isOptionsChanged()){
+					// Warning user
+					var choice = JOptionPane.showConfirmDialog(null,
+							HOVerwaltung.instance().getLanguageString("ls.options.changed.save.question"),
+							HOVerwaltung.instance().getLanguageString("ls.options.warning"),
+							JOptionPane.YES_NO_CANCEL_OPTION);
+					if (choice == JOptionPane.YES_OPTION){
+						save();
+					}
+					else if (choice == JOptionPane.CANCEL_OPTION){
+						return; // do not close window
+					}
+				}
+				dispose();	// close window
 			}
 		});
 	}

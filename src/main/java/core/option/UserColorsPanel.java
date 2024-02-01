@@ -25,6 +25,15 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 
 	private JComboBox skins = null;
 	private final DefaultTableModel tableModel = new DefaultTableModel() {
+		/**
+		 * 0: The color name column is not editable
+		 * 1: The color reference name column is editable
+		 * 2: The color value column is only editable if reference is not set
+		 * 3: The default color column is only editable if set
+		 * @param row             the row whose value is to be queried
+		 * @param column          the column whose value is to be queried
+		 * @return true if cell is editable
+		 */
 		@Override
 		public boolean isCellEditable(int row, int column) {
 			return switch (column) {
@@ -49,10 +58,23 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 	private JPanel tablePanel;
 	private List<HOColor> colors = new ArrayList<>();
 
+	/**
+	 * Create user color setting panel
+	 */
 	protected UserColorsPanel() {
 		initComponents();
 	}
 
+	/**
+	 * Create label component with colored background, used to render the color columns
+	 * @param table Table
+	 * @param value Value
+	 * @param isSelected Is selected
+	 * @param hasFocus Has focus
+	 * @param row Row number
+	 * @param column Column number
+	 * @return JLabel
+	 */
 	private static Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
 		var component = new JLabel();
 		if (value != null) {
@@ -68,12 +90,19 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 		return component;
 	}
 
+	/**
+	 * Create panels to edit theme selection and color settings
+	 */
 	private void initComponents() {
 		setLayout(new BorderLayout());
 		add(getTopPanel(), BorderLayout.NORTH);
 		add(getTablePanel(), BorderLayout.CENTER);
 	}
 
+	/**
+	 * Create panel with combo box for theme selection
+	 * @return Image Panel
+	 */
 	private JPanel getTopPanel() {
 		JPanel panel = new ImagePanel();
 		var themes = ThemeManager.instance().getRegisteredThemes();
@@ -86,6 +115,10 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 		return panel;
 	}
 
+	/**
+	 * Create panel with color settings table
+	 * @return JPanel with color table
+	 */
 	private JPanel getTablePanel() {
 		if (tablePanel == null) {
 			tablePanel = new JPanel();
@@ -95,12 +128,13 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 		return tablePanel;
 	}
 
-	private String getSelectedSkin() {
-		return (String) skins.getSelectedItem();
-	}
-
+	/**
+	 * Create the color settings table
+	 * @return JScrollPane with the color table
+	 */
 	protected JScrollPane createTable() {
-		initData(getSelectedSkin());
+		String skin = (String)skins.getSelectedItem();
+		initData(skin);
 		colorTable.getTableHeader().setReorderingAllowed(false);
 		colorTable.setSelectionMode(SINGLE_SELECTION);
 		colorTable.setRowSelectionAllowed(false);
@@ -120,6 +154,11 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 		return new JScrollPane(colorTable);
 	}
 
+	/**
+	 * Initialize the color settings table
+	 * The settings are copied to a internal color list.
+	 * @param skin Theme name
+	 */
 	protected void initData(String skin) {
 		// Clone the static color list for the editor
 		colors = new ArrayList<>();
@@ -132,6 +171,10 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 		}
 	}
 
+	/**
+	 * Create name chooser combo box used by the color reference column
+	 * @return ComboBox
+	 */
 	private JComboBox<HOColorName> createNameChooser() {
 		var box = new JComboBox<>(HOColorName.values());
 		box.insertItemAt(null, 0);
@@ -153,6 +196,7 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 								hoColor.setColor(currentColor);
 							}
 							updateRow(tableSelection, hoColor);
+							OptionManager.instance().setOptionsChanged(true);
 						}
 					}
 				}
@@ -161,34 +205,55 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 		return box;
 	}
 
+	/**
+	 * Update the current row of the color settings table
+	 * @param color Color setting
+	 */
 	public void updateRow(HOColor color) {
 		updateRow(colorTable.getEditingRow(), color);
+		OptionManager.instance().setOptionsChanged(true);
 	}
 
+	/**
+	 * Update color settings row
+	 * @param row Row number
+	 * @param color Color setting
+	 */
 	private void updateRow(int row, HOColor color) {
 		var tableModel = (DefaultTableModel) colorTable.getModel();
-		tableModel.setValueAt(createNameLabel(color.getName()), row, 0);
+		tableModel.setValueAt(createNameLabel(color.getHOColorName()), row, 0);
 		tableModel.setValueAt(color.colorReference(), row, 1);
 		tableModel.setValueAt(color, row, 2);
 		tableModel.setValueAt(color.getDefaultValue(), row, 3);
 	}
+
+	/**
+	 * Reset color setting to given default setting
+	 * @param color Default color setting
+	 */
 	public void resetRow(HOColor color) {
 		colors.set(colorTable.getEditingRow(), color);
 		updateRow(color);
 	}
 
-	private JLabel createNameLabel(String colorName) {
-		String text;
-		if (colorName != null) {
-			text = HOVerwaltung.instance().getLanguageString("ls.color." + colorName.toLowerCase());
-		} else {
-			text = "";
-		}
+	/**
+	 * Create label displaying the color name (1st column of the settings table)
+	 * The provided technical color name is translated to the select language.
+	 * This value is used as tool tip too.
+	 * @param colorName Color name
+	 * @return JLabel
+	 */
+	private JLabel createNameLabel(HOColorName colorName) {
+		String text = colorName!=null?colorName.toString():"";
 		var label = new JLabel(text);
 		label.setToolTipText(text);
 		return label;
 	}
 
+	/**
+	 * Get selected theme name
+	 * @return Theme name
+	 */
 	public String getSelectedTheme(){
 		return UserParameter.temp().skin;
 	}
@@ -206,6 +271,9 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 
 	}
 
+	/**
+	 * Store the edited color settings
+	 */
 	public void storeChangedColorSettings() {
 		for (var color : colors) {
 			var theme = getSelectedTheme();
@@ -227,17 +295,35 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 		}
 	}
 
+	/**
+	 * Compare two color settings
+	 * @param c1 Color setting, may be null
+	 * @param c2 Color setting, may  be null
+	 * @return True, if the settings are different
+	 */
 	private boolean AreDifferentColors(HOColor c1, HOColor c2) {
 		if (c1 == null || c2 == null) return c1 != c2;
 		return AreDifferent(c1.getColor(), c2.getColor()) || AreDifferent(c1.colorReference(), c2.colorReference());
 	}
 
+	/**
+	 * Compare two objects
+	 * @param o1 Object, may  be null
+	 * @param o2 Object, may  be null
+	 * @return True, if the objects are different
+	 */
 	private boolean AreDifferent(Object o1, Object o2) {
 		if (o1 == o2) return false;
 		if (o1 == null) return true;
 		return !o1.equals(o2);
 	}
 
+	/**
+	 * Get the color value of the color setting
+	 * If no value is set, the corresponding reference is searched in the internal setting list.
+	 * @param currentColor Color setting
+	 * @return Color value
+	 */
 	public Color getColor(HOColor currentColor) {
 		var ret = currentColor.getColor();
 		if ( ret == null){
@@ -251,5 +337,4 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 		}
 		return ret;
 	}
-
 }

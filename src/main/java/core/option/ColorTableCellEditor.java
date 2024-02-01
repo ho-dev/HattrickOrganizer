@@ -8,7 +8,10 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-// Source: https://docs.oracle.com/javase/tutorial/displayCode.html?code=https://docs.oracle.com/javase/tutorial/uiswing/examples/components/TableDialogEditDemoProject/src/components/ColorEditor.java
+/**
+ * ColorTableCellEditor handles color table cells of the UserColorsPanel
+ * Source: <a href="https://docs.oracle.com/javase/tutorial/displayCode.html?code=https://docs.oracle.com/javase/tutorial/uiswing/examples/components/TableDialogEditDemoProject/src/components/ColorEditor.java">...</a>
+ */
 public class ColorTableCellEditor extends AbstractCellEditor implements TableCellEditor, ActionListener {
     private final UserColorsPanel userColorsPanel;
     HOColor currentColor;
@@ -18,6 +21,13 @@ public class ColorTableCellEditor extends AbstractCellEditor implements TableCel
     public static final String EDIT = "edit";
     public static final String RESET_DEFAULT = "reset";
 
+    /**
+     * Create ColorTableCellEditor
+     * The color column of the user colors panel creates editor with "edit" action
+     * The default column creates editor with "reset" action
+     * @param userColorsPanel Link to the color context
+     * @param action Either "edit" or "reset"
+     */
     public ColorTableCellEditor(UserColorsPanel userColorsPanel, String action) {
         this.userColorsPanel = userColorsPanel;
         //Set up the editor (from the table's point of view),
@@ -68,12 +78,16 @@ public class ColorTableCellEditor extends AbstractCellEditor implements TableCel
         }
     }
 
-    //Implement the one CellEditor method that AbstractCellEditor doesn't.
+    /**
+     * Implement the one CellEditor method that AbstractCellEditor doesn't.
+     */
     public Object getCellEditorValue() {
         return currentColor;
     }
 
-    //Implement the one method defined by TableCellEditor.
+    /**
+     *   Implement the one method defined by TableCellEditor.
+     */
     public Component getTableCellEditorComponent(JTable table,
                                                  Object value,
                                                  boolean isSelected,

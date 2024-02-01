@@ -64,7 +64,7 @@ public class DarculaDarkTheme extends DarkTheme {
             addColor(HOColorName.LEAGUE_BG, defaults.getColor("Table.background"));
 
             // Lineup
-            addColor(HOColorName.LINEUP_RATING_BORDER, Color.GRAY);
+//            addColor(HOColorName.LINEUP_RATING_BORDER, Color.GRAY);
 
             addColor(HOColorName.LINEUP_PLAYER_SELECTED, new Color(60, 63, 65));
             addColor(HOColorName.LINEUP_PLAYER_SUB, new Color(48, 54, 56));
@@ -82,7 +82,7 @@ public class DarculaDarkTheme extends DarkTheme {
             addColor(HOColorName.MATCHTYPE_BG, new Color(60, 60, 60));
             addColor(HOColorName.MATCHTYPE_FRIENDLY_BG, new Color(60, 63, 65));
             addColor(HOColorName.MATCHTYPE_INTFRIENDLY_BG, new Color(60, 63, 65));
-            addColor(HOColorName.MATCHTYPE_INT_BG, new Color(50, 67, 67));
+//            addColor(HOColorName.MATCHTYPE_INT_BG, new Color(50, 67, 67));
             addColor(HOColorName.MATCHTYPE_CUP_BG, new Color(56, 76, 53));
             addColor(HOColorName.MATCHTYPE_QUALIFIKATION_BG, new Color(83, 45, 45));
 
@@ -98,7 +98,7 @@ public class DarculaDarkTheme extends DarkTheme {
             // Statistics
             addColor(HOColorName.STAT_PANEL_BG, defaults.getColor("background").brighter());
             addColor(HOColorName.STAT_PANEL_FG, defaults.getColor("Label.foreground"));
-            addColor(HOColorName.STAT_PANEL_FG_HELPING_LINES, defaults.getColor("Label.foreground").darker());
+//            addColor(HOColorName.STAT_PANEL_FG_HELPING_LINES, defaults.getColor("Label.foreground").darker());
 
             // TS Forecast
             addColor(HOColorName.TSFORECAST_ALT_COLOR, new Color(160, 160, 210));
@@ -155,7 +155,7 @@ public class DarculaDarkTheme extends DarkTheme {
             // League Details
             addColor(HOColorName.SHOW_MATCH, defaults.getColor("palette.lime"));
             addColor(HOColorName.DOWNLOAD_MATCH, defaults.getColor("palette.red"));
-            addColor(HOColorName.LEAGUEHISTORY_GRID_FG, defaults.getColor("background").brighter());
+//            addColor(HOColorName.LEAGUEHISTORY_GRID_FG, defaults.getColor("background").brighter());
             addColor(HOColorName.LEAGUEHISTORY_CROSS_FG, defaults.getColor("background").brighter());
             addColor(HOColorName.HOME_TEAM_FG, new Color(100, 131, 226));
             addColor(HOColorName.SELECTED_TEAM_FG, new Color(177, 193, 240));
