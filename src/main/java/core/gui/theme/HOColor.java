@@ -17,6 +17,7 @@ public class HOColor extends AbstractTable.Storable implements Cloneable {
      */
     static {
         addColor(RED, Color.RED);
+        addColor(PINK, Color.PINK);
         addColor(BLACK, Color.BLACK);
         addColor(WHITE, Color.WHITE);
         addColor(GRAY, Color.GRAY);

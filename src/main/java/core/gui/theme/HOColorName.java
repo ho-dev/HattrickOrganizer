@@ -13,6 +13,7 @@ public enum HOColorName {
 	BLACK,
 	WHITE,
 	RED,
+	PINK,
 	BLUE,
 	GREEN,
 	ORANGE,
