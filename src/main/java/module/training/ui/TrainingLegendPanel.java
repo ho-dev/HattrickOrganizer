@@ -77,7 +77,7 @@ public class TrainingLegendPanel extends ImagePanel {
                                  Math.min(color.getGreen() + 20, 255),
                                  Math.min(color.getBlue() + 20, 255), 224);
 
-        ImageIcon icon =  ImageUtilities.getImageIcon4Veraenderung(count,true);
+        ImageIcon icon =  ImageUtilities.getImageIcon4Change(count,true);
 
         int colCount = count;
         if ( count < 0) colCount = -count;

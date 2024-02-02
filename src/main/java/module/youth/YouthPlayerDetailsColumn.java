@@ -8,7 +8,6 @@ public class YouthPlayerDetailsColumn extends UserColumn {
     static int nextId=0;
     protected YouthPlayerDetailsColumn(String name) {
         this( name, 80);
-        this.setDisplay(true);
     }
     public YouthPlayerDetailsColumn(String name, int minWidth){
         this(name,name,minWidth);

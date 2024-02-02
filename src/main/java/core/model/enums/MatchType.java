@@ -11,7 +11,7 @@ public enum MatchType implements IMatchType {
 	NONE(0),
 	LEAGUE(1),  // League match
 	QUALIFICATION(2), //Qualification match
-	CUP(3),  //Cup match (standard league match)
+	CUP(3),  //Cup match (standard cup match)
 	FRIENDLYNORMAL(4), //	Friendly (normal rules)
 	FRIENDLYCUPRULES(5), //Friendly (cup rules)
 	INTSPIEL(6), // Not currently in use, but reserved for international competition matches with normal rules (may or may not be implemented at some future point).
@@ -84,15 +84,16 @@ public enum MatchType implements IMatchType {
 		}
 	}
 
+	public static List<MatchType> getFriendlyMatchTypes() {
+		return List.of(FRIENDLYNORMAL, FRIENDLYCUPRULES, INTFRIENDLYNORMAL, INTFRIENDLYCUPRULES);
+	}
+
 	public boolean isFriendly() {
-		switch (this) {
-			case FRIENDLYNORMAL, FRIENDLYCUPRULES, INTFRIENDLYNORMAL, INTFRIENDLYCUPRULES -> {
-				return true;
-			}
-			default -> {
-				return false;
-			}
-		}
+		return MatchType.getFriendlyMatchTypes().contains(this);
+	}
+
+	public static List<MatchType> getCupMatchTypes() {
+		return List.of(CUP);
 	}
 
 	/** Returns true for all normal matches.
@@ -132,15 +133,10 @@ public enum MatchType implements IMatchType {
 	 * Returns true for all NT matches.
 	 */
 	public boolean isNationalMatch() {
-		switch (this) {
-			case NATIONALCOMPNORMAL :
-			case NATIONALCOMPCUPRULES :
-			case NATIONALFRIENDLY : {
-				return true;
-			}
-			default:
-				return false;
-		}
+        return switch (this) {
+            case NATIONALCOMPNORMAL, NATIONALCOMPCUPRULES, NATIONALFRIENDLY -> true;
+            default -> false;
+        };
 	}
 
 	public static List<MatchType> getNTMatchType() {
@@ -148,6 +144,10 @@ public enum MatchType implements IMatchType {
 			cl_NTMatchType = MatchType.stream().filter(MatchType::isNationalMatch).collect(toList());
 		}
 		return cl_NTMatchType;
+	}
+
+	public static List<MatchType> getTournamentMatchTypes() {
+		return List.of(LADDER, TOURNAMENTGROUP, TOURNAMENTPLAYOFF);
 	}
 
 	public boolean isTournament() {

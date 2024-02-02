@@ -1,4 +1,4 @@
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import com.install4j.gradle.Install4jTask
 
 // Some useful commands:
 //
@@ -68,9 +68,9 @@ java {
     targetCompatibility = JavaVersion.VERSION_17
 }
 
-tasks.withType(KotlinCompile).all {
-    kotlinOptions {
-        jvmTarget = JavaVersion.VERSION_17
+kotlin {
+    jvmToolchain {
+        languageVersion.set(JavaLanguageVersion.of(17))
     }
 }
 
@@ -248,37 +248,7 @@ tasks.register("createVersion") {
     }
 }
 
-tasks.register("makeAllMedias") {
-    dependsOn tasks.media
-    doLast {
-        delete "${projectDir}/build/artefacts/output.txt"
-
-        println("copy version.properties into ${project.ext.target_dir}")  // ensures version.properties.html en up with the artefacts in the release
-        copy {
-            from "${projectDir}/version.properties"
-            into "${project.ext.target_dir}"
-        }
-
-        // to ensure changelog.html ends up within the distribution
-        println("copy release_notes.html")   // ensures release_notes.html en up with the artefacts in the release
-        copy {
-            from "${projectDir}/docs/html/release_notes.html"
-            into "${project.ext.target_dir}"
-        }
-
-        // compatibility to HO3 Updater
-        // which used other zip file name
-        def versionType = project.ext.version_type ?: '-DEV'
-        println("copy ${project.ext.target_dir}/HO-${project.version}-portable-win${versionType}.zip -> HO_${project.version}.zip")
-        copy {
-            from "${project.ext.target_dir}/HO-${project.version}-portable-win${versionType}.zip"
-            rename "HO-${project.version}-portable-win${versionType}.zip", "HO_${project.version}.zip"
-            into "${project.ext.target_dir}"
-        }
-    }
-}
-
-tasks.register("media", com.install4j.gradle.Install4jTask) {
+tasks.register("media", Install4jTask) {
     group 'sub tasks'
     dependsOn tasks.createDistribution
     projectFile = file("${projectDir}/utils/buildResources/HO.install4j")
@@ -311,6 +281,44 @@ tasks.register("media", com.install4j.gradle.Install4jTask) {
     //buildIds = [60]
 
     variables = [HO_version: project.version, projectDir: projectDir, versionType: project.ext.version_type]
+    doFirst {
+        // Ensures that the project.version used for HO_version
+        // is the expanded version computed in `createVersion` task.
+        var mediaTask = tasks.findByName("media") as Install4jTask
+        mediaTask.configure {
+            variables.HO_version = project.version
+        }
+    }
+}
+
+tasks.register("makeAllMedias") {
+    dependsOn tasks.media
+    doLast {
+        delete "${projectDir}/build/artefacts/output.txt"
+
+        println("copy version.properties into ${project.ext.target_dir}")  // ensures version.properties.html en up with the artefacts in the release
+        copy {
+            from "${projectDir}/version.properties"
+            into "${project.ext.target_dir}"
+        }
+
+        // to ensure changelog.html ends up within the distribution
+        println("copy release_notes.html")   // ensures release_notes.html en up with the artefacts in the release
+        copy {
+            from "${projectDir}/docs/html/release_notes.html"
+            into "${project.ext.target_dir}"
+        }
+
+        // compatibility to HO3 Updater
+        // which used other zip file name
+        def versionType = project.ext.version_type ?: '-DEV'
+        println("copy ${project.ext.target_dir}/HO-${project.version}-portable-win${versionType}.zip -> HO_${project.version}.zip")
+        copy {
+            from "${project.ext.target_dir}/HO-${project.version}-portable-win${versionType}.zip"
+            rename "HO-${project.version}-portable-win${versionType}.zip", "HO_${project.version}.zip"
+            into "${project.ext.target_dir}"
+        }
+    }
 }
 
 tasks.register("preparingBuild") {

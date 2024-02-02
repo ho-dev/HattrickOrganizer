@@ -82,6 +82,9 @@ final class DBUpdater {
 	}
 
 	private void updateDBv800(int dbVersion) throws SQLException {
+        assert dbManager.getConnectionManager() != null;
+        dbManager.getConnectionManager().executeUpdate("DROP TABLE IF EXISTS SPIELERSKILLUP");
+
 		if (!tableExists(FuturePlayerSkillTrainingTable.TABLENAME)) {
 			dbManager.getTable(FuturePlayerSkillTrainingTable.TABLENAME).createTable();
 		}

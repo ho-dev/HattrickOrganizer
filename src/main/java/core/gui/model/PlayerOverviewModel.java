@@ -18,13 +18,13 @@ import java.util.List;
  * @since 1.36
  */
 public final class PlayerOverviewModel extends HOTableModel {
-	
+
 	@Serial
 	private static final long serialVersionUID = 5149408240369536138L;
-	
+
 	/** all players **/
 	private List<Player> m_vPlayers;
-	
+
 	/**
 	 * constructor
 	 *
@@ -38,7 +38,7 @@ public final class PlayerOverviewModel extends HOTableModel {
 	public boolean userCanDisableColumns() {
 		return !DBManager.instance().isFirstStart();
 	}
-	
+
 	/**
 	 * initialize all columns.
 	 */
@@ -47,15 +47,15 @@ public final class PlayerOverviewModel extends HOTableModel {
 		columns = new UserColumn[63];
 		columns[0] = basic[0];
 		columns[48] = basic[1];
-		
+
 		UserColumn[] skills =  UserColumnFactory.createPlayerSkillArray();
 		int skillIndex = 9; // - 20
 		System.arraycopy(skills, 0, columns, skillIndex, skills.length);
-		
+
 		UserColumn[] positions =  UserColumnFactory.createPlayerPositionArray();
 		int positionIndex = 23;//- 41
 		System.arraycopy(positions, 0, columns, positionIndex, positions.length);
-		
+
 		UserColumn[] goals =  UserColumnFactory.createGoalsColumnsArray();
 		int goalsIndex = 42;//-46
 		System.arraycopy(goals, 0, columns, goalsIndex, goals.length);
@@ -86,7 +86,7 @@ public final class PlayerOverviewModel extends HOTableModel {
 		columns[61] = additionalArray[23]; // schum-rank
 		columns[62] = additionalArray[24]; // schum-rank benchmark
 	}
-	
+
     public Player getPlayer(int id) {
         // Can be negative for temp player
         if (id != 0) {
@@ -99,7 +99,7 @@ public final class PlayerOverviewModel extends HOTableModel {
 
         return null;
     }
-    
+
     /**
      * Sets the new list of players.
      */
@@ -107,37 +107,37 @@ public final class PlayerOverviewModel extends HOTableModel {
     	m_vPlayers = player;
         initData();
     }
-    
+
     /**
      * Resets the data for an HRF comparison.
      */
-    public void reInitDataHRFVergleich() {
+    public void reInitDataHRFComparison() {
         initData();
     }
 
-    
+
     /**
      * Returns the {@link Player} with the same ID as the instance passed, or <code>null</code>.
      */
     private Player getPreviousPlayerDevelopmentStage(Player currentDevelopmentStage) {
         final int id = currentDevelopmentStage.getPlayerId();
 
-        for (int i = 0;
-			 (SpielerTrainingsVergleichsPanel.getSelectedPlayerDevelopmentStage() != null)
-             && (i < SpielerTrainingsVergleichsPanel.getSelectedPlayerDevelopmentStage().size()); i++) {
-            final Player selectedDevelopmentStage = SpielerTrainingsVergleichsPanel.getSelectedPlayerDevelopmentStage().get(i);
+		List<Player> selectedPlayerDevelopmentStage = SpielerTrainingsVergleichsPanel.getSelectedPlayerDevelopmentStage();
+		for (int i = 0; (selectedPlayerDevelopmentStage != null)  && (i < selectedPlayerDevelopmentStage.size()); i++) {
+            final Player selectedDevelopmentStage = selectedPlayerDevelopmentStage.get(i);
 
             if (selectedDevelopmentStage.getPlayerId() == id) {
                 return selectedDevelopmentStage;
             }
         }
+
 		if (SpielerTrainingsVergleichsPanel.isDevelopmentStageSelected()) {
 			var hrf = SpielerTrainingsVergleichsPanel.getSelectedHrfId();
             return getFirstPlayerDevelopmentStageAfterSelected(currentDevelopmentStage, hrf);
         }
         return null;
     }
-    
+
     /**
      * Returns the {@link Player} from the first HRF in which he appears.
      */
@@ -151,7 +151,6 @@ public final class PlayerOverviewModel extends HOTableModel {
 		}
 		return core.db.DBManager.instance().loadPlayerFirstHRF(vorlage.getPlayerId(), after);
 	}
-    
 
     /**
      * create a data[][] from player-Vector
@@ -160,17 +159,17 @@ public final class PlayerOverviewModel extends HOTableModel {
 	protected void initData() {
     	UserColumn [] tmpDisplayedColumns = getDisplayedColumns();
     	m_clData = new Object[m_vPlayers.size()][tmpDisplayedColumns.length];
-    	
+
     	for (int i = 0; i < m_vPlayers.size(); i++) {
-    		final Player aktuellerPlayer = m_vPlayers.get(i);
-    		final Player vergleichsPlayer = getPreviousPlayerDevelopmentStage(aktuellerPlayer);
-    		
+    		final Player currentPlayer = m_vPlayers.get(i);
+    		final Player comparisonPlayer = getPreviousPlayerDevelopmentStage(currentPlayer);
+
     		for (int j = 0; j < tmpDisplayedColumns.length; j++) {
-    			m_clData[i][j] = ((PlayerColumn)tmpDisplayedColumns[j]).getTableEntry(aktuellerPlayer, vergleichsPlayer);
+    			m_clData[i][j] = ((PlayerColumn)tmpDisplayedColumns[j]).getTableEntry(currentPlayer, comparisonPlayer);
 			}
     	}
     }
-    
+
     /**
      * Passt nur die Aufstellung an
      */
@@ -178,7 +177,7 @@ public final class PlayerOverviewModel extends HOTableModel {
     	UserColumn [] tmpDisplayedColumns = getDisplayedColumns();
         for (int i = 0; i < m_vPlayers.size(); i++) {
             final Player aktuellerPlayer = m_vPlayers.get(i);
-            
+
             for (int j = 0; j < tmpDisplayedColumns.length; j++) {
 				if(tmpDisplayedColumns[j].getId() == UserColumnFactory.NAME
 						|| tmpDisplayedColumns[j].getId() == UserColumnFactory.LINEUP
@@ -187,6 +186,6 @@ public final class PlayerOverviewModel extends HOTableModel {
 						|| tmpDisplayedColumns[j].getId() == UserColumnFactory.GROUP)
 					m_clData[i][j] = ((PlayerColumn)tmpDisplayedColumns[j]).getTableEntry(aktuellerPlayer,null);
 			}
-        }   
+        }
     }
 }

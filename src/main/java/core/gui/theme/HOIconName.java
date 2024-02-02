@@ -8,7 +8,7 @@ public interface HOIconName {
 
 	 String[] MATCHICONS	= {"LEAGUE", "QUALIFICATION", "FRIENDLY", "NATIONAL_CUP", "EMERALD_CUP", "RUBY_CUP", "SAPPHIRE_CUP", "LADDER", "TOURNAMENT", "SINGLE", "MASTERS", "DEFAULT", "CONSOLANTE_CUP", "DIVISION_BATTLE"};
 	 String[] WEATHER 		= { "weather0", "weather1", "weather2", "weather3", "weather4"};
-	 String[] SPECIALTIES = { "player_specialty_unknown", "player_specialty_1", "player_specialty_2", "player_specialty_3", "player_specialty_4", "player_specialty_5", "player_specialty_6", "player_specialty_7", "player_specialty_8"};
+	String[] SPECIALTIES = { "player_specialty_unknown", "player_specialty_1", "player_specialty_2", "player_specialty_3", "player_specialty_4", "player_specialty_5", "player_specialty_6", "player_specialty_7", "player_specialty_8"};
 	 String[] SMILEYS = { "", "smiley-coach","smiley-sale", "smiley-happy", "smiley-sad", "smiley-neutral"};
 
 	 String GROUP_TEAM = "Group-Team.svg";
@@ -66,49 +66,6 @@ public interface HOIconName {
 
 	String REPLACEMENT = "replacement";
 	String ROTATE ="rotate";
-
-	String ME_GOAL_AND_QUICK = "me_goal_and_quick";
-	String ME_GOAL_AND_UNPREDICTABLE = "me_goal_and_unpredictable";
-	String ME_109 = "me_109";
-	String ME_117 = "me_117";
-	String ME_118 = "me_118";
-	String ME_GOAL_AND_HEAD_SPEC = "me_goal_and_head_spec";
-	String ME_GOAL_AND_TECHNICAL = "me_goal_and_technical";
-	String ME_135 = "me_135";
-	String ME_136 = "me_136";
-	String ME_137 = "me_137";
-	String ME_138 = "me_138";
-    String ME_139 = "me_138";
-	String ME_140 = "me_140";
-	String ME_141 = "me_141";
-	String ME_142 = "me_142";
-	String ME_143 = "me_143";
-	String ME_GOAL_AND_WHISTLE = "me_goal_and_whistle";
-	String ME_184 = "me_184";
-	String ME_185 = "me_185";
-	String ME_186 = "me_186";
-	String ME_190 = "me_190";
-	String ME_209 = "me_209";
-	String ME_217 = "me_217";
-	String ME_NO_GOAL_AND_HEAD_SPEC = "me_no_goal_and_head_spec";
-	String ME_ME_MISS_AND_QUICK = "me_me_miss_and_quick";
-	String ME_MISSED_CORNER = "missed_corner";
-	String ME_NO_GOAL_UNPREDICTABLE = "me_no_goal_unpredictable";
-	String ME_GOAL_LONGSHOT_PNG = "me_goal_longshot.png";
-	String ME_MISS_LONGSHOT_PNG =  "me_miss_longshot.png";
-	String ME_235 = "me_235";
-    String ME_236 = "me_236";
-	String ME_237 = "me_237";
-    String ME_239 = "me_239";
-	String ME_240 = "me_240";
-	String ME_241 = "me_241";
-	String ME_242 = "me_242";
-	String ME_243 = "me_243";
-	String ME_MISS_AND_WHISTLE = "me_miss_and_whistle";
-	String ME_285 = "me_285";
-	String ME_286 = "me_286";
-	String ME_289 = "me_289";
-	String ME_290 = "me_290";
 	String ME_YELLOW_THEN_RED= "me_YellowThenRed";
 	String ME_MAN_MARKING = "me_man_marking";
 
@@ -117,8 +74,7 @@ public interface HOIconName {
 	String GOAL_MID		= "tor_mitte";
 	String GOAL_LEFT		= "tor_links";
 	String GOAL_RIGHT		= "tor_rechts";
-	String CONVERTED_PENALTY = "convertedPenalty";
-	String MISSED_PENALTY = "missedPenalty";
+	String PENALTY = "penalty";
 	String PIECES = "pieces";
 	String CONFUSION = "confusion";
 	String REORGANIZE = "reorganize";
@@ -193,4 +149,9 @@ public interface HOIconName {
 
 	String ORDERS_SENT = "orders.sents";
 	String ORDERS_MISSING = "orders.missing";
+	String WHISTLE = "whistle";
+	String TIRED = "tired";
+	String CORNER = "corner";
+	String EXPERIENCE = "experience";
+	String WINGER = "winger";
 }

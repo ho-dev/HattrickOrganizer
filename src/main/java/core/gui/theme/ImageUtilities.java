@@ -14,7 +14,6 @@ import core.model.player.MatchRoleID;
 import core.model.player.Specialty;
 import core.util.HOLogger;
 import org.jetbrains.annotations.Nullable;
-
 import java.awt.*;
 import java.awt.Font;
 import java.awt.image.BufferedImage;
@@ -82,125 +81,126 @@ public class ImageUtilities {
 	    return image;
 	}
 
-	public static ImageIcon getImageIcon4Veraenderung(int wert, boolean aktuell) {
-	        ImageIcon icon;
-	        final Integer keywert = wert;
-	        int xPosText = 3;
-	
-	        // Nicht im Cache
-	        if ((!m_clPfeilCache.containsKey(keywert) && aktuell)
-	            || (!m_clPfeilLightCache.containsKey(keywert) && !aktuell)) {
-	            final BufferedImage image = new BufferedImage(14, 14, BufferedImage.TYPE_INT_ARGB);
-	
-	            //Pfeil zeichnen
-	            final java.awt.Graphics2D g2d = (java.awt.Graphics2D) image.getGraphics();
-	
-	            //g2d.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
+	public static ImageIcon getImageIcon4Change(int wert, boolean aktuell) {
+		if (wert == 0) return null;
+		ImageIcon icon;
+		final Integer keywert = wert;
+		int xPosText = 3;
 
-				if (wert > 0) {
-	                final int[] xpoints = {0, 6, 7, 13, 10, 10, 3, 3, 0};
-	                final int[] ypoints = {6, 0, 0, 6, 6, 13, 13, 6, 6};
-	
-	                //Polygon füllen
-	                if (!aktuell) {
-	                    g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
-	                }
-	
-	                int farbwert = Math.min(240, 90 + (50 * wert));
-	                g2d.setColor(new Color(0, farbwert, 0));
-	                g2d.fillPolygon(xpoints, ypoints, xpoints.length);
-	
-	                //Polygonrahmen
-	                farbwert = Math.min(255, 105 + (50 * wert));
-	                g2d.setColor(new Color(40, farbwert, 40));
-	                g2d.drawPolygon(xpoints, ypoints, xpoints.length);
-	
-	                //Wert eintragen
-	                if (!aktuell) {
-	                    g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-	                }
-	
-	                g2d.setFont(new java.awt.Font("sansserif", java.awt.Font.PLAIN, 10));
-	
-	                //Für 1 und 2 Weisse Schrift oben
-	                if (wert < 3) {
-	                    g2d.setColor(Color.black);
-	                    g2d.drawString(wert + "", xPosText, 11);
-	                    g2d.setColor(Color.white);
-	                    g2d.drawString(wert + "", xPosText + 1, 11);
-	                }
-	                //Sonst Schwarze Schrift oben (nur bei Positiven Veränderungen)
-	                else {
-	                    //Position bei grossen Zahlen weiter nach vorne
-	                    if (wert > 9) {
-	                        xPosText = 0;
-	                    }
-	
-	                    g2d.setColor(Color.white);
-	                    g2d.drawString(wert + "", xPosText, 11);
-	                    g2d.setColor(Color.black);
-	                    g2d.drawString(wert + "", xPosText + 1, 11);
-	                }
-	            } else {
-	                final int[] xpoints = {0, 6, 7, 13, 10, 10, 3, 3, 0};
-	                final int[] ypoints = {7, 13, 13, 7, 7, 0, 0, 7, 7};
-	
-	                //Polygon füllen
-	                if (!aktuell) {
-	                    g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
-	                }
-	
-	                int farbwert = Math.min(240, 90 - (50 * wert));
-	                g2d.setColor(new Color(farbwert, 0, 0));
-	                g2d.fillPolygon(xpoints, ypoints, xpoints.length);
-	
-	                //Polygonrahmen
-	                farbwert = Math.min(255, 105 - (50 * wert));
-	                g2d.setColor(new Color(farbwert, 40, 40));
-	                g2d.drawPolygon(xpoints, ypoints, xpoints.length);
-	
-	                //Wert eintragen
-	                if (!aktuell) {
-	                    g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-	                }
-	
-	                g2d.setFont(new Font("sansserif", Font.PLAIN, 10));
-	
-	                //Position bei grossen Zahlen weiter nach vorne
-	                if (wert < -9) {
-	                    xPosText = 0;
-	                }
-	
-	                g2d.setColor(Color.black);
-	                g2d.drawString(Math.abs(wert) + "", xPosText, 11);
-	                g2d.setColor(Color.white);
-	                g2d.drawString(Math.abs(wert) + "", xPosText + 1, 11);
-	            }
-	
-	            //Icon erstellen und in den Cache packen
-	            icon = new ImageIcon(image);
+		// Nicht im Cache
+		if ((!m_clPfeilCache.containsKey(keywert) && aktuell)
+				|| (!m_clPfeilLightCache.containsKey(keywert) && !aktuell)) {
+			final BufferedImage image = new BufferedImage(14, 14, BufferedImage.TYPE_INT_ARGB);
 
-	            if (aktuell) {
-	                m_clPfeilCache.put(keywert, icon);
-	            } else {
-	                m_clPfeilLightCache.put(keywert, icon);
-	            }
-	
-	            //HOLogger.instance().log(Helper.class, "Create Pfeil: " + wert );
-	        }
-	        //Im Cache
-	        else {
-	            if (aktuell) {
-	                icon = m_clPfeilCache.get(keywert);
-	            } else {
-	                icon = m_clPfeilLightCache.get(keywert);
-	            }
-	
-	            //HOLogger.instance().log(Helper.class, "Use Pfeilcache: " + wert );
-	        }
-	
-	        return icon;
-	    }
+			//Pfeil zeichnen
+			final java.awt.Graphics2D g2d = (java.awt.Graphics2D) image.getGraphics();
+
+			//g2d.setRenderingHint(java.awt.RenderingHints.KEY_ANTIALIASING, java.awt.RenderingHints.VALUE_ANTIALIAS_ON);
+
+			if (wert > 0) {
+				final int[] xpoints = {0, 6, 7, 13, 10, 10, 3, 3, 0};
+				final int[] ypoints = {6, 0, 0, 6, 6, 13, 13, 6, 6};
+
+				//Polygon füllen
+				if (!aktuell) {
+					g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
+				}
+
+				int farbwert = Math.min(240, 90 + (50 * wert));
+				g2d.setColor(new Color(0, farbwert, 0));
+				g2d.fillPolygon(xpoints, ypoints, xpoints.length);
+
+				//Polygonrahmen
+				farbwert = Math.min(255, 105 + (50 * wert));
+				g2d.setColor(new Color(40, farbwert, 40));
+				g2d.drawPolygon(xpoints, ypoints, xpoints.length);
+
+				//Wert eintragen
+				if (!aktuell) {
+					g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+				}
+
+				g2d.setFont(new java.awt.Font("sansserif", java.awt.Font.PLAIN, 10));
+
+				//Für 1 und 2 Weisse Schrift oben
+				if (wert < 3) {
+					g2d.setColor(Color.black);
+					g2d.drawString(wert + "", xPosText, 11);
+					g2d.setColor(Color.white);
+					g2d.drawString(wert + "", xPosText + 1, 11);
+				}
+				//Sonst Schwarze Schrift oben (nur bei Positiven Veränderungen)
+				else {
+					//Position bei grossen Zahlen weiter nach vorne
+					if (wert > 9) {
+						xPosText = 0;
+					}
+
+					g2d.setColor(Color.white);
+					g2d.drawString(wert + "", xPosText, 11);
+					g2d.setColor(Color.black);
+					g2d.drawString(wert + "", xPosText + 1, 11);
+				}
+			} else {
+				final int[] xpoints = {0, 6, 7, 13, 10, 10, 3, 3, 0};
+				final int[] ypoints = {7, 13, 13, 7, 7, 0, 0, 7, 7};
+
+				//Polygon füllen
+				if (!aktuell) {
+					g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
+				}
+
+				int farbwert = Math.min(240, 90 - (50 * wert));
+				g2d.setColor(new Color(farbwert, 0, 0));
+				g2d.fillPolygon(xpoints, ypoints, xpoints.length);
+
+				//Polygonrahmen
+				farbwert = Math.min(255, 105 - (50 * wert));
+				g2d.setColor(new Color(farbwert, 40, 40));
+				g2d.drawPolygon(xpoints, ypoints, xpoints.length);
+
+				//Wert eintragen
+				if (!aktuell) {
+					g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
+				}
+
+				g2d.setFont(new Font("sansserif", Font.PLAIN, 10));
+
+				//Position bei grossen Zahlen weiter nach vorne
+				if (wert < -9) {
+					xPosText = 0;
+				}
+
+				g2d.setColor(Color.black);
+				g2d.drawString(Math.abs(wert) + "", xPosText, 11);
+				g2d.setColor(Color.white);
+				g2d.drawString(Math.abs(wert) + "", xPosText + 1, 11);
+			}
+
+			//Icon erstellen und in den Cache packen
+			icon = new ImageIcon(image);
+
+			if (aktuell) {
+				m_clPfeilCache.put(keywert, icon);
+			} else {
+				m_clPfeilLightCache.put(keywert, icon);
+			}
+
+			//HOLogger.instance().log(Helper.class, "Create Pfeil: " + wert );
+		}
+		//Im Cache
+		else {
+			if (aktuell) {
+				icon = m_clPfeilCache.get(keywert);
+			} else {
+				icon = m_clPfeilLightCache.get(keywert);
+			}
+
+			//HOLogger.instance().log(Helper.class, "Use Pfeilcache: " + wert );
+		}
+
+		return icon;
+	}
 
 	/**
 	 * Creates a wide image for use where value can be greater than 99
@@ -208,7 +208,7 @@ public class ImageUtilities {
 	 * @param current
 	 * @return an icon representation of the value
 	 */
-	public static ImageIcon getWideImageIcon4Veraenderung(int value, boolean current) {
+	public static ImageIcon getWideImageIcon4Change(int value, boolean current) {
         ImageIcon icon;
         final Integer keywert = value;
         int xPosText = 8;
@@ -562,10 +562,10 @@ public class ImageUtilities {
 			String key = playerSpecialtyName + "_" + size;
 			Icon specialtyIcon = ThemeManager.getIcon(key);
 			if (specialtyIcon == null) {
-			String iconURI = String.format("gui/bilder/player overview/%s.svg", playerSpecialtyName);
-			Map<Object, Object> colorMap = Map.of("lineColor", ThemeManager.getColor(HOColorName.PLAYER_SPECIALTY_COLOR));
-			specialtyIcon = IconLoader.get().loadSVGIcon(iconURI, size, size, true, colorMap);
-			ThemeManager.instance().put(key, specialtyIcon);
+				String iconURI = String.format("gui/bilder/player overview/%s.svg", playerSpecialtyName);
+				Map<Object, Object> colorMap = Map.of("lineColor", ThemeManager.getColor(HOColorName.PLAYER_SPECIALTY_COLOR));
+				specialtyIcon = IconLoader.get().loadSVGIcon(iconURI, size, size, true, colorMap);
+				ThemeManager.instance().put(key, specialtyIcon);
 			}
 			return specialtyIcon;
 		}
@@ -618,16 +618,16 @@ public class ImageUtilities {
     public static Icon getSvgIcon(String key, int width, int height) {
 		final String index = key + "_" + width + "_" + height;
 		Icon icon = ThemeManager.getIcon(index);
-
 		if (icon == null) {
 			Object imagePath = ThemeManager.getIconPath(key);
-
+			if ( imagePath == null){
+				HOLogger.instance().error(ImageUtilities.class, "Icon path not found:  " + key);
+			}
 			icon = IconLoader.get().getIcon(Objects.requireNonNull(imagePath).toString(), width, height);
 			ThemeManager.instance().put(index, icon);
 		}
-
 		return icon;
-    }
+	}
 
     private static Map<Object, Object> normalizeColorMap(Map<Object, Object> inputColorMap){
 		Map<Object, Object> newColorMap= new HashMap<>(inputColorMap);
@@ -809,12 +809,6 @@ public class ImageUtilities {
 		return trainingBarIcon;
 	}
 
-
-
-	public static Icon getSetPiecesIcon() {
-		return getSetPiecesIcon(16, 16);
-	}
-
 	public static Icon getSetPiecesIcon(int width, int height) {
 
 		String key = "captain_" + width + "x" + height;
@@ -888,10 +882,6 @@ public class ImageUtilities {
 		return _icon;
 	}
 
-	public static Icon getDownloadIcon(Color color) {
-		return getDownloadIcon(color, 16, 16);
-	}
-
 	public static Icon getDownloadIcon(Color fillColor, int width, int height) {
 
 		String key = "downloadIcon_" + fillColor.toString() + "_" + width + "x" + height;
@@ -908,11 +898,6 @@ public class ImageUtilities {
 		}
 
 		return _icon;
-	}
-
-
-	public static Icon getUnavailableIcon(Color color) {
-		return getUnavailableIcon(color, 16, 16);
 	}
 
 	public static Icon getUnavailableIcon(Color fillColor, int width, int height) {
@@ -932,8 +917,6 @@ public class ImageUtilities {
 
 		return _icon;
 	}
-
-
 
 	public static Icon getSmallPlasterIcon() {
 		return getPlasterIcon(16, 16);

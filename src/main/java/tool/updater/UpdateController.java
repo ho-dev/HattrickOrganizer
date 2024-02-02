@@ -1,14 +1,18 @@
 package tool.updater;
 
+import com.install4j.api.launcher.Variables;
 import core.HO;
 import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.net.MyConnector;
+import core.util.BrowserLauncher;
+import core.util.HOLogger;
 import core.util.Updater;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
+import java.io.IOException;
 
 public final class UpdateController {
 
@@ -20,35 +24,34 @@ public final class UpdateController {
      * Check the external site for the latest version according to user preference regarding release channel
      */
     public static void check4update(boolean showNoUpdateAvailableDialog) {
-        VersionInfo updVersion = getUpdateVersion();
+        VersionInfo updateVersion = getUpdateVersion();
 
         // a version has been found and auto update is allowed
-        if (updVersion != null) {
-            showUpdateDialog(updVersion);
+        if (updateVersion != null) {
+            showUpdateDialog(updateVersion);
         }
 
         // no update available
         else if (showNoUpdateAvailableDialog) {
             showNoUpdateAvailableDialog();
-
         }
     }
 
     @Nullable
     private static VersionInfo getUpdateVersion() {
-        VersionInfo updVersion = null;
+        VersionInfo updateVersion = null;
 
         // check if version available based on channel
         switch (UserParameter.temp().ReleaseChannel) {
             case "Dev":
                 VersionInfo devVersion = MyConnector.instance().getLatestVersion();
-                if (compareToCurrentVersions(devVersion)) updVersion = devVersion;
+                if (compareToCurrentVersions(devVersion)) updateVersion = devVersion;
                 // no break; to check if there is a newer beta release
             case "Beta":
                 VersionInfo betaVersion = MyConnector.instance().getLatestBetaVersion();
                 if (compareToCurrentVersions(betaVersion)) {
-                    if (compareTwoVersions(betaVersion, updVersion)) {
-                        updVersion = betaVersion;
+                    if (compareTwoVersions(betaVersion, updateVersion)) {
+                        updateVersion = betaVersion;
                         UserParameter.temp().ReleaseChannel = "Beta";
                     }
                 }
@@ -57,17 +60,17 @@ public final class UpdateController {
             case "Stable":
                 VersionInfo stableVersion = MyConnector.instance().getLatestStableVersion();
                 if (compareToCurrentVersions(stableVersion)) {
-                    if (compareTwoVersions(stableVersion, updVersion)) {
-                        updVersion = stableVersion;
+                    if (compareTwoVersions(stableVersion, updateVersion)) {
+                        updateVersion = stableVersion;
                         UserParameter.temp().ReleaseChannel = "Stable";
                     }
                 }
         }
-        return updVersion;
+        return updateVersion;
     }
 
-    private static void showUpdateDialog(VersionInfo updVersion) {
-        String versionType = updVersion.getVersionType();
+    private static void showUpdateDialog(VersionInfo updateVersion) {
+        String versionType = updateVersion.getVersionType();
         String updateAvailable;
         String releaseNoteUrl;
         switch (versionType) {
@@ -88,9 +91,9 @@ public final class UpdateController {
         int update = JOptionPane.showConfirmDialog(HOMainFrame.instance(),
                 new UpdaterPanel("<html><body>" + updateAvailable + "<br/><br/>"
                         + "<font color=gray>" + HOVerwaltung.instance().getLanguageString("ls.version") + ":</font>"
-                        + updVersion.getVersionString() + "<br/>"
+                        + updateVersion.getVersionString() + "<br/>"
                         + "<font color=gray>" + HOVerwaltung.instance().getLanguageString("Released") + ":</font>"
-                        + updVersion.getReleaseDate() + "<br/><br/>"
+                        + updateVersion.getReleaseDate() + "<br/><br/>"
                         + HOVerwaltung.instance().getLanguageString("ls.button.update") + "?</body></html>",
                         releaseNoteUrl),
                 HOVerwaltung.instance().getLanguageString("confirmation.title"),
@@ -108,7 +111,7 @@ public final class UpdateController {
         }
 
         if (update == JOptionPane.YES_OPTION) {
-            updateHO(updVersion.getFullVersion(), versionType);
+            updateHO(updateVersion, versionType);
         }
     }
 
@@ -125,8 +128,10 @@ public final class UpdateController {
                 .getLanguageString("ls.menu.file.update.ho"), JOptionPane.INFORMATION_MESSAGE);
     }
 
-    public static String get_HO_zip_download_url(String full_version, String versionType) {
+    public static String getHOZipDownloadUrl(VersionInfo versionInfo, String versionType) {
 
+        // https://github.com/ho-dev/HattrickOrganizer/releases/download/dev/HO-8.0-portable-win-32bits--DEV.zip
+        String full_version = versionInfo.getFullVersion();
         return switch (versionType) {
             case "DEV" -> "https://github.com/ho-dev/HattrickOrganizer/releases/download/dev/HO-" + full_version + "-portable-win-DEV-JRE.zip";
             case "BETA" -> "https://github.com/ho-dev/HattrickOrganizer/releases/download/beta/HO-" + full_version + "-portable-win-BETA-JRE.zip";
@@ -134,34 +139,33 @@ public final class UpdateController {
         };
     }
 
-    public static void updateHO(String full_version, String versionType) {
-        updateHO(get_HO_zip_download_url(full_version, versionType));
-    }
-    public static void updateHO(final String urlString) {
-//        if (HO.isPortableVersion()) {
-//            // HO! manage the (partial) update
-//            File tmp = new File("update.piz");
-//            HOMainFrame.instance().resetInformation();
-//            if (!UpdateHelper.download(urlString, tmp)) {
-//                HOMainFrame.instance().resetInformation();
-//                HOLogger.instance().error(UpdateController.class, "Could not download: " + urlString);
-//                return;
-//            }
-//            HOMainFrame.instance().setInformationCompleted();
-//
-//            JOptionPane.showMessageDialog(null,
-//                    HOVerwaltung.instance().getLanguageString("NeustartErforderlich"), HOVerwaltung.instance()
-//                            .getLanguageString("ls.menu.file.update") + " - "+ HOVerwaltung.instance()
-//                            .getLanguageString("ls.menu.file.update.ho"),
-//                    JOptionPane.INFORMATION_MESSAGE);
-//
-//            HOMainFrame.instance().shutdown();
-//        }
-//        else {
-            // making update via install4J
-            Updater.instance().update();
-//        }
+    public static void updateHO(final VersionInfo versionInfo, String versionType) {
+        boolean manualUpdate = false;
+        try {
+            String mediaId = Variables.getCompilerVariable("mediaID");
+            if (mediaId != null) {
+                // making update via install4J
+                Updater.instance().update();
+            } else {
+                manualUpdate = true;
+            }
+        } catch (IOException e) {
+            HOLogger.instance().warning(UpdateController.class, "Error retrieving compiler var mediaID: " +
+                    e.getMessage());
+            manualUpdate = true;
+        }
 
+        if (manualUpdate) {
+            String urlString = getHOZipDownloadUrl(versionInfo, versionType);
+            try {
+                HOLogger.instance().info(UpdateController.class,
+                        "Launching browser to download update manually: " + urlString);
+                BrowserLauncher.openURL(urlString);
+            } catch (Exception ee) {
+                HOLogger.instance().error(UpdateController.class, "Error opening URL: "
+                        + urlString + ": " + ee.getMessage());
+            }
+        }
     }
 
     public static boolean compareTwoVersions(VersionInfo a, VersionInfo b) {
