@@ -11,6 +11,7 @@
 ### Database
 * Fix `unexpected token` issue with Transfer table query (#1965)
 * Fix potential NPE when using a prepared statement (#1941)
+* Repairing a failed V5 database upgrade (#1941)
 
 ### Squad
 * Fix length of owner notes in players' database table (#1816)
