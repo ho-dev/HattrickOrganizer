@@ -15,7 +15,7 @@ public final class MatchesColumnModel extends HOTableModel {
 
 	private MatchKurzInfo[] m_clMatches;
 
-	protected MatchesColumnModel(UserColumnController.ColumnModelId id) {
+	MatchesColumnModel(UserColumnController.ColumnModelId id) {
 		super(id, "Matches");
 		initialize();
 	}
@@ -79,9 +79,8 @@ public final class MatchesColumnModel extends HOTableModel {
 				case LEAGUE -> ThemeManager.getColor(HOColorName.MATCHTYPE_LEAGUE_BG);
 				case CUP -> ThemeManager.getColor(HOColorName.MATCHTYPE_CUP_BG);
 				case QUALIFICATION -> ThemeManager.getColor(HOColorName.MATCHTYPE_QUALIFIKATION_BG);
-				case MASTERS -> ThemeManager.getColor(HOColorName.MATCHTYPE_MASTERS_BG);
-				case INTSPIEL ->ThemeManager.getColor(HOColorName.MATCHTYPE_MASTERS_BG);
-				case INTFRIENDLYCUPRULES, INTFRIENDLYNORMAL -> ThemeManager.getColor(HOColorName.MATCHTYPE_INTFRIENDLY_BG);
+				case MASTERS, INTSPIEL -> ThemeManager.getColor(HOColorName.MATCHTYPE_MASTERS_BG);
+                case INTFRIENDLYCUPRULES, INTFRIENDLYNORMAL -> ThemeManager.getColor(HOColorName.MATCHTYPE_INTFRIENDLY_BG);
 				case NATIONALCOMPCUPRULES, NATIONALCOMPNORMAL, NATIONALFRIENDLY -> ThemeManager.getColor(HOColorName.MATCHTYPE_NATIONAL_BG);
 				case FRIENDLYCUPRULES, FRIENDLYNORMAL -> ThemeManager.getColor(HOColorName.MATCHTYPE_FRIENDLY_BG);
 				case TOURNAMENTGROUP -> ThemeManager.getColor(HOColorName.MATCHTYPE_TOURNAMENT_GROUP_BG);

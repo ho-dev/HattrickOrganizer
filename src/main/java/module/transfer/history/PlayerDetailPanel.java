@@ -319,15 +319,15 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
                 skill_experience.setText(SKILL_EXPERIENCE + " (" + player.getExperience() + ")");
 
 
-                arrow_keeper.setIcon(ImageUtilities.getImageIcon4Veraenderung(player.getAllLevelUp(PlayerSkill.KEEPER).size(), true));
-                arrow_playmaking.setIcon(ImageUtilities.getImageIcon4Veraenderung(player.getAllLevelUp(PlayerSkill.PLAYMAKING).size(), true));
-                arrow_passing.setIcon(ImageUtilities.getImageIcon4Veraenderung(player.getAllLevelUp(PlayerSkill.PASSING).size(), true));
-                arrow_wing.setIcon(ImageUtilities.getImageIcon4Veraenderung(player.getAllLevelUp(PlayerSkill.WINGER).size(), true));
-                arrow_defense.setIcon(ImageUtilities.getImageIcon4Veraenderung(player.getAllLevelUp(PlayerSkill.DEFENDING).size(), true));
-                arrow_scoring.setIcon(ImageUtilities.getImageIcon4Veraenderung(player.getAllLevelUp(PlayerSkill.SCORING).size(), true));
-                arrow_setpieces.setIcon(ImageUtilities.getImageIcon4Veraenderung(player.getAllLevelUp(PlayerSkill.SETPIECES).size(), true));
-                arrow_stamina.setIcon(ImageUtilities.getImageIcon4Veraenderung(player.getAllLevelUp(PlayerSkill.STAMINA).size(), true));
-                arrow_experience.setIcon(ImageUtilities.getImageIcon4Veraenderung(player.getAllLevelUp(PlayerSkill.EXPERIENCE).size(), true));
+                arrow_keeper.setIcon(ImageUtilities.getImageIcon4Change(player.getAllLevelUp(PlayerSkill.KEEPER).size(), true));
+                arrow_playmaking.setIcon(ImageUtilities.getImageIcon4Change(player.getAllLevelUp(PlayerSkill.PLAYMAKING).size(), true));
+                arrow_passing.setIcon(ImageUtilities.getImageIcon4Change(player.getAllLevelUp(PlayerSkill.PASSING).size(), true));
+                arrow_wing.setIcon(ImageUtilities.getImageIcon4Change(player.getAllLevelUp(PlayerSkill.WINGER).size(), true));
+                arrow_defense.setIcon(ImageUtilities.getImageIcon4Change(player.getAllLevelUp(PlayerSkill.DEFENDING).size(), true));
+                arrow_scoring.setIcon(ImageUtilities.getImageIcon4Change(player.getAllLevelUp(PlayerSkill.SCORING).size(), true));
+                arrow_setpieces.setIcon(ImageUtilities.getImageIcon4Change(player.getAllLevelUp(PlayerSkill.SETPIECES).size(), true));
+                arrow_stamina.setIcon(ImageUtilities.getImageIcon4Change(player.getAllLevelUp(PlayerSkill.STAMINA).size(), true));
+                arrow_experience.setIcon(ImageUtilities.getImageIcon4Change(player.getAllLevelUp(PlayerSkill.EXPERIENCE).size(), true));
             }
 
             final List<PlayerTransfer> transfers = DBManager.instance().getTransfers(this.playerId, true);

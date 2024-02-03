@@ -37,7 +37,6 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.net.URI;
-import java.sql.Date;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -307,8 +306,6 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 
 		if (source.equals(m_jmImportItem)) { // HRF Import
 			new HRFImport(this);
-		} else if (source.equals(m_jmDownloadItem)) { // HRF Download
-				DownloadDialog.instance();
 		} else if (source.equals(m_jmOptionen)) { // Options
 			new OptionenDialog(this).setVisible(true);
 		} else if (source.equals(userAdministrationOptionsMenu)) {
@@ -349,12 +346,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 			openURL("https://ho.readthedocs.io/");
 		} else if (source.equals(m_jmReportAbug)) { // Report a bug
 			openURL("https://github.com/ho-dev/HattrickOrganizer/issues/new/choose");
-		}
-
-		else if (source.equals(m_jmCheckUpdate)) {
-			UpdateController.check4update(true);
-		}
-		else if (source.equals(m_jmChangelog)) {
+		} else if (source.equals(m_jmChangelog)) {
 			if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
 				try {
 					File jarFile = new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI());
@@ -476,7 +468,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		((InputMap) UIManager.get("Table.ancestorInputMap")).remove(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0));
 
 		m_jmDownloadItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0));
-		m_jmDownloadItem.addActionListener(this);
+		m_jmDownloadItem.addActionListener(e -> DownloadDialog.instance());
 		m_jmFile.add(m_jmDownloadItem);
 
 		// Import HRF
@@ -552,7 +544,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		m_jmHelp.add(m_jmReportAbug);
 		m_jmHelp.addSeparator();
 
-		m_jmCheckUpdate.addActionListener(this);
+		m_jmCheckUpdate.addActionListener(e -> UpdateController.check4update(true));
 		m_jmHelp.add(m_jmCheckUpdate);				// Help | check update
 		m_jmChangelog.addActionListener(this);
 		m_jmHelp.add(m_jmChangelog);				// Help | changelog

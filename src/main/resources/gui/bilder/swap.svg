@@ -3,8 +3,8 @@
 <svg id="swap" version="1.1" xmlns="http://www.w3.org/2000/svg" width="512px" height="512px" fill="#FFFFFF">
     <defs id="colors">
 		<linearGradient id="fillColor">
-			<stop offset="0" stop-color="#FF0000"/>
-			<stop offset="1" stop-color="#FF0000"/>
+			<stop offset="0" stop-color="green"/>
+			<stop offset="1" stop-color="green"/>
 		</linearGradient>
 	</defs>
 	<g fill="url(#fillColor)">

@@ -10,6 +10,7 @@ import javax.swing.KeyStroke;
 
 
 public class SpecialEventsModule extends DefaultModule {
+	SpecialEventsPanel specialEventsPanel;
 
 	@Override
 	public KeyStroke getKeyStroke() {
@@ -28,7 +29,14 @@ public class SpecialEventsModule extends DefaultModule {
 
 	@Override
 	public JPanel createTabPanel() {
-		return new SpecialEventsPanel();
+		specialEventsPanel = new SpecialEventsPanel();
+		return specialEventsPanel;
+	}
+
+	@Override
+	public void storeUserSettings()
+	{
+		if ( specialEventsPanel != null) specialEventsPanel.storeUserSettings();
 	}
 
 }

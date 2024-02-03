@@ -129,8 +129,8 @@ public class PlayerOverviewTable extends JTable implements core.gui.Refreshable 
 		((PlayerOverviewModel) getSorter().getModel()).reInitData();
 	}
 
-	public final void reInitModelHRFVergleich() {
-		((PlayerOverviewModel) getSorter().getModel()).reInitDataHRFVergleich();
+	public final void reInitModelHRFComparison() {
+		((PlayerOverviewModel) getSorter().getModel()).reInitDataHRFComparison();
 	}
 
 	@Override
@@ -139,8 +139,8 @@ public class PlayerOverviewTable extends JTable implements core.gui.Refreshable 
 		repaint();
 	}
 
-	public final void refreshHRFVergleich() {
-		reInitModelHRFVergleich();
+	public final void refreshHRFComparison() {
+		reInitModelHRFComparison();
 		repaint();
 	}
 

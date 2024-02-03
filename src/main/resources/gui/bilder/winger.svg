@@ -7,6 +7,14 @@
 </g>
 <g id="Layer_17">
 </g>
-<polygon fill="#444444" points="16.008,5.822 13.018,0.64 10.025,5.822 12,5.822 12,10.532 8,6.533 4,10.532 4,5.822 5.975,5.822 
+
+<defs id="colors">
+    <linearGradient id="lineColor">
+        <stop offset="0" stop-color="#FF0000"/>
+		<stop offset="1" stop-color="#FF0000"/>
+    </linearGradient>
+</defs>
+
+<polygon fill="url(#lineColor)" points="16.008,5.822 13.018,0.64 10.025,5.822 12,5.822 12,10.532 8,6.533 4,10.532 4,5.822 5.975,5.822
 	2.983,0.64 -0.008,5.822 2,5.822 2,15.36 8,9.361 14,15.36 14,5.822 "/>
 </svg>

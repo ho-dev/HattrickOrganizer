@@ -73,7 +73,7 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
      */
     public ColorLabelEntry(int integerNumber, double number, boolean current, Color background, boolean withText) {
         if ((integerNumber != 0) || !withText) {
-            setIcon(ImageUtilities.getImageIcon4Veraenderung(integerNumber, current));
+            setIcon(ImageUtilities.getImageIcon4Change(integerNumber, current));
         }
 
         setHorizontalAlignment(SwingConstants.RIGHT);
@@ -104,7 +104,7 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
                            boolean withText) {
 
         if ((changeVal != 0) || !withText) {
-            setIcon(ImageUtilities.getImageIcon4Veraenderung(changeVal, current));
+            setIcon(ImageUtilities.getImageIcon4Change(changeVal, current));
         }
 
         setHorizontalAlignment(SwingConstants.RIGHT);
@@ -205,7 +205,7 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
      */
     public final void setGraphicalChangeValue(double number, boolean current, boolean withText) {
 
-        setIcon(ImageUtilities.getImageIcon4Veraenderung((int) Helper.round(number, 1), current));
+        setIcon(ImageUtilities.getImageIcon4Change((int) Helper.round(number, 1), current));
 
         if (withText) {
             setGraphicalChangeValue(number);
@@ -216,10 +216,10 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
     /**
      * Sets the change graphics (For values with sub-skills, e.g. the normal skills)
      */
-    public final void setGraphicalChangeValue(int integerNumber, double number, boolean current,
+    public void setGraphicalChangeValue(int integerNumber, double number, boolean current,
                                               boolean withText) {
 
-        setIcon(ImageUtilities.getImageIcon4Veraenderung((int) Helper.round(integerNumber, 1), current));
+        setIcon(ImageUtilities.getImageIcon4Change((int) Helper.round(integerNumber, 1), current));
 
         if (withText) {
             setGraphicalChangeValue(integerNumber + number);
@@ -236,15 +236,61 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
                 true);
     }
 
+    /**
+     * Initialize adding of icons to this entry
+     * Previously set icon (or text) will be moved to newly created child components of this entry.
+     * Layout is initialized to box layout.
+     */
+    private void initAdd() {
+        var isInitDone = this.getLayout() != null && this.getLayout().getClass() == BoxLayout.class;
+        if (!isInitDone){
+            this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+            var icon = this.getIcon();
+            if (icon!=null){
+                super.setIcon(null);
+                this.add(new JLabel(icon));
+            }
+            var text = this.getText();
+            if (!text.isEmpty()){
+                super.setText("");
+                this.add(new JLabel(text));
+            }
+        }
+    }
 
-    public final void setIcon(Icon icon, int imageAusrichtung) {
+    /**
+     * Add an icon to the entry
+     * A child Jlabel is added, which holds the specified icon.
+     * @param icon Icon to be added
+     */
+    public void addIcon(Icon icon){
+        initAdd();
+        this.add(new JLabel(icon));
+    }
+
+    /**
+     * Add a text label to the entry
+     * A child JLabel is added, which holds the specified text.
+     * @param text Text of the new child component
+     */
+    public void addText(String text){
+        initAdd();
+        this.add(new JLabel(text));
+    }
+
+    /**
+     * Set the icon
+     * (would be overwritten by added components)
+     * @param icon Icon to be set
+     * @param textPosition Horizontal text position (swing constant value)
+     */
+    public void setIcon(Icon icon, int textPosition) {
         setIcon(icon);
-        setHorizontalTextPosition(imageAusrichtung);
+        setHorizontalTextPosition(textPosition);
         updateComponent();
     }
 
-
-    public final void setSpecialNumber(int number, boolean currencyformat) {
+    public void setSpecialNumber(int number, boolean currencyformat) {
         setSpecialNumber(number, currencyformat, false);
     }
 

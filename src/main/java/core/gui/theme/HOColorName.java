@@ -8,7 +8,8 @@ package core.gui.theme;
 public interface HOColorName {
 
 	// DEFAULT COLOR
-    String RED 							= "default.red";
+	String PINK 						= "default.pink";
+	String RED 							= "default.red";
 	String BLUE 						= "default.blue";
 	String GREEN 						= "default.green";
 	String ORANGE 						= "default.orange";
