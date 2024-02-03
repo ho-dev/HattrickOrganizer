@@ -13,15 +13,14 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
+import static core.gui.theme.HOColor.areDifferentColors;
 import static java.awt.event.ItemEvent.*;
 import static javax.swing.ListSelectionModel.SINGLE_SELECTION;
 
-public class UserColorsPanel extends JPanel implements ActionListener {
+public class UserColorsPanel extends JPanel {
 
 	private JComboBox skins = null;
 	private final DefaultTableModel tableModel = new DefaultTableModel() {
@@ -110,7 +109,14 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 		skins = new JComboBox(names);
 		var selected = ThemeManager.getCurrentThemeName();
 		skins.setSelectedItem(selected);
-		skins.addActionListener(this);
+		skins.addActionListener(e->{
+			if (e.getSource() == skins) {
+				UserParameter.temp().skin = (String) skins.getSelectedItem();
+				initData(UserParameter.instance().skin);
+				// TODO change the look and feel dynamically
+				OptionManager.instance().setRestartNeeded();
+			}
+		});
 		panel.add(skins);
 		return panel;
 	}
@@ -259,19 +265,6 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 	}
 
 	/**
-	 * action
-	 */
-	public void actionPerformed(ActionEvent arg0) {
-		if (arg0.getSource() == skins) {
-			UserParameter.temp().skin = (String) skins.getSelectedItem();
-			initData(UserParameter.instance().skin);
-			// TODO change the look and feel dynamically
-			OptionManager.instance().setRestartNeeded();
-		}
-
-	}
-
-	/**
 	 * Store the edited color settings
 	 */
 	public void storeChangedColorSettings() {
@@ -279,8 +272,8 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 			var theme = getSelectedTheme();
 			var origValue = HOColor.getHOColor(color.getHOColorName(), theme);
 			assert origValue != null;
-			if (AreDifferentColors(origValue, color) ||
-					AreDifferentColors(origValue.getDefaultValue(), color.getDefaultValue())) {
+			if (areDifferentColors(origValue, color) ||
+					areDifferentColors(origValue.getDefaultValue(), color.getDefaultValue())) {
 				if (!color.getTheme().equals("default")) {
 					color.setTheme(theme);
 					DBManager.instance().storeHOColor(color);
@@ -293,29 +286,6 @@ public class UserColorsPanel extends JPanel implements ActionListener {
 				OptionManager.instance().setRestartNeeded();
 			}
 		}
-	}
-
-	/**
-	 * Compare two color settings
-	 * @param c1 Color setting, may be null
-	 * @param c2 Color setting, may  be null
-	 * @return True, if the settings are different
-	 */
-	private boolean AreDifferentColors(HOColor c1, HOColor c2) {
-		if (c1 == null || c2 == null) return c1 != c2;
-		return AreDifferent(c1.getColor(), c2.getColor()) || AreDifferent(c1.colorReference(), c2.colorReference());
-	}
-
-	/**
-	 * Compare two objects
-	 * @param o1 Object, may  be null
-	 * @param o2 Object, may  be null
-	 * @return True, if the objects are different
-	 */
-	private boolean AreDifferent(Object o1, Object o2) {
-		if (o1 == o2) return false;
-		if (o1 == null) return true;
-		return !o1.equals(o2);
 	}
 
 	/**

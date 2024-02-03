@@ -606,4 +606,29 @@ public class HOColor extends AbstractTable.Storable implements Cloneable {
             }
         }
     }
+
+
+    /**
+     * Compare two color settings
+     * @param c1 Color setting, may be null
+     * @param c2 Color setting, may  be null
+     * @return True, if the settings are different
+     */
+    public static boolean areDifferentColors(HOColor c1, HOColor c2) {
+        if (c1 == null || c2 == null) return c1 != c2;
+        return areDifferent(c1.getColor(), c2.getColor()) || areDifferent(c1.colorReference(), c2.colorReference());
+    }
+
+    /**
+     * Compare two objects
+     * @param o1 Object, may  be null
+     * @param o2 Object, may  be null
+     * @return True, if the objects are different
+     */
+    private static boolean areDifferent(Object o1, Object o2) {
+        if (o1 == o2) return false;
+        if (o1 == null) return true;
+        return !o1.equals(o2);
+    }
+
 }
