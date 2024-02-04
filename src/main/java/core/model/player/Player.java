@@ -104,6 +104,7 @@ public class Player extends AbstractTable.Storable {
      * Verteidigung
      */
     private double subDefendingSkill;
+    private double subStamina;
 
     /**
      * Agressivität
