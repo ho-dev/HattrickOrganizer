@@ -288,23 +288,7 @@ public class UserColorsPanel extends JPanel {
 		}
 	}
 
-	/**
-	 * Get the color value of the color setting
-	 * If no value is set, the corresponding reference is searched in the internal setting list.
-	 * @param currentColor Color setting
-	 * @return Color value
-	 */
-	public Color getColor(HOColor currentColor) {
-		var ret = currentColor.getColor();
-		if ( ret == null){
-			var colorReference = currentColor.getColorReference();
-			if (colorReference != null){
-				var hoColor = colors.stream().filter(i->i.getName().equals(currentColor.getName())).findFirst();
-				if ( hoColor.isPresent()){
-					ret = getColor(hoColor.get());
-				}
-			}
-		}
-		return ret;
+	public List<HOColor> getColors() {
+		return colors;
 	}
 }

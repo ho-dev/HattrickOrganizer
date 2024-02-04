@@ -60,7 +60,7 @@ public class ColorTableCellEditor extends AbstractCellEditor implements TableCel
         if (EDIT.equals(action)) {
             //The user has clicked the cell, so
             //bring up the dialog.
-            var color = userColorsPanel.getColor(currentColor); // HOColor.getColor(currentColor.getHOColorName(), currentColor.getTheme());
+            var color = currentColor.getColor(userColorsPanel.getColors());
             button.setBackground(color);
             colorChooser.setColor(color);
             dialog.setVisible(true);

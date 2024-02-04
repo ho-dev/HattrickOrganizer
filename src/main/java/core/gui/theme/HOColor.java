@@ -276,7 +276,8 @@ public class HOColor extends AbstractTable.Storable implements Cloneable {
 
     /**
      * Get color value
-     * @param name Color name
+     *
+     * @param name  Color name
      * @param theme Theme name
      * @return Color or null if no entry is found
      */
@@ -286,8 +287,9 @@ public class HOColor extends AbstractTable.Storable implements Cloneable {
 
     /**
      * Get color value
-     * @param name Color name
-     * @param theme Theme name
+     *
+     * @param name       Color name
+     * @param theme      Theme name
      * @param colorNames Color reference names (used to prevent recursions)
      * @return Color or null if no entry if found
      */
@@ -309,6 +311,7 @@ public class HOColor extends AbstractTable.Storable implements Cloneable {
 
     /**
      * Get color settings of theme
+     *
      * @param theme Theme name
      * @return List of colors
      */
@@ -323,7 +326,8 @@ public class HOColor extends AbstractTable.Storable implements Cloneable {
     /**
      * Get color setting.
      * If no entry in specified theme is found, the default color is returned.
-     * @param name Color name
+     *
+     * @param name  Color name
      * @param theme Theme name
      * @return Color setting or null if no entry is found
      */
@@ -340,7 +344,8 @@ public class HOColor extends AbstractTable.Storable implements Cloneable {
 
     /**
      * Add new color setting to the settings
-     * @param name Name of the color
+     *
+     * @param name  Name of the color
      * @param color Color value
      */
     private static void addColor(HOColorName name, Color color) {
@@ -349,7 +354,8 @@ public class HOColor extends AbstractTable.Storable implements Cloneable {
 
     /**
      * Add new color setting to the settings
-     * @param name Name of the color
+     *
+     * @param name           Name of the color
      * @param colorReference Color reference name
      */
     private static void addColor(HOColorName name, HOColorName colorReference) {
@@ -358,6 +364,7 @@ public class HOColor extends AbstractTable.Storable implements Cloneable {
 
     /**
      * Add new color setting to the settings
+     *
      * @param color Color setting
      */
     public static void addColor(HOColor color) {
@@ -400,8 +407,9 @@ public class HOColor extends AbstractTable.Storable implements Cloneable {
 
     /**
      * Default color setting
+     *
      * @param name Color name
-     * @param o Color reference name
+     * @param o    Color reference name
      */
     public HOColor(HOColorName name, HOColorName o) {
         this(name, "default", o);
@@ -409,8 +417,9 @@ public class HOColor extends AbstractTable.Storable implements Cloneable {
 
     /**
      * Default color setting
+     *
      * @param name Color name
-     * @param o Color value
+     * @param o    Color value
      */
     private HOColor(HOColorName name, Color o) {
         this(name, "default", o);
@@ -418,9 +427,10 @@ public class HOColor extends AbstractTable.Storable implements Cloneable {
 
     /**
      * Color setting
-     * @param name Color name
+     *
+     * @param name  Color name
      * @param theme Theme name
-     * @param o Color value
+     * @param o     Color value
      */
     public HOColor(HOColorName name, String theme, Color o) {
         this.name = name;
@@ -430,9 +440,10 @@ public class HOColor extends AbstractTable.Storable implements Cloneable {
 
     /**
      * Color setting
-     * @param name Color name
+     *
+     * @param name  Color name
      * @param theme Theme name
-     * @param o Color reference name
+     * @param o     Color reference name
      */
     public HOColor(HOColorName name, String theme, HOColorName o) {
         assert null != getColor(o, theme) : "Color " + o.name() + " not found";
@@ -443,6 +454,7 @@ public class HOColor extends AbstractTable.Storable implements Cloneable {
 
     /**
      * Clone the color setting
+     *
      * @return Color setting
      */
     @Override
@@ -465,6 +477,7 @@ public class HOColor extends AbstractTable.Storable implements Cloneable {
     /**
      * Get the color value
      * This is null if a color reference is set.
+     *
      * @return Color
      */
     public Color getColor() {
@@ -473,6 +486,7 @@ public class HOColor extends AbstractTable.Storable implements Cloneable {
 
     /**
      * Set the color value
+     *
      * @param color Color
      */
     public void setColor(Color color) {
@@ -481,6 +495,7 @@ public class HOColor extends AbstractTable.Storable implements Cloneable {
 
     /**
      * Get color setting name
+     *
      * @return String
      */
     public String getName() {
@@ -489,6 +504,7 @@ public class HOColor extends AbstractTable.Storable implements Cloneable {
 
     /**
      * Get color setting name
+     *
      * @return HOColorName
      */
     public HOColorName getHOColorName() {
@@ -497,6 +513,7 @@ public class HOColor extends AbstractTable.Storable implements Cloneable {
 
     /**
      * Set the color setting name
+     *
      * @param name String
      */
     public void setName(String name) {
@@ -505,6 +522,7 @@ public class HOColor extends AbstractTable.Storable implements Cloneable {
 
     /**
      * Get the color reference name
+     *
      * @return HOColorName
      */
     public HOColorName colorReference() {
@@ -513,6 +531,7 @@ public class HOColor extends AbstractTable.Storable implements Cloneable {
 
     /**
      * Get the color reference name
+     *
      * @return String
      */
     public String getColorReference() {
@@ -522,6 +541,7 @@ public class HOColor extends AbstractTable.Storable implements Cloneable {
 
     /**
      * Set the color reference name
+     *
      * @param colorReference String
      */
     public void setColorReference(String colorReference) {
@@ -535,6 +555,7 @@ public class HOColor extends AbstractTable.Storable implements Cloneable {
     /**
      * Get color value
      * (used by the database table)
+     *
      * @return Integer
      */
     public Integer getValue() {
@@ -547,6 +568,7 @@ public class HOColor extends AbstractTable.Storable implements Cloneable {
     /**
      * Set color value
      * (used by the database table)
+     *
      * @param v Integer
      */
     public void setValue(Integer v) {
@@ -559,6 +581,7 @@ public class HOColor extends AbstractTable.Storable implements Cloneable {
 
     /**
      * Get theme name
+     *
      * @return String
      */
     public String getTheme() {
@@ -567,6 +590,7 @@ public class HOColor extends AbstractTable.Storable implements Cloneable {
 
     /**
      * Set theme name
+     *
      * @param v String
      */
     public void setTheme(String v) {
@@ -575,6 +599,7 @@ public class HOColor extends AbstractTable.Storable implements Cloneable {
 
     /**
      * Set the default value
+     *
      * @param o Color setting
      */
     public void setDefaultValue(HOColor o) {
@@ -583,6 +608,7 @@ public class HOColor extends AbstractTable.Storable implements Cloneable {
 
     /**
      * Get the default value
+     *
      * @return Default color setting
      */
     public HOColor getDefaultValue() {
@@ -610,6 +636,7 @@ public class HOColor extends AbstractTable.Storable implements Cloneable {
 
     /**
      * Compare two color settings
+     *
      * @param c1 Color setting, may be null
      * @param c2 Color setting, may  be null
      * @return True, if the settings are different
@@ -621,6 +648,7 @@ public class HOColor extends AbstractTable.Storable implements Cloneable {
 
     /**
      * Compare two objects
+     *
      * @param o1 Object, may  be null
      * @param o2 Object, may  be null
      * @return True, if the objects are different
@@ -631,4 +659,22 @@ public class HOColor extends AbstractTable.Storable implements Cloneable {
         return !o1.equals(o2);
     }
 
+    /**
+     * Get the color value of the color setting
+     * If no value is set, the corresponding reference is searched in argument setting list.
+     *
+     * @param colors Color settings, used to find referenced color setting
+     * @return Color value
+     */
+    public Color getColor(List<HOColor> colors) {
+        if (this.color == null) {
+            if (this.colorReference != null) {
+                var hoColor = colors.stream().filter(i -> i.getName().equals(this.getName())).findFirst();
+                if (hoColor.isPresent()) {
+                    return hoColor.get().getColor(colors);
+                }
+            }
+        }
+        return this.color;
+    }
 }
