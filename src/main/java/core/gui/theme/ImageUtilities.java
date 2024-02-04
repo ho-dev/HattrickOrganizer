@@ -635,8 +635,8 @@ public class ImageUtilities {
 			if(entry.getValue() instanceof Color){
 				newColorMap.put(entry.getKey(), entry.getValue());
 			}
-			else if(entry.getValue() instanceof String){
-				newColorMap.put(entry.getKey(), ThemeManager.getColor((String) entry.getValue()));
+			else if(entry.getValue() instanceof HOColorName){
+				newColorMap.put(entry.getKey(), ThemeManager.getColor((HOColorName) entry.getValue()));
 			}
 			else{
 				newColorMap.put(entry.getKey(), new Color(0, 0, 0));
@@ -703,7 +703,7 @@ public class ImageUtilities {
 		return brightness < 130 ? Color.WHITE : Color.BLACK;
 	}
 
-	public static Color getColorForContrast(String backgroundColor) {
+	public static Color getColorForContrast(HOColorName backgroundColor) {
 		return getColorForContrast(ThemeManager.getColor(backgroundColor));
 	}
 
@@ -714,7 +714,7 @@ public class ImageUtilities {
 				String.format("%1$02X", colour.getBlue());
 	}
 
-	public static String getHexColor(String colour) {
+	public static String getHexColor(HOColorName colour) {
 		return getHexColor(ThemeManager.getColor(colour));
 	}
 
@@ -963,7 +963,7 @@ public class ImageUtilities {
 		return _icon;
 	}
 
-	private static Color getColor (String name){
+	private static Color getColor (HOColorName name){
 		return ThemeManager.getColor(name);
 	}
 
@@ -988,7 +988,7 @@ public class ImageUtilities {
 		return _icon;
 	}
 
-	public static Icon getClearLineupIcon(int height, String cLineup, String cSymbol) {
+	public static Icon getClearLineupIcon(int height, HOColorName cLineup, HOColorName cSymbol) {
 
 		return getClearLineupIcon(height, ThemeManager.getColor(cLineup), ThemeManager.getColor(cSymbol));
 	}
@@ -1014,7 +1014,7 @@ public class ImageUtilities {
 		return _icon;
 	}
 
-	public static Icon getStartAssistantIcon(int height, String cLineup, String cSymbol) {
+	public static Icon getStartAssistantIcon(int height, HOColorName cLineup, HOColorName cSymbol) {
 
 		return getStartAssistantIcon(height, ThemeManager.getColor(cLineup), ThemeManager.getColor(cSymbol));
 	}

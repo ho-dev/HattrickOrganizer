@@ -1,11 +1,19 @@
 package core.gui.theme;
 
 import core.model.UserParameter;
-
 import javax.swing.*;
 import java.awt.*;
 
 public abstract class BaseTheme implements Theme {
+
+   protected void addColor(HOColorName name, Color color){
+      var newColor = new Color(color.getRGB()); // UIColor objects are not displayed in settings table
+      HOColor.addColor(new HOColor(name, this.getName(), newColor));
+   }
+
+   protected void addColor(HOColorName name, HOColorName colorReference){
+      HOColor.addColor(new HOColor(name, this.getName(), colorReference));
+   }
 
      protected void setFont(int fontSize) {
         UIDefaults uid = UIManager.getLookAndFeelDefaults();

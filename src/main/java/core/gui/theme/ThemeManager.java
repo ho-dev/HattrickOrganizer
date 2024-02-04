@@ -109,22 +109,9 @@ public final class ThemeManager {
 		return new ArrayList<>(themes.values());
 	}
 
-	public static Color getColor(String key) {
-		Object obj;
-
-		obj = instance().classicSchema.getThemeColor(key);
-		if(obj instanceof Color)
-			return (Color)obj;
-		if(obj instanceof String)
-			return getColor(obj.toString());
-
-		if(obj == null)
-			obj = UIManager.getColor(key);
-
-		if(obj == null)
-			return instance().classicSchema.getDefaultColor(key);
-
-		return (Color)obj;
+	public static Color getColor(HOColorName key) {
+		var theme = getCurrentThemeName();
+		return HOColor.getColor(key, theme);
 	}
 
 	public boolean isSet(String key) {
@@ -352,6 +339,14 @@ public final class ThemeManager {
 		return scaledIcon;
 	}
 
+	public static String getCurrentThemeName(){
+		var ret = themes.get(UserParameter.instance().skin);
+		if (ret==null){
+			ret = themes.get(DEFAULT_THEME_NAME);
+		}
+		return ret.getName();
+	}
+
 	public void setCurrentTheme() {
 
 		try {
@@ -363,14 +358,25 @@ public final class ThemeManager {
 			}
 
 			if (!success) {
-				Theme classicTheme = themes.get(DEFAULT_THEME_NAME);
-				success = classicTheme.loadTheme();
+				theme = themes.get(DEFAULT_THEME_NAME);
+				success = theme.loadTheme();
 			}
+
+			loadUserDefinedColors(theme.getName());
 
 			initializeMacKeyBindings(success);
 
 		} catch (Exception e) {
 			HOLogger.instance().log(HOMainFrame.class, e);
+		}
+	}
+
+	private void loadUserDefinedColors(String theme) {
+		var userDefinedColors = DBManager.instance().loadHOColors(theme);
+		for (var color : userDefinedColors) {
+			var defaultColor = HOColor.getHOColor(color.getHOColorName(), theme);
+			color.setDefaultValue(defaultColor);
+			HOColor.addColor(color);
 		}
 	}
 

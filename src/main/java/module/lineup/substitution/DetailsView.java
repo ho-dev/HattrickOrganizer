@@ -3,9 +3,7 @@ package module.lineup.substitution;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
-import core.model.HOModel;
 import core.model.HOVerwaltung;
-import core.model.player.Player;
 import core.util.Helper;
 import module.lineup.substitution.model.GoalDiffCriteria;
 import module.lineup.substitution.model.MatchOrderType;
@@ -17,6 +15,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.io.Serial;
 import java.text.MessageFormat;
 
 import javax.swing.JLabel;
@@ -27,6 +26,7 @@ public class DetailsView extends JPanel {
 
 	private static final Dimension COMPONENTENSIZE = new Dimension(Helper.calcCellWidth(300),
 			Helper.calcCellWidth(18));
+	@Serial
 	private static final long serialVersionUID = -8046083206070885556L;
 	private Substitution substitution;
 	private JLabel orderTypeEntry;
@@ -56,7 +56,7 @@ public class DetailsView extends JPanel {
 
 	private void updateView() {
 		if (this.substitution != null) {
-			String color = (this.substitution.getSubjectPlayerID() != -1) ? HOColorName.SUBST_CHANGED_VALUE_BG
+			HOColorName color = (this.substitution.getSubjectPlayerID() != -1) ? HOColorName.SUBST_CHANGED_VALUE_BG
 					: HOColorName.TABLEENTRY_BG;
 			this.firstPlayerEntry.setBackground(ThemeManager.getColor(color));
 
@@ -129,7 +129,6 @@ public class DetailsView extends JPanel {
 		String redCards = "";
 
 		if (this.substitution != null) {
-			HOModel hoModel = HOVerwaltung.instance().getModel();
 			orderType = LanguageStringLookup.getOrderType(this.substitution.getOrderType());
 
 			playerOut = this.substitution.getSubjectPlayerName();
@@ -138,7 +137,7 @@ public class DetailsView extends JPanel {
 			if (this.substitution.getMatchMinuteCriteria() > 0) {
 				when = MessageFormat.format(
 						HOVerwaltung.instance().getLanguageString("subs.MinuteAfterX"),
-						(int) this.substitution.getMatchMinuteCriteria());
+                        this.substitution.getMatchMinuteCriteria());
 			} else {
 				when = HOVerwaltung.instance().getLanguageString("subs.MinuteAnytime");
 			}

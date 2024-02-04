@@ -144,59 +144,59 @@ public final class CombinedRatingChartPanel extends JPanel {
 		gbc.gridy++;
 		gbc.insets = new Insets(10,0,0,0);  //top padding
 		leftDefense = new Datum(hov.getLanguageString("ls.match.ratingsector.leftdefence"),
-				ThemeManager.getColor(HOColorName.PALETTE13[0]), "CombinedRatingChartPanel_LeftDefense");
+				ThemeManager.getColor(HOColorName.PALETTE13_0), "CombinedRatingChartPanel_LeftDefense");
 		controlsPanel.add(leftDefense.getCheckbox(), gbc);
 
 		gbc.gridy++;
 		gbc.insets = new Insets(0,0,0,0);  //top padding
 		centralDefense = new Datum(hov.getLanguageString("ls.match.ratingsector.centraldefence"),
-									ThemeManager.getColor(HOColorName.PALETTE13[1]),
+									ThemeManager.getColor(HOColorName.PALETTE13_1),
 									"CombinedRatingChartPanel_CentralDefense");
 		controlsPanel.add(centralDefense.getCheckbox(), gbc);
 
 		gbc.gridy++;
 		rightDefense = new Datum(hov.getLanguageString("ls.match.ratingsector.rightdefence"),
-								ThemeManager.getColor(HOColorName.PALETTE13[2]),
+								ThemeManager.getColor(HOColorName.PALETTE13_2),
 								"CombinedRatingChartPanel_RightDefense");
 		controlsPanel.add(rightDefense.getCheckbox(), gbc);
 
 		gbc.gridy++;
 		gbc.insets = new Insets(10,0,0,0);  //top padding
 		midfield = new Datum(hov.getLanguageString("ls.match.ratingsector.midfield"),
-							ThemeManager.getColor(HOColorName.PALETTE13[3]),
+							ThemeManager.getColor(HOColorName.PALETTE13_3),
 							"CombinedRatingChartPanel_Midfield");
 		controlsPanel.add(midfield.getCheckbox(), gbc);
 
 		gbc.gridy++;
 		leftAttack = new Datum(hov.getLanguageString("ls.match.ratingsector.leftattack"),
-								ThemeManager.getColor(HOColorName.PALETTE13[4]),
+								ThemeManager.getColor(HOColorName.PALETTE13_4),
 								"CombinedRatingChartPanel_LeftAttack");
 		controlsPanel.add(leftAttack.getCheckbox(), gbc);
 
 		gbc.gridy++;
 		gbc.insets = new Insets(0,0,0,0);  //top padding
 		centralAttack = new Datum(hov.getLanguageString("ls.match.ratingsector.centralattack"),
-									ThemeManager.getColor(HOColorName.PALETTE13[5]),
+									ThemeManager.getColor(HOColorName.PALETTE13_5),
 									"CombinedRatingChartPanel_CentralAttack");
 		controlsPanel.add(centralAttack.getCheckbox(), gbc);
 
 		gbc.gridy++;
 		rightAttack = new Datum(hov.getLanguageString("ls.match.ratingsector.rightattack"),
-								ThemeManager.getColor(HOColorName.PALETTE13[6]),
+								ThemeManager.getColor(HOColorName.PALETTE13_6),
 								"CombinedRatingChartPanel_RightAttack");
 		controlsPanel.add(rightAttack.getCheckbox(), gbc);
 
 		gbc.gridy++;
 		gbc.insets = new Insets(10,0,0,0);  //top padding
 		loddar = new Datum(hov.getLanguageString("ls.match.ratingtype.loddarstats"),
-				ThemeManager.getColor(HOColorName.PALETTE13[8]),
+				ThemeManager.getColor(HOColorName.PALETTE13_8),
 				"CombinedRatingChartPanel_Loddar");
 		controlsPanel.add(loddar.getCheckbox(), gbc);
 
 		gbc.gridy++;
 		gbc.insets = new Insets(0,0,0,0);  //top padding
 		String textLabel = hov.getLanguageString("ls.match.ratingtype.hatstats") + " (" + hov.getLanguageString("ls.chart.second_axis") + ")";
-		hatStats = new Datum(textLabel, ThemeManager.getColor(HOColorName.PALETTE13[7]),
+		hatStats = new Datum(textLabel, ThemeManager.getColor(HOColorName.PALETTE13_7),
 							"CombinedRatingChartPanel_HatStats",  true, 19.0d);
 		controlsPanel.add(hatStats.getCheckbox(), gbc);
 

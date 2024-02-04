@@ -18,25 +18,24 @@ import java.awt.*;
 final class SeriesHistoryPanel extends JPanel {
 
 	private final Color[] COLOR4LINES = {
-			ThemeManager.getColor(HOColorName.PALETTE13[0]),
-			ThemeManager.getColor(HOColorName.PALETTE13[1]),
-			ThemeManager.getColor(HOColorName.PALETTE13[2]),
-			ThemeManager.getColor(HOColorName.PALETTE13[8]),
-			ThemeManager.getColor(HOColorName.PALETTE13[4]),
-			ThemeManager.getColor(HOColorName.PALETTE13[5]),
-			ThemeManager.getColor(HOColorName.PALETTE13[6]),
-			ThemeManager.getColor(HOColorName.PALETTE13[9])
+			ThemeManager.getColor(HOColorName.PALETTE13_0),
+			ThemeManager.getColor(HOColorName.PALETTE13_1),
+			ThemeManager.getColor(HOColorName.PALETTE13_2),
+			ThemeManager.getColor(HOColorName.PALETTE13_8),
+			ThemeManager.getColor(HOColorName.PALETTE13_4),
+			ThemeManager.getColor(HOColorName.PALETTE13_5),
+			ThemeManager.getColor(HOColorName.PALETTE13_6),
+			ThemeManager.getColor(HOColorName.PALETTE13_9)
 	};
 
-	private Color STANDARD_FOREGROUND = ThemeManager.getColor(HOColorName.LEAGUE_FG);
+	private final Color STANDARD_FOREGROUND = ThemeManager.getColor(HOColorName.LEAGUE_FG);
 	private TabellenVerlaufEintrag[] m_clVerlaufeintraege;
-	private final int TEAM_NAME_WIDTH = 180;
-	private final Model model;
+    private final Model model;
 
 	/**
 	 * Creates a new TabellenverlaufStatistikPanel object.
 	 */
-	protected SeriesHistoryPanel(Model model) {
+    SeriesHistoryPanel(Model model) {
 		this.model = model;
 		setPreferredSize(new Dimension(700, 240));
 		initValues();
@@ -61,7 +60,8 @@ final class SeriesHistoryPanel extends JPanel {
 			final int anzahlPlaetze = m_clVerlaufeintraege.length + 1;
 			final int anzahlSpieltage = m_clVerlaufeintraege[0].getPlatzierungen().length;
 			final int abstandVertikal = getHeight() / (anzahlPlaetze + 1);
-			final int abstandHorizontal = (getWidth() - TEAM_NAME_WIDTH) / anzahlSpieltage;
+            int TEAM_NAME_WIDTH = 180;
+            final int abstandHorizontal = (getWidth() - TEAM_NAME_WIDTH) / anzahlSpieltage;
 
 			final int fontsize = UserParameter.instance().fontSize;
 			final Font fettFont = new Font("sansserif", Font.BOLD, fontsize);
@@ -174,7 +174,7 @@ final class SeriesHistoryPanel extends JPanel {
 		}
 	}
 
-	protected void changeSaison() {
+	void changeSaison() {
 		initValues();
 	}
 

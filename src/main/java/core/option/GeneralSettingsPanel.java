@@ -69,7 +69,6 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
         if (core.model.UserParameter.temp().zahlenFuerSkill != core.model.UserParameter.instance().zahlenFuerSkill)
             OptionManager.instance().setReInitNeeded();
         if (!core.model.UserParameter.temp().skin.equals(core.model.UserParameter.instance().skin)) {
-            OptionManager.instance().setSkinChanged();
             OptionManager.instance().setRestartNeeded();
         }
     }
@@ -80,7 +79,6 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
         core.model.UserParameter.temp().alternativePositionsTolerance = m_jslAlternativePositionsTolerance.getValue();
 
         if (core.model.UserParameter.temp().fontSize != core.model.UserParameter.instance().fontSize) {
-            OptionManager.instance().setSkinChanged();
             OptionManager.instance().setRestartNeeded();
         }
         if (core.model.UserParameter.temp().alternativePositionsTolerance != core.model.UserParameter.instance().alternativePositionsTolerance) {

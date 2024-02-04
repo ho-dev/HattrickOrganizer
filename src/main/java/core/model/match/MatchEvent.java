@@ -1107,7 +1107,7 @@ public class MatchEvent extends AbstractTable.Storable {
         return getIcon(HOIconName.SPECIALTIES[specialty.getValue()], HOColorName.PLAYER_SPECIALTY_COLOR);
     }
 
-    private Icon getIcon(String key, String color) {
+    private Icon getIcon(String key, HOColorName color) {
         Map<Object, Object> colorMap = Map.of("lineColor", ThemeManager.getColor(color));
         return ImageUtilities.getSvgIcon(key, colorMap, 15, 15);
     }
