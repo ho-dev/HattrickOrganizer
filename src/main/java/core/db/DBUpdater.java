@@ -69,6 +69,8 @@ final class DBUpdater {
 					case 700:
 						updateDBv701(DBVersion);
 					case 701:
+						// user database found with corrupt v5 upgrade (see https://github.com/ho-dev/HattrickOrganizer/issues/1941)
+						updateDBv500(DBVersion);
 						updateDBv800(DBVersion);
 					case 800:
 				}
@@ -87,6 +89,9 @@ final class DBUpdater {
 
 		if (!tableExists(FuturePlayerSkillTrainingTable.TABLENAME)) {
 			dbManager.getTable(FuturePlayerSkillTrainingTable.TABLENAME).createTable();
+		}
+		if (!tableExists(HOColorTable.TABLENAME)) {
+			dbManager.getTable(HOColorTable.TABLENAME).createTable();
 		}
 
 		var playerTable = dbManager.getTable(SpielerTable.TABLENAME);

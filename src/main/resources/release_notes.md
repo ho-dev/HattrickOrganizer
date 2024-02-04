@@ -5,6 +5,7 @@
 * Refactoring of the transfer module. Calculation of transfer fee income.
 * Refactoring of the database prepared statement caching.
 * Improve training planning
+* New color editor in options dialog
 
 ## [Detailed Changelog](https://github.com/ho-dev/HattrickOrganizer/issues?q=milestone%3A8.0)
 
@@ -12,6 +13,7 @@
 * Fix `unexpected token` issue with Transfer table query (#1965)
 * Fix potential NPE when using a prepared statement (#1941)
 * Improve Database Cleanup tool by adding additional match types (#1587)
+* Repairing a failed V5 database upgrade (#1941)
 
 ### Squad
 * Fix length of owner notes in players' database table (#1816)
@@ -51,6 +53,9 @@
 * Modify youth module layout (#1449)
 * Set initial youth module view layout (#1558)
 * Display specialty icons in youth player tables (#1999)
+
+### Option setting
+* new color editor in option settings (#1242)
 
 ### Misc
 * Add a Linux-friendly default theme, called “Gnome.”

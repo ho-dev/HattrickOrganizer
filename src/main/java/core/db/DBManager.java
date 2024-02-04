@@ -10,6 +10,7 @@ import core.file.hrf.HRF;
 import core.gui.comp.table.HOTableModel;
 import core.gui.model.ArenaStatistikTableModel;
 import core.gui.model.PlayerMatchCBItem;
+import core.gui.theme.HOColor;
 import core.gui.theme.TeamLogoInfo;
 import core.model.*;
 import core.model.Tournament.TournamentDetails;
@@ -277,6 +278,7 @@ public class DBManager implements PersistenceManager {
 		tables.put(FuturePlayerTrainingTable.TABLENAME, new FuturePlayerTrainingTable((connectionManager)));
 		tables.put(MatchTeamRatingTable.TABLENAME, new MatchTeamRatingTable(connectionManager));
 		tables.put(SquadInfoTable.TABLENAME, new SquadInfoTable(connectionManager));
+		tables.put(HOColorTable.TABLENAME, new HOColorTable(connectionManager));
 	}
 
 	/**
@@ -2386,4 +2388,15 @@ public class DBManager implements PersistenceManager {
 		((FuturePlayerSkillTrainingTable)getTable(FuturePlayerSkillTrainingTable.TABLENAME)).storeFuturePlayerSkillTraining(playerId, futurePlayerSkillTrainings);
 	}
 
+    public List<HOColor> loadHOColors(String theme) {
+		return ((HOColorTable)getTable(HOColorTable.TABLENAME)).load(theme);
+    }
+
+	public void storeHOColor(HOColor color) {
+		getTable(HOColorTable.TABLENAME).store(color);
+	}
+
+	public void deleteHOColor(HOColor color) {
+		getTable(HOColorTable.TABLENAME).delete(color);
+	}
 }

@@ -9,6 +9,7 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
+import java.io.Serial;
 
 import javax.swing.*;
 
@@ -19,19 +20,18 @@ import javax.swing.*;
 public class InfoPanel extends ImagePanel {
     //~ Static fields/initializers -----------------------------------------------------------------
 
-	private static final long serialVersionUID = 4902186890362152556L;
+	@Serial
+    private static final long serialVersionUID = 4902186890362152556L;
 
 	// color for error messages
     public static final Color FEHLERFARBE = ThemeManager.getColor(HOColorName.LABEL_ERROR_FG); // Color.red
     // color for info messages
     public static final Color INFOFARBE = ThemeManager.getColor(HOColorName.LABEL_FG);//Color.black;
-    // color for success messages
-    public static final Color ERFOLGSFARBE = ThemeManager.getColor(HOColorName.LABEL_SUCCESS_FG);//Color.green;
 
     //~ Instance fields ----------------------------------------------------------------------------
 
-    private JProgressBar m_jpbProgressBar = new JProgressBar(0, 100);
-    private JTextField m_jlInfoLabel = new JTextField();
+    private final JProgressBar m_jpbProgressBar = new JProgressBar(0, 100);
+    private final JTextField m_jlInfoLabel = new JTextField();
 
 
     //~ Constructors -------------------------------------------------------------------------------

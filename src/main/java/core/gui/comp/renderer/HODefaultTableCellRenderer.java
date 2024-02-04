@@ -24,7 +24,8 @@ public class HODefaultTableCellRenderer implements javax.swing.table.TableCellRe
 
     public java.awt.Component getTableCellRendererComponent(JTable table, Object value,
                                                             boolean isSelected,
-                                                            boolean hasFocus, int row,
+                                                            boolean hasFocus,
+                                                            int row,
                                                             int column)
     {
         if (value instanceof IHOTableEntry) {

@@ -51,10 +51,10 @@ public final class MultipleRatingChartsPanel extends JPanel {
 			Color lineColor;
 
 			if(m_isType2) {
-				lineColor = ThemeManager.getColor(HOColorName.PALETTE13[1]);
+				lineColor = ThemeManager.getColor(HOColorName.PALETTE13_1);
 			}
 			else{
-				lineColor = ThemeManager.getColor(HOColorName.PALETTE13[0]);
+				lineColor = ThemeManager.getColor(HOColorName.PALETTE13_0);
 			}
 
 			data[0] = new LinesChartDataModel(m_Data, " ", true, lineColor, m_fmt);
