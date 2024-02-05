@@ -16,8 +16,10 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 import module.teamAnalyzer.vo.SquadInfo;
+import org.jetbrains.annotations.NotNull;
 import org.w3c.dom.Document;
 
 
@@ -29,18 +31,20 @@ import org.w3c.dom.Document;
 public class HattrickManager {
 
     /**
-     * Method that download from Hattrick the available matches for the team
+     * Method that downloads from Hattrick the available matches for the team <code>teamId</code>.
      * If manual filter, the last 30 is made available.
      * If auto filter, enough matches to supply the filter needs are available.
-     * Recent tournament are added if on manual, or if they are wanted, in addition to
+     *
+     * <p>Recent tournament are added if on manual, or if they are wanted, in addition to
      * the number specified.
      *
-     * @param teamId teamid to download matches for
+     * @param teamId ID of team to download matches for
      * @param filter the match filter object.
      */
     public static void downloadMatches(final int teamId, Filter filter) {
+        System.out.println("Current Thread: " + Thread.currentThread().getName());
    		int limit = Math.min(filter.getNumber(), 50);
-   		
+
    		// If on manual, disable all filters, and download 30 matches.
    		if (!filter.isAutomatic()) {
    			limit = 30;
@@ -48,7 +52,7 @@ public class HattrickManager {
 
         var start = HODateTime.now().minus(8*30, ChronoUnit.DAYS);
 	    List<MatchKurzInfo> matches = OnlineWorker.getMatchArchive( teamId, start, false);
-        if ( matches != null) {
+        if (matches != null) {
             Collections.reverse(matches); // Newest first
             for (MatchKurzInfo match : matches) {
                 if (match.getMatchStatus() != MatchKurzInfo.FINISHED) {
@@ -68,7 +72,7 @@ public class HattrickManager {
                 }
             }
         }
-	    // Look for tournament matches if they are included in filter.	    
+	    // Look for tournament matches if they are included in filter.
 	    if (!filter.isAutomatic() || filter.isTournament()) {
 		    // Current matches includes tournament matches
 	    	matches = OnlineWorker.getMatches(teamId, true, false, false);
@@ -93,7 +97,7 @@ public class HattrickManager {
     }
 
     /**
-     * Method that download from Hattrick the current players for the team
+     * Method that downloads from Hattrick the current players for the team
      * player values are aggregated to squad info which is stored separately to get historical trends of the squad development
      * @param teamId teamid to download players for
      */
@@ -119,36 +123,46 @@ public class HattrickManager {
         PlayerDataManager.update(players);
 
         if ( lastMatchDate.isAfter(HODateTime.HT_START) ) {
-            var squadInfo = new SquadInfo(teamId, lastMatchDate);
-            for (var player : players) {
-                squadInfo.incrementPlayerCount();
-                if (player.isTransferListed()) squadInfo.incrementTransferListedCount();
-                if (player.getMotherClubBonus()) squadInfo.incrementHomegrownCount();
-
-                squadInfo.addSalary(player.getSalary());
-                squadInfo.addTsi(player.getTSI());
-                var injuryLevel = player.getInjuryLevel();
-                switch (injuryLevel) {
-                    case 0:
-                        squadInfo.incrementBruisedCount();
-                        break;
-                    case -1:
-                        break;
-                    default:
-                        squadInfo.addInjuredWeeksSum(injuryLevel);
-                        squadInfo.incrementInjuredCount();
-                }
-
-                switch (player.getBookingStatus()) {
-                    case PlayerDataManager.YELLOW -> squadInfo.incrementSingleYellowCards();
-                    case PlayerDataManager.DOUBLE_YELLOW -> squadInfo.incrementTwoYellowCards();
-                    case PlayerDataManager.SUSPENDED -> squadInfo.incrementSuspended();
-                }
-            }
+            var squadInfo = getSquadInfo(teamId, lastMatchDate, players);
             PlayerDataManager.update(squadInfo);
         }
 
         return players;
+    }
+
+    @NotNull
+    private static SquadInfo getSquadInfo(int teamId, HODateTime lastMatchDate, List<PlayerInfo> players) {
+        var squadInfo = new SquadInfo(teamId, lastMatchDate);
+        for (var player : players) {
+            squadInfo.incrementPlayerCount();
+            if (player.isTransferListed()) squadInfo.incrementTransferListedCount();
+            if (player.getMotherClubBonus()) squadInfo.incrementHomegrownCount();
+
+            squadInfo.addSalary(player.getSalary());
+            squadInfo.addTsi(player.getTSI());
+            var injuryLevel = player.getInjuryLevel();
+            switch (injuryLevel) {
+                case 0:
+                    squadInfo.incrementBruisedCount();
+                    break;
+                case -1:
+                    break;
+                default:
+                    squadInfo.addInjuredWeeksSum(injuryLevel);
+                    squadInfo.incrementInjuredCount();
+            }
+
+            switch (player.getBookingStatus()) {
+                case PlayerDataManager.YELLOW -> squadInfo.incrementSingleYellowCards();
+                case PlayerDataManager.DOUBLE_YELLOW -> squadInfo.incrementTwoYellowCards();
+                case PlayerDataManager.SUSPENDED -> squadInfo.incrementSuspended();
+            }
+        }
+        return squadInfo;
+    }
+
+    public static Map<String, String> getTeamDetails(int teamId) {
+        return OnlineWorker.getTeam(teamId);
     }
 
     /**
@@ -175,7 +189,7 @@ public class HattrickManager {
      * @return true if allowed
      */
     public static boolean isDownloadAllowed() {
-    	
+
     	// CHPP-Teles confirms in staff message to bingeling (blaghaid) that this is not a problem
     	// We don't have to worry much about traffic anymore, but may want to check for new functionality.
     	// The team analyzer was discussed.

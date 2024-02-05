@@ -579,10 +579,9 @@ public class MyConnector {
 	}
 
 
-	public String fetchTeamDetails(int teamId)
-	{
+	public String fetchTeamDetails(int teamId) {
 		try {
-			String xmlFile = htUrl + "?file=teamdetails&version=3.5&teamID=" + teamId;
+			String xmlFile = htUrl + "?file=teamdetails&version=3.6&teamID=" + teamId;
 			return getCHPPWebFile(xmlFile);
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(), e);

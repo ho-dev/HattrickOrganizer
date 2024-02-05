@@ -20,27 +20,18 @@ import javax.swing.SwingConstants;
  * @author <a href=mailto:draghetto@users.sourceforge.net>Massimiliano Amato</a>
  */
 public class SettingPanel extends JPanel {
-    //~ Instance fields ----------------------------------------------------------------------------
-
     private final JCheckBox checkName = new JCheckBox();
     private final JCheckBox descRating = new JCheckBox();
-//    private JCheckBox loddarStats = new JCheckBox();
     private final JCheckBox mixedLineup = new JCheckBox();
     private final JCheckBox myLineup = new JCheckBox();
     private final JCheckBox numberRating = new JCheckBox();
     private final JCheckBox playerInfo = new JCheckBox();
-//    private JCheckBox smartSquad = new JCheckBox();
-//    private JCheckBox squad = new JCheckBox();
-//    private JCheckBox stars = new JCheckBox();
+
     private final JCheckBox tacticDetail = new JCheckBox();
-//    private JCheckBox totalStrength = new JCheckBox();
     private final JCheckBox unavailable = new JCheckBox();
 
-    //~ Constructors -------------------------------------------------------------------------------
+    private final JCheckBox specialEventsVisible = new JCheckBox();
 
-    /**
-     * Constructs a new instance.
-     */
     public SettingPanel() {
         super();
         numberRating.setSelected(SystemManager.isNumericRating.isSet());
@@ -57,22 +48,12 @@ public class SettingPanel extends JPanel {
         playerInfo.setOpaque(false);
         mixedLineup.setSelected(SystemManager.isMixedLineup.isSet());
         mixedLineup.setOpaque(false);
-//        stars.setSelected(SystemManager.isStars.isSet());
-//        stars.setOpaque(false);
-//        smartSquad.setSelected(SystemManager.isSmartSquad.isSet());
-//        smartSquad.setOpaque(false);
-//        loddarStats.setSelected(SystemManager.isLoddarStats.isSet());
-//        loddarStats.setOpaque(false);
-//        squad.setSelected(SystemManager.isSquad.isSet());
-//        squad.setOpaque(false);
-//        totalStrength.setSelected(SystemManager.isTotalStrength.isSet());
-//        totalStrength.setOpaque(false);
         checkName.setSelected(SystemManager.isCheckTeamName.isSet());
         checkName.setOpaque(false);
+        specialEventsVisible.setSelected(SystemManager.isSpecialEventVisible.isSet());
+        specialEventsVisible.setOpaque(false);
         jbInit();
     }
-
-    //~ Methods ------------------------------------------------------------------------------------
 
     /**
      * Create a new Panel
@@ -90,7 +71,6 @@ public class SettingPanel extends JPanel {
 
         JPanel innerPanel = new ImagePanel();
 
-        //innerPanel.setLayout(new BorderLayout());
         innerPanel.add(checkBox);
         innerPanel.add(new JLabel(string, SwingConstants.LEFT));
         innerPanel.setOpaque(false);
@@ -121,38 +101,10 @@ public class SettingPanel extends JPanel {
             }
         });
 
-//        stars.addActionListener(e -> {
-//            SystemManager.isStars.set(stars.isSelected());
-//            SystemManager.updateUI();
-//
-//        });
-//        totalStrength.addActionListener(e -> {
-//            SystemManager.isTotalStrength.set(totalStrength.isSelected());
-//            SystemManager.updateUI();
-//
-//        });
         checkName.addActionListener(e -> {
             SystemManager.isCheckTeamName.set(checkName.isSelected());
             SystemManager.updateUI();
-
         });
-
-//        squad.addActionListener(e -> {
-//            SystemManager.isSquad.set(squad.isSelected());
-//            SystemManager.updateUI();
-//
-//        });
-//        smartSquad.addActionListener(e -> {
-//            SystemManager.isSmartSquad.set(smartSquad.isSelected());
-//            SystemManager.updateUI();
-//
-//        });
-//
-//        loddarStats.addActionListener(e -> {
-//            SystemManager.isLoddarStats.set(loddarStats.isSelected());
-//            SystemManager.updateUI();
-//
-//        });
 
         myLineup.addActionListener(e -> {
             SystemManager.isLineup.set(myLineup.isSelected());
@@ -176,6 +128,10 @@ public class SettingPanel extends JPanel {
             SystemManager.isMixedLineup.set(mixedLineup.isSelected());
             SystemManager.updateUI();
         });
+        specialEventsVisible.addActionListener(e -> {
+            SystemManager.isSpecialEventVisible.set(specialEventsVisible.isSelected());
+            SystemManager.updateUI();
+        });
     }
 
     /**
@@ -193,16 +149,10 @@ public class SettingPanel extends JPanel {
         mainPanel.add(createPanel(HOVerwaltung.instance().getLanguageString("SettingPanel.MixedLineup"), mixedLineup));
         mainPanel.add(createPanel(HOVerwaltung.instance().getLanguageString("SettingPanel.NumericRatings"), numberRating));
         mainPanel.add(createPanel(HOVerwaltung.instance().getLanguageString("SettingPanel.DescriptionRatings"), descRating));
-
         mainPanel.add(createPanel(HOVerwaltung.instance().getLanguageString("SettingPanel.ShowUnavailable"), unavailable));
-
-//        mainPanel.add(createPanel(HOVerwaltung.instance().getLanguageString("RecapPanel.Stars"), stars));
-//        mainPanel.add(createPanel(HOVerwaltung.instance().getLanguageString("ls.match.ratingtype.hatstats"), totalStrength));
-//        mainPanel.add(createPanel(HOVerwaltung.instance().getLanguageString("ls.match.ratingtype.squad"), squad));
-//        mainPanel.add(createPanel(HOVerwaltung.instance().getLanguageString("ls.match.ratingtype.smartsquad"), smartSquad));
-//        mainPanel.add(createPanel(HOVerwaltung.instance().getLanguageString("ls.match.ratingtype.loddarstats"), loddarStats));
         mainPanel.add(createPanel(HOVerwaltung.instance().getLanguageString("SettingPanel.Playerinformations"), playerInfo));
         mainPanel.add(createPanel(HOVerwaltung.instance().getLanguageString("SettingPanel.CheckName"), checkName));
+        mainPanel.add(createPanel(HOVerwaltung.instance().getLanguageString("SettingPanel.SpecialEventVisible"), specialEventsVisible));
 
         setLayout(new BorderLayout());
         setOpaque(false);

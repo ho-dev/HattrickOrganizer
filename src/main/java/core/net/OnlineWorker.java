@@ -387,8 +387,7 @@ public class OnlineWorker {
 		}
 	}
 
-	private static Map<String, String> getTeam(int teamId)
-	{
+	public static Map<String, String> getTeam(int teamId) {
 		String str = MyConnector.instance().fetchTeamDetails(teamId);
 		return XMLTeamDetailsParser.parseTeamdetailsFromString(str, teamId);
 	}
