@@ -19,7 +19,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.Vector;
 
 public class HOVerwaltung {
 

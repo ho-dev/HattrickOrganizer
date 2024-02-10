@@ -47,7 +47,8 @@ public class StatisticQuery {
 					tempwerte[3] = rs.getDouble("Erfahrung") + rs.getDouble("SubExperience");
 					tempwerte[4] = rs.getDouble("Form");
 					tempwerte[5] = rs.getDouble("Kondition");
-					tempwerte[6] = rs.getDouble("Torwart") + rs.getDouble("SubTorwart");
+					tempwerte[6] = rs.getDouble("Kondition") + rs.getDouble("SubStamina");
+//					tempwerte[6] = rs.getDouble("Torwart") + rs.getDouble("SubTorwart");
 					tempwerte[7] = rs.getDouble("Verteidigung") + rs.getDouble("SubVerteidigung");
 					tempwerte[8] = rs.getDouble("Spielaufbau") + rs.getDouble("SubSpielaufbau");
 					tempwerte[9] = rs.getDouble("Passpiel") + rs.getDouble("SubPasspiel");

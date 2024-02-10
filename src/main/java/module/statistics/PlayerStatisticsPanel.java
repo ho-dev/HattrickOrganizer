@@ -480,7 +480,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 
 			UserParameter.instance().statistikAnzahlHRF = anzahlHRF;
 
-			NumberFormat format = Helper.DEFAULTDEZIMALFORMAT;
+			NumberFormat format = Helper.DEZIMALFORMAT_2STELLEN;
 			NumberFormat format2 = Helper.getNumberFormat(true, 0);
 			NumberFormat format3 = Helper.getNumberFormat(false, 0);
 

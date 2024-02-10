@@ -313,11 +313,12 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		} else if (source.equals(m_jmiDbCleanupTool)) {
 			DBCleanupTool dbCleanupTool = new DBCleanupTool();
 			dbCleanupTool.showDialog(HOMainFrame.instance());
-		} else if (source.equals(m_jmSubksillFull)) { // recalc training (2 seasons = 32)
-			var from = HODateTime.now().minus(64*7, ChronoUnit.DAYS);
+		} else if (source.equals(m_jmSubksillFull)) { // recalc training (8 seasons = 128)
+			var from = HODateTime.now().minus(128*7, ChronoUnit.DAYS);
 			if (JOptionPane.showConfirmDialog(this,
 					HOVerwaltung.instance().getLanguageString("Subskill.Recalc.Full")+"\n"+HOVerwaltung.instance().getLanguageString("subskill.Recalc.Start"),
 					Helper.getTranslation("ls.menu.file.subskillrecalculation"), JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
+//				HOVerwaltung.instance().recalcSubskills(true, from.toDbTimestamp());
 				HOVerwaltung.instance().recalcSubskills(true, from.toDbTimestamp());
 			}
 		} else if (source.equals(m_jmSubksillRecalc7)) { // recalc training (7 weeks)

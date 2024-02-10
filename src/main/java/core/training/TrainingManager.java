@@ -1,10 +1,8 @@
 package core.training;
 
-import core.constants.player.PlayerSkill;
 import core.db.DBManager;
 import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
-import core.model.player.Player;
 import core.util.HODateTime;
 import core.util.HOLogger;
 import java.beans.PropertyChangeEvent;
