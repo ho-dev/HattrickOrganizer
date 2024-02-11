@@ -11,7 +11,6 @@ import core.gui.comp.ImageCheckbox;
 import org.knowm.xchart.style.lines.SeriesLines;
 import org.knowm.xchart.style.markers.SeriesMarkers;
 import java.awt.*;
-import java.text.NumberFormat;
 import java.awt.event.ItemEvent;
 import javax.swing.JPanel;
 import javax.swing.JCheckBox;

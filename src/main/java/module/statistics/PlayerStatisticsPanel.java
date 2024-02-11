@@ -479,10 +479,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 			}
 
 			UserParameter.instance().statistikAnzahlHRF = anzahlHRF;
-
 			NumberFormat format = Helper.DEZIMALFORMAT_2STELLEN;
-			NumberFormat format2 = Helper.getNumberFormat(true, 0);
-			NumberFormat format3 = Helper.getNumberFormat(false, 0);
 
 			if (jcbPlayer.getSelectedItem() != null) {
 				final double[][] statistikWerte = DBManager.instance().getSpielerDaten4Statistik(

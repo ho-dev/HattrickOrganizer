@@ -257,7 +257,6 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 
 		ActionListener actionListener = e -> {
 			UserParameter gup = UserParameter.instance();
-			HOVerwaltung hov = HOVerwaltung.instance();
 			if (e.getSource() == jbApply) {
 				initStatistik();
 			} else if (e.getSource() == jcbHelpLines) {
@@ -678,8 +677,6 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 			}
 			UserParameter.instance().statistikAnzahlHRF = anzahlHRF;
 			NumberFormat format = Helper.DEFAULTDEZIMALFORMAT;
-			NumberFormat fmt2 = Helper.getNumberFormat(true, 0);
-			NumberFormat fmt3 = Helper.getNumberFormat(false, 0);
 
 			double[][] statistikWerte = DBManager.instance().getDataForTeamStatisticsPanel(anzahlHRF,
 							jcbTeam.getSelectedItem().toString());
