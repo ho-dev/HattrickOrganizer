@@ -26,7 +26,6 @@ public final class MultipleRatingChartsPanel extends JPanel {
 		private final LinesChartDataModel[] data = new LinesChartDataModel[2];
 		private final double[] m_Data;
 		private final double m_AvgValue;
-		private final NumberFormat m_fmt;
 		private final String m_SeriesName;
 		private final boolean m_isType2;
 
@@ -36,7 +35,6 @@ public final class MultipleRatingChartsPanel extends JPanel {
 
 		public SingleChart(double avgValue, double[] values, NumberFormat format, String serieName, boolean bType2) {
 			m_Data = values;
-			m_fmt = format;
 			m_SeriesName = serieName;
 			m_isType2 = bType2;
 			m_AvgValue = avgValue;
@@ -69,10 +67,6 @@ public final class MultipleRatingChartsPanel extends JPanel {
 
 		public void setHelpLines(boolean state) {
 			oChartPanel.setHelpLines(state);
-		}
-
-		public void setValues(boolean state) {
-			oChartPanel.setLabelling(state);
 		}
 
 		public JPanel getChartPanel() {

@@ -118,7 +118,6 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 		jcbAggType.addItemListener(e -> {
 			if (e.getStateChange() == ItemEvent.SELECTED) {
 				UserParameter gup = UserParameter.instance();
-				HOVerwaltung hov = HOVerwaltung.instance();
 				int selectedIndex = jcbAggType.getSelectedIndex();
 				gup.statisticsTeamSumOrAverage = selectedIndex;
 				if (selectedIndex == 0)

@@ -63,7 +63,7 @@ public final class CombinedRatingChartPanel extends JPanel {
 		}
 
 
-		LinesChartDataModel getChartModel(double[] values, NumberFormat format) {
+		LinesChartDataModel getChartModel(double[] values) {
 			LinesChartDataModel model;
 			if (! m_bSecondAxis) {
 				model = new LinesChartDataModel(values, m_SerieName, checkbox.isSelected(), m_ColorSerie);
@@ -103,15 +103,15 @@ public final class CombinedRatingChartPanel extends JPanel {
 
 	void prepareChart() {
 		LinesChartDataModel[] data = new LinesChartDataModel[9];
-		data[0] = leftDefense.getChartModel(chartData.getLeftDefence(), Helper.DEFAULTDEZIMALFORMAT);
-		data[1] = centralDefense.getChartModel(chartData.getCentralDefence(), Helper.DEFAULTDEZIMALFORMAT);
-		data[2] = rightDefense.getChartModel(chartData.getRightDefence(), Helper.DEFAULTDEZIMALFORMAT);
-		data[3] = midfield.getChartModel(chartData.getMidfield(), Helper.DEFAULTDEZIMALFORMAT);
-		data[4] = leftAttack.getChartModel(chartData.getLeftAttack(), Helper.DEFAULTDEZIMALFORMAT);
-		data[5] = centralAttack.getChartModel(chartData.getCentralAttack(), Helper.DEFAULTDEZIMALFORMAT);
-		data[6] = rightAttack.getChartModel(chartData.getRightAttack(), Helper.DEFAULTDEZIMALFORMAT);
-		data[7] = hatStats.getChartModel(chartData.getHatStats(), Helper.INTEGERFORMAT);
-		data[8] = loddar.getChartModel(chartData.getLoddar(), Helper.DEFAULTDEZIMALFORMAT);
+		data[0] = leftDefense.getChartModel(chartData.getLeftDefence());
+		data[1] = centralDefense.getChartModel(chartData.getCentralDefence());
+		data[2] = rightDefense.getChartModel(chartData.getRightDefence());
+		data[3] = midfield.getChartModel(chartData.getMidfield());
+		data[4] = leftAttack.getChartModel(chartData.getLeftAttack());
+		data[5] = centralAttack.getChartModel(chartData.getCentralAttack());
+		data[6] = rightAttack.getChartModel(chartData.getRightAttack());
+		data[7] = hatStats.getChartModel(chartData.getHatStats());
+		data[8] = loddar.getChartModel(chartData.getLoddar());
 
 		double maxValueY1 = Helper.getMaxValue(chartData.getLoddar());
 		if(maxValueY1 > 20d) {
