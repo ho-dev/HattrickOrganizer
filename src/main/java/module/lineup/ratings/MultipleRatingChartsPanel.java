@@ -57,8 +57,8 @@ public final class MultipleRatingChartsPanel extends JPanel {
 				lineColor = ThemeManager.getColor(HOColorName.PALETTE13_0);
 			}
 
-			data[0] = new LinesChartDataModel(m_Data, " ", true, lineColor, m_fmt);
-			var data1 = new LinesChartDataModel(avgArray, "avg", true, lineColor, SeriesLines.DASH_DASH, SeriesMarkers.NONE, m_fmt, 1d, false);
+			data[0] = new LinesChartDataModel(m_Data, " ", true, lineColor);
+			var data1 = new LinesChartDataModel(avgArray, "avg", true, lineColor, SeriesLines.DASH_DASH, SeriesMarkers.NONE, 1d, false);
 			data1.setNotVisibleLegend();
 			data[1] = data1;
 

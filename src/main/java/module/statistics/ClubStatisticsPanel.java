@@ -369,27 +369,27 @@ public class ClubStatisticsPanel extends LazyImagePanel {
 
             if (data.length > 0) {
                 models[0] = new LinesChartDataModel(data[0], "AssistantTrainerLevel", jcbAssistantTrainerLevels.isSelected(),
-                        Colors.getColor(Colors.COLOR_CLUB_ASSISTANT_TRAINERS_LEVEL), format);
+                        Colors.getColor(Colors.COLOR_CLUB_ASSISTANT_TRAINERS_LEVEL));
                 models[1] = new LinesChartDataModel(data[1], "FinancialDirectorLevel", jcbFinancialDirectorLevels.isSelected(),
-                        Colors.getColor(Colors.COLOR_CLUB_FINANCIAL_DIRECTORS_LEVEL), format);
+                        Colors.getColor(Colors.COLOR_CLUB_FINANCIAL_DIRECTORS_LEVEL));
                 models[2] = new LinesChartDataModel(data[2], "FormCoachLevel", jcbFormCoachLevels.isSelected(),
-                        Colors.getColor(Colors.COLOR_CLUB_FORM_COACHS_LEVEL), format);
+                        Colors.getColor(Colors.COLOR_CLUB_FORM_COACHS_LEVEL));
                 models[3] = new LinesChartDataModel(data[3], "DoctorLevel", jcbDoctorLevels.isSelected(),
-                        Colors.getColor(Colors.COLOR_CLUB_DOCTORS_LEVEL), format);
+                        Colors.getColor(Colors.COLOR_CLUB_DOCTORS_LEVEL));
                 models[4] = new LinesChartDataModel(data[4], "SpokespersonLevel", jcbSpokePersonLevels.isSelected(),
-                        Colors.getColor(Colors.COLOR_CLUB_SPOKE_PERSONS_LEVEL), format);
+                        Colors.getColor(Colors.COLOR_CLUB_SPOKE_PERSONS_LEVEL));
                 models[5] = new LinesChartDataModel(data[5], "SportPsychologistLevel", jcbSportPsychologistLevels.isSelected(),
-                        Colors.getColor(Colors.COLOR_CLUB_SPORT_PSYCHOLOGIST_LEVELS), format);
+                        Colors.getColor(Colors.COLOR_CLUB_SPORT_PSYCHOLOGIST_LEVELS));
                 models[6] = new LinesChartDataModel(data[6], "TacticalAssistantLevel", jcbTacticalAssistantLevels.isSelected(),
-                        Colors.getColor(Colors.COLOR_CLUB_TACTICAL_ASSISTANT_LEVELS), format);
+                        Colors.getColor(Colors.COLOR_CLUB_TACTICAL_ASSISTANT_LEVELS));
                 models[7] = new LinesChartDataModel(data[7], "FanClubSize", jcbFanClubSize.isSelected(),
-                        Colors.getColor(Colors.COLOR_CLUB_FAN_CLUB_SIZE), format, 0d, true);
+                        Colors.getColor(Colors.COLOR_CLUB_FAN_CLUB_SIZE), 0d, true);
                 models[8] = new LinesChartDataModel(data[8], "GlobalRanking", jcbGlobalRanking.isSelected(),
-                        Colors.getColor(Colors.COLOR_CLUB_GLOBAL_RANKING), SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, format, 0d, "Y3");
+                        Colors.getColor(Colors.COLOR_CLUB_GLOBAL_RANKING), SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, 0d, "Y3");
                 models[9] = new LinesChartDataModel(data[9], "LeagueRanking", jcbLeagueRanking.isSelected(),
-                        Colors.getColor(Colors.COLOR_CLUB_LEAGUE_RANKING), SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, format, 0d, "Y3");
+                        Colors.getColor(Colors.COLOR_CLUB_LEAGUE_RANKING), SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, 0d, "Y3");
                 models[10] = new LinesChartDataModel(data[10], "PowerRating", jcbPowerRating.isSelected(),
-                        Colors.getColor(Colors.COLOR_CLUB_POWER_RATING), format, 0d, true);
+                        Colors.getColor(Colors.COLOR_CLUB_POWER_RATING), 0d, true);
             }
 
             oChartPanel.setAllValues(models, data[11], format, getLangStr("Wochen"), "",

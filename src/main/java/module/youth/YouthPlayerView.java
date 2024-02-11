@@ -271,7 +271,7 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
                 for (int i = 0; i < YouthPlayer.skillIds.length; i++) {
                     var skillId = YouthPlayer.skillIds[i];
                     playerSkillInfoEditors[i].setSkillInfo(player.getSkillInfo(skillId));
-                    chartDataModels[i] = new LinesChartDataModel(player.getSkillDevelopment(skillId), skillId.name(), true, skillIDColorMap.get(skillId), null);
+                    chartDataModels[i] = new LinesChartDataModel(player.getSkillDevelopment(skillId), skillId.name(), true, skillIDColorMap.get(skillId));
                 }
                 youthSkillChart.setAllValues(chartDataModels, player.getSkillDevelopmentDates(), Helper.DEFAULTDEZIMALFORMAT, HOVerwaltung.instance().getLanguageString("Wochen"), "",false, true);
                 playerScoutCommentField.setText(getScoutComment(player));

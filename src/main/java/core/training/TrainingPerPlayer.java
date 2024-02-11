@@ -144,9 +144,10 @@ public class TrainingPerPlayer  {
 	 * @param stamina    Stamina training settings (staminaShare * training intensity)
 	 * @param decrease	 No stamina training done
 	 * @param playerAge  Age in years
+	 * @param minutes    Minutes played in week before training
+	 * @param injury     Injury weeks when training
 	 * @return Stamina increment
 	 */
-
 	private double calcStaminaIncrement( double skillLevel, double stamina, int playerAge, int minutes,  boolean decrease, int injury) {
 		int k;
 		if (playerAge < 20) k = 3;

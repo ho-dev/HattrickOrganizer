@@ -66,11 +66,11 @@ public final class CombinedRatingChartPanel extends JPanel {
 		LinesChartDataModel getChartModel(double[] values, NumberFormat format) {
 			LinesChartDataModel model;
 			if (! m_bSecondAxis) {
-				model = new LinesChartDataModel(values, m_SerieName, checkbox.isSelected(), m_ColorSerie, format);
+				model = new LinesChartDataModel(values, m_SerieName, checkbox.isSelected(), m_ColorSerie);
 			}
 			else{
 				double maxValue = Helper.getMaxValue(values);
-				model = new LinesChartDataModel(values, m_SerieName, checkbox.isSelected(), m_ColorSerie, SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, format, m_Ymax/maxValue, true);
+				model = new LinesChartDataModel(values, m_SerieName, checkbox.isSelected(), m_ColorSerie, SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, m_Ymax/maxValue, true);
 			}
 			return model;
 		}
