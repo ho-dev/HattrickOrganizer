@@ -1,6 +1,7 @@
 
 
 ## Highlights
+* Culculate stamina sub skill value (using Schum's formula)
 * Refactoring rating prediction (implement Schum rating)
 * Refactoring of the transfer module. Calculation of transfer fee income.
 * Refactoring of the database prepared statement caching.
@@ -20,6 +21,7 @@
 * player avatar image can be reloaded (#1815)
 * Fix error player download nickname null pointer exception (#1938)
 * Fix initial sorting by player group (#1909)
+* Show stamina sub skill (#383)
 
 ### Team Analyzer
 * Restore size of match prediction dialog box (#1898)
