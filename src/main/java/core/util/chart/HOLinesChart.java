@@ -195,7 +195,7 @@ public class HOLinesChart implements IChart {
            }
 
            // Serie is added if should be shown and if contains data
-           if (model.isShow() && (serieData.size() != 0))
+           if (model.isShow() && (!serieData.isEmpty()))
            {
                serie =  m_chart.addSeries(serieName, this.m_xData, serieData);
                serie.setLineStyle(model.getLineStyle());

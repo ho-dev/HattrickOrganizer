@@ -30,10 +30,10 @@ public class PlayerSkillColumn extends PlayerColumn {
 	
 	/**
 	 * constructor
-	 * @param id
-	 * @param name
-	 * @param tooltip
-	 * @param skill
+	 * @param id column identifier
+	 * @param name column header name
+	 * @param tooltip tooltip text
+	 * @param skill Player skill type
 	 */
 	protected PlayerSkillColumn(int id,String name, String tooltip,PlayerSkill skill){
 		super(id,name,tooltip);
@@ -67,9 +67,9 @@ public class PlayerSkillColumn extends PlayerColumn {
               background);
 	}
 	/**
-	 * return a value if comparePlayer is not null
-	 * @param player
-	 * @param comparePlayer
+	 * Get a value if comparePlayer is not null
+	 * @param player Player
+	 * @param comparePlayer Player to compare with
 	 * @return ColorLabelEntry
 	 */
 	public ColorLabelEntry getCompareValue(Player player, Player comparePlayer){

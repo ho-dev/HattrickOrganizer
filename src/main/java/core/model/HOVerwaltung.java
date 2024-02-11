@@ -157,8 +157,7 @@ public class HOVerwaltung {
 				previousHRF = hrf;
 				mSum += (System.currentTimeMillis() - s2);
 			} catch (Exception e) {
-				HOLogger.instance().log(getClass(), "recalcSubskills : ");
-				HOLogger.instance().log(getClass(), e);
+				HOLogger.instance().log(getClass(), "recalcSubskills : "+ e);
 			}
 		}
 

@@ -84,10 +84,8 @@ public class StatisticQuery {
 							werte[13] = rset.getDouble("Bewertung") / 2d;
 						}
 
-						if (rset != null) {
-							rset.close();
-						}
-					}
+                        rset.close();
+                    }
 
 					for (int j = 0; j < werte.length; j++) {
 						returnWerte[j][i] = werte[j];

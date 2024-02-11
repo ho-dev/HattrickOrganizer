@@ -471,7 +471,7 @@ public class Player extends AbstractTable.Storable {
                     motherClubName = playerDetails.getMotherClubName();
                 }
             } catch (Exception e) {
-                HOLogger.instance().warning(getClass(), "mother club not available for player " + this.getFullName());
+//                HOLogger.instance().warning(getClass(), "mother club not available for player " + this.getFullName());
             } finally {
                 connection.setSilentDownload(isSilentDownload); // reset
             }
@@ -2031,7 +2031,7 @@ public class Player extends AbstractTable.Storable {
                                     sub = .99f;
                                 }
                             } else {
-                                if (sub > 0.99f) {
+                                if (sub >= 1f) {
                                     sub = 0.99f;
                                 } else if (sub < 0f) {
                                     sub = 0f;

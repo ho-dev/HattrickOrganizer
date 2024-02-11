@@ -27,8 +27,6 @@ public class TrainingManager implements PropertyChangeListener {
 
 	private HODateTime lastTrainingDate;
 
-	public static final boolean TRAINING_DEBUG = false;
-
 
 	public void propertyChange(PropertyChangeEvent evt) {
 		HOLogger.instance().debug(this.getClass(), "HOVerwaltung model changed => TrainingManager and TrainingWeekManager are reinitialized");
@@ -100,11 +98,6 @@ public class TrainingManager implements PropertyChangeListener {
             m_clInstance = new TrainingManager();
         }
         return m_clInstance;
-    }
-
-
-    public List<TrainingPerWeek> getRecentTrainings() {
-        return recentTrainings.getTrainingList();
     }
 
 	public TrainingPerWeek getNextWeekTraining() {
