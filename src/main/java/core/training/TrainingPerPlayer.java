@@ -216,6 +216,10 @@ public class TrainingPerPlayer  {
 			ret = min(ret, 0);
 		}
 
+		if ( skillLevel + ret < 0.7){
+			ret = skillLevel - 0.7;
+		}
+
 		return ret;
 	}
 

@@ -25,7 +25,7 @@ public class StatisticQuery {
 	private static final String getSpielerBewertungSql = "SELECT Bewertung FROM SPIELER WHERE Bewertung>0 AND Datum>=? AND Datum<=? AND SpielerID=? ORDER BY Datum";
 
 	public static double[][] getSpielerDaten4Statistik(int spielerId, int anzahlHRF) {
-		final int anzahlSpalten = 16;
+		final int anzahlSpalten = 17;
 		final float faktor = core.model.UserParameter.instance().FXrate;
 
 		double[][] returnWerte = new double[0][0];
@@ -46,9 +46,8 @@ public class StatisticQuery {
 					tempwerte[2] = rs.getDouble("Fuehrung");
 					tempwerte[3] = rs.getDouble("Erfahrung") + rs.getDouble("SubExperience");
 					tempwerte[4] = rs.getDouble("Form");
-					tempwerte[5] = rs.getDouble("Kondition");
-					tempwerte[6] = rs.getDouble("Kondition") + rs.getDouble("SubStamina");
-//					tempwerte[6] = rs.getDouble("Torwart") + rs.getDouble("SubTorwart");
+					tempwerte[5] = rs.getDouble("Kondition") + rs.getDouble("SubStamina");
+					tempwerte[6] = rs.getDouble("Torwart") + rs.getDouble("SubTorwart");
 					tempwerte[7] = rs.getDouble("Verteidigung") + rs.getDouble("SubVerteidigung");
 					tempwerte[8] = rs.getDouble("Spielaufbau") + rs.getDouble("SubSpielaufbau");
 					tempwerte[9] = rs.getDouble("Passpiel") + rs.getDouble("SubPasspiel");
@@ -58,6 +57,7 @@ public class StatisticQuery {
 					tempwerte[13] = rs.getDouble("Bewertung") / 2d;
 					tempwerte[14] = rs.getDouble("Loyalty");
 					tempwerte[15] = rs.getTimestamp("Datum").getTime();
+					tempwerte[16] = rs.getDouble("Kondition") ; // temporary statistics of stamina without sub to check sub stamina calculation
 
 					//TSI, alle Marktwerte / 1000 teilen
 					if (rs.getTimestamp("Datum").before(DBManager.TSIDATE)) {

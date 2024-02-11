@@ -515,6 +515,11 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 					models[5] = new LinesChartDataModel(statistikWerte[5], "ls.player.skill.stamina",
 							jcbStamina.isSelected(),
 							Colors.getColor(Colors.COLOR_PLAYER_STAMINA), format);
+
+					models[15] = new LinesChartDataModel(statistikWerte[16], "ls.player.stamina",
+							jcbStamina.isSelected(),
+							Colors.getColor(Colors.COLOR_PLAYER_GK), format);
+
 					models[6] = new LinesChartDataModel(statistikWerte[6], "ls.player.skill.keeper",
 							jcbKeeper.isSelected(),
 							Colors.getColor(Colors.COLOR_PLAYER_GK), format);
@@ -539,10 +544,11 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 					models[13] = new LinesChartDataModel(statistikWerte[13], "RecapPanel.Stars",
 							jcbRating.isSelected(),
 							Colors.getColor(Colors.COLOR_PLAYER_RATING), format);
-
 					models[14] = new LinesChartDataModel(statistikWerte[14], "ls.player.loyalty",
 							jcbLoyalty.isSelected(),
 							Colors.getColor(Colors.COLOR_PLAYER_LOYALTY), format);
+
+
 				}
 
 				oChartPanel.setAllValues(models, statistikWerte[15], format, HOVerwaltung
