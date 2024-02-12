@@ -71,6 +71,7 @@ public class TrainingLegendPanel extends ImagePanel {
     }
 
     public static Icon getSkillupTypeIcon(PlayerSkill skill, int count) {
+        if ( count == 0 ) return null;
         Color color = Skills.getSkillColor(skill);
 
         Color lcolor = new Color(Math.min(color.getRed() + 20, 255),
@@ -93,6 +94,7 @@ public class TrainingLegendPanel extends ImagePanel {
             iconFillColor = new Color(fillColorValue, 0,0);
             iconDrawColor = new Color(drawColorValue, 40,40);
         }
+        assert icon != null;
         Image image = ReplaceImageColor(icon.getImage(), iconFillColor, color);
         image = ReplaceImageColor(image, iconDrawColor, lcolor);
 
