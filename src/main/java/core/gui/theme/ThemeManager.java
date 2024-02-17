@@ -64,6 +64,7 @@ public final class ThemeManager {
 		return MANAGER;
 	}
 
+
 	private void initialize() {
 
 		themes.put(NimbusTheme.THEME_NAME, new NimbusTheme());
@@ -110,9 +111,29 @@ public final class ThemeManager {
 	}
 
 	public static Color getColor(HOColorName key) {
-		var theme = getCurrentThemeName();
-		return HOColor.getColor(key, theme);
+		var theme = getCurrentTheme();
+		return theme.getColor(key);
 	}
+	public static HOColor getHOColor(HOColorName key) {
+		var theme = getCurrentTheme();
+		return theme.getHOColor(key);
+	}
+	public static Color getColor(HOColor hoColor) {
+		if (hoColor.getColorReference() != null) {
+			var theme = getTheme(hoColor.getTheme());
+			return theme.getColor(hoColor.getHOColorName());
+		}
+		return hoColor.getColor();
+	}
+
+	public static List<HOColor> getHOColors(String theme){
+		return getTheme(theme).getHOColors();
+	}
+
+	public static BaseTheme getCurrentTheme() {
+		return getTheme(getCurrentThemeName());
+	}
+	public static BaseTheme getTheme(String name){ return (BaseTheme) themes.get(Objects.equals(name, "default") ?DEFAULT_THEME_NAME:name); }
 
 	public boolean isSet(String key) {
 		Boolean tmp = (Boolean)classicSchema.get(key);
@@ -371,12 +392,13 @@ public final class ThemeManager {
 		}
 	}
 
-	private void loadUserDefinedColors(String theme) {
-		var userDefinedColors = DBManager.instance().loadHOColors(theme);
+	private void loadUserDefinedColors(String themeName) {
+		var userDefinedColors = DBManager.instance().loadHOColors(themeName);
+		var theme = getCurrentTheme();
 		for (var color : userDefinedColors) {
-			var defaultColor = HOColor.getHOColor(color.getHOColorName(), theme);
+			var defaultColor = getHOColor(color.getHOColorName());
 			color.setDefaultValue(defaultColor);
-			HOColor.addColor(color);
+			theme.addColor(color);
 		}
 	}
 
