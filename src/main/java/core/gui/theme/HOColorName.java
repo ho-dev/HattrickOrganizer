@@ -1,10 +1,6 @@
 package core.gui.theme;
 
-
 import core.model.HOVerwaltung;
-
-import java.awt.*;
-import java.util.ArrayList;
 
 /**
  * Constants for Colors used in HO.

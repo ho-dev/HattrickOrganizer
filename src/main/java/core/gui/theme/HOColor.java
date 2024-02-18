@@ -2,11 +2,7 @@ package core.gui.theme;
 
 import core.db.AbstractTable;
 import java.awt.*;
-import java.util.*;
 import java.util.List;
-
-import static core.gui.theme.ThemeManager.getCurrentThemeName;
-import static core.gui.theme.ThemeManager.getHOColor;
 
 public class HOColor extends AbstractTable.Storable implements Cloneable {
 
@@ -143,26 +139,6 @@ public class HOColor extends AbstractTable.Storable implements Cloneable {
     }
 
     /**
-     * Default color setting
-     *
-     * @param name Color name
-     * @param o    Color reference name
-     */
-    public HOColor(HOColorName name, HOColorName o) {
-        this(name, "default", o);
-    }
-
-    /**
-     * Default color setting
-     *
-     * @param name Color name
-     * @param o    Color value
-     */
-    private HOColor(HOColorName name, Color o) {
-        this(name, "default", o);
-    }
-
-    /**
      * Color setting
      *
      * @param name  Color name
@@ -183,7 +159,6 @@ public class HOColor extends AbstractTable.Storable implements Cloneable {
      * @param o     Color reference name
      */
     public HOColor(HOColorName name, String theme, HOColorName o) {
-//        assert null != getColor(o, theme) : "Color " + o.name() + " not found";
         this.name = name;
         this.theme = theme;
         this.colorReference = o;
