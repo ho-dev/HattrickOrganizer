@@ -1,7 +1,7 @@
 
 
 ## Highlights
-* Culculate stamina sub skill value (using Schum's formula)
+* Calculate stamina sub skill value (using Schum's formula)
 * Refactoring rating prediction (implement Schum rating)
 * Refactoring of the transfer module. Calculation of transfer fee income.
 * Refactoring of the database prepared statement caching.
