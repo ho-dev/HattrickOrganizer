@@ -6,105 +6,6 @@ import java.util.List;
 
 public class HOColor extends AbstractTable.Storable implements Cloneable {
 
-//    /**
-//     * Get color value
-//     *
-//     * @param name  Color name
-//     * @param theme Theme name
-//     * @return Color or null if no entry is found
-//     */
-//    public static Color getColor(HOColorName name, String theme) {
-//        return getColor(name, theme, new ArrayList<>());
-//    }
-
-//    /**
-//     * Get color value
-//     *
-//     * @param name       Color name
-//     * @param theme      Theme name
-//     * @param colorNames Color reference names (used to prevent recursions)
-//     * @return Color or null if no entry if found
-//     */
-//    private static Color getColor(HOColorName name, String theme, List<String> colorNames) {
-//        ThemeManager.instance().getRegisteredThemes();
-//        if (!colorNames.contains(name.name())) { // break endless recursion
-//            var hoColor = getHOColor(name, theme);
-//            if (hoColor != null) {
-//                var ref = hoColor.colorReference;
-//                if (ref != null) {
-//                    colorNames.add(hoColor.getName());
-//                    return getColor(ref, theme, colorNames);
-//                } else {
-//                    return hoColor.getColor();
-//                }
-//            }
-//        }
-//        return null;
-//    }
-
-//    /**
-//     * Get color settings of theme
-//     *
-//     * @param theme Theme name
-//     * @return List of colors
-//     */
-//    public static List<HOColor> getColors(String theme) {
-//        var ret = new ArrayList<HOColor>();
-//        for (var name : HOColorName.values()) {
-//            ret.add(getHOColor(name, theme));
-//        }
-//        return ret;
-//    }
-
-//    /**
-//     * Get color setting.
-//     * If no entry in specified theme is found, the default color is returned.
-//     *
-//     * @param name  Color name
-//     * @param theme Theme name
-//     * @return Color setting or null if no entry is found
-//     */
-//    public static HOColor getHOColor(HOColorName name, String theme) {
-//        var colorMap = colors.get(name);
-//        if (colorMap != null) {
-//            var hoColor = colorMap.get(theme);
-//            if (hoColor != null) return hoColor;
-//            hoColor = colorMap.get("default");
-//            return hoColor;
-//        }
-//        return null;
-//    }
-//
-//    /**
-//     * Add new color setting to the settings
-//     *
-//     * @param name  Name of the color
-//     * @param color Color value
-//     */
-//    private static void addColor(HOColorName name, Color color) {
-//        addColor(new HOColor(name, color));
-//    }
-//
-//    /**
-//     * Add new color setting to the settings
-//     *
-//     * @param name           Name of the color
-//     * @param colorReference Color reference name
-//     */
-//    private static void addColor(HOColorName name, HOColorName colorReference) {
-//        addColor(new HOColor(name, colorReference));
-//    }
-//
-//    /**
-//     * Add new color setting to the settings
-//     *
-//     * @param color Color setting
-//     */
-//    public static void addColor(HOColor color) {
-//        var colorMap = colors.computeIfAbsent(color.name, k -> new HashMap<>());
-//        colorMap.put(color.theme, color);
-//    }
-
     /**
      * Unique color name
      */
@@ -326,25 +227,6 @@ public class HOColor extends AbstractTable.Storable implements Cloneable {
     public HOColor getDefaultValue() {
         return this.defaultValue;
     }
-
-//    /**
-//     * Initialize the default value with the current setting
-//     * if default is not already set
-//     */
-//    public void initDefaultValue() {
-//        if (this.defaultValue == null) {
-//            if (this.colorReference != null) {
-//                this.defaultValue = HOColor.getHOColor(this.colorReference, this.theme);
-//            } else {
-//                this.defaultValue = new HOColor();
-//                this.defaultValue.name = this.name;
-//                this.defaultValue.color = this.color;
-//                this.defaultValue.colorReference = null;
-//                this.defaultValue.theme = this.theme;
-//            }
-//        }
-//    }
-
 
     /**
      * Compare two color settings
