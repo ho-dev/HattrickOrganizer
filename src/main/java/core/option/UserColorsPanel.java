@@ -80,6 +80,7 @@ public class UserColorsPanel extends JPanel {
 			var hoColor = (HOColor) value;
 			Color color = ThemeManager.getColor(hoColor);
 			component.setBackground(color);
+			component.setOpaque(true);
 		}
 		return component;
 	}
