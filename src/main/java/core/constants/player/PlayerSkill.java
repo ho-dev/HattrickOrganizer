@@ -5,21 +5,6 @@ import core.model.HOVerwaltung;
 
 public enum  PlayerSkill {
 
-//	private static final String[] languageKeys = {
-//			"ls.player.skill.keeper",
-//			"ls.player.skill.defending",
-//			"ls.player.skill.winger",
-//			"ls.player.skill.playmaking",
-//			"ls.player.skill.scoring",
-//			"ls.player.skill.passing",
-//			"ls.player.skill.stamina",
-//			"ls.player.form",
-//			"ls.player.skill.setpieces",
-//			"ls.player.experience",
-//			"ls.player.leadership",
-//			"ls.player.loyalty"
-//	};
-
 	KEEPER(0),
 	DEFENDING(1),
 	WINGER(2),

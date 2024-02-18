@@ -574,7 +574,6 @@ public class HOModel {
      * Calculates the subskills of each player based on trainings that took place during a given period
      */
     public final void calcSubskills(HODateTime from, HODateTime to) {
-
         var trainingWeeks = TrainingManager.instance().getHistoricalTrainingsBetweenDates(from, to);
         for (var player : this.getCurrentPlayers()) {
             player.calcSubSkills(this.getPreviousID(), trainingWeeks);

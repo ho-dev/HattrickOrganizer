@@ -84,7 +84,7 @@ public class HOLinesChart implements IChart {
         m_chart.getStyler().setYAxisGroupTickMarksColorMap(0, ThemeManager.getColor(HOColorName.STAT_PANEL_FG));
         m_chart.getStyler().setToolTipsEnabled(true);
         m_chart.getStyler().setToolTipType(Styler.ToolTipType.yLabels);
-        m_chart.getStyler().setDecimalPattern("#0.0");
+        m_chart.getStyler().setDecimalPattern("#0.00");
 
         if (y1_axisMin != null) m_axeStyler.setYAxisMin(0, y1_axisMin);
         if (y1_axisMax != null) m_axeStyler.setYAxisMax(0, y1_axisMax);
@@ -195,7 +195,7 @@ public class HOLinesChart implements IChart {
            }
 
            // Serie is added if should be shown and if contains data
-           if (model.isShow() && (serieData.size() != 0))
+           if (model.isShow() && (!serieData.isEmpty()))
            {
                serie =  m_chart.addSeries(serieName, this.m_xData, serieData);
                serie.setLineStyle(model.getLineStyle());

@@ -11,7 +11,6 @@ import core.gui.comp.ImageCheckbox;
 import org.knowm.xchart.style.lines.SeriesLines;
 import org.knowm.xchart.style.markers.SeriesMarkers;
 import java.awt.*;
-import java.text.NumberFormat;
 import java.awt.event.ItemEvent;
 import javax.swing.JPanel;
 import javax.swing.JCheckBox;
@@ -63,14 +62,14 @@ public final class CombinedRatingChartPanel extends JPanel {
 		}
 
 
-		LinesChartDataModel getChartModel(double[] values, NumberFormat format) {
+		LinesChartDataModel getChartModel(double[] values) {
 			LinesChartDataModel model;
 			if (! m_bSecondAxis) {
-				model = new LinesChartDataModel(values, m_SerieName, checkbox.isSelected(), m_ColorSerie, format);
+				model = new LinesChartDataModel(values, m_SerieName, checkbox.isSelected(), m_ColorSerie);
 			}
 			else{
 				double maxValue = Helper.getMaxValue(values);
-				model = new LinesChartDataModel(values, m_SerieName, checkbox.isSelected(), m_ColorSerie, SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, format, m_Ymax/maxValue, true);
+				model = new LinesChartDataModel(values, m_SerieName, checkbox.isSelected(), m_ColorSerie, SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, m_Ymax/maxValue, true);
 			}
 			return model;
 		}
@@ -103,15 +102,15 @@ public final class CombinedRatingChartPanel extends JPanel {
 
 	void prepareChart() {
 		LinesChartDataModel[] data = new LinesChartDataModel[9];
-		data[0] = leftDefense.getChartModel(chartData.getLeftDefence(), Helper.DEFAULTDEZIMALFORMAT);
-		data[1] = centralDefense.getChartModel(chartData.getCentralDefence(), Helper.DEFAULTDEZIMALFORMAT);
-		data[2] = rightDefense.getChartModel(chartData.getRightDefence(), Helper.DEFAULTDEZIMALFORMAT);
-		data[3] = midfield.getChartModel(chartData.getMidfield(), Helper.DEFAULTDEZIMALFORMAT);
-		data[4] = leftAttack.getChartModel(chartData.getLeftAttack(), Helper.DEFAULTDEZIMALFORMAT);
-		data[5] = centralAttack.getChartModel(chartData.getCentralAttack(), Helper.DEFAULTDEZIMALFORMAT);
-		data[6] = rightAttack.getChartModel(chartData.getRightAttack(), Helper.DEFAULTDEZIMALFORMAT);
-		data[7] = hatStats.getChartModel(chartData.getHatStats(), Helper.INTEGERFORMAT);
-		data[8] = loddar.getChartModel(chartData.getLoddar(), Helper.DEFAULTDEZIMALFORMAT);
+		data[0] = leftDefense.getChartModel(chartData.getLeftDefence());
+		data[1] = centralDefense.getChartModel(chartData.getCentralDefence());
+		data[2] = rightDefense.getChartModel(chartData.getRightDefence());
+		data[3] = midfield.getChartModel(chartData.getMidfield());
+		data[4] = leftAttack.getChartModel(chartData.getLeftAttack());
+		data[5] = centralAttack.getChartModel(chartData.getCentralAttack());
+		data[6] = rightAttack.getChartModel(chartData.getRightAttack());
+		data[7] = hatStats.getChartModel(chartData.getHatStats());
+		data[8] = loddar.getChartModel(chartData.getLoddar());
 
 		double maxValueY1 = Helper.getMaxValue(chartData.getLoddar());
 		if(maxValueY1 > 20d) {

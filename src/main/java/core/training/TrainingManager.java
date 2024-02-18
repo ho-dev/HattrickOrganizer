@@ -1,10 +1,8 @@
 package core.training;
 
-import core.constants.player.PlayerSkill;
 import core.db.DBManager;
 import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
-import core.model.player.Player;
 import core.util.HODateTime;
 import core.util.HOLogger;
 import java.beans.PropertyChangeEvent;
@@ -28,8 +26,6 @@ public class TrainingManager implements PropertyChangeListener {
 	private List<TrainingPerWeek> historicalTrainings;          			// used to populate training history, no match information => Created at initialization
 
 	private HODateTime lastTrainingDate;
-
-	public static final boolean TRAINING_DEBUG = false;
 
 
 	public void propertyChange(PropertyChangeEvent evt) {
@@ -102,11 +98,6 @@ public class TrainingManager implements PropertyChangeListener {
             m_clInstance = new TrainingManager();
         }
         return m_clInstance;
-    }
-
-
-    public List<TrainingPerWeek> getRecentTrainings() {
-        return recentTrainings.getTrainingList();
     }
 
 	public TrainingPerWeek getNextWeekTraining() {

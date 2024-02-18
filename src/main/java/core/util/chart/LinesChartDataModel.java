@@ -1,7 +1,6 @@
 package core.util.chart;
 
 
-import org.jetbrains.annotations.Nullable;
 import org.knowm.xchart.style.lines.SeriesLines;
 import org.knowm.xchart.style.markers.Marker;
 import org.knowm.xchart.style.markers.SeriesMarkers;
@@ -12,18 +11,17 @@ import java.util.stream.Collectors;
 
 public class LinesChartDataModel {
 
-    private java.text.NumberFormat m_clFormat;
     private String m_sName;
     private double[] m_values;
-    private List<Double> lValues;
+    private final List<Double> lValues;
     private boolean m_bShow;
     private boolean dataBasedBoundaries = false;
     private boolean m_IsVisibleLegend = true;
     private double m_dFactor;
-    private BasicStroke m_LineStyle;
-    private Marker m_MarkerStyle;
+    private final BasicStroke m_LineStyle;
+    private final Marker m_MarkerStyle;
     private java.awt.Color m_LineColor;
-    private int y_axisGroup;
+    private final int y_axisGroup;
 
     public int getY_axisGroup() {
         return y_axisGroup;
@@ -31,10 +29,6 @@ public class LinesChartDataModel {
 
     public Marker getMarkerStyle() {
         return m_MarkerStyle;
-    }
-
-    public void setM_MarkerStyle(Marker m_MarkerStyle) {
-        this.m_MarkerStyle = m_MarkerStyle;
     }
 
     public List<Double> getlValues() {
@@ -53,40 +47,30 @@ public class LinesChartDataModel {
         return m_LineStyle;
     }
 
-
-    public LinesChartDataModel(double[] values, String name, boolean show, java.awt.Color color,
-                               java.text.NumberFormat format, int yAxisGroup) {
-        this(values, name, show, color, SeriesLines.SOLID, SeriesMarkers.DIAMOND, format, 1, false);
+    public LinesChartDataModel(double[] values, String name, boolean show, java.awt.Color color) {
+        this(values, name, show, color,  1);
     }
 
-    public LinesChartDataModel(double[] values, String name, boolean show, java.awt.Color color,
-                               java.text.@Nullable NumberFormat format) {
-        this(values, name, show, color, format, 1);
+    public LinesChartDataModel(double[] values, String name, boolean show, java.awt.Color color, double factor) {
+        this(values, name, show, color, SeriesLines.SOLID, SeriesMarkers.DIAMOND, factor, false);
     }
 
-    public LinesChartDataModel(double[] values, String name, boolean show, java.awt.Color color,
-                               java.text.NumberFormat format, double factor) {
-        this(values, name, show, color, SeriesLines.SOLID, SeriesMarkers.DIAMOND, format, factor, false);
+    public LinesChartDataModel(double[] values, String name, boolean show, java.awt.Color color, double factor, boolean second_Y_axis) {
+        this(values, name, show, color, SeriesLines.SOLID, SeriesMarkers.DIAMOND, factor, second_Y_axis);
     }
 
-    public LinesChartDataModel(double[] values, String name, boolean show, java.awt.Color color,
-                               java.text.NumberFormat format, double factor, boolean second_Y_axis) {
-        this(values, name, show, color, SeriesLines.SOLID, SeriesMarkers.DIAMOND, format, factor, second_Y_axis);
-    }
-
-    public LinesChartDataModel(double[] values, String name, boolean show, java.awt.Color color,
-                               java.text.NumberFormat format, double factor, String Y_axis) {
-        this(values, name, show, color, SeriesLines.SOLID, SeriesMarkers.DIAMOND, format, factor, Y_axis);
+    public LinesChartDataModel(double[] values, String name, boolean show, java.awt.Color color, double factor, String Y_axis) {
+        this(values, name, show, color, SeriesLines.SOLID, SeriesMarkers.DIAMOND, factor, Y_axis);
     }
 
     public LinesChartDataModel(double[] values, String name, boolean show, java.awt.Color color, BasicStroke lineStyle,
-                               Marker markerStyle, java.text.NumberFormat format, double factor, String Y_axis) {
+                               Marker markerStyle, double factor, String Y_axis) {
         m_values = values;
         lValues = Arrays.stream(values).boxed().collect(Collectors.toList());
         m_sName = name;
         m_bShow = show;
         m_LineColor = color;
-        m_clFormat = format;
+//        m_clFormat = format;
         m_dFactor = factor;
         m_LineStyle = lineStyle;
         m_MarkerStyle = markerStyle;
@@ -98,13 +82,13 @@ public class LinesChartDataModel {
     }
 
     public LinesChartDataModel(double[] values, String name, boolean show, java.awt.Color color, BasicStroke lineStyle,
-                               Marker markerStyle, java.text.NumberFormat format, double factor, boolean second_Y_axis) {
+                               Marker markerStyle, double factor, boolean second_Y_axis) {
         m_values = values;
         lValues = Arrays.stream(values).boxed().collect(Collectors.toList());
         m_sName = name;
         m_bShow = show;
         m_LineColor = color;
-        m_clFormat = format;
+//        m_clFormat = format;
         m_dFactor = factor;
         m_LineStyle = lineStyle;
         m_MarkerStyle = markerStyle;
@@ -148,52 +132,6 @@ public class LinesChartDataModel {
      */
     public final double getFaktor() {
         return m_dFactor;
-    }
-
-    /**
-     * Setter for property m_clFormat.
-     *
-     * @param m_clFormat New value of property m_clFormat.
-     */
-    public final void setFormat(java.text.NumberFormat m_clFormat) {
-        this.m_clFormat = m_clFormat;
-    }
-
-    /**
-     * Getter for property m_clFormat.
-     *
-     * @return Value of property m_clFormat.
-     */
-    public final java.text.NumberFormat getFormat() {
-        return m_clFormat;
-    }
-
-    //-----------------------------------
-    public final double getMaxValue() {
-        double max;
-        if(dataBasedBoundaries) max = Integer.MIN_VALUE;
-        else max = 0;
-
-        for (int i = 0; (m_values != null) && (i < m_values.length); i++) {
-            if (m_values[i] > max) {
-                max = m_values[i];
-            }
-        }
-
-        return (max);
-    }
-
-    public final double getMinValue() {
-        double min;
-        if(dataBasedBoundaries) min = Integer.MAX_VALUE;
-        else min = 0;
-
-        for (int i = 0; (m_values != null) && (i < m_values.length); i++) {
-            if (m_values[i] < min) {
-                min = m_values[i];
-            }
-        }
-        return (min);
     }
 
     /**

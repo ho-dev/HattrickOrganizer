@@ -296,16 +296,16 @@ public class FinancesStatisticsPanel extends LazyImagePanel {
 
 			if (data.length > 0) {
 
-				modelsDevelopmentChart[0] = new LinesChartDataModel(data[1], getLangStr("ls.finance.revenue.sponsors"),	true, Colors.getColor(Colors.COLOR_FINANCE_INCOME_SPONSORS), null, 0d, false);
-				modelsDevelopmentChart[1] = new LinesChartDataModel(data[2], getLangStr("ls.finance.expenses.wages"),	true, Colors.getColor(Colors.COLOR_FINANCE_COST_PLAYERS), null, 0d, false);
-				modelsDevelopmentChart[2] = new LinesChartDataModel(data[0], getLangStr("ls.finance.cash") + " (" + getLangStr("ls.chart.second_axis") + ")", true, Colors.getColor(Colors.COLOR_FINANCE_CASH), null, 0d, true);
+				modelsDevelopmentChart[0] = new LinesChartDataModel(data[1], getLangStr("ls.finance.revenue.sponsors"),	true, Colors.getColor(Colors.COLOR_FINANCE_INCOME_SPONSORS), 0d, false);
+				modelsDevelopmentChart[1] = new LinesChartDataModel(data[2], getLangStr("ls.finance.expenses.wages"),	true, Colors.getColor(Colors.COLOR_FINANCE_COST_PLAYERS), 0d, false);
+				modelsDevelopmentChart[2] = new LinesChartDataModel(data[0], getLangStr("ls.finance.cash") + " (" + getLangStr("ls.chart.second_axis") + ")", true, Colors.getColor(Colors.COLOR_FINANCE_CASH), 0d, true);
 
-				modelsBalanceChart[0] = new LinesChartDataModel(data[3], balanceChartPlotsNames[0], !bIncludeTransfer, Colors.getColor(PALETTE13_0), null, 0d, true);
-				modelsBalanceChart[1] = new LinesChartDataModel(data[4], balanceChartPlotsNames[1], !bIncludeTransfer, Colors.getColor(PALETTE13_1), null, 0d, true);
-				modelsBalanceChart[2] = new LinesChartDataModel(data[5], balanceChartPlotsNames[2], !bIncludeTransfer, Colors.getColor(PALETTE13_2), null, 0d, true);
-				modelsBalanceChart[3] = new LinesChartDataModel(data[6], balanceChartPlotsNames[3], bIncludeTransfer, Colors.getColor(PALETTE13_0), null, 0d, true);
-				modelsBalanceChart[4] = new LinesChartDataModel(data[7], balanceChartPlotsNames[4], bIncludeTransfer, Colors.getColor(PALETTE13_1), null, 0d, true);
-				modelsBalanceChart[5] = new LinesChartDataModel(data[8], balanceChartPlotsNames[5], bIncludeTransfer, Colors.getColor(PALETTE13_2), null, 0d, true);
+				modelsBalanceChart[0] = new LinesChartDataModel(data[3], balanceChartPlotsNames[0], !bIncludeTransfer, Colors.getColor(PALETTE13_0), 0d, true);
+				modelsBalanceChart[1] = new LinesChartDataModel(data[4], balanceChartPlotsNames[1], !bIncludeTransfer, Colors.getColor(PALETTE13_1), 0d, true);
+				modelsBalanceChart[2] = new LinesChartDataModel(data[5], balanceChartPlotsNames[2], !bIncludeTransfer, Colors.getColor(PALETTE13_2), 0d, true);
+				modelsBalanceChart[3] = new LinesChartDataModel(data[6], balanceChartPlotsNames[3], bIncludeTransfer, Colors.getColor(PALETTE13_0), 0d, true);
+				modelsBalanceChart[4] = new LinesChartDataModel(data[7], balanceChartPlotsNames[4], bIncludeTransfer, Colors.getColor(PALETTE13_1), 0d, true);
+				modelsBalanceChart[5] = new LinesChartDataModel(data[8], balanceChartPlotsNames[5], bIncludeTransfer, Colors.getColor(PALETTE13_2), 0d, true);
 
 				modelsRevExpChart_Revenue[0] = new PieChartDataModel(getLangStr("ls.finance.revenue.player_sales"), Arrays.stream(data[10]).sum(), true, Colors.getColor(PALETTE13_0));
 				modelsRevExpChart_Revenue[1] = new PieChartDataModel(getLangStr("ls.finance.revenue.commission"), Arrays.stream(data[11]).sum(), true, Colors.getColor(PALETTE13_1));

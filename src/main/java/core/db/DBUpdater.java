@@ -95,11 +95,11 @@ final class DBUpdater {
 		}
 
 		var playerTable = dbManager.getTable(SpielerTable.TABLENAME);
+		playerTable.tryAddColumn("SubStamina", "FLOAT DEFAULT 0");
 		playerTable.tryAddColumn("LineupDisabled", "BOOLEAN");
 		playerTable.tryAddColumn("ContractDate", "VARCHAR(100)");
 		playerTable.tryChangeColumn("OwnerNotes", "VARCHAR(512)");
 		playerTable.tryAddIndex("ISPIELER_3", "LASTNAME,FIRSTNAME,DATUM");
-		// playerTable.tryDropIndex("ISPIELER_3");
 
 		var transferTable = dbManager.getTable(TransferTable.TABLENAME);
 		transferTable.tryAddColumn("motherclubfee", "INTEGER");

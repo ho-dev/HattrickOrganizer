@@ -19,7 +19,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.Date;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.Vector;
 
 public class HOVerwaltung {
 
@@ -158,8 +157,7 @@ public class HOVerwaltung {
 				previousHRF = hrf;
 				mSum += (System.currentTimeMillis() - s2);
 			} catch (Exception e) {
-				HOLogger.instance().log(getClass(), "recalcSubskills : ");
-				HOLogger.instance().log(getClass(), e);
+				HOLogger.instance().log(getClass(), "recalcSubskills : "+ e);
 			}
 		}
 

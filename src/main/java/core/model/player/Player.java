@@ -28,7 +28,7 @@ public class Player extends AbstractTable.Storable {
 
     private byte idealPos = IMatchRoleID.UNKNOWN;
 
-    private static final PlayerSkill[] trainingSkills = {KEEPER, SETPIECES, DEFENDING, SCORING, WINGER, PASSING, PLAYMAKING};
+    private static final PlayerSkill[] trainingSkills = {STAMINA, KEEPER, SETPIECES, DEFENDING, SCORING, WINGER, PASSING, PLAYMAKING};
     private static final String BREAK = "[br]";
     private static final String O_BRACKET = "[";
     private static final String C_BRACKET = "]";
@@ -104,6 +104,7 @@ public class Player extends AbstractTable.Storable {
      * Verteidigung
      */
     private double subDefendingSkill;
+    private double subStamina;
 
     /**
      * Agressivität
@@ -456,9 +457,9 @@ public class Player extends AbstractTable.Storable {
         downloadMotherClubInfoIfMissing();
         return this.motherClubId;
     }
-
     private void downloadMotherClubInfoIfMissing() {
-        if (motherClubId == null) {
+        var isCurrentPlayer = HOVerwaltung.instance().getModel().getCurrentPlayer(this.getPlayerId()) != null;
+        if (isCurrentPlayer && motherClubId == null ) {
             var connection = MyConnector.instance();
             var isSilentDownload = connection.isSilentDownload();
             try {
@@ -470,7 +471,7 @@ public class Player extends AbstractTable.Storable {
                     motherClubName = playerDetails.getMotherClubName();
                 }
             } catch (Exception e) {
-                HOLogger.instance().warning(getClass(), "mother club not available for player " + this.getFullName());
+//                HOLogger.instance().warning(getClass(), "mother club not available for player " + this.getFullName());
             } finally {
                 connection.setSilentDownload(isSilentDownload); // reset
             }
@@ -1263,7 +1264,7 @@ public class Player extends AbstractTable.Storable {
             case SCORING -> subScoringSkill;
             case SETPIECES -> subSetPiecesSkill;
             case EXPERIENCE -> subExperience;
-            case STAMINA -> 0.5;
+            case STAMINA -> subStamina;
             default -> 0;
         };
 
@@ -1281,6 +1282,7 @@ public class Player extends AbstractTable.Storable {
             case SCORING -> subScoringSkill = value;
             case SETPIECES -> subSetPiecesSkill = value;
             case EXPERIENCE -> subExperience = value;
+            case STAMINA -> subStamina = value;
         }
     }
 
@@ -2029,7 +2031,7 @@ public class Player extends AbstractTable.Storable {
                                     sub = .99f;
                                 }
                             } else {
-                                if (sub > 0.99f) {
+                                if (sub >= 1f) {
                                     sub = 0.99f;
                                 } else if (sub < 0f) {
                                     sub = 0f;
@@ -2050,13 +2052,13 @@ public class Player extends AbstractTable.Storable {
                             } else {
                                 HOLogger.instance().warning(getClass(), "no training info found");
                             }
-                            HOLogger.instance().info(getClass(),
-                                    "Training " + training.getTrainingDate().toLocaleDateTime() +
-                                            "; Minutes= " + minutes +
-                                            "; Experience increment of " + this.getFullName() +
-                                            "; increment: " + inc +
-                                            "; new sub value=" + experienceSub
-                            );
+//                            HOLogger.instance().info(getClass(),
+//                                    "Training " + training.getTrainingDate().toLocaleDateTime() +
+//                                            "; Minutes= " + minutes +
+//                                            "; Experience increment of " + this.getFullName() +
+//                                            "; increment: " + inc +
+//                                            "; new sub value=" + experienceSub
+//                            );
                         }
                     }
                 }
