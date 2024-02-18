@@ -53,6 +53,7 @@ public class FuturePlayerSkillTrainingTable extends AbstractTable {
     public void storeFuturePlayerSkillTraining(int playerId, List<FuturePlayerSkillTraining> futurePlayerTrainings) {
         executePreparedDelete(playerId);
         for (var t : futurePlayerTrainings) {
+            t.setIsStored(false);
             store(t);
         }
     }
