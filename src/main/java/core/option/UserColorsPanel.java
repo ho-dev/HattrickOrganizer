@@ -107,8 +107,7 @@ public class UserColorsPanel extends JPanel {
 		skins.setSelectedItem(selected);
 		skins.addActionListener(e->{
 			if (e.getSource() == skins) {
-				var newSkin = (String) skins.getSelectedItem();
-				UserParameter.temp().skin = newSkin;
+                UserParameter.temp().skin = (String) skins.getSelectedItem();
 				// disable table panel
 				remove(tablePanel);
 				revalidate();

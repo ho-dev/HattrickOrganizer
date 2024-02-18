@@ -112,20 +112,12 @@ public final class ThemeManager {
 		var theme = getCurrentTheme();
 		return theme.getColor(key);
 	}
-	public static HOColor getHOColor(HOColorName key) {
-		var theme = getCurrentTheme();
-		return theme.getHOColor(key);
-	}
 	public static Color getColor(HOColor hoColor) {
 		if (hoColor.getColorReference() != null) {
 			var theme = getTheme(hoColor.getTheme());
 			return theme.getColor(hoColor.getHOColorName());
 		}
 		return hoColor.getColor();
-	}
-
-	public static List<HOColor> getHOColors(String theme){
-		return getTheme(theme).getHOColors();
 	}
 
 	public static BaseTheme getCurrentTheme() {
