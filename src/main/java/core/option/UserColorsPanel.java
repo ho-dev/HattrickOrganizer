@@ -107,8 +107,12 @@ public class UserColorsPanel extends JPanel {
 		skins.setSelectedItem(selected);
 		skins.addActionListener(e->{
 			if (e.getSource() == skins) {
-				UserParameter.temp().skin = (String) skins.getSelectedItem();
-				initData(UserParameter.instance().skin);
+				var newSkin = (String) skins.getSelectedItem();
+				UserParameter.temp().skin = newSkin;
+				// disable table panel
+				remove(tablePanel);
+				revalidate();
+				repaint();
 				// TODO change the look and feel dynamically
 				OptionManager.instance().setRestartNeeded();
 			}
@@ -164,7 +168,8 @@ public class UserColorsPanel extends JPanel {
 	protected void initData(String skin) {
 		// Clone the static color list for the editor
 		colors = new ArrayList<>();
-		for (var c : ThemeManager.getHOColors(skin)) colors.add(c.clone());
+		var theme = ThemeManager.getTheme(skin);
+		for (var c : theme.getHOColors()) colors.add(c.clone());
 		Object[][] value = new Object[colors.size()][4];
 		tableModel.setDataVector(value, columnNames);
 		int i = 0;
@@ -265,8 +270,11 @@ public class UserColorsPanel extends JPanel {
 	 * Store the edited color settings
 	 */
 	public void storeChangedColorSettings() {
+		// Colors are changed for the current theme only
+		// If another theme is selected, the color table will be disabled
+		// Previously edited colors belong to the current theme
+		var theme = ThemeManager.getCurrentTheme();
 		for (var color : colors) {
-			var theme = ThemeManager.getTheme(getSelectedTheme());
 			var origValue = theme.getHOColor(color.getHOColorName());
 			assert origValue != null;
 			if (areDifferentColors(origValue, color) ||
