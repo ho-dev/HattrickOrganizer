@@ -856,7 +856,7 @@ public class DBManager implements PersistenceManager {
 	}
 
 	/**
-	 * is there is an HRFFile in the database with the same date?
+	 * Is there is an HRFFile in the database with the same date?
 	 *
 	 * @param fetchDate the date
 	 * @return The date of the file to which the file was imported or zero if no suitable file is available

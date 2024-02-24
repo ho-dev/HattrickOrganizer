@@ -60,11 +60,11 @@ public class HRFImport {
 					frame.setInformation(getLangStr("HRFSave"));
 
 					// file already imported?
-					java.sql.Timestamp HRFts = homodel.getBasics().getDatum().toDbTimestamp();
+					var HRFts = homodel.getBasics().getDatum().toDbTimestamp();
 					var storedHrf = DBManager.instance().loadHRFDownloadedAt(HRFts);
 
 					if (choice == null || !choice.applyToAll) {
-						choice = bStoreHRF(frame, HRFts, storedHrf);
+						choice = confirmHRFSaving(frame, HRFts, storedHrf, files.length > 1);
 						if (choice.cancel) {
 							break;
 						}
@@ -87,7 +87,6 @@ public class HRFImport {
 				}
 			}
 
-//			DBManager.instance().reimportSkillup();
 			HOVerwaltung.instance().loadLatestHoModel();
 			HOModel hom = HOVerwaltung.instance().getModel();
 
@@ -123,7 +122,18 @@ public class HRFImport {
 		return HOVerwaltung.instance().getLanguageString(key);
 	}
 
-	private UserChoice bStoreHRF(Component parent, Timestamp HRF_date, HRF oldHRF) {
+	/**
+	 * User confirmation for saving the hrf file
+	 * @param parent Parent component
+	 * @param HRF_date Timestamp of the hrf file
+	 * @param oldHRF Previously stored hrf of the same date, null if it not in database yet.
+	 * @param multipleFilesSelected User selected more than one file to import
+	 * @return User choice
+	 * 		Import Yes/No
+	 * 		Apply to all Yes/No
+	 * 		Cancel
+	 */
+	private UserChoice confirmHRFSaving(Component parent, Timestamp HRF_date, HRF oldHRF, boolean multipleFilesSelected) {
 		UserChoice choice = new UserChoice();
 
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy");
@@ -131,18 +141,20 @@ public class HRFImport {
 
 		if (oldHRF != null) {
 			text += "\n(" + getLangStr("HRFinDB") + " " + oldHRF.getName() + ")";
+			text += "\n" + getLangStr("ErneutImportieren");
 		}
 
-		text += "\n" + getLangStr("ErneutImportieren");
-
-		JCheckBox applyToAllCheckBox = new JCheckBox(getLangStr("hrfImport.applyToAll"));
+		JCheckBox applyToAllCheckBox = null;
+		if ( multipleFilesSelected) {
+			 applyToAllCheckBox = new JCheckBox(getLangStr("hrfImport.applyToAll"));
+		}
 		Object[] o = {text, applyToAllCheckBox};
 		int value = JOptionPane.showConfirmDialog(parent, o, getLangStr("confirmation.title"), JOptionPane.YES_NO_CANCEL_OPTION);
 
 		if (value == JOptionPane.CANCEL_OPTION) {
 			choice.cancel = true;
 		} else {
-			choice.applyToAll = applyToAllCheckBox.isSelected();
+			choice.applyToAll = !multipleFilesSelected || applyToAllCheckBox.isSelected();
 			if (value == JOptionPane.YES_OPTION) {
 				choice.importHRF = true;
 			}
