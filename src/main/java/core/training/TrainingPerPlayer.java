@@ -101,7 +101,10 @@ public class TrainingPerPlayer  {
 			if (ret > 1) ret = 1; // limit 1
 		} else {
 			var trainingDate = this.getTrainingWeek().getTrainingDate();
-			var minutes = this.getTrainingPair().getTrainingDuration().getPlayedMinutes();
+			int minutes = 0;
+			if ( this.getTrainingPair() != null){
+				minutes = this.getTrainingPair().getTrainingDuration().getPlayedMinutes();
+			}
 			long daysWithoutMatchMinutes = 0;
 			if (minutes == 0) {
 				HODateTime t;

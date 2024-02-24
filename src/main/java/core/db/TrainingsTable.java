@@ -44,6 +44,7 @@ final class TrainingsTable extends AbstractTable {
 			if (trainingDate.isAfter(lastTrainingDate)) {
 				return;
 			}
+			training.setIsStored(isStored(trainingDate.toDbTimestamp()));
 			store(training);
 		}
 	}

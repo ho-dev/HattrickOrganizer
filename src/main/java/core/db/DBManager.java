@@ -297,7 +297,7 @@ public class DBManager implements PersistenceManager {
 	 * @return the adapter
 	 */
 // Accessor
-	public ConnectionManager getConnectionManager() {
+	public @Nullable ConnectionManager getConnectionManager() {
 		return connectionManager;
 	}
 
@@ -503,17 +503,6 @@ public class DBManager implements PersistenceManager {
 		}
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
 				.getSpielerFirstHRF(spielerid, after.toDbTimestamp());
-	}
-
-	/**
-	 * Returns the trainer code for the specified hrf. -99 if error
-	 *
-	 * @param hrfID HRF for which to load TrainerType
-	 * @return int trainer type
-	 */
-	public int getTrainerType(int hrfID) {
-		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
-				.getTrainerType(hrfID);
 	}
 
 	/**
@@ -856,7 +845,7 @@ public class DBManager implements PersistenceManager {
 	}
 
 	/**
-	 * is there is an HRFFile in the database with the same date?
+	 * Is there is an HRFFile in the database with the same date?
 	 *
 	 * @param fetchDate the date
 	 * @return The date of the file to which the file was imported or zero if no suitable file is available
