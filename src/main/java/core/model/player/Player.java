@@ -478,11 +478,11 @@ public class Player extends AbstractTable.Storable {
         }
     }
 
-    private String getMotherClubName() {
+    public String getMotherClubName() {
         return this.motherClubName;
     }
 
-    private Integer getMotherClubId() {
+    public Integer getMotherClubId() {
         return this.motherClubId;
     }
 
@@ -888,7 +888,7 @@ public class Player extends AbstractTable.Storable {
 
     static class PlayerPositionRating {
 
-        public PlayerPositionRating(Integer p, Byte behaviour, double rating, double ralativeRating) {
+        public PlayerPositionRating(Integer p, Byte behaviour, double rating) {
             this.roleId = p;
             this.behaviour = behaviour;
             this.rating = rating;
@@ -931,7 +931,7 @@ public class Player extends AbstractTable.Storable {
         for (var p : RatingPredictionModel.playerRatingPositions) {
             for (var behaviour : MatchRoleID.getBehaviours(p)) {
                 var d = ratingPredictionModel.getPlayerMatchAverageRating(this, p, behaviour);
-                ret.add(new PlayerPositionRating(p, behaviour, d, ratingPredictionModel.calcRelativePlayerRating(this, p, behaviour, 0)));
+                ret.add(new PlayerPositionRating(p, behaviour, d));
             }
         }
         return ret;
