@@ -142,21 +142,14 @@ public class ConvertXml2Hrf {
 		}
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.economy"), progressIncrement);
 		Map<String, String> economyDataMap = XMLEconomyParser.parseEconomyFromString(mc.getEconomy(teamId));
-		if (!HOVerwaltung.instance().getModel().getCurrentPlayers().isEmpty()) { // do not download transfers on fresh database
-			if (Integer.parseInt(economyDataMap.get("IncomeSoldPlayers")) > 0 ||
-					Integer.parseInt(economyDataMap.get("IncomeSoldPlayersCommission")) > 0 ||
-					Integer.parseInt(economyDataMap.get("LastIncomeSoldPlayers")) > 0 ||
-					Integer.parseInt(economyDataMap.get("LastIncomeSoldPlayersCommission")) > 0 ||
-					Integer.parseInt(economyDataMap.get("CostsBoughtPlayers")) > 0 ||
-					Integer.parseInt(economyDataMap.get("LastCostsBoughtPlayers")) > 0) {
-				HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.transfers"), progressIncrement);
-				PlayerTransfer.downloadMissingTransfers(teamId);
-			}
+		if (areTransfersMissing(economyDataMap)) {
+			HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.transfers"), progressIncrement);
+			PlayerTransfer.downloadMissingTransfers(teamId);
 		}
 
 		var commission = Integer.parseInt(economyDataMap.get("IncomeSoldPlayersCommission"));
 		var lastCommission = Integer.parseInt(economyDataMap.get("LastIncomeSoldPlayersCommission"));
-		if (commission > 0 || lastCommission>0) {
+		if (commission > 0 || lastCommission > 0) {
 			var soldPlayers = DBManager.instance().loadTeamTransfers(teamId, true);
 			if (commission > 0) {
 				PlayerTransfer.downloadMissingTransferCommissions(soldPlayers, commission, HODateTime.now().toHTWeek());
@@ -261,5 +254,36 @@ public class ConvertXml2Hrf {
 		hrfSgtringBuilder.createStaff(staffData);
 
 		return hrfSgtringBuilder.createHRF().toString();
+	}
+
+	/**
+	 * Check if transfer sums of economy data are registered in transfer table
+	 * @param economyDataMap Economy map
+	 * @return true if stored transfers are not fitting to economy data
+	 */
+	private static boolean areTransfersMissing(Map<String, String> economyDataMap) {
+		if (!HOVerwaltung.instance().getModel().getCurrentPlayers().isEmpty()) { // do not download transfers on fresh database
+			var income = Integer.parseInt(economyDataMap.get("IncomeSoldPlayers")) + Integer.parseInt(economyDataMap.get("LastIncomeSoldPlayers"));
+			var costs = Integer.parseInt(economyDataMap.get("CostsBoughtPlayers")) + Integer.parseInt(economyDataMap.get("LastCostsBoughtPlayers"));
+			var commission = Integer.parseInt(economyDataMap.get("IncomeSoldPlayersCommission")) + Integer.parseInt(economyDataMap.get("LastIncomeSoldPlayersCommission"));
+			if (income > 0 || costs > 0 || commission > 0) {
+				var teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+				var previousWeek = HODateTime.now().minus(7, ChronoUnit.DAYS).toHTWeek();
+				var transfers = DBManager.instance().getTransfersSince(HODateTime.fromHTWeek(previousWeek).toDbTimestamp());
+				if (income > 0) {
+					var storedIncome = transfers.stream().filter(i -> i.getSellerid() == teamId).mapToInt(PlayerTransfer::getPrice).sum();
+					if (storedIncome != income) return true;
+				}
+				if (costs > 0) {
+					var storedCosts = transfers.stream().filter(i -> i.getBuyerid() == teamId).mapToInt(PlayerTransfer::getPrice).sum();
+					if (storedCosts != costs) return true;
+				}
+				if (commission > 0) {
+					var storedCommission = transfers.stream().mapToInt(i -> i.getMotherClubFee() + i.getPreviousClubFee()).sum();
+					if (storedCommission != commission) return true;
+				}
+			}
+		}
+		return false; // database already contains all required transfers
 	}
 }

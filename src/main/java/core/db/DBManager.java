@@ -297,7 +297,7 @@ public class DBManager implements PersistenceManager {
 	 * @return the adapter
 	 */
 // Accessor
-	public @Nullable ConnectionManager getConnectionManager() {
+	public ConnectionManager getConnectionManager() {
 		return connectionManager;
 	}
 
@@ -1465,6 +1465,12 @@ public class DBManager implements PersistenceManager {
 				.getTransfers(playerid, allTransfers);
 	}
 
+	public List<PlayerTransfer> getTransfersSince(Timestamp dbTimestamp) {
+		return ((TransferTable) getTable(TransferTable.TABLENAME))
+				.getTransfersSince(dbTimestamp);
+	}
+
+
 	private void loadPlayerInfo(List<PlayerTransfer> playerTransfers) {
 		for ( var t : playerTransfers){
 			t.loadPLayerInfo(true);
@@ -2388,4 +2394,5 @@ public class DBManager implements PersistenceManager {
 	public void deleteHOColor(HOColor color) {
 		getTable(HOColorTable.TABLENAME).delete(color);
 	}
+
 }

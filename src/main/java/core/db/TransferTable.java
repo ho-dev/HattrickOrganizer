@@ -5,6 +5,7 @@ import core.util.HODateTime;
 import core.util.HOLogger;
 import module.transfer.PlayerTransfer;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.sql.Types;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -206,5 +207,11 @@ public class TransferTable extends AbstractTable {
             HOLogger.instance().error(getClass(), sqlException);
         }
         return 0;
+    }
+
+    private final String getTransfersSinceSql = createSelectStatement(" WHERE Date >= ?");
+
+    public List<PlayerTransfer> getTransfersSince(Timestamp dbTimestamp) {
+        return load(PlayerTransfer.class, this.connectionManager.executePreparedQuery(getTransfersSinceSql, dbTimestamp));
     }
 }
