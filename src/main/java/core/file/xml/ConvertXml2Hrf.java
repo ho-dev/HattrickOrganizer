@@ -145,19 +145,19 @@ public class ConvertXml2Hrf {
 		if (areTransfersMissing(economyDataMap)) {
 			HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.transfers"), progressIncrement);
 			PlayerTransfer.downloadMissingTransfers(teamId);
+			var commission = Integer.parseInt(economyDataMap.get("IncomeSoldPlayersCommission"));
+			var lastCommission = Integer.parseInt(economyDataMap.get("LastIncomeSoldPlayersCommission"));
+			if (commission > 0 || lastCommission > 0) {
+				var soldPlayers = DBManager.instance().loadTeamTransfers(teamId, true);
+				if (commission > 0) {
+					PlayerTransfer.downloadMissingTransferCommissions(soldPlayers, commission, HODateTime.now().toHTWeek());
+				}
+				if (lastCommission > 0) {
+					PlayerTransfer.downloadMissingTransferCommissions(soldPlayers, commission, HODateTime.now().minus(7, ChronoUnit.DAYS).toHTWeek());
+				}
+			}
 		}
 
-		var commission = Integer.parseInt(economyDataMap.get("IncomeSoldPlayersCommission"));
-		var lastCommission = Integer.parseInt(economyDataMap.get("LastIncomeSoldPlayersCommission"));
-		if (commission > 0 || lastCommission > 0) {
-			var soldPlayers = DBManager.instance().loadTeamTransfers(teamId, true);
-			if (commission > 0) {
-				PlayerTransfer.downloadMissingTransferCommissions(soldPlayers, commission, HODateTime.now().toHTWeek());
-			}
-			if (lastCommission > 0) {
-				PlayerTransfer.downloadMissingTransferCommissions(soldPlayers, commission, HODateTime.now().minus(7, ChronoUnit.DAYS).toHTWeek());
-			}
-		}
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.training"), progressIncrement);
 		Map<String, String> trainingDataMap = XMLTrainingParser.parseTrainingFromString(mc.getTraining(teamId));
 
