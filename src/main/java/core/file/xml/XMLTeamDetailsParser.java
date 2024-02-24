@@ -152,6 +152,9 @@ public class XMLTeamDetailsParser {
 			root = (Element) team.getElementsByTagName("Region").item(0);
 			xmlValue2Hash(hash, root, "RegionID");
 
+			xmlValue2Hash(hash, team, "IsBot");
+			xmlValue2Hash(hash, team, "BotSince");
+
 			// Power Rating
 			Element PowerRating = (Element)doc.getDocumentElement().getElementsByTagName("PowerRating").item(0);
 			xmlValue2Hash(hash, PowerRating, "GlobalRanking");

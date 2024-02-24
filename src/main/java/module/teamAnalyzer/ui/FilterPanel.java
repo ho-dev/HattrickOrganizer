@@ -2,7 +2,6 @@ package module.teamAnalyzer.ui;
 
 import core.gui.HOMainFrame;
 import core.gui.comp.panel.ImagePanel;
-import core.gui.event.ChangeEventHandler;
 import core.model.HOVerwaltung;
 import core.util.HOLogger;
 import module.teamAnalyzer.SystemManager;
@@ -68,8 +67,7 @@ public class FilterPanel extends JPanel {
 			radioAutomatic.setSelected(true);
 			cLayout.show(cards, CARD_AUTOMATIC);
 			autoPanel.reload();
-		}
-		else {
+		} else {
 			radioManual.setSelected(true);
 			cLayout.show(cards, CARD_MANUAL);
 			manualPanel.reload();
