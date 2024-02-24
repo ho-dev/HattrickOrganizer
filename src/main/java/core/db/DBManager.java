@@ -297,7 +297,7 @@ public class DBManager implements PersistenceManager {
 	 * @return the adapter
 	 */
 // Accessor
-	public ConnectionManager getConnectionManager() {
+	public @Nullable ConnectionManager getConnectionManager() {
 		return connectionManager;
 	}
 
@@ -503,17 +503,6 @@ public class DBManager implements PersistenceManager {
 		}
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
 				.getSpielerFirstHRF(spielerid, after.toDbTimestamp());
-	}
-
-	/**
-	 * Returns the trainer code for the specified hrf. -99 if error
-	 *
-	 * @param hrfID HRF for which to load TrainerType
-	 * @return int trainer type
-	 */
-	public int getTrainerType(int hrfID) {
-		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
-				.getTrainerType(hrfID);
 	}
 
 	/**

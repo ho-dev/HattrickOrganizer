@@ -33,7 +33,6 @@ public class HRFImport {
 
 			UserChoice choice = null;
 			for (int i = 0; i < files.length; i++) {
-				files[i].getPath();
 				if (!files[i].getPath().endsWith(".hrf")) {
 					files[i] = new File(files[i].getAbsolutePath() + ".hrf");
 				}
