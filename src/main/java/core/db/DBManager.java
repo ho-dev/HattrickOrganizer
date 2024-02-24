@@ -297,7 +297,7 @@ public class DBManager implements PersistenceManager {
 	 * @return the adapter
 	 */
 // Accessor
-	public @Nullable ConnectionManager getConnectionManager() {
+	public ConnectionManager getConnectionManager() {
 		return connectionManager;
 	}
 
