@@ -13,24 +13,23 @@ import java.awt.event.KeyListener;
 
 import javax.swing.*;
 
+/**
+ * Panel to automatically select games to download.
+ */
 public class AutoFilterPanel extends JPanel implements ActionListener, KeyListener {
-    //~ Instance fields ----------------------------------------------------------------------------
-	private JCheckBox awayGames = new JCheckBox();
-    private JCheckBox cup = new JCheckBox();
-    private JCheckBox defeat = new JCheckBox();
-    private JCheckBox draw = new JCheckBox();
-    private JCheckBox friendly = new JCheckBox();
-    private JCheckBox tournament = new JCheckBox();
+	private final JCheckBox awayGames = new JCheckBox();
+    private final JCheckBox cup = new JCheckBox();
+    private final JCheckBox defeat = new JCheckBox();
+    private final JCheckBox draw = new JCheckBox();
+    private final JCheckBox friendly = new JCheckBox();
+    private final JCheckBox tournament = new JCheckBox();
 
-    //  Filter filter = SystemManager.getFilter();
-    private JCheckBox homeGames = new JCheckBox();
-    private JCheckBox league = new JCheckBox();
-    private JCheckBox qualifier = new JCheckBox();
-    private JCheckBox masters = new JCheckBox();
-    private JCheckBox win = new JCheckBox();
-    private NumberTextField number = new NumberTextField(2);
-
-    //~ Constructors -------------------------------------------------------------------------------
+    private final JCheckBox homeGames = new JCheckBox();
+    private final JCheckBox league = new JCheckBox();
+    private final JCheckBox qualifier = new JCheckBox();
+    private final JCheckBox masters = new JCheckBox();
+    private final JCheckBox win = new JCheckBox();
+    private final NumberTextField number = new NumberTextField(2);
 
     /**
      * Creates a new instance of AutoFilterPanel
@@ -39,9 +38,8 @@ public class AutoFilterPanel extends JPanel implements ActionListener, KeyListen
         jbInit();
     }
 
-    //~ Methods ------------------------------------------------------------------------------------
     public void reload() {
-    	Filter filter = TeamAnalyzerPanel.filter;
+    	final Filter filter = TeamAnalyzerPanel.filter;
     	filter.loadFilters();
         homeGames.setSelected(filter.isHomeGames());
         awayGames.setSelected(filter.isAwayGames());
@@ -58,7 +56,7 @@ public class AutoFilterPanel extends JPanel implements ActionListener, KeyListen
     }
 
     protected void setFilter() {
-    	Filter filter = TeamAnalyzerPanel.filter;
+    	final Filter filter = TeamAnalyzerPanel.filter;
     	filter.setAwayGames(awayGames.isSelected());
     	filter.setHomeGames(homeGames.isSelected());
     	filter.setWin(win.isSelected());
@@ -72,9 +70,8 @@ public class AutoFilterPanel extends JPanel implements ActionListener, KeyListen
     	filter.setMasters(masters.isSelected());
     	filter.setNumber(number.getValue());
     	filter.saveFilters();
-    	
     }
-    
+
     /**
      * Handle action events.
      */
@@ -94,8 +91,13 @@ public class AutoFilterPanel extends JPanel implements ActionListener, KeyListen
         setOpaque(false);
 
         JPanel filters = new ImagePanel();
-
         filters.setLayout(new GridLayout(12, 2));
+
+        filters.add(new JLabel(HOVerwaltung.instance().getLanguageString("AutoFilterPanel.Max_Number"))); //$NON-NLS-1$
+        number.setText(filter.getNumber() + "");
+        number.addKeyListener(this);
+        filters.add(number);
+
         filters.add(new JLabel(HOVerwaltung.instance().getLanguageString("AutoFilterPanel.Home_Games"))); //$NON-NLS-1$
         homeGames.setSelected(filter.isHomeGames());
         homeGames.setOpaque(false);
@@ -149,24 +151,18 @@ public class AutoFilterPanel extends JPanel implements ActionListener, KeyListen
         qualifier.setOpaque(false);
         qualifier.addActionListener(this);
         filters.add(qualifier);
-        
+
         filters.add(new JLabel(HOVerwaltung.instance().getLanguageString("AutoFilterPanel.MastersGame"))); //$NON-NLS-1$
         masters.setSelected(filter.isQualifier());
         masters.setOpaque(false);
         masters.addActionListener(this);
         filters.add(masters);
-        
-        
+
         filters.add(new JLabel(HOVerwaltung.instance().getLanguageString("AutoFilterPanel.TournamentGame"))); //$NON-NLS-1$
         tournament.setSelected(filter.isTournament());
         tournament.setOpaque(false);
         tournament.addActionListener(this);
         filters.add(tournament);
-
-        filters.add(new JLabel(HOVerwaltung.instance().getLanguageString("AutoFilterPanel.Max_Number"))); //$NON-NLS-1$
-        number.setText(filter.getNumber() + "");
-        number.addKeyListener(this);
-        filters.add(number);
 
         main.add(filters, BorderLayout.NORTH);
 

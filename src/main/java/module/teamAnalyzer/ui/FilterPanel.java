@@ -218,20 +218,27 @@ public class FilterPanel extends JPanel {
 		buttonPanel.add(Box.createHorizontalGlue());
 
 		topPanel.add(mainTeamPanel, BorderLayout.NORTH);
-		topPanel.add(buttonPanel, BorderLayout.SOUTH);
+	//	topPanel.add(buttonPanel, BorderLayout.SOUTH);
 
-		main.add(topPanel, BorderLayout.NORTH);
-		add(main, BorderLayout.NORTH);
+		JPanel downloadGamesPanel = new JPanel();
+		downloadGamesPanel.setLayout(new BorderLayout());
+		downloadGamesPanel.add(buttonPanel, BorderLayout.NORTH);
+		downloadGamesPanel.setBorder(BorderFactory.createTitledBorder("Download Games"));
+
 		autoPanel = new AutoFilterPanel();
 		manualPanel = new ManualFilterPanel();
 		cards.add(autoPanel, CARD_AUTOMATIC);
 		cards.add(manualPanel, CARD_MANUAL);
-		add(cards, BorderLayout.CENTER);
+		downloadGamesPanel.add(cards, BorderLayout.CENTER);
 
 		JPanel buttonContainerPanel = new JPanel(new GridLayout(1, 2, 4 ,4));
 		buttonContainerPanel.setOpaque(true);
 		buttonContainerPanel.add(downloadButton);
 		buttonContainerPanel.add(analyzeButton);
-		add(buttonContainerPanel, BorderLayout.SOUTH);
+		downloadGamesPanel.add(buttonContainerPanel, BorderLayout.SOUTH);
+
+		main.add(topPanel, BorderLayout.NORTH);
+		main.add(downloadGamesPanel, BorderLayout.CENTER);
+		add(main, BorderLayout.CENTER);
 	}
 }

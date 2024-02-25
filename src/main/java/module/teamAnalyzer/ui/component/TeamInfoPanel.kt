@@ -5,6 +5,7 @@ import java.awt.Font
 import java.awt.GridBagConstraints
 import java.awt.GridBagLayout
 import javax.swing.BorderFactory
+import javax.swing.ImageIcon
 import javax.swing.JLabel
 import javax.swing.JPanel
 
@@ -26,6 +27,9 @@ class TeamInfoPanel : JPanel() {
         val isBot = isBot(details)
 
         // Column 1
+        val infoLabel = JLabel()
+        infoLabel.icon = ImageIcon(details["LogoURL"])
+        infoLabel.text = "Info"
         border = BorderFactory.createTitledBorder("Info")
         val gbc = GridBagConstraints()
         layout = GridBagLayout()
@@ -77,7 +81,7 @@ class TeamInfoPanel : JPanel() {
             gbc.gridy++
             val botStatusValueLabel = JLabel()
             val boStatusDate = details["BotSince"]
-            botStatusValueLabel.text = "since ${HODateTime.fromHT(boStatusDate).toLocaleDate()})"
+            botStatusValueLabel.text = "since ${HODateTime.fromHT(boStatusDate).toLocaleDate()}"
             add(botStatusValueLabel, gbc)
         }
 
