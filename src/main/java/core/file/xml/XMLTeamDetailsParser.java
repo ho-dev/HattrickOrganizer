@@ -4,6 +4,8 @@ import core.util.HOLogger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -60,8 +62,6 @@ public class XMLTeamDetailsParser {
 		Element ele, root;
 		Map<String, String> hash = new SafeInsertMap();
 
-//		HOLogger.instance().debug(XMLTeamDetailsParser.class, "parsing teamDetails for teamID: " + teamId);
-
 		if (doc == null) {
 			return hash;
 		}
@@ -89,26 +89,8 @@ public class XMLTeamDetailsParser {
 			}
 			hash.put("HasSupporter", supportStatus);
 
-			// We need to find the correct team
-
-			Element team = null;
-			ele = (Element) doc.getDocumentElement().getElementsByTagName("Teams").item(0);
-			if ( ele != null) {
-				root = ele;
-				NodeList list = root.getElementsByTagName("Team");
-				for (int i = 0; (list != null) && (i < list.getLength()); i++) {
-					team = (Element) list.item(i);
-
-					ele = (Element) team.getElementsByTagName("TeamID").item(0);
-					if (Integer.parseInt(XMLManager.getFirstChildNodeValue(ele)) == teamId) {
-						break;
-					}
-				}
-			}
-			else {
-				team = (Element)doc.getDocumentElement().getElementsByTagName("Team").item(0);
-			}
-
+			// We need to find the correct team in doc
+			final Element team = selectTeamWithId(doc, teamId);
 			if (team == null) { 
 				return hash;
 			}
@@ -139,6 +121,8 @@ public class XMLTeamDetailsParser {
 			} catch (Exception exp) {
 				HOLogger.instance().log(XMLTeamDetailsParser.class, exp);
 			}
+
+			xmlValue2Hash(hash, team, "CountryName");
 
 			var fanclub = (Element) team.getElementsByTagName("Fanclub").item(0);
 			xmlValue2Hash(hash, fanclub, "FanclubSize");
@@ -171,6 +155,29 @@ public class XMLTeamDetailsParser {
 		}
 
 		return hash;
+	}
+
+	private static Element selectTeamWithId(Document doc, int teamId) {
+		Element team = null;
+		Element ele;
+		Element root;
+		ele = (Element) doc.getDocumentElement().getElementsByTagName("Teams").item(0);
+		if ( ele != null) {
+			root = ele;
+			NodeList list = root.getElementsByTagName("Team");
+			for (int i = 0; (list != null) && (i < list.getLength()); i++) {
+				team = (Element) list.item(i);
+
+				ele = (Element) team.getElementsByTagName("TeamID").item(0);
+				if (Integer.parseInt(XMLManager.getFirstChildNodeValue(ele)) == teamId) {
+					break;
+				}
+			}
+		}
+		else {
+			team = (Element) doc.getDocumentElement().getElementsByTagName("Team").item(0);
+		}
+		return team;
 	}
 
 	public static List<TeamInfo> getTeamInfoFromString(String input) {

@@ -18,7 +18,7 @@ import java.util.concurrent.TimeUnit;
 import javax.swing.*;
 
 /**
- * Panel to filter opponents matches.
+ * Panel to filter and download opponent's matches.
  */
 public class FilterPanel extends JPanel {
 
@@ -27,6 +27,7 @@ public class FilterPanel extends JPanel {
 	private static boolean teamComboUpdating = false;
 	private AutoFilterPanel autoPanel;
 	private final JButton downloadButton = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.update"));
+	private final JButton analyzeButton = new JButton(HOVerwaltung.instance().getLanguageString("AutoFilterPanel.Analyze"));
 	private final JComboBox<Team> teamCombo = new JComboBox<>();
 	private final JPanel cards = new JPanel(new CardLayout());
 	private JRadioButton radioAutomatic;
@@ -53,13 +54,13 @@ public class FilterPanel extends JPanel {
 	 * Update GUI elements.
 	 */
 	public void reload() {
-		System.out.println("REload");
 		if (TeamManager.isUpdated()) {
 			fillTeamCombo();
 		}
 
 		downloadButton.setEnabled(true);
 		downloadButton.setText(HOVerwaltung.instance().getLanguageString("ls.button.update"));
+		analyzeButton.setEnabled(true);
 
 		CardLayout cLayout = (CardLayout) (cards.getLayout());
 
@@ -122,9 +123,6 @@ public class FilterPanel extends JPanel {
 			teamInfoPanel.setTeam(teamDetails);
 		}
 
-		JButton analyzeButton = new JButton(HOVerwaltung.instance().getLanguageString(
-				"AutoFilterPanel.Analyze"));
-
 		analyzeButton.addActionListener(e -> {
 			if (radioManual.isSelected()) {
 				manualPanel.setFilter();
@@ -157,6 +155,7 @@ public class FilterPanel extends JPanel {
 					downloadExecutor.shutdown();
 					try {
 						downloadExecutor.awaitTermination(30, TimeUnit.SECONDS);
+						analyzeButton.setEnabled(true);
 					} catch (Exception ee) {
 						HOLogger.instance().error(FilterPanel.class, "Error awaiting termination: "  + ee.getMessage());
 					}
@@ -178,7 +177,6 @@ public class FilterPanel extends JPanel {
 		teamPanel.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 
 		teamPanel.setLayout(new BorderLayout());
-		teamPanel.add(downloadButton, BorderLayout.NORTH);
 		teamPanel.add(teamCombo, BorderLayout.SOUTH);
 		teamPanel.setOpaque(false);
 
@@ -229,6 +227,11 @@ public class FilterPanel extends JPanel {
 		cards.add(autoPanel, CARD_AUTOMATIC);
 		cards.add(manualPanel, CARD_MANUAL);
 		add(cards, BorderLayout.CENTER);
-		add(analyzeButton, BorderLayout.SOUTH);
+
+		JPanel buttonContainerPanel = new JPanel(new GridLayout(1, 2, 4 ,4));
+		buttonContainerPanel.setOpaque(true);
+		buttonContainerPanel.add(downloadButton);
+		buttonContainerPanel.add(analyzeButton);
+		add(buttonContainerPanel, BorderLayout.SOUTH);
 	}
 }

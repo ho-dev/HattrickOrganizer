@@ -10,7 +10,6 @@ import module.teamAnalyzer.vo.Filter;
 import module.training.ui.comp.DividerListener;
 
 import java.awt.BorderLayout;
-import java.io.Serial;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
@@ -18,17 +17,17 @@ import javax.swing.JSplitPane;
 /**
  * Base panel of the module.
  *
- * It is composed of:
- * - MainPanel, which displays the team lineup for the selected team, and the user's team
- * - RecapPanel at the bottom, which displays the x last matches for the selected team
- * - simButton, FilterPanel, RatingPanel and SpecialEventsPanel on the left.
+ * <p>It is composed of:
+ * <ul>
+ * <li>{@link MainPanel}, which displays the team lineup for the selected team, and the user's team;</li>
+ * <li>{@link RecapPanel} at the bottom, which displays the <em>x</em> last matches for the selected team;</li>
+ * <li>simButton, {@link FilterPanel}, {@link RatingPanel} and {@link SpecialEventsPanel} on the left.</li>
+ * </ul>
  */
 public class TeamAnalyzerPanel extends LazyPanel {
 
 	/** The filters */
 	public static Filter filter = new Filter();
-	@Serial
-	private static final long serialVersionUID = 1L;
 	private JButton simButton;
 	private RecapPanel recapPanel;
 	private MainPanel mainPanel;

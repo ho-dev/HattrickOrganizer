@@ -72,7 +72,7 @@ public class OnlineWorker {
 				if (hrf == null) {
 					return false;
 				}
-				
+
 			} catch (IOException e) {
 				// Info
 				String msg = getLangString("Downloadfehler")
@@ -389,6 +389,7 @@ public class OnlineWorker {
 
 	public static Map<String, String> getTeam(int teamId) {
 		String str = MyConnector.instance().fetchTeamDetails(teamId);
+		HOLogger.instance().debug(OnlineWorker.class, "Retrieve details team: " + teamId + ", result: \n" + str);
 		return XMLTeamDetailsParser.parseTeamdetailsFromString(str, teamId);
 	}
 
@@ -693,7 +694,7 @@ public class OnlineWorker {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		
+
 		return result;
 	}
 
@@ -993,10 +994,10 @@ public class OnlineWorker {
 	private static String getHRFFileName() {
 		GregorianCalendar calendar = (GregorianCalendar) Calendar.getInstance();
 		StringBuilder builder = new StringBuilder();
-		
+
 		builder.append(HOVerwaltung.instance().getModel().getBasics().getTeamId());
 		builder.append('-');
-		
+
 		builder.append(calendar.get(Calendar.YEAR));
 		builder.append('-');
 		int month = calendar.get(Calendar.MONTH) + 1;
