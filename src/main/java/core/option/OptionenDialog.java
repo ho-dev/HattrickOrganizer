@@ -149,14 +149,15 @@ public class OptionenDialog extends JDialog {
 	}
 
 	private void save() {
+		// Store user colors before theme setting in user parameters might change
+		userColorsPanel.storeChangedColorSettings();
+
 		UserParameter.saveTempParameter();
 		ModuleConfig.instance().save();
 		ModuleManager.instance().saveTemp();
 
 		//save release channel information in java store
 		Updater.instance().saveReleaseChannelPreference(m_jpReleaseChannelsPanel.getRc());
-
-		userColorsPanel.storeChangedColorSettings();
 
 		if (OptionManager.instance().isRestartNeeded()) {
 			Helper.showMessage(OptionenDialog.this,

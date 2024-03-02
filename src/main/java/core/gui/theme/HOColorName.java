@@ -1,6 +1,5 @@
 package core.gui.theme;
 
-
 import core.model.HOVerwaltung;
 
 /**

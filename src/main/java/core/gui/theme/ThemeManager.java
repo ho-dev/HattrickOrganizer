@@ -64,12 +64,11 @@ public final class ThemeManager {
 		return MANAGER;
 	}
 
+
 	private void initialize() {
 
 		themes.put(NimbusTheme.THEME_NAME, new NimbusTheme());
 		themes.put(DarculaDarkTheme.THEME_NAME, new DarculaDarkTheme());
-// Comment out those themes for now as they are not ready yet.
-//		themes.put(HighContrastTheme.THEME_NAME, new HighContrastTheme());
 		themes.put(SolarizedDarkTheme.THEME_NAME, new SolarizedDarkTheme());
 		themes.put(SolarizedLightTheme.THEME_NAME, new SolarizedLightTheme());
 
@@ -110,9 +109,21 @@ public final class ThemeManager {
 	}
 
 	public static Color getColor(HOColorName key) {
-		var theme = getCurrentThemeName();
-		return HOColor.getColor(key, theme);
+		var theme = getCurrentTheme();
+		return theme.getColor(key);
 	}
+	public static Color getColor(HOColor hoColor) {
+		if (hoColor.getColorReference() != null) {
+			var theme = getTheme(hoColor.getTheme());
+			return theme.getColor(hoColor.getHOColorName());
+		}
+		return hoColor.getColor();
+	}
+
+	public static BaseTheme getCurrentTheme() {
+		return getTheme(getCurrentThemeName());
+	}
+	public static BaseTheme getTheme(String name){ return (BaseTheme) themes.get(Objects.equals(name, "default") ?DEFAULT_THEME_NAME:name); }
 
 	public boolean isSet(String key) {
 		Boolean tmp = (Boolean)classicSchema.get(key);
@@ -348,11 +359,14 @@ public final class ThemeManager {
 	}
 
 	public void setCurrentTheme() {
+		setTheme(UserParameter.instance().skin);
+	}
 
+	public void setTheme(String name){
 		try {
 			boolean success = false;
 
-			Theme theme = themes.get(UserParameter.instance().skin);
+			Theme theme = themes.get(name);
 			if (theme != null) {
 				success = theme.loadTheme();
 			}
@@ -371,12 +385,13 @@ public final class ThemeManager {
 		}
 	}
 
-	private void loadUserDefinedColors(String theme) {
-		var userDefinedColors = DBManager.instance().loadHOColors(theme);
+	private void loadUserDefinedColors(String themeName) {
+		var userDefinedColors = DBManager.instance().loadHOColors(themeName);
+		var theme = getTheme(themeName);
 		for (var color : userDefinedColors) {
-			var defaultColor = HOColor.getHOColor(color.getHOColorName(), theme);
+			var defaultColor = theme.getHOColor(color.getHOColorName());
 			color.setDefaultValue(defaultColor);
-			HOColor.addColor(color);
+			theme.addColor(color);
 		}
 	}
 

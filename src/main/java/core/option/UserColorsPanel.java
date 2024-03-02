@@ -78,13 +78,9 @@ public class UserColorsPanel extends JPanel {
 		var component = new JLabel();
 		if (value != null) {
 			var hoColor = (HOColor) value;
-			Color color;
-			if (hoColor.getColorReference() != null) {
-				color = HOColor.getColor(hoColor.getHOColorName(), hoColor.getTheme());
-			} else {
-				color = hoColor.getColor();
-			}
+			Color color = ThemeManager.getColor(hoColor);
 			component.setBackground(color);
+			component.setOpaque(true);
 		}
 		return component;
 	}
@@ -111,8 +107,11 @@ public class UserColorsPanel extends JPanel {
 		skins.setSelectedItem(selected);
 		skins.addActionListener(e->{
 			if (e.getSource() == skins) {
-				UserParameter.temp().skin = (String) skins.getSelectedItem();
-				initData(UserParameter.instance().skin);
+                UserParameter.temp().skin = (String) skins.getSelectedItem();
+				// disable table panel
+				remove(tablePanel);
+				revalidate();
+				repaint();
 				// TODO change the look and feel dynamically
 				OptionManager.instance().setRestartNeeded();
 			}
@@ -168,7 +167,8 @@ public class UserColorsPanel extends JPanel {
 	protected void initData(String skin) {
 		// Clone the static color list for the editor
 		colors = new ArrayList<>();
-		for (var c : HOColor.getColors(skin)) colors.add(c.clone());
+		var theme = ThemeManager.getTheme(skin);
+		for (var c : theme.getHOColors()) colors.add(c.clone());
 		Object[][] value = new Object[colors.size()][4];
 		tableModel.setDataVector(value, columnNames);
 		int i = 0;
@@ -190,11 +190,12 @@ public class UserColorsPanel extends JPanel {
 				if (e != null) {
 					var box1 = (JComboBox<HOColorName>) e.getSource();
 					var colorName = HOColorName.values()[tableSelection];
-					var hoColor = HOColor.getHOColor(colorName, (String) skins.getSelectedItem());
+					var theme = ThemeManager.getTheme((String) skins.getSelectedItem());
+					var hoColor = theme.getHOColor(colorName);
 					if (hoColor != null) {
 						if (e.getStateChange() == DESELECTED || hoColor.colorReference() == null) {
-							hoColor.initDefaultValue();
-							var currentColor = HOColor.getColor(hoColor.getHOColorName(), hoColor.getTheme());
+							theme.initDefaultValue(hoColor);
+							var currentColor = theme.getColor(hoColor.getHOColorName());
 							var selection = (HOColorName) box1.getSelectedItem();
 							if (selection != null) {
 								hoColor.setColorReference(selection.name());
@@ -268,21 +269,24 @@ public class UserColorsPanel extends JPanel {
 	 * Store the edited color settings
 	 */
 	public void storeChangedColorSettings() {
+		// Colors are changed for the current theme only
+		// If another theme is selected, the color table will be disabled
+		// Previously edited colors belong to the current theme
+		var theme = ThemeManager.getCurrentTheme();
 		for (var color : colors) {
-			var theme = getSelectedTheme();
-			var origValue = HOColor.getHOColor(color.getHOColorName(), theme);
+			var origValue = theme.getHOColor(color.getHOColorName());
 			assert origValue != null;
 			if (areDifferentColors(origValue, color) ||
 					areDifferentColors(origValue.getDefaultValue(), color.getDefaultValue())) {
 				if (!color.getTheme().equals("default")) {
-					color.setTheme(theme);
+					color.setTheme(theme.getName());
 					DBManager.instance().storeHOColor(color);
 				}
 				else {
 					// reset default
 					DBManager.instance().deleteHOColor(origValue);
 				}
-				HOColor.addColor(color);
+				theme.addColor(color);
 				OptionManager.instance().setRestartNeeded();
 			}
 		}

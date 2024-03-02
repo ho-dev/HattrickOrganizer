@@ -1,6 +1,7 @@
 package core.option;
 
 import core.gui.theme.HOColor;
+import core.gui.theme.ThemeManager;
 
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
@@ -71,7 +72,8 @@ public class ColorTableCellEditor extends AbstractCellEditor implements TableCel
             // current color is the default color
             userColorsPanel.resetRow(currentColor);
         } else { //User pressed dialog's "OK" button.
-            currentColor.initDefaultValue();
+            var theme = ThemeManager.getTheme(currentColor.getTheme());
+            theme.initDefaultValue(currentColor);
             currentColor.setColor( colorChooser.getColor());
             currentColor.setTheme(userColorsPanel.getSelectedTheme());
             userColorsPanel.updateRow(currentColor);
