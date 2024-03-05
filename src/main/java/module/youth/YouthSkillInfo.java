@@ -270,6 +270,31 @@ public class YouthSkillInfo {
     }
 
     /**
+     * Calculate the minimum contribution of the skill's allrounder contribution
+     * The exact value would be given by the average of the skill's start and max values.
+     * Since the max value is not always known, it's value is given by the maximum of the calculated
+     * 17 years potential, the maximum skill level, if known from trainer or scout messages or the currently
+     * estimated skill level.
+     * @return Double value of the minimum allrounder contribution
+     */
+    public double calculateMinimumAllrounderContribution() {
+        var sum = 0.;
+        var potential = this.getPotential17Value();
+        if (potential != null) {
+            sum = potential;
+        }
+        if (this.isMaxAvailable() && this.max > sum) {
+            sum = this.max;
+        }
+        if (this.currentValue > sum) {
+            // minimum max value if nothing else is known
+            sum = this.currentValue;
+        }
+        sum += this.startValue;
+        return sum / 2.;
+    }
+
+    /**
      * Set the upper limit of skill maximum (potential).
      * The value is not for sure and could be reduced by future trainer reports
      * @param isKeeper Boolean
