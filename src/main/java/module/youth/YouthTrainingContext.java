@@ -6,14 +6,13 @@ import core.util.HODateTime;
 
 import java.time.temporal.ChronoUnit;
 import java.util.AbstractMap;
-import java.util.HashMap;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
 public class YouthTrainingContext {
     public int age;
     public int days;
-    private HODateTime birthday;
+    private final HODateTime birthday;
 
     public long numberOfKnownTop3Skills = 0;
     public int minimumTop3SkillPotential = 8;

@@ -1101,7 +1101,7 @@ public class YouthPlayer extends AbstractTable.Storable {
      * The current skill value gets weight 0 at age of 15 and 2 (200%) at age of 17.
      * Above 17 zero is returned.
      *
-     * @param skillInfo
+     * @param skillInfo Skill info
      * @return Integer, the returned value is a weighted sum of current and maximum skill value
      */
     private Integer getTrainingUsefulness(YouthSkillInfo skillInfo) {

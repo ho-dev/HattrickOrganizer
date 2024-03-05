@@ -66,7 +66,6 @@ public class YouthSkillInfo {
     /**
      * Scout mentions up to 2 skill info. Both of them belong to the top 3 skills with highest maximum.
      * Information is used to restrict other skill maxima.
-     *
      * True if skill is one of the skills mentioned by the scout or found maximum is greater than one of the scout infos
      * False if skill maximum is not one of the top 3 maximums
      * null otherwise (not known)
@@ -112,7 +111,6 @@ public class YouthSkillInfo {
      * startlevel<=startValue<startLevel+1
      * currentLevel<=currentValue<currentLevel+1
      * 0<=startValue<=currentValue<=max+1 or 8.3
-     *
      * Additionally possible ranges of start value (startValueRange) and currentValue (currentValueRange)
      * are examined.
      */
