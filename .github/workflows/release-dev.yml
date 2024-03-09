@@ -81,7 +81,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
       - name: If not dev-release create a Release with short version tag
         if: ${{ steps.read_version_properties.outputs.tag != 'dev'}}
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
