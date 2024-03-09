@@ -36,17 +36,15 @@ public class SpecialEventsPanel extends JPanel {
         tableModel = new BaseTableModel(data, new Vector<>(Arrays.asList(columns)));
         table = new JTable(tableModel);
         setLayout(new BorderLayout());
+        setBorder(BorderFactory.createTitledBorder(hov.getLanguageString("ls.teamanalyzer.special_events")));
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
-        JLabel start = new JLabel(hov.getLanguageString("ls.teamanalyzer.special_events"));
-        add(start, BorderLayout.PAGE_START);
         add(scrollPane);
 
         resultLabel = new JLabel( hov.getLanguageString("ls.teamanalyzer.result") + ": 0.00 - 0.00");
         add(resultLabel, BorderLayout.PAGE_END);
-
     }
 
     public void reload(TeamLineup teamLineup) {
@@ -129,11 +127,12 @@ public class SpecialEventsPanel extends JPanel {
         this.resultLabel.setText(String.format(hov.getLanguageString("ls.teamanalyzer.result") + ": %.2f : %.2f", scores, opponentScores));
     }
 
-    private Vector<Object> getRow(String kind, Player player, Player opponentPlayer, ArrayList<Player> involved, double probability, Double scores, Double scoresOpponent) {
+    private Vector<Object> getRow(String kind, Player player, Player opponentPlayer, ArrayList<Player> involved,
+                                  double probability, Double scores, Double scoresOpponent) {
 
         ArrayList<String> involvedPlayerNames = new ArrayList<>();
-        for ( Player p : involved){
-            if ( p == null){
+        for (Player p : involved) {
+            if (p == null) {
                 continue;
             }
             involvedPlayerNames.add(p.getFullName());

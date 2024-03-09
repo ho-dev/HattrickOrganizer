@@ -159,7 +159,7 @@ public class MyConnector {
 	 * lädt die Tabelle
 	 */
 	public String getLeagueDetails(String leagueUnitId) {
-		String url = htUrl + "?file=leaguedetails&version=1.5&leagueLevelUnitID=" + leagueUnitId;
+		String url = htUrl + "?file=leaguedetails&version=1.6&leagueLevelUnitID=" + leagueUnitId;
 		return getCHPPWebFile(url);
 	}
 
@@ -447,7 +447,7 @@ public class MyConnector {
 	 * Download team details
 	 */
 	public String getTeamdetails(int teamId) throws IOException {
-		String url = htUrl + "?file=teamdetails&version=3.5";
+		String url = htUrl + "?file=teamdetails&version=3.6";
 		if (teamId > 0) {
 			url += ("&teamID=" + teamId);
 		}

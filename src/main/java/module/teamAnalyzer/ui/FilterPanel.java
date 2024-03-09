@@ -1,5 +1,6 @@
 package module.teamAnalyzer.ui;
 
+import core.file.xml.TeamStats;
 import core.gui.HOMainFrame;
 import core.gui.comp.panel.ImagePanel;
 import core.model.HOVerwaltung;
@@ -7,8 +8,9 @@ import core.util.HOLogger;
 import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.ht.HattrickManager;
 import module.teamAnalyzer.manager.TeamManager;
-import module.teamAnalyzer.ui.component.TeamInfoPanel;
+import module.teamAnalyzer.ui.TeamInfoPanel;
 import module.teamAnalyzer.vo.Team;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.*;
 import java.util.Map;
@@ -111,7 +113,7 @@ public class FilterPanel extends JPanel {
 			if (!teamComboUpdating) {
 				Team selectedTeam = (Team) teamCombo.getSelectedItem();
 				SystemManager.setActiveTeam(selectedTeam);
-				Map<String, String> teamDetails = HattrickManager.getTeamDetails(selectedTeam.getTeamId());
+				Map<String, String> teamDetails = retrieveTeamDetails(selectedTeam);
 				teamInfoPanel.setTeam(teamDetails);
 				SystemManager.refresh();
 			}
@@ -119,7 +121,7 @@ public class FilterPanel extends JPanel {
 
 		if (teamCombo.getSelectedItem() != null) {
 			Team selectedTeam = (Team) teamCombo.getSelectedItem();
-			Map<String, String> teamDetails = HattrickManager.getTeamDetails(selectedTeam.getTeamId());
+			Map<String, String> teamDetails = retrieveTeamDetails(selectedTeam);
 			teamInfoPanel.setTeam(teamDetails);
 		}
 
@@ -240,5 +242,15 @@ public class FilterPanel extends JPanel {
 		main.add(topPanel, BorderLayout.NORTH);
 		main.add(downloadGamesPanel, BorderLayout.CENTER);
 		add(main, BorderLayout.CENTER);
+	}
+
+	@NotNull
+	private static Map<String, String> retrieveTeamDetails(Team selectedTeam) {
+		Map<String, String> teamDetails = HattrickManager.getTeamDetails(selectedTeam.getTeamId());
+		TeamStats teamStats = HattrickManager.downloadSeriesDetails(Integer.parseInt(teamDetails.get("LeagueLevelUnitID")), selectedTeam.getTeamId());
+		if (teamStats != null) {
+			teamDetails.put("LeaguePosition", String.valueOf(teamStats.getPosition()));
+		}
+		return teamDetails;
 	}
 }
