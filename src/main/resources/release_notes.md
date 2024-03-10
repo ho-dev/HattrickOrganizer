@@ -31,6 +31,7 @@
 
 ### Matches
 * Fix bug loading matches with no region id (#1975)
+* Fix NPE when selecting match with red card (#2034)
 
 ### Lineup
 * Fix missing player id column in lineup assistant's player table (#1930)
