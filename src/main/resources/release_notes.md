@@ -70,6 +70,7 @@
 * Fix issue with startup post-installation (#2002)
 * Fix NPE when saving preferences on un-managed HO install (#1992)
   HO now downloads the update in the browser when HO install is un-managed.
+* Enable standard custom popup menu in oauth dialog's text fields (#1471)
 
 ## Translations
 
