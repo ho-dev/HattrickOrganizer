@@ -109,7 +109,7 @@ public class HOClassicSchema extends Schema implements HOIconName, HOBooleanName
 		// Highlights
 
 		put(YELLOWCARD, "img/icons/made/yellow-card(yellow).svg");
-		put(REDCARD, "gui/bilder//red-card.svg");
+		put(REDCARD, "gui/bilder/red-card.svg");
 		put(FORMATION, "gui/bilder/mo-select.svg");
 		put(REPLACEMENT, "gui/bilder/exchange.svg");
 		put(ROTATE, "gui/bilder/rotate.svg");
