@@ -7,8 +7,8 @@ import javax.swing.JPanel;
 public class MainPanel extends JPanel {
     //~ Instance fields ----------------------------------------------------------------------------
 	private static final long serialVersionUID = -6374854816698657464L;
-	private RosterPanel rosterPanel = new RosterPanel();
-    private TeamPanel teamPanel = new TeamPanel();
+	private final RosterPanel rosterPanel = new RosterPanel();
+    private final TeamPanel teamPanel = new TeamPanel();
 
     //~ Constructors -------------------------------------------------------------------------------
 
