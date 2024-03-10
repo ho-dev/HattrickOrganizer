@@ -25,6 +25,7 @@
 
 ### Team Analyzer
 * Restore size of match prediction dialog box (#1898)
+* Fix Home/Away setup in Simulator panel (#1885)
 
 ### Rating
 * Implement schum rating prediction (#1782)

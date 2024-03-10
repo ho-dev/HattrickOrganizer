@@ -24,7 +24,7 @@ public class FilterPanel extends JPanel implements ActionListener {
 	private static boolean teamComboUpdating = false;
 	private AutoFilterPanel autoPanel;
 	private final JButton downloadButton = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.update"));
-	private final JComboBox teamCombo = new JComboBox();
+	private final JComboBox<Team> teamCombo = new JComboBox<>();
 	private final JPanel cards = new JPanel(new CardLayout());
 	private JRadioButton radioAutomatic;
 	private JRadioButton radioManual;
@@ -122,7 +122,7 @@ public class FilterPanel extends JPanel implements ActionListener {
 		teamCombo.setOpaque(false);
 		teamCombo.addItemListener(e -> {
 			if (!teamComboUpdating) {
-				SystemManager.setActiveTeam((Team) teamCombo.getSelectedItem());
+                SystemManager.setActiveTeam((Team)teamCombo.getSelectedItem());
 				SystemManager.refresh();
 			}
 		});

@@ -1,15 +1,13 @@
 package module.teamAnalyzer.ui.component;
 
 import core.model.HOVerwaltung;
-import module.teamAnalyzer.ui.controller.DownloadItemListener;
+import module.teamAnalyzer.SystemManager;
+import module.teamAnalyzer.vo.Team;
 
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
+import javax.swing.*;
 
 
 public class TAMenu extends JMenu {
-
-	private static final long serialVersionUID = 1L;
 
 	public TAMenu() {
 		super(HOVerwaltung.instance().getLanguageString("TeamAnalyzer"));
@@ -19,12 +17,24 @@ public class TAMenu extends JMenu {
 	private void initialize() {
 		add(getDownloadItem());
 		add(new FavouriteMenu());
-		
 	}
 	
-	private JMenuItem getDownloadItem(){
+	private JMenuItem getDownloadItem() {
 		JMenuItem downloadItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("Menu.DownloadMatch"));
-		downloadItem.addActionListener(new DownloadItemListener());
+		downloadItem.addActionListener(e -> {
+			JOptionPane.showMessageDialog(
+					SystemManager.getPlugin(),
+					new DownloadPanel(),
+					HOVerwaltung.instance().getLanguageString("Menu.DownloadMatch"),
+					JOptionPane.PLAIN_MESSAGE
+			);
+
+			if (SystemManager.getPlugin() != null) {
+				Team selectedTeam = SystemManager.getPlugin().getFilterPanel().getSelectedTeam();
+				SystemManager.setActiveTeam(selectedTeam);
+				SystemManager.refresh();
+			}
+		});
 		return downloadItem;
 	}
 }

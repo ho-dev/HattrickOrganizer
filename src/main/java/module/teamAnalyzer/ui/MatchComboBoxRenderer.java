@@ -12,6 +12,9 @@ import java.awt.*;
 import javax.swing.*;
 
 
+/**
+ * This class renders the team name and match details in the combobox.
+ */
 public class MatchComboBoxRenderer extends JLabel implements ListCellRenderer<Team> {
 
     private final String OWN_TEAM_NAME = HOVerwaltung.instance().getModel().getBasics().getTeamName();
@@ -35,8 +38,7 @@ public class MatchComboBoxRenderer extends JLabel implements ListCellRenderer<Te
 
     @Override
     public Component getListCellRendererComponent(JList<? extends Team> list, Team value,
-                                                  int index,boolean isSelected,boolean cellHasFocus)
-    {
+                                                  int index, boolean isSelected, boolean cellHasFocus) {
         if (value == null) {
             JLabel m_jlBlank = new JLabel(" ");
             m_jlBlank.setOpaque(true);

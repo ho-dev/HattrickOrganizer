@@ -1,4 +1,3 @@
-// %3491987323:hoplugins.teamAnalyzer.ui.controller%
 package module.teamAnalyzer.ui.controller;
 
 import core.constants.player.PlayerAbility;
@@ -56,8 +55,7 @@ public class SimButtonListener implements ActionListener {
     //~ Methods ------------------------------------------------------------------------------------
 
     /**
-     * Action performed event listener PRepares the date for the 2 teams and lauch the
-     * MatchRatingPredictor
+     * Prepares the date for the 2 teams, and launches the match rating prediction panel.
      *
      * @param e the event
      */
@@ -100,12 +98,12 @@ public class SimButtonListener implements ActionListener {
         MatchEnginePanel matchPredictionPanel;
         String match;
 
-        if (lineup.getLocation() == 1) {
+        if (SystemManager.getSelectedTeamLocation() == IMatchDetails.LOCATION_HOME) {
             matchPredictionPanel = new MatchEnginePanel(myTeamValues, opponentTeamValues);
-            match = myTeamValues.getTeamName() + " - " + opponentTeamValues.getTeamName();
+            match = myTeamValues.getTeamName() + " – " + opponentTeamValues.getTeamName();
         } else {
             matchPredictionPanel = 	new MatchEnginePanel(opponentTeamValues, myTeamValues);
-            match = opponentTeamValues.getTeamName() + " - " + myTeamValues.getTeamName();
+            match = opponentTeamValues.getTeamName() + " – " + myTeamValues.getTeamName();
         }
 
         MatchPredictionDialog d = new MatchPredictionDialog(matchPredictionPanel, match);
@@ -114,7 +112,7 @@ public class SimButtonListener implements ActionListener {
     /**
      * Returns the tactic level for the user team defined formation in HO Lineup
      *
-     * @return the actual tactic level as shown in HO LIneup tab
+     * @return the actual tactic level as shown in HO Lineup tab
      */
     private int getTacticLevel() {
         var lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
