@@ -257,7 +257,7 @@ public class YouthSkillInfo {
     }
 
     /**
-     * get the minumum potential value. This is the maximum value if it is known
+     * get the minimum potential value. This is the maximum value if it is known
      * or the current level value, if maximum is unknown
      * @return int, 0 if neither current level nor maximum is known
      */
@@ -400,4 +400,3 @@ public class YouthSkillInfo {
     }
 
 }
-
