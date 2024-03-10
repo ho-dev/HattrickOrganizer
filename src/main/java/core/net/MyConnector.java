@@ -446,13 +446,18 @@ public class MyConnector {
 	/**
 	 * Download team details
 	 */
-	public String getTeamdetails(int teamId) throws IOException {
-		String url = htUrl + "?file=teamdetails&version=3.6";
-		if (teamId > 0) {
-			url += ("&teamID=" + teamId);
-		}
+	public String getTeamDetails(int teamId) {
+		try {
+			String url = htUrl + "?file=teamdetails&version=3.6";
+			if (teamId > 0) {
+				url += ("&teamID=" + teamId);
+			}
 
-		return getCHPPWebFile(url);
+			return getCHPPWebFile(url);
+		} catch (Exception e) {
+			HOLogger.instance().log(getClass(), e);
+		}
+		return "";
 	}
 
 	/**
@@ -571,22 +576,11 @@ public class MyConnector {
 	 * Get the region id for a certain team.
 	 */
 	public String fetchRegionID(int teamId) {
-		String xml = fetchTeamDetails(teamId);
+		String xml = getTeamDetails(teamId);
 		if (!xml.isEmpty()){
 			return XMLTeamDetailsParser.fetchRegionID(xml);
 		}
 		return "-1";
-	}
-
-
-	public String fetchTeamDetails(int teamId) {
-		try {
-			String xmlFile = htUrl + "?file=teamdetails&version=3.6&teamID=" + teamId;
-			return getCHPPWebFile(xmlFile);
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(), e);
-		}
-		return "";
 	}
 
 	public InputStream getFileFromWeb(String url, boolean displaysettingsScreen) {

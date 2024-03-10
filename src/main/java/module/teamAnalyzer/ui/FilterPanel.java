@@ -8,7 +8,6 @@ import core.util.HOLogger;
 import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.ht.HattrickManager;
 import module.teamAnalyzer.manager.TeamManager;
-import module.teamAnalyzer.ui.TeamInfoPanel;
 import module.teamAnalyzer.vo.Team;
 import org.jetbrains.annotations.NotNull;
 
@@ -113,7 +112,8 @@ public class FilterPanel extends JPanel {
 			if (!teamComboUpdating) {
 				Team selectedTeam = (Team) teamCombo.getSelectedItem();
 				SystemManager.setActiveTeam(selectedTeam);
-				Map<String, String> teamDetails = retrieveTeamDetails(selectedTeam);
+                assert selectedTeam != null;
+                Map<String, String> teamDetails = retrieveTeamDetails(selectedTeam);
 				teamInfoPanel.setTeam(teamDetails);
 				SystemManager.refresh();
 			}
@@ -146,8 +146,6 @@ public class FilterPanel extends JPanel {
 				// Load squad info of all teams
 				try {
 					for (var team : TeamManager.getTeams()) {
-						Map<String, String> teamDetails = HattrickManager.getTeamDetails(team.getTeamId());
-						System.out.println(teamDetails);
 						downloadExecutor.execute(() -> HattrickManager.downloadPlayers(team.getTeamId()));
 					}
 

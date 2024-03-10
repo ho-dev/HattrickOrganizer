@@ -44,15 +44,13 @@ public class PlayerPanel extends JPanel {
 	 * Creates a new PlayerPanel object.
 	 */
 	public PlayerPanel() {
-		//setLayout(new BorderLayout());
-
 		Font nFont = new Font(nameField.getFont().getFontName(), Font.BOLD, nameField.getFont().getSize());
-
 		nameField.setFont(nFont);
 
 		JPanel details = new JPanel();
 
-		details.setBorder(BorderFactory.createEtchedBorder());
+		// details.setBorder(BorderFactory.createEtchedBorder());
+		details.setBorder(BorderFactory.createLineBorder(new Color(230, 230, 230), 1));
 		details.setBackground(getBackGround());
 		details.setLayout(new BorderLayout());
 
@@ -71,7 +69,8 @@ public class PlayerPanel extends JPanel {
 
 		JPanel centerPanel = new JPanel();
 
-		centerPanel.setBorder(BorderFactory.createEtchedBorder());
+		// centerPanel.setBorder(BorderFactory.createEtchedBorder());
+		centerPanel.setBorder(BorderFactory.createLineBorder(new Color(230, 230, 230), 1));
 		centerPanel.setBackground(getBackGround());
 		centerPanel.setLayout(new BorderLayout());
 		centerPanel.add(details, BorderLayout.NORTH);
@@ -81,23 +80,17 @@ public class PlayerPanel extends JPanel {
 			centerPanel.add(infoPanel, BorderLayout.SOUTH);
 		}
 
-//		mainPanel = new ImagePanel();
-//		mainPanel.setLayout(new BorderLayout());
-//		mainPanel.setBorder(BorderFactory.createRaisedBevelBorder());
 		setLayout(new GridBagLayout());
 		var c = new GridBagConstraints();
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 0;
 		c.weightx = 1;
-//		mainPanel.setBorder(BorderFactory.createRaisedBevelBorder());
-//		mainPanel.setPreferredSize(getDefaultSize());
 		add(positionField, c);
 		c.gridy++;
 		add(centerPanel,c);
 		c.gridy++;
 		add(tacticPanel, c);
-		//add(mainPanel, BorderLayout.CENTER);
 	}
 
 	protected Color getBackGround() {
@@ -113,7 +106,6 @@ public class PlayerPanel extends JPanel {
 	 */
 	public void reload(SpotLineup lineup, int week, int season) {
 		tacticPanel.setVisible(SystemManager.isTacticDetail.isSet());
-		//mainPanel.setPreferredSize(getDefaultSize());
 
 		if (lineup != null) {
 			containsPlayer = true;			
@@ -191,8 +183,7 @@ public class PlayerPanel extends JPanel {
 	protected Icon getTransferListedStatusIcon(int transferStatus) {
 		if(transferStatus == PlayerDataManager.TRANSFER_LISTED) {
 			return ImageUtilities.getSvgIcon(TRANSFERLISTED_TINY, Map.of("foregroundColor", ThemeManager.getColor(HOColorName.PLAYER_SPECIALTY_COLOR)), 14, 14);
-		}
-		else{
+		} else {
 			return null;
 		}
 	}

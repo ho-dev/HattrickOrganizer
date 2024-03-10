@@ -64,9 +64,9 @@ public class DownloadCountryDetails {
         HOLogger.instance().info(DownloadCountryDetails.class, String.format("Retrieving Team details for team %d.", teamId));
 
         try {
-            String details = mc.getTeamdetails(teamId);
+            String details = mc.getTeamDetails(teamId);
             return XMLTeamDetailsParser.parseTeamdetailsFromString(details, teamId);
-        } catch (IOException e) {
+        } catch (Exception e) {
             HOLogger.instance().log(DownloadCountryDetails.class, e);
         }
 
@@ -85,7 +85,7 @@ public class DownloadCountryDetails {
                 .entrySet()
                 .stream()
                 .flatMap(longListEntry -> longListEntry.getValue().stream())
-                .collect(Collectors.toList()); // merge all the lists of team ranks
+                .toList(); // merge all the lists of team ranks
 
         HOLogger.instance().info(DownloadCountryDetails.class, String.format("Found %d team with duplicate ranks.", duplicateRanks.size()));
         countryTeamInfo.data.clear();

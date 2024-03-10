@@ -38,7 +38,6 @@ public class HattrickManager {
      * @param filter the match filter object.
      */
     public static void downloadMatches(final int teamId, Filter filter) {
-        System.out.println("Current Thread: " + Thread.currentThread().getName()); // FIXME Remove printout
    		int limit = Math.min(filter.getNumber(), 50);
 
    		// If on manual, disable all filters, and download 30 matches.

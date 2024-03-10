@@ -388,7 +388,7 @@ public class OnlineWorker {
 
 	private static void downloadTeamRatings(int matchID, MatchType matchType, int teamID) {
 		try {
-			var xml = MyConnector.instance().getTeamdetails(teamID);
+			var xml = MyConnector.instance().getTeamDetails(teamID);
 			var teamrating = new MatchTeamRating(matchID, matchType, XMLTeamDetailsParser.parseTeamdetailsFromString(xml, teamID));
 			DBManager.instance().storeTeamRatings(teamrating);
 		} catch (Exception e) {
@@ -401,7 +401,7 @@ public class OnlineWorker {
 	}
 
 	public static Map<String, String> getTeam(int teamId) {
-		String str = MyConnector.instance().fetchTeamDetails(teamId);
+		String str = MyConnector.instance().getTeamDetails(teamId);
 		return XMLTeamDetailsParser.parseTeamdetailsFromString(str, teamId);
 	}
 
