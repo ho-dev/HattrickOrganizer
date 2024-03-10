@@ -101,7 +101,7 @@ public class AddPanel extends JPanel {
                     }
 
                     try {
-                        String teamName = HattrickManager.downloadTeam(teamId.getValue());
+                        String teamName = HattrickManager.downloadTeamName(teamId.getValue());
 
                         team.setName(teamName);
                     } catch (Exception e1) {

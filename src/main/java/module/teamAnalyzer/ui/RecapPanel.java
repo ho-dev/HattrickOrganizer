@@ -34,7 +34,7 @@ public class RecapPanel extends JPanel {
     }
 
     private void jbInit() {
-        tableModel = UserColumnController.instance().getTeamAnalyzerRecapModell();
+        tableModel = UserColumnController.instance().getTeamAnalyzerRecapModel();
         tableModel.showTeamReport(null);
         table = new FixedColumnsTable(2, tableModel);
         table.setDefaultRenderer(Object.class, new RecapTableRenderer());

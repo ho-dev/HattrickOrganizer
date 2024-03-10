@@ -208,27 +208,7 @@ public class TeamPanel extends JPanel {
                 spotLineup.setPosition(lineup.getEffectivePos4PositionID(spot));
                 spotLineup.setRating(ratingPredictionModel.getPlayerMatchAverageRating(player, lineup.getEffectivePos4PositionID(spot)));
 
-                int cards = player.getTotalCards();
-                int injury =  player.getInjuryWeeks();
-
-                int injuryStatus, bookingStatus;
-
-                switch (cards) {
-                    case 1 -> bookingStatus = PlayerDataManager.YELLOW;
-                    case 2 ->  bookingStatus = PlayerDataManager.DOUBLE_YELLOW;
-                    case 3 ->  bookingStatus = PlayerDataManager.SUSPENDED;
-                    default -> bookingStatus = 0;
-                }
-
-                switch (injury) {
-                    case -1 -> injuryStatus = 0;
-                    case 0 -> injuryStatus = PlayerDataManager.BRUISED;
-                    default -> injuryStatus = PlayerDataManager.INJURED;
-                }
-
-                int transferListedStatus  = player.getTransferListed() * PlayerDataManager.TRANSFER_LISTED;
-
-                int status = injuryStatus + 10 * bookingStatus + 100 * transferListedStatus;
+                int status = getPlayerStatus(player);
                 spotLineup.setStatus(status);
                 spotLineup.setSpot(spot);
                 spotLineup.setTactics(new ArrayList<>());
@@ -266,6 +246,30 @@ public class TeamPanel extends JPanel {
         lineupPanel.getMyTeam().setMidfield(convertRating(ratingPredictionModel.getAverageRating(lineup, RatingPredictionModel.RatingSector.MIDFIELD, 90)));
     }
 
+    private static int getPlayerStatus(Player player) {
+        int cards = player.getTotalCards();
+        int injury = player.getInjuryWeeks();
+
+        int injuryStatus, bookingStatus;
+
+        switch (cards) {
+            case 1 -> bookingStatus = PlayerDataManager.YELLOW;
+            case 2 ->  bookingStatus = PlayerDataManager.DOUBLE_YELLOW;
+            case 3 ->  bookingStatus = PlayerDataManager.SUSPENDED;
+            default -> bookingStatus = 0;
+        }
+
+        switch (injury) {
+            case -1 -> injuryStatus = 0;
+            case 0 -> injuryStatus = PlayerDataManager.BRUISED;
+            default -> injuryStatus = PlayerDataManager.INJURED;
+        }
+
+        int transferListedStatus  = player.getTransferListed() * PlayerDataManager.TRANSFER_LISTED;
+
+        return injuryStatus + 10 * bookingStatus + 100 * transferListedStatus;
+    }
+
     private int convertRating(double rating) {
         return RatingUtil.getIntValue4Rating(rating);
     }
@@ -275,7 +279,6 @@ public class TeamPanel extends JPanel {
         
         // Don't add the panel of an empty position.
         if (playerPanel.getContainsPlayer()) {
-//            playerPanel.setPreferredSize(playerPanel.getDefaultSize());
             panel.setLayout(new GridBagLayout());
             var constraints = new GridBagConstraints();
             constraints.gridy=0;
@@ -286,12 +289,6 @@ public class TeamPanel extends JPanel {
             constraints.fill = GridBagConstraints.BOTH;
             panel.add(playerPanel, constraints);
         }
-//        else {
-//        	// But leave a box the size of a player panel...
-//        	Box box = new Box(BoxLayout.X_AXIS);
-////        	box.setPreferredSize(playerPanel.getDefaultSize());
-//        	panel.add(box);
-//        }
     }
 
     public Lineup getOwnLineup() {

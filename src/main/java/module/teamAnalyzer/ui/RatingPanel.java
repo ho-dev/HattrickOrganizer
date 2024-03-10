@@ -29,7 +29,7 @@ public class RatingPanel extends JPanel {
     		HOVerwaltung.instance().getLanguageString("Rating"),
     		HOVerwaltung.instance().getLanguageString("Differenz_kurz"),
     		HOVerwaltung.instance().getLanguageString("RatingPanel.Relative")
-                               };
+    };
 
     //~ Constructors -------------------------------------------------------------------------------
 

@@ -72,7 +72,7 @@ public class OnlineWorker {
 				if (hrf == null) {
 					return false;
 				}
-				
+
 			} catch (IOException e) {
 				// Info
 				String msg = getLangString("Downloadfehler")
@@ -229,9 +229,23 @@ public class OnlineWorker {
 		return downloadMatchData(info, refresh);
 	}
 
-	public static boolean downloadMatchData(MatchKurzInfo info, boolean refresh)
-	{
-		if (info.isObsolet()){
+	/**
+	 * Downloads all the data for a match whose <code>kurzInfo</code> is passed.
+	 *
+	 * <p>This includes:</p>
+	 * <ul>
+	 *     <li>{@link Matchdetails} for that match, incl. opponents, date, location, weather, events, etc.;</li>
+	 *     <li>The teams' logo;</li>
+	 *     <li>The match lineup for both teams;</li>
+	 *     <li>The team details (for ratings) for both teams;</li>
+	 *     <li>and {@link Matchdetails} again for highlights?</li>
+	 * </ul>
+	 * @param info High level match info.
+	 * @param refresh Forces a new download of the match details, even if they already exist.
+	 * @return boolean – <code>true</code> if download is successful, <code>false</code> otherwise.
+	 */
+	public static boolean downloadMatchData(MatchKurzInfo info, boolean refresh) {
+		if (info.isObsolet()) {
 			return true;
 		}
 
@@ -243,7 +257,7 @@ public class OnlineWorker {
 		}
 
 		HOMainFrame.instance().setWaitInformation();
-		// Only download if not present in the database, or if refresh is true or if match not oboslet
+		// Only download if not present in the database, or if refresh is true or if match not obsolete
 		if (refresh
 				|| !DBManager.instance().isMatchInDB(matchID, info.getMatchType())
 				|| DBManager.instance().hasUnsureWeatherForecast(matchID)
@@ -255,14 +269,14 @@ public class OnlineWorker {
 				// If ids not found, download matchdetails to obtain them.
 				// Highlights will be missing.
 				// ArenaId==0 in division battles
-				boolean newInfo = info.getHomeTeamID()<=0 || info.getGuestTeamID()<=0;
+				boolean incompleteInfo = info.getHomeTeamID() <= 0 || info.getGuestTeamID() <= 0;
 				Weather.Forecast weatherDetails = info.getWeatherForecast();
 				boolean bWeatherKnown = ((weatherDetails != null) && weatherDetails.isSure());
-				if ( newInfo || !bWeatherKnown) {
 
+				if (incompleteInfo || !bWeatherKnown) {
 					HOMainFrame.instance().setWaitInformation();
 					details = downloadMatchDetails(matchID, info.getMatchType(), null);
-					if ( details != null) {
+					if (details != null) {
 						info.setHomeTeamID(details.getHomeTeamId());
 						info.setGuestTeamID(details.getGuestTeamId());
 						info.setArenaId(details.getArenaID());
@@ -277,7 +291,7 @@ public class OnlineWorker {
 
 							if (!info.getWeatherForecast().isSure()) {
 								Regiondetails regiondetails = getRegionDetails(info.getRegionId());
-								if ( regiondetails != null) {
+								if (regiondetails != null) {
 									var matchDate = info.getMatchSchedule().toLocaleDate();
 									var weatherDate = regiondetails.getFetchDatum().toLocaleDate();
 									if (matchDate.equals(weatherDate)) {
@@ -319,12 +333,11 @@ public class OnlineWorker {
 
 				MatchLineup lineup;
 				boolean success;
-				if ( (info.getMatchStatus() == MatchKurzInfo.FINISHED) && (! info.isObsolet())) {
+				if ( (info.getMatchStatus() == MatchKurzInfo.FINISHED) && (!info.isObsolet())) {
 					lineup = downloadMatchlineup(matchID, info.getMatchType(), info.getHomeTeamID(), info.getGuestTeamID());
 					if (lineup == null) {
 						if ( !isSilentDownload()) {
-							String msg = getLangString("Downloadfehler")
-									+ " : Error fetching Matchlineup :";
+							String msg = getLangString("Downloadfehler") + " : Error fetching Matchlineup :";
 							// Info
 							setInfoMsg(msg, InfoPanel.FEHLERFARBE);
 							Helper.showMessage(HOMainFrame.instance(), msg, getLangString("Fehler"),
@@ -375,7 +388,7 @@ public class OnlineWorker {
 
 	private static void downloadTeamRatings(int matchID, MatchType matchType, int teamID) {
 		try {
-			var xml = MyConnector.instance().getTeamdetails(teamID);
+			var xml = MyConnector.instance().getTeamDetails(teamID);
 			var teamrating = new MatchTeamRating(matchID, matchType, XMLTeamDetailsParser.parseTeamdetailsFromString(xml, teamID));
 			DBManager.instance().storeTeamRatings(teamrating);
 		} catch (Exception e) {
@@ -387,9 +400,8 @@ public class OnlineWorker {
 		}
 	}
 
-	private static Map<String, String> getTeam(int teamId)
-	{
-		String str = MyConnector.instance().fetchTeamDetails(teamId);
+	public static Map<String, String> getTeam(int teamId) {
+		String str = MyConnector.instance().getTeamDetails(teamId);
 		return XMLTeamDetailsParser.parseTeamdetailsFromString(str, teamId);
 	}
 
@@ -399,8 +411,7 @@ public class OnlineWorker {
 		return 0;
 	}
 
-	private  static int getArenaId(Map<String, String> team)
-	{
+	private  static int getArenaId(Map<String, String> team) {
 		String str = team.get("ArenaID");
 		if ( str != null ) return Integer.parseInt(str);
 		return 0;
@@ -462,7 +473,6 @@ public class OnlineWorker {
 	/**
 	 * Download information about a given tournament
 	 */
-
 	public static TournamentDetails getTournamentDetails(int tournamentId) {
 		TournamentDetails oTournamentDetails = null;
 		String tournamentString = "";
@@ -614,7 +624,6 @@ public class OnlineWorker {
 												   int teamId2) {
 		MatchLineup lineUp2 = null;
 
-		// Wait Dialog zeigen
 		HOMainFrame.instance().setWaitInformation();
 
 		// Lineups holen
@@ -685,7 +694,6 @@ public class OnlineWorker {
 	 *            The lineup object to be uploaded
 	 * @return A string response with any error message
 	 */
-
 	public static String uploadMatchOrder(int matchId, MatchType matchType, Lineup lineup) {
 		String result;
 		String orders = lineup.toJson();
@@ -694,7 +702,7 @@ public class OnlineWorker {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		
+
 		return result;
 	}
 
@@ -994,10 +1002,10 @@ public class OnlineWorker {
 	private static String getHRFFileName() {
 		GregorianCalendar calendar = (GregorianCalendar) Calendar.getInstance();
 		StringBuilder builder = new StringBuilder();
-		
+
 		builder.append(HOVerwaltung.instance().getModel().getBasics().getTeamId());
 		builder.append('-');
-		
+
 		builder.append(calendar.get(Calendar.YEAR));
 		builder.append('-');
 		int month = calendar.get(Calendar.MONTH) + 1;
@@ -1262,6 +1270,11 @@ public class OnlineWorker {
 		catch (Exception ignore) {
 		}
 		return new SafeInsertMap();
+	}
+
+	public static Map<String, TeamStats> downloadLeagueDetails(int leagueId) {
+		String leagueDetailsXml = MyConnector.instance().getLeagueDetails(String.valueOf(leagueId));
+		return XMLLeagueDetailsParser.parseLeagueDetails(leagueDetailsXml);
 	}
 
 }

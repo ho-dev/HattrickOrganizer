@@ -606,14 +606,13 @@ public class DBManager implements PersistenceManager {
 	}
 
 	/**
-	 * lädt alle Spielpläne aus der DB
+	 * Loads all the games schedules from the database.
 	 *
-	 * @param withFixtures inklusive der Paarungen ja/nein
-	 * @return the spielplan [ ]
+	 * @param withFixtures includes fixtures if set to <code>true</code>
+	 * @return List<Spielplan> – List of all the {@link Spielplan}s.
 	 */
 	public List<Spielplan> getAllSpielplaene(boolean withFixtures) {
-		var ret =  ((SpielplanTable) getTable(SpielplanTable.TABLENAME))
-				.getAllSpielplaene();
+		var ret =  ((SpielplanTable) getTable(SpielplanTable.TABLENAME)).getAllSpielplaene();
 		if (withFixtures) {
 			for (Spielplan gameSchedule : ret) {
 				gameSchedule.addFixtures(loadFixtures(gameSchedule));

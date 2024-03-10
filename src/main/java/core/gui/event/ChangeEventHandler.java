@@ -10,7 +10,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class ChangeEventHandler {
 
     /** CopyOnWriteArrayList ensures thread-safety */
-    private List<ChangeListener> changeListeners = new CopyOnWriteArrayList<>();
+    private final List<ChangeListener> changeListeners = new CopyOnWriteArrayList<>();
 
     public void addChangeListener(ChangeListener changeListener) {
         changeListeners.add(changeListener);
@@ -22,7 +22,7 @@ public class ChangeEventHandler {
         }
     }
 
-    protected void fireChangeEvent(ChangeEvent event) {
+    public void fireChangeEvent(ChangeEvent event) {
         for (ChangeListener listener : changeListeners) {
             listener.stateChanged(event);
         }

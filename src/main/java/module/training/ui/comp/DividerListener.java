@@ -1,4 +1,3 @@
-// %1126721451182:hoplugins.trainingExperience.ui.component%
 package module.training.ui.comp;
 
 import core.model.UserParameter;
@@ -7,7 +6,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 /**
- * Dividend Listener that store in the Database the position of the varous
+ * Divider Listener that store in the Database the position of the various
  * SplitPane
  * 
  * @author <a href=mailto:draghetto@users.sourceforge.net>Massimiliano Amato</a>

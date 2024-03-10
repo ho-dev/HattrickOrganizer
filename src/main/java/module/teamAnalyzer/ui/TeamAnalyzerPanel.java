@@ -8,18 +8,26 @@ import module.teamAnalyzer.report.TeamReport;
 import module.teamAnalyzer.ui.controller.SimButtonListener;
 import module.teamAnalyzer.vo.Filter;
 import module.training.ui.comp.DividerListener;
+
 import java.awt.BorderLayout;
-import java.io.Serial;
 import javax.swing.JButton;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
+/**
+ * Base panel of the module.
+ *
+ * <p>It is composed of:
+ * <ul>
+ * <li>{@link MainPanel}, which displays the team lineup for the selected team, and the user's team;</li>
+ * <li>{@link RecapPanel} at the bottom, which displays the <em>x</em> last matches for the selected team;</li>
+ * <li>simButton, {@link FilterPanel}, {@link RatingPanel} and {@link SpecialEventsPanel} on the left.</li>
+ * </ul>
+ */
 public class TeamAnalyzerPanel extends LazyPanel {
 
 	/** The filters */
 	public static Filter filter = new Filter();
-	@Serial
-	private static final long serialVersionUID = 1L;
 	private JButton simButton;
 	private RecapPanel recapPanel;
 	private MainPanel mainPanel;
@@ -61,33 +69,40 @@ public class TeamAnalyzerPanel extends LazyPanel {
 
 		simButton = new JButton(HOVerwaltung.instance().getLanguageString("Simulate"));
 
-		JSplitPane splitPaneSub = new JSplitPane(JSplitPane.VERTICAL_SPLIT, ratingPanel, specialEventsPanel);
-		splitPaneSub.setDividerLocation(UserParameter.instance().teamAnalyzer_RatingPanelSplitPane);
-		splitPaneSub.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY,
-				new DividerListener(DividerListener.teamAnalyzer_RatingPanelSplitPane));
-
-		JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, filterPanel, splitPaneSub);
-		splitPane.setDividerLocation(UserParameter.instance().teamAnalyzer_FilterPanelSplitPane);
-		splitPane.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY,
-				new DividerListener(DividerListener.teamAnalyzer_FilterPanelSplitPane));
+		JSplitPane splitPane = createTopSplitPane();
 
 		JPanel mainLeftPanel = new JPanel();
 		mainLeftPanel.setLayout(new BorderLayout());
 		mainLeftPanel.add(splitPane, BorderLayout.CENTER);
 		mainLeftPanel.add(simButton, BorderLayout.SOUTH);
 
-		JSplitPane splitPaneUpper = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, mainLeftPanel,
-				mainPanel);
+		JSplitPane splitPaneUpper = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, mainLeftPanel, mainPanel);
 		splitPaneUpper.setDividerLocation(UserParameter.instance().teamAnalyzer_MainPanelSplitPane);
 		splitPaneUpper.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY,
 				new DividerListener(DividerListener.teamAnalyzer_MainPanelSplitPane));
 
-		JSplitPane splitPaneMain = new JSplitPane(JSplitPane.VERTICAL_SPLIT, splitPaneUpper,
-				recapPanel);
+		JSplitPane splitPaneMain = new JSplitPane(JSplitPane.VERTICAL_SPLIT, splitPaneUpper, recapPanel);
 		splitPaneMain.setDividerLocation(UserParameter.instance().teamAnalyzer_BottomSplitPane);
 		splitPaneMain.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY,
 				new DividerListener(DividerListener.teamAnalyzer_BottomSplitPane));
 		add(splitPaneMain, BorderLayout.CENTER);
+	}
+
+	private JSplitPane createTopSplitPane() {
+		JSplitPane splitPane;
+		if (SystemManager.isSpecialEventVisible.isSet()) {
+			JSplitPane splitPaneSub = new JSplitPane(JSplitPane.VERTICAL_SPLIT, ratingPanel, specialEventsPanel);
+			splitPaneSub.setDividerLocation(UserParameter.instance().teamAnalyzer_RatingPanelSplitPane);
+			splitPaneSub.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY,
+					new DividerListener(DividerListener.teamAnalyzer_RatingPanelSplitPane));
+			splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, filterPanel, splitPaneSub);
+		} else {
+			splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, filterPanel, ratingPanel);
+		}
+		splitPane.setDividerLocation(UserParameter.instance().teamAnalyzer_FilterPanelSplitPane);
+		splitPane.addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY,
+				new DividerListener(DividerListener.teamAnalyzer_FilterPanelSplitPane));
+		return splitPane;
 	}
 
 	public MainPanel getMainPanel() {
@@ -122,17 +137,17 @@ public class TeamAnalyzerPanel extends LazyPanel {
 	public void reload() {
 		getFilterPanel().reload();
 		TeamReport teamReport = SystemManager.getTeamReport();
+
 		getMainPanel().reload(teamReport.getSelectedLineup(), 0, 0);
 		getRecapPanel().reload(teamReport);
 		getRatingPanel().reload(teamReport.getSelectedLineup());
-
 		getSpecialEventsPanel().reload(teamReport.getSelectedLineup());
 
 		this.simButton.setVisible(SystemManager.isLineup.isSet());
 	}
 
 	public void storeUserSettings() {
-		if ( this.recapPanel != null)  {
+		if (this.recapPanel != null) {
 			this.recapPanel.storeUserSettings();
 		}
 	}

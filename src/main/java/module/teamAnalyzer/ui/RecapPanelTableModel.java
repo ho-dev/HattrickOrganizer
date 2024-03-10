@@ -22,7 +22,7 @@ import java.awt.*;
 
 public class RecapPanelTableModel extends HOTableModel {
 
-    public RecapPanelTableModel( UserColumnController.ColumnModelId id) {
+    public RecapPanelTableModel(UserColumnController.ColumnModelId id) {
         super(id, "TeamAnalyzerRecap");
         columns = initColumns();
     }

@@ -29,6 +29,7 @@ public class SystemManager {
 	private final static String ISMIXEDLINEUP = "TA_mixedLineup";
 	private final static String ISSHOWPLAYERINFO = "TA_isShowPlayerInfo";
 	private final static String ISCHECKTEAMNAME = "TA_isCheckTeamName";
+	private final static String IS_SPECIAL_EVENT_VISIBLE = "TA_isSpecialEventVisible";
 
 	public static class Setting {
 		Boolean is;
@@ -66,6 +67,7 @@ public class SystemManager {
 	public static Setting isMixedLineup = new Setting(ISMIXEDLINEUP, false);
 	public static Setting isShowPlayerInfo = new Setting(ISSHOWPLAYERINFO, false);
 	public static Setting isCheckTeamName = new Setting(ISCHECKTEAMNAME);
+	public static Setting isSpecialEventVisible = new Setting(IS_SPECIAL_EVENT_VISIBLE, true);
 
 	/**
 	 * The Selected Team
@@ -190,7 +192,7 @@ public class SystemManager {
 	}
 
 	public static TeamReport getTeamReport() {
-		if ( teamReport == null){
+		if (teamReport == null) {
 			teamReport = new TeamReport(getActiveTeamId(), new ArrayList<>()); // create an empty team report
 		}
 		return teamReport;

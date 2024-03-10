@@ -231,13 +231,12 @@ class SeriesTablePanel extends ImagePanel {
 	private void populateSerieTable() {
 		try {
 			if (this.model.getCurrentSeries() != null) {
-				final Vector<SerieTableEntry> tabelleneintraege = this.model.getCurrentSeries()
-						.getTable().getEntries();
+				final Vector<SerieTableEntry> tableEntries = this.model.getCurrentSeries().getTable().getEntries();
 				final int teamid = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 				int j;
 
-				for (int i = 0; i < tabelleneintraege.size(); i++) {
-					final SerieTableEntry entry = tabelleneintraege.get(i);
+				for (int i = 0; i < tableEntries.size(); i++) {
+					final SerieTableEntry entry = tableEntries.get(i);
 
 					if (entry.getPoints() > -1) {
 						j = i + 1;
