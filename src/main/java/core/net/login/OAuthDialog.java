@@ -15,6 +15,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.Serial;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
@@ -23,6 +24,7 @@ import javax.swing.JPanel;
 
 public class OAuthDialog extends JDialog {
 
+	@Serial
 	private static final long serialVersionUID = 1798304851624958795L;
 
 	private final HOMainFrame m_clMainFrame;
@@ -37,7 +39,7 @@ public class OAuthDialog extends JDialog {
 	private final OAuth10aService m_service;
 	private OAuth1AccessToken m_AccessToken;
 	private OAuth1RequestToken m_RequestToken;
-	private String scopes = "";
+	private String scopes;
 
 	public OAuthDialog(HOMainFrame mainFrame, OAuth10aService service, String scope) {
 		super(mainFrame, HOVerwaltung.instance().getLanguageString(
@@ -107,7 +109,7 @@ public class OAuthDialog extends JDialog {
 		ActionListener actionListener = new ActionListener() {
 
 			@Override
-			public final void actionPerformed(ActionEvent actionEvent) {
+			public void actionPerformed(ActionEvent actionEvent) {
 				if (actionEvent.getSource().equals(m_jbOK)) {
 					doAuthorize();
 				} else if (actionEvent.getSource().equals(m_jbBrowse)) {
