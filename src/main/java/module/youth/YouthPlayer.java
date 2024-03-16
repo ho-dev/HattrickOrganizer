@@ -1057,48 +1057,48 @@ public class YouthPlayer extends AbstractTable.Storable {
         return null;
     }
 
-    private Boolean _isAllrounderSkillLevelAvailable;
+    private Boolean _isOverallSkillsLevelAvailable;
 
     /**
-     * Is allrounder skill level available.
-     * Allrounder skill levels can be given in the scout's comment.
-     * @return True, if allrounder skill is known.
+     * Is overall skills level available.
+     * Overall skills level can be given in the scout's comment.
+     * @return True, if overall skills is known.
      */
-    public boolean isAllrounderSkillLevelAvailable(){
-        if (_isAllrounderSkillLevelAvailable == null) {
+    public boolean isOverallSkillsLevelAvailable(){
+        if (_isOverallSkillsLevelAvailable == null) {
             var sc = this.getScoutComments().stream()
                     .filter(i -> i.type == CommentType.AVERAGE_SKILL_LEVEL)
                     .findFirst()
                     .orElse(null);
-            _isAllrounderSkillLevelAvailable = sc != null;
-            if (_isAllrounderSkillLevelAvailable) {
-                allrounderSkillLevel = sc.getSkillLevel();
+            _isOverallSkillsLevelAvailable = sc != null;
+            if (_isOverallSkillsLevelAvailable) {
+                overallSkillsLevel = sc.getSkillLevel();
             }
         }
-        return _isAllrounderSkillLevelAvailable;
+        return _isOverallSkillsLevelAvailable;
     }
 
-    private int allrounderSkillLevel;
+    private int overallSkillsLevel;
 
     /**
      * Get the allrounder skill level
      * @return Integer The allrounder skill level, null if unknown
      */
-    public Integer getAllrounderSkillLevel() {
-        if (isAllrounderSkillLevelAvailable()) return allrounderSkillLevel;
+    public Integer getOverallSkillsLevel() {
+        if (isOverallSkillsLevelAvailable()) return overallSkillsLevel;
         return null;
     }
 
     /**
-     * Get the player's overall skill level given by the scout.
+     * Get the player's overall skills level given by the scout.
      * @return String
-     *          number of overall skill
-     *          empty, if no overall skill was given by the scout
+     *          overall skills level
+     *          empty, if no overall skills was given by the scout
      */
-    public String getAllrounderSkillLevelAsString() {
+    public String getOverallSkillsLevelAsString() {
         var stringBuilder = new StringBuilder();
-        if (isAllrounderSkillLevelAvailable()) {
-            stringBuilder.append(allrounderSkillLevel).append(" ");
+        if (isOverallSkillsLevelAvailable()) {
+            stringBuilder.append(overallSkillsLevel).append(" ");
         }
         stringBuilder.append("(").append(String.format("%.2f", this.currentSkills.calculateMinimumAllrounderSkill()))
                 .append(")");
@@ -1199,11 +1199,11 @@ public class YouthPlayer extends AbstractTable.Storable {
         // init max
         var max = s.getCurrentValue();
         while (trainingContext.age < 17 && max < skillLimit) {
-            if (isAllrounderSkillLevelAvailable()) {
+            if (isOverallSkillsLevelAvailable()) {
                 // check if allrounderLimit is reached.
                 s.setPotential17Value(max);
                 var minAllrounder = this.currentSkills.calculateMinimumAllrounderSkill();
-                if (minAllrounder >= getAllrounderSkillLevel()) {
+                if (minAllrounder >= getOverallSkillsLevel()) {
                     ret = false; // stop further training
                     break;
                 }
