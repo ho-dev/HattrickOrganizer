@@ -58,6 +58,7 @@
 * Modify youth module layout (#1449)
 * Set initial youth module view layout (#1558)
 * Display specialty icons in youth player tables (#1999)
+* Display future player development (potential) and take allrounder skill into account (#2045)
 
 ### Option setting
 * new color editor in option settings (#1242)
@@ -74,14 +75,14 @@
 
 ## Translations
 
-Reports by Contributors - September 24, 2023 - February 04, 2024
+Reports by Contributors - September 24, 2023 - March 05, 2024
 
 * Sebastien 157
+* wsbrenk 37
 * \_KOHb\_ 22
 * Georgi 10
 * Moorhuhninho 3
 * Lidegand 3
 * sich 3
-* wsbrenk 3
 
-Total 198
+Total 235

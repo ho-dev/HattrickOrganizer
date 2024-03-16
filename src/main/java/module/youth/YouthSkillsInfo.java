@@ -173,4 +173,14 @@ public class YouthSkillsInfo extends HashMap<PlayerSkill, YouthSkillInfo> {
         }
         return ret;
     }
+
+    /**
+     * Calculate average of 3 maximum allrounder contributions.
+     * @return Double minimum allrounder value
+     */
+    public double calculateMinimumAllrounderSkill(){
+        return this.values().stream()
+                .sorted(Comparator.comparing(YouthSkillInfo::calculateMinimumAllrounderContribution, Comparator.reverseOrder()))
+                .limit(3).mapToDouble(YouthSkillInfo::calculateMinimumAllrounderContribution).sum() / 3.;
+    }
 }
