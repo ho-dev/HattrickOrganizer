@@ -10,6 +10,7 @@ import core.util.HODateTime;
 import core.util.HOLogger;
 import module.training.Skills.ScoutCommentSkillTypeID;
 import java.time.Duration;
+import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import static java.lang.Math.max;
@@ -703,13 +704,19 @@ public class YouthPlayer extends AbstractTable.Storable {
      */
     public double[] getSkillDevelopment(PlayerSkill skillId) {
         var trainingDevelopment = getTrainingDevelopment();
-        var ret = new double[trainingDevelopment.size() + futureTrainings.size()];
+        var ret = new double[max(1, trainingDevelopment.size()) + futureTrainings.size()];
         int i=0;
         var value = 0.;
-        for ( var t : trainingDevelopment.values()){
-            var skills = t.getSkills();
-            var skill = skills.get(skillId);
-            value = skill.getCurrentValue();
+        if (!trainingDevelopment.isEmpty()) {
+            for (var t : trainingDevelopment.values()) {
+                var skills = t.getSkills();
+                var skill = skills.get(skillId);
+                value = skill.getCurrentValue();
+                ret[i++] = value;
+            }
+        }
+        else {
+            value = getSkillInfo(skillId).getCurrentValue();
             ret[i++] = value;
         }
         for ( var futureTrainingValue : this.futureTrainings.values()){
@@ -728,10 +735,15 @@ public class YouthPlayer extends AbstractTable.Storable {
      */
     public double[] getSkillDevelopmentDates() {
         var trainingDevelopment = getTrainingDevelopment();
-        var ret = new double[trainingDevelopment.size() + futureTrainings.size()];
+        var ret = new double[max(1, trainingDevelopment.size()) + futureTrainings.size()];
         int i = 0;
-        for (var t : trainingDevelopment.keySet()) {
-            ret[i++] = Date.from(t.instant).getTime();
+        if (!trainingDevelopment.isEmpty()) {
+            for (var t : trainingDevelopment.keySet()) {
+                ret[i++] = Date.from(t.instant).getTime();
+            }
+        }
+        else {
+            ret[i++] = Date.from(Instant.now()).getTime();
         }
         for ( var futureTrainingKey : futureTrainings.keySet()){
             ret[i++] = Date.from(futureTrainingKey.instant).getTime();
@@ -1195,7 +1207,7 @@ public class YouthPlayer extends AbstractTable.Storable {
         var max = s.getCurrentValue();
         while (trainingContext.age < 17 && max < skillLimit) {
             var increment = YouthTraining.getMaxTrainingPerWeek(s.getSkillID(), (int) max, trainingContext.age);
-            if (isOverallSkillsLevelAvailable() && !s.isMaxAvailable()) {
+            if (isOverallSkillsLevelAvailable() && (!s.isMaxAvailable() || max > s.getMax())) {
                 // check if overall skills level is reached.
                 s.setPotential17Value(max+increment);
                 var minOverallSkillsLevel = this.currentSkills.calculateMinimumOverallSkillsLevel();
