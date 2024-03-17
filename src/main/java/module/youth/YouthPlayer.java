@@ -1170,7 +1170,6 @@ public class YouthPlayer extends AbstractTable.Storable {
      * @param trainingContext Current training context of the calculation
      */
     private void calculatePotential17Value(YouthSkillInfo s, YouthTrainingContext trainingContext) {
-        var ret = true;
         var skillLimit = 8.3;
         if (s.isMaxAvailable()){
             skillLimit = min(8.3, s.getMax() + .99);
