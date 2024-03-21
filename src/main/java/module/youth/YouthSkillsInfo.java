@@ -175,12 +175,12 @@ public class YouthSkillsInfo extends HashMap<PlayerSkill, YouthSkillInfo> {
     }
 
     /**
-     * Calculate average of 3 maximum allrounder contributions.
-     * @return Double minimum allrounder value
+     * Calculate average of 3 maximum overall skills level contributions.
+     * @return Double minimum overall skills level value
      */
-    public double calculateMinimumAllrounderSkill(){
+    public double calculateMinimumOverallSkillsLevel(){
         return this.values().stream()
-                .sorted(Comparator.comparing(YouthSkillInfo::calculateMinimumAllrounderContribution, Comparator.reverseOrder()))
-                .limit(3).mapToDouble(YouthSkillInfo::calculateMinimumAllrounderContribution).sum() / 3.;
+                .sorted(Comparator.comparing(YouthSkillInfo::calculateMinimumOverallSkillsLevelContribution, Comparator.reverseOrder()))
+                .limit(3).mapToDouble(YouthSkillInfo::calculateMinimumOverallSkillsLevelContribution).sum() / 3.;
     }
 }

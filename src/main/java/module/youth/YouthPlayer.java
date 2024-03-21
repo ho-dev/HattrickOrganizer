@@ -10,6 +10,7 @@ import core.util.HODateTime;
 import core.util.HOLogger;
 import module.training.Skills.ScoutCommentSkillTypeID;
 import java.time.Duration;
+import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import static java.lang.Math.max;
@@ -703,13 +704,19 @@ public class YouthPlayer extends AbstractTable.Storable {
      */
     public double[] getSkillDevelopment(PlayerSkill skillId) {
         var trainingDevelopment = getTrainingDevelopment();
-        var ret = new double[trainingDevelopment.size() + futureTrainings.size()];
+        var ret = new double[max(1, trainingDevelopment.size()) + futureTrainings.size()];
         int i=0;
         var value = 0.;
-        for ( var t : trainingDevelopment.values()){
-            var skills = t.getSkills();
-            var skill = skills.get(skillId);
-            value = skill.getCurrentValue();
+        if (!trainingDevelopment.isEmpty()) {
+            for (var t : trainingDevelopment.values()) {
+                var skills = t.getSkills();
+                var skill = skills.get(skillId);
+                value = skill.getCurrentValue();
+                ret[i++] = value;
+            }
+        }
+        else {
+            value = getSkillInfo(skillId).getCurrentValue();
             ret[i++] = value;
         }
         for ( var futureTrainingValue : this.futureTrainings.values()){
@@ -728,10 +735,15 @@ public class YouthPlayer extends AbstractTable.Storable {
      */
     public double[] getSkillDevelopmentDates() {
         var trainingDevelopment = getTrainingDevelopment();
-        var ret = new double[trainingDevelopment.size() + futureTrainings.size()];
+        var ret = new double[max(1, trainingDevelopment.size()) + futureTrainings.size()];
         int i = 0;
-        for (var t : trainingDevelopment.keySet()) {
-            ret[i++] = Date.from(t.instant).getTime();
+        if (!trainingDevelopment.isEmpty()) {
+            for (var t : trainingDevelopment.keySet()) {
+                ret[i++] = Date.from(t.instant).getTime();
+            }
+        }
+        else {
+            ret[i++] = Date.from(Instant.now()).getTime();
         }
         for ( var futureTrainingKey : futureTrainings.keySet()){
             ret[i++] = Date.from(futureTrainingKey.instant).getTime();
@@ -1100,7 +1112,7 @@ public class YouthPlayer extends AbstractTable.Storable {
         if (isOverallSkillsLevelAvailable()) {
             stringBuilder.append(overallSkillsLevel).append(" ");
         }
-        stringBuilder.append("(").append(String.format("%.2f", this.currentSkills.calculateMinimumAllrounderSkill()))
+        stringBuilder.append("(").append(String.format("%.2f", this.currentSkills.calculateMinimumOverallSkillsLevel()))
                 .append(")");
         return stringBuilder.toString();
     }
@@ -1130,7 +1142,7 @@ public class YouthPlayer extends AbstractTable.Storable {
      * Calculate the maximum reachable skills
      */
     private void calcMaxSkills17() {
-        if (this.getAgeYears() >16) {
+        if (this.getAgeYears() > 16) {
             // the player is older than 17 years old
             // Find skill values at age of 17,0
             YouthSkillsInfo skill17 = null;
@@ -1150,22 +1162,15 @@ public class YouthPlayer extends AbstractTable.Storable {
                 skill17 = this.currentSkills;
             }
             // Set skill potential values of each skill
-            for ( var skill: skill17.values()){
+            for (var skill : skill17.values()) {
                 this.getSkillInfo(skill.getSkillID()).setPotential17Value(skill.getCurrentValue());
             }
-        }
-        else {
+        } else {
             var trainingContext = new YouthTrainingContext(this);
             Comparator<YouthSkillInfo> trainingUsefulnessComparator = (i1, i2) -> getTrainingUsefulness(i2).compareTo(getTrainingUsefulness(i1));
             var trainingPlan = this.currentSkills.values().stream().sorted(trainingUsefulnessComparator).toList();
-            var calculateTraining = true;
-            for (var t : trainingPlan){
-                if (calculateTraining){
-                    calculateTraining = calculatePotential17Value(t, trainingContext);
-                }
-                else {
-                    t.setPotential17Value(t.getCurrentValue());
-                }
+            for (var t : trainingPlan) {
+                calculatePotential17Value(t, trainingContext);
             }
             this.futureTrainings = trainingContext.futureTrainings;
         }
@@ -1175,42 +1180,44 @@ public class YouthPlayer extends AbstractTable.Storable {
      * Calculate the effect of training skill s until either age of 17 years or the maximum skill level is reached.
      * @param s Youth skill info
      * @param trainingContext Current training context of the calculation
-     * @return boolean true if further training is possible, false if limit is reached
      */
-    private boolean calculatePotential17Value(YouthSkillInfo s, YouthTrainingContext trainingContext) {
-        var ret = true;
+    private void calculatePotential17Value(YouthSkillInfo s, YouthTrainingContext trainingContext) {
         var skillLimit = 8.3;
-        if (s.isMaxAvailable() && s.getMax() < 8) skillLimit = s.getMax() + .99;
-        if (s.isTop3() != null) {
-            if (!s.isTop3()) {
-                if (skillLimit > trainingContext.minimumTop3SkillPotential + .99) {
-                    skillLimit = min(8.3, trainingContext.minimumTop3SkillPotential + .99);
-                }
-            }
-        } else {
-            if (trainingContext.numberOfKnownTop3Skills == 3) {
-                if (skillLimit > trainingContext.minimumTop3SkillPotential + .99) {
-                    skillLimit = min(8.3, trainingContext.minimumTop3SkillPotential + .99);
+        if (s.isMaxAvailable()){
+            skillLimit = min(8.3, s.getMax() + .99);
+        }
+        else {
+            if (s.isTop3() != null) {
+                if (!s.isTop3()) {
+                    if (skillLimit > trainingContext.minimumTop3SkillPotential + .99) {
+                        skillLimit = min(8.3, trainingContext.minimumTop3SkillPotential + .99);
+                    }
                 }
             } else {
-                trainingContext.numberOfKnownTop3Skills++;
+                if (trainingContext.numberOfKnownTop3Skills == 3) {
+                    if (skillLimit > trainingContext.minimumTop3SkillPotential + .99) {
+                        skillLimit = min(8.3, trainingContext.minimumTop3SkillPotential + .99);
+                    }
+                } else {
+                    trainingContext.numberOfKnownTop3Skills++;
+                }
             }
         }
         // init max
         var max = s.getCurrentValue();
         while (trainingContext.age < 17 && max < skillLimit) {
-            if (isOverallSkillsLevelAvailable()) {
-                // check if allrounderLimit is reached.
-                s.setPotential17Value(max);
-                var minAllrounder = this.currentSkills.calculateMinimumAllrounderSkill();
-                if (minAllrounder >= getOverallSkillsLevel()) {
-                    ret = false; // stop further training
+            var increment = YouthTraining.getMaxTrainingPerWeek(s.getSkillID(), (int) max, trainingContext.age);
+            if (isOverallSkillsLevelAvailable() && (!s.isMaxAvailable() || max > s.getMax())) {
+                // check if overall skills level is reached.
+                s.setPotential17Value(max+increment);
+                var minOverallSkillsLevel = this.currentSkills.calculateMinimumOverallSkillsLevel();
+                if (minOverallSkillsLevel >= getOverallSkillsLevel()) {
                     break;
                 }
             }
 
             //  weekly increment of the skill
-            max += YouthTraining.getMaxTrainingPerWeek(s.getSkillID(), (int) max, trainingContext.age);
+            max += increment;
             // player's age of next week
             trainingContext.days += 7;
             if (trainingContext.days > 111) {
@@ -1223,7 +1230,6 @@ public class YouthPlayer extends AbstractTable.Storable {
             trainingContext.addFutureTraining(s.getSkillID(), max);
         }
         s.setPotential17Value(max);
-        return ret;
     }
 
     /**
