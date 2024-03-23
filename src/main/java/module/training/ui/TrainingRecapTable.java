@@ -110,7 +110,7 @@ public class TrainingRecapTable extends JScrollPane {
             var skillChanges = ftm.getFutureSkillups();
 
             HashMap<String, SkillChange> maps = new HashMap<>();
-            for ( var s: skillChanges){
+            for (var s : skillChanges) {
                 maps.put(s.getHtSeason() + " " + s.getHtWeek(), s);
             }
 
@@ -119,10 +119,7 @@ public class TrainingRecapTable extends JScrollPane {
             row.add(player.getFullName());
             row.add(player.getAgeWithDaysAsString());
             byte bIdealPosition = player.getIdealPosition();
-            row.add(MatchRoleID.getNameForPosition(bIdealPosition)
-                    + " ("
-                    +  player.getIdealPositionRating()
-                    + ")");
+            row.add(String.format(MatchRoleID.getNameForPosition(bIdealPosition) + " (%.2f)", player.getIdealPositionRating()));
             row.add(Integer.toString(ftm.getTrainingSpeed()));
             row.add(Integer.toString(player.getPlayerId()));
 
