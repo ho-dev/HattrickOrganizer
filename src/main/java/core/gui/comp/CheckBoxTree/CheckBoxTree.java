@@ -77,8 +77,8 @@ public class CheckBoxTree extends JTree {
     }
 
     private void resetCheckingState() {
-        nodesCheckingState = new HashMap<TreePath, CheckedNode>();
-        checkedPaths = new HashSet<TreePath>();
+        nodesCheckingState = new HashMap<>();
+        checkedPaths = new HashSet<>();
         DefaultMutableTreeNode node = (DefaultMutableTreeNode)getModel().getRoot();
         if (node == null) {
             return;

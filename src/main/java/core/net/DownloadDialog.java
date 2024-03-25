@@ -1,6 +1,5 @@
 package core.net;
 
-import core.datatype.CBItem;
 import core.db.DBManager;
 import core.db.user.UserManager;
 import core.file.hrf.HRFStringParser;
@@ -349,7 +348,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 
 			if (bOK) {
 				// Download previous series data
-				var selection = new ArrayList<Object>();
+				var selection = new ArrayList<>();
 				var e = filterRoot.getPreviousSeriesData().children();
 				while (e.hasMoreElements()) {
 					DefaultMutableTreeNode child = (DefaultMutableTreeNode) e.nextElement();
@@ -413,7 +412,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 	private void startNtDownload() {
 		try {
 			var teams = NthrfUtil.getNtTeams();
-			if (teams == null || teams.size() < 1 || teams.get(0)[0] == null || teams.get(0)[0].length() < 1) {
+			if (teams == null || teams.isEmpty() || teams.get(0)[0] == null || teams.get(0)[0].isEmpty()) {
 				return;
 			}
 			final long teamId;
