@@ -72,17 +72,18 @@
 * Fix NPE when saving preferences on un-managed HO install (#1992)
   HO now downloads the update in the browser when HO install is un-managed.
 * Enable standard custom popup menu in oauth dialog's text fields (#1471)
+* Move previous series download checkbox to the check box tree of download dialog (#1434)
 
 ## Translations
 
-Reports by Contributors - September 24, 2023 - March 05, 2024
+Reports by Contributors - September 24, 2023 - March 26, 2024
 
+* wsbrenk 214
 * Sebastien 157
-* wsbrenk 37
 * \_KOHb\_ 22
 * Georgi 10
 * Moorhuhninho 3
 * Lidegand 3
 * sich 3
 
-Total 235
+Total 412

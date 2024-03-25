@@ -77,8 +77,8 @@ public class CheckBoxTree extends JTree {
     }
 
     private void resetCheckingState() {
-        nodesCheckingState = new HashMap<TreePath, CheckedNode>();
-        checkedPaths = new HashSet<TreePath>();
+        nodesCheckingState = new HashMap<>();
+        checkedPaths = new HashSet<>();
         DefaultMutableTreeNode node = (DefaultMutableTreeNode)getModel().getRoot();
         if (node == null) {
             return;
@@ -100,6 +100,7 @@ public class CheckBoxTree extends JTree {
     // Overriding cell renderer by a class that ignores the original "selection" mechanism
     // It decides how to show the nodes due to the checking-mechanism
     private class CheckBoxCellRenderer extends JPanel implements TreeCellRenderer {
+
         JCheckBox checkBox;
 
         public CheckBoxCellRenderer() {
@@ -113,7 +114,7 @@ public class CheckBoxTree extends JTree {
         public Component getTreeCellRendererComponent(JTree tree, Object value,
                                                       boolean selected, boolean expanded, boolean leaf, int row,
                                                       boolean hasFocus) {
-            DefaultMutableTreeNode node = (DefaultMutableTreeNode)value;
+            DefaultMutableTreeNode node = (DefaultMutableTreeNode) value;
             Object obj = node.getUserObject();
             TreePath tp = new TreePath(node.getPath());
             CheckedNode cn = nodesCheckingState.get(tp);
@@ -122,8 +123,9 @@ public class CheckBoxTree extends JTree {
             }
 
             checkBox.setSelected(cn.isSelected);
+            checkBox.getModel().setArmed(!cn.allChildrenSelected);
+            checkBox.getModel().setPressed(!cn.allChildrenSelected);
             checkBox.setText(obj.toString());
-            checkBox.setOpaque(cn.isSelected && cn.hasChildren && !cn.allChildrenSelected);
             return this;
         }
     }
@@ -186,12 +188,12 @@ public class CheckBoxTree extends JTree {
         DefaultMutableTreeNode parentNode = (DefaultMutableTreeNode) parentPath.getLastPathComponent();
         parentCheckedNode.allChildrenSelected = true;
         parentCheckedNode.isSelected = false;
-        for (int i = 0 ; i < parentNode.getChildCount() ; i++) {
+        for (int i = 0; i < parentNode.getChildCount(); i++) {
             TreePath childPath = parentPath.pathByAddingChild(parentNode.getChildAt(i));
             CheckedNode childCheckedNode = nodesCheckingState.get(childPath);
             // It is enough that even one subtree is not fully selected
             // to determine that the parent is not fully selected
-            if (! childCheckedNode.allChildrenSelected) {
+            if (!childCheckedNode.allChildrenSelected) {
                 parentCheckedNode.allChildrenSelected = false;
             }
             // If at least one child is selected, selecting also the parent
