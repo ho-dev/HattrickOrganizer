@@ -118,9 +118,6 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         if  ( player == null) {
             // at initialisation select first player to ensure clean display =====
             player = m_playerOverviewTable.getSorter().getSpieler(0);
-            if ( player == null){
-                player = HOVerwaltung.instance().getModel().getCurrentPlayers().get(0);
-            }
         }
 
         m_clPlayer = player;

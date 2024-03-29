@@ -22,6 +22,7 @@
 * Fix error player download nickname null pointer exception (#1938)
 * Fix initial sorting by player group (#1909)
 * Show stamina sub skill (#383)
+* fix error on player details display after initial download (#2044)
 
 ### Team Analyzer
 * Restore size of match prediction dialog box (#1898)

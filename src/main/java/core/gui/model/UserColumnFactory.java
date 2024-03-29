@@ -273,11 +273,11 @@ final public class UserColumnFactory {
             @Override
             public void setSize(TableColumn column) {
                 // Column ID is not shown!
+                // isDisplay needs to be true in order to get players' ids in hidden column in the table model
                 column.setMinWidth(0);
                 column.setPreferredWidth(0);
             }
         };
-        playerBasicArray[1].setDisplay(false);
         return playerBasicArray;
     }
 
