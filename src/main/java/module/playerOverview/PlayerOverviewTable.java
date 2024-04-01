@@ -86,16 +86,6 @@ public class PlayerOverviewTable extends JTable implements core.gui.Refreshable 
 		});
 	}
 
-	/**
-	 * Returns the width of the Best position column.
-	 */
-	public final int getBestPosWidth() {
-		return getColumnModel()
-				.getColumn(getColumnModel()
-						.getColumnIndex(tableModel.getPositionInArray(UserColumnFactory.BEST_POSITION)))
-				.getWidth();
-	}
-
 	public final TableSorter getSorter() {
 		return tableSorter;
 	}

@@ -36,7 +36,7 @@ public final class LineupPlayersTable extends JTable implements core.gui.Refresh
 	private LineupTableModel tableModel;
 	private TableSorter tableSorter;
 
-	protected LineupPlayersTable() {
+	LineupPlayersTable() {
 		super();
 		initModel();
 		setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
@@ -78,7 +78,7 @@ public final class LineupPlayersTable extends JTable implements core.gui.Refresh
 	/**
 	 *Returns the column for sorting
 	 */
-	protected int getSortSpalte() {
+    private int getSortSpalte() {
 		return switch (UserParameter.instance().standardsortierung) {
 			case UserParameter.SORT_NAME -> tableModel.getPositionInArray(UserColumnFactory.NAME);
 			case UserParameter.SORT_AUFGESTELLT -> tableModel.getPositionInArray(UserColumnFactory.LINEUP);
@@ -88,12 +88,11 @@ public final class LineupPlayersTable extends JTable implements core.gui.Refresh
 		};
 	}
 
-	protected TableSorter getSorter() {
+	TableSorter getSorter() {
 		return tableSorter;
 	}
 
-
-	public final void saveColumnOrder() {
+	public void saveColumnOrder() {
 		final UserColumn[] columns = tableModel.getDisplayedColumns();
 		final TableColumnModel tableColumnModel = getColumnModel();
 		for (int i = 0; i < columns.length; i++) {
@@ -183,8 +182,6 @@ public final class LineupPlayersTable extends JTable implements core.gui.Refresh
 			public void mouseReleased(MouseEvent e) {
 				int rowindex = getSelectedRow();
 				if (rowindex >= 0){
-					int colAUTO_LINEUP_ID = tableModel.getPositionInArray(UserColumnFactory.AUTO_LINEUP);
-
 					// Last match column
 					int viewColumn = columnAtPoint(e.getPoint());
 					int column = columnModel.getColumn(viewColumn).getModelIndex();

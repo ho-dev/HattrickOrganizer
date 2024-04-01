@@ -157,8 +157,8 @@ public abstract class HOTableModel extends AbstractTableModel {
 	/**
 	 * return value
 	 * 
-	 * @param row
-	 * @param column
+	 * @param row Row number
+	 * @param column Column number
 	 * 
 	 * @return Object
 	 */
@@ -176,12 +176,7 @@ public abstract class HOTableModel extends AbstractTableModel {
 		return (m_clData != null) ? m_clData.length : 0;
 	}
 
-	@Override
-	public boolean isCellEditable(int row, int col) {
-		return false;
-	}
-
-	@Override
+    @Override
 	public final Class<?> getColumnClass(int columnIndex) {
 		final Object obj = getValueAt(0, columnIndex);
 
