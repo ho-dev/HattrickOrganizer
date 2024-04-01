@@ -159,7 +159,7 @@ public class TableSorter extends TableMap {
         return null;
     }
 
-    public final Player getSpieler(int row) {
+    public final Player getPlayerAtRow(int row) {
         if (row > -1) {
             try {
                 var entry = (ColorLabelEntry) getValueAt(row, idColumn);

@@ -68,7 +68,7 @@ public class PlayerOverviewTable extends JTable implements core.gui.Refreshable 
 					String columnName = PlayerOverviewTable.this.getColumnName(columnAtPoint);
 					String lastMatchRating = (HOVerwaltung.instance().getLanguageString("LastMatchRating"));
 
-					Player player = tableSorter.getSpieler(rowIndex);
+					Player player = tableSorter.getPlayerAtRow(rowIndex);
 					if (player != null) {
 						if (columnName.equalsIgnoreCase(lastMatchRating)) {
 							if (e.isShiftDown()) {
