@@ -458,13 +458,9 @@ public class YouthPlayer extends AbstractTable.Storable {
 
         // set start skill values (they may be edited by the user)
         var skills = getStartSkills();
+        checkIfSkillsAreKeeperSkills(skills);
         var trainings = model.getYouthTrainingsAfter(this.getArrivalDate());
         for (var training : trainings) {
-            var keeper = skills.areKeeperSkills();
-            if (keeper != null) {
-                skills.setPlayerMaxSkills(keeper);
-                this.currentSkills.setPlayerMaxSkills(keeper);
-            }
             var team = training.getTeam(teamId);
             if (team != null && team.hasPlayerPlayed(this.id)) {
                 var trainingEntry = new YouthTrainingDevelopmentEntry(this, training);
@@ -474,12 +470,27 @@ public class YouthPlayer extends AbstractTable.Storable {
                 trainingEntry.setInjuryLevel(getInjuryLevelAt(training.getMatchDate()));
                 trainingEntry.setIsSuspended(isSuspendedAt(training.getMatchDate()));
                 trainingDevelopment.put(training.getMatchDate(), trainingEntry);
+                checkIfSkillsAreKeeperSkills(skills);
             } else {
                 progressLastMatch = 0;
             }
         }
         this.currentSkills = skills;
         DBManager.instance().storeYouthPlayer(this.hrfid, this);
+    }
+
+    /**
+     * Check if the skills are keeper skill.
+     * If it is not sure whether these skills are keeper skill or not the skill's maximum values remains unchanged.
+     * Otherwise the skills' maximum values are set accordingly.
+     * @param skills
+     */
+    private void checkIfSkillsAreKeeperSkills(YouthSkillsInfo skills) {
+        var keeper = skills.areKeeperSkills();
+        if (keeper != null) {
+            skills.setPlayerMaxSkills(keeper);
+            this.currentSkills.setPlayerMaxSkills(keeper);
+        }
     }
 
     /**
@@ -1125,15 +1136,14 @@ public class YouthPlayer extends AbstractTable.Storable {
      *
      * @return int potential number
      */
-    public int getPotential()
-    {
-        if ( potential == null){
+    public int getPotential() {
+        if (potential == null) {
             calcMaxSkills17();
             double p = 0d;
-            for ( var skillId: skillIds){
+            for (var skillId : skillIds) {
                 p += max(0, getSkillInfo(skillId).getPotential17Value() - YouthSkillInfo.UsefulTrainingThreshold) / YouthTraining.potentialNormingFactor.get(skillId);
             }
-            potential = (int)Math.round(p);
+            potential = (int) Math.round(p);
         }
         return potential;
     }
