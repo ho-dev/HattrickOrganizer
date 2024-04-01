@@ -24,6 +24,8 @@ import org.jetbrains.annotations.Nullable;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JTable;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumnModel;
 
 /**
@@ -155,6 +157,13 @@ public final class LineupPlayersTable extends JTable implements core.gui.Refresh
 	}
 
 	private void initListeners() {
+
+		this.tableSorter.addTableModelListener(e -> {
+			var r = getSelectedRow();
+
+			// TODO replace mouse listener with table model listener
+
+        });
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {

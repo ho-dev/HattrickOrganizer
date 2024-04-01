@@ -218,6 +218,7 @@ public abstract class HOTableModel extends AbstractTableModel {
 	@Override
 	public void setValueAt(Object value, int row, int column) {
 		m_clData[row][column] = value;
+		fireTableDataChanged();
 	}
 
 	/**
