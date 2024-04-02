@@ -4,13 +4,14 @@ import module.teamAnalyzer.vo.TeamLineup;
 import java.awt.BorderLayout;
 import javax.swing.JPanel;
 
+/**
+ * Main panel displays the lineup for both sides for a selected game
+ * in the {@link RecapPanel}.
+ */
 public class MainPanel extends JPanel {
-    //~ Instance fields ----------------------------------------------------------------------------
-	private static final long serialVersionUID = -6374854816698657464L;
-	private final RosterPanel rosterPanel = new RosterPanel();
-    private final TeamPanel teamPanel = new TeamPanel();
 
-    //~ Constructors -------------------------------------------------------------------------------
+	  private final RosterPanel rosterPanel = new RosterPanel();
+    private final TeamPanel teamPanel = new TeamPanel();
 
     /**
      * Creates a new TeamPanel object.
@@ -19,7 +20,6 @@ public class MainPanel extends JPanel {
         jbInit();
     }
 
-    //~ Methods ------------------------------------------------------------------------------------
     public TeamLineupData getMyTeamLineupPanel() {
         return teamPanel.getMyTeamLineupPanel();
     }

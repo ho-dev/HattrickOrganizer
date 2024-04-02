@@ -52,7 +52,7 @@ public class ConvertXml2Hrf {
 		int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 		Integer youthTeamId = HOVerwaltung.instance().getModel().getBasics().getYouthTeamId();
 
-		String teamDetails = mc.getTeamdetails(-1);
+		String teamDetails = mc.getTeamDetails(-1);
 
 		if (teamDetails == null) {
 			return null;

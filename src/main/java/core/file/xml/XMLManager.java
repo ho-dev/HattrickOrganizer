@@ -112,12 +112,40 @@ public class XMLManager {
         }
     }
 
+    /**
+     * Get the content of the tag <code>xmlKey</code> under the XML <code>element</code>,
+     * and inserts it into the <code>hash</code>, using <code>hashKey</code> as the entry key.
+     *
+     * <p>If the element is not found in the XML element, an empty string is returned.</p>
+     *
+     * @param hash {@link Map} into which the value of the XML element is inserted.
+     * @param element XML element from which the value is being read.
+     * @param xmlKey Name of the XML tag for which we get the value.
+     * @param hashKey Name of the key in <code>hash</code> when inserting the value.
+     *
+     * @return String – Value of the element <code>xmlKey</code> in <code>element</code> if present;
+     * empty string otherwise.
+     */
     public static String xmlValue2Hash(Map<String, String> hash, Element element, String xmlKey, String hashKey) {
-        var value =  xmlValue(element, xmlKey);
+        var value = xmlValue(element, xmlKey);
         hash.put(hashKey, value);
         return value;
     }
 
+    /**
+     * Get the content of the tag <code>key</code> under the XML <code>element</code>,
+     * and inserts it into the <code>hash</code>, using <code>key</code> as the entry key.
+     *
+     * <p>If the element is not found in the XML element, an empty string is returned.</p>
+     *
+     * @param hash {@link Map} into which the value of the XML element is inserted.
+     * @param element XML element from which the value is being read.
+     * @param key Name of the XML tag for which we get the value, and name of the key in <code>hash</code>
+     *            when inserting the value.
+     *
+     * @return String – Value of the element <code>key</code> in <code>element</code> if present;
+     * empty string otherwise.
+     */
     public static String xmlValue2Hash(Map<String, String> hash, Element element, String key) {
         return xmlValue2Hash(hash, element, key, key);
     }

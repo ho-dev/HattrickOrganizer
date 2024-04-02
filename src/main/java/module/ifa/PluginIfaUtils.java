@@ -28,7 +28,7 @@ import org.w3c.dom.Element;
 public class PluginIfaUtils {
 
 	private static String getTeamDetails(int teamID) throws Exception {
-		return MyConnector.instance().getTeamdetails(teamID);
+		return MyConnector.instance().getTeamDetails(teamID);
 	}
 
 	private static String parseXmlElement(Document doc, String element, int i, String eleText) {

@@ -95,22 +95,22 @@ public final class UserColumnController {
 	 *
 	 */
 	public void load() {
-		final DBManager dbZugriff = DBManager.instance();
+		final DBManager dbManager = DBManager.instance();
 
-		dbZugriff.loadHOColumModel(getMatchesModel());
-		dbZugriff.loadHOColumModel(getPlayerOverviewModel());
-		dbZugriff.loadHOColumModel(getLineupModel());
-		dbZugriff.loadHOColumModel(getAnalysis1Model());
-		dbZugriff.loadHOColumModel(getAnalysis2Model());
-		dbZugriff.loadHOColumModel(getMatchesOverview1ColumnModel());
+		dbManager.loadHOColumModel(getMatchesModel());
+		dbManager.loadHOColumModel(getPlayerOverviewModel());
+		dbManager.loadHOColumModel(getLineupModel());
+		dbManager.loadHOColumModel(getAnalysis1Model());
+		dbManager.loadHOColumModel(getAnalysis2Model());
+		dbManager.loadHOColumModel(getMatchesOverview1ColumnModel());
 
-		dbZugriff.loadHOColumModel(getYouthTrainingViewColumnModel());
-		dbZugriff.loadHOColumModel(getYouthPlayerOverviewColumnModel());
-		dbZugriff.loadHOColumModel(getYouthPlayerDetailsColumnModel());
-		dbZugriff.loadHOColumModel(getTeamAnalyzerRecapModell());
-		dbZugriff.loadHOColumModel(getTransferTableModel());
-		dbZugriff.loadHOColumModel(getPlayerTransferTableModel());
-		dbZugriff.loadHOColumModel(getSpecialEventsTableModel());
+		dbManager.loadHOColumModel(getYouthTrainingViewColumnModel());
+		dbManager.loadHOColumModel(getYouthPlayerOverviewColumnModel());
+		dbManager.loadHOColumModel(getYouthPlayerDetailsColumnModel());
+		dbManager.loadHOColumModel(getTeamAnalyzerRecapModel());
+		dbManager.loadHOColumModel(getTransferTableModel());
+		dbManager.loadHOColumModel(getPlayerTransferTableModel());
+		dbManager.loadHOColumModel(getSpecialEventsTableModel());
 	}
 
 	public SpecialEventsTableModel getSpecialEventsTableModel() {
@@ -191,7 +191,7 @@ public final class UserColumnController {
 		v.add(getLineupModel());
 		v.add(getAnalysis1Model());
 		v.add(getAnalysis2Model());
-		v.add(getTeamAnalyzerRecapModell());
+		v.add(getTeamAnalyzerRecapModel());
 		// MatchesOverView1Model should not add in this vector, because columns should not be edit
 		return v;
 	}
@@ -216,8 +216,8 @@ public final class UserColumnController {
 		return youthPlayerDetailsTableModel;
 	}
 
-	public RecapPanelTableModel getTeamAnalyzerRecapModell() {
-		if (teamAnalyzerRecapModel==null){
+	public RecapPanelTableModel getTeamAnalyzerRecapModel() {
+		if (teamAnalyzerRecapModel == null) {
 			teamAnalyzerRecapModel = new RecapPanelTableModel(ColumnModelId.TEAMANALYZERRECAP);
 		}
 		return teamAnalyzerRecapModel;

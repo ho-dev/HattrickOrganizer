@@ -26,6 +26,7 @@
 
 ### Team Analyzer
 * Restore size of match prediction dialog box (#1898)
+* Improve layout of Team Analyzer a bit, add option to hide Special Events, and add info about selected team (#2020)
 * Fix Home/Away setup in Simulator panel (#1885)
 
 ### Rating

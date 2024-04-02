@@ -1,6 +1,8 @@
 package core.model.series;
 
-public class SerieTableEntry implements Comparable<SerieTableEntry>{
+import java.util.Arrays;
+
+public class SerieTableEntry implements Comparable<SerieTableEntry> {
     //~ Instance fields ----------------------------------------------------------------------------
     public static final byte H_SIEG = 1;
     public static final byte A_SIEG = 2;
@@ -43,9 +45,7 @@ public class SerieTableEntry implements Comparable<SerieTableEntry>{
      * Creates a new instance of LigaTabellenEintrag
      */
     public SerieTableEntry() {
-        for (int i = 0; i < m_aSerie.length; i++) {
-            m_aSerie[i] = UNKOWN;
-        }
+        Arrays.fill(m_aSerie, UNKOWN);
     }
 
     //~ Methods ------------------------------------------------------------------------------------
@@ -463,10 +463,10 @@ public class SerieTableEntry implements Comparable<SerieTableEntry>{
     }
 
     public final String getSerieAsString() {
-        final StringBuffer buffer = new StringBuffer();
+        final StringBuilder buffer = new StringBuilder();
 
-        for (int i = 0; i < m_aSerie.length; i++) {
-            switch (m_aSerie[i]) {
+        for (byte b : m_aSerie) {
+            switch (b) {
                 case H_SIEG:
                     buffer.append(core.model.HOVerwaltung.instance().getLanguageString("SerieHeimSieg"));
                     break;
@@ -589,14 +589,14 @@ public class SerieTableEntry implements Comparable<SerieTableEntry>{
      * vergleicht die Einträge
      */
     public final int compareTo(SerieTableEntry obj) {
-        if (obj instanceof SerieTableEntry) {
+        if (obj != null) {
             final SerieTableEntry lte = (SerieTableEntry) obj;
 
             if (m_iPunkte > lte.getPoints()) {
                 return -1;
             } else if (m_iPunkte < lte.getPoints()) {
                 return 1;
-            } else if (m_iPunkte == lte.getPoints()) {
+            } else {
                 if (getGoalsDiff() > lte.getGoalsDiff()) {
                     return -1;
                 } else if (getGoalsDiff() < lte.getGoalsDiff()) {
@@ -646,14 +646,12 @@ public class SerieTableEntry implements Comparable<SerieTableEntry>{
         if (obj instanceof SerieTableEntry) {
             lte = (SerieTableEntry) obj;
 
-            if ((lte.getAnzSpiele() == m_iAnzSpiele)
-                && (lte.getPosition() == m_iPosition)
-                && (lte.getPoints() == m_iPunkte)
-                && (lte.getTeamName().equals(m_sTeamName))
-                && (lte.getGoalsFor() == m_iToreFuer)
-                && (lte.getGoalsAgainst() == m_iToreGegen)) {
-                return true;
-            }
+            return (lte.getAnzSpiele() == m_iAnzSpiele)
+                    && (lte.getPosition() == m_iPosition)
+                    && (lte.getPoints() == m_iPunkte)
+                    && (lte.getTeamName().equals(m_sTeamName))
+                    && (lte.getGoalsFor() == m_iToreFuer)
+                    && (lte.getGoalsAgainst() == m_iToreGegen);
         }
 
         return false;
