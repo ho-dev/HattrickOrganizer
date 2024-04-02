@@ -22,16 +22,19 @@
 * Fix error player download nickname null pointer exception (#1938)
 * Fix initial sorting by player group (#1909)
 * Show stamina sub skill (#383)
+* fix error on player details display after initial download (#2044)
 
 ### Team Analyzer
 * Restore size of match prediction dialog box (#1898)
 * Improve layout of Team Analyzer a bit, add option to hide Special Events, and add info about selected team (#2020)
+* Fix Home/Away setup in Simulator panel (#1885)
 
 ### Rating
 * Implement schum rating prediction (#1782)
 
 ### Matches
 * Fix bug loading matches with no region id (#1975)
+* Fix NPE when selecting match with red card (#2034)
 
 ### Lineup
 * Fix missing player id column in lineup assistant's player table (#1930)
@@ -57,6 +60,7 @@
 * Modify youth module layout (#1449)
 * Set initial youth module view layout (#1558)
 * Display specialty icons in youth player tables (#1999)
+* Display future player development (potential) and take allrounder skill into account (#2045)
 
 ### Option setting
 * new color editor in option settings (#1242)
@@ -69,17 +73,19 @@
 * Fix issue with startup post-installation (#2002)
 * Fix NPE when saving preferences on un-managed HO install (#1992)
   HO now downloads the update in the browser when HO install is un-managed.
+* Enable standard custom popup menu in oauth dialog's text fields (#1471)
+* Move previous series download checkbox to the check box tree of download dialog (#1434)
 
 ## Translations
 
-Reports by Contributors - September 24, 2023 - February 04, 2024
+Reports by Contributors - September 24, 2023 - March 26, 2024
 
+* wsbrenk 214
 * Sebastien 157
 * \_KOHb\_ 22
 * Georgi 10
 * Moorhuhninho 3
 * Lidegand 3
 * sich 3
-* wsbrenk 3
 
-Total 198
+Total 412

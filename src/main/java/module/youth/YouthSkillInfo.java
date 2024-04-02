@@ -66,7 +66,6 @@ public class YouthSkillInfo {
     /**
      * Scout mentions up to 2 skill info. Both of them belong to the top 3 skills with highest maximum.
      * Information is used to restrict other skill maxima.
-     *
      * True if skill is one of the skills mentioned by the scout or found maximum is greater than one of the scout infos
      * False if skill maximum is not one of the top 3 maximums
      * null otherwise (not known)
@@ -112,7 +111,6 @@ public class YouthSkillInfo {
      * startlevel<=startValue<startLevel+1
      * currentLevel<=currentValue<currentLevel+1
      * 0<=startValue<=currentValue<=max+1 or 8.3
-     *
      * Additionally possible ranges of start value (startValueRange) and currentValue (currentValueRange)
      * are examined.
      */
@@ -259,7 +257,7 @@ public class YouthSkillInfo {
     }
 
     /**
-     * get the minumum potential value. This is the maximum value if it is known
+     * get the minimum potential value. This is the maximum value if it is known
      * or the current level value, if maximum is unknown
      * @return int, 0 if neither current level nor maximum is known
      */
@@ -267,6 +265,31 @@ public class YouthSkillInfo {
         if (this.max != null) return this.max;
         if (this.currentLevel != null) return this.currentLevel;
         return 0;
+    }
+
+    /**
+     * Calculate the minimum contribution of the skill's overall skills level contribution
+     * The exact value would be given by the average of the skill's start and max values.
+     * Since the max value is not always known, it's value is given by the maximum of the calculated
+     * 17 years potential, the maximum skill level, if known from trainer or scout messages or the currently
+     * estimated skill level.
+     * @return Double value of the minimum overall skills contribution
+     */
+    public double calculateMinimumOverallSkillsLevelContribution() {
+        var sum = 0.;
+        var potential = this.getPotential17Value();
+        if (potential != null) {
+            sum = potential;
+        }
+        if (this.isMaxAvailable() && this.max > sum) {
+            sum = this.max;
+        }
+        if (this.currentValue > sum) {
+            // minimum max value if nothing else is known
+            sum = this.currentValue;
+        }
+        sum += this.startValue;
+        return sum / 2.;
     }
 
     /**
@@ -377,4 +400,3 @@ public class YouthSkillInfo {
     }
 
 }
-

@@ -1,5 +1,6 @@
 package module.teamAnalyzer;
 
+import core.model.match.IMatchDetails;
 import core.module.config.ModuleConfig;
 import core.prediction.engine.TeamData;
 import module.teamAnalyzer.manager.MatchManager;
@@ -17,7 +18,7 @@ import java.util.List;
 
 /**
  * This is a class where all the relevant and shared plugin info are kept
- * 
+ *
  * @author <a href=mailto:draghetto@users.sourceforge.net>Massimiliano Amato</a>
  */
 public class SystemManager {
@@ -80,13 +81,26 @@ public class SystemManager {
 	/** Reference to the plugin itself */
 	private static TeamAnalyzerPanel plugin;
 
+	public static int getSelectedTeamLocation() {
+		return selectedTeamLocation;
+	}
+
+	public static void setSelectedTeamLocation(int selectedTeamLocation) {
+		SystemManager.selectedTeamLocation = selectedTeamLocation;
+	}
+
+	private static int selectedTeamLocation;
+
 	/**
-	 * Set the active team
-	 * 
+	 * Set the active team, i.e. the team currently selected in the drop-down.
+	 *
 	 * @param team
 	 */
 	public static void setActiveTeam(Team team) {
 		selectedTeam = team;
+		if (selectedTeam != null) {
+			setSelectedTeamLocation((selectedTeam.isHomeMatch()) ? IMatchDetails.LOCATION_HOME : IMatchDetails.LOCATION_AWAY);
+		}
 	}
 
 	/**
@@ -103,7 +117,7 @@ public class SystemManager {
 
 	/**
 	 * Get the active team Name
-	 * 
+	 *
 	 * @return String
 	 */
 	public static String getActiveTeamName() {
@@ -112,7 +126,7 @@ public class SystemManager {
 
 	/**
 	 * Returns the main Plugin class
-	 * 
+	 *
 	 * @return TeamAnalyzerPanel
 	 */
 	public static TeamAnalyzerPanel getPlugin() {
@@ -121,7 +135,7 @@ public class SystemManager {
 
 	/**
 	 * Initialize the instance
-	 * 
+	 *
 	 * @param aPlugin
 	 *            main plugin class
 	 */

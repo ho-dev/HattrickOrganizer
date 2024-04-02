@@ -66,7 +66,7 @@ public class Credits {
 		gbc.gridx = 0;
 		hoPanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("ls.about.logs.folder") + ": "), gbc);
 		gbc.gridx = 1;
-		hoPanel.add(new HyperLinkLabel(new File(HOLogger.instance().getLogsFolderName()).toURI().toString()), gbc);
+		hoPanel.add(new HyperLinkLabel(new File(HOLogger.getLogsFolderName()).toURI().toString()), gbc);
 
 		creditsPanel.add(hoPanel, gbc);
 

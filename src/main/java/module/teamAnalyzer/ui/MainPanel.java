@@ -9,7 +9,8 @@ import javax.swing.JPanel;
  * in the {@link RecapPanel}.
  */
 public class MainPanel extends JPanel {
-	private final RosterPanel rosterPanel = new RosterPanel();
+
+	  private final RosterPanel rosterPanel = new RosterPanel();
     private final TeamPanel teamPanel = new TeamPanel();
 
     /**

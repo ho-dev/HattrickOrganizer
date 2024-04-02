@@ -10,44 +10,36 @@ import core.model.UserParameter;
 import core.util.BrowserLauncher;
 import core.util.HOLogger;
 import core.util.Helper;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-
+import java.io.Serial;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
-
-//import org.scribe.model.Token;
-//import com.github.scribejava.core;
-//import org.scribe.oauth.OAuthService;
 
 public class OAuthDialog extends JDialog {
 
+	@Serial
 	private static final long serialVersionUID = 1798304851624958795L;
 
 	private final HOMainFrame m_clMainFrame;
 	private final JButton m_jbOK = new JButton();
 	private final JButton m_jbBrowse = new JButton();
 	private final JButton m_jbCancel = new JButton();
-	private final JTextField m_jtfAuthString = new JTextField();
-	private final JTextField m_jtfAuthURL = new JTextField();
+	private final TextField m_jtfAuthString = new TextField();
+	private final TextField m_jtfAuthURL = new TextField();
 	private String m_sUserURL;
 	private boolean m_bUserCancel = false;
 	private boolean m_bFirstTry = true;
 	private final OAuth10aService m_service;
 	private OAuth1AccessToken m_AccessToken;
 	private OAuth1RequestToken m_RequestToken;
-	private String scopes = "";
+	private String scopes;
 
 	public OAuthDialog(HOMainFrame mainFrame, OAuth10aService service, String scope) {
 		super(mainFrame, HOVerwaltung.instance().getLanguageString(
@@ -117,7 +109,7 @@ public class OAuthDialog extends JDialog {
 		ActionListener actionListener = new ActionListener() {
 
 			@Override
-			public final void actionPerformed(ActionEvent actionEvent) {
+			public void actionPerformed(ActionEvent actionEvent) {
 				if (actionEvent.getSource().equals(m_jbOK)) {
 					doAuthorize();
 				} else if (actionEvent.getSource().equals(m_jbBrowse)) {

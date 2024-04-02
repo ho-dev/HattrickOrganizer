@@ -19,9 +19,9 @@ public class TeamManager {
 		return entry.getValue();
 	}
 
-	public static Vector<Team> getLeagueMatches(Boolean includeOwn) {
+	public static List<Team> getLeagueMatches(Boolean includeOwn) {
 		Spielplan league = getDivisionMatches();
-		Vector<Team> lteams = new Vector<>();
+		List<Team> teams = new ArrayList<>();
 		int ownTeamID = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 
 		if (league != null) {
@@ -40,8 +40,9 @@ public class TeamManager {
 					t.setTeamId(element.getGastId());
 					t.setTime(element.getDatum());
 					t.setMatchType(MatchType.LEAGUE);
+					t.setHomeMatch(true);
 
-					lteams.add(t);
+					teams.add(t);
 				}
 
 				if (element.getGastId() == ownTeamID) {
@@ -51,8 +52,9 @@ public class TeamManager {
 					t.setTeamId(element.getHeimId());
 					t.setTime(element.getDatum());
 					t.setMatchType(MatchType.LEAGUE);
+					t.setHomeMatch(false);
 
-					lteams.add(t);
+					teams.add(t);
 				}
 			}
 		}
@@ -66,10 +68,10 @@ public class TeamManager {
 			t.setTime(HODateTime.fromHT("2200-01-01 00:00:00")); // to ensure own team appear last
 			t.setMatchType(MatchType.NONE);
 
-			lteams.add(t);
+			teams.add(t);
 		}
 
-		return lteams;
+		return teams;
 	}
 
 	public static Team getTeam(int teamId) {
@@ -122,11 +124,11 @@ public class TeamManager {
 		if (teams == null) {
 			teams = new LinkedHashMap<>();
 
-			Vector<Team> vLMatch = getUpComingMatchs(getLeagueMatches(includeOwn));
+			List<Team> vLMatch = getUpComingMatches(getLeagueMatches(includeOwn));
 			Collections.sort(vLMatch);
 
 			var refTS = HOVerwaltung.instance().getModel().getBasics().getDatum();
-			for ( var team : vLMatch){
+			for (var team : vLMatch) {
 				if (team.getTime().compareTo(refTS) >= 0) {
 					teams.putIfAbsent(team.getTeamId(), team);
 				}
@@ -143,19 +145,14 @@ public class TeamManager {
 		return null;	// nothing downloaded yet
 	}
 
-	/*
-	 * Return upcoming match, except league matchs
+	/**
+	 * Returns upcoming matches.
 	 */
-	private static Vector<Team> getUpComingMatchs(Vector<Team> vTeams) {
+	private static List<Team> getUpComingMatches(List<Team> vTeams) {
 		int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 		var dbMatches = DBManager.instance().getMatchesKurzInfoUpComing(teamId);
 
-//		List<MatchKurzInfo> l = new ArrayList<>(Arrays.asList(dbMatches));
-//
-//		Object[] matches = l.toArray();
-
 		for (var match : dbMatches) {
-//			MatchKurzInfo match = (MatchKurzInfo) o;
 			Team team = new Team();
 
 			if (match.getHomeTeamID() == teamId) {
@@ -167,6 +164,7 @@ public class TeamManager {
 			}
 			team.setTime(match.getMatchSchedule());
 			team.setMatchType(match.getMatchTypeExtended());
+			team.setHomeMatch(match.isHomeMatch());
 
 			vTeams.add(team);
 		}

@@ -76,7 +76,7 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
                 new YouthPlayerColumn("ls.youth.player.average") {
                     @Override
                     public IHOTableEntry getTableEntry(YouthPlayer player) {
-                        return new ColorLabelEntry(player.getAverageSkillLevel(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
+                        return new ColorLabelEntry(player.getOverallSkillsLevelAsString(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
                     }
                 },
                 new YouthPlayerColumn("ls.youth.player.matchcount") {

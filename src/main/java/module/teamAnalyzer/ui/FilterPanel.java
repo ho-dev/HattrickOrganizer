@@ -112,8 +112,8 @@ public class FilterPanel extends JPanel {
 			if (!teamComboUpdating) {
 				Team selectedTeam = (Team) teamCombo.getSelectedItem();
 				SystemManager.setActiveTeam(selectedTeam);
-                assert selectedTeam != null;
-                Map<String, String> teamDetails = retrieveTeamDetails(selectedTeam);
+        assert selectedTeam != null;
+        Map<String, String> teamDetails = retrieveTeamDetails(selectedTeam);
 				teamInfoPanel.setTeam(teamDetails);
 				SystemManager.refresh();
 			}
@@ -218,7 +218,6 @@ public class FilterPanel extends JPanel {
 		buttonPanel.add(Box.createHorizontalGlue());
 
 		topPanel.add(mainTeamPanel, BorderLayout.NORTH);
-	//	topPanel.add(buttonPanel, BorderLayout.SOUTH);
 
 		JPanel downloadGamesPanel = new JPanel();
 		downloadGamesPanel.setLayout(new BorderLayout());

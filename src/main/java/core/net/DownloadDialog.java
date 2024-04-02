@@ -1,6 +1,5 @@
 package core.net;
 
-import core.datatype.CBItem;
 import core.db.DBManager;
 import core.db.user.UserManager;
 import core.file.hrf.HRFStringParser;
@@ -24,8 +23,11 @@ import module.series.Spielplan;
 import tool.updater.UpdateController;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
 
@@ -41,14 +43,10 @@ public class DownloadDialog extends JDialog implements ActionListener {
 	private final JButton m_jbAbort = new JButton(hov.getLanguageString("ls.button.cancel"));
 	final private JButton m_jbDownload = new JButton(hov.getLanguageString("ls.button.download"));
 	private final JButton m_jbProxy = new JButton(hov.getLanguageString("ConfigureProxy"));
-	private final JCheckBox m_jchOldFixtures = new JCheckBox(hov.getLanguageString("download.oldseriesdata"), false);
 	private final DownloadFilter filterRoot = new DownloadFilter();
 	private final CheckBoxTree downloadFilter = new CheckBoxTree();
 
-	private final JCheckBox m_jchHRF = new JCheckBox(hov.getLanguageString("download.teamdata"),	core.model.UserParameter.instance().xmlDownload);
 	private final JCheckBox m_jchMatchArchive = new JCheckBox(hov.getLanguageString("download.oldmatches"), false);
-	private final JCheckBox m_jchFixtures = new JCheckBox(hov.getLanguageString("download.seriesdata"), core.model.UserParameter.instance().fixtures);
-	private final JList m_jlOldSeasons = new JList();
 	private final SpinnerDateModel m_clSpinnerModel = new SpinnerDateModel();
 	private final JSpinner m_jsSpinner = new JSpinner(m_clSpinnerModel);
 	private final JCheckBox m_jchShowSaveDialog = new JCheckBox(hov.getLanguageString("Show_SaveHRF_Dialog"), core.model.UserParameter.instance().showHRFSaveDialog);
@@ -77,9 +75,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 
 	@Override
 	public final void actionPerformed(ActionEvent e) {
-		if (e.getSource().equals(m_jchOldFixtures)) {
-			m_jlOldSeasons.setEnabled(m_jchOldFixtures.isSelected());
-		} else if (e.getSource().equals(m_jbDownload)) {
+		if (e.getSource().equals(m_jbDownload)) {
 			if ( isNtTeam){
 				startNtDownload();
 			}
@@ -102,28 +98,6 @@ public class DownloadDialog extends JDialog implements ActionListener {
 		setVisible(false);
 		dispose();
 		m_clDownloadDialog = null;
-	}
-
-	/**
-	 * Fill season list box.
-	 */
-	private void fillOldFixturesList() {
-		final int aktuelleSaison = hov.getModel().getBasics().getSeason();
-		var activationDate = hov.getModel().getBasics().getActivationDate();
-		var htWeek = activationDate.toLocaleHTWeek();
-		var seasons = DBManager.instance().getAllSpielplaene(false);
-		final DefaultListModel listModel = new DefaultListModel();
-		for (int i = aktuelleSaison; i >= htWeek.season; i--) {
-			int finalI = i;
-			var season = seasons.stream().filter(f -> f.getSaison() == finalI).findFirst();
-			var itemText = new StringBuilder(hov.getLanguageString("Season")).append(" ").append(i);
-			if (season.isPresent()) {
-				itemText.append(" / ").append(season.get().getLigaName());
-			}
-			listModel.addElement(new CBItem(itemText.toString(), i));
-		}
-		m_jlOldSeasons.setModel(listModel);
-		m_jchOldFixtures.setEnabled(!listModel.isEmpty());
 	}
 
 	/**
@@ -159,7 +133,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 			downloadFilter.checkNode(filterRoot.getTeamData(), UserParameter.instance().xmlDownload);
 
 			// Series Data (fixtures)
-			downloadFilter.checkNode(filterRoot.getSeriesData(), UserParameter.instance().fixtures);
+			downloadFilter.checkNode(filterRoot.getCurrentSeriesData(), UserParameter.instance().fixtures);
 
 			var filterPanel = new JPanel(new BorderLayout());
 			filterPanel.add(downloadFilter);
@@ -179,16 +153,6 @@ public class DownloadDialog extends JDialog implements ActionListener {
 
 			// Alte Spielpläne
 			final JPanel oldFixturePanel = new ImagePanel(new BorderLayout());
-
-			m_jchOldFixtures.setToolTipText(hov.getLanguageString("download.oldseriesdata.tt"));
-			m_jchOldFixtures.addActionListener(this);
-			m_jchOldFixtures.setOpaque(false);
-			oldFixturePanel.add(m_jchOldFixtures, BorderLayout.NORTH);
-
-			m_jlOldSeasons.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-			m_jlOldSeasons.setEnabled(false);
-			fillOldFixturesList();
-			oldFixturePanel.add(new JScrollPane(m_jlOldSeasons), BorderLayout.CENTER);
 
 			// MatchArchive
 			final JPanel matchArchivePanel = new JPanel(new BorderLayout(1, 2));
@@ -212,7 +176,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 			diverseOptionsPanel.add(matchArchivePanel, BorderLayout.NORTH);
 			diverseOptionsPanel.add(m_jchShowSaveDialog, BorderLayout.SOUTH);
 
-			oldFixturePanel.add(diverseOptionsPanel, BorderLayout.SOUTH);
+			oldFixturePanel.add(diverseOptionsPanel, BorderLayout.NORTH);
 
 			specialDownload.add(oldFixturePanel);
 			c.gridx = 1;
@@ -298,10 +262,10 @@ public class DownloadDialog extends JDialog implements ActionListener {
 		UserParameter.instance().downloadSingleMatches = downloadFilter.isChecked(filterRoot.getSingleMatches());
 
 		UserParameter.instance().showHRFSaveDialog = m_jchShowSaveDialog.isSelected();
-		UserParameter.instance().xmlDownload = m_jchHRF.isSelected();
-		UserParameter.instance().fixtures = m_jchFixtures.isSelected();
+		UserParameter.instance().xmlDownload = downloadFilter.isChecked(filterRoot.getTeamData());
+		UserParameter.instance().fixtures = downloadFilter.isChecked(filterRoot.getCurrentSeriesData());
 
-		if (m_jchHRF.isSelected()) {
+		if (UserParameter.instance().xmlDownload) { // download team data
 			bOK = OnlineWorker.getHrf(this);
 			List<Player> player = hov.getModel().getCurrentPlayers();
 			for (Player p : player) {
@@ -344,7 +308,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 				}
 			}
 
-			if (bOK && m_jchFixtures.isSelected()) {
+			if (bOK && UserParameter.instance().fixtures) {
 				// in the last week of a season the LeagueLevelUnitID switches to the next season's value (no fixtures are available then)
 				if (model.getBasics().getSpieltag() < 16) {
 					HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.fixtures"), progressIncrement);
@@ -382,9 +346,18 @@ public class DownloadDialog extends JDialog implements ActionListener {
 				}
 			}
 
-			if (bOK && m_jchOldFixtures.isSelected()) {
+			if (bOK) {
+				// Download previous series data
+				var selection = new ArrayList<>();
+				var e = filterRoot.getPreviousSeriesData().children();
+				while (e.hasMoreElements()) {
+					DefaultMutableTreeNode child = (DefaultMutableTreeNode) e.nextElement();
+					if (downloadFilter.isChecked(child)) {
+						selection.add(child.getUserObject());
+					}
+				}
 				HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.fixtures"), progressIncrement);
-				downloadOldFixtures(teamId);
+				downloadOldFixtures(teamId, selection);
 			}
 		}
 
@@ -395,14 +368,14 @@ public class DownloadDialog extends JDialog implements ActionListener {
 
 	}
 
-	private void downloadOldFixtures(int teamId) {
+	private void downloadOldFixtures(int teamId, List<Object> selection) {
 		LigaAuswahlDialog leagueSelectionDialog = null;
 		boolean useOwnLeague = true;
 		var leagueId = HOVerwaltung.instance().getModel().getXtraDaten().getLeagueLevelUnitID();
-		var selection = m_jlOldSeasons.getSelectedValuesList();
 		for (Object s : selection) {
-			if (s instanceof CBItem) {
-				final int seasonId = ((CBItem) s).getId();
+			if (s instanceof Map.Entry) {
+				var e = (Map.Entry<String, Integer>)s;
+				final int seasonId = e.getValue();
 
 				if (useOwnLeague || !leagueSelectionDialog.getReuseSelection()) {
 					// download matches of the season to get the league id of own team
@@ -439,7 +412,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 	private void startNtDownload() {
 		try {
 			var teams = NthrfUtil.getNtTeams();
-			if (teams == null || teams.size() < 1 || teams.get(0)[0] == null || teams.get(0)[0].length() < 1) {
+			if (teams == null || teams.isEmpty() || teams.get(0)[0] == null || teams.get(0)[0].isEmpty()) {
 				return;
 			}
 			final long teamId;
@@ -448,7 +421,6 @@ public class DownloadDialog extends JDialog implements ActionListener {
 				chooser.setModal(true);
 				chooser.setVisible(true);
 				teamId = chooser.getSelectedTeamId();
-				//System.out.println("Result is: " + chooser.getSelectedTeamId());
 				chooser.dispose();
 			} else {
 				teamId = Long.parseLong(teams.get(0)[0]);

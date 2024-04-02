@@ -81,7 +81,7 @@ public final class MatchesPanel extends LazyImagePanel {
 	private JButton deleteButton;
 	private JButton reloadMatchButton;
 	private JButton simulateMatchButton;
-	private JComboBox m_jcbSpieleFilter;
+	private JComboBox<CBItem> gameSelectionFilter;
 	private JSplitPane horizontalLeftSplitPane;
 	private JSplitPane verticalSplitPane;
 	private MatchesTable matchesTable;
@@ -121,7 +121,7 @@ public final class MatchesPanel extends LazyImagePanel {
 
 		HOMainFrame.instance().addApplicationClosingListener(this::saveSettings);
 
-		m_jcbSpieleFilter.addItemListener(e -> {
+		gameSelectionFilter.addItemListener(e -> {
 			if (e.getStateChange() == ItemEvent.SELECTED) {
 				doReInit();
 			}
@@ -204,7 +204,7 @@ public final class MatchesPanel extends LazyImagePanel {
 		text.append(":");
 
 		for (int i = 0; (i < infos.length) && (i < 11); i++) {
-			text.append("\n").append(infos[i].getHomeTeamName()).append(" - ").append(infos[i].getGuestTeamName());
+			text.append("\n").append(infos[i].getHomeTeamName()).append(" – ").append(infos[i].getGuestTeamName());
 			if (i == 10) {
 				text.append("\n ... ");
 			}
@@ -266,17 +266,15 @@ public final class MatchesPanel extends LazyImagePanel {
 						details != null ? getRatingValue(details.getGuestTacticSkill() - 1) : 1);
 			}
 
-			String match = matchesModel.getMatch().getHomeTeamName() + " - "
-					+ matchesModel.getMatch().getGuestTeamName();
-			MatchEnginePanel matchPredictionPanel = new MatchEnginePanel(homeTeamValues,
-					awayTeamValues);
+			String matchName = matchesModel.getMatch().getHomeTeamName() + " – " + matchesModel.getMatch().getGuestTeamName();
+			MatchEnginePanel matchPredictionPanel = new MatchEnginePanel(homeTeamValues, awayTeamValues);
 
-			MatchPredictionDialog d = new MatchPredictionDialog(matchPredictionPanel, match);
+			MatchPredictionDialog d = new MatchPredictionDialog(matchPredictionPanel, matchName);
 		}
 	}
 
 	/**
-	 * Helper to get at least the minium rating value.
+	 * Helper to get at least the minimum rating value.
 	 */
 	private int getRatingValue(int in) {
 		if (in > 0) {
@@ -296,7 +294,7 @@ public final class MatchesPanel extends LazyImagePanel {
 	}
 
 	/**
-	 * Get the team data for the own team (current linep).
+	 * Get the team data for the own team (current lineup).
 	 */
 	private TeamData getOwnLineupRatings(MatchPredictionManager manager) {
 		var hoModel = HOVerwaltung.instance().getModel();
@@ -325,11 +323,11 @@ public final class MatchesPanel extends LazyImagePanel {
 	}
 
 	private void doReInit() {
-		if (m_jcbSpieleFilter.getSelectedIndex() > -1) {
+		if (gameSelectionFilter.getSelectedIndex() > -1) {
 			CursorToolkit.startWaitCursor(this);
 			try {
 				// Update tables
-				int id = ((CBItem) m_jcbSpieleFilter.getSelectedItem()).getId();
+				int id = ((CBItem) gameSelectionFilter.getSelectedItem()).getId();
 				matchesTable.refresh(id, UserParameter.instance().matchLocation);
 				matchesOverviewTable.refresh(id, UserParameter.instance().matchLocation);
 				matchesHighlightsTable.refresh(id, UserParameter.instance().matchLocation);
@@ -350,7 +348,7 @@ public final class MatchesPanel extends LazyImagePanel {
 		// If no match found in table
 		if (matchesTable.getSelectedRow() < 0) {
 			// Select all games for the marker to work
-			m_jcbSpieleFilter.setSelectedIndex(0);
+			gameSelectionFilter.setSelectedIndex(0);
 			UserParameter.instance().spieleFilter = 0;
 			matchesTable.markiereMatch(matchid);
 		}
@@ -453,10 +451,10 @@ public final class MatchesPanel extends LazyImagePanel {
 		ImagePanel panel = new ImagePanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-		m_jcbSpieleFilter = new JComboBox(matchesTypeCBItems);
-		Helper.setComboBoxFromID(m_jcbSpieleFilter, UserParameter.instance().spieleFilter);
-		m_jcbSpieleFilter.setFont(m_jcbSpieleFilter.getFont().deriveFont(Font.BOLD));
-		panel.add(m_jcbSpieleFilter);
+		gameSelectionFilter = new JComboBox<>(matchesTypeCBItems);
+		Helper.setComboBoxFromID(gameSelectionFilter, UserParameter.instance().spieleFilter);
+		gameSelectionFilter.setFont(gameSelectionFilter.getFont().deriveFont(Font.BOLD));
+		panel.add(gameSelectionFilter);
 
 
 		// Add Match Location filtering =======

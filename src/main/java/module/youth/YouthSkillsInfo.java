@@ -173,4 +173,14 @@ public class YouthSkillsInfo extends HashMap<PlayerSkill, YouthSkillInfo> {
         }
         return ret;
     }
+
+    /**
+     * Calculate average of 3 maximum overall skills level contributions.
+     * @return Double minimum overall skills level value
+     */
+    public double calculateMinimumOverallSkillsLevel(){
+        return this.values().stream()
+                .sorted(Comparator.comparing(YouthSkillInfo::calculateMinimumOverallSkillsLevelContribution, Comparator.reverseOrder()))
+                .limit(3).mapToDouble(YouthSkillInfo::calculateMinimumOverallSkillsLevelContribution).sum() / 3.;
+    }
 }
