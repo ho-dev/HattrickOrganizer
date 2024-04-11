@@ -68,7 +68,7 @@ public class PlayerOverviewTable extends JTable implements core.gui.Refreshable 
 					String columnName = PlayerOverviewTable.this.getColumnName(columnAtPoint);
 					String lastMatchRating = (HOVerwaltung.instance().getLanguageString("LastMatchRating"));
 
-					Player player = tableSorter.getSpieler(rowIndex);
+					Player player = tableSorter.getPlayerAtRow(rowIndex);
 					if (player != null) {
 						if (columnName.equalsIgnoreCase(lastMatchRating)) {
 							if (e.isShiftDown()) {
@@ -84,16 +84,6 @@ public class PlayerOverviewTable extends JTable implements core.gui.Refreshable 
 				}
 			}
 		});
-	}
-
-	/**
-	 * Returns the width of the Best position column.
-	 */
-	public final int getBestPosWidth() {
-		return getColumnModel()
-				.getColumn(getColumnModel()
-						.getColumnIndex(tableModel.getPositionInArray(UserColumnFactory.BEST_POSITION)))
-				.getWidth();
 	}
 
 	public final TableSorter getSorter() {

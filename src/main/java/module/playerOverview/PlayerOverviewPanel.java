@@ -77,7 +77,7 @@ public class PlayerOverviewPanel extends ImagePanel {
 	public final void refreshHRFComparison() {
 		playerOverviewTable.refreshHRFComparison();
 
-		Player player = playerOverviewTable.getSorter().getSpieler(playerOverviewTable.getSelectedRow());
+		Player player = playerOverviewTable.getSorter().getPlayerAtRow(playerOverviewTable.getSelectedRow());
 		playerDetailsPanel.setPlayer(player);
 	}
 
@@ -241,7 +241,7 @@ public class PlayerOverviewPanel extends ImagePanel {
 						selectRow(playerOverviewTable, row);
 
 						// Set player on HOMainFrame to notify other tabs.
-						Player player = playerOverviewTable.getSorter().getSpieler(row);
+						Player player = playerOverviewTable.getSorter().getPlayerAtRow(row);
 						if (player != null) HOMainFrame.instance().selectPlayer(player);
 					}
 				}

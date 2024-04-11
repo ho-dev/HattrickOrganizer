@@ -33,7 +33,7 @@ public class LineupPlayersTableNameColumn extends JTable implements Refreshable,
 			public void mouseReleased(MouseEvent e) {
 				int rowindex = getSelectedRow();
 				if (rowindex >= 0){
-					Player player = tableSorter.getSpieler(rowindex);
+					Player player = tableSorter.getPlayerAtRow(rowindex);
 					if(player!=null && e.isShiftDown()){
 						HattrickLink.showPlayer(player.getPlayerId());
 					}
@@ -45,7 +45,7 @@ public class LineupPlayersTableNameColumn extends JTable implements Refreshable,
 
 	@Override
 	public @Nullable Player getPlayer(int row) {
-		return this.tableSorter.getSpieler(row);
+		return this.tableSorter.getPlayerAtRow(row);
 	}
 
 	@Override

@@ -36,7 +36,7 @@ public final class LineupPlayersTable extends JTable implements core.gui.Refresh
 	private LineupTableModel tableModel;
 	private TableSorter tableSorter;
 
-	protected LineupPlayersTable() {
+	LineupPlayersTable() {
 		super();
 		initModel();
 		setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
@@ -56,7 +56,7 @@ public final class LineupPlayersTable extends JTable implements core.gui.Refresh
 
 	@Override
 	public @Nullable Player getPlayer(int row) {
-		return this.tableSorter.getSpieler(row);
+		return this.tableSorter.getPlayerAtRow(row);
 	}
 
 	@Override
@@ -78,7 +78,7 @@ public final class LineupPlayersTable extends JTable implements core.gui.Refresh
 	/**
 	 *Returns the column for sorting
 	 */
-	protected int getSortSpalte() {
+    private int getSortSpalte() {
 		return switch (UserParameter.instance().standardsortierung) {
 			case UserParameter.SORT_NAME -> tableModel.getPositionInArray(UserColumnFactory.NAME);
 			case UserParameter.SORT_AUFGESTELLT -> tableModel.getPositionInArray(UserColumnFactory.LINEUP);
@@ -88,12 +88,11 @@ public final class LineupPlayersTable extends JTable implements core.gui.Refresh
 		};
 	}
 
-	protected TableSorter getSorter() {
+	TableSorter getSorter() {
 		return tableSorter;
 	}
 
-
-	public final void saveColumnOrder() {
+	public void saveColumnOrder() {
 		final UserColumn[] columns = tableModel.getDisplayedColumns();
 		final TableColumnModel tableColumnModel = getColumnModel();
 		for (int i = 0; i < columns.length; i++) {
@@ -155,22 +154,40 @@ public final class LineupPlayersTable extends JTable implements core.gui.Refresh
 	}
 
 	private void initListeners() {
+
+		this.tableSorter.addTableModelListener(e -> {
+			var r = e.getFirstRow();
+			var c = e.getColumn();
+			var player = tableSorter.getPlayerAtRow(r);
+			if (player != null) {
+				if (c == tableModel.getPositionInArray(UserColumnFactory.AUTO_LINEUP)) {
+					var autoLineup = tableSorter.getValueAt(r,c);
+					if (autoLineup != null){
+						player.setCanBeSelectedByAssistant((boolean) autoLineup);
+						if( player.getCanBeSelectedByAssistant()){
+							// this player has been made selectable from the Lineup tab, for consistency we set its position to undefined
+							player.setUserPosFlag(IMatchRoleID.UNKNOWN);
+						}
+						else {
+							player.setUserPosFlag(IMatchRoleID.UNSELECTABLE);
+						}
+						HOMainFrame.instance().getSpielerUebersichtPanel().update();
+					}
+				}
+			}
+        });
+
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				int rowindex = getSelectedRow();
 				if (rowindex >= 0){
-					int colAUTO_LINEUP_ID = tableModel.getPositionInArray(UserColumnFactory.AUTO_LINEUP);
-
 					// Last match column
 					int viewColumn = columnAtPoint(e.getPoint());
 					int column = columnModel.getColumn(viewColumn).getModelIndex();
-					String columnName = tableSorter.getColumnName(viewColumn);
-					String lastMatchRating = (HOVerwaltung.instance().getLanguageString("LastMatchRating"));
-
-					Player selectedPlayer = tableSorter.getSpieler(rowindex);
+					Player selectedPlayer = tableSorter.getPlayerAtRow(rowindex);
 					if(selectedPlayer != null){
-						if(columnName.equalsIgnoreCase(lastMatchRating)){
+						if ( column == tableModel.getPositionInArray(UserColumnFactory.LAST_MATCH_RATING)){
 							if(e.isShiftDown()){
 								int matchId = selectedPlayer.getLastMatchId();
 								// TODO get the match type of last match from player. For the moment we hope, that going with no type will work
@@ -178,20 +195,6 @@ public final class LineupPlayersTable extends JTable implements core.gui.Refresh
 								HattrickLink.showMatch(matchId + "", info.getMatchType().isOfficial());
 							}else if(e.getClickCount()==2) {
 								HOMainFrame.instance().showMatch(selectedPlayer.getLastMatchId());
-							}
-						}
-						else if (column == colAUTO_LINEUP_ID){
-							var result = tableSorter.getValueAt(rowindex, colAUTO_LINEUP_ID);
-							if (result != null) {
-								boolean bSelected = (boolean) result;
-								selectedPlayer.setCanBeSelectedByAssistant(bSelected);
-								if (bSelected) {
-									// this player has been made selectable from the Lineup tab, for consistency we set its position to undefined
-									selectedPlayer.setUserPosFlag(IMatchRoleID.UNKNOWN);
-								} else {
-									selectedPlayer.setUserPosFlag(IMatchRoleID.UNSELECTABLE);
-								}
-								HOMainFrame.instance().getSpielerUebersichtPanel().update();
 							}
 						}
 					}
