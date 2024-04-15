@@ -78,14 +78,14 @@
 
 ## Translations
 
-Reports by Contributors - September 24, 2023 - March 26, 2024
+Reports by Contributors - September 24, 2023 - April 25, 2024
 
 * wsbrenk 214
 * Sebastien 157
+* Lidegand 152
 * \_KOHb\_ 22
 * Georgi 10
 * Moorhuhninho 3
-* Lidegand 3
 * sich 3
 
-Total 412
+Total 561
