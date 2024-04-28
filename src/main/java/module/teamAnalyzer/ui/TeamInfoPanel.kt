@@ -6,7 +6,6 @@ import java.awt.Font
 import java.awt.GridBagConstraints
 import java.awt.GridBagLayout
 import javax.swing.BorderFactory
-import javax.swing.ImageIcon
 import javax.swing.JLabel
 import javax.swing.JPanel
 
@@ -23,7 +22,7 @@ class TeamInfoPanel : JPanel() {
 
     fun setTeam(details: Map<String?, String?>) {
         removeAll()
-        val hoVerwaltung = HOVerwaltung.instance();
+        val hoVerwaltung = HOVerwaltung.instance()
         val isBot = isBot(details)
 
         // Column 1
