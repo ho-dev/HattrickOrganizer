@@ -27,10 +27,10 @@ class TeamInfoPanel : JPanel() {
         val isBot = isBot(details)
 
         // Column 1
-        val infoLabel = JLabel()
-        infoLabel.icon = ImageIcon(details["LogoURL"])
-        infoLabel.text = hoVerwaltung.getLanguageString("ls.teamanalyzer.info")
-        border = BorderFactory.createTitledBorder("Info")
+//        val infoLabel = JLabel()
+//        infoLabel.icon = ImageIcon(details["LogoURL"])
+//        infoLabel.text = hoVerwaltung.getLanguageString("ls.teamanalyzer.info")
+        border = BorderFactory.createTitledBorder(hoVerwaltung.getLanguageString("ls.teamanalyzer.info"))
         val gbc = GridBagConstraints()
         layout = GridBagLayout()
 
