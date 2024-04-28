@@ -12,6 +12,7 @@ import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.enums.MatchType;
 import core.model.match.Matchdetails;
+import core.util.CurrencyUtils;
 import core.util.Helper;
 import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.report.TeamReport;
@@ -220,7 +221,7 @@ public class RecapPanelTableModel extends HOTableModel {
                 new RecapUserColumn("ls.team.sumsalary", 50) {
                     @Override
                     public IHOTableEntry getTableEntry(TeamLineup lineup) {
-                        return createIntegerTableEntry(lineup.getSalarySum(), MatchesColumnModel.getColor4Matchtyp(lineup.getMatchType()), true);
+                        return createIntegerTableEntry(CurrencyUtils.convertCurrency(lineup.getSalarySum()), MatchesColumnModel.getColor4Matchtyp(lineup.getMatchType()), true);
                     }
                 },
                 new RecapUserColumn("ls.team.numhomegrown", 50) {
