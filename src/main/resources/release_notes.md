@@ -80,12 +80,13 @@
 
 Reports by Contributors - September 24, 2023 - April 28, 2024
 
-* wsbrenk 214
-* Lidegand 175
-* Sebastien 157
+* wsbrenk 355
+* Lidegand 178
+* Sebastien 156
+* Achilles 70
 * \_KOHb\_ 22
 * Georgi 10
 * Moorhuhninho 3
 * sich 3
 
-Total 584
+Total 797
