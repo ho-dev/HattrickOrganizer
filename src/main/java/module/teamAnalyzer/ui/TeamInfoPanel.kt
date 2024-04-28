@@ -6,7 +6,6 @@ import java.awt.Font
 import java.awt.GridBagConstraints
 import java.awt.GridBagLayout
 import javax.swing.BorderFactory
-import javax.swing.ImageIcon
 import javax.swing.JLabel
 import javax.swing.JPanel
 
@@ -23,14 +22,14 @@ class TeamInfoPanel : JPanel() {
 
     fun setTeam(details: Map<String?, String?>) {
         removeAll()
-        val hoVerwaltung = HOVerwaltung.instance();
+        val hoVerwaltung = HOVerwaltung.instance()
         val isBot = isBot(details)
 
         // Column 1
-        val infoLabel = JLabel()
-        infoLabel.icon = ImageIcon(details["LogoURL"])
-        infoLabel.text = hoVerwaltung.getLanguageString("ls.teamanalyzer.info")
-        border = BorderFactory.createTitledBorder("Info")
+//        val infoLabel = JLabel()
+//        infoLabel.icon = ImageIcon(details["LogoURL"])
+//        infoLabel.text = hoVerwaltung.getLanguageString("ls.teamanalyzer.info")
+        border = BorderFactory.createTitledBorder(hoVerwaltung.getLanguageString("ls.teamanalyzer.info"))
         val gbc = GridBagConstraints()
         layout = GridBagLayout()
 
