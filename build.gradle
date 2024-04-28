@@ -32,24 +32,24 @@ repositories {
 }
 
 dependencies {
-    implementation "com.install4j:install4j-runtime:10.0.6"
+    implementation "com.install4j:install4j-runtime:10.0.7"
     implementation "com.github.scribejava:scribejava-core:8.3.3"
     implementation "org.hsqldb:hsqldb:2.7.2"
-    implementation "com.google.code.gson:gson:2.10"
-    implementation "com.squareup.okhttp3:okhttp:4.10.0"
-    implementation "com.squareup.okhttp3:okhttp-tls:4.10.0"
-    implementation "com.squareup.okhttp3:logging-interceptor:4.10.0"
+    implementation "com.google.code.gson:gson:2.10.1"
+    implementation "com.squareup.okhttp3:okhttp:4.12.0"
+    implementation "com.squareup.okhttp3:okhttp-tls:4.12.0"
+    implementation "com.squareup.okhttp3:logging-interceptor:4.12.0"
     implementation "com.github.weisj:darklaf-core:3.0.2"
     implementation "com.github.weisj:darklaf-theme:3.0.2"
     implementation "com.github.weisj:darklaf-property-loader:3.0.2"
     implementation "org.javatuples:javatuples:1.2"
-    implementation "org.apache.commons:commons-text:1.10.0"
-    implementation "org.knowm.xchart:xchart:3.8.3"
-    implementation "org.jsoup:jsoup:1.15.3"
-    implementation "org.jetbrains:annotations:24.0.0"
+    implementation "org.apache.commons:commons-text:1.12.0"
+    implementation "org.knowm.xchart:xchart:3.8.7"
+    implementation "org.jsoup:jsoup:1.17.2"
+    implementation "org.jetbrains:annotations:24.1.0"
     implementation "org.codehaus.groovy:groovy-all:3.0.19"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-    testImplementation "org.junit.jupiter:junit-jupiter:5.9.0"
+    testImplementation "org.junit.jupiter:junit-jupiter:5.10.2"
 }
 
 test {
