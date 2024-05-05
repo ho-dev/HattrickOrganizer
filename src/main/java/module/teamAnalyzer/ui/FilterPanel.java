@@ -36,6 +36,7 @@ public class FilterPanel extends JPanel {
 	private ManualFilterPanel manualPanel;
 
 	private final TeamInfoPanel teamInfoPanel = new TeamInfoPanel();
+	private final ExecutorService downloadExecutor = Executors.newCachedThreadPool();
 
 	/**
 	 * Creates a new FilterPanel object.
@@ -134,41 +135,7 @@ public class FilterPanel extends JPanel {
 			SystemManager.updateReport();
 		});
 
-		downloadButton.addActionListener(e -> {
-            downloadButton.setEnabled(false);
-			// Trigger event in a separate thread to avoid Button UI from being blocked.
-			SwingUtilities.invokeLater(() -> {
-				final ExecutorService downloadExecutor = Executors.newCachedThreadPool();
-
-				HOLogger.instance().log(getClass(),
-						"UPDATE for Team " + SystemManager.getActiveTeamId());
-
-				// Load squad info of all teams
-				try {
-					for (var team : TeamManager.getTeams()) {
-						downloadExecutor.execute(() -> HattrickManager.downloadPlayers(team.getTeamId()));
-					}
-
-					downloadExecutor.execute(() ->
-							HattrickManager.downloadMatches(SystemManager.getActiveTeamId(), TeamAnalyzerPanel.filter));
-				} finally {
-					downloadExecutor.shutdown();
-					try {
-						downloadExecutor.awaitTermination(30, TimeUnit.SECONDS);
-						analyzeButton.setEnabled(true);
-					} catch (Exception ee) {
-						HOLogger.instance().error(FilterPanel.class, "Error awaiting termination: "  + ee.getMessage());
-					}
-				}
-				HOMainFrame.instance().setInformationCompleted();
-				SystemManager.refresh();
-
-				HOLogger.instance().info(getClass(),
-						"Download complete for Team " + SystemManager.getActiveTeamId());
-
-				downloadButton.setEnabled(true);
-			});
-        });
+		downloadButton.addActionListener(e -> new DownloadMatchesWorker().execute());
 
 		JPanel mainTeamPanel = new JPanel();
 		mainTeamPanel.setLayout(new BorderLayout());
@@ -249,5 +216,45 @@ public class FilterPanel extends JPanel {
 			teamDetails.put("LeaguePosition", String.valueOf(teamStats.getPosition()));
 		}
 		return teamDetails;
+	}
+
+	class DownloadMatchesWorker extends SwingWorker<Object, Object> {
+		protected Object doInBackground() {
+			downloadButton.setEnabled(false);
+			// Trigger event in a separate thread to avoid Button UI from being blocked.
+			HOLogger.instance().log(getClass(), "Update for Team " + SystemManager.getActiveTeamId());
+
+			// Load squad info of all teams
+			try {
+				for (var team : TeamManager.getTeams()) {
+					downloadExecutor.execute(() -> HattrickManager.downloadPlayers(team.getTeamId()));
+				}
+
+				downloadExecutor.execute(() ->
+						HattrickManager.downloadMatches(SystemManager.getActiveTeamId(), TeamAnalyzerPanel.filter));
+			} finally {
+				downloadExecutor.shutdown();
+				try {
+					downloadExecutor.awaitTermination(30, TimeUnit.SECONDS);
+					analyzeButton.setEnabled(true);
+				} catch (Exception ee) {
+					HOLogger.instance().error(FilterPanel.class, "Error awaiting termination: "  + ee.getMessage());
+				}
+			}
+			return null;
+		}
+
+		protected void done() {
+			try {
+				HOMainFrame.instance().setInformationCompleted();
+				SystemManager.refresh();
+				HOLogger.instance().info(getClass(),
+						"Download complete for Team " + SystemManager.getActiveTeamId());
+
+				downloadButton.setEnabled(true);
+			} catch (Exception e) {
+				HOLogger.instance().error(FilterPanel.class, "Error awaiting termination: "  + e.getMessage());
+			}
+		}
 	}
 }

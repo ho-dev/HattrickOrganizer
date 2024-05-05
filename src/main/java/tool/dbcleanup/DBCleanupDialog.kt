@@ -87,7 +87,7 @@ internal class DBCleanupDialog(owner: JFrame?, private val cleanupTool: DBCleanu
         gbc.gridy++
         mainPanel.add(hrfAutoRemove, gbc)
 
-       addNewStrut(gbc, mainPanel)
+        addNewStrut(gbc, mainPanel)
 
         // Add current statistics on DB Records
         gbc.gridy++
