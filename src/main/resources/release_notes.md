@@ -79,15 +79,15 @@
 
 ## Translations
 
-Reports by Contributors - September 24, 2023 - April 28, 2024
+Reports by Contributors - September 24, 2023 - May 05, 2024
 
 * wsbrenk 355
+* \_KOHb\_ 230
 * Lidegand 178
 * Sebastien 156
 * Achilles 70
-* \_KOHb\_ 22
 * Georgi 10
 * Moorhuhninho 3
 * sich 3
 
-Total 797
+Total 1025
