@@ -75,6 +75,7 @@
   HO now downloads the update in the browser when HO install is un-managed.
 * Enable standard custom popup menu in oauth dialog's text fields (#1471)
 * Move previous series download checkbox to the check box tree of download dialog (#1434)
+* Add 5 new countries to international flag module (#2063)
 
 ## Translations
 

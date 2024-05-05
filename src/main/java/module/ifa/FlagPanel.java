@@ -94,7 +94,7 @@ public class FlagPanel extends JPanel {
 	}
 
 	private void createFlagLabels(boolean away, IfaModel ifaModel, FlagDisplayModel flagDisplayModel) {
-		this.flagLabels = new ArrayList<FlagLabel>();
+		this.flagLabels = new ArrayList<>();
 		WorldDetailsManager.instance().getLeagues().stream()
 				.filter(l->l.getLeagueId()!=APACHE_LEAGUE_ID)
 				.sorted((l1,l2)-> ObjectUtils.compare(l1.getCountryName(),l2.getCountryName()))
