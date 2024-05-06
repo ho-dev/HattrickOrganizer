@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.GraphicsEnvironment;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.Serial;
 import java.sql.ResultSet;
 
 import javax.swing.JDialog;
@@ -15,14 +16,13 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextPane;
 
-
-
 final class TablesDialog extends JDialog implements MouseListener {
-	private static final long serialVersionUID = -1584823279333655850L;
-	private JList tablelist;
+	@Serial
+    private static final long serialVersionUID = -1584823279333655850L;
+	private JList<String> tablelist;
     private JTable tableColumns;
     
-    protected TablesDialog(SQLDialog owner) {
+    TablesDialog(SQLDialog owner) {
         super(owner, "Tables");
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         initialize();
@@ -39,20 +39,18 @@ final class TablesDialog extends JDialog implements MouseListener {
     }
 
     private JScrollPane getMiddlePanel() {
-        JScrollPane scrollPane = new JScrollPane(getList());
-        return scrollPane;
+        return new JScrollPane(getList());
     }
 
     private JScrollPane getTablePanel() {
-        JScrollPane scrollPane = new JScrollPane(getTable());
-        return scrollPane;
+        return new JScrollPane(getTable());
     }
 
-    private JList getList()
+    private JList<String> getList()
     {
         if(tablelist == null)
         {
-            tablelist = new JList(DBManager.instance().getConnectionManager().getAllTableNames());
+            tablelist = new JList<>(DBManager.instance().getConnectionManager().getAllTableNames());
             tablelist.addMouseListener(this);
         }
         return tablelist;
@@ -73,7 +71,7 @@ final class TablesDialog extends JDialog implements MouseListener {
     {
         ResultSet rs = DBManager.instance().getConnectionManager().executeQuery("SELECT * FROM " + tablename + " where 1 = 2");
         int columns = rs.getMetaData().getColumnCount();
-        Object columnData[][] = new Object[columns][4];
+        var columnData = new Object[columns][4];
         for(int i = 0; i < columns; i++)
         {
             columnData[i][0] = rs.getMetaData().getColumnName(i + 1);
@@ -114,12 +112,12 @@ final class TablesDialog extends JDialog implements MouseListener {
     {
     }
 
-    protected void refresh()
+    private void refresh()
     {
         String tableName = getList().getSelectedValue().toString();
         try
         {
-            DummyTableModel model1 = new DummyTableModel(setTable(tableName), COLUMNNAMES);
+            DummyTableModel model1 = new DummyTableModel(setTable(tableName), COLUMN_NAMES);
             tableColumns.setModel(model1);
         }
         catch(Exception e)
@@ -128,9 +126,7 @@ final class TablesDialog extends JDialog implements MouseListener {
         }
     }
 
-    private static final String COLUMNNAMES[] = {
+    private static final String[] COLUMN_NAMES = {
         "NAME", "TYP", "SIZE", "Nullable"
     };
-
-
 }
