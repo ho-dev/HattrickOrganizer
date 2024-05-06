@@ -28,6 +28,7 @@
 * Restore size of match prediction dialog box (#1898)
 * Improve layout of Team Analyzer a bit, add option to hide Special Events, and add info about selected team (#2020)
 * Fix Home/Away setup in Simulator panel (#1885)
+* Fix currency error in total salary column (#2059)
 
 ### Rating
 * Implement schum rating prediction (#1782)
@@ -35,6 +36,7 @@
 ### Matches
 * Fix bug loading matches with no region id (#1975)
 * Fix NPE when selecting match with red card (#2034)
+* Fix sql error when match report is too long for the database column (#2065)
 
 ### Lineup
 * Fix missing player id column in lineup assistant's player table (#1930)
