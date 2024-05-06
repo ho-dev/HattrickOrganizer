@@ -79,6 +79,7 @@ final class TablesDialog extends JDialog implements MouseListener {
             columnData[i][0] = rs.getMetaData().getColumnName(i + 1);
             columnData[i][1] = rs.getMetaData().getColumnTypeName(i + 1);
             columnData[i][2] = rs.getMetaData().getColumnDisplaySize(i + 1);
+            columnData[i][3] = rs.getMetaData().isNullable(i + 1)==0?"false":"true";
         }
 
         rs.close();
@@ -128,7 +129,7 @@ final class TablesDialog extends JDialog implements MouseListener {
     }
 
     private static final String COLUMNNAMES[] = {
-        "NAME", "TYP", "SIZE"
+        "NAME", "TYP", "SIZE", "Nullable"
     };
 
 
