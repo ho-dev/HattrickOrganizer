@@ -44,6 +44,17 @@ public abstract class AbstractTable {
 		initColumns();
 	}
 
+	/**
+	 * Truncate string to maximum length
+	 * @param s String is truncated if its length exceeds given limit
+	 * @param maxLength Length limit
+	 * @return Truncated string
+	 */
+	static String truncateString(String s, int maxLength) {
+		if (s != null && s.length() > maxLength) return s.substring(0, maxLength);
+		return s;
+	}
+
 	protected String getTableType() {
 		return "CACHED";
 	}

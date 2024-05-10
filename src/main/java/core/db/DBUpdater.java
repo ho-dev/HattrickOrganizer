@@ -73,6 +73,8 @@ final class DBUpdater {
 						updateDBv500(DBVersion);
 						updateDBv800(DBVersion);
 					case 800:
+						updateDBv900(DBVersion);
+					case 900:
 				}
 
 			} catch (Exception e) {
@@ -81,6 +83,12 @@ final class DBUpdater {
 		} else {
 			HOLogger.instance().log(getClass(), "No DB update necessary.");
 		}
+	}
+
+	private void updateDBv900(int dbVersion) throws SQLException {
+		var matchDetailsTable = dbManager.getTable(MatchDetailsTable.TABLENAME);
+		matchDetailsTable.tryChangeColumn("Matchreport", "VARCHAR(40000)");
+		updateDBVersion(dbVersion, 900);
 	}
 
 	private void updateDBv800(int dbVersion) throws SQLException {
