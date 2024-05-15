@@ -158,6 +158,7 @@ public class WorldDetailLeague  extends AbstractTable.Storable {
 			new WorldDetailLeague(168,192,"Nepal"),
 			new WorldDetailLeague(169,197,"Guyana"),
 			new WorldDetailLeague(170,196,"Tahiti"),
+			new WorldDetailLeague(171,198,"Guinea"),
 			new WorldDetailLeague(1000,1000,"International")
 	};
 	
