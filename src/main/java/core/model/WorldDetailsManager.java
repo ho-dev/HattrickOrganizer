@@ -12,8 +12,8 @@ public class WorldDetailsManager {
 
 	private static WorldDetailsManager WMANAGER = null;
 	private List<WorldDetailLeague> leagues;
-	private HashMap<Integer, WorldDetailLeague> countryMap = new HashMap<Integer, WorldDetailLeague>();
-	private HashMap<Integer, WorldDetailLeague> leagueMap = new HashMap<Integer, WorldDetailLeague>();
+	private final HashMap<Integer, WorldDetailLeague> countryMap = new HashMap<>();
+	private final HashMap<Integer, WorldDetailLeague> leagueMap = new HashMap<>();
 	private int totalUsers;
 
 	public static WorldDetailsManager instance() {
@@ -66,8 +66,8 @@ public class WorldDetailsManager {
 		var ret = countryMap.get(countryId);
 		if (ret == null) {
 			ret = downloadWorldDetailLeague(countryId);
-			countryMap.put(countryId, ret);
-			DBManager.instance().storeWorldDetailLeagues(Collections.singletonList(ret));
+			DBManager.instance().storeWorldDetailLeague(ret);
+			initialize();
 		}
 		return ret;
 	}

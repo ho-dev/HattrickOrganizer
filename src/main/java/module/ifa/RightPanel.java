@@ -22,10 +22,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -42,6 +39,7 @@ import static java.lang.Double.parseDouble;
 
 public class RightPanel extends JPanel {
 
+	@Serial
 	private static final long serialVersionUID = -5038012557489983903L;
 	private JButton updateButton;
 	private JButton saveImageButton;
@@ -54,10 +52,6 @@ public class RightPanel extends JPanel {
 		this.model = model;
 		initComponents();
 		addListeners();
-	}
-
-	public ImageDesignPanel getImageDesignPanel() {
-		return this.imageDesignPanel;
 	}
 
 	private void initComponents() {
@@ -106,56 +100,40 @@ public class RightPanel extends JPanel {
 	}
 
 	private void addListeners() {
-		this.awayRadioButton.addItemListener(new ItemListener() {
+		this.awayRadioButton.addItemListener(evt -> {
+            if (evt.getStateChange() == ItemEvent.SELECTED) {
+                imageDesignPanel.setAway(true);
+            }
+        });
 
-			@Override
-			public void itemStateChanged(ItemEvent evt) {
-				if (evt.getStateChange() == ItemEvent.SELECTED) {
-					imageDesignPanel.setAway(true);
-				}
-			}
-		});
+		this.homeRadioButton.addItemListener(evt -> {
+            if (evt.getStateChange() == ItemEvent.SELECTED) {
+                imageDesignPanel.setAway(false);
+            }
+        });
 
-		this.homeRadioButton.addItemListener(new ItemListener() {
+		this.updateButton.addActionListener(arg0 -> {
+            String worldDetails;
+            try {
+                worldDetails = MyConnector.instance().getWorldDetails(0);
+                List<WorldDetailLeague> leagues = XMLWorldDetailsParser.parseDetails(XMLManager
+                        .parseString(worldDetails));
+                DBManager.instance().storeWorldDetailLeagues(leagues);
+                WorldDetailsManager.instance().refresh();
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
+            PluginIfaUtils.updateMatchesTable();
+            RightPanel.this.model.reload();
+        });
 
-			@Override
-			public void itemStateChanged(ItemEvent evt) {
-				if (evt.getStateChange() == ItemEvent.SELECTED) {
-					imageDesignPanel.setAway(false);
-				}
-			}
-		});
-
-		this.updateButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				String worldDetails;
-				try {
-					worldDetails = MyConnector.instance().getWorldDetails(0);
-					List<WorldDetailLeague> leagues = XMLWorldDetailsParser.parseDetails(XMLManager
-							.parseString(worldDetails));
-					DBManager.instance().storeWorldDetailLeagues(leagues);
-					WorldDetailsManager.instance().refresh();
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-				PluginIfaUtils.updateMatchesTable();
-				RightPanel.this.model.reload();
-			}
-		});
-
-		this.saveImageButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				try {
-					saveImage();
-				} catch (IOException ex) {
-					throw new RuntimeException(ex);
-				}
-			}
-		});
+		this.saveImageButton.addActionListener(e -> {
+            try {
+                saveImage();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
 
 	}
 

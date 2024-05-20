@@ -328,7 +328,7 @@ public class DBManager implements PersistenceManager {
 	/**
 	 * connect to the database
 	 */
-	private void connect() throws Exception {
+	private void connect() {
 		User current_user = UserManager.instance().getCurrentUser();
 		if (connectionManager != null) {
 			connectionManager.connect(current_user.getDbURL(), current_user.getDbUsername(), current_user.getDbPwd(), UserManager.instance().getDriver());
@@ -1576,6 +1576,16 @@ public class DBManager implements PersistenceManager {
 		for (WorldDetailLeague league : leagues) {
 			table.storeWorldDetailsLeague(league);
 		}
+	}
+
+	/**
+	 * Save single world detail league.
+	 *
+	 * @param league The league
+	 */
+	public void storeWorldDetailLeague(WorldDetailLeague league) {
+		WorldDetailsTable table = (WorldDetailsTable) getTable(WorldDetailsTable.TABLENAME);
+		table.storeWorldDetailsLeague(league);
 	}
 
 	// --------------------------------------------------------------------------------
