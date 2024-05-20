@@ -8,6 +8,7 @@ import core.model.WorldDetailLeague;
 import core.model.WorldDetailsManager;
 import core.net.MyConnector;
 import core.util.GUIUtils;
+import core.util.HOLogger;
 import core.util.IOUtils;
 import module.ifa.gif.Gif89Encoder;
 import module.ifa.model.IfaModel;
@@ -17,10 +18,7 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.List;
@@ -61,10 +59,10 @@ public class RightPanel extends JPanel {
 
 		JPanel buttonPanel = new JPanel();
 		GridBagConstraints gbc = new GridBagConstraints();
-		this.updateButton = new JButton(getLangString("ls.button.update"));
+		this.updateButton = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.update"));
 		gbc.anchor = GridBagConstraints.EAST;
 		buttonPanel.add(this.updateButton, gbc);
-		this.saveImageButton = new JButton(getLangString("ifa.imageBuilder.button.save"));
+		this.saveImageButton = new JButton(HOVerwaltung.instance().getLanguageString("ifa.imageBuilder.button.save"));
 		gbc.gridx = 1;
 		gbc.anchor = GridBagConstraints.WEST;
 		buttonPanel.add(this.saveImageButton, gbc);
@@ -75,13 +73,13 @@ public class RightPanel extends JPanel {
 		gbc.gridwidth = 2;
 		add(buttonPanel, gbc);
 
-		this.awayRadioButton = new JRadioButton(getLangString("ifa.imageBuilder.visited"), true);
+		this.awayRadioButton = new JRadioButton(HOVerwaltung.instance().getLanguageString("ifa.imageBuilder.visited"), true);
 		gbc.insets = new Insets(5, 6, 5, 6);
 		gbc.gridy = 1;
 		gbc.gridwidth = 1;
 		add(this.awayRadioButton, gbc);
 
-		this.homeRadioButton = new JRadioButton(getLangString("ifa.imageBuilder.hosted"), false);
+		this.homeRadioButton = new JRadioButton(HOVerwaltung.instance().getLanguageString("ifa.imageBuilder.hosted"), false);
 		gbc.gridx = 1;
 		add(this.homeRadioButton, gbc);
 
@@ -121,7 +119,7 @@ public class RightPanel extends JPanel {
                 DBManager.instance().storeWorldDetailLeagues(leagues);
                 WorldDetailsManager.instance().refresh();
             } catch (IOException e1) {
-                e1.printStackTrace();
+				HOLogger.instance().warning(getClass(), "Could not download world details: " + e1.getMessage());
             }
             PluginIfaUtils.updateMatchesTable();
             RightPanel.this.model.reload();
@@ -135,16 +133,6 @@ public class RightPanel extends JPanel {
             }
         });
 
-	}
-
-	/**
-	 * Convenience method
-	 *
-	 * @param key
-	 * @return
-	 */
-	private static String getLangString(String key) {
-		return HOVerwaltung.instance().getLanguageString(key);
 	}
 
 	private void saveImage() throws IOException {

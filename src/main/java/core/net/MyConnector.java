@@ -3,7 +3,6 @@ package core.net;
 
 import com.github.scribejava.core.model.*;
 import core.file.xml.XMLCHPPPreParser;
-import core.file.xml.XMLTeamDetailsParser;
 import core.gui.CursorToolkit;
 import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
