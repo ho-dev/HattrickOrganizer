@@ -56,7 +56,8 @@
 * Change subskill recalculation dialog display (#1556)
 * Tuning subskill recalculation (#1870)
 
-### League
+### International Friendlies
+* Fix database error on match reload (#2063)
 
 ### Youth
 * Increase effect of youth friendly match training (#1950, #1994)
