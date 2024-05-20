@@ -508,6 +508,11 @@ public class MyConnector {
 		return getCHPPWebFile(url);
 	}
 
+	public String getWorldDetailsByCountryId(int countryId) throws IOException {
+		String url = htUrl + "?file=worlddetails&version=1.9&countryID=" + countryId;
+		return getCHPPWebFile(url);
+	}
+
 	// ///////////////////////////////////////////////////////////////////////////////
 	// Update Checker
 	// //////////////////////////////////////////////////////////////////////////////

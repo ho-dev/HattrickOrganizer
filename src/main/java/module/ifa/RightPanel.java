@@ -135,7 +135,7 @@ public class RightPanel extends JPanel {
 					worldDetails = MyConnector.instance().getWorldDetails(0);
 					List<WorldDetailLeague> leagues = XMLWorldDetailsParser.parseDetails(XMLManager
 							.parseString(worldDetails));
-					DBManager.instance().saveWorldDetailLeagues(leagues);
+					DBManager.instance().storeWorldDetailLeagues(leagues);
 					WorldDetailsManager.instance().refresh();
 				} catch (IOException e1) {
 					e1.printStackTrace();

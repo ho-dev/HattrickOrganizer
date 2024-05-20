@@ -18,11 +18,12 @@
 
 ### Squad
 * Fix length of owner notes in players' database table (#1816)
-* player avatar image can be reloaded (#1815)
+* Player avatar image can be reloaded (#1815)
 * Fix error player download nickname null pointer exception (#1938)
 * Fix initial sorting by player group (#1909)
 * Show stamina sub skill (#383)
-* fix error on player details display after initial download (#2044)
+* Fix error on player details display after initial download (#2044)
+* Update missing world details in database (#2063)
 
 ### Team Analyzer
 * Restore size of match prediction dialog box (#1898)

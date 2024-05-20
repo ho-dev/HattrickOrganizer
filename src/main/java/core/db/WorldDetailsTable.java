@@ -26,7 +26,7 @@ class WorldDetailsTable extends AbstractTable {
 		return createSelectStatement("");
 	}
 
-	void insertWorldDetailsLeague(WorldDetailLeague league){
+	void storeWorldDetailsLeague(WorldDetailLeague league){
 		if(league == null)
 			return;
 		store(league);
@@ -44,7 +44,7 @@ class WorldDetailsTable extends AbstractTable {
 	@Override
 	protected void insertDefaultValues(){
 		for ( var league : WorldDetailLeague.allLeagues){
-			insertWorldDetailsLeague(league);
+			storeWorldDetailsLeague(league);
 		}
 	}
 }
