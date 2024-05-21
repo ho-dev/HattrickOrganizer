@@ -8,6 +8,7 @@ import core.model.WorldDetailLeague;
 import core.model.WorldDetailsManager;
 import core.net.MyConnector;
 import core.util.GUIUtils;
+import core.util.HOLogger;
 import core.util.IOUtils;
 import module.ifa.gif.Gif89Encoder;
 import module.ifa.model.IfaModel;
@@ -17,15 +18,9 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -42,6 +37,7 @@ import static java.lang.Double.parseDouble;
 
 public class RightPanel extends JPanel {
 
+	@Serial
 	private static final long serialVersionUID = -5038012557489983903L;
 	private JButton updateButton;
 	private JButton saveImageButton;
@@ -56,10 +52,6 @@ public class RightPanel extends JPanel {
 		addListeners();
 	}
 
-	public ImageDesignPanel getImageDesignPanel() {
-		return this.imageDesignPanel;
-	}
-
 	private void initComponents() {
 		setLayout(new GridBagLayout());
 		setBorder(BorderFactory.createTitledBorder(HOVerwaltung.instance().getLanguageString(
@@ -67,10 +59,10 @@ public class RightPanel extends JPanel {
 
 		JPanel buttonPanel = new JPanel();
 		GridBagConstraints gbc = new GridBagConstraints();
-		this.updateButton = new JButton(getLangString("ls.button.update"));
+		this.updateButton = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.update"));
 		gbc.anchor = GridBagConstraints.EAST;
 		buttonPanel.add(this.updateButton, gbc);
-		this.saveImageButton = new JButton(getLangString("ifa.imageBuilder.button.save"));
+		this.saveImageButton = new JButton(HOVerwaltung.instance().getLanguageString("ifa.imageBuilder.button.save"));
 		gbc.gridx = 1;
 		gbc.anchor = GridBagConstraints.WEST;
 		buttonPanel.add(this.saveImageButton, gbc);
@@ -81,13 +73,13 @@ public class RightPanel extends JPanel {
 		gbc.gridwidth = 2;
 		add(buttonPanel, gbc);
 
-		this.awayRadioButton = new JRadioButton(getLangString("ifa.imageBuilder.visited"), true);
+		this.awayRadioButton = new JRadioButton(HOVerwaltung.instance().getLanguageString("ifa.imageBuilder.visited"), true);
 		gbc.insets = new Insets(5, 6, 5, 6);
 		gbc.gridy = 1;
 		gbc.gridwidth = 1;
 		add(this.awayRadioButton, gbc);
 
-		this.homeRadioButton = new JRadioButton(getLangString("ifa.imageBuilder.hosted"), false);
+		this.homeRadioButton = new JRadioButton(HOVerwaltung.instance().getLanguageString("ifa.imageBuilder.hosted"), false);
 		gbc.gridx = 1;
 		add(this.homeRadioButton, gbc);
 
@@ -106,67 +98,41 @@ public class RightPanel extends JPanel {
 	}
 
 	private void addListeners() {
-		this.awayRadioButton.addItemListener(new ItemListener() {
+		this.awayRadioButton.addItemListener(evt -> {
+            if (evt.getStateChange() == ItemEvent.SELECTED) {
+                imageDesignPanel.setAway(true);
+            }
+        });
 
-			@Override
-			public void itemStateChanged(ItemEvent evt) {
-				if (evt.getStateChange() == ItemEvent.SELECTED) {
-					imageDesignPanel.setAway(true);
-				}
-			}
-		});
+		this.homeRadioButton.addItemListener(evt -> {
+            if (evt.getStateChange() == ItemEvent.SELECTED) {
+                imageDesignPanel.setAway(false);
+            }
+        });
 
-		this.homeRadioButton.addItemListener(new ItemListener() {
+		this.updateButton.addActionListener(arg0 -> {
+            String worldDetails;
+            try {
+                worldDetails = MyConnector.instance().getWorldDetails(0);
+                List<WorldDetailLeague> leagues = XMLWorldDetailsParser.parseDetails(XMLManager
+                        .parseString(worldDetails));
+                DBManager.instance().storeWorldDetailLeagues(leagues);
+                WorldDetailsManager.instance().refresh();
+            } catch (IOException e1) {
+				HOLogger.instance().warning(getClass(), "Could not download world details: " + e1.getMessage());
+            }
+            PluginIfaUtils.updateMatchesTable();
+            RightPanel.this.model.reload();
+        });
 
-			@Override
-			public void itemStateChanged(ItemEvent evt) {
-				if (evt.getStateChange() == ItemEvent.SELECTED) {
-					imageDesignPanel.setAway(false);
-				}
-			}
-		});
+		this.saveImageButton.addActionListener(e -> {
+            try {
+                saveImage();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
 
-		this.updateButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				String worldDetails;
-				try {
-					worldDetails = MyConnector.instance().getWorldDetails(0);
-					List<WorldDetailLeague> leagues = XMLWorldDetailsParser.parseDetails(XMLManager
-							.parseString(worldDetails));
-					DBManager.instance().saveWorldDetailLeagues(leagues);
-					WorldDetailsManager.instance().refresh();
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
-				PluginIfaUtils.updateMatchesTable();
-				RightPanel.this.model.reload();
-			}
-		});
-
-		this.saveImageButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				try {
-					saveImage();
-				} catch (IOException ex) {
-					throw new RuntimeException(ex);
-				}
-			}
-		});
-
-	}
-
-	/**
-	 * Convenience method
-	 *
-	 * @param key
-	 * @return
-	 */
-	private static String getLangString(String key) {
-		return HOVerwaltung.instance().getLanguageString(key);
 	}
 
 	private void saveImage() throws IOException {
