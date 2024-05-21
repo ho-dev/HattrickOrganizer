@@ -328,7 +328,7 @@ public class DBManager implements PersistenceManager {
 	/**
 	 * connect to the database
 	 */
-	private void connect() throws Exception {
+	private void connect() {
 		User current_user = UserManager.instance().getCurrentUser();
 		if (connectionManager != null) {
 			connectionManager.connect(current_user.getDbURL(), current_user.getDbUsername(), current_user.getDbPwd(), UserManager.instance().getDriver());
@@ -1560,7 +1560,6 @@ public class DBManager implements PersistenceManager {
 	 *
 	 * @return the world detail league [ ]
 	 */
-// WorldDetail
 	public List<WorldDetailLeague> getAllWorldDetailLeagues() {
 		return ((WorldDetailsTable) getTable(WorldDetailsTable.TABLENAME))
 				.getAllWorldDetailLeagues();
@@ -1571,12 +1570,22 @@ public class DBManager implements PersistenceManager {
 	 *
 	 * @param leagues the leagues
 	 */
-	public void saveWorldDetailLeagues(List<WorldDetailLeague> leagues) {
+	public void storeWorldDetailLeagues(List<WorldDetailLeague> leagues) {
 		WorldDetailsTable table = (WorldDetailsTable) getTable(WorldDetailsTable.TABLENAME);
 		table.truncateTable();
 		for (WorldDetailLeague league : leagues) {
-			table.insertWorldDetailsLeague(league);
+			table.storeWorldDetailsLeague(league);
 		}
+	}
+
+	/**
+	 * Save single world detail league.
+	 *
+	 * @param league The league
+	 */
+	public void storeWorldDetailLeague(WorldDetailLeague league) {
+		WorldDetailsTable table = (WorldDetailsTable) getTable(WorldDetailsTable.TABLENAME);
+		table.storeWorldDetailsLeague(league);
 	}
 
 	// --------------------------------------------------------------------------------

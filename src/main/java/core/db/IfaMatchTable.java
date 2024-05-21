@@ -69,10 +69,11 @@ public class IfaMatchTable extends AbstractTable {
 		store(match);
 	}
 
-//	@Override
-//	protected String createSelectStatement(){
-//		return createSelectStatement("");
-//	}
+	@Override
+	protected String createDeleteStatement() {
+		return createDeleteStatement(" WHERE TRUE");
+	}
+
 	void deleteAllMatches() {
 		executePreparedDelete();
 	}
