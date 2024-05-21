@@ -3,7 +3,6 @@ package core.net;
 
 import com.github.scribejava.core.model.*;
 import core.file.xml.XMLCHPPPreParser;
-import core.file.xml.XMLTeamDetailsParser;
 import core.gui.CursorToolkit;
 import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
@@ -508,6 +507,11 @@ public class MyConnector {
 		return getCHPPWebFile(url);
 	}
 
+	public String getWorldDetailsByCountryId(int countryId) {
+		String url = htUrl + "?file=worlddetails&version=1.9&countryID=" + countryId;
+		return getCHPPWebFile(url);
+	}
+
 	// ///////////////////////////////////////////////////////////////////////////////
 	// Update Checker
 	// //////////////////////////////////////////////////////////////////////////////
@@ -570,17 +574,6 @@ public class MyConnector {
 			System.getProperties().remove("http.proxyHost");
 			System.getProperties().remove("http.proxyPort");
 		}
-	}
-
-	/**
-	 * Get the region id for a certain team.
-	 */
-	public String fetchRegionID(int teamId) {
-		String xml = getTeamDetails(teamId);
-		if (!xml.isEmpty()){
-			return XMLTeamDetailsParser.fetchRegionID(xml);
-		}
-		return "-1";
 	}
 
 	public InputStream getFileFromWeb(String url, boolean displaysettingsScreen) {
