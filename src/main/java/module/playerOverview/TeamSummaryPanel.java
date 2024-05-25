@@ -50,12 +50,9 @@ public class TeamSummaryPanel extends ImagePanel implements ChangeListener, Refr
     }
 
     private void createField(String labelName, JComponent fieldLabel) {
-        JLabel label;
-        label = new JLabel(labelName);
-        this.add(label);
-        this.add(Box.createHorizontalStrut(10));
+        this.add(new JLabel(labelName));
+//        this.add(Box.createHorizontalStrut(2));
         this.add(fieldLabel);
-        this.add(Box.createHorizontalStrut(15));
     }
 
     private void setComparisonField(Number val, DoubleLabelPanel label, int numDecimals) {
