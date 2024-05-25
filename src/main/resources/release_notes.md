@@ -24,6 +24,7 @@
 * Show stamina sub skill (#383)
 * Fix error on player details display after initial download (#2044)
 * Update missing world details in database (#2063)
+* Reduce space between team summary labels (#2069)
 
 ### Team Analyzer
 * Restore size of match prediction dialog box (#1898)
@@ -83,7 +84,7 @@
 
 ## Translations
 
-Reports by Contributors - September 24, 2023 - May 05, 2024
+Reports by Contributors - September 24, 2023 - May 25, 2024
 
 * wsbrenk 355
 * \_KOHb\_ 230
