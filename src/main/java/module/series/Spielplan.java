@@ -4,6 +4,8 @@ import core.db.AbstractTable;
 import core.model.series.*;
 import core.util.HODateTime;
 import core.util.HOLogger;
+import module.teamAnalyzer.ht.HattrickManager;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -242,8 +244,20 @@ public class Spielplan  extends AbstractTable.Storable {
                     maxMatchDay));
         }
 
-        tmp.sort();
-        berechneAltePositionen(tmp);
+        if(tmp.getEntries().get(0).getAnzSpiele() > 0) {
+            tmp.sort();
+            berechneAltePositionen(tmp);
+        }
+        else {
+            var seriesDetails = HattrickManager.getSeriesDetails(this.getLigaId());
+            for ( var t : tmp.getEntries()){
+                var details = seriesDetails.get(String.valueOf(t.getTeamId()));
+                var position = details.getPosition();
+                t.setPosition(position);
+                t.setAltePosition(position);
+            }
+            tmp.sortByPosition();
+        }
 
         return tmp;
     }

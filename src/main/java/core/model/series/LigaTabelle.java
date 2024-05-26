@@ -2,7 +2,9 @@ package core.model.series;
 
 import core.util.Helper;
 
+import java.util.Comparator;
 import java.util.Vector;
+import java.util.stream.Collectors;
 
 public class LigaTabelle  {
     //~ Instance fields ----------------------------------------------------------------------------
@@ -209,5 +211,9 @@ public class LigaTabelle  {
         //zurückkopieren
         Helper.copyArray2Vector(list, m_vEintraege);
         list = null;
+    }
+
+    public void sortByPosition() {
+        m_vEintraege = m_vEintraege.stream().sorted(Comparator.comparing(SerieTableEntry::getPosition)).collect(Collectors.toCollection(Vector::new));
     }
 }

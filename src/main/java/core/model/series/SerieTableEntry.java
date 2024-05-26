@@ -586,7 +586,7 @@ public class SerieTableEntry implements Comparable<SerieTableEntry> {
     }
 
     /**
-     * vergleicht die Einträge
+     * Compare series table entries
      */
     public final int compareTo(SerieTableEntry obj) {
         if (obj != null) {
@@ -607,11 +607,6 @@ public class SerieTableEntry implements Comparable<SerieTableEntry> {
                     } else if (m_iToreFuer < lte.getGoalsFor()) {
                         return 1;
                     }
-                    /*else if ( m_iToreFuer == lte.getToreFuer () )
-                       {
-                           return 0;
-                       }*/
-
                     //nun gilt der Auswärtsfaktor
                     else if (getA_Punkte() > lte.getA_Punkte()) {
                         return -1;
@@ -623,16 +618,10 @@ public class SerieTableEntry implements Comparable<SerieTableEntry> {
                         } else if (m_iA_ToreFuer < lte.getA_ToreFuer()) {
                             return 1;
                         }
-
-                        /* else if ( m_iA_ToreFuer  == lte.getA_ToreFuer () )
-                           {
-                               return 0;
-                           }*/
                     }
                 }
             }
         }
-
         return 0;
     }
 
