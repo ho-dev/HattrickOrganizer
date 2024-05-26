@@ -417,32 +417,31 @@ public class SerieTableEntry implements Comparable<SerieTableEntry> {
      * Compare series table entries
      */
     public final int compareTo(@NotNull SerieTableEntry obj) {
-        final SerieTableEntry lte = (SerieTableEntry) obj;
 
-        if (m_iPunkte > lte.getPoints()) {
+        if (m_iPunkte > obj.getPoints()) {
             return -1;
-        } else if (m_iPunkte < lte.getPoints()) {
+        } else if (m_iPunkte < obj.getPoints()) {
             return 1;
         } else {
-            if (getGoalsDiff() > lte.getGoalsDiff()) {
+            if (getGoalsDiff() > obj.getGoalsDiff()) {
                 return -1;
-            } else if (getGoalsDiff() < lte.getGoalsDiff()) {
+            } else if (getGoalsDiff() < obj.getGoalsDiff()) {
                 return 1;
-            } else if (getGoalsDiff() == lte.getGoalsDiff()) {
-                if (m_iToreFuer > lte.getGoalsFor()) {
+            } else if (getGoalsDiff() == obj.getGoalsDiff()) {
+                if (m_iToreFuer > obj.getGoalsFor()) {
                     return -1;
-                } else if (m_iToreFuer < lte.getGoalsFor()) {
+                } else if (m_iToreFuer < obj.getGoalsFor()) {
                     return 1;
                 }
                 //nun gilt der Auswärtsfaktor
-                else if (getA_Punkte() > lte.getA_Punkte()) {
+                else if (getA_Punkte() > obj.getA_Punkte()) {
                     return -1;
-                } else if (getA_Punkte() < lte.getA_Punkte()) {
+                } else if (getA_Punkte() < obj.getA_Punkte()) {
                     return 1;
-                } else if (getA_Punkte() == lte.getA_Punkte()) {
-                    if (m_iA_ToreFuer > lte.getA_ToreFuer()) {
+                } else {
+                    if (m_iA_ToreFuer > obj.getA_ToreFuer()) {
                         return -1;
-                    } else if (m_iA_ToreFuer < lte.getA_ToreFuer()) {
+                    } else if (m_iA_ToreFuer < obj.getA_ToreFuer()) {
                         return 1;
                     }
                 }
