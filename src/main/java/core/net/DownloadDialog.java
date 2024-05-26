@@ -3,6 +3,7 @@ package core.net;
 import core.db.DBManager;
 import core.db.user.UserManager;
 import core.file.hrf.HRFStringParser;
+import core.file.xml.TeamStats;
 import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
 import core.gui.comp.CheckBoxTree.CheckBoxTree;
@@ -13,6 +14,7 @@ import core.model.UserParameter;
 import core.model.enums.MatchType;
 import core.model.match.MatchKurzInfo;
 import core.model.player.Player;
+import core.model.series.Paarung;
 import core.net.login.ProxyDialog;
 import core.util.HODateTime;
 import core.util.HOLogger;
@@ -20,16 +22,17 @@ import core.util.Helper;
 import module.nthrf.NtTeamChooser;
 import module.nthrf.NthrfUtil;
 import module.series.Spielplan;
+import module.teamAnalyzer.ht.HattrickManager;
 import tool.updater.UpdateController;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
-
 
 /**
  * Dialog, der den User den Download von verschiedenen Daten aus Hattrick heraus
@@ -312,8 +315,165 @@ public class DownloadDialog extends JDialog implements ActionListener {
 				// in the last week of a season the LeagueLevelUnitID switches to the next season's value (no fixtures are available then)
 				if (model.getBasics().getSpieltag() < 16) {
 					HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.fixtures"), progressIncrement);
-					var fixtures = OnlineWorker.downloadLeagueFixtures(-1, model.getXtraDaten().getLeagueLevelUnitID());
+					var leagueId = model.getXtraDaten().getLeagueLevelUnitID();
+					var fixtures = OnlineWorker.downloadLeagueFixtures(-1, leagueId);
 					if (fixtures != null) {
+						if ( fixtures.getMatches().isEmpty()){
+							// Matches are not available from hattrick. Initialize them
+							var teamStats = HattrickManager.getSeriesDetails(leagueId);
+							var teams = teamStats.values().stream().sorted(Comparator.comparing(TeamStats::getPosition)).toArray(TeamStats[]::new);
+							var team1 = (TeamStats)teams[0];
+							var team2 = (TeamStats)teams[1];
+							var team3 = (TeamStats)teams[2];
+							var team4 = (TeamStats)teams[3];
+							var team5 = (TeamStats)teams[4];
+							var team6 = (TeamStats)teams[5];
+							var team7 = (TeamStats)teams[6];
+							var team8 = (TeamStats)teams[7];
+
+							var newFixtures = new ArrayList<Paarung>();
+							// 1. round
+							var date = model.getXtraDaten().getSeriesMatchDate();
+							//1	-	2
+							newFixtures.add(createFixture(date, 1, team1, team2));
+							//3	-	4
+							newFixtures.add(createFixture(date, 1, team3, team4));
+							//5	-	6
+							newFixtures.add(createFixture(date, 1, team5, team6));
+							//7	-	8
+							newFixtures.add(createFixture(date, 1, team7, team8));
+							//2. round
+							date = date.plusDaysAtSameLocalTime(7);
+							//4	-	1
+							newFixtures.add(createFixture(date, 2, team4, team1));
+							//2	-	7
+							newFixtures.add(createFixture(date, 2, team2, team7));
+							//6	-	3
+							newFixtures.add(createFixture(date, 2, team6, team3));
+							//8	-	5
+							newFixtures.add(createFixture(date, 2, team8, team5));
+							//3. round
+							date = date.plusDaysAtSameLocalTime(7);
+							//1	-	8
+							newFixtures.add(createFixture(date, 3, team1, team8));
+							//3	-	5
+							newFixtures.add(createFixture(date, 3, team3, team5));
+							//4	-	2
+							newFixtures.add(createFixture(date, 3, team4, team2));
+							//7	-	6
+							newFixtures.add(createFixture(date, 3, team7, team6));
+							//4. round
+							date = date.plusDaysAtSameLocalTime(7);
+							//6	-	1
+							newFixtures.add(createFixture(date, 4, team6, team1));
+							//2	-	3
+							newFixtures.add(createFixture(date, 4, team2, team3));
+							//5	-	7
+							newFixtures.add(createFixture(date, 4, team5, team7));
+							//8	-	4
+							newFixtures.add(createFixture(date, 4, team8, team4));
+							//5. round
+							date = date.plusDaysAtSameLocalTime(7);
+							//1	-	7
+							newFixtures.add(createFixture(date, 5, team1, team7));
+							//4	-	5
+							newFixtures.add(createFixture(date, 5, team4, team5));
+							//3	-	8
+							newFixtures.add(createFixture(date, 5, team3, team8));
+							//2	-	6
+							newFixtures.add(createFixture(date, 5, team2, team6));
+							//6. round
+							date = date.plusDaysAtSameLocalTime(7);
+							//5	-	1
+							newFixtures.add(createFixture(date, 6, team5, team1));
+							//7	-	3
+							newFixtures.add(createFixture(date, 6, team7, team3));
+							//6	-	4
+							newFixtures.add(createFixture(date, 6, team6, team4));
+							//8	-	2
+							newFixtures.add(createFixture(date, 6, team8, team2));
+							//7. round
+							date = date.plusDaysAtSameLocalTime(7);
+							//1	-	3
+							newFixtures.add(createFixture(date, 7, team1, team3));
+							//2	-	5
+							newFixtures.add(createFixture(date, 7, team2, team5));
+							//4	-	7
+							newFixtures.add(createFixture(date, 7, team4, team7));
+							//6	-	8
+							newFixtures.add(createFixture(date, 7, team6, team8));
+							//8. round
+							date = date.plusDaysAtSameLocalTime(7);
+							//8	-	6
+							newFixtures.add(createFixture(date, 8, team8, team6));
+							//7	-	4
+							newFixtures.add(createFixture(date, 8, team7, team4));
+							//5	-	2
+							newFixtures.add(createFixture(date, 8, team5, team2));
+							//3	-	1
+							newFixtures.add(createFixture(date, 8, team3, team1));
+							//9. round
+							date = date.plusDaysAtSameLocalTime(7);
+							//2	-	8
+							newFixtures.add(createFixture(date, 9, team2, team8));
+							//4	-	6
+							newFixtures.add(createFixture(date, 9, team4, team6));
+							//3	-	7
+							newFixtures.add(createFixture(date, 9, team3, team7));
+							//1	-	5
+							newFixtures.add(createFixture(date, 9, team1, team5));
+							//10. round
+							date = date.plusDaysAtSameLocalTime(7);
+							//6	-	2
+							newFixtures.add(createFixture(date, 10, team6, team2));
+							//8	-	3
+							newFixtures.add(createFixture(date, 10, team8, team3));
+							//5	-	4
+							newFixtures.add(createFixture(date, 10, team5, team4));
+							//7	-	1
+							newFixtures.add(createFixture(date, 10, team7, team1));
+							//11. round
+							date = date.plusDaysAtSameLocalTime(7);
+							//4	-	8
+							newFixtures.add(createFixture(date, 11, team4, team8));
+							//7	-	5
+							newFixtures.add(createFixture(date, 11, team7, team5));
+							//3	-	2
+							newFixtures.add(createFixture(date, 11, team3, team2));
+							//1	-	6
+							newFixtures.add(createFixture(date, 11, team1, team6));
+							//12. round
+							date = date.plusDaysAtSameLocalTime(7);
+							//6	-	7
+							newFixtures.add(createFixture(date, 12, team6, team7));
+							//2	-	4
+							newFixtures.add(createFixture(date, 12, team2, team4));
+							//5	-	3
+							newFixtures.add(createFixture(date, 12, team5, team3));
+							//8	-	1
+							newFixtures.add(createFixture(date, 12, team8, team1));
+							//13. round
+							date = date.plusDaysAtSameLocalTime(7);
+							//5	-	8
+							newFixtures.add(createFixture(date, 13, team5, team8));
+							//3	-	6
+							newFixtures.add(createFixture(date, 13, team3, team6));
+							//7	-	2
+							newFixtures.add(createFixture(date, 13, team7, team2));
+							//1	-	4
+							newFixtures.add(createFixture(date, 13, team1, team4));
+							//14. round
+							date = date.plusDaysAtSameLocalTime(7);
+							//8	-	7
+							newFixtures.add(createFixture(date, 14, team8, team7));
+							//6	-	5
+							newFixtures.add(createFixture(date, 14, team6, team5));
+							//4	-	3
+							newFixtures.add(createFixture(date, 14, team4, team3));
+							//2	-	1
+							newFixtures.add(createFixture(date, 14, team2, team1));
+							fixtures.addFixtures(newFixtures);
+						}
 						final Spielplan modelFixtures = hov.getModel().getFixtures();
 						if (modelFixtures != null) {
 							// state of previous download
@@ -366,6 +526,25 @@ public class DownloadDialog extends JDialog implements ActionListener {
 
 		HOMainFrame.instance().setInformationCompleted();
 
+	}
+
+	/**
+	 * Create new fixture
+	 * @param date Match date
+	 * @param round Match round
+	 * @param team1 Home team
+	 * @param team2 Guest team
+	 * @return Fixture
+	 */
+	private Paarung createFixture(HODateTime date, int round,  TeamStats team1, TeamStats team2) {
+		var ret = new Paarung();
+		ret.setDatum(date);
+		ret.setHeimId(team1.getTeamId());
+		ret.setGastId(team2.getTeamId());
+		ret.setHeimName(team1.getTeamName());
+		ret.setGastName(team2.getTeamName());
+		ret.setSpieltag(round);
+		return ret;
 	}
 
 	private void downloadOldFixtures(int teamId, List<Object> selection) {

@@ -183,14 +183,16 @@ public class HattrickManager {
         return "";
     }
 
-    public static TeamStats downloadSeriesDetails(int seriesId, int teamId) {
-        Map<String, TeamStats> teamStatsMap;
-        if (seriesDetailsCache.containsKey(seriesId)) {
-            teamStatsMap = seriesDetailsCache.get(seriesId);
-        } else {
-            teamStatsMap = OnlineWorker.downloadLeagueDetails(seriesId);
+    public static Map<String, TeamStats> getSeriesDetails(int seriesId) {
+        if (!seriesDetailsCache.containsKey(seriesId)) {
+            var teamStatsMap = OnlineWorker.downloadLeagueDetails(seriesId);
+            seriesDetailsCache.put(seriesId, teamStatsMap);
         }
+        return seriesDetailsCache.get(seriesId);
+    }
 
+    public static TeamStats getTeamStatistics(int seriesId, int teamId) {
+        var teamStatsMap = getSeriesDetails(seriesId);
         if (teamStatsMap != null) {
             return  teamStatsMap.get(String.valueOf(teamId));
         } else {
