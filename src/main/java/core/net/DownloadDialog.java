@@ -22,7 +22,6 @@ import core.util.Helper;
 import module.nthrf.NtTeamChooser;
 import module.nthrf.NthrfUtil;
 import module.series.Spielplan;
-import module.teamAnalyzer.ht.HattrickManager;
 import tool.updater.UpdateController;
 import java.awt.*;
 import java.awt.event.*;
@@ -35,8 +34,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
 /**
- * Dialog, der den User den Download von verschiedenen Daten aus Hattrick heraus
- * ermöglicht
+ * User dialog to download different hattrick data
  */
 public class DownloadDialog extends JDialog implements ActionListener {
 
@@ -320,7 +318,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 					if (fixtures != null) {
 						if ( fixtures.getMatches().isEmpty()){
 							// Matches are not available from hattrick. Initialize them
-							var teamStats = HattrickManager.getSeriesDetails(leagueId);
+							var teamStats = OnlineWorker.getSeriesDetails(leagueId);
 							var teams = teamStats.values().stream().sorted(Comparator.comparing(TeamStats::getPosition)).toArray(TeamStats[]::new);
 							var team1 = (TeamStats)teams[0];
 							var team2 = (TeamStats)teams[1];

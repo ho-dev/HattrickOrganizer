@@ -2,9 +2,10 @@ package module.series;
 
 import core.db.AbstractTable;
 import core.model.series.*;
+import core.net.OnlineWorker;
 import core.util.HODateTime;
 import core.util.HOLogger;
-import module.teamAnalyzer.ht.HattrickManager;
+//import module.teamAnalyzer.ht.HattrickManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -249,7 +250,7 @@ public class Spielplan  extends AbstractTable.Storable {
             berechneAltePositionen(tmp);
         }
         else {
-            var seriesDetails = HattrickManager.getSeriesDetails(this.getLigaId());
+            var seriesDetails = OnlineWorker.getSeriesDetails(this.getLigaId());
             for ( var t : tmp.getEntries()){
                 var details = seriesDetails.get(String.valueOf(t.getTeamId()));
                 var position = details.getPosition();
