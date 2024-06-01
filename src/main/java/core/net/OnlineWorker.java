@@ -1161,9 +1161,8 @@ public class OnlineWorker {
 					}
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				HOLogger.instance().error(OnlineWorker.class, "Error downloading youth match data: " + e);
 			}
-
 		}
 	}
 

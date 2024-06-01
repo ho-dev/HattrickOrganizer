@@ -629,7 +629,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 				// TODO message box
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
+			HOLogger.instance().error(getClass(), "Cannot download NT data from hattrick: " + e);
 		}
 	}
 }
