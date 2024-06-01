@@ -24,7 +24,6 @@ import org.w3c.dom.Document;
 public class HattrickManager {
 
     private static final Map<Integer, Map<String, String>> teamDetailsCache = new HashMap<>();
-//    private static final Map<Integer, Map<String, TeamStats>> seriesDetailsCache = new HashMap<>();
 
     /**
      * Method that downloads from Hattrick the available matches for the team <code>teamId</code>.
@@ -205,5 +204,4 @@ public class HattrickManager {
 
     	return true;
     }
-
 }

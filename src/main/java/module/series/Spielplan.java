@@ -5,8 +5,6 @@ import core.model.series.*;
 import core.net.OnlineWorker;
 import core.util.HODateTime;
 import core.util.HOLogger;
-//import module.teamAnalyzer.ht.HattrickManager;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
