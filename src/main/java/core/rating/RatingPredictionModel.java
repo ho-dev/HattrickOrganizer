@@ -106,11 +106,20 @@ public class RatingPredictionModel {
      * @return double
      */
     public double getRating(Lineup lineup, RatingSector s, int minute) {
+        verifyCaches();
+        return ratingCache.get(lineup, s, minute);
+    }
+
+    /**
+     * Reset rating caches if their revision is expired.
+     * Remember the new team rating revision.
+     */
+    private void verifyCaches() {
         if (team.getRatingRevision() != teamRatingRevision) {
             ratingCache.clear();
+            averageRatingCache.clear();
             teamRatingRevision = team.getRatingRevision();
         }
-        return ratingCache.get(lineup, s, minute);
     }
 
     /**
@@ -133,10 +142,7 @@ public class RatingPredictionModel {
      * @return double
      */
     public double getAverageRating(Lineup lineup, RatingSector s, int minutes) {
-        if (team.getRatingRevision() != teamRatingRevision) {
-            ratingCache.clear();
-            teamRatingRevision = team.getRatingRevision();
-        }
+        verifyCaches();
         return averageRatingCache.get(lineup, s, minutes);
     }
 

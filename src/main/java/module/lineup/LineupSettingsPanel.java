@@ -42,7 +42,6 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 	private final CBItem[] SUB_TEAM_SPIRIT = {
 			new CBItem(getTranslation("verylow"), 0),
 			new CBItem(getTranslation("low"), 1),
-			//new CBItem(getTranslation("Durchschnitt"), 2),
 			new CBItem(getTranslation("high"), 2),
 			new CBItem(getTranslation("veryhigh"), 3) };
 	private final JComboBox<CBItem> m_jcbSubTeamSpirit = new JComboBox<>(SUB_TEAM_SPIRIT);
@@ -137,19 +136,6 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		core.gui.RefreshManager.instance().registerRefreshable(this);
 	}
 
-	private boolean isLineupSimulator(){
-/*		if (matchAndLineupPanel == null){
-			matchAndLineupPanel = lineupPanel.getLineupPositionsPanel().getMatchAndLineupSelectionPanel();
-		}
-		if (matchAndLineupPanel != null) {
-			return matchAndLineupPanel.isLineupSimulator();
-		}
-		else{
-			return false;
-		}*/
-		return true;
-	}
-
 	public Weather getWeather() {
 		int id = ((CBItem) Objects.requireNonNull(m_jcbWeather.getSelectedItem(), "Weather CB can't be null")).getId();
 		return Weather.getById(id);
@@ -190,58 +176,36 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		}
 		else
 		{
-			boolean bLineupSimulation = isLineupSimulator();
-			m_jcbMainTeamSpirit.setEnabled(bLineupSimulation);
-			m_jcbSubTeamSpirit.setEnabled(bLineupSimulation);
-			m_jcbTeamConfidence.setEnabled(bLineupSimulation);
+			m_jcbMainTeamSpirit.setEnabled(true);
+			m_jcbSubTeamSpirit.setEnabled(true);
+			m_jcbTeamConfidence.setEnabled(true);
 		}
 	}
 
 	public void setLabels() {
 
-		// Lineup settings are editable only if in Lineup Simulator mode
-		boolean bLineupSimulation = isLineupSimulator();
-		m_jcbLocation.setEnabled(bLineupSimulation);
-		m_jcbWeather.setEnabled(bLineupSimulation);
-		m_jcbMainTeamSpirit.setEnabled(bLineupSimulation);
-		m_jcbSubTeamSpirit.setEnabled(bLineupSimulation);
-		m_jcbTeamConfidence.setEnabled(bLineupSimulation);
-		m_jcbTrainerType.setEnabled(bLineupSimulation);
-		m_jcbTacticalAssistants.setEnabled(bLineupSimulation);
-		m_jcbPullBackMinute.setEnabled(bLineupSimulation);
-		m_jbReset.setEnabled(bLineupSimulation);
+		m_jcbLocation.setEnabled(true);
+		m_jcbWeather.setEnabled(true);
+		m_jcbMainTeamSpirit.setEnabled(true);
+		m_jcbSubTeamSpirit.setEnabled(true);
+		m_jcbTeamConfidence.setEnabled(true);
+		m_jcbTrainerType.setEnabled(true);
+		m_jcbTacticalAssistants.setEnabled(true);
+		m_jcbPullBackMinute.setEnabled(true);
+		m_jbReset.setEnabled(true);
 
 		var team = homodel.getTeam();
-		if ( team != null){
-			if(bLineupSimulation) {
-				setTeamSpirit(team.getTeamSpiritLevel(), team.getSubTeamSpirit());
-				setConfidence(team.getConfidence());
-				setTrainerType(homodel.getTrainer().getTrainerType().toInt());
-			}
-			else{
-
-				if (m_jcbLocation.getSelectedItem() != null &&
-						((CBItem)m_jcbLocation.getSelectedItem()).getId() == IMatchDetails.LOCATION_TOURNAMENT){
-					setTeamSpirit(6, 2);
-					setConfidence(6);
-				}
-				else{
-					setTeamSpirit(m_iRealTeamSpirit, m_iRealSubTeamSpirit);
-					setConfidence(m_iRealConfidence);
-				}
-				setTrainerType(m_iRealTrainerType);
-			}
+		if ( team != null) {
+			setTeamSpirit(team.getTeamSpiritLevel(), team.getSubTeamSpirit());
+			setConfidence(team.getConfidence());
+			setTrainerType(homodel.getTrainer().getTrainerType().toInt());
 		}
 
 		var club = homodel.getClub();
-		if ( club != null){
-			if(bLineupSimulation) {
-				setTacticalAssistants(club.getTacticalAssistantLevels());
-			}
-			else{
-				setTacticalAssistants(m_iRealTacticalAssistantsLevel);
-			}
+		if ( club != null) {
+			setTacticalAssistants(club.getTacticalAssistantLevels());
 		}
+
 		final Lineup currentLineup = homodel.getCurrentLineup();
         setManMarking(currentLineup.getManMarkingOrder() != null, currentLineup.getManMarkingPosition());
         setLocation(currentLineup.getLocation());
