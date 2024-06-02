@@ -443,8 +443,6 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 	}
 
 	private CBItem[] getPredictionItems() {
-		final ResourceBundle bundle = HOVerwaltung.instance().getResource();
-		//String[] allPredictionNames = RatingPredictionConfig.getAllPredictionNames();
 		var ratingPredictionManager = homodel.getRatingPredictionManager();
 		var allPredictionNames = ratingPredictionManager.getAllPredictionModelNames();
 		CBItem[] allItems = new CBItem[allPredictionNames.size()];
