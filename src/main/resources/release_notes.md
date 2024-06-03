@@ -65,7 +65,8 @@
 * Modify youth module layout (#1449)
 * Set initial youth module view layout (#1558)
 * Display specialty icons in youth player tables (#1999)
-* Display future player development (potential) and take allrounder skill into account (#2045)
+* Display future player development (potential) and take overall skill level into account (#2045)
+* Fix sorting of youth table average column (#2076)
 
 ### Option setting
 * new color editor in option settings (#1242)

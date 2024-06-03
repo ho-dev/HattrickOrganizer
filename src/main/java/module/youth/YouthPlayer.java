@@ -1128,6 +1128,10 @@ public class YouthPlayer extends AbstractTable.Storable {
         return stringBuilder.toString();
     }
 
+    public double getMinimumOverallSkillsLevel(){
+        return this.currentSkills.calculateMinimumOverallSkillsLevel();
+    }
+
     private Integer potential;
 
     /**
