@@ -1,6 +1,7 @@
 package core.gui.comp.panel;
 
 import core.gui.comp.entry.DoubleLabelEntries;
+import core.model.UserParameter;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,9 +26,11 @@ public class DoubleLabelPanel extends JPanel {
         layout.setVgap(0);
         setLayout(layout);
         // Fix right label width to avoid components moving when values change.
-        rightLabel.setMinimumSize(new Dimension(90, 10));
-        rightLabel.setMaximumSize(new Dimension(90, 10));
-        rightLabel.setPreferredSize(new Dimension(90, 10));
+        var width = 60;
+        var height = UserParameter.instance().fontSize;
+        rightLabel.setMinimumSize(new Dimension(width, height));
+        rightLabel.setMaximumSize(new Dimension(width, height));
+        rightLabel.setPreferredSize(new Dimension(width, height));
 
         add(leftLabel);
         add(rightLabel);

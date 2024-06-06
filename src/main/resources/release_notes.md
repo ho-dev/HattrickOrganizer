@@ -24,7 +24,8 @@
 
 ### Training
 
-### League
+### International Friendlies
+* Fix database error on match reload (#2063)
 
 ### Youth
 

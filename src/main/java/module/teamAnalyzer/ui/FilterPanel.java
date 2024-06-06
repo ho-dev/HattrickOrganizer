@@ -211,7 +211,7 @@ public class FilterPanel extends JPanel {
 	@NotNull
 	private static Map<String, String> retrieveTeamDetails(Team selectedTeam) {
 		Map<String, String> teamDetails = HattrickManager.getTeamDetails(selectedTeam.getTeamId());
-		TeamStats teamStats = HattrickManager.downloadSeriesDetails(Integer.parseInt(teamDetails.get("LeagueLevelUnitID")), selectedTeam.getTeamId());
+		TeamStats teamStats = HattrickManager.getTeamStatistics(Integer.parseInt(teamDetails.get("LeagueLevelUnitID")), selectedTeam.getTeamId());
 		if (teamStats != null) {
 			teamDetails.put("LeaguePosition", String.valueOf(teamStats.getPosition()));
 		}

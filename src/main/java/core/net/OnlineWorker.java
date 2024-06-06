@@ -1161,9 +1161,8 @@ public class OnlineWorker {
 					}
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				HOLogger.instance().error(OnlineWorker.class, "Error downloading youth match data: " + e);
 			}
-
 		}
 	}
 
@@ -1277,4 +1276,13 @@ public class OnlineWorker {
 		return XMLLeagueDetailsParser.parseLeagueDetails(leagueDetailsXml);
 	}
 
+	private static final Map<Integer, Map<String, TeamStats>> seriesDetailsCache = new HashMap<>();
+
+	public static Map<String, TeamStats> getSeriesDetails(int seriesId) {
+		if (!seriesDetailsCache.containsKey(seriesId)) {
+			var teamStatsMap = OnlineWorker.downloadLeagueDetails(seriesId);
+			seriesDetailsCache.put(seriesId, teamStatsMap);
+		}
+		return seriesDetailsCache.get(seriesId);
+	}
 }
