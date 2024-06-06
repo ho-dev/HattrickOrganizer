@@ -1,5 +1,7 @@
 package core.model.series;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Arrays;
 
 public class SerieTableEntry implements Comparable<SerieTableEntry> {
@@ -60,15 +62,6 @@ public class SerieTableEntry implements Comparable<SerieTableEntry> {
     }
 
     /**
-     * Getter for property m_iA_Nied.
-     *
-     * @return Value of property m_iA_Nied.
-     */
-    public final int getA_Nied() {
-        return m_iA_Nied;
-    }
-
-    /**
      * Setter for property m_iA_Punkte.
      *
      * @param m_iA_Punkte New value of property m_iA_Punkte.
@@ -93,19 +86,6 @@ public class SerieTableEntry implements Comparable<SerieTableEntry> {
      */
     public final void setA_Siege(int m_iA_Siege) {
         this.m_iA_Siege = m_iA_Siege;
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////
-    // EXTENDED MEMBER Accessor    
-    ////////////////////////////////////////////////////////////////////////////////7
-
-    /**
-     * Getter for property m_iA_Siege.
-     *
-     * @return Value of property m_iA_Siege.
-     */
-    public final int getA_Siege() {
-        return m_iA_Siege;
     }
 
     /**
@@ -136,30 +116,12 @@ public class SerieTableEntry implements Comparable<SerieTableEntry> {
     }
 
     /**
-     * Getter for property m_iA_ToreGegen.
-     *
-     * @return Value of property m_iA_ToreGegen.
-     */
-    public final int getA_ToreGegen() {
-        return m_iA_ToreGegen;
-    }
-
-    /**
      * Setter for property m_iA_Un.
      *
      * @param m_iA_Un New value of property m_iA_Un.
      */
     public final void setA_Un(int m_iA_Un) {
         this.m_iA_Un = m_iA_Un;
-    }
-
-    /**
-     * Getter for property m_iA_Un.
-     *
-     * @return Value of property m_iA_Un.
-     */
-    public final int getA_Un() {
-        return m_iA_Un;
     }
 
     /**
@@ -196,10 +158,6 @@ public class SerieTableEntry implements Comparable<SerieTableEntry> {
      */
     public final int getAnzSpiele() {
         return m_iAnzSpiele;
-    }
-
-    public final int getAwayTorDiff() {
-        return (m_iA_ToreFuer - m_iA_ToreGegen);
     }
 
     /**
@@ -273,30 +231,12 @@ public class SerieTableEntry implements Comparable<SerieTableEntry> {
     }
 
     /**
-     * Getter for property m_iH_Nied.
-     *
-     * @return Value of property m_iH_Nied.
-     */
-    public final int getH_Nied() {
-        return m_iH_Nied;
-    }
-
-    /**
      * Setter for property m_iH_Punkte.
      *
      * @param m_iH_Punkte New value of property m_iH_Punkte.
      */
     public final void setH_Punkte(int m_iH_Punkte) {
         this.m_iH_Punkte = m_iH_Punkte;
-    }
-
-    /**
-     * Getter for property m_iH_Punkte.
-     *
-     * @return Value of property m_iH_Punkte.
-     */
-    public final int getH_Punkte() {
-        return m_iH_Punkte;
     }
 
     /**
@@ -309,30 +249,12 @@ public class SerieTableEntry implements Comparable<SerieTableEntry> {
     }
 
     /**
-     * Getter for property m_iH_Siege.
-     *
-     * @return Value of property m_iH_Siege.
-     */
-    public final int getH_Siege() {
-        return m_iH_Siege;
-    }
-
-    /**
      * Setter for property m_iH_ToreFuer.
      *
      * @param m_iH_ToreFuer New value of property m_iH_ToreFuer.
      */
     public final void setH_ToreFuer(int m_iH_ToreFuer) {
         this.m_iH_ToreFuer = m_iH_ToreFuer;
-    }
-
-    /**
-     * Getter for property m_iH_ToreFuer.
-     *
-     * @return Value of property m_iH_ToreFuer.
-     */
-    public final int getH_ToreFuer() {
-        return m_iH_ToreFuer;
     }
 
     /**
@@ -345,67 +267,12 @@ public class SerieTableEntry implements Comparable<SerieTableEntry> {
     }
 
     /**
-     * Getter for property m_iH_ToreGegen.
-     *
-     * @return Value of property m_iH_ToreGegen.
-     */
-    public final int getH_ToreGegen() {
-        return m_iH_ToreGegen;
-    }
-
-    /**
      * Setter for property m_iH_Un.
      *
      * @param m_iH_Un New value of property m_iH_Un.
      */
     public final void setH_Un(int m_iH_Un) {
         this.m_iH_Un = m_iH_Un;
-    }
-
-    /**
-     * Getter for property m_iH_Un.
-     *
-     * @return Value of property m_iH_Un.
-     */
-    public final int getH_Un() {
-        return m_iH_Un;
-    }
-
-    public final int getHeimTorDiff() {
-        return (m_iH_ToreFuer - m_iH_ToreGegen);
-    }
-
-    /**
-     * liefert die letzen XXX Spiele als Serie
-     *
-     * @param anzahl wie viele der letzen Spiele sollen angezeigt werden,  -1 = alle, 0 = nur das
-     *        akuelle, 1-x = anzahl Spiele vor dem aktuellen
-     */
-    public final byte[] getLastSerie(int anzahl) {
-        byte[] miniSerie = new byte[0];
-        int start = -1;
-        final int ende = m_iAnzSpiele;
-
-        // Bereich vorbereiten
-        if (anzahl >= 0) {
-            if (m_iAnzSpiele > anzahl) {
-                //-1 weil index eines Spieltages = ( Spieltag - 1 ) ist
-                start = (m_iAnzSpiele - 1) - anzahl;
-            } else {
-                start = 0;
-            }
-
-            //miniSerie vorbereiten
-            miniSerie = new byte[ende - start];
-        }
-
-        for (int i = start; i < ende; i++) {
-            //- start damit bei 0 angefangen wird, hier nur i da bereits auf array abgestimmt ist!
-            miniSerie[i - start] = m_aSerie[i];
-        }
-
-        //nix zurückgeben
-        return miniSerie;
     }
 
     /**
@@ -460,45 +327,6 @@ public class SerieTableEntry implements Comparable<SerieTableEntry> {
      */
     public final byte[] getSerie() {
         return this.m_aSerie;
-    }
-
-    public final String getSerieAsString() {
-        final StringBuilder buffer = new StringBuilder();
-
-        for (byte b : m_aSerie) {
-            switch (b) {
-                case H_SIEG:
-                    buffer.append(core.model.HOVerwaltung.instance().getLanguageString("SerieHeimSieg"));
-                    break;
-
-                case H_UN:
-                    buffer.append(core.model.HOVerwaltung.instance().getLanguageString("SerieHeimUnendschieden"));
-                    break;
-
-                case H_NIED:
-                    buffer.append(core.model.HOVerwaltung.instance().getLanguageString("SerieHeimNiederlage"));
-                    break;
-
-                case A_SIEG:
-                    buffer.append(core.model.HOVerwaltung.instance().getLanguageString("SerieAuswaertsSieg"));
-                    break;
-
-                case A_UN:
-                    buffer.append(core.model.HOVerwaltung.instance().getLanguageString("SerieAuswaertsUnendschieden"));
-                    break;
-
-                case A_NIED:
-                    buffer.append(core.model.HOVerwaltung.instance().getLanguageString("SerieAuswaertsNiederlage"));
-                    break;
-
-                default:
-
-                    //nix
-                    break;
-            }
-        }
-
-        return buffer.toString();
     }
 
     /**
@@ -586,53 +414,39 @@ public class SerieTableEntry implements Comparable<SerieTableEntry> {
     }
 
     /**
-     * vergleicht die Einträge
+     * Compare series table entries
      */
-    public final int compareTo(SerieTableEntry obj) {
-        if (obj != null) {
-            final SerieTableEntry lte = (SerieTableEntry) obj;
+    public final int compareTo(@NotNull SerieTableEntry obj) {
 
-            if (m_iPunkte > lte.getPoints()) {
+        if (m_iPunkte > obj.getPoints()) {
+            return -1;
+        } else if (m_iPunkte < obj.getPoints()) {
+            return 1;
+        } else {
+            if (getGoalsDiff() > obj.getGoalsDiff()) {
                 return -1;
-            } else if (m_iPunkte < lte.getPoints()) {
+            } else if (getGoalsDiff() < obj.getGoalsDiff()) {
                 return 1;
-            } else {
-                if (getGoalsDiff() > lte.getGoalsDiff()) {
+            } else if (getGoalsDiff() == obj.getGoalsDiff()) {
+                if (m_iToreFuer > obj.getGoalsFor()) {
                     return -1;
-                } else if (getGoalsDiff() < lte.getGoalsDiff()) {
+                } else if (m_iToreFuer < obj.getGoalsFor()) {
                     return 1;
-                } else if (getGoalsDiff() == lte.getGoalsDiff()) {
-                    if (m_iToreFuer > lte.getGoalsFor()) {
+                }
+                //nun gilt der Auswärtsfaktor
+                else if (getA_Punkte() > obj.getA_Punkte()) {
+                    return -1;
+                } else if (getA_Punkte() < obj.getA_Punkte()) {
+                    return 1;
+                } else {
+                    if (m_iA_ToreFuer > obj.getA_ToreFuer()) {
                         return -1;
-                    } else if (m_iToreFuer < lte.getGoalsFor()) {
+                    } else if (m_iA_ToreFuer < obj.getA_ToreFuer()) {
                         return 1;
-                    }
-                    /*else if ( m_iToreFuer == lte.getToreFuer () )
-                       {
-                           return 0;
-                       }*/
-
-                    //nun gilt der Auswärtsfaktor
-                    else if (getA_Punkte() > lte.getA_Punkte()) {
-                        return -1;
-                    } else if (getA_Punkte() < lte.getA_Punkte()) {
-                        return 1;
-                    } else if (getA_Punkte() == lte.getA_Punkte()) {
-                        if (m_iA_ToreFuer > lte.getA_ToreFuer()) {
-                            return -1;
-                        } else if (m_iA_ToreFuer < lte.getA_ToreFuer()) {
-                            return 1;
-                        }
-
-                        /* else if ( m_iA_ToreFuer  == lte.getA_ToreFuer () )
-                           {
-                               return 0;
-                           }*/
                     }
                 }
             }
         }
-
         return 0;
     }
 
@@ -641,7 +455,7 @@ public class SerieTableEntry implements Comparable<SerieTableEntry> {
     ////////////////////////////////////////////////////////////////////////////////7    
     @Override
 	public final boolean equals(Object obj) {
-        SerieTableEntry lte = null;
+        SerieTableEntry lte;
 
         if (obj instanceof SerieTableEntry) {
             lte = (SerieTableEntry) obj;

@@ -618,7 +618,6 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
                 };
             }
 
-
             m_jpRightDefense.setRating(minuteRating.get(currentLineup, RatingPredictionModel.RatingSector.DEFENCE_RIGHT));
             m_jpCentralDefense.setRating(minuteRating.get(currentLineup, RatingPredictionModel.RatingSector.DEFENCE_CENTRAL));
             m_jpLeftDefense.setRating(minuteRating.get(currentLineup, RatingPredictionModel.RatingSector.DEFENCE_LEFT));

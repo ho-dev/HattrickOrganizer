@@ -2,13 +2,15 @@ package core.model.series;
 
 import core.util.Helper;
 
+import java.util.Comparator;
 import java.util.Vector;
+import java.util.stream.Collectors;
 
 public class LigaTabelle  {
     //~ Instance fields ----------------------------------------------------------------------------
     protected String m_sLigaLandName = "";
     protected String m_sLigaName = "";
-    protected Vector<SerieTableEntry> m_vEintraege = new Vector<SerieTableEntry>();
+    protected Vector<SerieTableEntry> m_vEintraege = new Vector<>();
     protected int m_iLigaId = -1;
     protected int m_iLigaLandId = -1;
     /** Maximale ANzahl an Spielklassen */
@@ -33,7 +35,7 @@ public class LigaTabelle  {
      * liefert den Eintrag zu einem Team
      */
     public final SerieTableEntry getEintragByTeamId(int teamId) {
-        SerieTableEntry tmp = null;
+        SerieTableEntry tmp;
 
         for (int i = 0; (teamId >= 0) && (i < m_vEintraege.size()); i++) {
             tmp = m_vEintraege.elementAt(i);
@@ -56,30 +58,12 @@ public class LigaTabelle  {
     }
 
     /**
-     * Getter for property m_iLigaId.
-     *
-     * @return Value of property m_iLigaId.
-     */
-    public final int getLigaId() {
-        return m_iLigaId;
-    }
-
-    /**
      * Setter for property m_iLigaLandId.
      *
      * @param m_iLigaLandId New value of property m_iLigaLandId.
      */
     public final void setLigaLandId(int m_iLigaLandId) {
         this.m_iLigaLandId = m_iLigaLandId;
-    }
-
-    /**
-     * Getter for property m_iLigaLandId.
-     *
-     * @return Value of property m_iLigaLandId.
-     */
-    public final int getLigaLandId() {
-        return m_iLigaLandId;
     }
 
     /**
@@ -92,30 +76,12 @@ public class LigaTabelle  {
     }
 
     /**
-     * Getter for property m_sLigaLandName.
-     *
-     * @return Value of property m_sLigaLandName.
-     */
-    public final java.lang.String getLigaLandName() {
-        return m_sLigaLandName;
-    }
-
-    /**
      * Setter for property m_sLigaName.
      *
      * @param m_sLigaName New value of property m_sLigaName.
      */
     public final void setLigaName(java.lang.String m_sLigaName) {
         this.m_sLigaName = m_sLigaName;
-    }
-
-    /**
-     * Getter for property m_sLigaName.
-     *
-     * @return Value of property m_sLigaName.
-     */
-    public final java.lang.String getLigaName() {
-        return m_sLigaName;
     }
 
     /**
@@ -128,59 +94,12 @@ public class LigaTabelle  {
     }
 
     /**
-     * Getter for property m_iMaxAnzahlSpielklassen.
-     *
-     * @return Value of property m_iMaxAnzahlSpielklassen.
-     */
-    public final int getMaxAnzahlSpielklassen() {
-        return m_iMaxAnzahlSpielklassen;
-    }
-
-    /**
      * Setter for property m_iSpielklasse.
      *
      * @param m_iSpielklasse New value of property m_iSpielklasse.
      */
     public final void setSpielklasse(int m_iSpielklasse) {
         this.m_iSpielklasse = m_iSpielklasse;
-    }
-
-    /**
-     * Getter for property m_iSpielklasse.
-     *
-     * @return Value of property m_iSpielklasse.
-     */
-    public final int getSpielklasse() {
-        return m_iSpielklasse;
-    }
-
-    ////////////////////////////////////////////////////////////////////////////////    
-    //Logic
-    ////////////////////////////////////////////////////////////////////////////////
-
-    /**
-     * liefert tendenz zur Platzierung des Teams im Vergleich mit der angegebenen Tabelle -1 ==
-     * abgerutscht, 0 = gleich, 1 == aufgestiegen
-     */
-    public final byte getTeamPlatzTendenz(int teamId, LigaTabelle compare) {
-        SerieTableEntry aktu = null;
-        SerieTableEntry vergleich = null;
-
-        if (compare != null) {
-            aktu = getEintragByTeamId(teamId);
-            vergleich = compare.getEintragByTeamId(teamId);
-
-            if ((aktu != null) && (vergleich != null)) {
-                if (aktu.getPosition() < vergleich.getPosition()) {
-                    return (byte) 1;
-                } else if (aktu.getPosition() > vergleich.getPosition()) {
-                    return (byte) -1;
-                }
-            }
-        }
-
-        //default
-        return (byte) 0;
     }
 
     public final void addEintrag(SerieTableEntry lte) {
@@ -190,7 +109,7 @@ public class LigaTabelle  {
     }
 
     /*
-     *Sortiert die Einträge
+     * Sort series table entries
      */
     public final void sort() {
         SerieTableEntry[] list = new SerieTableEntry[m_vEintraege.size()];
@@ -208,6 +127,9 @@ public class LigaTabelle  {
 
         //zurückkopieren
         Helper.copyArray2Vector(list, m_vEintraege);
-        list = null;
+    }
+
+    public void sortByPosition() {
+        m_vEintraege = m_vEintraege.stream().sorted(Comparator.comparing(SerieTableEntry::getPosition)).collect(Collectors.toCollection(Vector::new));
     }
 }
