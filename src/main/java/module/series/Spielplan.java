@@ -2,6 +2,7 @@ package module.series;
 
 import core.db.AbstractTable;
 import core.model.series.*;
+import core.net.OnlineWorker;
 import core.util.HODateTime;
 import core.util.HOLogger;
 import java.util.ArrayList;
@@ -242,8 +243,20 @@ public class Spielplan  extends AbstractTable.Storable {
                     maxMatchDay));
         }
 
-        tmp.sort();
-        berechneAltePositionen(tmp);
+        if(tmp.getEntries().get(0).getAnzSpiele() > 0) {
+            tmp.sort();
+            berechneAltePositionen(tmp);
+        }
+        else {
+            var seriesDetails = OnlineWorker.getSeriesDetails(this.getLigaId());
+            for ( var t : tmp.getEntries()){
+                var details = seriesDetails.get(String.valueOf(t.getTeamId()));
+                var position = details.getPosition();
+                t.setPosition(position);
+                t.setAltePosition(position);
+            }
+            tmp.sortByPosition();
+        }
 
         return tmp;
     }

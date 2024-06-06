@@ -26,6 +26,9 @@
 * Update missing world details in database (#2063)
 * Reduce space between team summary labels (#2069)
 
+### Series
+* Initialize series table if no matches are played yet (#1455)
+
 ### Team Analyzer
 * Restore size of match prediction dialog box (#1898)
 * Improve layout of Team Analyzer a bit, add option to hide Special Events, and add info about selected team (#2020)

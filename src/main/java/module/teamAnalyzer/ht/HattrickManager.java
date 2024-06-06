@@ -24,7 +24,6 @@ import org.w3c.dom.Document;
 public class HattrickManager {
 
     private static final Map<Integer, Map<String, String>> teamDetailsCache = new HashMap<>();
-    private static final Map<Integer, Map<String, TeamStats>> seriesDetailsCache = new HashMap<>();
 
     /**
      * Method that downloads from Hattrick the available matches for the team <code>teamId</code>.
@@ -183,14 +182,8 @@ public class HattrickManager {
         return "";
     }
 
-    public static TeamStats downloadSeriesDetails(int seriesId, int teamId) {
-        Map<String, TeamStats> teamStatsMap;
-        if (seriesDetailsCache.containsKey(seriesId)) {
-            teamStatsMap = seriesDetailsCache.get(seriesId);
-        } else {
-            teamStatsMap = OnlineWorker.downloadLeagueDetails(seriesId);
-        }
-
+    public static TeamStats getTeamStatistics(int seriesId, int teamId) {
+        var teamStatsMap = OnlineWorker.getSeriesDetails(seriesId);
         if (teamStatsMap != null) {
             return  teamStatsMap.get(String.valueOf(teamId));
         } else {
@@ -211,5 +204,4 @@ public class HattrickManager {
 
     	return true;
     }
-
 }
