@@ -38,7 +38,7 @@ class TrainerCurve extends Curve {
 	}
 
 	private static final String readTrainerBeforeStartSql = "select SPIELERID, FUEHRUNG, DATUM from SPIELER where TRAINERTYP <> -1 and DATUM <= ? order by DATUM desc";
-	private static final String readTrainerSql = "select SPIELERID, FUEHRUNG, DATUM from SPIELER where TRAINERTYP <> -1 and DATUM > ? and DATUM < ? order by DATUM";
+	private static final String readTrainerSql = "select SPIELERID, FUEHRUNG, DATUM from SPIELER where TRAINERTYP <> -1 and DATUM > ? and DATUM <= ? order by DATUM";
 	private void readTrainer() {
 		var start = HOVerwaltung.instance().getModel().getBasics().getDatum().minus(WEEKS_BACK*7, ChronoUnit.DAYS);
 
