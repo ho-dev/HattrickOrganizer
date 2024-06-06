@@ -74,6 +74,9 @@
 ### Option setting
 * new color editor in option settings (#1242)
 
+### Team spirit forecast
+* Fix loading trainer data (#2078)
+
 ### Misc
 * Add a Linux-friendly default theme, called “Gnome.”
 * Add Kotlin support to codebase
