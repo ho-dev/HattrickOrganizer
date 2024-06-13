@@ -239,21 +239,6 @@ final class SpielerTable extends AbstractTable {
 		return loadOne(Player.class, connectionManager.executePreparedQuery(loadLatestPlayerInfoSql, playerId));
 	}
 
-	private final String getTrainerTypeSql = createSelectStatement(" WHERE HRF_ID=? AND TrainerTyp >=0 AND Trainer >0 order by Trainer desc");
-
-	int getTrainerType(int hrfID) {
-		try (ResultSet rs = connectionManager.executePreparedQuery(getTrainerTypeSql, hrfID)) {
-			if (rs != null) {
-				if (rs.next()) {
-					return rs.getInt("TrainerTyp");
-				}
-			}
-		} catch (Exception ignored) {
-		}
-
-		return -99;
-	}
-
 	private final String loadPlayerBeforeSql = createSelectStatement(" WHERE SpielerID=? AND Datum<=? ORDER BY Datum DESC LIMIT 1");
 
 	public Player loadPlayerBefore(int playerId, Timestamp before) {

@@ -157,7 +157,7 @@ public final class HRFTable extends AbstractTable {
 	}
 
 	public List<Integer> getHrfIdPerWeekList(int nWeeks) {
-		var sql = "select min(hrf_id) as id from " +
+		var sql = "select max(hrf_id) as id from " +
 				getTableName() +
 				" group by unix_timestamp(datum)/7/86400 order by id desc limit " +
 				nWeeks;

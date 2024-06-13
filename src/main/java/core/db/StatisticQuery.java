@@ -249,8 +249,8 @@ public class StatisticQuery {
 				while (rs.next()) {
 					final double[] thisHRFvalues = new double[nbColumnsHRF];
 					thisHRFvalues[0] = rs.getDouble("Fuehrung");  //Leadership
-					thisHRFvalues[1] = rs.getDouble("Erfahrung"); //Experience
-					thisHRFvalues[2] = rs.getDouble("Form");
+					thisHRFvalues[1] = rs.getDouble("Erfahrung")+ rs.getDouble("SubExperience"); //Experience
+					thisHRFvalues[2] = rs.getDouble("Form")+ rs.getDouble("SubForm");
 					thisHRFvalues[3] = rs.getDouble("Kondition"); //Stamina
 					thisHRFvalues[4] = rs.getDouble("Torwart") + rs.getDouble("SubTorwart");  //Goalkeeper
 					thisHRFvalues[5] = rs.getDouble("Verteidigung") + rs.getDouble("SubVerteidigung"); //Defence

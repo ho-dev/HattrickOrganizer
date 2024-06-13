@@ -9,7 +9,6 @@ import core.model.HOVerwaltung;
 import core.model.player.Player;
 import core.option.SliderPanel;
 import core.util.Helper;
-
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -20,9 +19,6 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
-
-import static java.lang.Math.*;
-
 
 final class PlayerSubskillOffsetDialog extends JDialog implements ActionListener, ChangeListener {
 
