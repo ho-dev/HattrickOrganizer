@@ -49,7 +49,7 @@ public final class SliderPanel extends ImagePanel implements ChangeListener {
      * Wert mit faktor multiplizieren und auf int casten
      */
     public void setValue(float value) {
-        m_jslSlider.setValue((int) (value * m_fFaktor));
+        m_jslSlider.setValue((int) (value * m_fFaktor + .5));
     }
 
     public final float getValue() {

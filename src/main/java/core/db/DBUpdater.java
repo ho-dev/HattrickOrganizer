@@ -88,6 +88,10 @@ final class DBUpdater {
 	private void updateDBv900(int dbVersion) throws SQLException {
 		var matchDetailsTable = dbManager.getTable(MatchDetailsTable.TABLENAME);
 		matchDetailsTable.tryChangeColumn("Matchreport", "VARCHAR(40000)");
+
+		var playerTable = dbManager.getTable(SpielerTable.TABLENAME);
+		playerTable.tryAddColumn("SubForm", "FLOAT DEFAULT 0");
+
 		updateDBVersion(dbVersion, 900);
 	}
 
