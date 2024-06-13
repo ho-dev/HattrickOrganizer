@@ -131,9 +131,6 @@ public final class HRFTable extends AbstractTable {
 	}
 
 	private HRF loadMaxHrf() {
-		/**
-		 * liefert die Maximal Vergebene Id eines HRF-Files
-		 */
 		String loadMaxHrfSql = createSelectStatement("order by HRF_ID desc LIMIT 1");
 		return loadHRF(loadMaxHrfSql);
 	}

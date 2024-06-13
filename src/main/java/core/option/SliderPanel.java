@@ -24,7 +24,6 @@ public final class SliderPanel extends ImagePanel implements ChangeListener {
     private final float m_fFaktor;
     private final float m_fTextfeldFaktor;
     private final int m_iTextbreite;
-    private final int decimals = 0;
     private boolean bDeactivateTxtLister = false;
 
 
@@ -52,7 +51,7 @@ public final class SliderPanel extends ImagePanel implements ChangeListener {
         m_jslSlider.setValue((int) (value * m_fFaktor + .5));
     }
 
-    public final float getValue() {
+    public float getValue() {
         HOLogger.instance().log(getClass(),(float) m_jslSlider.getValue() + " : "
                            + (m_jslSlider.getValue() / m_fFaktor));
         return m_jslSlider.getValue() / m_fFaktor;
