@@ -143,8 +143,7 @@ public class Lineup{
 	private short m_sLocation = -1;
 
 	private int m_iArenaId = -1;
-	private int m_iRegionId = -1;
-	private Weather m_cWeather = Weather.NULL;
+    private Weather m_cWeather = Weather.NULL;
 	private Weather.Forecast m_cWeatherForecast = Weather.Forecast.NULL;
 
 	/**
@@ -678,11 +677,10 @@ public class Lineup{
 
 		ratingRevision++;
 
-		if (match == null) {
+        if (match == null) {
 			m_sLocation = 0;
 			m_iArenaId = 0;
-			m_iRegionId = 0;
-			m_cWeather = Weather.NULL;
+            m_cWeather = Weather.NULL;
 			m_cWeatherForecast = Weather.Forecast.NULL;
 			HOLogger.instance().warning(getClass(), "no match to determine location");
 			return false;
@@ -707,8 +705,7 @@ public class Lineup{
 		}
 
 		m_iArenaId = match.getArenaId();
-		m_iRegionId = match.getRegionId();
-		m_cWeather = match.getWeather();
+        m_cWeather = match.getWeather();
 		if (m_cWeather == null) m_cWeather = Weather.NULL;
 		m_cWeatherForecast = match.getWeatherForecast();
 		if (m_cWeatherForecast == null) m_cWeatherForecast = Weather.Forecast.NULL;

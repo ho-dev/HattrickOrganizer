@@ -435,7 +435,7 @@ public class RatingPredictionModel {
 
     /**
      * Get value from contribution cache
-     * (Attention: Method is used by AkasolaceRatingPredictionModel.groovy)
+     * (ATTENTION: Method is used by AkasolaceRatingPredictionModel.groovy)
      * @param p Player
      * @param roleId Lineup position
      * @param behaviour Behaviour
