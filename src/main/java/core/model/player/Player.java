@@ -385,7 +385,7 @@ public class Player extends AbstractTable.Storable {
         this.hrfDate = hrfDate;
 
         if (hrfDate.isBefore(HODateTime.fromDbTimestamp(DBManager.TSIDATE))) {
-            tsi /= 1000d;
+            tsi /= 1000;
         }
 
         totalCards = properties.getInt("warnings", 0);
@@ -2062,21 +2062,10 @@ public class Player extends AbstractTable.Storable {
                             var inc = trainingPerPlayer.getExperienceSub();
                             experienceSub += inc;
                             if (experienceSub > 0.99) experienceSub = 0.99;
-
-                            var minutes = 0;
                             var tp = trainingPerPlayer.getTrainingPair();
-                            if (tp != null) {
-                                minutes = tp.getTrainingDuration().getPlayedMinutes();
-                            } else {
+                            if (tp == null) {
                                 HOLogger.instance().warning(getClass(), "no training info found");
                             }
-//                            HOLogger.instance().info(getClass(),
-//                                    "Training " + training.getTrainingDate().toLocaleDateTime() +
-//                                            "; Minutes= " + minutes +
-//                                            "; Experience increment of " + this.getFullName() +
-//                                            "; increment: " + inc +
-//                                            "; new sub value=" + experienceSub
-//                            );
                         }
                     }
                 }
