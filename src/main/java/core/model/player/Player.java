@@ -1258,8 +1258,7 @@ public class Player extends AbstractTable.Storable {
     public double getEffectiveSkill(PlayerSkill iSkill) {
         double ret = getValue4Skill(iSkill);
         if ( ret > 0 ){
-            ret += getSub4Skill(iSkill);
-            ret--;
+            ret += getSub4Skill(iSkill) - 1.;
         }
         return ret;
     }
