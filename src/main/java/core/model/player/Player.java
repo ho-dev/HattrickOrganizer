@@ -1250,6 +1250,21 @@ public class Player extends AbstractTable.Storable {
     }
 
     /**
+     * Get the effective skill value from the displayed skill value
+     * Displayed value has to be reduced by 1, if not already zero
+     * @param iSkill Skill id
+     * @return double Effective skill value
+     */
+    public double getEffectiveSkill(PlayerSkill iSkill) {
+        double ret = getValue4Skill(iSkill);
+        if ( ret > 0 ){
+            ret += getSub4Skill(iSkill);
+            ret--;
+        }
+        return ret;
+    }
+
+    /**
      * Returns accurate subskill number. If you need subskill for UI
      * purpose it is better to use getSubskill4Pos()
      *
@@ -2372,7 +2387,7 @@ public class Player extends AbstractTable.Storable {
      * is done by approximating the calculated tsi value to the given one.
      */
     private void adjustFormSub(){
-        if ( this.injuryWeeks > 0) return;
+        if ( this.injuryWeeks > -1) return;
         var max = .99;
         var min = 0.;
         while (max-min > 0.01){
@@ -2403,14 +2418,14 @@ public class Player extends AbstractTable.Storable {
         //
         //TSIgk = 3 * Gk^3.359 * Fm^0.5
 
-        double def = max(0, this.getSkill(DEFENDING) - 1);
-        double pm = max(0, this.getSkill(PLAYMAKING) - 1);
-        double sc = max(0, this.getSkill(SCORING) - 1);
-        double ps = max(0, this.getSkill(PASSING) - 1);
-        double wg = max(0, this.getSkill(WINGER) - 1);
-        double st = max(0, this.getSkill(STAMINA) - 1);
-        double fm = max(0, this.getSkill(FORM) -1);
-        double gk = max(0, this.getSkill(KEEPER) -1);
+        double def =getEffectiveSkill(DEFENDING);
+        double pm = getEffectiveSkill(PLAYMAKING);
+        double sc = getEffectiveSkill(SCORING);
+        double ps = getEffectiveSkill(PASSING);
+        double wg = getEffectiveSkill(WINGER);
+        double st = getEffectiveSkill(STAMINA);
+        double fm = getEffectiveSkill(FORM);
+        double gk = getEffectiveSkill(KEEPER);
 
         double tsi = 0;
         int startTsiDrop = 27;

@@ -1308,7 +1308,7 @@ public class RatingPredictionModel {
      * @return Double
      */
     protected double calcForm(@NotNull Player player) {
-        var form = min(7., calcSkillRating(.5 + player.getSkill(PlayerSkill.FORM)));
+        var form = min(7., calcSkillRating(player.getSkill(PlayerSkill.FORM)));
         return 0.378 * sqrt(form);  // form 0.5 .. 7.0
     }
 

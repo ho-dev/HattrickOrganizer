@@ -429,9 +429,6 @@ public class Lineup{
 			var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
 			for (Player player : players) {
 				if (m_clAssi.isPlayerInStartingEleven(player.getPlayerId(), noKeeper)) {
-//					double sp = (double) player.getSPskill()
-//							+ player.getSub4Skill(PlayerSkill.SET_PIECES)
-//							+ RatingPredictionManager.getLoyaltyEffect(player);
 					var sp = ratingPredictionModel.getPlayerSetPiecesStrength(player);
 					if (sp > maxStandard) {
 						maxStandard = sp;

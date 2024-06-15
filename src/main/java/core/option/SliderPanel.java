@@ -44,6 +44,13 @@ public final class SliderPanel extends ImagePanel implements ChangeListener {
         initComponents(text, max, min);
     }
 
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        m_jslSlider.setEnabled(enabled);
+        m_jtfTextfield.setEnabled(enabled);
+    }
+
     /**
      * Wert mit faktor multiplizieren und auf int casten
      */
