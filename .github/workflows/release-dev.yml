@@ -72,7 +72,7 @@ jobs:
           --url https://api.github.com/repos/ho-dev/HattrickOrganizer/releases/${{ steps.create_release.outputs.id }} \
           --data '{ "draft": false }'
       - name: If not dev-release delete previous short version tag
-        if: ${{ steps.read_version_properties.outputs.tag != 'dev'}}
+        if: ${{ steps.read_version_properties.outputs.tag != 'dev' }}
         uses: ClementTsang/delete-tag-and-release@v0.3.1
         with:
           delete_release: true
@@ -80,7 +80,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
       - name: If not dev-release create a Release with short version tag
-        if: ${{ steps.read_version_properties.outputs.tag != 'dev'}}
+        if: ${{ steps.read_version_properties.outputs.tag != 'dev' }}
         uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
@@ -91,4 +91,10 @@ jobs:
           tag_name: ${{ steps.read_version_properties.outputs.shortVersion }}
           body_path: docs/md/release_notes.md
           target_commitish: ${{ steps.read_version_properties.outputs.branch }}
-          prerelease: ${{ steps.read_version_properties.outputs.tag != 'tag_stable'}}
+          prerelease: ${{ steps.read_version_properties.outputs.tag != 'tag_stable' }}
+      - name: If 'tag_stable' release, also create 'stable' tag
+        if: ${{ steps.read_version_properties.outputs.tag == 'tag_stable' }}
+        uses: rickstaa/action-create-tag@v1.7.2
+        with:
+          tag: stable
+          tag_exists_error: false

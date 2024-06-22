@@ -34,6 +34,7 @@
 ### Option setting
 
 ### Misc
+* Fix missing `stable` tag when creating `tag_stable` release (#2081)
 
 ## Translations
 
