@@ -45,7 +45,7 @@ public class StatisticQuery {
 					tempwerte[1] = rs.getDouble("Gehalt") / faktor;
 					tempwerte[2] = rs.getDouble("Fuehrung");
 					tempwerte[3] = rs.getDouble("Erfahrung") + rs.getDouble("SubExperience");
-					tempwerte[4] = rs.getDouble("Form");
+					tempwerte[4] = rs.getDouble("Form") + rs.getDouble("SubForm");
 					tempwerte[5] = rs.getDouble("Kondition") + rs.getDouble("SubStamina");
 					tempwerte[6] = rs.getDouble("Torwart") + rs.getDouble("SubTorwart");
 					tempwerte[7] = rs.getDouble("Verteidigung") + rs.getDouble("SubVerteidigung");
@@ -249,8 +249,8 @@ public class StatisticQuery {
 				while (rs.next()) {
 					final double[] thisHRFvalues = new double[nbColumnsHRF];
 					thisHRFvalues[0] = rs.getDouble("Fuehrung");  //Leadership
-					thisHRFvalues[1] = rs.getDouble("Erfahrung"); //Experience
-					thisHRFvalues[2] = rs.getDouble("Form");
+					thisHRFvalues[1] = rs.getDouble("Erfahrung")+ rs.getDouble("SubExperience"); //Experience
+					thisHRFvalues[2] = rs.getDouble("Form")+ rs.getDouble("SubForm");
 					thisHRFvalues[3] = rs.getDouble("Kondition"); //Stamina
 					thisHRFvalues[4] = rs.getDouble("Torwart") + rs.getDouble("SubTorwart");  //Goalkeeper
 					thisHRFvalues[5] = rs.getDouble("Verteidigung") + rs.getDouble("SubVerteidigung"); //Defence

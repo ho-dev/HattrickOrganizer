@@ -22,9 +22,8 @@ public final class SliderPanel extends ImagePanel implements ChangeListener {
     private JSlider m_jslSlider;
     private JFormattedTextField m_jtfTextfield;
     private final float m_fFaktor;
-    private float m_fTextfeldFaktor = 1;
+    private final float m_fTextfeldFaktor;
     private final int m_iTextbreite;
-    private final int decimals = 0;
     private boolean bDeactivateTxtLister = false;
 
 
@@ -45,14 +44,21 @@ public final class SliderPanel extends ImagePanel implements ChangeListener {
         initComponents(text, max, min);
     }
 
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        m_jslSlider.setEnabled(enabled);
+        m_jtfTextfield.setEnabled(enabled);
+    }
+
     /**
      * Wert mit faktor multiplizieren und auf int casten
      */
     public void setValue(float value) {
-        m_jslSlider.setValue((int) (value * m_fFaktor));
+        m_jslSlider.setValue((int) (value * m_fFaktor + .5));
     }
 
-    public final float getValue() {
+    public float getValue() {
         HOLogger.instance().log(getClass(),(float) m_jslSlider.getValue() + " : "
                            + (m_jslSlider.getValue() / m_fFaktor));
         return m_jslSlider.getValue() / m_fFaktor;
@@ -68,11 +74,7 @@ public final class SliderPanel extends ImagePanel implements ChangeListener {
 
     public void stateChanged(javax.swing.event.ChangeEvent changeEvent) {
         bDeactivateTxtLister = true;
-        if (decimals != 0){
-            m_jtfTextfield.setText(core.util.Helper.round(m_jslSlider.getValue() * m_fTextfeldFaktor, decimals) + "");}
-        else {
-            m_jtfTextfield.setText((int)(m_jslSlider.getValue() * m_fTextfeldFaktor) + "");
-        }
+        m_jtfTextfield.setText((int) (m_jslSlider.getValue() * m_fTextfeldFaktor) + "");
         bDeactivateTxtLister = false;
     }
 
@@ -122,25 +124,16 @@ public final class SliderPanel extends ImagePanel implements ChangeListener {
 
         m_jtfTextfield = new JFormattedTextField(formatter);
         m_jtfTextfield.setColumns(4);
-
-        if (decimals != 0) {
-            m_jtfTextfield.setText(core.util.Helper.round(m_jslSlider.getValue() * m_fTextfeldFaktor, decimals) + "");
-        }
-        else
-        {
-            m_jtfTextfield.setText((int)(m_jslSlider.getValue() * m_fTextfeldFaktor) + "");
-        }
-
+        m_jtfTextfield.setText((int) (m_jslSlider.getValue() * m_fTextfeldFaktor) + "");
         m_jtfTextfield.setEditable(true);
         m_jtfTextfield.setHorizontalAlignment(SwingConstants.RIGHT);
-
 
         m_jtfTextfield.getDocument().addDocumentListener(new DocumentListener() {
 
             @Override
             public void removeUpdate(DocumentEvent arg0) {
                 if (!bDeactivateTxtLister) {
-                    if(m_jtfTextfield.getText().equals("")){
+                    if(m_jtfTextfield.getText().isEmpty()){
                         updateSliderWithoutEvent(0);
                     }
                     else {
@@ -152,7 +145,7 @@ public final class SliderPanel extends ImagePanel implements ChangeListener {
             @Override
             public void insertUpdate(DocumentEvent arg0) {
                 if (!bDeactivateTxtLister) {
-                    if(m_jtfTextfield.getText().equals("")){
+                    if(m_jtfTextfield.getText().isEmpty()){
                         updateSliderWithoutEvent(0);
                     }
                     else {

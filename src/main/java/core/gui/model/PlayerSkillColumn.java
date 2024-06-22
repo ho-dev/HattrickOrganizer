@@ -52,20 +52,15 @@ public class PlayerSkillColumn extends PlayerColumn {
 		return new DoubleLabelEntries(getSkillValue(player),getCompareValue(player,comparePlayer));
 	}
 	
-	public  IHOTableEntry getSkillValue(Player player){
+	public  IHOTableEntry getSkillValue(Player player) {
 		var value = player.getValue4Skill(skill);
-		if( skill == PlayerSkill.FORM
-//				|| skill == PlayerSkill.STAMINA
-				|| skill == PlayerSkill.LEADERSHIP
-				|| skill == PlayerSkill.LOYALTY){
-		return new ColorLabelEntry(value,
-                background,
-                false, 0);
+		if (skill == PlayerSkill.LEADERSHIP || skill == PlayerSkill.LOYALTY) {
+			return new ColorLabelEntry(value, background, false, 0);
 		}
 		return new SkillEntry(value + player.getSub4Skill(skill),
-              ColorLabelEntry.FG_STANDARD,
-              background);
+				ColorLabelEntry.FG_STANDARD, background);
 	}
+
 	/**
 	 * Get a value if comparePlayer is not null
 	 * @param player Player

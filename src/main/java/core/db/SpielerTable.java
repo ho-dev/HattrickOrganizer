@@ -55,6 +55,7 @@ final class SpielerTable extends AbstractTable {
 				ColumnDescriptor.Builder.newInstance().setColumnName("SubPasspiel").setGetter((p) -> ((Player) p).getSub4Skill(PlayerSkill.PASSING)).setSetter((p, v) -> ((Player) p).setSubskill4PlayerSkill(PlayerSkill.PASSING, (float) v)).setType(Types.REAL).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("SubStandards").setGetter((p) -> ((Player) p).getSub4Skill(PlayerSkill.SETPIECES)).setSetter((p, v) -> ((Player) p).setSubskill4PlayerSkill(PlayerSkill.SETPIECES, (float) v)).setType(Types.REAL).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("SubStamina").setGetter((p) -> ((Player) p).getSub4Skill(PlayerSkill.STAMINA)).setSetter((p, v) -> ((Player) p).setSubskill4PlayerSkill(PlayerSkill.STAMINA, (float) v)).setType(Types.REAL).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("SubForm").setGetter((p) -> ((Player) p).getSub4Skill(PlayerSkill.FORM)).setSetter((p, v) -> ((Player) p).setSubskill4PlayerSkill(PlayerSkill.FORM, (float) v)).setType(Types.REAL).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("iSpezialitaet").setGetter((p) -> ((Player) p).getSpecialty()).setSetter((p, v) -> ((Player) p).setSpecialty((int) v)).setType(Types.INTEGER).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("iCharakter").setGetter((p) -> ((Player) p).getGentleness()).setSetter((p, v) -> ((Player) p).setGentleness((int) v)).setType(Types.INTEGER).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("iAnsehen").setGetter((p) -> ((Player) p).getHonesty()).setSetter((p, v) -> ((Player) p).setHonesty((int) v)).setType(Types.INTEGER).isNullable(false).build(),
@@ -236,21 +237,6 @@ final class SpielerTable extends AbstractTable {
 
 	public Player loadLatestPlayerInfo(int playerId) {
 		return loadOne(Player.class, connectionManager.executePreparedQuery(loadLatestPlayerInfoSql, playerId));
-	}
-
-	private final String getTrainerTypeSql = createSelectStatement(" WHERE HRF_ID=? AND TrainerTyp >=0 AND Trainer >0 order by Trainer desc");
-
-	int getTrainerType(int hrfID) {
-		try (ResultSet rs = connectionManager.executePreparedQuery(getTrainerTypeSql, hrfID)) {
-			if (rs != null) {
-				if (rs.next()) {
-					return rs.getInt("TrainerTyp");
-				}
-			}
-		} catch (Exception ignored) {
-		}
-
-		return -99;
 	}
 
 	private final String loadPlayerBeforeSql = createSelectStatement(" WHERE SpielerID=? AND Datum<=? ORDER BY Datum DESC LIMIT 1");

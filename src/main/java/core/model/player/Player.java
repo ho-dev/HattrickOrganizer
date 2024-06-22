@@ -23,6 +23,7 @@ import static core.model.player.MatchRoleID.*;
 import static java.lang.Integer.MAX_VALUE;
 import static java.lang.Integer.min;
 import static core.constants.player.PlayerSkill.*;
+import static java.lang.Math.*;
 
 public class Player extends AbstractTable.Storable {
 
@@ -105,6 +106,7 @@ public class Player extends AbstractTable.Storable {
      */
     private double subDefendingSkill;
     private double subStamina;
+    private double subForm;
 
     /**
      * Agressivität
@@ -383,7 +385,7 @@ public class Player extends AbstractTable.Storable {
         this.hrfDate = hrfDate;
 
         if (hrfDate.isBefore(HODateTime.fromDbTimestamp(DBManager.TSIDATE))) {
-            tsi /= 1000d;
+            tsi /= 1000;
         }
 
         totalCards = properties.getInt("warnings", 0);
@@ -1248,6 +1250,20 @@ public class Player extends AbstractTable.Storable {
     }
 
     /**
+     * Get the effective skill value from the displayed skill value
+     * Displayed value has to be reduced by 1, if not already zero
+     * @param iSkill Skill id
+     * @return double Effective skill value
+     */
+    public double getEffectiveSkill(PlayerSkill iSkill) {
+        double ret = getValue4Skill(iSkill);
+        if ( ret > 0 ){
+            ret += getSub4Skill(iSkill) - 1.;
+        }
+        return ret;
+    }
+
+    /**
      * Returns accurate subskill number. If you need subskill for UI
      * purpose it is better to use getSubskill4Pos()
      *
@@ -1265,6 +1281,7 @@ public class Player extends AbstractTable.Storable {
             case SETPIECES -> subSetPiecesSkill;
             case EXPERIENCE -> subExperience;
             case STAMINA -> subStamina;
+            case FORM -> subForm;
             default -> 0;
         };
 
@@ -1283,6 +1300,7 @@ public class Player extends AbstractTable.Storable {
             case SETPIECES -> subSetPiecesSkill = value;
             case EXPERIENCE -> subExperience = value;
             case STAMINA -> subStamina = value;
+            case FORM -> subForm = value;
         }
     }
 
@@ -2044,21 +2062,10 @@ public class Player extends AbstractTable.Storable {
                             var inc = trainingPerPlayer.getExperienceSub();
                             experienceSub += inc;
                             if (experienceSub > 0.99) experienceSub = 0.99;
-
-                            var minutes = 0;
                             var tp = trainingPerPlayer.getTrainingPair();
-                            if (tp != null) {
-                                minutes = tp.getTrainingDuration().getPlayedMinutes();
-                            } else {
+                            if (tp == null) {
                                 HOLogger.instance().warning(getClass(), "no training info found");
                             }
-//                            HOLogger.instance().info(getClass(),
-//                                    "Training " + training.getTrainingDate().toLocaleDateTime() +
-//                                            "; Minutes= " + minutes +
-//                                            "; Experience increment of " + this.getFullName() +
-//                                            "; increment: " + inc +
-//                                            "; new sub value=" + experienceSub
-//                            );
                         }
                     }
                 }
@@ -2075,6 +2082,7 @@ public class Player extends AbstractTable.Storable {
             this.setSubskill4PlayerSkill(skill, sub);
             this.setSubExperience(experienceSub);
         }
+        adjustFormSub();
     }
 
     /**
@@ -2361,4 +2369,78 @@ public class Player extends AbstractTable.Storable {
         }
         return skillChanges;
     }
+
+    /**
+     * Adjustment of the form sub
+     * is done by approximating the calculated tsi value to the given one.
+     */
+    private void adjustFormSub(){
+        if ( this.injuryWeeks > -1) return;
+        var max = .99;
+        var min = 0.;
+        while (max-min > 0.01){
+            var calculateTSI = this.calculateTSI();
+            var currentSub = this.getSub4Skill(FORM);
+            if (calculateTSI < this.getTsi()){
+                min = currentSub;
+            }
+            else {
+                max = currentSub;
+            }
+            var newSub = (max + min) / 2;
+            this.setSubskill4PlayerSkill(FORM, newSub);
+        }
+    }
+
+    /**
+     * Calculate the TSI value from player's skills
+     * The formula from Schum is used: <a href="https://www87.hattrick.org/Forum/Read.aspx?t=17404127&n=5&v=0&mr=0">...</a>
+     * which is similar but with more precise coefficients than the formula given by the unwritten manual.
+     * The age coefficients are from the unwritten manual. In case of the goalkeeper tsi the factor is guessed.
+     * @return long TSI
+     */
+    public long calculateTSI() {
+
+        // Formula from unwritten manual:
+        // TSI = (1.03Def^3 + 1.03PM^3 + 1.03Sc^3 + 1.0Ps^3 + 0.84*Wg^3)^2 * St^0.5 * Fm^0.5 / 1000
+        //
+        //TSIgk = 3 * Gk^3.359 * Fm^0.5
+
+        double def =getEffectiveSkill(DEFENDING);
+        double pm = getEffectiveSkill(PLAYMAKING);
+        double sc = getEffectiveSkill(SCORING);
+        double ps = getEffectiveSkill(PASSING);
+        double wg = getEffectiveSkill(WINGER);
+        double st = getEffectiveSkill(STAMINA);
+        double fm = getEffectiveSkill(FORM);
+        double gk = getEffectiveSkill(KEEPER);
+
+        double tsi = 0;
+        int startTsiDrop = 27;
+        if (gk < def ||
+                gk < sc ||
+                gk < ps ||
+                gk < wg ||
+                gk < pm) {
+            tsi += pow(def, 3.) * 1.034;
+            tsi += pow(pm, 3.) * 1.031;
+            tsi += pow(sc, 3.) * 1.038;
+            tsi += pow(ps, 3.) * 1.035;
+            tsi += pow(wg, 3.) * .826;
+
+            tsi = tsi * tsi;
+            tsi *= sqrt(st);
+            tsi /= 1000.;
+        } else {
+            tsi = 3. * pow(gk, 3.359);
+            startTsiDrop = 31;
+        }
+        tsi *= sqrt(fm);
+
+        var ageFactor =  Math.min(1, max(1./8., 1. - (this.getAge()-startTsiDrop)/8.));
+        tsi *= ageFactor;
+
+        return round(tsi/10) * 10;
+    }
+
 }
