@@ -92,7 +92,7 @@
 
 ## Translations
 
-Reports by Contributors - September 24, 2023 - May 25, 2024
+Reports by Contributors - September 24, 2023 - June 23, 2024
 
 * wsbrenk 355
 * \_KOHb\_ 230
