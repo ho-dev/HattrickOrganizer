@@ -1,3 +1,14 @@
+# Changelist HO! 8.0
+
+## Some numbers
+* 113 commits
+* 533 files changed, 21370 insertions(+), 20337 deletions(-)
+* Contributors:
+  * 81 wsbrenk
+  * 31 Sébastien Le Callonnec
+  * 1 Armando Schiano di Cola
+
+
 # Changelist HO! 7.2
 
 ## Some numbers
