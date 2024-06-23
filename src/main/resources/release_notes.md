@@ -88,6 +88,7 @@
 * Enable standard custom popup menu in oauth dialog's text fields (#1471)
 * Move previous series download checkbox to the check box tree of download dialog (#1434)
 * Add 6 new countries to international flag module (#2063)
+* Fix missing `stable` tag when creating `tag_stable` release (#2081)
 
 ## Translations
 
