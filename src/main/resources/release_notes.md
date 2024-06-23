@@ -34,11 +34,10 @@
 ### Option setting
 
 ### Misc
-* Fix missing `stable` tag when creating `tag_stable` release (#2081)
 
 ## Translations
 
-Reports by Contributors - April 28, 2024 - June 13, 2024
+Reports by Contributors - April 28, 2024 - June 23, 2024
 
 * wsbrenk 0
 
