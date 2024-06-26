@@ -51,7 +51,10 @@ public abstract class AbstractTable {
 	 * @return Truncated string
 	 */
 	static String truncateString(String s, int maxLength) {
-		if (s != null && s.length() > maxLength) return s.substring(0, maxLength);
+		if (s != null && s.length() > maxLength){
+			HOLogger.instance().warning(AbstractTable.class, "truncated string: " + s);
+			return s.substring(0, maxLength);
+		}
 		return s;
 	}
 
