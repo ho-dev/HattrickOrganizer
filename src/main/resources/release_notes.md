@@ -70,6 +70,7 @@
 * Display specialty icons in youth player tables (#1999)
 * Display future player development (potential) and take overall skill level into account (#2045)
 * Fix sorting of youth table average column (#2076)
+* Fix sql error when youth scout comment is too long for the database column (#2094)
 
 ### Option setting
 * new color editor in option settings (#1242)
