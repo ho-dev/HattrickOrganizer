@@ -22,7 +22,7 @@ version = '8.0'
 ext {
     // Development_stage (DEV:0  BETA:1  STABLE:2)
     development_stage = project.properties['DEV_STAGE'] as Integer ?: 0
-    version_type = "-DEV"
+    version_type = ["-DEV", "-BETA", ""].get(development_stage) ?: '-DEV'
     target_dir = "${buildDir}/artefacts"
 }
 
@@ -237,8 +237,6 @@ tasks.register("createVersion") {
         versionProps['shortVersion'] = "${major}.${minor}".toString()
         versionProps['tag'] = ['dev', 'beta', 'tag_stable'].get(developmentStage)
         versionProps['branch'] = currentBranch
-
-        project.ext.version_type = ["-DEV", "-BETA", ""].get(developmentStage)
 
         // Write to version.properties file
         def versionPropsFile = new File('version.properties')
