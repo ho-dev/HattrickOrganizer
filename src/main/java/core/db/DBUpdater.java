@@ -89,6 +89,9 @@ final class DBUpdater {
 		var matchDetailsTable = dbManager.getTable(MatchDetailsTable.TABLENAME);
 		matchDetailsTable.tryChangeColumn("Matchreport", "VARCHAR(40000)");
 
+		var youthScoutCommentTable = dbManager.getTable(YouthScoutCommentTable.TABLENAME);
+		youthScoutCommentTable.tryChangeColumn("Text", "VARCHAR(1024)");
+
 		var playerTable = dbManager.getTable(SpielerTable.TABLENAME);
 		playerTable.tryAddColumn("SubForm", "FLOAT DEFAULT 0");
 
