@@ -43,7 +43,7 @@ jobs:
         id: show_version
         run: cat version.properties
       - name: Delete previous tag and release
-        uses: tychobrailleur/delete-tag-and-release@71d16bced8e2014c0a4340d36bfae3d50f756605
+        uses: tychobrailleur/delete-tag-and-release@37738271e11ce386a5f2b5023bb063ed87b6d075
         with:
           delete_release: true
           delete_non_draft: true
@@ -74,7 +74,7 @@ jobs:
           --data '{ "draft": false }'
       - name: If not dev-release delete previous short version tag
         if: ${{ steps.read_version_properties.outputs.tag != 'dev' }}
-        uses: tychobrailleur/delete-tag-and-release@71d16bced8e2014c0a4340d36bfae3d50f756605
+        uses: tychobrailleur/delete-tag-and-release@37738271e11ce386a5f2b5023bb063ed87b6d075
         with:
           delete_release: true
           delete_non_draft: true
