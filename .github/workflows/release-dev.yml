@@ -92,9 +92,9 @@ jobs:
           body_path: docs/md/release_notes.md
           target_commitish: ${{ steps.read_version_properties.outputs.branch }}
           prerelease: ${{ steps.read_version_properties.outputs.tag != 'tag_stable' }}
-      - name: If 'tag_stable' release, also create 'stable' tag
-        if: ${{ steps.read_version_properties.outputs.tag == 'tag_stable' }}
-        uses: rickstaa/action-create-tag@v1.7.2
-        with:
-          tag: stable
-          tag_exists_error: false
+      # - name: If 'tag_stable' release, also create 'stable' tag
+      #   if: ${{ steps.read_version_properties.outputs.tag == 'tag_stable' }}
+      #   uses: rickstaa/action-create-tag@v1.7.2
+      #   with:
+      #     tag: stable
+      #     tag_exists_error: false
