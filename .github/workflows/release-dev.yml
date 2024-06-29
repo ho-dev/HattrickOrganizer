@@ -98,3 +98,4 @@ jobs:
         with:
           tag: stable
           tag_exists_error: false
+          force_push_tag: true
