@@ -22,7 +22,7 @@ version = '8.0'
 ext {
     // Development_stage (DEV:0  BETA:1  STABLE:2)
     development_stage = project.properties['DEV_STAGE'] as Integer ?: 0
-    version_type = ["-DEV", "-BETA", ""].get(development_stage) ?: '-DEV'
+    version_type = ["-DEV", "-BETA", ""].get(development_stage)
     target_dir = "${buildDir}/artefacts"
 }
 
