@@ -193,7 +193,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
     }
 
     /**
-     * Initialize temporal player instance with combo box selections
+     * Initialize temporary player instance with combo box selections
      * A new tempPlayer is required since rating prediction calculation caches players prediction values
      */
     private void initTempPlayer() {
