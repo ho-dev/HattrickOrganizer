@@ -25,6 +25,7 @@
 * Fix error on player details display after initial download (#2044)
 * Update missing world details in database (#2063)
 * Reduce space between team summary labels (#2069)
+* Fix skill tester rating prediction (#2092)
 
 ### Series
 * Initialize series table if no matches are played yet (#1455)
