@@ -29,6 +29,7 @@
 
 ### Youth
 * Fix sql error when youth scout comment is too long for the database column (#2094)
+* Fix exception on examining youth player substitutions (#2097)
 
 ### Option setting
 
