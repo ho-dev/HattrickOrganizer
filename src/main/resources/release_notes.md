@@ -2,12 +2,13 @@
 
 ## Highlights
 * Bug fixes only 
-* 
+
 ## [Detailed Changelog](https://github.com/ho-dev/HattrickOrganizer/issues?q=milestone%3A8.1)
 
 ### Database
 
 ### Squad
+* Fix skill tester rating prediction (#2092)
 
 ### Series
 
