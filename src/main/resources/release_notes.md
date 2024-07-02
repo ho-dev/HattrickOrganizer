@@ -8,6 +8,7 @@
 ### Database
 
 ### Squad
+* Fix skill tester rating prediction (#2092)
 
 ### Series
 
