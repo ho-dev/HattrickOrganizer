@@ -37,7 +37,7 @@
 
 ## Translations
 
-Reports by Contributors - April 28, 2024 - June 23, 2024
+Reports by Contributors - June 23, 2024 - July 01, 2024
 
 * wsbrenk 0
 

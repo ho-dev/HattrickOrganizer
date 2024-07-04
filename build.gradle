@@ -22,7 +22,7 @@ version = '9.0'
 ext {
     // Development_stage (DEV:0  BETA:1  STABLE:2)
     development_stage = project.properties['DEV_STAGE'] as Integer ?: 0
-    version_type = "-DEV"
+    version_type = ["-DEV", "-BETA", ""].get(development_stage)
     target_dir = "${buildDir}/artefacts"
 }
 
@@ -238,8 +238,6 @@ tasks.register("createVersion") {
         versionProps['tag'] = ['dev', 'beta', 'tag_stable'].get(developmentStage)
         versionProps['branch'] = currentBranch
 
-        project.ext.version_type = ["-DEV", "-BETA", ""].get(developmentStage)
-
         // Write to version.properties file
         def versionPropsFile = new File('version.properties')
         versionProps.store(versionPropsFile.newWriter(), null)
@@ -347,9 +345,9 @@ tasks.register("pushmd")  {
         // list the contributors that don't want to be mentioned in release notes
         def contributorFilter = ["Che"]
 
-        def commitCount = callGit('git rev-list 7.0..HEAD --count')
-        def diff = callGit('git diff --shortstat 7.0..HEAD')
-        def contributors = filter(callGit('git shortlog -s -n 7.0..HEAD'), contributorFilter)
+        def commitCount = callGit('git rev-list 8.0..HEAD --count')
+        def diff = callGit('git diff --shortstat 8.0..HEAD')
+        def contributors = filter(callGit('git shortlog -s -n 8.0..HEAD'), contributorFilter)
         def latestCommit = callGit('git log -1 --pretty=format:"%s"')
 
         println("create release-notes")
