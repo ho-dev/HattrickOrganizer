@@ -286,86 +286,6 @@ public class MatchLineupTeam extends AbstractTable.Storable {
 		lineup.setPosition(player);
 	}
 
-	/**
-	 * Determines the played formation.
-	 */
-	public final byte determineSystem() {
-		short abw = 0;
-		short mf = 0;
-		short st = 0;
-
-		for (var matchRoleId : getLineup().getFieldPositions()) {
-			if (matchRoleId != null) {
-				switch (matchRoleId.getSector()) {
-					default -> {
-					}
-					case CentralDefence, Back -> abw++;
-					case InnerMidfield, Wing -> mf++;
-					case Forward -> st++;
-				}
-			}
-		}
-
-		if (abw == 2) {
-			// 253
-			if (mf == 5) {
-				return Lineup.SYS_253;
-			}
-			// MURKS
-			else {
-				return Lineup.SYS_MURKS;
-			}
-		} else if (abw == 3) {
-			// 343
-			if (mf == 4) {
-				return Lineup.SYS_343;
-			} // 352
-			else if ((mf == 5) && (st == 2)) {
-				return Lineup.SYS_352;
-			}
-			// MURKS
-			else {
-				return Lineup.SYS_MURKS;
-			}
-		} else if (abw == 4) {
-			// 433
-			if ((mf == 3) && (st == 3)) {
-				return Lineup.SYS_433;
-			} // 442
-			else if ((mf == 4) && (st == 2)) {
-				return Lineup.SYS_442;
-			} // 451
-			else if ((mf == 5) && (st == 1)) {
-				return Lineup.SYS_451;
-			}
-			// MURKS
-			else {
-				return Lineup.SYS_MURKS;
-			}
-		} else if (abw == 5) {
-			// 532
-			if ((mf == 3) && (st == 2)) {
-				return Lineup.SYS_532;
-			} // 541
-			else if ((mf == 4) && (st == 1)) {
-				return Lineup.SYS_541;
-			} // 523
-			else if ((mf == 2) && (st == 3)) {
-				return Lineup.SYS_523;
-			} // 550
-			else if ((mf == 5) && (st == 0)) {
-				return Lineup.SYS_550;
-			}
-			// MURKS
-			else {
-				return Lineup.SYS_MURKS;
-			}
-		} // MURKS
-		else {
-			return Lineup.SYS_MURKS;
-		}
-	}
-
 	public MatchType getMatchType() {
 		if (matchType == MatchType.NONE) {
 			MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(this.matchId, matchType);
@@ -690,10 +610,11 @@ public class MatchLineupTeam extends AbstractTable.Storable {
 		// examine last minutes
 		for (var app : lastMatchAppearances.entrySet()) {
 			var player = app.getValue().player;
-			//player.addMinutesInSector(getMatchEndMinute(player.getPlayerId())-app.getValue().minute, app.getKey());
-			addPlayersMinutesInSector(player.getPlayerId(),
-					app.getValue().getSector(),
-					getMatchEndMinute(player.getPlayerId()) - app.getValue().minute);
+			if (player != null) {
+				addPlayersMinutesInSector(player.getPlayerId(),
+						app.getValue().getSector(),
+						getMatchEndMinute(player.getPlayerId()) - app.getValue().minute);
+			}
 		}
 	}
 
