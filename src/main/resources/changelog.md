@@ -1,3 +1,11 @@
+# Changelist HO! 8.1
+## Some numbers
+
+## Highlights
+* Bug fixes
+
+## [Detailed Changelog](https://github.com/ho-dev/HattrickOrganizer/issues?q=milestone%3A8.1)
+
 # Changelist HO! 8.0
 
 ## Some numbers
