@@ -388,7 +388,7 @@ public class RatingPredictionModel {
 //        var p = isRightHandSidePosition?togglePositionSide(roleId):roleId;
 //        var s = isRightHandSidePosition?toggleRatingSectorSide(sector):sector;
 
-        var contribution = contributionCache.get(sector, roleId, player, behaviour);
+        var contribution = contributionCache.get(player, sector, roleId, behaviour);
         if (contribution > 0) {
             contribution *= overcrowdingPenalty;
             var exp = experienceCache.get(player.getSkillValue(EXPERIENCE), sector);
@@ -426,9 +426,9 @@ public class RatingPredictionModel {
      * A map of contribution factors of each player to the different rating sectors
      * If the value is not available in the cache it is calculated and stored in the cache.
      */
-    RatingCalculationCache4<RatingSector, Integer, Player, Byte> contributionCache = new RatingCalculationCache4<>() {
+    RatingCalculationCache4<Player, RatingSector, Integer, Byte> contributionCache = new RatingCalculationCache4<>() {
         @Override
-        public double calc(RatingSector sector, Integer roleId, Player player, Byte behaviour) {
+        public double calc(Player player, RatingSector sector, Integer roleId, Byte behaviour) {
             return calcContribution(player, roleId, behaviour, sector);
         }
     };
@@ -443,7 +443,7 @@ public class RatingPredictionModel {
      * @return double
      */
     protected double getContribution(Player p, Integer roleId, Byte behaviour, RatingSector s){
-        return contributionCache.get(s, roleId, p, behaviour);
+        return contributionCache.get(p, s, roleId, behaviour);
     }
 
     /**
@@ -1027,6 +1027,11 @@ public class RatingPredictionModel {
             ret += c;
         }
         return pow(ret, 1.2) / 4.;
+    }
+
+    public void removePlayer(Player p){
+        playerRatingCache.remove(p);
+        contributionCache.remove(p);
     }
 
     /**

@@ -87,6 +87,10 @@ final class PlayerSubskillOffsetDialog extends JDialog implements ActionListener
 
 			DBManager.instance().saveSpieler(HOVerwaltung.instance().getModel().getCurrentPlayers());
 
+			// Remove player from prediction model to force recalculation of his rating values
+			var predictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+			predictionModel.removePlayer(m_clPlayer);
+
 			core.gui.RefreshManager.instance().doReInit();
 			setVisible(false);
 			dispose();
