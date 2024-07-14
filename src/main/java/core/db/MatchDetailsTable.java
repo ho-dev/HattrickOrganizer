@@ -129,8 +129,8 @@ final class MatchDetailsTable extends AbstractTable {
 		return false;
 	}
 
-	static private String placeHolderYouthMatchTypes;
-	static private String getPlaceHolderYouthMatchTypes(){
+	private static String placeHolderYouthMatchTypes;
+	private static String getPlaceHolderYouthMatchTypes(){
 		if ( placeHolderYouthMatchTypes==null){
 			var youthMatchTypes = MatchType.getYouthMatchType();
 			var placeholders =youthMatchTypes.stream().map(i->"?").collect(Collectors.joining(","));
