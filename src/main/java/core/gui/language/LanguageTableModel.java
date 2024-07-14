@@ -167,15 +167,13 @@ public class LanguageTableModel extends AbstractTableModel implements TableModel
 			bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(destinationPath.getPath()), "UTF-8"));
 
 			// Loop over table and put into properties
-			Iterator<String> rbKeys = this.keys.iterator();
-			while(rbKeys.hasNext()) {
-				String key = rbKeys.next();
-				StringBuffer sb = new StringBuffer(key);
-				sb.append("=");
-				sb.append(this.data.get(key));
-				bw.write(sb.toString());
-				bw.newLine();
-			}
+            for (String key : this.keys) {
+                StringBuffer sb = new StringBuffer(key);
+                sb.append("=");
+                sb.append(this.data.get(key));
+                bw.write(sb.toString());
+                bw.newLine();
+            }
 			
 			String message = "Please pass the file " + destinationPath.getPath() + " to a developer who will commit it for you.";
 			JOptionPane.showMessageDialog(new JFrame(), message, "Saved", JOptionPane.INFORMATION_MESSAGE);
