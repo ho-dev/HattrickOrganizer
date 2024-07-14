@@ -31,7 +31,7 @@ public final class TrainingType {
 		new CBItem(Helper.getTranslation("ls.team.trainingtype.wingattacks"), WING_ATTACKS)
 	};
 
-    private TrainingType(){};
+    private TrainingType(){}
 
     public static String toString(int trainingType){
     	if(trainingType >= SET_PIECES && trainingType <= WING_ATTACKS)
