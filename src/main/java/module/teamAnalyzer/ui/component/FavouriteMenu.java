@@ -91,7 +91,6 @@ public class FavouriteMenu extends JMenu {
                                           + " "
                                           + HOVerwaltung.instance().getLanguageString("Verein"),
                                           JOptionPane.PLAIN_MESSAGE);
-            ;
         });
 
         itemAdd.addActionListener(arg0 -> {
@@ -101,7 +100,6 @@ public class FavouriteMenu extends JMenu {
                                           + " "
                                           + HOVerwaltung.instance().getLanguageString("Verein"),
                                           JOptionPane.PLAIN_MESSAGE);
-            ;
         });
     }
 }

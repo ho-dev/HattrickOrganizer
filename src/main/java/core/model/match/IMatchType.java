@@ -13,7 +13,7 @@ public interface IMatchType {
 
     default Icon getIcon(){
         return ThemeManager.getIcon(HOIconName.MATCHICONS[this.getIconArrayIndex()]) ;
-    };
+    }
 
     String getName();
     default boolean isCompetitive() {
