@@ -31,10 +31,10 @@ public final class TeamSpirit {
 			new CBItem(HOVerwaltung.instance().getLanguageString("ls.team.teamspirit.paradiseonearth"),	PARADISE_ON_EARTH) };
 
 	private TeamSpirit() {
-	};
+	}
 
 
-	public static String toString(int teamSpirit){
+    public static String toString(int teamSpirit){
 		if(teamSpirit >= LIKE_THE_COLD_WAR && teamSpirit <= PARADISE_ON_EARTH)
 			return ITEMS[teamSpirit].getText();
 		else

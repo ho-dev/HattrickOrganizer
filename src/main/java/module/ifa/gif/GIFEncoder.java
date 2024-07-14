@@ -79,7 +79,8 @@ public class GIFEncoder {
 		throw new AWTException("Grabber returned false: " +
 				       grabber.status());
 	}
-	catch (InterruptedException e) { ; }
+	catch (InterruptedException e) {
+    }
 	
 	byte r[][] = new byte[width_][height_];
 	byte g[][] = new byte[width_][height_];

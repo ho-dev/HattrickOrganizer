@@ -17,7 +17,7 @@ public final class XMLCHPPPreParser {
 		String sReturnError = "";
 		final HOVerwaltung hov = HOVerwaltung.instance();
 		if(xmlIn.length() > 0 ) {
-	        Document doc = XMLManager.parseString(xmlIn);;
+	        Document doc = XMLManager.parseString(xmlIn);
 	        if (doc != null) {
 	        	Element ele = null;
 	            Element root = doc.getDocumentElement();

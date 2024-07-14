@@ -190,7 +190,6 @@ public class ExampleFileFilter extends javax.swing.filechooser.FileFilter
                 return filename.substring(i + 1).toLowerCase(java.util.Locale.ENGLISH);
             }
 
-            ;
         }
 
         return null;
@@ -240,7 +239,6 @@ public class ExampleFileFilter extends javax.swing.filechooser.FileFilter
                 return true;
             }
 
-            ;
         }
 
         return false;
