@@ -9,6 +9,7 @@ package tool.arenasizer;
 import core.util.Helper;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 
 public class ArenaSizer {
@@ -31,10 +32,10 @@ public class ArenaSizer {
     private static float ABRISS = 60f;
     private static float FIXKOSTEN = 100000f;
 
-    static final BigDecimal TERRACES_PERCENT 	= new BigDecimal(0.60).setScale(3, BigDecimal.ROUND_HALF_DOWN);
-    static final BigDecimal BASICS_PERCENT 		= new BigDecimal(0.235).setScale(3, BigDecimal.ROUND_HALF_DOWN);
-    static final BigDecimal ROOF_PERCENT 		= new BigDecimal(0.14).setScale(3, BigDecimal.ROUND_HALF_DOWN);
-    static final BigDecimal VIP_PERCENT 		= new BigDecimal(0.025).setScale(3, BigDecimal.ROUND_HALF_DOWN);
+    static final BigDecimal TERRACES_PERCENT 	= new BigDecimal(0.60).setScale(3, RoundingMode.HALF_DOWN);
+    static final BigDecimal BASICS_PERCENT 		= new BigDecimal(0.235).setScale(3, RoundingMode.HALF_DOWN);
+    static final BigDecimal ROOF_PERCENT 		= new BigDecimal(0.14).setScale(3, RoundingMode.HALF_DOWN);
+    static final BigDecimal VIP_PERCENT 		= new BigDecimal(0.025).setScale(3, RoundingMode.HALF_DOWN);
 
     //SUPPORTER-DISTRIBUTION
     static final Integer SUPPORTER_NORMAL = 20;
