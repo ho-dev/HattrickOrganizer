@@ -316,9 +316,9 @@ public class Gif89Encoder {
 	 *            Interframe interval in centiseconds.
 	 */
 	public void setUniformDelay(int interval) {
-		for (int i = 0; i < vFrames.size(); ++i) {
-			vFrames.get(i).setDelay(interval);
-		}
+        for (Gif89Frame vFrame : vFrames) {
+            vFrame.setDelay(interval);
+        }
 	}
 
 	/**
@@ -607,9 +607,9 @@ class GifColorTable {
 	private void trackPixelUsage(IndexGif89Frame igf) {
 		byte[] ci_pixels = (byte[]) igf.getPixelSource();
 		int npixels = ci_pixels.length;
-		for (int i = 0; i < npixels; ++i)
-			if (ci_pixels[i] >= ciCount)
-				ciCount = ci_pixels[i] + 1;
+        for (byte ciPixel : ci_pixels)
+            if (ciPixel >= ciCount)
+                ciCount = ciPixel + 1;
 	}
 
 	private int computeColorDepth(int colorcount) {
