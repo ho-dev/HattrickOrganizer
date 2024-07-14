@@ -18,7 +18,7 @@ public class CurrencyUtils {
 	 * @param v Integer value to convert
 	 * @return Integer converted local currency
 	 */
-	static public Integer convertCurrency(Integer v) {
+	public static Integer convertCurrency(Integer v) {
 		if (v != null) {
 			var xtra = HOVerwaltung.instance().getModel().getXtraDaten();
 			if (xtra != null) {
