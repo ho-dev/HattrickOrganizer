@@ -47,9 +47,9 @@ public class HattrickLink {
             String os = System.getProperty("os.name").toLowerCase();
             Runtime runtime = Runtime.getRuntime();
             try {
-                if(os.indexOf("win") >= 0)
+                if(os.contains("win"))
                     runtime.exec("rundll32 url.dll,FileProtocolHandler " + url);
-                else if(os.indexOf("mac") >= 0)
+                else if(os.contains("mac"))
                     runtime.exec("open " + url);
                 else
                     runtime.exec("firefox " + url);
