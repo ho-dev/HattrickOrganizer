@@ -308,7 +308,7 @@ class LZWStringTable {
 	    AddCharString((short)0xFFFF, (byte)q);
     }
     
-    static public int Hash(short index, byte lastbyte) {
+    public static int Hash(short index, byte lastbyte) {
 	return ((int)((short)(lastbyte << 8) ^ index) & 0xFFFF) % HASHSIZE;
     }
 }
