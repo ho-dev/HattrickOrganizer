@@ -135,12 +135,12 @@ public class MatchesOverviewCommonPanel extends ImagePanel {
 	}
 	
 	private void clear(){
-		for (int i = 0; i < resultLabels.length; i++) {
-			resultLabels[i].setText("0");
-		}
-		for (int i = 0; i < teamNames.length; i++) {
-			teamNames[i].setText("");
-		}
+        for (JLabel resultLabel : resultLabels) {
+            resultLabel.setText("0");
+        }
+        for (JLabel teamName : teamNames) {
+            teamName.setText("");
+        }
 	}
 	private MatchKurzInfo getHighestMatch(MatchKurzInfo home,MatchKurzInfo away){
 		if(home != null ){

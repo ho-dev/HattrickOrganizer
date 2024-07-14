@@ -53,11 +53,9 @@ public class TacticPanel extends JPanel {
         Vector<Object> rowData;
         int row = 0;
 
-        for (Iterator<TacticReport> iter = list.iterator(); iter.hasNext();) {
-            TacticReport report = iter.next();
-
+        for (TacticReport report : list) {
             rowData = new Vector<Object>();
-            rowData.add(MatchRoleID.getNameForPosition((byte)report.getTacticCode()));
+            rowData.add(MatchRoleID.getNameForPosition((byte) report.getTacticCode()));
             rowData.add("" + report.getAppearance());
             rowData.add(format(report.getRating()));
             tableModel.addRow(rowData);

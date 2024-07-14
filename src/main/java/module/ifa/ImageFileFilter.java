@@ -24,11 +24,11 @@ class ImageFileFilter extends FileFilter {
 			extension = s.substring(i + 1).toLowerCase();
 		}
 		if (extension != null) {
-			for (int j = 0; j < this.ext.length; j++) {
-				if (extension.equals(this.ext[j])) {
-					return true;
-				}
-			}
+            for (String string : this.ext) {
+                if (extension.equals(string)) {
+                    return true;
+                }
+            }
 		}
 		return false;
 	}

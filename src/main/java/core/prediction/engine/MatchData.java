@@ -32,9 +32,7 @@ public class MatchData {
     public final Action[] advance() {
         final Action[] actions = generator.predict(minute);
 
-        for (int i = 0; i < actions.length; i++) {
-            final Action action = actions[i];
-
+        for (final Action action : actions) {
             if (action.isHomeTeam()) {
                 homeTeam.addAction(action);
             } else {
@@ -48,14 +46,13 @@ public class MatchData {
 
 	public final Action[] simulate() {
 		final Action[] actions = generator.simulate();
-		for (int i = 0; i < actions.length; i++) {
-			final Action action = actions[i];
-			if (action.isHomeTeam()) {
-				homeTeam.addAction(action);
-			} else {
-				awayTeam.addAction(action);
-			}
-		}
+        for (final Action action : actions) {
+            if (action.isHomeTeam()) {
+                homeTeam.addAction(action);
+            } else {
+                awayTeam.addAction(action);
+            }
+        }
 		return actions;
 	}
 
@@ -84,8 +81,8 @@ public class MatchData {
         int g = 0;
         int ca = 0;
 
-        for (int i = 0; i < actions.size(); i++) {
-            final Action ac = (Action) actions.get(i);
+        for (Action action : actions) {
+            final Action ac = (Action) action;
 
             if (ac.isScore()) {
                 g++;
@@ -97,7 +94,7 @@ public class MatchData {
                 c++;
             }
 
-            HOLogger.instance().log(getClass(),ac);
+            HOLogger.instance().log(getClass(), ac);
         }
 
         HOLogger.instance().log(getClass(),"Chances " + c);

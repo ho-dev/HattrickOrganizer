@@ -37,9 +37,7 @@ class Row implements Comparable<Row> {
             }
         }
 
-        for (Iterator<Directive> it = this.sorter.getSortingColumns().iterator();
-            it.hasNext();) {
-            Directive directive = it.next();
+        for (Directive directive : this.sorter.getSortingColumns()) {
             int column = directive.getColumn();
             Object o1 = this.sorter.tableModel.getValueAt(row1, column);
             Object o2 = this.sorter.tableModel.getValueAt(row2, column);
@@ -49,20 +47,17 @@ class Row implements Comparable<Row> {
             // Define null less than everything, except null.
             if ((o1 == null) && (o2 == null)) {
                 comparison = 0;
-            }
-            else if (o1 == null) {
+            } else if (o1 == null) {
                 comparison = -1;
-            }
-            else if (o2 == null) {
+            } else if (o2 == null) {
                 comparison = 1;
-            }
-            else {
+            } else {
                 comparison = this.sorter.getComparator(column).compare(o1, o2);
             }
 
             if (comparison != 0) {
                 return (directive.getDirection() == AbstractTableSorter.DESCENDING)
-                ? (-comparison) : comparison;
+                        ? (-comparison) : comparison;
             }
         }
 

@@ -923,18 +923,18 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 	 * fetchPlayer(int id) - searches for a player with id in the player array
 	 */
 	private void fetchPlayer(int id) {
-		for (int i = 0; i < m_ar_allPlayers.length; i++) {
-			if (m_ar_allPlayers[i].getId() == id) {
-				m_ar_allPlayers[i].changePlayerSkillValues(true);
-				m_V_setPlayers.addElement(m_ar_allPlayers[i]);
-			}
-		}
+        for (Player mArAllPlayer : m_ar_allPlayers) {
+            if (mArAllPlayer.getId() == id) {
+                mArAllPlayer.changePlayerSkillValues(true);
+                m_V_setPlayers.addElement(mArAllPlayer);
+            }
+        }
 	}
 
 	private void resetPlayer() {
-		for (int i = 0; i < m_ar_allPlayers.length; i++) {
-			m_ar_allPlayers[i].resetPlayers();
-		}
+        for (Player mArAllPlayer : m_ar_allPlayers) {
+            mArAllPlayer.resetPlayers();
+        }
 	}
 
 	private void setDummyPlayerDetails() {
