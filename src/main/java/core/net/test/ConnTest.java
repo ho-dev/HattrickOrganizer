@@ -23,12 +23,12 @@ import org.w3c.dom.Element;
 public class ConnTest {
 
 	private static final long serialVersionUID = 8532069037729446669L;
-	final static private String LS = System.getProperty("line.separator");
-	final static private String URL_NORMAL = "http://ho1.sourceforge.net/onlinefiles/version.htm";
-	final static private String URL_SERVERS = "https://www.hattrick.org/common/chppxml.axd?file=servers";
-	//final static private String URL_HT = "http://plugins.hattrickorganizer.net/version.htm";
-	final static private int steps = 3;
-	final static public float VERSION = 0.1f;
+	private static final String LS = System.getProperty("line.separator");
+	private static final String URL_NORMAL = "http://ho1.sourceforge.net/onlinefiles/version.htm";
+	private static final String URL_SERVERS = "https://www.hattrick.org/common/chppxml.axd?file=servers";
+	//private static final String URL_HT = "http://plugins.hattrickorganizer.net/version.htm";
+	private static final int steps = 3;
+	public static final float VERSION = 0.1f;
 
 	/**
 	 * Constructor.
@@ -58,7 +58,7 @@ public class ConnTest {
 	/**
 	 * Test connection the login at HT.
 	 */
-	static private void testHtLogin(JTextArea log) {
+	private static void testHtLogin(JTextArea log) {
 		try {
 			log.append("Step 3/"+steps+" - testing login at Hattrick..." + LS);
 			log.append("Still TODO" + LS);
@@ -71,7 +71,7 @@ public class ConnTest {
 	/**
 	 * Test connection to a normal web resource.
 	 */
-	static private void testHtStartUrl(JTextArea log) {
+	private static void testHtStartUrl(JTextArea log) {
 		try {
 			log.append("Step 2/"+steps+" - testing initial Hattrick connection..." + LS);
 			final URL url = new URL(URL_SERVERS);
@@ -111,7 +111,7 @@ public class ConnTest {
 	/**
 	 * Test connection to a normal web resource.
 	 */
-	static private void testNormalUrl(JTextArea log) {
+	private static void testNormalUrl(JTextArea log) {
 		try {
 			log.append("Step 1/"+steps+" - testing normal connection..." + LS);
 			final URL url = new URL(URL_NORMAL);
@@ -141,7 +141,7 @@ public class ConnTest {
 	/**
 	 * Add some system infos.
 	 */
-	static private void printSystemInfos(JTextArea log) {
+	private static void printSystemInfos(JTextArea log) {
 		try {
 			log.append("System Information" + LS);
 			Properties p = System.getProperties();
