@@ -213,7 +213,7 @@ public class PluginIfaUtils {
 			}
 		}
 
-		if (errors.length() > 0) {
+		if (!errors.isEmpty()) {
 			HOLogger.instance().error(PluginIfaUtils.class, errors.toString());
 		}
 

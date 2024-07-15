@@ -80,7 +80,7 @@ public class FavouriteMenu extends JMenu {
         add(itemAdd);
         add(itemDelete);
 
-        if (teams.size() == 0) {
+        if (teams.isEmpty()) {
             itemDelete.setVisible(false);
         }
 

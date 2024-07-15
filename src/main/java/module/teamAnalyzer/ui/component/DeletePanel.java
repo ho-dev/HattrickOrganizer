@@ -111,7 +111,7 @@ public class DeletePanel extends JPanel {
                     DBManager.instance().removeTAFavoriteTeam(team.getTeamId());
                     fillCombo();
 
-                    if (menu.teams.size() == 0) {
+                    if (menu.teams.isEmpty()) {
                         menu.itemDelete.setVisible(false);
                     }
                 }
