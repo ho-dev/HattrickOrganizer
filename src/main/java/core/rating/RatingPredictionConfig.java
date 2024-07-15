@@ -154,7 +154,7 @@ public class RatingPredictionConfig {
     	tacticsParam.readFromFile(prefix + "tactics.dat");
     	
     	// Check all params for re-parsed files
-    	RatingPredictionParameter allParams [] = 
+    	RatingPredictionParameter[] allParams =
     		{sideDefenseParam, centralDefenseParam, midfieldParam, 
     			sideAttackParam, centralAttackParam, playerStrengthParam, tacticsParam};
     	

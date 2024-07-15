@@ -12,7 +12,7 @@ final class DummyTableModel extends DefaultTableModel {
 
 	private static final long serialVersionUID = -1521045917540294324L;
 
-	protected DummyTableModel(Object daten[][], Object headers[]) {
+	protected DummyTableModel(Object[][] daten, Object[] headers) {
 		super(daten, headers);
 	}
 
