@@ -20,7 +20,7 @@ public enum Config {
 	HOSTED_EMBLEM_PATH("IFA_HostedEmblemPath"),
 	STATS_TABLES_DIVIDER_LOCATION("IFA_StatsTableDividerLocation");
 
-	private String txt;
+	private final String txt;
 
 	private Config(String text) {
 		this.txt = text;

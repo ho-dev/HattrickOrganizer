@@ -4,7 +4,7 @@ public enum TrainingType {
     PAST_TRAINING(1),
     FUTURE_TRAINING(2);
 
-    private int value;
+    private final int value;
 
     TrainingType(int value) {
         this.value = value;
