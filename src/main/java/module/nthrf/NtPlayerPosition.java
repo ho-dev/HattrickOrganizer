@@ -53,7 +53,7 @@ class NtPlayerPosition {
 
 	@Override
 	public String toString() {
-		StringBuffer sb = new StringBuffer("--- NtPlayerPosition - " + name + " (" + playerId + ") ---");
+		StringBuilder sb = new StringBuilder("--- NtPlayerPosition - " + name + " (" + playerId + ") ---");
 		sb.append("\n\trole / posi / behaviour: " + roleId + " / " + positionCode + " / " + behaviour);
 		sb.append("\n\tRatingstars: " + ratingStars);
 		return sb.toString();

@@ -65,19 +65,19 @@ class FullScreen
 	        GraphicsDevice[] devices = env.getScreenDevices();
 	        boolean bFound = false;
 	        final GraphicsConfiguration frameConf = frame.getGraphicsConfiguration();
-	        for (int i = 0; i < devices.length; i++) {
-	        	GraphicsConfiguration[] confs = devices[i].getConfigurations();
+            for (GraphicsDevice graphicsDevice : devices) {
+                GraphicsConfiguration[] confs = graphicsDevice.getConfigurations();
 //				HOLogger.instance().debug(getClass(), "FullScreen: "+confs.length+" configs for dev "+devices[i].getIDstring()+" found, iFSS="+devices[i].isFullScreenSupported());
-		        for (int k = 0; k < confs.length; k++) {
+                for (GraphicsConfiguration conf : confs) {
 //					HOLogger.instance().debug(getClass(), "FullScreen: Conf found: "+k+"="+confs[k].toString());
-		        	if (frameConf == confs[k]) {
+                    if (frameConf == conf) {
 //						HOLogger.instance().debug(getClass(), "FullScreen: Matching conf found: ["+k+"]="+confs[k].toString()+" for dev["+i+"]="+devices[i].getIDstring());
-		        		device = devices[i];
-		        		bFound = true;
-		        		break;
-		        	}
-		        }
-	        }
+                        device = graphicsDevice;
+                        bFound = true;
+                        break;
+                    }
+                }
+            }
 	        if (!bFound) {
 //				HOLogger.instance().debug(getClass(), "FullScreen: NO matching conf found");
 	        	device = devices[0]; // if nothing matches stay with the first one

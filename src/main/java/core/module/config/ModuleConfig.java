@@ -99,7 +99,7 @@ public class ModuleConfig {
 	}
 
 	public void setBoolean(String key, boolean value) {
-		configMap.put(key, Boolean.valueOf(value));
+		configMap.put(key, value);
 	}
 
 	public void setString(String key, String value) {

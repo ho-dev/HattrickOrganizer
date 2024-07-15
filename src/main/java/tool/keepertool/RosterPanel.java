@@ -52,10 +52,7 @@ class RosterPanel extends JPanel {
         players.removeAllItems();
         players.addItem(new PlayerItem());
 
-        for (Iterator<Player> iter = HOVerwaltung.instance().getModel().getCurrentPlayers().iterator();
-             iter.hasNext();) {
-            final Player element = iter.next();
-
+        for (final Player element : HOVerwaltung.instance().getModel().getCurrentPlayers()) {
             if (element.getGoalkeeperSkill() > 4) {
                 players.addItem(new PlayerItem(element));
             }

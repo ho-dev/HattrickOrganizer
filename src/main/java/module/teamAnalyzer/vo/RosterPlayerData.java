@@ -59,9 +59,7 @@ public class RosterPlayerData {
         int main = getMainPosition();
         List<RosterRoleData> l = new ArrayList<RosterRoleData>();
 
-        for (int i = 0; i < app.length; i++) {
-            RosterRoleData array_element = app[i];
-
+        for (RosterRoleData array_element : app) {
             if ((array_element.getApp() > 0) && (array_element.getPos() != main)) {
                 l.add(array_element);
             }

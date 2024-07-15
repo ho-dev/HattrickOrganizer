@@ -367,7 +367,7 @@ class NtPlayer {
 
 	@Override
 	public String toString() {
-		StringBuffer sb = new StringBuffer("--- NtPlayer " + getName() + " (" + playerId + ") ---");
+		StringBuilder sb = new StringBuilder("--- NtPlayer " + getName() + " (" + playerId + ") ---");
 		sb.append("\n\tshirtNumber: " + shirtNumber);
 		sb.append("\n\tTSI: " + tsi);
 		sb.append("\n\tForm: " + form);

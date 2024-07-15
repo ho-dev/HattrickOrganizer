@@ -147,8 +147,8 @@ final class HighlightingKeyListener extends KeyAdapter{
 
     private boolean checkWord(String word)
     {
-        for(int i = 0; i < KEYWORDS.length; i++)
-            if(word.equalsIgnoreCase(KEYWORDS[i]))
+        for (String keyword : KEYWORDS)
+            if (word.equalsIgnoreCase(keyword))
                 return true;
 
         return false;

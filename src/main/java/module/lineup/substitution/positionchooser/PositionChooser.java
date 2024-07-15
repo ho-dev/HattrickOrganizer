@@ -35,30 +35,30 @@ public class PositionChooser extends JPanel {
 	private Integer selected;
 
 	public PositionChooser() {
-		positions.put(Integer.valueOf(IMatchRoleID.keeper), new PositionPanel(IMatchRoleID.keeper));
-		positions.put(Integer.valueOf(IMatchRoleID.rightBack), new PositionPanel(IMatchRoleID.rightBack));
-		positions.put(Integer.valueOf(IMatchRoleID.rightCentralDefender), new PositionPanel(
+		positions.put(IMatchRoleID.keeper, new PositionPanel(IMatchRoleID.keeper));
+		positions.put(IMatchRoleID.rightBack, new PositionPanel(IMatchRoleID.rightBack));
+		positions.put(IMatchRoleID.rightCentralDefender, new PositionPanel(
 				IMatchRoleID.rightCentralDefender));
-		positions.put(Integer.valueOf(IMatchRoleID.middleCentralDefender), new PositionPanel(
+		positions.put(IMatchRoleID.middleCentralDefender, new PositionPanel(
 				IMatchRoleID.middleCentralDefender));
-		positions.put(Integer.valueOf(IMatchRoleID.leftCentralDefender), new PositionPanel(
+		positions.put(IMatchRoleID.leftCentralDefender, new PositionPanel(
 				IMatchRoleID.leftCentralDefender));
-		positions.put(Integer.valueOf(IMatchRoleID.leftBack), new PositionPanel(IMatchRoleID.leftBack));
-		positions.put(Integer.valueOf(IMatchRoleID.rightWinger), new PositionPanel(
+		positions.put(IMatchRoleID.leftBack, new PositionPanel(IMatchRoleID.leftBack));
+		positions.put(IMatchRoleID.rightWinger, new PositionPanel(
 				IMatchRoleID.rightWinger));
-		positions.put(Integer.valueOf(IMatchRoleID.rightInnerMidfield), new PositionPanel(
+		positions.put(IMatchRoleID.rightInnerMidfield, new PositionPanel(
 				IMatchRoleID.rightInnerMidfield));
-		positions.put(Integer.valueOf(IMatchRoleID.centralInnerMidfield), new PositionPanel(
+		positions.put(IMatchRoleID.centralInnerMidfield, new PositionPanel(
 				IMatchRoleID.centralInnerMidfield));
-		positions.put(Integer.valueOf(IMatchRoleID.leftInnerMidfield), new PositionPanel(
+		positions.put(IMatchRoleID.leftInnerMidfield, new PositionPanel(
 				IMatchRoleID.leftInnerMidfield));
-		positions.put(Integer.valueOf(IMatchRoleID.leftWinger),
+		positions.put(IMatchRoleID.leftWinger,
 				new PositionPanel(IMatchRoleID.leftWinger));
-		positions.put(Integer.valueOf(IMatchRoleID.rightForward), new PositionPanel(
+		positions.put(IMatchRoleID.rightForward, new PositionPanel(
 				IMatchRoleID.rightForward));
-		positions.put(Integer.valueOf(IMatchRoleID.centralForward), new PositionPanel(
+		positions.put(IMatchRoleID.centralForward, new PositionPanel(
 				IMatchRoleID.centralForward));
-		positions.put(Integer.valueOf(IMatchRoleID.leftForward), new PositionPanel(
+		positions.put(IMatchRoleID.leftForward, new PositionPanel(
 				IMatchRoleID.leftForward));
 
 		initComponents();

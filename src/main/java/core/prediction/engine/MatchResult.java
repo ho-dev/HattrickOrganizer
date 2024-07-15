@@ -34,55 +34,55 @@ public class MatchResult  {
 		final int[] matchGuestSuccess = { 0, 0, 0 };
 		final int[] matchGuestFailed = { 0, 0, 0 };
 
-		for (int i = 0; i < actions.length; i++) {
-			final Action element = (Action) actions[i];
+        for (Action action : actions) {
+            final Action element = (Action) action;
 
-			if (element.isHomeTeam()) {
-				matchHomeChances++;
+            if (element.isHomeTeam()) {
+                matchHomeChances++;
 
-				if (element.isScore()) {
-					matchHomeGoals++;
+                if (element.isScore()) {
+                    matchHomeGoals++;
 
-					if (element.getArea() == -1) {
-						matchHomeSuccess[0]++;
-					} else if (element.getArea() == 0) {
-						matchHomeSuccess[1]++;
-					} else {
-						matchHomeSuccess[2]++;
-					}
-				} else {
-					if (element.getArea() == -1) {
-						matchHomeFailed[0]++;
-					} else if (element.getArea() == 0) {
-						matchHomeFailed[1]++;
-					} else {
-						matchHomeFailed[2]++;
-					}
-				}
-			} else {
-				matchGuestChances++;
+                    if (element.getArea() == -1) {
+                        matchHomeSuccess[0]++;
+                    } else if (element.getArea() == 0) {
+                        matchHomeSuccess[1]++;
+                    } else {
+                        matchHomeSuccess[2]++;
+                    }
+                } else {
+                    if (element.getArea() == -1) {
+                        matchHomeFailed[0]++;
+                    } else if (element.getArea() == 0) {
+                        matchHomeFailed[1]++;
+                    } else {
+                        matchHomeFailed[2]++;
+                    }
+                }
+            } else {
+                matchGuestChances++;
 
-				if (element.isScore()) {
-					matchGuestGoals++;
+                if (element.isScore()) {
+                    matchGuestGoals++;
 
-					if (element.getArea() == -1) {
-						matchGuestSuccess[0]++;
-					} else if (element.getArea() == 0) {
-						matchGuestSuccess[1]++;
-					} else {
-						matchGuestSuccess[2]++;
-					}
-				} else {
-					if (element.getArea() == -1) {
-						matchGuestFailed[0]++;
-					} else if (element.getArea() == 0) {
-						matchGuestFailed[1]++;
-					} else {
-						matchGuestFailed[2]++;
-					}
-				}
-			}
-		}
+                    if (element.getArea() == -1) {
+                        matchGuestSuccess[0]++;
+                    } else if (element.getArea() == 0) {
+                        matchGuestSuccess[1]++;
+                    } else {
+                        matchGuestSuccess[2]++;
+                    }
+                } else {
+                    if (element.getArea() == -1) {
+                        matchGuestFailed[0]++;
+                    } else if (element.getArea() == 0) {
+                        matchGuestFailed[1]++;
+                    } else {
+                        matchGuestFailed[2]++;
+                    }
+                }
+            }
+        }
 
 		int away = matchGuestGoals;
 		if (away > 4) {
