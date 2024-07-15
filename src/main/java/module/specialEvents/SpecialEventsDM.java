@@ -84,7 +84,7 @@ public class SpecialEventsDM {
 			matchTypes.add(MatchType.QUALIFICATION.getId());
 		}
 
-		if (matchTypes.size() == 0) {
+		if (matchTypes.isEmpty()) {
 			// NO matches at all
 			return null;
 		}

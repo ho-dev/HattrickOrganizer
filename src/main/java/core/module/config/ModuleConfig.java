@@ -125,7 +125,7 @@ public class ModuleConfig {
 	public final int[] getIntArray(String key) {
 		int[] values = new int[1];
 		String value = getString(key);
-		if (value == null || value.length() == 0)
+		if (value == null || value.isEmpty())
 			return new int[0];
 
 		if (value.contains(",")) {

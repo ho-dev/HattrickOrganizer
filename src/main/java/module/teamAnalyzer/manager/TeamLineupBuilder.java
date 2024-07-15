@@ -143,7 +143,7 @@ public class TeamLineupBuilder {
     private static<T> SortedSet<T> getSortedSet(Collection<T> beans, Comparator<T> comparator) {
         final SortedSet<T> set = new TreeSet<>(comparator);
 
-        if ((beans != null) && (beans.size() > 0)) {
+        if ((beans != null) && (!beans.isEmpty())) {
             set.addAll(beans);
         }
 

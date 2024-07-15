@@ -45,7 +45,7 @@ public class HrfTableModel extends DefaultTableModel {
 	}
 
 	public void removeAllRows() {
-		while (dataVector.size() > 0) {
+		while (!dataVector.isEmpty()) {
 			this.removeRow(0);
 		}
 	}

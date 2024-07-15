@@ -86,7 +86,7 @@ public class RatingPredictionConfig {
         				line = line.replaceFirst("#.*", "");
         				// Trim
         				line = line.trim();
-        				if (line.length() != 0) {
+        				if (!line.isEmpty()) {
         					list.add(line);
         				}
         			}

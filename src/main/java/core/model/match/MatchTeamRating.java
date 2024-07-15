@@ -39,7 +39,7 @@ public class MatchTeamRating extends AbstractTable.Storable {
     private int getInt(Map<String, String> download, String key) {
         try {
             var s = download.get(key);
-            if (s != null && s.length() > 0) return Integer.parseInt(s);
+            if (s != null && !s.isEmpty()) return Integer.parseInt(s);
         } catch (Exception e) {
             HOLogger.instance().warning(getClass(), "getInt: " + e);
         }

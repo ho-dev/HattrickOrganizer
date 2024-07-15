@@ -76,7 +76,7 @@ public class MainPanel extends JPanel implements ActionListener {
 		try {
 
 			List<String[]> teams = NthrfUtil.getNtTeams();
-			if (teams == null || teams.size() < 1 || teams.get(0)[0] == null || teams.get(0)[0].length() < 1) {
+			if (teams == null || teams.isEmpty() || teams.get(0)[0] == null || teams.get(0)[0].isEmpty()) {
 				return false;
 			}
 			final long teamId;

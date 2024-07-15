@@ -80,7 +80,7 @@ public class StatusIcon implements Icon {
 
     @Override
     public int getIconWidth() {
-        if ( icons.size() == 0 ) return 0;
+        if (icons.isEmpty()) return 0;
         return ICON_SIZE*icons.size() + ICON_SPACE*(icons.size()-1);
     }
 
