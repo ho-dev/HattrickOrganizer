@@ -76,14 +76,13 @@ public class ImageDesignPanel extends JPanel {
 			headerText = ModuleConfig.instance().getString(Config.VISITED_HEADER_TEXT.toString(),
 					HOVerwaltung.instance().getLanguageString("ifa.visitedHeader.defaultText"));
 			brightness = ModuleConfig.instance()
-					.getInteger(Config.VISITED_BRIGHTNESS.toString(), 50)
-					.intValue();
+                    .getInteger(Config.VISITED_BRIGHTNESS.toString(), 50);
 			grey = ModuleConfig.instance()
-					.getBoolean(Config.VISITED_GREY.toString(), Boolean.FALSE).booleanValue();
+                    .getBoolean(Config.VISITED_GREY.toString(), Boolean.FALSE);
 			roundly = ModuleConfig.instance()
-					.getBoolean(Config.VISITED_ROUNDLY.toString(), Boolean.FALSE).booleanValue();
+                    .getBoolean(Config.VISITED_ROUNDLY.toString(), Boolean.FALSE);
 			showHeader = ModuleConfig.instance()
-					.getBoolean(Config.SHOW_VISITED_HEADER.toString(), Boolean.TRUE).booleanValue();
+                    .getBoolean(Config.SHOW_VISITED_HEADER.toString(), Boolean.TRUE);
 		} else {
 			flagWidth = ModuleConfig.instance().getInteger(Config.HOSTED_FLAG_WIDTH.toString(),
                     8);
@@ -92,14 +91,12 @@ public class ImageDesignPanel extends JPanel {
 			headerText = ModuleConfig.instance().getString(Config.HOSTED_HEADER_TEXT.toString(),
 					HOVerwaltung.instance().getLanguageString("ifa.hostedHeader.defaultText"));
 			brightness = ModuleConfig.instance()
-					.getInteger(Config.HOSTED_BRIGHTNESS.toString(), 50)
-					.intValue();
-			grey = ModuleConfig.instance().getBoolean(Config.HOSTED_GREY.toString(), Boolean.FALSE)
-					.booleanValue();
+                    .getInteger(Config.HOSTED_BRIGHTNESS.toString(), 50);
+			grey = ModuleConfig.instance().getBoolean(Config.HOSTED_GREY.toString(), Boolean.FALSE);
 			roundly = ModuleConfig.instance()
-					.getBoolean(Config.HOSTED_ROUNDLY.toString(), Boolean.FALSE).booleanValue();
+                    .getBoolean(Config.HOSTED_ROUNDLY.toString(), Boolean.FALSE);
 			showHeader = ModuleConfig.instance()
-					.getBoolean(Config.SHOW_HOSTED_HEADER.toString(), Boolean.TRUE).booleanValue();
+                    .getBoolean(Config.SHOW_HOSTED_HEADER.toString(), Boolean.TRUE);
 		}
 		flagDisplayModel.setRoundFlag(roundly);
 		flagDisplayModel.setGrey(grey);
@@ -329,7 +326,7 @@ public class ImageDesignPanel extends JPanel {
 
 			@Override
 			public void stateChanged(ChangeEvent e) {
-				int rowSize = ((Integer) ImageDesignPanel.this.sizeSpinner.getValue()).intValue();
+				int rowSize = (Integer) ImageDesignPanel.this.sizeSpinner.getValue();
 				if (away) {
 					ModuleConfig.instance().setInteger(Config.VISITED_FLAG_WIDTH.toString(),
 							rowSize);
