@@ -76,7 +76,7 @@ public class ImageDesignPanel extends JPanel {
 			headerText = ModuleConfig.instance().getString(Config.VISITED_HEADER_TEXT.toString(),
 					HOVerwaltung.instance().getLanguageString("ifa.visitedHeader.defaultText"));
 			brightness = ModuleConfig.instance()
-					.getInteger(Config.VISITED_BRIGHTNESS.toString(), Integer.valueOf(50))
+					.getInteger(Config.VISITED_BRIGHTNESS.toString(), 50)
 					.intValue();
 			grey = ModuleConfig.instance()
 					.getBoolean(Config.VISITED_GREY.toString(), Boolean.FALSE).booleanValue();
@@ -86,13 +86,13 @@ public class ImageDesignPanel extends JPanel {
 					.getBoolean(Config.SHOW_VISITED_HEADER.toString(), Boolean.TRUE).booleanValue();
 		} else {
 			flagWidth = ModuleConfig.instance().getInteger(Config.HOSTED_FLAG_WIDTH.toString(),
-					Integer.valueOf(8));
+                    8);
 			emblemPath = ModuleConfig.instance()
 					.getString(Config.HOSTED_EMBLEM_PATH.toString(), "");
 			headerText = ModuleConfig.instance().getString(Config.HOSTED_HEADER_TEXT.toString(),
 					HOVerwaltung.instance().getLanguageString("ifa.hostedHeader.defaultText"));
 			brightness = ModuleConfig.instance()
-					.getInteger(Config.HOSTED_BRIGHTNESS.toString(), Integer.valueOf(50))
+					.getInteger(Config.HOSTED_BRIGHTNESS.toString(), 50)
 					.intValue();
 			grey = ModuleConfig.instance().getBoolean(Config.HOSTED_GREY.toString(), Boolean.FALSE)
 					.booleanValue();
@@ -121,7 +121,7 @@ public class ImageDesignPanel extends JPanel {
 		}
 		this.roundlyCheckBox.setSelected(roundly);
 		this.greyColoredCheckBox.setSelected(grey);
-		this.sizeSpinner.setValue(Integer.valueOf(flagWidth));
+		this.sizeSpinner.setValue(flagWidth);
 		this.headerYesNoCheckBox.setSelected(showHeader);
 		this.brightnessSlider.setValue(brightness);
 		this.emblemPanel.setHeaderVisible(showHeader);
@@ -185,7 +185,7 @@ public class ImageDesignPanel extends JPanel {
 		settingsPanel.add(sizeLabel, gbc);
 
 		int flagWidth = ModuleConfig.instance().getInteger(Config.VISITED_FLAG_WIDTH.toString(),
-				Integer.valueOf(8));
+                8);
 		this.sizeSpinner = new JSpinner(new SpinnerNumberModel(flagWidth, MIN_FLAG_WIDTH,
 				MAX_FLAG_WIDTH, 1));
 		this.sizeSpinner.setName("size");
