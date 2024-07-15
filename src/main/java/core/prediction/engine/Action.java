@@ -44,7 +44,7 @@ public class Action implements  Comparable<Object> {
     }
 
     public final String getShortDesc() {
-        final StringBuffer buffer = new StringBuffer();
+        final StringBuilder buffer = new StringBuilder();
 
         if (type == IMatchDetails.TAKTIK_KONTER) {
             buffer.append(core.model.HOVerwaltung.instance().getLanguageString("Counter"));
@@ -103,7 +103,7 @@ public class Action implements  Comparable<Object> {
      */
     @Override
 	public final String toString() {
-        final StringBuffer buffer = new StringBuffer();
+        final StringBuilder buffer = new StringBuilder();
 
         if (homeTeam) {
             buffer.append("Team1 has a chance ");

@@ -104,7 +104,7 @@ public class FuturePlayer {
 	 */
 	@Override
 	public String toString() {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 		buffer.append("FuturePlayer[");
 		buffer.append("passing = "+passing);
 		buffer.append(", playmaking = "+playmaking);

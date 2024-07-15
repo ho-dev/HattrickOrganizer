@@ -168,7 +168,7 @@ public class LanguageTableModel extends AbstractTableModel implements TableModel
 
 			// Loop over table and put into properties
             for (String key : this.keys) {
-                StringBuffer sb = new StringBuffer(key);
+                StringBuilder sb = new StringBuilder(key);
                 sb.append("=");
                 sb.append(this.data.get(key));
                 bw.write(sb.toString());

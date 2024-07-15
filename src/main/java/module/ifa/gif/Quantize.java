@@ -682,7 +682,7 @@ public class Quantize {
 
             @Override
 			public String toString() {
-                StringBuffer buf = new StringBuffer();
+                StringBuilder buf = new StringBuilder();
                 if (parent == this) {
                     buf.append("root");
                 } else {
