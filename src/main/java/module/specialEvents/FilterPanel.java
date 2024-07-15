@@ -220,7 +220,7 @@ public class FilterPanel extends JPanel {
 				if (item == null) {
 					filter.setPlayerId(null);
 				} else {
-					filter.setPlayerId(Integer.valueOf(item.getId()));
+					filter.setPlayerId(item.getId());
 				}
 			}
 		});
