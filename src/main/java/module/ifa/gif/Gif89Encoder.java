@@ -159,7 +159,7 @@ public class Gif89Encoder {
 	 * @exception IOException
 	 *                See the addFrame() methods.
 	 */
-	public Gif89Encoder(Color[] colors, int width, int height, byte ci_pixels[]) throws IOException {
+	public Gif89Encoder(Color[] colors, int width, int height, byte[] ci_pixels) throws IOException {
 		this(colors);
 		addFrame(width, height, ci_pixels);
 	}
@@ -236,7 +236,7 @@ public class Gif89Encoder {
 	 *                IndexGif89Frame <i>per se</i>. But I might add some
 	 *                pedantic check later, to justify the generality :)
 	 */
-	public void addFrame(int width, int height, byte ci_pixels[]) throws IOException {
+	public void addFrame(int width, int height, byte[] ci_pixels) throws IOException {
 		addFrame(new IndexGif89Frame(width, height, ci_pixels));
 	}
 
