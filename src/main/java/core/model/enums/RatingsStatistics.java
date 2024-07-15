@@ -6,7 +6,7 @@ public enum RatingsStatistics {
     HATSTATS_DEF(3),
     HATSTATS_MID(4),
     HATSTATS_OFF(5);
-    private int value;
+    private final int value;
 
     RatingsStatistics(int value) {
         this.value = value;
