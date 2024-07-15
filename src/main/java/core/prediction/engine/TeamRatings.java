@@ -91,7 +91,7 @@ public class TeamRatings {
 
     @Override
 	public final String toString() {
-        final StringBuffer buffer = new StringBuffer();
+        final StringBuilder buffer = new StringBuilder();
         buffer.append("TeamRatings[");
         buffer.append("leftDef = " + leftDef);
         buffer.append(", middleDef = " + middleDef);

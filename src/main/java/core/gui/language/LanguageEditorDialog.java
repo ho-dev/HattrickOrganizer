@@ -83,7 +83,7 @@ public class LanguageEditorDialog extends JDialog {
 
 	private JTextPane initHintText() {
 		JTextPane hintText = new JTextPane();
-		StringBuffer sb = new StringBuffer();
+		StringBuilder sb = new StringBuilder();
 		
 		sb.append("1. Select language to edit using drop down box.\n");
 		sb.append("2. The chosen language will appear in the right hand table. All missing keys will be added with an English value\n");

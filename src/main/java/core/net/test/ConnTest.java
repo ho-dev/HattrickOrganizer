@@ -80,7 +80,7 @@ public class ConnTest {
 			httpurlconnection.connect();
 			InputStream is = httpurlconnection.getInputStream();
 			final BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-			StringBuffer sb = new StringBuffer();
+			StringBuilder sb = new StringBuilder();
 			String line = null;
 			boolean found = false;
 			while ((line = br.readLine()) != null) {

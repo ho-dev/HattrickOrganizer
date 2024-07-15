@@ -247,7 +247,7 @@ public class TableLayoutConstraints implements TableLayoutConstants {
      */
     @Override
 	public String toString() {
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
 
         buffer.append(col1);
         buffer.append(", "); //$NON-NLS-1$

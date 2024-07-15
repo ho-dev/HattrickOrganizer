@@ -63,7 +63,7 @@ public class MatchData {
 
     @Override
 	public final String toString() {
-        final StringBuffer buffer = new StringBuffer();
+        final StringBuilder buffer = new StringBuilder();
         buffer.append("Match[");
         buffer.append("generator = " + generator);
         buffer.append(", minute = " + minute);
