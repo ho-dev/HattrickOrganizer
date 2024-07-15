@@ -22,8 +22,8 @@ public class TrainingComparator implements Comparator<Vector<String>> {
 
         /* Compare training speed first */
         if (!v1.get(speed).equals(v2.get(speed))) {
-            int i1 = Integer.valueOf(v1.get(speed));
-            int i2 = Integer.valueOf(v2.get(speed));
+            int i1 = Integer.parseInt(v1.get(speed));
+            int i2 = Integer.parseInt(v2.get(speed));
 
             if (i1 > i2)
                 return -1;
