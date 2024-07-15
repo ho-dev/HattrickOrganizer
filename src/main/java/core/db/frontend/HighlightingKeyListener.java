@@ -11,7 +11,7 @@ final class HighlightingKeyListener extends KeyAdapter{
     private StyledDocument doc;
     private JTextPane textPane;
     private int caretPastePosition;
-    private static final String KEYWORDS[] = {
+    private static final String[] KEYWORDS = {
         "SELECT", "FROM", "WHERE", "JOIN", "INNER", "OUTER", "CROSS", "GROUP", "ORDER", "BY", 
         "HAVING", "INSERT", "UPDATE", "INTO", "VALUES"
     };
@@ -45,7 +45,7 @@ final class HighlightingKeyListener extends KeyAdapter{
     }
 
     protected synchronized void coloringWords(int initPos, Integer length) throws BadLocationException {
-        int word[] = new int[2];
+        int[] word = new int[2];
         if(length == null){
             if(textPane.getText(initPos, 1).equals(" ") || textPane.getText(initPos, 1).equals("\n")) {
                 word = getLastWord(initPos);
@@ -79,7 +79,7 @@ final class HighlightingKeyListener extends KeyAdapter{
     }
 
     private int[] getCurrentWord(int initPos) throws BadLocationException {
-        int word[] = new int[2];
+        int[] word = new int[2];
         int min = initPos <= 0 ? initPos : initPos - 1;
         int max = initPos;
         if(textPane.getText(min, 1).equals(" ") || textPane.getText(min, 1).equals("\n") || textPane.getText(max, 1).equals(" ") || textPane.getText(max, 1).equals("\n"))
@@ -100,7 +100,7 @@ final class HighlightingKeyListener extends KeyAdapter{
     }
 
     private int[] getLastWord(int initPos) throws BadLocationException {
-        int word[] = new int[2];
+        int[] word = new int[2];
         int min = initPos;
         int length = 0;
         boolean foundChar = false;
@@ -123,7 +123,7 @@ final class HighlightingKeyListener extends KeyAdapter{
     }
 
     private synchronized int[] getNextWord(int initPos) throws BadLocationException {
-        int word[] = new int[2];
+        int[] word = new int[2];
         int max = initPos >= 1 ? initPos : 0;
         int length = 0;
         boolean foundChar = false;
