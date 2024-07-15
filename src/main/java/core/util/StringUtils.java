@@ -49,7 +49,7 @@ public class StringUtils {
 	 *         <code>null</code>, <code>false</code> otherwise.
 	 */
 	public static boolean isEmpty(String str) {
-		return (str == null || str.length() == 0);
+		return (str == null || str.isEmpty());
 	}
 
 	private static String _separator = null;

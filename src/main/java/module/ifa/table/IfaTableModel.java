@@ -41,7 +41,7 @@ public class IfaTableModel extends AbstractTableModel implements ModelChangeList
 
 	@Override
 	public int getRowCount() {
-		if (list.size() > 0) {
+		if (!list.isEmpty()) {
 			return this.list.size() + 1;
 		}
 		return 0;

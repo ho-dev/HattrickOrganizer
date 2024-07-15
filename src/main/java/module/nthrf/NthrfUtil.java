@@ -104,7 +104,7 @@ public class NthrfUtil {
             		Element eName = (Element) nt.getElementsByTagName("NationalTeamName").item(0);
             		String tid =XMLManager.getFirstChildNodeValue(ele);
             		String name = XMLManager.getFirstChildNodeValue(eName);
-            		if (tid != null && tid.length() > 0) {
+            		if (tid != null && !tid.isEmpty()) {
 						ret.add(new String[] { tid, name });
 					}
             	}

@@ -35,7 +35,7 @@ public class ToolTipHeader extends JTableHeader {
             retStr = "";
         }
 
-        if (retStr == null || retStr.length() < 1) {
+        if (retStr == null || retStr.isEmpty()) {
             retStr = super.getToolTipText(e);
         }
 

@@ -29,7 +29,7 @@ class MatchberichtEditorPanel extends ImagePanel {
 	}
 
 	public final void setText(String text) {
-		if ((text == null) || (text.trim().length() == 0)) {
+		if ((text == null) || (text.trim().isEmpty())) {
 			text = " --- ";
 		}
 

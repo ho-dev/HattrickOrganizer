@@ -106,7 +106,7 @@ public class XMLMatchLineupParser {
 			// First- and LastName can be empty
 			name = getStringValue((Element)ele.getElementsByTagName("FirstName").item(0));
 			var lastName = getStringValue((Element)ele.getElementsByTagName("LastName").item(0));
-			if ( name.length()>0 && lastName.length()>0) name = name + " ";
+			if (!name.isEmpty() && !lastName.isEmpty()) name = name + " ";
 			name = name + lastName;
 
 			// shift lineup ids to match order ids

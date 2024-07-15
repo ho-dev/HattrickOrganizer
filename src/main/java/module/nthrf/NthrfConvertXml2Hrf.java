@@ -65,7 +65,7 @@ class NthrfConvertXml2Hrf {
 			xml = dh.getHattrickXMLFile("/chppxml.axd?file=nationalplayers&teamid=" + teamId);
 			List<SafeInsertMap> playersData = NtPlayersParser.parsePlayersFromString(xml);
 
-			if (playersData.size() == 0) {
+			if (playersData.isEmpty()) {
 				// training area closed or all players are released
 				return "";
 			}
