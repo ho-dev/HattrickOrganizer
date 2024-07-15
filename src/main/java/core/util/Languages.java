@@ -42,7 +42,7 @@ public enum Languages {
 //    Ukranian,
 //            Vlaams;
 
-    private int value;
+    private final int value;
 
     Languages(int value) {
         this.value = value;

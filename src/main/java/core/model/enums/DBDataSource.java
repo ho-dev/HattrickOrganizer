@@ -7,7 +7,7 @@ public enum DBDataSource {
     GUESS(3);
 
 
-    private int value;
+    private final int value;
 
     DBDataSource(int value) {
         this.value = value;

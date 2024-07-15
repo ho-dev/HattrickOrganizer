@@ -11,7 +11,7 @@ public enum Error implements Problem {
 	PLAYERIN_NOT_REAL("subs.plausibility.player.notReal"),
 	TOO_MANY_ORDERS("subs.plausibility.toomanysubs");
 	
-	private String languageKey;
+	private final String languageKey;
 
 	Error(String languageKey) {
 		this.languageKey = languageKey;
