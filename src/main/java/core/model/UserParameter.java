@@ -30,6 +30,9 @@ public final class UserParameter extends Configuration {
     public static final int POSITIONNAMES_SHORT = 0;
     public static final int POSITIONNAMES_LONG = 1;
 
+    private static final String LANGUAGE_DEUTSCH_OBSOLETE = "Deutsch";
+    private static final String LANGUAGE_GERMAN = "German";
+
     //~ Instance fields ----------------------------------------------------------------------------
 
     public String AccessToken = "";
@@ -53,7 +56,7 @@ public final class UserParameter extends Configuration {
     /**
      * Name of language
      */
-    public String sprachDatei = "English";
+    public String sprachDatei = Translator.LANGUAGE_DEFAULT;
     /**
      * is proxy activ
      */
@@ -661,7 +664,7 @@ public final class UserParameter extends Configuration {
         hrfImport_HRFPath = getStringValue(values, "hrfImport_HRFPath");
         matchLineupImport_Path = getStringValue(values, "matchLineupImport_Path");
         spielPlanImport_Path = getStringValue(values, "spielPlanImport_Path");
-        sprachDatei = getStringValue(values, "sprachDatei");
+        sprachDatei = readLegacyLanguage(getStringValue(values, "sprachDatei"));
         skin = getStringValue(values, "skin");
 
         ProxyAktiv = getBooleanValue(values, "ProxyAktiv");
@@ -895,5 +898,19 @@ public final class UserParameter extends Configuration {
         series_tableSplitPaneDivider.location = getIntValue(values, "series_tableSplitPaneDivider");
         matchPredictionDialog_Width = getIntValue(values, "matchPredictionDialog_Width");
         matchPredictionDialog_Height = getIntValue(values, "matchPredictionDialog_Height");
+    }
+
+    /**
+     * Reads the legacy language {@code legacyLanguage} and returns the language.
+     *
+     * @return the language
+     *
+     * @since 9.0 - added due to renaming the language {@code Deutsch} to {@code German}.
+     */
+    private static String readLegacyLanguage(String legacyLanguage) {
+        if (LANGUAGE_DEUTSCH_OBSOLETE.equalsIgnoreCase(legacyLanguage)) {
+            return LANGUAGE_GERMAN;
+        }
+        return legacyLanguage;
     }
 }

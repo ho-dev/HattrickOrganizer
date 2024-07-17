@@ -86,7 +86,7 @@ public class LanguageComboBoxModel extends AbstractListModel implements ComboBox
 
 		     };
 		     
-		     URL languages = this.getClass().getClassLoader().getResource("sprache/languages.xml");
+		     URL languages = this.getClass().getClassLoader().getResource("language/languages.xml");
 		     saxParser.parse(languages.getPath(), handler);
 		     
 		 } catch (Exception e) {

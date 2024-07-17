@@ -16,7 +16,7 @@ class PlayerAbilityTest {
             .hrfId(42)
             .build()
         hoAdmin.model = hoModel
-        hoAdmin.setLanguageBundle(null)
+        hoAdmin.clearTranslator();
     }
 
     @Test

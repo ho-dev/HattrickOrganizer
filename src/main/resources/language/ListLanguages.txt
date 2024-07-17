@@ -3,12 +3,12 @@ Catalan
 Chinese
 Czech
 Danish
-Deutsch
 English
 Finnish
 French
 Galego
 Georgian
+German
 Greeklish
 Hangul(Korean)
 Hebrew

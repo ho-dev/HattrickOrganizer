@@ -5,6 +5,7 @@ import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.Theme;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.model.Translator;
 import core.model.UserParameter;
 import core.util.DateTimeUtils;
 import core.util.HOLogger;
@@ -112,7 +113,7 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
         m_jcbSkin.addItemListener(this);
         add(m_jcbSkin);
 
-        final String[] sprachdateien = HOVerwaltung.getLanguageFileNames();
+        final String[] sprachdateien = Translator.getSupportedLanguages();
         try {
             java.util.Arrays.sort(sprachdateien);
         } catch (Exception ignored) {
