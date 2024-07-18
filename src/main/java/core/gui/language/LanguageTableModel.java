@@ -1,8 +1,11 @@
 package core.gui.language;
 
+import core.model.Translator;
 import core.util.HOLogger;
-import core.util.UTF8Control;
 
+import javax.swing.*;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
@@ -18,11 +21,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
 
 /**
  * This class represents the table model for editing language resource files.
@@ -46,7 +44,7 @@ public class LanguageTableModel extends AbstractTableModel implements TableModel
 		
 		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
 		
-		URL englishPath = this.getClass().getClassLoader().getResource("sprache/English.properties");
+		URL englishPath = this.getClass().getClassLoader().getResource("language/English.properties");
 		
 		FileInputStream fis = null;
 		try {
@@ -88,8 +86,8 @@ public class LanguageTableModel extends AbstractTableModel implements TableModel
 		this.isDestinationFile = true;
 		this.langauageName = languageName;
 		
-		ResourceBundle englishBundle = ResourceBundle.getBundle("sprache.English", new UTF8Control());
-		ResourceBundle destBundle = ResourceBundle.getBundle("sprache." + languageName, new UTF8Control());
+		ResourceBundle englishBundle = Translator.loadDefault().getResourceBundle();
+		ResourceBundle destBundle = Translator.load(languageName).getResourceBundle();
 		Iterator<String> rbKeys = this.keys.iterator();
 		String value = null;
 		
@@ -158,7 +156,7 @@ public class LanguageTableModel extends AbstractTableModel implements TableModel
 	 * Save the table model back to a properties file
 	 */
 	public void save() {
-		StringBuilder fileName = new StringBuilder("sprache/");
+		StringBuilder fileName = new StringBuilder("language/");
 		fileName.append(this.langauageName);
 		fileName.append(".properties");
 		URL destinationPath = this.getClass().getClassLoader().getResource(fileName.toString());

@@ -2,6 +2,8 @@ package core.training;
 
 import core.HO;
 import core.model.HOVerwaltung;
+import core.model.Translator;
+
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
@@ -11,7 +13,7 @@ public class TrainingManagerTest {
 
         HO.setPortable_version(true);
         HOVerwaltung.instance().loadLatestHoModel();
-        HOVerwaltung.instance().setResource("English");
+        HOVerwaltung.instance().setTranslator(Translator.LANGUAGE_DEFAULT);
 
         Instant endDate = Instant.now();
         Instant startDate = endDate.minus(7, ChronoUnit.DAYS);

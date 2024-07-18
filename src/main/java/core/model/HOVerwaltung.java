@@ -1,6 +1,5 @@
 package core.model;
 
-
 import core.db.DBManager;
 import core.file.FileLoader;
 import core.file.hrf.HRF;
@@ -8,16 +7,14 @@ import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
 import core.util.HODateTime;
 import core.util.HOLogger;
-import core.util.Languages;
-import core.util.UTF8Control;
+
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.io.InputStream;
 import java.sql.Timestamp;
-import java.text.MessageFormat;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
-import java.util.Locale;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class HOVerwaltung {
@@ -29,9 +26,7 @@ public class HOVerwaltung {
 	/** das Model */
 	protected HOModel m_clHoModel;
 
-	/** Resource */
-	protected ResourceBundle languageBundle;
-	protected Locale m_locale;
+	private Translator translator = null;
 
     public static boolean isNewModel(HOModel homodel) {
 		return (homodel != null && ((instance().getModel() == null) ||
@@ -87,23 +82,28 @@ public class HOVerwaltung {
 		return m_clInstance;
 	}
 
+	/**
+	 * @deprecated Provided for compatibility. Please use {@link #setTranslator(String)} instead.
+	 */
+	@Deprecated(since = "9.0", forRemoval = true)
 	public void setResource(String pfad) {
-		try {
-              languageBundle = ResourceBundle.getBundle("sprache." + pfad, new UTF8Control());
-			  m_locale = Languages.lookup(UserParameter.instance().sprachDatei).getLocale();
-		}
-		catch (UnsupportedOperationException e) {
-			// ResourceBundle.Control not supported in named modules in JDK9+
-			languageBundle = ResourceBundle.getBundle("sprache." + pfad);
-			m_locale = Languages.lookup(UserParameter.instance().sprachDatei).getLocale();
-		} catch (Exception e) {
-			HOLogger.instance().log(getClass(), e);
-		}
-
+		setTranslator(pfad);
 	}
 
+	public void setTranslator(String language) {
+		try {
+			translator = Translator.load(language);
+		} catch (RuntimeException e) {
+			HOLogger.instance().log(getClass(), e);
+		}
+	}
+
+	/**
+	 * @deprecated Provided for compatibility. Will be removed without substitution!
+	 */
+	@Deprecated(since = "9.0", forRemoval = true)
 	public ResourceBundle getResource() {
-		return languageBundle;
+		return Optional.ofNullable(translator).map(Translator::getResourceBundle).orElse(null);
 	}
 
 	/**
@@ -205,33 +205,7 @@ public class HOVerwaltung {
 	 *         language files
 	 */
 	public String getLanguageString(String key) {
-		String temp = null;
-		try {
-			if (languageBundle != null) {
-				temp = languageBundle.getString(key);
-			}
-		} catch (Exception e) {
-			// Do nothing, it just throws error if key is missing. 
-		}
-		if (temp != null)
-			return temp;
-		// Search in english.properties if nothing found and active language not
-		// english
-		if (!UserParameter.instance().sprachDatei.equalsIgnoreCase("english")) {
-			ResourceBundle tempBundle = ResourceBundle.getBundle("sprache.English", new UTF8Control());
-
-			try {
-				temp = tempBundle.getString(key);
-			} catch (Exception e) {
-				// Ignore
-			}
-
-			if (temp != null)
-				return temp;
-		}
-
-		HOLogger.instance().warning(getClass(), "getLanguageString: '" + key + "' not found!");
-		return "!" + key + "!";
+		return translator.translate(key);
 	}
 
 	/**
@@ -245,36 +219,7 @@ public class HOVerwaltung {
 	 *         replaced by the given value(s).
 	 */
 	public String getLanguageString(String key, Object... values) {
-
-		String str = getLanguageString(key);
-
-		MessageFormat formatter = new MessageFormat("");
-		formatter.setLocale(m_locale);
-		formatter.applyPattern(str);
-
-		return formatter.format(values);
-	}
-
-	public static String[] getLanguageFileNames() {
-		String[] files = null;
-
-		try {
-            java.io.InputStream is = HOVerwaltung.class.getClassLoader().getResourceAsStream("sprache/ListLanguages.txt");
-            assert is != null;
-            java.util.Scanner s = new java.util.Scanner(is);
-            java.util.ArrayList<String> llist = new java.util.ArrayList<>();
-            while (s.hasNext()){
-                llist.add(s.next());
-            }
-            s.close();
-
-            files = llist.toArray(new String[0]);
-
-		} catch (Exception e) {
-			HOLogger.instance().log(HOVerwaltung.class, e);
-		}
-
-		return files;
+		return translator.translate(key, values);
 	}
 
 	/**
@@ -282,22 +227,29 @@ public class HOVerwaltung {
 	 */
 	public static void checkLanguageFile(String languageFilename) {
 		try {
-			final InputStream translationFile = FileLoader.instance().getFileInputStream("sprache/" + languageFilename + ".properties");
-			if (translationFile != null) {
+			if (Translator.isAvailable(languageFilename)) {
 				HOLogger.instance().info(HOVerwaltung.class, "language used for interface is: " + languageFilename);
 			}
 			else{
-				HOLogger.instance().error(HOVerwaltung.class, "language set for interface (" + languageFilename +") can't be loaded ... reverting to English !");
-				UserParameter.instance().sprachDatei = "English";
+				HOLogger.instance().error(HOVerwaltung.class, "language set for interface (" + languageFilename + ") can't be loaded ... reverting to " + Translator.LANGUAGE_DEFAULT + " !");
+				UserParameter.instance().sprachDatei = Translator.LANGUAGE_DEFAULT;
 			}
 		}
 		catch (Exception e) {
-			HOLogger.instance().error(HOVerwaltung.class, "language set for interface (" + languageFilename +") can't be loaded ... reverting to English !" + "   " + e);
-			UserParameter.instance().sprachDatei = "English";
+			HOLogger.instance().error(HOVerwaltung.class, "language set for interface (" + languageFilename + ") can't be loaded ... reverting to " + Translator.LANGUAGE_DEFAULT + " !" + "   " + e);
+			UserParameter.instance().sprachDatei = Translator.LANGUAGE_DEFAULT;
 		}
 	}
 
-	public void setLanguageBundle(ResourceBundle bundle) {
-		this.languageBundle = bundle;
+	/**
+	 * @deprecated Provided for compatibility. Please use {@link #clearTranslator()} instead.
+	 */
+	@Deprecated(since = "9.0", forRemoval = true)
+    public void clearLanguageBundle() {
+		clearTranslator();
+	}
+
+	public void clearTranslator() {
+		translator = null;
 	}
 }

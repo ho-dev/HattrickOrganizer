@@ -2,10 +2,8 @@ package core.playeravatars;
 
 import core.HO;
 import core.db.DBManager;
-import core.db.user.UserManager;
-import core.file.xml.XMLArenaParser;
-import core.file.xml.XMLAvatarsParser;
 import core.model.HOVerwaltung;
+import core.model.Translator;
 import core.net.MyConnector;
 
 import javax.imageio.ImageIO;
@@ -13,11 +11,9 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.Map;
 
 public class PlayerAvatars {
 
@@ -26,7 +22,7 @@ public class PlayerAvatars {
     HO.setPortable_version(true);
     DBManager.instance().loadUserParameter();
     HOVerwaltung.instance().loadLatestHoModel();
-    HOVerwaltung.instance().setResource("English");
+    HOVerwaltung.instance().setTranslator(Translator.LANGUAGE_DEFAULT);
 //    HOVerwaltung.instance().set
 
     final MyConnector mc = MyConnector.instance();
