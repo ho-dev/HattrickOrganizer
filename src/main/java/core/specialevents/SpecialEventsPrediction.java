@@ -374,7 +374,7 @@ public class SpecialEventsPrediction {
         this.involvedOpponentPositions.add(mid);
     }
 
-    static public SpecialEventsPrediction createIfInRange(IMatchRoleID position,
+    public static SpecialEventsPrediction createIfInRange(IMatchRoleID position,
                                                           ISpecialEventPredictionAnalyzer.SpecialEventType eventName,
                                                           double maxProbability,
                                                           double valueAtMaxProbability,
