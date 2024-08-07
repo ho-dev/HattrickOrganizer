@@ -174,17 +174,7 @@ public class PlayerOverviewTable extends JTable implements core.gui.Refreshable 
 				tableColumnModel.getColumn(i).setIdentifier(i);
 			}
 
-			int[][] targetColumn = tableModel.getColumnOrder();
-
-			// Sort according to [x][1]
-			targetColumn = Helper.sortintArray(targetColumn, 1);
-
-			if (targetColumn != null) {
-				for (int[] ints : targetColumn) {
-					this.moveColumn(getColumnModel().getColumnIndex(ints[0]), ints[1]);
-				}
-			}
-
+			tableModel.initColumnOrder(this);
 			tableSorter.addMouseListenerToHeaderInTable(this);
 			tableModel.setColumnsSize(getColumnModel());
 		} else {

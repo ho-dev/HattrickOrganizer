@@ -128,17 +128,7 @@ public final class LineupPlayersTable extends JTable implements core.gui.Refresh
 				columnModel.getColumn(i).setIdentifier(i);
 			}
 
-			int[][] targetColumn = tableModel.getColumnOrder();
-			targetColumn = Helper.sortintArray(targetColumn, 1);
-
-			if (targetColumn != null) {
-				for (int[] ints : targetColumn) {
-					this.moveColumn(
-							getColumnModel().getColumnIndex(ints[0]),
-							ints[1]);
-				}
-			}
-
+			tableModel.initColumnOrder(this);
 			tableSorter.addMouseListenerToHeaderInTable(this);
 			tableModel.setColumnsSize(getColumnModel());
 		} else {

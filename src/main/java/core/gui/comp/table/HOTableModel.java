@@ -3,6 +3,8 @@ package core.gui.comp.table;
 import core.db.DBManager;
 import core.gui.model.UserColumnController;
 import core.model.HOVerwaltung;
+import core.util.Helper;
+
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumnModel;
@@ -235,7 +237,7 @@ public abstract class HOTableModel extends AbstractTableModel {
 	 * 
 	 * @return
 	 */
-	public int[][] getColumnOrder() {
+	private int[][] getColumnOrder() {
 		UserColumn[] tmp = getDisplayedColumns();
 		int[][] order = new int[tmp.length][2];
 		for (int i = 0; i < order.length; i++) {
@@ -243,6 +245,19 @@ public abstract class HOTableModel extends AbstractTableModel {
 			order[i][1] = tmp[i].getIndex();
 		}
 		return order;
+	}
+
+	public void initColumnOrder(JTable table)
+	{
+		var order = getColumnOrder();
+		// Sort according to [x][1]
+		order = Helper.sortintArray(order, 1);
+
+		if (order != null) {
+			for (int[] ints : order) {
+				table.moveColumn(table.getColumnModel().getColumnIndex(ints[0]), ints[1]);
+			}
+		}
 	}
 
 	/**
