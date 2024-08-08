@@ -1,6 +1,8 @@
 package core.gui.comp.table;
 
 import core.model.HOVerwaltung;
+
+import javax.swing.*;
 import javax.swing.table.TableColumn;
 
 public abstract class UserColumn {
@@ -26,6 +28,9 @@ public abstract class UserColumn {
 	
 	/** if a column is shown in the jtable. Only displayed columns are saved in db. **/
 	protected boolean display = false;
+
+	SortOrder sortOrder;
+	Integer sortPriority;
 
 	protected UserColumn(int id,String name, String tooltip){
 		this.id = id;
@@ -86,6 +91,8 @@ public abstract class UserColumn {
 		this.display = display;
 		if (!display) {
 			index = 0;
+			sortPriority = null;
+			sortOrder = null;
 		}
 	}
 
@@ -145,4 +152,19 @@ public abstract class UserColumn {
 		return preferredWidth;
 	}
 
+	public Integer getSortPriority() {
+		return sortPriority;
+	}
+
+	public SortOrder getSortOrder() {
+		return sortOrder;
+	}
+
+	public void setSortPriority(Integer sortPriority) {
+		this.sortPriority = sortPriority;
+	}
+
+	public void setSortOrder(SortOrder sortOrder) {
+		this.sortOrder = sortOrder;
+	}
 }

@@ -9,8 +9,10 @@ import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumnModel;
 import java.io.Serial;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 
 /**
  * Basic ColumnModel for all UserColumnModels
@@ -23,10 +25,13 @@ public abstract class HOTableModel extends AbstractTableModel {
 	@Serial
 	private static final long serialVersionUID = -207230110294902139L;
 
-	/** id from ColumnModell, important for saving columns in db */
+	/**
+	 * Identifier of the column model.
+	 * It is used for saving columns in db
+	 */
 	private final int id;
 
-	/** name of ColumnModell, shows in OptionsPanel **/
+	/** Name of the column model, shows in OptionsPanel **/
 	private final String name;
 
 	/** count of displayed column **/
@@ -247,6 +252,10 @@ public abstract class HOTableModel extends AbstractTableModel {
 		return order;
 	}
 
+	/**
+	 * Move the columns of the table to their correct places
+	 * @param table JTable
+	 */
 	public void initColumnOrder(JTable table)
 	{
 		var order = getColumnOrder();
@@ -320,6 +329,9 @@ public abstract class HOTableModel extends AbstractTableModel {
 				.filter(UserColumn::isDisplay)
 				.sorted(Comparator.comparingInt(UserColumn::getIndex))
 				.forEach(i -> setColumnSettings(i, table, offset));
+
+		// TODO: Restore row order settings
+
 	}
 	public void restoreUserSettings(FixedColumnsTable table) {
 		restoreUserSettings(table.getFixedTable(), 0);
@@ -359,6 +371,16 @@ public abstract class HOTableModel extends AbstractTableModel {
 		// column order and width
 		var tableColumnModel = table.getColumnModel();
 		var modelColumnCount = this.getColumnCount();
+
+		var rowSorter = table.getRowSorter();
+		List<? extends RowSorter.SortKey> rowSortKeys;
+		if (rowSorter != null) {
+			rowSortKeys = table.getRowSorter().getSortKeys();
+		}
+		else {
+			rowSortKeys = new ArrayList<>();	// empty
+		}
+
 		for (int i = 0; i < modelColumnCount; i++) {
 			if (i < offset) continue;                                // skip fixed columns in case of scroll table
 			if (offset == 0 && i >= table.getColumnCount()) break;   // fixed columns exceeded
@@ -374,6 +396,22 @@ public abstract class HOTableModel extends AbstractTableModel {
 					changed = true;
 					column.setPreferredWidth(tableColumnModel.getColumn(index).getWidth());
 				}
+
+				// Check row order settings, after column index is evaluated
+				var sortKey = rowSortKeys.stream().filter(k -> k.getColumn() == column.getIndex()).findAny();
+				if (sortKey.isPresent() && sortKey.get().getSortOrder() != SortOrder.UNSORTED) {
+					var sortPriority = rowSortKeys.indexOf(sortKey.get());
+					if (sortPriority != column.getSortPriority() || sortKey.get().getSortOrder() != column.getSortOrder()) {
+						changed = true;
+						column.setSortPriority(sortPriority);
+						column.setSortOrder(sortKey.get().getSortOrder());
+					}
+				} else if (column.getSortPriority() != null) {
+					changed = true;
+					column.setSortPriority(null);
+					column.setSortOrder(null);
+				}
+
 			}
 		}
 		return changed;
