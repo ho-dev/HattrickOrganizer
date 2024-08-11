@@ -44,6 +44,7 @@ final class FormelPanel extends ImagePanel implements ActionListener, ItemListen
     private SliderPanel m_jpTorwart;
     private SliderPanel m_jpVerteidigung;
     private SliderPanel m_jpNORMALISATIONFACTOR;
+    private boolean isStored;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -160,6 +161,7 @@ final class FormelPanel extends ImagePanel implements ActionListener, ItemListen
         m_jpVerteidigung.setValue(factorObject.getDEfactor());
         m_jpStandard.setValue(factorObject.getSPfactor());
         m_jpNORMALISATIONFACTOR.setValue(factorObject.getNormalizationFactor());
+        isStored = factorObject.isStored();
 
         m_jpSpielaufbau.addChangeListener(this);
         m_jpFluegelspiel.addChangeListener(this);
@@ -177,14 +179,15 @@ final class FormelPanel extends ImagePanel implements ActionListener, ItemListen
     	final FormulaFactors factors = FormulaFactors.instance();
         final FactorObject factorObject = new FactorObject((byte) (((CBItem) Objects.requireNonNull(m_jcbPosition
                 .getSelectedItem())).getId()),
-                                                           m_jpTorwart.getValue(),
-                                                           m_jpSpielaufbau.getValue(),
-                                                           m_jpPasspiel.getValue(),
-                                                           m_jpFluegelspiel.getValue(),
-                                                           m_jpVerteidigung.getValue(),
-                                                           m_jpTorschuss.getValue(),
-                                                           m_jpStandard.getValue(),
-                                                           m_jpNORMALISATIONFACTOR.getValue());
+                m_jpTorwart.getValue(),
+                m_jpSpielaufbau.getValue(),
+                m_jpPasspiel.getValue(),
+                m_jpFluegelspiel.getValue(),
+                m_jpVerteidigung.getValue(),
+                m_jpTorschuss.getValue(),
+                m_jpStandard.getValue(),
+                m_jpNORMALISATIONFACTOR.getValue());
+        factorObject.setIsStored(isStored);
 
         factors.setPositionFactor(factorObject.getPosition(),factorObject);
         OptionManager.instance().setReInitNeeded();
