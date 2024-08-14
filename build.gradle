@@ -6,6 +6,19 @@ import com.install4j.gradle.Install4jTask
 //   `./gradlew run` runs HO locally
 //   `./gradlew tiTree <task>` shows the task graph for the task <task>
 
+// Temporary workaround for #2116
+// Thx to https://github.com/kordamp/markdown-gradle-plugin/issues/36#issuecomment-2277317737
+buildscript {
+    configurations.all {
+        resolutionStrategy.dependencySubstitution {
+            substitute module("com.overzealous:remark:1.1.0") \
+                using module("com.wavefront:remark:2023-07.07") \
+                because "not available on maven central anymore"
+        }
+    }
+}
+
+
 plugins {
     id "java"
     id "groovy"
