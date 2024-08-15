@@ -83,7 +83,7 @@ public class XMLMatchOrderParserNew {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		HOVerwaltung.instance().setResource(UserParameter.instance().sprachDatei);
+		HOVerwaltung.instance().setTranslator(UserParameter.instance().sprachDatei);
 		File file = new File(
 				"/home/chr/tmp/matchorders_version_1_8_matchID_353869167_isYouth_false.xml");
 		new XMLMatchOrderParserNew(XMLManager.parseFile(file));

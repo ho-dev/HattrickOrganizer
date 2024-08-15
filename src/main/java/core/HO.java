@@ -181,9 +181,9 @@ public class HO {
 		}
 
 		// Check if language file available
-		interruptionWindow.setInfoText(4, "Check Languagefiles");
+		interruptionWindow.setInfoText(4, "Check Language files");
 		HOVerwaltung.checkLanguageFile(UserParameter.instance().sprachDatei);
-		HOVerwaltung.instance().setResource(UserParameter.instance().sprachDatei);
+		HOVerwaltung.instance().setTranslator(UserParameter.instance().sprachDatei);
 
 		if (DBManager.instance().isFirstStart()) {
 			interruptionWindow.setVisible(false);

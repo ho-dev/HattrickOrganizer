@@ -1,6 +1,8 @@
 // %4025553032:de.hattrickorganizer.gui.menu.option%
 package core.option;
 
+import core.model.Translator;
+
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
 
@@ -56,7 +58,7 @@ public final class InitOptionsDialog extends JDialog implements java.awt.event.A
 
         optionspanel.add(new JLabel("Language"));
 
-        final String[] sprachdateien = core.model.HOVerwaltung.getLanguageFileNames();
+        final String[] sprachdateien = Translator.getSupportedLanguages();
 
         try {
             java.util.Arrays.sort(sprachdateien);
