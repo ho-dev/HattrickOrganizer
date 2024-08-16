@@ -53,7 +53,7 @@ public class LookAndFeelDialog extends JDialog {
 	 * 
 	 * @return A sorted collection of all Look and Feel keys.
 	 */
-	private static Collection<String> getLookAndFeelKeys() { ;
+	private static Collection<String> getLookAndFeelKeys() {
 		UIDefaults defaults = UIManager.getLookAndFeelDefaults();
 		return defaults.keySet().stream().map(Object::toString).sorted().collect(Collectors.toList());
 	}
