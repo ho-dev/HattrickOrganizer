@@ -154,7 +154,7 @@ public class RatingPredictionModel {
      * @param minutes match duration to calculate average for [90|120]
      * @return TreeSet of integer
      */
-    static public @NotNull TreeSet<Integer> getRatingChangeMinutes(Lineup lineup, int minutes) {
+    public static @NotNull TreeSet<Integer> getRatingChangeMinutes(Lineup lineup, int minutes) {
         var staminaChanges = new TreeSet<Integer>();
         for (int i = 0; i < minutes; i += 5) {
             staminaChanges.add(i);
