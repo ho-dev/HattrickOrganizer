@@ -39,7 +39,7 @@ public class PlayerPositionTableCellRenderer extends DefaultTableCellRenderer {
         if (value instanceof Integer) {
             super.getTableCellRendererComponent(table, null, isSelected, hasFocus, row, col);
 
-            int pos = ((Integer) value).intValue();
+            int pos = (Integer) value;
 
             Icon icon;
 

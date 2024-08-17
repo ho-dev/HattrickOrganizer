@@ -48,11 +48,11 @@ public class TransferTable extends JTable implements Refreshable {
     }
 
     private void setMinWidth(int index, int width) {
-        getColumnModel().getColumn(getColumnModel().getColumnIndex(Integer.valueOf(index))).setMinWidth(Helper.calcCellWidth(width));
+        getColumnModel().getColumn(getColumnModel().getColumnIndex(index)).setMinWidth(Helper.calcCellWidth(width));
     }
 
     private void setPreferredWidth(int index, int width) {
-        getColumnModel().getColumn(getColumnModel().getColumnIndex(Integer.valueOf(index)))
+        getColumnModel().getColumn(getColumnModel().getColumnIndex(index))
             .setPreferredWidth(Helper.calcCellWidth(width));
     }
 
@@ -73,7 +73,7 @@ public class TransferTable extends JTable implements Refreshable {
             setModel(m_clTableSorter);
 
             for (int i = 0; i <= 35; i++) {
-                getColumnModel().getColumn(i).setIdentifier(Integer.valueOf(i));
+                getColumnModel().getColumn(i).setIdentifier(i);
             }
 
             m_clTableSorter.addMouseListenerToHeaderInTable(this);

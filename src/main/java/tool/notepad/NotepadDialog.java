@@ -80,7 +80,7 @@ public class NotepadDialog extends JDialog implements ActionListener{
         	if(!file.exists())
         		return;
             BufferedReader in = new BufferedReader(new FileReader(file));
-            StringBuffer txt = new StringBuffer();
+            StringBuilder txt = new StringBuilder();
             String line;
             while((line = in.readLine()) != null){
                 txt.append(line+"\n");

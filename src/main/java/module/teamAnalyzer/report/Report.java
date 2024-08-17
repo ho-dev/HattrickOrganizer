@@ -104,7 +104,7 @@ public class Report {
      */
     @Override
 	public String toString() {
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
 
         buffer.append("numberAppearance = " + appearance);
         buffer.append(", averageRating = " + rating);

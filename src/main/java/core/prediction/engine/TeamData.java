@@ -68,7 +68,7 @@ public class TeamData  {
 
     @Override
 	public final String toString() {
-        final StringBuffer buffer = new StringBuffer();
+        final StringBuilder buffer = new StringBuilder();
         buffer.append("TeamData[");
         buffer.append("actions = " + actions);
         buffer.append(", ratings = " + ratings);

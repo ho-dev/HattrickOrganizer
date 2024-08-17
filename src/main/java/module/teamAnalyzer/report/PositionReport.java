@@ -53,7 +53,7 @@ public class PositionReport extends Report {
      */
     @Override
 	public String toString() {
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
 
         buffer.append("PositionReport[");
         buffer.append(super.toString());

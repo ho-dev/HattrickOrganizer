@@ -58,9 +58,7 @@ public class RosterPanel extends JPanel {
 
     //~ Methods ------------------------------------------------------------------------------------
     public PlayerInfo getPrevious(int playerId) {
-        for (Iterator<PlayerInfo> iter = oldPlayersInfo.iterator(); iter.hasNext();) {
-            PlayerInfo element = iter.next();
-
+        for (PlayerInfo element : oldPlayersInfo) {
             if (element.getPlayerId() == playerId) {
                 return element;
             }

@@ -24,8 +24,7 @@ public class ImportItemListener implements ActionListener {
 
     //~ Methods ------------------------------------------------------------------------------------
     public void actionPerformed(ActionEvent arg0) {
-        for (Iterator<Team> iter = TeamManager.getTeams().iterator(); iter.hasNext();) {
-            Team element = iter.next();
+        for (Team element : TeamManager.getTeams()) {
             System.out.println("Downloading " + element.getName());
             HattrickManager.downloadPlayers(element.getTeamId());
         }

@@ -483,8 +483,8 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 		if (ie.getSource().equals(m_CB_type)) {
 			int cbType = m_CB_type.getSelectedIndex();
 			for (int i = 0; i < m_i_ptmTopCount; i++) {
-				int spielerID = ((Integer) m_playerTableModelTop.getValueAt(i,
-						m_playerTableModelTop.getColumnCount() - 1)).intValue();
+				int spielerID = (Integer) m_playerTableModelTop.getValueAt(i,
+                        m_playerTableModelTop.getColumnCount() - 1);
 				int pos = HOVerwaltung.instance().getModel().getCurrentPlayer(spielerID)
 						.getIdealPosition();
 				String group = HOVerwaltung.instance().getModel().getCurrentPlayer(spielerID)
@@ -600,8 +600,8 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 		int spielerID;
 		int counter = 0;
 		for (int i = 0; i < m_playerTableModelTop.getRowCount(); i++) {
-			spielerID = ((Integer) m_playerTableModelTop.getValueAt(i,
-					m_playerTableModelTop.getColumnCount() - 1)).intValue();
+			spielerID = (Integer) m_playerTableModelTop.getValueAt(i,
+                    m_playerTableModelTop.getColumnCount() - 1);
 			core.model.player.Player player = HOVerwaltung.instance().getModel().getCurrentPlayer(spielerID);
 			m_playerTableModelTop.setValueAt(player.getTeamGroup(), i, 5);
 			if (player.getTeamGroup().equals("A-Team")
@@ -663,7 +663,7 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 		m_scrollPaneTableBottom.setViewportView(null);
 
 		for (int i = 0; i < m_i_ptmTopCount; i++) {
-			if (((Boolean) m_playerTableModelTop.getValueAt(i, 0)).booleanValue() == true) {
+			if ((Boolean) m_playerTableModelTop.getValueAt(i, 0) == true) {
 				m_playerTableModelTop.setValueAt(Boolean.FALSE, i, 0);
 			}
 		}
@@ -711,9 +711,9 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 		switch (selectedType) {
 		case 0:
 			for (int i = 0; i < m_i_ptmTopCount; i++)
-				if (((Boolean) m_playerTableModelTop.getValueAt(i, 0)).booleanValue() == true)
-					fetchPlayer(((Integer) m_playerTableModelTop.getValueAt(i,
-							m_playerTableModelTop.getColumnCount() - 1)).intValue());
+				if ((Boolean) m_playerTableModelTop.getValueAt(i, 0) == true)
+					fetchPlayer((Integer) m_playerTableModelTop.getValueAt(i,
+                            m_playerTableModelTop.getColumnCount() - 1));
 			break;
 		case 1:
 			for (int i = 0; i < m_i_ptmTopCount; i++) {
@@ -724,8 +724,8 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 				} catch (Exception ex) {
 				}
 				if (tmpPos == 0 && m_playerTableModelTop.getValueAt(i, 0) == Boolean.TRUE) {
-					fetchPlayer(((Integer) m_playerTableModelTop.getValueAt(i,
-							m_playerTableModelTop.getColumnCount() - 1)).intValue());
+					fetchPlayer((Integer) m_playerTableModelTop.getValueAt(i,
+                            m_playerTableModelTop.getColumnCount() - 1));
 				} else if (tmpPos == 0 && m_playerTableModelTop.getValueAt(i, 0) == Boolean.FALSE) {
 					m_CB_type.setSelectedIndex(0);
 				}
@@ -742,8 +742,8 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 
 				if ((tmpPos > 0 && tmpPos < 8)
 						&& m_playerTableModelTop.getValueAt(i, 0) == Boolean.TRUE) {
-					fetchPlayer(((Integer) m_playerTableModelTop.getValueAt(i,
-							m_playerTableModelTop.getColumnCount() - 1)).intValue());
+					fetchPlayer((Integer) m_playerTableModelTop.getValueAt(i,
+                            m_playerTableModelTop.getColumnCount() - 1));
 				} else if ((tmpPos > 0 && tmpPos < 8)
 						&& m_playerTableModelTop.getValueAt(i, 0) == Boolean.FALSE) {
 					m_CB_type.setSelectedIndex(0);
@@ -760,8 +760,8 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 				}
 				if ((tmpPos > 7 && tmpPos < 12)
 						&& m_playerTableModelTop.getValueAt(i, 0) == Boolean.TRUE) {
-					fetchPlayer(((Integer) m_playerTableModelTop.getValueAt(i,
-							m_playerTableModelTop.getColumnCount() - 1)).intValue());
+					fetchPlayer((Integer) m_playerTableModelTop.getValueAt(i,
+                            m_playerTableModelTop.getColumnCount() - 1));
 				} else if ((tmpPos > 7 && tmpPos < 12)
 						&& m_playerTableModelTop.getValueAt(i, 0) == Boolean.FALSE) {
 					m_CB_type.setSelectedIndex(0);
@@ -779,8 +779,8 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 				}
 				if ((tmpPos > 11 && tmpPos < 16)
 						&& m_playerTableModelTop.getValueAt(i, 0) == Boolean.TRUE) {
-					fetchPlayer(((Integer) m_playerTableModelTop.getValueAt(i,
-							m_playerTableModelTop.getColumnCount() - 1)).intValue());
+					fetchPlayer((Integer) m_playerTableModelTop.getValueAt(i,
+                            m_playerTableModelTop.getColumnCount() - 1));
 				} else if ((tmpPos > 11 && tmpPos < 16)
 						&& m_playerTableModelTop.getValueAt(i, 0) == Boolean.FALSE) {
 					m_CB_type.setSelectedIndex(0);
@@ -799,8 +799,8 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 				}
 				if ((tmpPos > 15 && tmpPos < 18)
 						&& m_playerTableModelTop.getValueAt(i, 0) == Boolean.TRUE) {
-					fetchPlayer(((Integer) m_playerTableModelTop.getValueAt(i,
-							m_playerTableModelTop.getColumnCount() - 1)).intValue());
+					fetchPlayer((Integer) m_playerTableModelTop.getValueAt(i,
+                            m_playerTableModelTop.getColumnCount() - 1));
 				} else if ((tmpPos > 15 && tmpPos < 18)
 						&& m_playerTableModelTop.getValueAt(i, 0) == Boolean.FALSE) {
 					m_CB_type.setSelectedIndex(0);
@@ -816,8 +816,8 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 				gruppe = m_playerTableModelTop.getValueAt(i, 5).toString();
 				if (gruppe.equals("A-Team")
 						&& m_playerTableModelTop.getValueAt(i, 0) == Boolean.TRUE) {
-					fetchPlayer(((Integer) m_playerTableModelTop.getValueAt(i,
-							m_playerTableModelTop.getColumnCount() - 1)).intValue());
+					fetchPlayer((Integer) m_playerTableModelTop.getValueAt(i,
+                            m_playerTableModelTop.getColumnCount() - 1));
 				} else if (gruppe.equals("A-Team")
 						&& m_playerTableModelTop.getValueAt(i, 0) == Boolean.FALSE) {
 					m_CB_type.setSelectedIndex(0);
@@ -833,8 +833,8 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 				gruppe = m_playerTableModelTop.getValueAt(i, 5).toString();
 				if (gruppe.equals("B-Team")
 						&& m_playerTableModelTop.getValueAt(i, 0) == Boolean.TRUE) {
-					fetchPlayer(((Integer) m_playerTableModelTop.getValueAt(i,
-							m_playerTableModelTop.getColumnCount() - 1)).intValue());
+					fetchPlayer((Integer) m_playerTableModelTop.getValueAt(i,
+                            m_playerTableModelTop.getColumnCount() - 1));
 				} else if (gruppe.equals("B-Team")
 						&& m_playerTableModelTop.getValueAt(i, 0) == Boolean.FALSE) {
 					m_CB_type.setSelectedIndex(0);
@@ -850,8 +850,8 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 				gruppe = m_playerTableModelTop.getValueAt(i, 5).toString();
 				if (gruppe.equals("C-Team")
 						&& m_playerTableModelTop.getValueAt(i, 0) == Boolean.TRUE) {
-					fetchPlayer(((Integer) m_playerTableModelTop.getValueAt(i,
-							m_playerTableModelTop.getColumnCount() - 1)).intValue());
+					fetchPlayer((Integer) m_playerTableModelTop.getValueAt(i,
+                            m_playerTableModelTop.getColumnCount() - 1));
 				} else if (gruppe.equals("C-Team")
 						&& m_playerTableModelTop.getValueAt(i, 0) == Boolean.FALSE) {
 					m_CB_type.setSelectedIndex(0);
@@ -867,8 +867,8 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 				gruppe = m_playerTableModelTop.getValueAt(i, 5).toString();
 				if (gruppe.equals("D-Team")
 						&& m_playerTableModelTop.getValueAt(i, 0) == Boolean.TRUE) {
-					fetchPlayer(((Integer) m_playerTableModelTop.getValueAt(i,
-							m_playerTableModelTop.getColumnCount() - 1)).intValue());
+					fetchPlayer((Integer) m_playerTableModelTop.getValueAt(i,
+                            m_playerTableModelTop.getColumnCount() - 1));
 				} else if (gruppe.equals("D-Team")
 						&& m_playerTableModelTop.getValueAt(i, 0) == Boolean.FALSE) {
 					m_CB_type.setSelectedIndex(0);
@@ -883,8 +883,8 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 				gruppe = m_playerTableModelTop.getValueAt(i, 5).toString();
 				if (gruppe.equals("E-Team")
 						&& m_playerTableModelTop.getValueAt(i, 0) == Boolean.TRUE) {
-					fetchPlayer(((Integer) m_playerTableModelTop.getValueAt(i,
-							m_playerTableModelTop.getColumnCount() - 1)).intValue());
+					fetchPlayer((Integer) m_playerTableModelTop.getValueAt(i,
+                            m_playerTableModelTop.getColumnCount() - 1));
 				} else if (gruppe.equals("E-Team")
 						&& m_playerTableModelTop.getValueAt(i, 0) == Boolean.FALSE) {
 					m_CB_type.setSelectedIndex(0);
@@ -894,8 +894,8 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 
 		case 11:
 			for (int i = 0; i < m_i_ptmTopCount; i++) {
-				fetchPlayer(((Integer) m_playerTableModelTop.getValueAt(i,
-						m_playerTableModelTop.getColumnCount() - 1)).intValue());
+				fetchPlayer((Integer) m_playerTableModelTop.getValueAt(i,
+                        m_playerTableModelTop.getColumnCount() - 1));
 			}
 		}
 
@@ -923,18 +923,18 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 	 * fetchPlayer(int id) - searches for a player with id in the player array
 	 */
 	private void fetchPlayer(int id) {
-		for (int i = 0; i < m_ar_allPlayers.length; i++) {
-			if (m_ar_allPlayers[i].getId() == id) {
-				m_ar_allPlayers[i].changePlayerSkillValues(true);
-				m_V_setPlayers.addElement(m_ar_allPlayers[i]);
-			}
-		}
+        for (Player mArAllPlayer : m_ar_allPlayers) {
+            if (mArAllPlayer.getId() == id) {
+                mArAllPlayer.changePlayerSkillValues(true);
+                m_V_setPlayers.addElement(mArAllPlayer);
+            }
+        }
 	}
 
 	private void resetPlayer() {
-		for (int i = 0; i < m_ar_allPlayers.length; i++) {
-			m_ar_allPlayers[i].resetPlayers();
-		}
+        for (Player mArAllPlayer : m_ar_allPlayers) {
+            mArAllPlayer.resetPlayers();
+        }
 	}
 
 	private void setDummyPlayerDetails() {

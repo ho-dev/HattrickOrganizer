@@ -16,6 +16,7 @@ import tool.updater.TableModel;
 
 import java.awt.BorderLayout;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -70,11 +71,11 @@ class DistributionStatisticsPanel extends JPanel {
                     ColorLabelEntry.FG_STANDARD,  ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
             BigDecimal tmp = new BigDecimal(matches[i].getZuschaueranzahl()).setScale(1);
 
-            value[i][3] = createDoppelLabelEntry(matches[i].getSoldTerraces(), new BigDecimal(matches[i].getSoldTerraces()*100).setScale(1).divide(tmp,BigDecimal.ROUND_HALF_DOWN).toString());
-            value[i][4] = createDoppelLabelEntry(matches[i].getSoldBasics(),new BigDecimal(matches[i].getSoldBasics()*100).setScale(1).divide(tmp,BigDecimal.ROUND_HALF_DOWN).toString());
-            value[i][5] = createDoppelLabelEntry(matches[i].getSoldRoof(),new BigDecimal(matches[i].getSoldRoof()*100).setScale(1).divide(tmp,BigDecimal.ROUND_HALF_DOWN).toString());
-            value[i][6] = createDoppelLabelEntry(matches[i].getSoldVip(),new BigDecimal(matches[i].getSoldVip()*100).setScale(1).divide(tmp,BigDecimal.ROUND_HALF_DOWN).toString());
-            value[i][7] = createFansDoppelLabelEntry(matches[i].getFans(),tmp.divide(new BigDecimal(matches[i].getFans()),BigDecimal.ROUND_HALF_DOWN).setScale(1).toString());
+            value[i][3] = createDoppelLabelEntry(matches[i].getSoldTerraces(), new BigDecimal(matches[i].getSoldTerraces()*100).setScale(1).divide(tmp, RoundingMode.HALF_DOWN).toString());
+            value[i][4] = createDoppelLabelEntry(matches[i].getSoldBasics(),new BigDecimal(matches[i].getSoldBasics()*100).setScale(1).divide(tmp, RoundingMode.HALF_DOWN).toString());
+            value[i][5] = createDoppelLabelEntry(matches[i].getSoldRoof(),new BigDecimal(matches[i].getSoldRoof()*100).setScale(1).divide(tmp, RoundingMode.HALF_DOWN).toString());
+            value[i][6] = createDoppelLabelEntry(matches[i].getSoldVip(),new BigDecimal(matches[i].getSoldVip()*100).setScale(1).divide(tmp, RoundingMode.HALF_DOWN).toString());
+            value[i][7] = createFansDoppelLabelEntry(matches[i].getFans(),tmp.divide(new BigDecimal(matches[i].getFans()), RoundingMode.HALF_DOWN).setScale(1).toString());
         }
 
         TableModel model = new TableModel(value, columnNames);

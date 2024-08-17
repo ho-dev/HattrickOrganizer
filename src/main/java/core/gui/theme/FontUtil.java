@@ -10,11 +10,11 @@ public class FontUtil {
 	
     private static String checkInstalledFont(String targetFont, String sample, Font[] allfonts) {
     	if (targetFont != null) {
-    		for (int j = 0; j < allfonts.length; j++) {
-    			if (targetFont.equalsIgnoreCase(allfonts[j].getFontName()) && (sample == null || allfonts[j].canDisplayUpTo(sample) == -1)) {
-    				return allfonts[j].getFontName();
-    			}
-    		}
+            for (Font allfont : allfonts) {
+                if (targetFont.equalsIgnoreCase(allfont.getFontName()) && (sample == null || allfont.canDisplayUpTo(sample) == -1)) {
+                    return allfont.getFontName();
+                }
+            }
     	}
     	return null;
     }
@@ -31,12 +31,12 @@ public class FontUtil {
 				geFont = checkInstalledFont("Sylfaen", georgiansample, allfonts); // try Sylfan as 3rd
 			}
 			if (geFont == null) {
-				for (int j = 0; j < allfonts.length; j++) {
-					if (allfonts[j].canDisplayUpTo(georgiansample) == -1) {
-						geFont = allfonts[j].getFontName();
-						break;
-					}
-				}
+                for (Font allfont : allfonts) {
+                    if (allfont.canDisplayUpTo(georgiansample) == -1) {
+                        geFont = allfont.getFontName();
+                        break;
+                    }
+                }
 			}
 			return geFont;
 		} else if ("Chinese".equalsIgnoreCase(languageFile)) {
@@ -47,12 +47,12 @@ public class FontUtil {
 				chFont = checkInstalledFont("Arial Unicode MS", chinesesample, allfonts); // 2. try to use Arial Unicode MS
 			}
 			if (chFont == null) { // 3. still no font found yet, check other fonts
-				for (int j = 0; j < allfonts.length; j++) {
-					if (allfonts[j].canDisplayUpTo(chinesesample) == -1) {
-						chFont = allfonts[j].getFontName();
-						break;
-					}
-				}
+                for (Font allfont : allfonts) {
+                    if (allfont.canDisplayUpTo(chinesesample) == -1) {
+                        chFont = allfont.getFontName();
+                        break;
+                    }
+                }
 			}
 			return chFont;
 		} else {

@@ -14,9 +14,7 @@ public class NameManager {
     public static String getLastName(String name) {
         String lastName = "";
 
-        for (Iterator<String> iter = names.keySet().iterator(); iter.hasNext();) {
-            String storedName = iter.next();
-
+        for (String storedName : names.keySet()) {
             if (name.indexOf(storedName) > 0) {
                 return storedName;
             }
@@ -36,8 +34,8 @@ public class NameManager {
     }
 
     public static void addNames(List<?> nameList) {
-        for (Iterator<?> iter = nameList.iterator(); iter.hasNext();) {
-            String name = (String) iter.next();
+        for (Object o : nameList) {
+            String name = (String) o;
 
             names.put(name, name);
         }
