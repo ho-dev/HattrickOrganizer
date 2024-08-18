@@ -70,7 +70,7 @@ public class ImageDesignPanel extends JPanel {
 
 		if (this.away) {
 			flagWidth = ModuleConfig.instance().getInteger(Config.VISITED_FLAG_WIDTH.toString(),
-					Integer.valueOf(8));
+					8);
 			emblemPath = ModuleConfig.instance().getString(Config.VISITED_EMBLEM_PATH.toString(),
 					"");
 			headerText = ModuleConfig.instance().getString(Config.VISITED_HEADER_TEXT.toString(),
