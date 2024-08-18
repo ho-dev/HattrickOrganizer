@@ -8,7 +8,7 @@ import java.util.List;
 
 public class YouthTrainingTable extends AbstractTable{
     /** tablename **/
-    final static String TABLENAME = "YOUTHTRAINING";
+    static final String TABLENAME = "YOUTHTRAINING";
 
     YouthTrainingTable(ConnectionManager adapter) {
         super(TABLENAME, adapter);

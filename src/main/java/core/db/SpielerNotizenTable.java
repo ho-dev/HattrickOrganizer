@@ -6,7 +6,7 @@ import java.sql.Types;
 final class SpielerNotizenTable extends AbstractTable {
 
 	/** tablename **/
-	public final static String TABLENAME = "SPIELERNOTIZ";
+	public static final String TABLENAME = "SPIELERNOTIZ";
 	
 	SpielerNotizenTable(ConnectionManager adapter){
 		super(TABLENAME,adapter);

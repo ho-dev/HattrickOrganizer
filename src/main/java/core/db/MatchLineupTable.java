@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 public final class MatchLineupTable extends AbstractTable {
 
 	/** tablename **/
-	public final static String TABLENAME = "MATCHLINEUP";
+	public static final String TABLENAME = "MATCHLINEUP";
 	
 	MatchLineupTable(ConnectionManager adapter){
 		super(TABLENAME,adapter);

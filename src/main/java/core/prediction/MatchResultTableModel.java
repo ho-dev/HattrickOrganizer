@@ -19,7 +19,7 @@ import javax.swing.SwingConstants;
 public class MatchResultTableModel extends AbstractMatchTableModel {
 	//~ Instance fields ----------------------------------------------------------------------------
 	private static final long serialVersionUID = 5568369952809628251L;
-	public final static String[] columnNames = {
+	public static final String[] columnNames = {
 		HOVerwaltung.instance().getLanguageString("ls.match.result"),
 		HOVerwaltung.instance().getLanguageString("frequency"),
 		"" };

@@ -17,8 +17,8 @@ import java.util.Optional;
 
 
 final class DBConfigUpdater {
-	final static DBManager dbManager = DBManager.instance();
-	final static ConnectionManager m_clJDBCAdapter = dbManager.getConnectionManager();
+	static final DBManager dbManager = DBManager.instance();
+	static final ConnectionManager m_clJDBCAdapter = dbManager.getConnectionManager();
 
 
 	public static void updateDBConfig(double configVersion) {

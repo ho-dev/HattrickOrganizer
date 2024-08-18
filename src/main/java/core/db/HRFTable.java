@@ -13,7 +13,7 @@ import java.util.List;
 public final class HRFTable extends AbstractTable {
 
 	/** tablename **/
-	public final static String TABLENAME = "HRF";
+	public static final String TABLENAME = "HRF";
 
 	private HRF maxHrf = new HRF();
 	private HRF latestHrf = new HRF();

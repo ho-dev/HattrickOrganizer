@@ -11,7 +11,7 @@ public final class MatchLineupTeamTable extends AbstractTable {
 	/**
 	 * tablename
 	 **/
-	public final static String TABLENAME = "MATCHLINEUPTEAM";
+	public static final String TABLENAME = "MATCHLINEUPTEAM";
 
 	MatchLineupTeamTable(ConnectionManager adapter) {
 		super(TABLENAME, adapter);

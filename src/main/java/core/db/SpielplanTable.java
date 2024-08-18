@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Vector;
 
 final class SpielplanTable extends AbstractTable {
-	final static String TABLENAME = "SPIELPLAN";
+	static final String TABLENAME = "SPIELPLAN";
 	
 	SpielplanTable(ConnectionManager adapter){
 		super(TABLENAME,adapter);

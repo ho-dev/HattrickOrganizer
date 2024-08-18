@@ -102,12 +102,12 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
     }
 
     private final MinuteTogglerPanel m_jpMinuteToggler = new MinuteTogglerPanel(this);
-    private final static Color LABEL_BG = ThemeManager.getColor(HOColorName.PANEL_BG);
-    private final static Color LABEL_FG = ThemeManager.getColor(HOColorName.LEAGUE_FG);
-    private final static Color BAD_LABEL_FG = ThemeManager.getColor(HOColorName.TABLEENTRY_DECLINE_FG);
-    private final static Color RATING_DEFAULT = ThemeManager.getColor(HOColorName.PLAYER_POSITION_PANEL_BORDER);
-    private final static Color RATING_BELOW_LIMIT = ThemeManager.getColor(HOColorName.RATING_BORDER_BELOW_LIMIT);
-    private final static Color RATING_ABOVE_LIMIT = ThemeManager.getColor(HOColorName.RATING_BORDER_ABOVE_LIMIT);
+    private static final Color LABEL_BG = ThemeManager.getColor(HOColorName.PANEL_BG);
+    private static final Color LABEL_FG = ThemeManager.getColor(HOColorName.LEAGUE_FG);
+    private static final Color BAD_LABEL_FG = ThemeManager.getColor(HOColorName.TABLEENTRY_DECLINE_FG);
+    private static final Color RATING_DEFAULT = ThemeManager.getColor(HOColorName.PLAYER_POSITION_PANEL_BORDER);
+    private static final Color RATING_BELOW_LIMIT = ThemeManager.getColor(HOColorName.RATING_BORDER_BELOW_LIMIT);
+    private static final Color RATING_ABOVE_LIMIT = ThemeManager.getColor(HOColorName.RATING_BORDER_ABOVE_LIMIT);
     int iHatStats;
     double loddar;
     private final ColorLabelEntry m_jlHatstatMain = new ColorLabelEntry("", LABEL_FG, LABEL_BG, SwingConstants.RIGHT);

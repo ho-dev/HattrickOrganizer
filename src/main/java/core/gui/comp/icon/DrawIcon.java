@@ -14,8 +14,8 @@ import java.awt.*;
  * in the league.  It cannot be resized as of yet.</p>
  */
 public class DrawIcon implements Icon {
-    public final static int UPWARD_DIRECTION = 1;
-    public final static int DOWNWARD_DIRECTION = 0;
+    public static final int UPWARD_DIRECTION = 1;
+    public static final int DOWNWARD_DIRECTION = 0;
 
     private static final Color WIN_COLOR = ThemeManager.getColor(HOColorName.FORM_STREAK_WIN);
     private static final Color DEFEAT_COLOR = ThemeManager.getColor(HOColorName.FORM_STREAK_DEFEAT);

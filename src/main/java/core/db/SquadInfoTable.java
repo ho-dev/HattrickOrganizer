@@ -7,7 +7,7 @@ import java.sql.Types;
 import java.util.List;
 
 public class SquadInfoTable extends AbstractTable {
-    final static String TABLENAME = "SQUAD";
+    static final String TABLENAME = "SQUAD";
 
     SquadInfoTable(ConnectionManager adapter) {
         super(TABLENAME, adapter);

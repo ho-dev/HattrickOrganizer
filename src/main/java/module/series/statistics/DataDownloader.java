@@ -22,14 +22,14 @@ import java.util.*;
 @Deprecated
 public class DataDownloader {
 
-    private final static String ALLTID_SERVER_BASEURL = "https://hattid.com/api";
-    private final static String POWERRATING_ENDPOINT  = "/leagueUnit/%s/teamPowerRatings?page=0&pageSize=8&sortBy=power_rating&sortDirection=asc&statType=statRound&statRoundNumber=%s&season=%s";
-    private final static String HATSTATS_ENDPOINT     = "/leagueUnit/%s/teamHatstats?page=0&pageSize=8&sortBy=hatstats&sortDirection=asc&statType=%s&season=%s";
+    private static final String ALLTID_SERVER_BASEURL = "https://hattid.com/api";
+    private static final String POWERRATING_ENDPOINT  = "/leagueUnit/%s/teamPowerRatings?page=0&pageSize=8&sortBy=power_rating&sortDirection=asc&statType=statRound&statRoundNumber=%s&season=%s";
+    private static final String HATSTATS_ENDPOINT     = "/leagueUnit/%s/teamHatstats?page=0&pageSize=8&sortBy=hatstats&sortDirection=asc&statType=%s&season=%s";
 
     /** HTTP Header requested by Hattid. */
-    private final static String HATTID_REQUEST_SOURCE = "Hattid-Request-Source";
+    private static final String HATTID_REQUEST_SOURCE = "Hattid-Request-Source";
     /** Value for Hattid Header request. */
-    private final static String HATTID_REQUEST_SOURCE_VALUE = "HO!";
+    private static final String HATTID_REQUEST_SOURCE_VALUE = "HO!";
 
 
     // Singleton.

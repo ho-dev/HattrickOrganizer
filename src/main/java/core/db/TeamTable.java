@@ -4,7 +4,7 @@ import core.model.Team;
 import java.sql.Types;
 
 final class TeamTable extends AbstractTable {
-	public final static String TABLENAME = "TEAM";
+	public static final String TABLENAME = "TEAM";
 	
 	TeamTable(ConnectionManager adapter){
 		super(TABLENAME,adapter);

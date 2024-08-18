@@ -12,7 +12,7 @@ import java.awt.*;
 
 public class DarculaDarkTheme extends DarkTheme {
 
-    public final static String THEME_NAME = "Darcula";
+    public static final String THEME_NAME = "Darcula";
 
     /**
      * @inheritDoc

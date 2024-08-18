@@ -10,7 +10,7 @@ import java.util.List;
 
 public class FuturePlayerSkillTrainingTable extends AbstractTable {
 
-    public final static String TABLENAME = "FUTUREPLAYERSKILLTRAINING";
+    public static final String TABLENAME = "FUTUREPLAYERSKILLTRAINING";
 
     /**
      * constructor

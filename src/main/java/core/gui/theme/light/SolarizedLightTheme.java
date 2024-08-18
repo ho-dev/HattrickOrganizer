@@ -12,7 +12,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class SolarizedLightTheme extends BaseTheme {
-    public final static String THEME_NAME = "Solarized Light";
+    public static final String THEME_NAME = "Solarized Light";
 
     /**
      * @inheritDoc

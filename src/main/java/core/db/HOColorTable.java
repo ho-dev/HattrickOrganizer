@@ -6,7 +6,7 @@ import java.util.List;
 
 public class HOColorTable extends AbstractTable {
 
-    public final static String TABLENAME = "HOColor";
+    public static final String TABLENAME = "HOColor";
 
     /**
      * constructor

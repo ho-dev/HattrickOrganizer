@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TransferTable extends AbstractTable {
-	final static String TABLENAME = "TRANSFER";
+	static final String TABLENAME = "TRANSFER";
 
     TransferTable(ConnectionManager adapter){
 		super(TABLENAME, adapter);

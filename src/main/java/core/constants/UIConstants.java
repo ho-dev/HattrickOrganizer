@@ -6,6 +6,6 @@ package core.constants;
  */
 public class UIConstants {
 
-	public final static int TABLE_ROW_HEIGHT = 18;
+	public static final int TABLE_ROW_HEIGHT = 18;
 	
 }

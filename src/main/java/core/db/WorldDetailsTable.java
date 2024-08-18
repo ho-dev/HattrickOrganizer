@@ -6,7 +6,7 @@ import java.util.List;
 
 class WorldDetailsTable extends AbstractTable {
 
-	final static String TABLENAME = "HT_WORLDDETAILS";
+	static final String TABLENAME = "HT_WORLDDETAILS";
 	
 	WorldDetailsTable(ConnectionManager adapter){
 		super(TABLENAME,adapter);

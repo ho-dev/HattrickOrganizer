@@ -9,7 +9,7 @@ import java.util.List;
 public final class PaarungTable extends AbstractTable {
 
 	/** tablename **/
-	public final static String TABLENAME = "PAARUNG";
+	public static final String TABLENAME = "PAARUNG";
 	
 	PaarungTable(ConnectionManager adapter){
 		super(TABLENAME,adapter);

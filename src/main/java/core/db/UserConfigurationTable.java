@@ -16,7 +16,7 @@ import java.util.Map;
  *
  */
 final class UserConfigurationTable extends AbstractTable {
-	final static String TABLENAME = "USERCONFIGURATION";
+	static final String TABLENAME = "USERCONFIGURATION";
 
 	UserConfigurationTable(ConnectionManager adapter) {
 		super(TABLENAME, adapter);

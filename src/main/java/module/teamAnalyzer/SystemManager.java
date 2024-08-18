@@ -22,9 +22,9 @@ import java.util.List;
  * @author <a href=mailto:draghetto@users.sourceforge.net>Massimiliano Amato</a>
  */
 public class SystemManager {
-	private final static String ISNUMERICRATING = "TA_numericRating";
-	private final static String ISLINEUP = "TA_lineupCompare";
-	private final static String ISTACTICDETAIL = "TA_tacticDetail";
+	private static final String ISNUMERICRATING = "TA_numericRating";
+	private static final String ISLINEUP = "TA_lineupCompare";
+	private static final String ISTACTICDETAIL = "TA_tacticDetail";
 	private final static String ISDESCRIPTIONRATING = "TA_descriptionRating";
 	private final static String ISSHOWUNAVAILABLE = "TA_isShowUnavailable";
 	private final static String ISMIXEDLINEUP = "TA_mixedLineup";

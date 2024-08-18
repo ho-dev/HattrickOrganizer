@@ -29,7 +29,7 @@ import java.util.Map;
  */
 public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 
-	public final static Color TITLE_FG = ThemeManager.getColor(HOColorName.LINEUP_HIGHLIGHT_FG);
+	public static final Color TITLE_FG = ThemeManager.getColor(HOColorName.LINEUP_HIGHLIGHT_FG);
 	private LineupPositionsPanel lineupPositionsPanel;
 	private LineupPlayersTable lineupPlayersTable;
 	private LineupRatingAssistantPanel lineupRatingAssistantPanel;
