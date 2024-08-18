@@ -1,8 +1,5 @@
 package core.util;
 
-import core.HO;
-import core.model.HOVerwaltung;
-import core.model.Translator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -11,11 +8,6 @@ public class HODateTimeTest {
 
         @Test
         public void test() {
-
-            HO.setPortable_version(true);
-            HOVerwaltung.instance().loadLatestHoModel();
-            HOVerwaltung.instance().setTranslator(Translator.LANGUAGE_DEFAULT);
-
             var nextTraining = HODateTime.fromHT("2022-03-31 08:30:00");
             var localDateTime = nextTraining.toLocaleDateTime();
             var previousTraining = nextTraining.plusDaysAtSameLocalTime(-7);

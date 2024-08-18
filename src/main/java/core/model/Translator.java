@@ -16,6 +16,7 @@ public class Translator {
 
     public static final String LANGUAGE_RESOURCE_PATH = "language";
     public static final String LANGUAGE_DEFAULT = "English";
+    public static final String LANGUAGE_NO_TRANSLATION = "NoTranslation";
     public static final String LANGUAGE_FILE_EXTENSION = "properties";
 
     private static final String LANGUAGE_SUPPORTED_LANGUAGES_FILENAME = "ListLanguages.txt";
@@ -110,7 +111,7 @@ public class Translator {
             return temp;
 
         // Search in properties of default language if nothing found and active language not the default
-        if (!isDefaultLanguage()) {
+        if (!isDefaultLanguage() && !isNoTranslation()) {
             ResourceBundle tempBundle = loadDefault().getResourceBundle();
 
             try {
@@ -129,6 +130,10 @@ public class Translator {
 
     private boolean isDefaultLanguage() {
         return getLanguage().equalsIgnoreCase(LANGUAGE_DEFAULT);
+    }
+
+    private boolean isNoTranslation() {
+        return getLanguage().equalsIgnoreCase(LANGUAGE_NO_TRANSLATION);
     }
 
     /**
