@@ -51,7 +51,7 @@ import java.awt.image.*;
 public class GIFEncoder {
     short width_, height_;
     int numColors_;
-    byte pixels_[], colors_[];
+    byte[] pixels_, colors_;
     
     ScreenDescriptor sd_;
     ImageDescriptor id_;
@@ -70,7 +70,7 @@ public class GIFEncoder {
 	width_ = (short)image.getWidth(null);
 	height_ = (short)image.getHeight(null);
 
-	int values[] = new int[width_ * height_];
+	int[] values = new int[width_ * height_];
 	PixelGrabber grabber = new PixelGrabber(
 	    image, 0, 0, width_, height_, values, 0, width_);
 	
@@ -82,9 +82,9 @@ public class GIFEncoder {
 	catch (InterruptedException e) {
     }
 	
-	byte r[][] = new byte[width_][height_];
-	byte g[][] = new byte[width_][height_];
-	byte b[][] = new byte[width_][height_];
+	byte[][] r = new byte[width_][height_];
+	byte[][] g = new byte[width_][height_];
+	byte[][] b = new byte[width_][height_];
 	int index = 0;
 	for (int y = 0; y < height_; ++y)
 	    for (int x = 0; x < width_; ++x) {
@@ -111,7 +111,7 @@ public class GIFEncoder {
  * @exception AWTException Will be thrown if the image contains more than
  * 256 colors.
  * */
-    public GIFEncoder(byte r[][], byte g[][], byte b[][]) throws AWTException {
+    public GIFEncoder(byte[][] r, byte[][] g, byte[][] b) throws AWTException {
 	width_ = (short)(r.length);
 	height_ = (short)(r[0].length);
 
@@ -153,8 +153,8 @@ public class GIFEncoder {
 	output.flush();
     }
 
-    void ToIndexedColor(byte r[][], byte g[][],
-			byte b[][]) throws AWTException {
+    void ToIndexedColor(byte[][] r, byte[][] g,
+                        byte[][] b) throws AWTException {
 	pixels_ = new byte[width_ * height_];
 	colors_ = new byte[256 * 3];
 	int colornum = 0;
@@ -181,7 +181,7 @@ public class GIFEncoder {
 	    }
 	}
 	numColors_ = 1 << BitUtils.BitsNeeded(colornum);
-	byte copy[] = new byte[numColors_ * 3];
+	byte[] copy = new byte[numColors_ * 3];
 	System.arraycopy(colors_, 0, copy, 0, numColors_ * 3);
 	colors_ = copy;
     }
@@ -190,7 +190,7 @@ public class GIFEncoder {
 
 class BitFile {
     OutputStream output_;
-    byte buffer_[];
+    byte[] buffer_;
     int index_, bitsLeft_;
 
     public BitFile(OutputStream output) {
@@ -253,9 +253,9 @@ class LZWStringTable {
     private final static short HASHSIZE = 9973;
     private final static short HASHSTEP = 2039;
 
-    byte strChr_[];
-    short strNxt_[];
-    short strHsh_[];
+    byte[] strChr_;
+    short[] strNxt_;
+    short[] strHsh_;
     short numStrings_;
 
     public LZWStringTable() {
@@ -317,7 +317,7 @@ class LZWStringTable {
 class LZWCompressor {
 
     public static void LZWCompress(OutputStream output, int codesize,
-				   byte toCompress[]) throws IOException {
+                                   byte[] toCompress) throws IOException {
 	byte c;
 	short index;
 	int clearcode, endofinfo, numbits, limit;

@@ -73,7 +73,7 @@ public class LanguageComboBoxModel extends AbstractListModel implements ComboBox
 				}
 	
 				@Override
-				public void characters(char ch[], int start, int length) throws SAXException {
+				public void characters(char[] ch, int start, int length) throws SAXException {
 
 					if (blname) {
 						String s = new String(ch, start, length);
