@@ -205,7 +205,7 @@ public class Player {
         }
 
         // add warnings info text (yellow / red card)
-        if (getBooked() != null && getBooked().length()>0) {
+        if (getBooked() != null && !getBooked().isEmpty()) {
             info += getBooked() + "\r\n";
         }
 

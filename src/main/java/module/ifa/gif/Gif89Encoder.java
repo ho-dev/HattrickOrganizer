@@ -348,7 +348,7 @@ public class Gif89Encoder {
 		colorTable.encode(out);
 		if (is_sequence && loopCount != 1)
 			writeNetscapeExtension(out);
-		if (theComments != null && theComments.length() > 0)
+		if (theComments != null && !theComments.isEmpty())
 			writeCommentExtension(out);
 
 		// write out the control and rendering data for each frame
