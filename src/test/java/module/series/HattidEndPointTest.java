@@ -4,10 +4,10 @@ package module.series;
 import org.junit.jupiter.api.Test;
 
 @Deprecated
-public class HattidEndPointTest {
+class HattidEndPointTest {
 
     @Test
-    public void testEndPointPowerRatings() {
+    void testEndPointPowerRatings() {
 /*
         var res = DataDownloader.instance().fetchLeagueTeamPowerRatings(21641, 14, 76);
 
