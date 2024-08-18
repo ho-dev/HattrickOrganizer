@@ -5,11 +5,11 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 
-public class NtTeamTest {
+class NtTeamTest {
 
 
     @Test
-    public void testParseXml() {
+    void testParseXml() {
 
 
         var xml = """

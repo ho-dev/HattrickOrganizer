@@ -3,11 +3,11 @@ package core.util;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-public class HODateTimeTest {
+class HODateTimeTest {
 
 
         @Test
-        public void test() {
+        void test() {
             var nextTraining = HODateTime.fromHT("2022-03-31 08:30:00");
             var localDateTime = nextTraining.toLocaleDateTime();
             var previousTraining = nextTraining.plusDaysAtSameLocalTime(-7);
