@@ -5,7 +5,7 @@ public enum Uncertainty implements Problem {
 
 	private final String languageKey;
 
-	private Uncertainty(String languageKey) {
+	Uncertainty(String languageKey) {
 		this.languageKey = languageKey;
 	}
 

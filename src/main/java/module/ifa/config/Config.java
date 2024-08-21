@@ -22,7 +22,7 @@ public enum Config {
 
 	private final String txt;
 
-	private Config(String text) {
+	Config(String text) {
 		this.txt = text;
 	}
 
