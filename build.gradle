@@ -63,6 +63,7 @@ dependencies {
     implementation "org.codehaus.groovy:groovy-all:3.0.19"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
     testImplementation "org.junit.jupiter:junit-jupiter:5.10.2"
+    testImplementation "org.assertj:assertj-core:3.26.3"
 }
 
 test {

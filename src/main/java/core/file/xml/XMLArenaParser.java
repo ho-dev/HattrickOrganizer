@@ -72,9 +72,10 @@ public class XMLArenaParser {
 					.item(0);
 			ele = (Element) tmpRoot.getElementsByTagName("RebuiltDate").item(0);
 
-			if (XMLManager.getAttributeValue(ele, "Available").trim()
-					.equalsIgnoreCase("true")) {
-				map.put("RebuiltDate", (XMLManager.getFirstChildNodeValue(ele)));
+			final boolean rebuiltDateAvailable =
+					XMLManager.getAttributeValue(ele, "Available").trim().equalsIgnoreCase("true");
+			if (rebuiltDateAvailable) {
+				map.put("RebuiltDate", XMLManager.getFirstChildNodeValue(ele));
 			}
 
 			ele = (Element) tmpRoot.getElementsByTagName("Terraces").item(0);
@@ -91,8 +92,9 @@ public class XMLArenaParser {
 			tmpRoot = (Element) root.getElementsByTagName("ExpandedCapacity")
 					.item(0);
 
-			if (XMLManager.getAttributeValue(ele, "Available").trim()
-					.equalsIgnoreCase("true")) {
+			final boolean expandedCapacityAvailable =
+					XMLManager.getAttributeValue(tmpRoot, "Available").trim().equalsIgnoreCase("true");
+			if (expandedCapacityAvailable) {
 				map.put("isExpanding", "1");
 				ele = (Element) tmpRoot.getElementsByTagName("ExpansionDate")
 						.item(0);
