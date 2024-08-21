@@ -31,7 +31,7 @@ class BaseActionGenerator {
 		return 1;
 	}
 
-	protected static final int getRandom(int value) {
+	protected static int getRandom(int value) {
 	        return (int) (Math.random() * value);
 	}
 

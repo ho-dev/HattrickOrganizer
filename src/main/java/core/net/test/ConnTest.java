@@ -158,7 +158,7 @@ public class ConnTest {
 	/**
 	 * @see de.hattrickorganizer.logik.xml.XMLMenuParser.parseMenuFromString()
 	 */
-	private static final String parseDetails(Document doc, JTextArea log) throws Exception {
+	private static String parseDetails(Document doc, JTextArea log) throws Exception {
         Element ele = null;
         Element root = null;
 
