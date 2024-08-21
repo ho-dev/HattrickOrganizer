@@ -81,7 +81,7 @@ public class MatchRating {
     public static int TacticTypeStringToInt(String tacticType) {
         tacticType = tacticType.toLowerCase();
 
-        ResourceBundle englishBundle = Translator.loadDefault().getResourceBundle();;
+        ResourceBundle englishBundle = Translator.loadDefault().getResourceBundle();
         HOVerwaltung hoi = HOVerwaltung.instance();
 
         String english_tactictype = englishBundle.getString("ls.team.tactic.normal").toLowerCase();
