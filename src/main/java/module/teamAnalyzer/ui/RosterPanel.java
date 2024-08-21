@@ -24,8 +24,8 @@ public class RosterPanel extends JPanel {
     //~ Instance fields ----------------------------------------------------------------------------
 	private static final long serialVersionUID = -3867854224503291836L;
 	private JTable table;
-    private List<PlayerInfo> oldPlayersInfo = new ArrayList<PlayerInfo>();
-    private Map<String,RosterPlayerData> players = new HashMap<String,RosterPlayerData>();
+    private List<PlayerInfo> oldPlayersInfo = new ArrayList<>();
+    private Map<String,RosterPlayerData> players = new HashMap<>();
     private UiRosterTableModel tableModel;
     private String[] columns = {
             HOVerwaltung.instance().getLanguageString("ls.player.name"),

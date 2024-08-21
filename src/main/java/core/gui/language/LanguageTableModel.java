@@ -32,7 +32,7 @@ public class LanguageTableModel extends AbstractTableModel implements TableModel
 	private static final long serialVersionUID = -1926494264955036043L;
 	private String[] columnNames = {"Key", "Value"};
 	private Map<String, String> data;
-	private List<String> keys = new ArrayList<String>();
+	private List<String> keys = new ArrayList<>();
 	private boolean isDestinationFile = false;
 	private String langauageName = "";
 	
@@ -42,7 +42,7 @@ public class LanguageTableModel extends AbstractTableModel implements TableModel
 	public LanguageTableModel() {
 		this.langauageName = "English";
 		
-		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+		LinkedHashMap<String, String> map = new LinkedHashMap<>();
 		
 		URL englishPath = this.getClass().getClassLoader().getResource("language/English.properties");
 		
@@ -91,7 +91,7 @@ public class LanguageTableModel extends AbstractTableModel implements TableModel
 		Iterator<String> rbKeys = this.keys.iterator();
 		String value = null;
 		
-		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+		LinkedHashMap<String, String> map = new LinkedHashMap<>();
 
 		while(rbKeys.hasNext()) {
 			String key = rbKeys.next();

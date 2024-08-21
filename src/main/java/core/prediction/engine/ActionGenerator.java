@@ -32,14 +32,14 @@ import java.util.List;
 	}
 
 	final Action[] predict(int minute) {
-		final List<Action> actions = new ArrayList<Action>();
+		final List<Action> actions = new ArrayList<>();
 		actions.addAll(calculateActions(minute, homeTeamGameData, awayTeamGameData));
 		actions.addAll(calculateActions(minute, awayTeamGameData, homeTeamGameData));
 		return actions.toArray(new Action[0]);
 	}
 
 	Action[] simulate() {
-		final List<Action> actions = new ArrayList<Action>();
+		final List<Action> actions = new ArrayList<>();
 		int midfieldPossession = (int) getEffectiveness(homeTeamGameData.getRatings().getMidfield());
 		int pressing = getPressing(homeTeamGameData, awayTeamGameData);
 		int succesfulPressing = 0;
@@ -81,7 +81,7 @@ import java.util.List;
 	}
 
 	private List<Action> calculateActions(int minute, TeamGameData team, TeamGameData opponent) {
-		final List<Action> actions = new ArrayList<Action>();
+		final List<Action> actions = new ArrayList<>();
 		boolean hasChance = hasChance(team, minute);
 
 		if (hasChance) {
@@ -118,7 +118,7 @@ import java.util.List;
 	}
 
 	private List<Action> calculateAction(TeamGameData team, TeamGameData opponent) {
-		final List<Action> actions = new ArrayList<Action>();
+		final List<Action> actions = new ArrayList<>();
 		final Action action = new Action();
 		action.setArea(getArea(team.getTacticType(), team.getTacticLevel()));
 		action.setType(0);

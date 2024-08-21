@@ -8,7 +8,7 @@ import java.util.StringTokenizer;
 public class NameManager {
     //~ Static fields/initializers -----------------------------------------------------------------
 
-    private static Hashtable<String, String> names = new Hashtable<String, String>();
+    private static Hashtable<String, String> names = new Hashtable<>();
 
     //~ Methods ------------------------------------------------------------------------------------
     public static String getLastName(String name) {
@@ -42,6 +42,6 @@ public class NameManager {
     }
 
     public static void clean() {
-        names = new Hashtable<String, String>();
+        names = new Hashtable<>();
     }
 }

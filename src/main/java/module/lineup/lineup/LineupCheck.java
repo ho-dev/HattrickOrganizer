@@ -21,7 +21,7 @@ import javax.swing.JOptionPane;
 public class LineupCheck {
 
 	public static boolean doUpload(@Nullable MatchOrdersCBItem match, Lineup lineup) {
-		List<JLabel> problems = new ArrayList<JLabel>();
+		List<JLabel> problems = new ArrayList<>();
 		if (hasFreePosition(lineup)) {
 			problems.add(getErrorLabel("lineup.upload.check.lineupIncomplete"));
 		}

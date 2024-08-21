@@ -707,7 +707,7 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 				m_CB_Loyalty.getSelectedIndex(), 0);
 
 		int selectedType = m_CB_type.getSelectedIndex();
-		m_V_setPlayers = new Vector<module.playeranalysis.skillCompare.Player>();
+		m_V_setPlayers = new Vector<>();
 		switch (selectedType) {
 		case 0:
 			for (int i = 0; i < m_i_ptmTopCount; i++)

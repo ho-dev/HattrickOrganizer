@@ -413,7 +413,7 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
      * @see #getOverlappingEntry
      */
     public java.util.List<Object> getInvalidEntry() {
-        LinkedList<Object> listInvalid = new LinkedList<Object>();
+        LinkedList<Object> listInvalid = new LinkedList<>();
 
         try {
             ListIterator<Entry> iterator = list.listIterator(0);
@@ -492,7 +492,7 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
      * @see #getInvalidEntry
      */
     public java.util.List<Object> getOverlappingEntry() {
-        LinkedList<Object> listOverlapping = new LinkedList<Object>();
+        LinkedList<Object> listOverlapping = new LinkedList<>();
 
         try {
             // Count contraints
@@ -1766,7 +1766,7 @@ nextComponent:
         }
 
         // Create an empty list of components
-        list = new LinkedList<Entry>();
+        list = new LinkedList<>();
 
         // Indicate that the cell sizes are not known
         dirty = true;

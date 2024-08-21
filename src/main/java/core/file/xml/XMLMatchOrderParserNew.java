@@ -26,8 +26,8 @@ public class XMLMatchOrderParserNew {
 
 	public XMLMatchOrderParserNew(Document doc) {
 		this.document = doc;
-		this.positions = new HashMap<Integer, MatchRoleID>();
-		this.orders = new ArrayList<Substitution>();
+		this.positions = new HashMap<>();
+		this.orders = new ArrayList<>();
 		parse();
 	}
 

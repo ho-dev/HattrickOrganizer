@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class ModuleConfig {
 
-	private Map<String, Object> configMap = new HashMap<String, Object>();
+	private Map<String, Object> configMap = new HashMap<>();
 
 	// singleton
 	private static ModuleConfig configuration = null;

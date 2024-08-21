@@ -26,7 +26,7 @@ public class LanguageComboBoxModel extends AbstractListModel implements ComboBox
 	private String selected = null;
 
 	public LanguageComboBoxModel() {
-		comboBoxItemList = new ArrayList<String>();
+		comboBoxItemList = new ArrayList<>();
 		loadData();
 	}
 

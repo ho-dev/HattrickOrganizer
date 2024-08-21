@@ -47,7 +47,7 @@ final class SpielerPositionTable extends JTable {
 			if (m_iSpielerId != -1) {
 				bewertungen = DBManager.instance().getAlleBewertungen(m_iSpielerId);
 			} else {
-				bewertungen = new Vector<float[]>();
+				bewertungen = new Vector<>();
 			}
 			m_clTableModel = new SpielerPositionTableModel(bewertungen);
 			m_clTableSorter = new TableSorter(m_clTableModel, -1, -1);

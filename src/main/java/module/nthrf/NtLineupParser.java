@@ -12,7 +12,7 @@ import org.w3c.dom.NodeList;
 
 class NtLineupParser {
 
-	private List<NtPlayerPosition> players = new ArrayList<NtPlayerPosition>(); // <NtPlayerPosition>
+	private List<NtPlayerPosition> players = new ArrayList<>(); // <NtPlayerPosition>
 	private boolean parsingSuccess;
 
 	NtLineupParser(String xmlData) {
