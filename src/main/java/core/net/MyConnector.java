@@ -399,10 +399,10 @@ public class MyConnector {
 		GregorianCalendar cal = new GregorianCalendar();
 		cal.setTimeInMillis(System.currentTimeMillis());
 		if (upcoming) {
-			cal.add(java.util.Calendar.MONTH, 5);
+			cal.add(Calendar.MONTH, 5);
 		}
 		// Paranoia against inaccurate system clock.
-		cal.add(java.util.Calendar.DAY_OF_MONTH, 1);
+		cal.add(Calendar.DAY_OF_MONTH, 1);
 
 		url += "&LastMatchDate=";
 		url += new SimpleDateFormat("yyyy-MM-dd").format(cal.getTime());

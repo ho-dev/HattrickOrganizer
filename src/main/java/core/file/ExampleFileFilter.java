@@ -34,6 +34,7 @@ package core.file;
 import java.io.File;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Locale;
 
 
 /**
@@ -187,7 +188,7 @@ public class ExampleFileFilter extends javax.swing.filechooser.FileFilter
             final int i = filename.lastIndexOf('.');
 
             if ((i > 0) && (i < (filename.length() - 1))) {
-                return filename.substring(i + 1).toLowerCase(java.util.Locale.ENGLISH);
+                return filename.substring(i + 1).toLowerCase(Locale.ENGLISH);
             }
 
         }
@@ -256,7 +257,7 @@ public class ExampleFileFilter extends javax.swing.filechooser.FileFilter
             filters = new Hashtable<>(5);
         }
 
-        filters.put(extension.toLowerCase(java.util.Locale.ENGLISH), this);
+        filters.put(extension.toLowerCase(Locale.ENGLISH), this);
         fullDescription = null;
     }
 

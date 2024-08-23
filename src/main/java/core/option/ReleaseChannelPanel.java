@@ -10,6 +10,7 @@ import javax.swing.event.ChangeEvent;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.Locale;
 
 /**
  * Controls for release channel with description
@@ -49,7 +50,7 @@ public final class ReleaseChannelPanel extends ImagePanel {
 				core.model.UserParameter.temp().ReleaseChannel = ReleaseChannelLabel;
 				m_jta_Description.setText(
 						core.model.HOVerwaltung.instance().getLanguageString("options.release_channels_" +
-								source.getText().toUpperCase(java.util.Locale.ENGLISH) + "_desc")
+								source.getText().toUpperCase(Locale.ENGLISH) + "_desc")
 				);
 				rc = Updater.ReleaseChannel.byLabel(ReleaseChannelLabel);
 			}

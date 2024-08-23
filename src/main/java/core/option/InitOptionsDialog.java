@@ -5,6 +5,7 @@ import core.model.Translator;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.util.Arrays;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -61,7 +62,7 @@ public final class InitOptionsDialog extends JDialog implements java.awt.event.A
         final String[] sprachdateien = Translator.getSupportedLanguages();
 
         try {
-            java.util.Arrays.sort(sprachdateien);
+            Arrays.sort(sprachdateien);
         } catch (Exception e) {
         }
 

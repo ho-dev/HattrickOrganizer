@@ -21,6 +21,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 
 public class HRFStringParser {
@@ -109,7 +110,7 @@ public class HRFStringParser {
 							properties = new HOProperties();
 						}
 						properties.setProperty(lineString.substring(0, indexEqualsSign)
-								.toLowerCase(java.util.Locale.ENGLISH), lineString
+								.toLowerCase(Locale.ENGLISH), lineString
 								.substring(indexEqualsSign + 1));
 					}
 				}

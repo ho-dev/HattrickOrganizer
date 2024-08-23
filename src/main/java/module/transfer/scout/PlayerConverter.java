@@ -66,27 +66,27 @@ public class PlayerConverter {
         try{
             // Get all skills for active language
             // This should be the same language as in Hattrick
-            skills.add(homodel.getLanguageString("ls.player.skill.value.non-existent").toLowerCase(java.util.Locale.ENGLISH));
-            skills.add(homodel.getLanguageString("ls.player.skill.value.disastrous").toLowerCase(java.util.Locale.ENGLISH));
-            skills.add(homodel.getLanguageString("ls.player.skill.value.wretched").toLowerCase(java.util.Locale.ENGLISH));
-            skills.add(homodel.getLanguageString("ls.player.skill.value.poor").toLowerCase(java.util.Locale.ENGLISH));
-            skills.add(homodel.getLanguageString("ls.player.skill.value.weak").toLowerCase(java.util.Locale.ENGLISH));
-            skills.add(homodel.getLanguageString("ls.player.skill.value.inadequate").toLowerCase(java.util.Locale.ENGLISH));
-            skills.add(homodel.getLanguageString("ls.player.skill.value.passable").toLowerCase(java.util.Locale.ENGLISH));
-            skills.add(homodel.getLanguageString("ls.player.skill.value.solid").toLowerCase(java.util.Locale.ENGLISH));
-            skills.add(homodel.getLanguageString("ls.player.skill.value.excellent").toLowerCase(java.util.Locale.ENGLISH));
-            skills.add(homodel.getLanguageString("ls.player.skill.value.formidable").toLowerCase(java.util.Locale.ENGLISH));
-            skills.add(homodel.getLanguageString("ls.player.skill.value.outstanding").toLowerCase(java.util.Locale.ENGLISH));
-            skills.add(homodel.getLanguageString("ls.player.skill.value.brilliant").toLowerCase(java.util.Locale.ENGLISH));
-            skills.add(homodel.getLanguageString("ls.player.skill.value.magnificent").toLowerCase(java.util.Locale.ENGLISH));
-            skills.add(homodel.getLanguageString("ls.player.skill.value.worldclass").toLowerCase(java.util.Locale.ENGLISH));
-            skills.add(homodel.getLanguageString("ls.player.skill.value.supernatural").toLowerCase(java.util.Locale.ENGLISH));
-            skills.add(homodel.getLanguageString("ls.player.skill.value.titanic").toLowerCase(java.util.Locale.ENGLISH));
-            skills.add(homodel.getLanguageString("ls.player.skill.value.extra-terrestrial").toLowerCase(java.util.Locale.ENGLISH));
-            skills.add(homodel.getLanguageString("ls.player.skill.value.mythical").toLowerCase(java.util.Locale.ENGLISH));
-            skills.add(homodel.getLanguageString("ls.player.skill.value.magical").toLowerCase(java.util.Locale.ENGLISH));
-            skills.add(homodel.getLanguageString("ls.player.skill.value.utopian").toLowerCase(java.util.Locale.ENGLISH));
-            skills.add(homodel.getLanguageString("ls.player.skill.value.divine").toLowerCase(java.util.Locale.ENGLISH));
+            skills.add(homodel.getLanguageString("ls.player.skill.value.non-existent").toLowerCase(Locale.ENGLISH));
+            skills.add(homodel.getLanguageString("ls.player.skill.value.disastrous").toLowerCase(Locale.ENGLISH));
+            skills.add(homodel.getLanguageString("ls.player.skill.value.wretched").toLowerCase(Locale.ENGLISH));
+            skills.add(homodel.getLanguageString("ls.player.skill.value.poor").toLowerCase(Locale.ENGLISH));
+            skills.add(homodel.getLanguageString("ls.player.skill.value.weak").toLowerCase(Locale.ENGLISH));
+            skills.add(homodel.getLanguageString("ls.player.skill.value.inadequate").toLowerCase(Locale.ENGLISH));
+            skills.add(homodel.getLanguageString("ls.player.skill.value.passable").toLowerCase(Locale.ENGLISH));
+            skills.add(homodel.getLanguageString("ls.player.skill.value.solid").toLowerCase(Locale.ENGLISH));
+            skills.add(homodel.getLanguageString("ls.player.skill.value.excellent").toLowerCase(Locale.ENGLISH));
+            skills.add(homodel.getLanguageString("ls.player.skill.value.formidable").toLowerCase(Locale.ENGLISH));
+            skills.add(homodel.getLanguageString("ls.player.skill.value.outstanding").toLowerCase(Locale.ENGLISH));
+            skills.add(homodel.getLanguageString("ls.player.skill.value.brilliant").toLowerCase(Locale.ENGLISH));
+            skills.add(homodel.getLanguageString("ls.player.skill.value.magnificent").toLowerCase(Locale.ENGLISH));
+            skills.add(homodel.getLanguageString("ls.player.skill.value.worldclass").toLowerCase(Locale.ENGLISH));
+            skills.add(homodel.getLanguageString("ls.player.skill.value.supernatural").toLowerCase(Locale.ENGLISH));
+            skills.add(homodel.getLanguageString("ls.player.skill.value.titanic").toLowerCase(Locale.ENGLISH));
+            skills.add(homodel.getLanguageString("ls.player.skill.value.extra-terrestrial").toLowerCase(Locale.ENGLISH));
+            skills.add(homodel.getLanguageString("ls.player.skill.value.mythical").toLowerCase(Locale.ENGLISH));
+            skills.add(homodel.getLanguageString("ls.player.skill.value.magical").toLowerCase(Locale.ENGLISH));
+            skills.add(homodel.getLanguageString("ls.player.skill.value.utopian").toLowerCase(Locale.ENGLISH));
+            skills.add(homodel.getLanguageString("ls.player.skill.value.divine").toLowerCase(Locale.ENGLISH));
 
             for (int k = 0; k < skills.size(); k++) {
                 skillvalues.add(k);
@@ -116,17 +116,17 @@ public class PlayerConverter {
             // Get all specialities for active language
             // This should be the same language as in Hattrick
             specialities.add(""); // No speciality
-            specialities.add(homodel.getLanguageString("ls.player.speciality.technical").toLowerCase(java.util.Locale.ENGLISH));
-            specialities.add(homodel.getLanguageString("ls.player.speciality.quick").toLowerCase(java.util.Locale.ENGLISH));
-            specialities.add(homodel.getLanguageString("ls.player.speciality.powerful").toLowerCase(java.util.Locale.ENGLISH));
-            specialities.add(homodel.getLanguageString("ls.player.speciality.unpredictable").toLowerCase(java.util.Locale.ENGLISH));
-            specialities.add(homodel.getLanguageString("ls.player.speciality.head").toLowerCase(java.util.Locale.ENGLISH));
-            specialities.add(homodel.getLanguageString("ls.player.speciality.regainer").toLowerCase(java.util.Locale.ENGLISH));
-            specialities.add(homodel.getLanguageString("ls.player.speciality.support").toLowerCase(java.util.Locale.ENGLISH));
+            specialities.add(homodel.getLanguageString("ls.player.speciality.technical").toLowerCase(Locale.ENGLISH));
+            specialities.add(homodel.getLanguageString("ls.player.speciality.quick").toLowerCase(Locale.ENGLISH));
+            specialities.add(homodel.getLanguageString("ls.player.speciality.powerful").toLowerCase(Locale.ENGLISH));
+            specialities.add(homodel.getLanguageString("ls.player.speciality.unpredictable").toLowerCase(Locale.ENGLISH));
+            specialities.add(homodel.getLanguageString("ls.player.speciality.head").toLowerCase(Locale.ENGLISH));
+            specialities.add(homodel.getLanguageString("ls.player.speciality.regainer").toLowerCase(Locale.ENGLISH));
+            specialities.add(homodel.getLanguageString("ls.player.speciality.support").toLowerCase(Locale.ENGLISH));
 
             for (int i = 0; i<PlayerSpeciality.ITEMS.length; i++){
                 for (int k = 0; k < 8; k++) {
-                    if(PlayerSpeciality.ITEMS[i].getText().toLowerCase(java.util.Locale.ENGLISH).equals(specialities.get(k))){
+                    if(PlayerSpeciality.ITEMS[i].getText().toLowerCase(Locale.ENGLISH).equals(specialities.get(k))){
                         specialitiesvalues.add(PlayerSpeciality.ITEMS[i].getId());
                         break;
                     }
@@ -324,7 +324,7 @@ Mindestgebot: [money]0[/money]
         sc.close();
         //Analyze Player Description
         row = rows.get(indexRowExperience);
-        sc = new Scanner(row.toLowerCase(java.util.Locale.ENGLISH));
+        sc = new Scanner(row.toLowerCase(Locale.ENGLISH));
         Pattern pattern = Pattern.compile(" |\\.");
         sc.useDelimiter(pattern);
         // Experience
@@ -415,7 +415,7 @@ Mindestgebot: [money]0[/money]
 
 
         // Speciality
-        row = rows.get(indexRowSpecialty).toLowerCase(java.util.Locale.ENGLISH);
+        row = rows.get(indexRowSpecialty).toLowerCase(Locale.ENGLISH);
         for (int index = 1; index < specialities.size(); index++) {
             if (row.contains(specialities.get(index))) {
                 player.setSpeciality(specialitiesvalues.get(index));
@@ -986,11 +986,11 @@ Mindestgebot: [money]0[/money]
 
             char[] cs = new char[teamname.length()];
             Arrays.fill(cs, '*');
-            mytext = mytext.replaceAll(Pattern.quote(teamname), new String(cs)).toLowerCase(java.util.Locale.ENGLISH);
+            mytext = mytext.replaceAll(Pattern.quote(teamname), new String(cs)).toLowerCase(Locale.ENGLISH);
 
             cs = new char[name.length()];
             Arrays.fill(cs, '*');
-            mytext = mytext.replaceAll(Pattern.quote(name.toLowerCase(java.util.Locale.ENGLISH)), new String(cs)).toLowerCase(java.util.Locale.ENGLISH);
+            mytext = mytext.replaceAll(Pattern.quote(name.toLowerCase(Locale.ENGLISH)), new String(cs)).toLowerCase(Locale.ENGLISH);
 
             // We can search all the skills in text now
             p = skills.size() - 1;
