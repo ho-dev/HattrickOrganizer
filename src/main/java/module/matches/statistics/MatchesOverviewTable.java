@@ -61,8 +61,7 @@ public class MatchesOverviewTable extends JTable {
 
             if (targetColumn != null) {
                 for (int[] ints : targetColumn) {
-                    this.moveColumn(getColumnModel().getColumnIndex(Integer.valueOf(ints[0])),
-                            ints[1]);
+                    this.moveColumn(getColumnModel().getColumnIndex(ints[0]), ints[1]);
                 }
             }
 
