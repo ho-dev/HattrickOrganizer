@@ -1,127 +1,167 @@
-// %2675225597:de.hattrickorganizer.logik.xml%
-/*
- * XMLArenaParser.java
- *
- * Created on 5. Juni 2004, 15:40
- */
 package core.file.xml;
 
 import core.util.HOLogger;
-
-import java.util.Map;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-/**
- * 
- * @author thetom
- */
+import java.util.Map;
+
 public class XMLArenaParser {
 
-	/**
-	 * Utility class - private constructor enforces noninstantiability.
-	 */
-	private XMLArenaParser() {
-	}
+    private static final String ELEMENT_NAME_FETCHED_DATE = "FetchedDate";
+    private static final String ELEMENT_NAME_ARENA = "Arena";
+    private static final String ELEMENT_NAME_ARENA_ID = "ArenaID";
+    private static final String ELEMENT_NAME_ARENA_NAME = "ArenaName";
+    private static final String ELEMENT_NAME_TEAM = "Team";
+    private static final String ELEMENT_NAME_TEAM_ID = "TeamID";
+    private static final String ELEMENT_NAME_TEAM_NAME = "TeamName";
+    private static final String ELEMENT_NAME_LEAGUE = "League";
+    private static final String ELEMENT_NAME_LEAGUE_ID = "LeagueID";
+    private static final String ELEMENT_NAME_LEAGUE_NAME = "LeagueName";
+    private static final String ELEMENT_NAME_REGION = "Region";
+    private static final String ELEMENT_NAME_REGION_ID = "RegionID";
+    private static final String ELEMENT_NAME_REGION_NAME = "RegionName";
+    private static final String ELEMENT_NAME_CURRENT_CAPACITY = "CurrentCapacity";
+    private static final String ELEMENT_NAME_CURRENT_CAPACITY_REBUILT_DATE = "RebuiltDate";
 
-	public static Map<String, String> parseArenaFromString(String str) {
-		return parseDetails(XMLManager.parseString(str));
-	}
+    private static final String ELEMENT_NAME_EXPANDED_CAPACITY = "ExpandedCapacity";
+    private static final String ELEMENT_NAME_EXPANDED_CAPACITY_EXPANSION_DATE = "ExpansionDate";
 
-	private static Map<String, String> parseDetails(Document doc) {
-		Map<String, String> map = new SafeInsertMap();
+    private static final String ATTRIBUTE_NAME_CAPACITY_AVAILABLE = "Available";
+    private static final String ELEMENT_NAME_CAPACITY_TERRACES = "Terraces";
+    private static final String ELEMENT_NAME_CAPACITY_BASIC = "Basic";
+    private static final String ELEMENT_NAME_CAPACITY_ROOF = "Roof";
+    private static final String ELEMENT_NAME_CAPACITY_VIP = "VIP";
+    private static final String ELEMENT_NAME_CAPACITY_TOTAL = "Total";
 
-		if (doc == null) {
-			return map;
-		}
+    private static final String PROPERTY_NAME_FETCHED_DATE = "FetchedDate";
+    private static final String PROPERTY_NAME_ARENA_ID = "ArenaID";
+    private static final String PROPERTY_NAME_ARENA_NAME = "ArenaName";
+    private static final String PROPERTY_NAME_TEAM_ID = "TeamID";
+    private static final String PROPERTY_NAME_TEAM_NAME = "TeamName";
+    private static final String PROPERTY_NAME_LEAGUE_ID = "LeagueID";
+    private static final String PROPERTY_NAME_LEAGUE_NAME = "LeagueName";
+    private static final String PROPERTY_NAME_REGION_ID = "RegionID";
+    private static final String PROPERTY_NAME_REGION_NAME = "RegionName";
 
-		try {
-			Element root = doc.getDocumentElement();
-			Element ele = (Element) root.getElementsByTagName("FetchedDate")
-					.item(0);
-			map.put("FetchedDate", (XMLManager.getFirstChildNodeValue(ele)));
+    private static final String PROPERTY_NAME_CURRENT_CAPACITY_REBUILT_DATE = "RebuiltDate";
+    private static final String PROPERTY_NAME_CURRENT_CAPACITY_TERRACES = "Terraces";
+    private static final String PROPERTY_NAME_CURRENT_CAPACITY_BASIC = "Basic";
+    private static final String PROPERTY_NAME_CURRENT_CAPACITY_ROOF = "Roof";
+    private static final String PROPERTY_NAME_CURRENT_CAPACITY_VIP = "VIP";
+    private static final String PROPERTY_NAME_CURRENT_CAPACITY_TOTAL = "Total";
 
-			// Root wechseln
-			root = (Element) root.getElementsByTagName("Arena").item(0);
-			ele = (Element) root.getElementsByTagName("ArenaID").item(0);
-			map.put("ArenaID", (XMLManager.getFirstChildNodeValue(ele)));
-			ele = (Element) root.getElementsByTagName("ArenaName").item(0);
-			map.put("ArenaName", (XMLManager.getFirstChildNodeValue(ele)));
+    private static final String PROPERTY_NAME_EXPANDING_CAPACITY_IS_EXPANDING = "isExpanding";
+    private static final String PROPERTY_NAME_EXPANDING_CAPACITY_EXPANSION_DATE = "ExpansionDate";
+    private static final String PROPERTY_NAME_EXPANDING_CAPACITY_TERRACES = "ExTerraces";
+    private static final String PROPERTY_NAME_EXPANDING_CAPACITY_BASIC = "ExBasic";
+    private static final String PROPERTY_NAME_EXPANDING_CAPACITY_ROOF = "ExRoof";
+    private static final String PROPERTY_NAME_EXPANDING_CAPACITY_VIP = "ExVIP";
+    private static final String PROPERTY_NAME_EXPANDING_CAPACITY_TOTAL = "ExTotal";
 
-			Element tmpRoot = (Element) root.getElementsByTagName("Team").item(
-					0);
-			ele = (Element) tmpRoot.getElementsByTagName("TeamID").item(0);
-			map.put("TeamID", (XMLManager.getFirstChildNodeValue(ele)));
-			ele = (Element) tmpRoot.getElementsByTagName("TeamName").item(0);
-			map.put("TeamName", (XMLManager.getFirstChildNodeValue(ele)));
+    private static final String PROPERTY_VALUE_ZERO = "0";
+    private static final String PROPERTY_VALUE_ONE = "1";
 
-			tmpRoot = (Element) root.getElementsByTagName("League").item(0);
-			ele = (Element) tmpRoot.getElementsByTagName("LeagueID").item(0);
-			map.put("LeagueID", (XMLManager.getFirstChildNodeValue(ele)));
-			ele = (Element) tmpRoot.getElementsByTagName("LeagueName").item(0);
-			map.put("LeagueName", (XMLManager.getFirstChildNodeValue(ele)));
+    private XMLArenaParser() {
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
+    }
 
-			tmpRoot = (Element) root.getElementsByTagName("Region").item(0);
-			ele = (Element) tmpRoot.getElementsByTagName("RegionID").item(0);
-			map.put("RegionID", (XMLManager.getFirstChildNodeValue(ele)));
-			ele = (Element) tmpRoot.getElementsByTagName("RegionName").item(0);
-			map.put("RegionName", (XMLManager.getFirstChildNodeValue(ele)));
+    public static Map<String, String> parseArenaFromString(String str) {
+        return parseDetails(XMLManager.parseString(str));
+    }
 
-			tmpRoot = (Element) root.getElementsByTagName("CurrentCapacity")
-					.item(0);
-			ele = (Element) tmpRoot.getElementsByTagName("RebuiltDate").item(0);
+    private static Map<String, String> parseDetails(Document doc) {
+        Map<String, String> map = new SafeInsertMap();
 
-			if (XMLManager.getAttributeValue(ele, "Available").trim()
-					.equalsIgnoreCase("true")) {
-				map.put("RebuiltDate", (XMLManager.getFirstChildNodeValue(ele)));
-			}
+        if (doc == null) {
+            return map;
+        }
 
-			ele = (Element) tmpRoot.getElementsByTagName("Terraces").item(0);
-			map.put("Terraces", (XMLManager.getFirstChildNodeValue(ele)));
-			ele = (Element) tmpRoot.getElementsByTagName("Basic").item(0);
-			map.put("Basic", (XMLManager.getFirstChildNodeValue(ele)));
-			ele = (Element) tmpRoot.getElementsByTagName("Roof").item(0);
-			map.put("Roof", (XMLManager.getFirstChildNodeValue(ele)));
-			ele = (Element) tmpRoot.getElementsByTagName("VIP").item(0);
-			map.put("VIP", (XMLManager.getFirstChildNodeValue(ele)));
-			ele = (Element) tmpRoot.getElementsByTagName("Total").item(0);
-			map.put("Total", (XMLManager.getFirstChildNodeValue(ele)));
+        try {
+            Element root = doc.getDocumentElement();
+            Element element = (Element) root.getElementsByTagName(ELEMENT_NAME_FETCHED_DATE).item(0);
+            map.put(PROPERTY_NAME_FETCHED_DATE, XMLManager.getFirstChildNodeValue(element));
 
-			tmpRoot = (Element) root.getElementsByTagName("ExpandedCapacity")
-					.item(0);
+            // Root wechseln
+            root = (Element) root.getElementsByTagName(ELEMENT_NAME_ARENA).item(0);
+            element = (Element) root.getElementsByTagName(ELEMENT_NAME_ARENA_ID).item(0);
+            map.put(PROPERTY_NAME_ARENA_ID, XMLManager.getFirstChildNodeValue(element));
+            element = (Element) root.getElementsByTagName(ELEMENT_NAME_ARENA_NAME).item(0);
+            map.put(PROPERTY_NAME_ARENA_NAME, XMLManager.getFirstChildNodeValue(element));
 
-			if (XMLManager.getAttributeValue(ele, "Available").trim()
-					.equalsIgnoreCase("true")) {
-				map.put("isExpanding", "1");
-				ele = (Element) tmpRoot.getElementsByTagName("ExpansionDate")
-						.item(0);
-				map.put("ExpansionDate",
-						(XMLManager.getFirstChildNodeValue(ele)));
-				ele = (Element) tmpRoot.getElementsByTagName("Terraces")
-						.item(0);
-				map.put("ExTerraces", (XMLManager.getFirstChildNodeValue(ele)));
-				ele = (Element) tmpRoot.getElementsByTagName("Basic").item(0);
-				map.put("ExBasic", (XMLManager.getFirstChildNodeValue(ele)));
-				ele = (Element) tmpRoot.getElementsByTagName("Roof").item(0);
-				map.put("ExRoof", (XMLManager.getFirstChildNodeValue(ele)));
-				ele = (Element) tmpRoot.getElementsByTagName("VIP").item(0);
-				map.put("ExVIP", (XMLManager.getFirstChildNodeValue(ele)));
-				ele = (Element) tmpRoot.getElementsByTagName("Total").item(0);
-				map.put("ExTotal", (XMLManager.getFirstChildNodeValue(ele)));
-			} else {
-				map.put("isExpanding", "0");
-				map.put("ExpansionDate", "0");
-				map.put("ExTerraces", "0");
-				map.put("ExBasic", "0");
-				map.put("ExRoof", "0");
-				map.put("ExVIP", "0");
-				map.put("ExTotal", "0");
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(XMLArenaParser.class, e);
-		}
+            Element tmpRoot = (Element) root.getElementsByTagName(ELEMENT_NAME_TEAM).item(
+                    0);
+            element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_TEAM_ID).item(0);
+            map.put(PROPERTY_NAME_TEAM_ID, XMLManager.getFirstChildNodeValue(element));
+            element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_TEAM_NAME).item(0);
+            map.put(PROPERTY_NAME_TEAM_NAME, XMLManager.getFirstChildNodeValue(element));
 
-		return map;
-	}
+            tmpRoot = (Element) root.getElementsByTagName(ELEMENT_NAME_LEAGUE).item(0);
+            element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_LEAGUE_ID).item(0);
+            map.put(PROPERTY_NAME_LEAGUE_ID, XMLManager.getFirstChildNodeValue(element));
+            element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_LEAGUE_NAME).item(0);
+            map.put(PROPERTY_NAME_LEAGUE_NAME, XMLManager.getFirstChildNodeValue(element));
+
+            tmpRoot = (Element) root.getElementsByTagName(ELEMENT_NAME_REGION).item(0);
+            element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_REGION_ID).item(0);
+            map.put(PROPERTY_NAME_REGION_ID, XMLManager.getFirstChildNodeValue(element));
+            element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_REGION_NAME).item(0);
+            map.put(PROPERTY_NAME_REGION_NAME, XMLManager.getFirstChildNodeValue(element));
+
+            tmpRoot = (Element) root.getElementsByTagName(ELEMENT_NAME_CURRENT_CAPACITY).item(0);
+            element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_CURRENT_CAPACITY_REBUILT_DATE).item(0);
+
+            final boolean rebuiltDateAvailable = getXmlAttributeAsBoolean(element, ATTRIBUTE_NAME_CAPACITY_AVAILABLE);
+            if (rebuiltDateAvailable) {
+                map.put(PROPERTY_NAME_CURRENT_CAPACITY_REBUILT_DATE, XMLManager.getFirstChildNodeValue(element));
+            }
+
+            element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_CAPACITY_TERRACES).item(0);
+            map.put(PROPERTY_NAME_CURRENT_CAPACITY_TERRACES, XMLManager.getFirstChildNodeValue(element));
+            element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_CAPACITY_BASIC).item(0);
+            map.put(PROPERTY_NAME_CURRENT_CAPACITY_BASIC, XMLManager.getFirstChildNodeValue(element));
+            element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_CAPACITY_ROOF).item(0);
+            map.put(PROPERTY_NAME_CURRENT_CAPACITY_ROOF, XMLManager.getFirstChildNodeValue(element));
+            element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_CAPACITY_VIP).item(0);
+            map.put(PROPERTY_NAME_CURRENT_CAPACITY_VIP, XMLManager.getFirstChildNodeValue(element));
+            element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_CAPACITY_TOTAL).item(0);
+            map.put(PROPERTY_NAME_CURRENT_CAPACITY_TOTAL, XMLManager.getFirstChildNodeValue(element));
+
+            tmpRoot = (Element) root.getElementsByTagName(ELEMENT_NAME_EXPANDED_CAPACITY).item(0);
+
+            final boolean expandedCapacityAvailable = getXmlAttributeAsBoolean(tmpRoot, ATTRIBUTE_NAME_CAPACITY_AVAILABLE);
+            if (expandedCapacityAvailable) {
+                map.put(PROPERTY_NAME_EXPANDING_CAPACITY_IS_EXPANDING, PROPERTY_VALUE_ONE);
+                element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_EXPANDED_CAPACITY_EXPANSION_DATE).item(0);
+                map.put(PROPERTY_NAME_EXPANDING_CAPACITY_EXPANSION_DATE, XMLManager.getFirstChildNodeValue(element));
+                element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_CAPACITY_TERRACES).item(0);
+                map.put(PROPERTY_NAME_EXPANDING_CAPACITY_TERRACES, XMLManager.getFirstChildNodeValue(element));
+                element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_CAPACITY_BASIC).item(0);
+                map.put(PROPERTY_NAME_EXPANDING_CAPACITY_BASIC, XMLManager.getFirstChildNodeValue(element));
+                element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_CAPACITY_ROOF).item(0);
+                map.put(PROPERTY_NAME_EXPANDING_CAPACITY_ROOF, XMLManager.getFirstChildNodeValue(element));
+                element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_CAPACITY_VIP).item(0);
+                map.put(PROPERTY_NAME_EXPANDING_CAPACITY_VIP, XMLManager.getFirstChildNodeValue(element));
+                element = (Element) tmpRoot.getElementsByTagName(ELEMENT_NAME_CAPACITY_TOTAL).item(0);
+                map.put(PROPERTY_NAME_EXPANDING_CAPACITY_TOTAL, XMLManager.getFirstChildNodeValue(element));
+            } else {
+                map.put(PROPERTY_NAME_EXPANDING_CAPACITY_IS_EXPANDING, PROPERTY_VALUE_ZERO);
+                map.put(PROPERTY_NAME_EXPANDING_CAPACITY_EXPANSION_DATE, PROPERTY_VALUE_ZERO);
+                map.put(PROPERTY_NAME_EXPANDING_CAPACITY_TERRACES, PROPERTY_VALUE_ZERO);
+                map.put(PROPERTY_NAME_EXPANDING_CAPACITY_BASIC, PROPERTY_VALUE_ZERO);
+                map.put(PROPERTY_NAME_EXPANDING_CAPACITY_ROOF, PROPERTY_VALUE_ZERO);
+                map.put(PROPERTY_NAME_EXPANDING_CAPACITY_VIP, PROPERTY_VALUE_ZERO);
+                map.put(PROPERTY_NAME_EXPANDING_CAPACITY_TOTAL, PROPERTY_VALUE_ZERO);
+            }
+        } catch (Exception e) {
+            HOLogger.instance().log(XMLArenaParser.class, e);
+        }
+
+        return map;
+    }
+
+    @SuppressWarnings(value = "SameParameterValue")
+    private static boolean getXmlAttributeAsBoolean(Element element, String attributeName) {
+        return Boolean.parseBoolean(XMLManager.getAttributeValue(element, attributeName).trim());
+    }
 }

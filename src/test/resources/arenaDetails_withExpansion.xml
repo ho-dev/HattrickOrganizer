@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<HattrickData>
+    <FileName>arenadetails.xml</FileName>
+    <Version>1.3</Version>
+    <UserID>1234567</UserID>
+    <FetchedDate>2024-08-21 11:08:22</FetchedDate>
+    <Arena>
+        <ArenaID>2345678</ArenaID>
+        <ArenaName>ArenaName</ArenaName>
+        <Team>
+            <TeamID>3456789</TeamID>
+            <TeamName>TeamName</TeamName>
+        </Team>
+        <League>
+            <LeagueID>3</LeagueID>
+            <LeagueName>LeagueName</LeagueName>
+        </League>
+        <Region>
+            <RegionID>227</RegionID>
+            <RegionName>RegionName</RegionName>
+        </Region>
+        <CurrentCapacity>
+            <RebuiltDate Available="False"/>
+            <Terraces>8000</Terraces>
+            <Basic>3000</Basic>
+            <Roof>1792</Roof>
+            <VIP>282</VIP>
+            <Total>13074</Total>
+        </CurrentCapacity>
+        <ExpandedCapacity Available="True">
+            <ExpansionDate>2024-08-30 11:07:17</ExpansionDate>
+            <Terraces>226</Terraces>
+            <Basic>234</Basic>
+            <Roof>1138</Roof>
+            <VIP>78</VIP>
+            <Total>1676</Total>
+        </ExpandedCapacity>
+    </Arena>
+</HattrickData>
