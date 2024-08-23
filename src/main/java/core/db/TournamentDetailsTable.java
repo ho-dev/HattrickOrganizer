@@ -6,7 +6,7 @@ import java.sql.Types;
 
 public final class TournamentDetailsTable extends AbstractTable {
 
-	public final static String TABLENAME = "TOURNAMENTDETAILS";
+	public static final String TABLENAME = "TOURNAMENTDETAILS";
 
 	TournamentDetailsTable(ConnectionManager adapter){
 		super(TABLENAME,adapter);

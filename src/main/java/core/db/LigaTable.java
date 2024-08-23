@@ -6,7 +6,7 @@ import java.sql.Types;
 public final class LigaTable extends AbstractTable {
 
 	/** tablename **/
-	public final static String TABLENAME = "LIGA";
+	public static final String TABLENAME = "LIGA";
 	
 	LigaTable(ConnectionManager adapter){
 		super(TABLENAME,adapter);

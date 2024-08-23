@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 final class MatchDetailsTable extends AbstractTable {
 
-	public final static String TABLENAME = "MATCHDETAILS";
+	public static final String TABLENAME = "MATCHDETAILS";
 
 	MatchDetailsTable(ConnectionManager adapter) {
 		super(TABLENAME, adapter);

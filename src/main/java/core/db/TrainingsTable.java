@@ -15,7 +15,7 @@ import java.util.stream.Stream;
  * This method will be called automatically after table creation and during upgrade to v5.0
  */
 final class TrainingsTable extends AbstractTable {
-	final static String TABLENAME = "TRAINING";
+	static final String TABLENAME = "TRAINING";
 	
 	TrainingsTable(ConnectionManager adapter){
 		super(TABLENAME, adapter);

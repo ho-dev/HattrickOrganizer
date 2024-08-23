@@ -5,7 +5,7 @@ import core.util.HODateTime;
 import java.sql.Types;
 
 final class BasicsTable extends AbstractTable {
-	final static String TABLENAME = "BASICS";
+	static final String TABLENAME = "BASICS";
 
 	BasicsTable(ConnectionManager connectionManager) {
 		super(TABLENAME, connectionManager);

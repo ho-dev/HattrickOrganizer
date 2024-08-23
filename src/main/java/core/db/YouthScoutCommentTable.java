@@ -9,7 +9,7 @@ import java.util.List;
 public class YouthScoutCommentTable extends AbstractTable {
 
     /** tablename **/
-    final static String TABLENAME = "YOUTHSCOUTCOMMENT";
+    static final String TABLENAME = "YOUTHSCOUTCOMMENT";
 
     YouthScoutCommentTable(ConnectionManager adapter) {
         super(TABLENAME, adapter);

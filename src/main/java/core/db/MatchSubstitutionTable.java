@@ -12,10 +12,10 @@ public class MatchSubstitutionTable extends AbstractTable {
 	/**
 	 * tablename
 	 **/
-	public final static String TABLENAME = "MATCHSUBSTITUTION";
+	public static final String TABLENAME = "MATCHSUBSTITUTION";
 
 	// Dummy value for ids not used (hrf, team, match)
-	private final static int DUMMY = -101;
+	private static final int DUMMY = -101;
 
 	protected MatchSubstitutionTable(ConnectionManager adapter) {
 		super(TABLENAME, adapter);

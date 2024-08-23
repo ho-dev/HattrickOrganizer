@@ -6,7 +6,7 @@ import java.sql.*;
 import java.util.List;
 
 final class NtTeamTable extends AbstractTable {
-	public final static String TABLENAME = "NTTEAM";
+	public static final String TABLENAME = "NTTEAM";
 
 	NtTeamTable(ConnectionManager adapter) {
 		super(TABLENAME, adapter);

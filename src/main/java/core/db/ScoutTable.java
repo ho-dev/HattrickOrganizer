@@ -10,7 +10,7 @@ import java.util.Vector;
 final class ScoutTable extends AbstractTable {
 
 	/** tablename **/
-	public final static String TABLENAME = "SCOUT";
+	public static final String TABLENAME = "SCOUT";
 	
 	ScoutTable(ConnectionManager adapter){
 		super(TABLENAME,adapter);

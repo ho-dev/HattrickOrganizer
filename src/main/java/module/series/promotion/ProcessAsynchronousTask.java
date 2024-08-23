@@ -33,7 +33,7 @@ public class ProcessAsynchronousTask<T> {
     }
 
     // Keep number of threads conservative to not hammer HT server.
-    private final static int NUM_THREADS = 3;
+    private static final int NUM_THREADS = 3;
     private final ExecutorService executorService = Executors.newFixedThreadPool(NUM_THREADS);
 
     final Queue<T> queue = new LinkedBlockingQueue<>();

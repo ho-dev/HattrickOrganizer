@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 final class MatchHighlightsTable extends AbstractTable {
-	final static String TABLENAME = "MATCHHIGHLIGHTS";
+	static final String TABLENAME = "MATCHHIGHLIGHTS";
 
 	MatchHighlightsTable(ConnectionManager adapter) {
 		super(TABLENAME, adapter);

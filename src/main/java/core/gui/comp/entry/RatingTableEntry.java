@@ -18,7 +18,7 @@ import static core.util.Helper.INTEGERFORMAT;
 public class RatingTableEntry extends AbstractHOTableEntry {
 
     private final Color bgColor = ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
-    private final static Icon iconStar = ImageUtilities.getStarIcon();
+    private static final Icon iconStar = ImageUtilities.getStarIcon();
 
     private JComponent m_clComponent = new JPanel();
 

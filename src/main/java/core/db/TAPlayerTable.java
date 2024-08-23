@@ -13,7 +13,7 @@ import java.sql.Types;
  * 
  */
 final class TAPlayerTable extends AbstractTable {
-	final static String TABLENAME = "TA_PLAYER";
+	static final String TABLENAME = "TA_PLAYER";
 
 	TAPlayerTable(ConnectionManager adapter) {
 		super(TABLENAME, adapter);

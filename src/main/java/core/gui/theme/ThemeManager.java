@@ -43,15 +43,15 @@ import javax.swing.text.*;
 public final class ThemeManager {
 
 	/** Name of the default theme. */
-	public final static String DEFAULT_THEME_NAME = NimbusTheme.THEME_NAME;
+	public static final String DEFAULT_THEME_NAME = NimbusTheme.THEME_NAME;
 
-	private final static Path tempImgPath = Paths.get(UserManager.instance().getDbParentFolder() , "img");
-	private final static Path teamLogoPath = tempImgPath.resolve("clubLogos");
-	private final static File teamLogoDir = new File(String.valueOf(teamLogoPath));
-	private final static Path playerAvatarPath = tempImgPath.resolve("playersAvatar");
-	private final static File playerAvatarDir = new File(String.valueOf(playerAvatarPath));
-	private final static Map<String, Theme> themes = new LinkedHashMap<>();
-	private final static ThemeManager MANAGER = new ThemeManager();
+	private static final Path tempImgPath = Paths.get(UserManager.instance().getDbParentFolder() , "img");
+	private static final Path teamLogoPath = tempImgPath.resolve("clubLogos");
+	private static final File teamLogoDir = new File(String.valueOf(teamLogoPath));
+	private static final Path playerAvatarPath = tempImgPath.resolve("playersAvatar");
+	private static final File playerAvatarDir = new File(String.valueOf(playerAvatarPath));
+	private static final Map<String, Theme> themes = new LinkedHashMap<>();
+	private static final ThemeManager MANAGER = new ThemeManager();
 
 	HOClassicSchema classicSchema = new HOClassicSchema();
 

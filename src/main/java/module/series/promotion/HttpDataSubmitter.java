@@ -21,7 +21,7 @@ import java.util.function.Function;
  */
 public class HttpDataSubmitter implements DataSubmitter {
 
-    private final static String HOSERVER_BASEURL = ModuleConfig.instance()
+    private static final String HOSERVER_BASEURL = ModuleConfig.instance()
             .getString("PromotionStatus_HoServer",
                     "https://UNF6X7OJB7PFLVEQ.anvil.app/_/private_api/HN4JZ6UMWUM7I4PTILWZTJFD");
 

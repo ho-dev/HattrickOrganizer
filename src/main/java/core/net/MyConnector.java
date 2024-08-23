@@ -39,8 +39,8 @@ public class MyConnector {
 	private static final String htUrl = "https://chpp.hattrick.org/chppxml.ashx";
 	public static String m_sIDENTIFIER = "HO! Hattrick Organizer V" + HO.VERSION;
 	private static MyConnector m_clInstance;
-	private final static String CONSUMER_KEY = ">Ij-pDTDpCq+TDrKA^nnE9";
-	private final static String CONSUMER_SECRET = "2/Td)Cprd/?q`nAbkAL//F+eGD@KnnCc>)dQgtP,p+p";
+	private static final String CONSUMER_KEY = ">Ij-pDTDpCq+TDrKA^nnE9";
+	private static final String CONSUMER_SECRET = "2/Td)Cprd/?q`nAbkAL//F+eGD@KnnCc>)dQgtP,p+p";
 	private ProxySettings proxySettings;
 	private final OAuth10aService m_OAService;
 	private OAuth1AccessToken m_OAAccessToken;

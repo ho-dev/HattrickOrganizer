@@ -13,7 +13,7 @@ public final class FutureTrainingTable extends AbstractTable {
 	/**
 	 * tablename
 	 **/
-	public final static String TABLENAME = "FUTURETRAINING";
+	public static final String TABLENAME = "FUTURETRAINING";
 
 	FutureTrainingTable(ConnectionManager adapter) {
 		super(TABLENAME, adapter);

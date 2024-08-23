@@ -7,7 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 final class ModuleConfigTable extends AbstractTable {
-	final static String TABLENAME = "MODULE_CONFIGURATION";
+	static final String TABLENAME = "MODULE_CONFIGURATION";
 
 	ModuleConfigTable(ConnectionManager adapter) {
 		super(TABLENAME, adapter);

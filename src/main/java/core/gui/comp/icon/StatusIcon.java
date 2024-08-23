@@ -16,7 +16,7 @@ import static core.gui.theme.HOIconName.*;
 import static core.gui.theme.HOIconName.ONEYELLOW_TINY;
 
 public class StatusIcon implements Icon {
-    private final static Map<Object, Object> TRANSFERLISTED_ICON_COLOR_MAP = Map.of("foregroundColor", ThemeManager.getColor(HOColorName.PLAYER_SPECIALTY_COLOR));
+    private static final Map<Object, Object> TRANSFERLISTED_ICON_COLOR_MAP = Map.of("foregroundColor", ThemeManager.getColor(HOColorName.PLAYER_SPECIALTY_COLOR));
 
     private int ICON_SIZE = 12;
     private int ICON_SPACE = 2;
@@ -25,12 +25,12 @@ public class StatusIcon implements Icon {
     private Icon TWO_YELLOW_ICON = ImageUtilities.getSvgIcon(TWOYELLOW_TINY, ICON_SIZE, ICON_SIZE);
     private Icon ONE_YELLOW_ICON = ImageUtilities.getSvgIcon(ONEYELLOW_TINY, ICON_SIZE, ICON_SIZE);
 
-    private final static int LARGE_ICON_SIZE = 16;
-    private final static int LARGE_ICON_SPACE = 3;
-    private final static Icon LARGE_TRANSFERLISTED_ICON = ImageUtilities.getSvgIcon(TRANSFERLISTED_TINY, TRANSFERLISTED_ICON_COLOR_MAP, 19, 19);
-    private final static Icon LARGE_SUSPENDED_ICON = ImageUtilities.getSvgIcon(SUSPENDED_TINY, LARGE_ICON_SIZE, LARGE_ICON_SIZE);
-    private final static Icon LARGE_TWO_YELLOW_ICON = ImageUtilities.getSvgIcon(TWOYELLOW_TINY, LARGE_ICON_SIZE, LARGE_ICON_SIZE);
-    private final static Icon LARGE_ONE_YELLOW_ICON = ImageUtilities.getSvgIcon(ONEYELLOW_TINY, LARGE_ICON_SIZE, LARGE_ICON_SIZE);
+    private static final int LARGE_ICON_SIZE = 16;
+    private static final int LARGE_ICON_SPACE = 3;
+    private static final Icon LARGE_TRANSFERLISTED_ICON = ImageUtilities.getSvgIcon(TRANSFERLISTED_TINY, TRANSFERLISTED_ICON_COLOR_MAP, 19, 19);
+    private static final Icon LARGE_SUSPENDED_ICON = ImageUtilities.getSvgIcon(SUSPENDED_TINY, LARGE_ICON_SIZE, LARGE_ICON_SIZE);
+    private static final Icon LARGE_TWO_YELLOW_ICON = ImageUtilities.getSvgIcon(TWOYELLOW_TINY, LARGE_ICON_SIZE, LARGE_ICON_SIZE);
+    private static final Icon LARGE_ONE_YELLOW_ICON = ImageUtilities.getSvgIcon(ONEYELLOW_TINY, LARGE_ICON_SIZE, LARGE_ICON_SIZE);
 
     private final List<Icon> icons = new ArrayList<>();
 

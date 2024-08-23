@@ -7,7 +7,7 @@ import java.util.List;
 
 public class FuturePlayerTrainingTable extends AbstractTable {
 
-    public final static String TABLENAME = "FUTUREPLAYERTRAINING";
+    public static final String TABLENAME = "FUTUREPLAYERTRAINING";
 
     /**
      * constructor

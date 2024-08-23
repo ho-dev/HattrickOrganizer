@@ -6,7 +6,7 @@ import java.sql.Types;
 
 public class TransferTypeTable extends AbstractTable {
 
-	final static String TABLENAME = "TRANSFERTYPE";
+    static final String TABLENAME = "TRANSFERTYPE";
 	
 	TransferTypeTable(ConnectionManager adapter){
 		super(TABLENAME,adapter);

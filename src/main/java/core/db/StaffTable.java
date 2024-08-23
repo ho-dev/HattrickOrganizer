@@ -7,7 +7,7 @@ import java.util.List;
 
 public class StaffTable extends AbstractTable{
 	/** tablename **/
-	public final static String TABLENAME = "STAFF";
+	public static final String TABLENAME = "STAFF";
 
 	protected StaffTable(ConnectionManager adapter) {
 		super(TABLENAME, adapter);
