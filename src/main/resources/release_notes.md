@@ -38,6 +38,9 @@
 
 ### Misc
 
+* Fix #2137: Resolved an issue where the Download Dialog would not reappear after being closed with the 'X' button. The
+  dialog will now correctly reappear when triggered again.
+
 ## Translations
 
 Reports by Contributors - June 23, 2024 - July 01, 2024
