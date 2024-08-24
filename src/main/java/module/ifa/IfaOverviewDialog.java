@@ -72,7 +72,7 @@ public class IfaOverviewDialog extends JDialog {
 		table.getColumnModel().getColumn(MyTableModel.COL_ACTIVE_USERS)
 				.setCellRenderer(new DoubleTableCellRenderer(0));
 
-		TableRowSorter<MyTableModel> sorter = new TableRowSorter<MyTableModel>(tblModel);
+		TableRowSorter<MyTableModel> sorter = new TableRowSorter<>(tblModel);
 		sorter.setComparator(MyTableModel.COL_COUNTRY, new Comparator<Country>() {
 
 			@Override
@@ -81,7 +81,7 @@ public class IfaOverviewDialog extends JDialog {
 			}
 
 		});
-		List<SortKey> sortKeys = new ArrayList<RowSorter.SortKey>();
+		List<SortKey> sortKeys = new ArrayList<>();
 		sortKeys.add(new SortKey(MyTableModel.COL_COUNTRY, SortOrder.ASCENDING));
 		sorter.setSortKeys(sortKeys);
 		table.setRowSorter(sorter);
@@ -124,7 +124,7 @@ public class IfaOverviewDialog extends JDialog {
 		private String[] columns = { "Country", "Active users", "Coolness", "V", "H" };
 
 		MyTableModel() {
-			this.list = new ArrayList<Entry>();
+			this.list = new ArrayList<>();
 			WorldDetailsManager.instance().getLeagues().stream()
 					.filter(l->l.getLeagueId()!=APACHE_LEAGUE_ID).forEach(l->addEntry(l));
 		}

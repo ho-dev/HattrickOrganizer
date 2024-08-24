@@ -35,7 +35,7 @@ public class MatchPredictionManager {
      * @return Vector holding IMPActions for that match
      */
     public Vector<Action> calculateMatch(TeamData home, TeamData away) {
-        final Vector<Action> actions = new Vector<Action>();
+        final Vector<Action> actions = new Vector<>();
         final MatchData matchengine = new MatchData((TeamData) home, (TeamData) away);
 
         for (int i = 0; i < 91; i++) {

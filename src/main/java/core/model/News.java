@@ -22,7 +22,7 @@ public class News {
 	private float version = -1;
 	private float minimumHOVersion = -1;
 	
-	private List<String> msg = new ArrayList<String>();
+	private List<String> msg = new ArrayList<>();
 	
 
 	public int getType() {

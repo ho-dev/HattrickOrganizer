@@ -123,7 +123,7 @@ public class CheckThreadViolationRepaintManager extends RepaintManager {
 			if (lastComponent != null && c == lastComponent.get()) {
 				return;
 			}
-			lastComponent = new WeakReference<JComponent>(c);
+			lastComponent = new WeakReference<>(c);
 			violationDetected(c, stackTrace);
 		}
 	}

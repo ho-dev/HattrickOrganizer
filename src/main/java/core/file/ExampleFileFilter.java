@@ -66,7 +66,7 @@ public class ExampleFileFilter extends javax.swing.filechooser.FileFilter
      * @see #addExtension
      */
     public ExampleFileFilter() {
-        this.filters = new Hashtable<String,ExampleFileFilter>();
+        this.filters = new Hashtable<>();
     }
 
     /**
@@ -253,7 +253,7 @@ public class ExampleFileFilter extends javax.swing.filechooser.FileFilter
      */
     public final void addExtension(String extension) {
         if (filters == null) {
-            filters = new Hashtable<String,ExampleFileFilter>(5);
+            filters = new Hashtable<>(5);
         }
 
         filters.put(extension.toLowerCase(java.util.Locale.ENGLISH), this);

@@ -73,7 +73,7 @@ public class RatingPredictionConfig {
     	if (allPredictionNames != null)
     		return allPredictionNames;
     	else {
-    		ArrayList<String> list = new ArrayList<String>();
+    		ArrayList<String> list = new ArrayList<>();
     		try {
     			InputStream predictionIS = FileLoader.instance().getFileInputStream(new String[]{predConfigFile, predDir + "/predictionTypes.conf"});
     			if (predictionIS==null) {

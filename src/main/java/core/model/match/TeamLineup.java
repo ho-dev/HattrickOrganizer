@@ -24,7 +24,7 @@ public class TeamLineup {
      */
     public TeamLineup() {
         for (int i = 0; i < 4; i++) {
-            players[i] = new ArrayList<String>();
+            players[i] = new ArrayList<>();
         }
     }
 

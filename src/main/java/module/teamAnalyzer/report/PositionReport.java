@@ -17,7 +17,7 @@ public class PositionReport extends Report {
     //~ Instance fields ----------------------------------------------------------------------------
 
     /** List of tactics used offensive, defensive etc */
-    private Map<String,TacticReport> tacticReports = new HashMap<String,TacticReport>();
+    private Map<String,TacticReport> tacticReports = new HashMap<>();
 
     //~ Constructors -------------------------------------------------------------------------------
 

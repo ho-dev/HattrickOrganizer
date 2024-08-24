@@ -30,8 +30,8 @@ public class PositionChooser extends JPanel {
 	private final Color COLOR_POS_DEFAULT = COLOR_BG;
 	private final Color COLOR_POS_OCCUPIED = Color.LIGHT_GRAY;
 	private final Color COLOR_POS_SELECTED = Color.YELLOW;
-	private final LinkedHashMap<Integer, PositionPanel> positions = new LinkedHashMap<Integer, PositionPanel>();
-	private final List<PositionSelectionListener> positionSelectionListeners = new ArrayList<PositionSelectionListener>();
+	private final LinkedHashMap<Integer, PositionPanel> positions = new LinkedHashMap<>();
+	private final List<PositionSelectionListener> positionSelectionListeners = new ArrayList<>();
 	private Integer selected;
 
 	public PositionChooser() {

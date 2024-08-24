@@ -323,7 +323,7 @@ public class FilterPanel extends JPanel {
 	}
 
 	private List<CBItem> getTactics() {
-		List<CBItem> list = new ArrayList<CBItem>();
+		List<CBItem> list = new ArrayList<>();
 
 		list.add(new CBItem(getLangStr("ls.team.tactic_short.pressing"),
 				IMatchDetails.TAKTIK_PRESSING));
@@ -338,13 +338,13 @@ public class FilterPanel extends JPanel {
 		list.add(new CBItem(getLangStr("ls.team.tactic_short.longshots"),
 				IMatchDetails.TAKTIK_LONGSHOTS));
 
-		Collections.sort(list, new Comparator<CBItem>() {
+		Collections.sort(list, new Comparator<>() {
 
-			@Override
-			public int compare(CBItem o1, CBItem o2) {
-				return o1.getText().compareTo(o2.getText());
-			}
-		});
+            @Override
+            public int compare(CBItem o1, CBItem o2) {
+                return o1.getText().compareTo(o2.getText());
+            }
+        });
 
 		list.add(0, new CBItem(getLangStr("ls.team.tactic_short.normal"), IMatchDetails.TAKTIK_NORMAL));
 		list.add(0, null);
@@ -446,17 +446,17 @@ public class FilterPanel extends JPanel {
 	private void updatePlayerComboBoxData(boolean currentPlayersOnly) {
 		CBItem oldItem = (CBItem) this.playerComboBox.getSelectedItem();
 
-		Comparator<Player> comparator = new Comparator<Player>() {
+		Comparator<Player> comparator = new Comparator<>() {
 
-			@Override
-			public int compare(Player o1, Player o2) {
-				return o1.getFullName().compareTo(o2.getFullName());
-			}
-		};
+            @Override
+            public int compare(Player o1, Player o2) {
+                return o1.getFullName().compareTo(o2.getFullName());
+            }
+        };
 
-		List<CBItem> playerItems = new ArrayList<CBItem>();
-		List<Player> players = new ArrayList<Player>(HOVerwaltung.instance().getModel()
-				.getCurrentPlayers());
+		List<CBItem> playerItems = new ArrayList<>();
+		List<Player> players = new ArrayList<>(HOVerwaltung.instance().getModel()
+                .getCurrentPlayers());
 		Collections.sort(players, comparator);
 		for (Player player : players) {
 			playerItems.add(new PlayerCBItem(player.getFullName(), player.getPlayerId(), player
@@ -464,7 +464,7 @@ public class FilterPanel extends JPanel {
 		}
 
 		if (!currentPlayersOnly) {
-			players = new ArrayList<Player>(HOVerwaltung.instance().getModel().getFormerPlayers());
+			players = new ArrayList<>(HOVerwaltung.instance().getModel().getFormerPlayers());
 			Collections.sort(players, comparator);
 			if (!players.isEmpty()) {
 				playerItems.add(null);

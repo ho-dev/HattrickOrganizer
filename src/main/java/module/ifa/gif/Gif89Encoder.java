@@ -101,7 +101,7 @@ public class Gif89Encoder {
 	private int bgIndex = 0;
 	private int loopCount = 1;
 	private String theComments;
-	private List<Gif89Frame> vFrames = new ArrayList<Gif89Frame>();
+	private List<Gif89Frame> vFrames = new ArrayList<>();
 
 	/**
 	 * Use this default constructor if you'll be adding multiple frames

@@ -246,7 +246,7 @@ class SkillAdjuster {
 	
 	protected int calculateWage(CalcVariables calcPlayer, double skillDelta) {
 
-		List<Double> wageElements = new ArrayList<Double>();
+		List<Double> wageElements = new ArrayList<>();
 		
 		wageElements.add(Math.pow((Math.max(calcPlayer.getDefending() + skillDelta, 1) - 1),6.4) * 0.000830);
 		wageElements.add(Math.pow((Math.max(calcPlayer.getPlaymaking() + skillDelta, 1) - 1),6.4) * 0.00104);

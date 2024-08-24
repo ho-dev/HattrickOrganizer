@@ -54,7 +54,7 @@ public class SQLDialog extends JDialog implements ActionListener {
     public SQLDialog() {
         super(HOMainFrame.instance(), "Simple SQL Editor");
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        statements = new ArrayList<String>();
+        statements = new ArrayList<>();
         CRState = false;
         butBook = new JButton("History");
         butExecute = new JButton(ThemeManager.getIcon(HOIconName.TOOTHEDWHEEL));

@@ -16,7 +16,7 @@ public class SummaryTableSorter<M extends TableModel> extends TableRowSorter<M> 
 	@Override
 	public void setModel(M model) {
 		super.setModel(model);
-		setModelWrapper(new SummaryModelWrapper<M>(getModelWrapper()));
+		setModelWrapper(new SummaryModelWrapper<>(getModelWrapper()));
 	}
 
 	// overridden to use TableCellValueComparator always

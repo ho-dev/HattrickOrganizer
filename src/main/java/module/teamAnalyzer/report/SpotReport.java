@@ -18,10 +18,10 @@ public class SpotReport extends Report {
     //~ Instance fields ----------------------------------------------------------------------------
 
     /** Map of players that played in this spot */
-    private Map<String,PlayerAppearance> players = new HashMap<String,PlayerAppearance>();
+    private Map<String,PlayerAppearance> players = new HashMap<>();
 
     /** Map of PositionReport based on the effective position on the field */
-    private Map<String,PositionReport> positionReports = new HashMap<String,PositionReport>();
+    private Map<String,PositionReport> positionReports = new HashMap<>();
 
     //~ Constructors -------------------------------------------------------------------------------
 
