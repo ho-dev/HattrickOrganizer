@@ -19,7 +19,7 @@ public class ModuleConfig {
 	private ModuleConfig() {
 	}
 
-	public static final ModuleConfig instance() {
+	public static ModuleConfig instance() {
 		if (configuration == null) {
 			configuration = new ModuleConfig();
 			configuration.load();
