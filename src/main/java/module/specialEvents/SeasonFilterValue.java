@@ -6,7 +6,7 @@ public enum SeasonFilterValue {
 
 	private final int id;
 
-	private SeasonFilterValue(int id) {
+	SeasonFilterValue(int id) {
 		this.id = id;
 	}
 

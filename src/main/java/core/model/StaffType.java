@@ -13,7 +13,7 @@ public enum StaffType {
 		
 	private final int id;
 
-	private StaffType(int id) {
+	StaffType(int id) {
 		this.id = id;
 	}
 
