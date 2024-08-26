@@ -3,6 +3,8 @@ package tool.arenasizer;
 import core.db.AbstractTable;
 import org.apache.commons.lang3.math.NumberUtils;
 
+import java.util.Properties;
+
 /**
  * Enthält die Stadiendaten
  */
@@ -57,7 +59,7 @@ public class Stadium extends AbstractTable.Storable {
     /**
      * Creates a new Stadium object.
      */
-    public Stadium(java.util.Properties properties) {
+    public Stadium(Properties properties) {
         m_sStadienname = properties.getProperty("arenaname", "");
         m_iStadiumId = NumberUtils.toInt(properties.getProperty("arenaid"),0);
         //m_iGesamtgroesse = NumberUtils.toInt(properties.getProperty("seattotal"),0);

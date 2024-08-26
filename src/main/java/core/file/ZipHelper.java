@@ -8,6 +8,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
+import java.util.Locale;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
@@ -48,8 +49,8 @@ public class ZipHelper {
 		while (e.hasMoreElements()) {
 			ZipEntry entry = (ZipEntry) e.nextElement();
 			String fileName = destDir + File.separatorChar + entry.getName();
-			if (fileName.toUpperCase(java.util.Locale.ENGLISH).endsWith(
-					entryName.toUpperCase(java.util.Locale.ENGLISH))) {
+			if (fileName.toUpperCase(Locale.ENGLISH).endsWith(
+					entryName.toUpperCase(Locale.ENGLISH))) {
 				saveEntry(zipFile, entry, fileName);
 			}
 		}

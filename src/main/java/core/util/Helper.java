@@ -10,6 +10,7 @@ import core.model.player.MatchRoleID;
 import java.awt.*;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Arrays;
 import java.util.Vector;
 import javax.swing.*;
 
@@ -284,7 +285,7 @@ public class Helper {
 				sortSpalte[i] = toSort[i][spaltenindex];
 			}
 
-			java.util.Arrays.sort(sortSpalte);
+			Arrays.sort(sortSpalte);
 
 			// scan all entries, search value in toSort and copy the value to the result
 			for (int i = 0; i < toSort.length; i++) {

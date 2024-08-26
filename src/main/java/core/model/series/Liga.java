@@ -3,6 +3,8 @@ package core.model.series;
 
 import core.db.AbstractTable;
 
+import java.util.Properties;
+
 /**
  * Enthält alle Ligadaten
  */
@@ -33,7 +35,7 @@ public final class Liga extends AbstractTable.Storable {
     /**
      * Creates a new Liga object.
      */
-    public Liga(java.util.Properties properties) {
+    public Liga(Properties properties) {
         m_sLiga = properties.getProperty("serie", "");
 
         try {
