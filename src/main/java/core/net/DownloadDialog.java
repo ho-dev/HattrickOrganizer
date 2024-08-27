@@ -65,6 +65,10 @@ public class DownloadDialog extends JDialog implements ActionListener {
 		return m_clDownloadDialog;
 	}
 
+	private static void clearInstance() {
+		m_clDownloadDialog = null;
+	}
+
 	/**
 	 * Singleton
 	 */
@@ -99,7 +103,12 @@ public class DownloadDialog extends JDialog implements ActionListener {
 	private void close(){
 		setVisible(false);
 		dispose();
-		m_clDownloadDialog = null;
+	}
+
+	@Override
+	public void dispose() {
+		super.dispose();
+		clearInstance();
 	}
 
 	/**
