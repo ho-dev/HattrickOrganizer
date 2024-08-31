@@ -56,7 +56,7 @@ public class TabellenVerlaufEintrag {
      *
      * @param m_sTeamName New value of property m_sTeamName.
      */
-    public final void setTeamName(java.lang.String m_sTeamName) {
+    public final void setTeamName(String m_sTeamName) {
         this.m_sTeamName = m_sTeamName;
     }
 
@@ -65,7 +65,7 @@ public class TabellenVerlaufEintrag {
      *
      * @return Value of property m_sTeamName.
      */
-    public final java.lang.String getTeamName() {
+    public final String getTeamName() {
         return m_sTeamName;
     }
 }

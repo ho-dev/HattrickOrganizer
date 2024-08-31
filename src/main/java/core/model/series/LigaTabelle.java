@@ -71,7 +71,7 @@ public class LigaTabelle  {
      *
      * @param m_sLigaLandName New value of property m_sLigaLandName.
      */
-    public final void setLigaLandName(java.lang.String m_sLigaLandName) {
+    public final void setLigaLandName(String m_sLigaLandName) {
         this.m_sLigaLandName = m_sLigaLandName;
     }
 
@@ -80,7 +80,7 @@ public class LigaTabelle  {
      *
      * @param m_sLigaName New value of property m_sLigaName.
      */
-    public final void setLigaName(java.lang.String m_sLigaName) {
+    public final void setLigaName(String m_sLigaName) {
         this.m_sLigaName = m_sLigaName;
     }
 

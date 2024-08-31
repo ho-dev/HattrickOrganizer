@@ -83,7 +83,7 @@ public final class Liga extends AbstractTable.Storable {
      *
      * @param m_sLiga New value of property m_sLiga.
      */
-    public void setLiga(java.lang.String m_sLiga) {
+    public void setLiga(String m_sLiga) {
         this.m_sLiga = m_sLiga;
     }
 
@@ -92,7 +92,7 @@ public final class Liga extends AbstractTable.Storable {
      *
      * @return Value of property m_sLiga.
      */
-    public java.lang.String getLiga() {
+    public String getLiga() {
         return m_sLiga;
     }
 

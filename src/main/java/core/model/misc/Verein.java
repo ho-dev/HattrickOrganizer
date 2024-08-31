@@ -315,7 +315,7 @@ public final class Verein extends AbstractTable.Storable {
      *
      * @param m_sTeamName New value of property m_sTeamName.
      */
-    public void setTeamName(java.lang.String m_sTeamName) {
+    public void setTeamName(String m_sTeamName) {
         this.m_sTeamName = m_sTeamName;
     }
 
@@ -324,7 +324,7 @@ public final class Verein extends AbstractTable.Storable {
      *
      * @return Value of property m_sTeamName.
      */
-    public java.lang.String getTeamName() {
+    public String getTeamName() {
         return m_sTeamName;
     }
   
