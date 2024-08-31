@@ -56,7 +56,7 @@ public class StaffMember extends AbstractTable.Storable implements Comparable<St
 	}
 	
 	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
+	 * @see Object#toString()
 	 */
 	@Override
 	public String toString() {

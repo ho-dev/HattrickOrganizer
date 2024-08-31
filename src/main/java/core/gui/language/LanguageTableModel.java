@@ -142,7 +142,7 @@ public class LanguageTableModel extends AbstractTableModel implements TableModel
 	}
 	
 	/* (non-Javadoc)
-	 * @see javax.swing.table.AbstractTableModel#setValueAt(java.lang.Object, int, int)
+	 * @see javax.swing.table.AbstractTableModel#setValueAt(Object, int, int)
 	 */
 	@Override
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {

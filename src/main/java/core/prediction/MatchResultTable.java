@@ -18,7 +18,7 @@ class MatchResultTable extends JTable {
 	MatchResultTable(MatchResult matchresults,boolean isHome) {
 		super();
 		initModel(matchresults,isHome);
-		setDefaultRenderer(java.lang.Object.class, new core.gui.comp.renderer.HODefaultTableCellRenderer());
+		setDefaultRenderer(Object.class, new core.gui.comp.renderer.HODefaultTableCellRenderer());
 		setSelectionBackground(core.gui.comp.renderer.HODefaultTableCellRenderer.SELECTION_BG);
 		setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 	}

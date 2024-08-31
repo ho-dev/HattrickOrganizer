@@ -148,7 +148,7 @@ public class TrainingRecapTable extends JScrollPane {
     private static class FixedTrainingRecapRenderer extends DefaultTableCellRenderer {
 
         /* (non-Javadoc)
-         * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, java.lang.Object, boolean, boolean, int, int)
+         * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable, Object, boolean, boolean, int, int)
          */
         @Override
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,

@@ -85,7 +85,7 @@ public class PastTrainingManager {
 	private static class SkillChangeComparator implements Comparator<SkillChange> {
 
 		/**
-		 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
+		 * @see java.util.Comparator#compare(Object, Object)
 		 */
 		@Override
 		public int compare(SkillChange o1, SkillChange o2) {

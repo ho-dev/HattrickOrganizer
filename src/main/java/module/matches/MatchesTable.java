@@ -27,7 +27,7 @@ final class MatchesTable extends JTable {
 	protected MatchesTable(int matchtyp) {
 		super();
 		initModel(matchtyp, UserParameter.instance().matchLocation);
-		setDefaultRenderer(java.lang.Object.class, new HODefaultTableCellRenderer());
+		setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
 		getTableHeader().setDefaultRenderer(new TableHeaderRenderer1(this));
 		getTableHeader().setFont(getTableHeader().getFont().deriveFont(Font.BOLD));
 		setSelectionBackground(HODefaultTableCellRenderer.SELECTION_BG);
