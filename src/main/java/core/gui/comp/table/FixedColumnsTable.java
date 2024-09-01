@@ -35,7 +35,7 @@ public class FixedColumnsTable extends JScrollPane {
      * Column settings are restored from database.
      * Internally two tables are created, "fixed" for the left hand side, "scroll" for the right hand side
      *
-     * @param fixedColumns number of fixed columnms
+     * @param fixedColumns number of fixed columns
      * @param tableModel table model
      */
     public FixedColumnsTable(int fixedColumns, HOTableModel tableModel) {
@@ -104,7 +104,7 @@ public class FixedColumnsTable extends JScrollPane {
     /**
      * Returns the Locked LeftTable
      *
-     * @return Jtable
+     * @return JTable
      */
     public JTable getFixedTable() {
         return fixed;
@@ -113,7 +113,7 @@ public class FixedColumnsTable extends JScrollPane {
     /**
      * Returns the Scrollable RightTable
      *
-     * @return Jtable
+     * @return JTable
      */
     public JTable getScrollTable() {
         return scroll;

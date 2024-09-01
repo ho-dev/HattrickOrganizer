@@ -3,8 +3,9 @@ package module.playerOverview;
 import core.gui.RefreshManager;
 import core.gui.Refreshable;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
-import core.gui.comp.table.TableSorter;
-import core.gui.model.ReduzedTableModel;
+import core.gui.comp.table.HOTableModel;
+import core.gui.model.PlayerOverviewTableModel;
+import core.gui.model.ReducedTableModel;
 import core.model.player.Player;
 import core.net.HattrickLink;
 import org.jetbrains.annotations.Nullable;
@@ -14,18 +15,18 @@ import java.awt.event.MouseEvent;
 
 public class LineupPlayersTableNameColumn extends JTable implements Refreshable, PlayerTable {
 
-	private final TableSorter tableSorter;
+	private final PlayerOverviewTableModel tableModel;
 
 	/**
 	 * Only the name column
 	 */
-	public LineupPlayersTableNameColumn(TableSorter model) {
+	public LineupPlayersTableNameColumn(PlayerOverviewTableModel model) {
 		super();
-		tableSorter = model;
-		model.addMouseListenerToHeaderInTable(this);
+		tableModel = model;
+//		model.addMouseListenerToHeaderInTable(this);
 		model.addTableModelListener(this);
 		setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		setModel(new ReduzedTableModel(model, 0));
+		setModel(new ReducedTableModel(model, 0));
 		setDefaultRenderer(java.lang.Object.class, new HODefaultTableCellRenderer());
 		RefreshManager.instance().registerRefreshable(this);
 		addMouseListener(new MouseAdapter() {
@@ -33,7 +34,7 @@ public class LineupPlayersTableNameColumn extends JTable implements Refreshable,
 			public void mouseReleased(MouseEvent e) {
 				int rowindex = getSelectedRow();
 				if (rowindex >= 0){
-					Player player = tableSorter.getPlayerAtRow(rowindex);
+					Player player = tableModel.getPlayerAtRow(rowindex);
 					if(player!=null && e.isShiftDown()){
 						HattrickLink.showPlayer(player.getPlayerId());
 					}
@@ -45,12 +46,13 @@ public class LineupPlayersTableNameColumn extends JTable implements Refreshable,
 
 	@Override
 	public @Nullable Player getPlayer(int row) {
-		return this.tableSorter.getPlayerAtRow(row);
+		return this.tableModel.getPlayerAtRow(row);
 	}
 
 	@Override
 	public final void setPlayer(int spielerid) {
-		final int index = tableSorter.getRow4Spieler(spielerid);
+
+		final int index = tableModel.getRowIndexOfPlayer(spielerid);
 
 		if (index >= 0) {
 			this.setRowSelectionInterval(index, index);

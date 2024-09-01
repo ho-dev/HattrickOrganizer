@@ -5,6 +5,7 @@ import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
 import core.gui.comp.renderer.BooleanTableCellRenderer;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
+import core.gui.comp.table.HOTableModel;
 import core.gui.comp.table.TableSorter;
 import core.gui.comp.table.ToolTipHeader;
 import core.gui.comp.table.UserColumn;
@@ -25,6 +26,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JTable;
 import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableRowSorter;
 
 /**
  * Table displaying the players' details in Lineup tab.
@@ -34,7 +36,7 @@ import javax.swing.table.TableColumnModel;
 public final class LineupPlayersTable extends JTable implements core.gui.Refreshable, PlayerTable {
 
 	private LineupTableModel tableModel;
-	private TableSorter tableSorter;
+//	private TableSorter tableSorter;
 
 	LineupPlayersTable() {
 		super();
@@ -48,15 +50,15 @@ public final class LineupPlayersTable extends JTable implements core.gui.Refresh
 
 	@Override
 	public void setPlayer(int iPlayerID) {
-		int index = tableSorter.getRow4Spieler(iPlayerID);
-		if (index >= 0) {
-			this.setRowSelectionInterval(index, index);
+		var rowIndex = tableModel.getRowIndexOfPlayer(iPlayerID);
+		if (rowIndex >= 0) {
+			this.setRowSelectionInterval(rowIndex, rowIndex);
 		}
 	}
 
 	@Override
 	public @Nullable Player getPlayer(int row) {
-		return this.tableSorter.getPlayerAtRow(row);
+		return tableModel.getPlayerAtRow(row);
 	}
 
 	@Override
@@ -66,7 +68,7 @@ public final class LineupPlayersTable extends JTable implements core.gui.Refresh
 	}
 
 	public void reInitModel() {
-		((LineupTableModel) (this.getSorter()).getModel()).reInitData();
+		tableModel.reInitData();
 	}
 
 	@Override
@@ -88,9 +90,11 @@ public final class LineupPlayersTable extends JTable implements core.gui.Refresh
 		};
 	}
 
-	TableSorter getSorter() {
-		return tableSorter;
-	}
+//	TableSorter getSorter() {
+//		return tableSorter;
+//	}
+
+	public LineupTableModel getTableModel() {return this.tableModel;}
 
 	public void saveColumnOrder() {
 		final UserColumn[] columns = tableModel.getDisplayedColumns();
@@ -111,61 +115,47 @@ public final class LineupPlayersTable extends JTable implements core.gui.Refresh
 			tableModel = UserColumnController.instance().getLineupModel();
 
 			tableModel.setValues(HOVerwaltung.instance().getModel().getCurrentPlayers());
-			tableSorter = new TableSorter(tableModel,
-					tableModel.getPositionInArray(UserColumnFactory.ID),
-					getSortSpalte(),
-					tableModel.getPositionInArray(UserColumnFactory.NAME));
+//			tableSorter = new TableSorter(tableModel,
+//					tableModel.getPositionInArray(UserColumnFactory.ID),
+//					getSortSpalte(),
+//					tableModel.getPositionInArray(UserColumnFactory.NAME));
 
-			ToolTipHeader header = new ToolTipHeader(getColumnModel());
-			header.setToolTipStrings(tableModel.getTooltips());
-			header.setToolTipText("");
-			setTableHeader(header);
-			setModel(tableSorter);
-
-			final TableColumnModel columnModel = getColumnModel();
-
-			for (int i = 0; i < tableModel.getColumnCount(); i++) {
-				columnModel.getColumn(i).setIdentifier(i);
-			}
-
-			tableModel.initColumnOrder(this);
-			tableSorter.addMouseListenerToHeaderInTable(this);
-			tableModel.setColumnsSize(getColumnModel());
+			tableModel.initTable(this);
 		} else {
 			// Reset values
 			tableModel.setValues(HOVerwaltung.instance().getModel().getCurrentPlayers());
-			tableSorter.reallocateIndexes();
+//			tableSorter.reallocateIndexes();
 		}
 
 		setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 		setSelectionMode(0);
 		setRowSelectionAllowed(true);
-		tableSorter.initsort();
+//		tableSorter.initsort();
 	}
 
 	private void initListeners() {
 
-		this.tableSorter.addTableModelListener(e -> {
-			var r = e.getFirstRow();
-			var c = e.getColumn();
-			var player = tableSorter.getPlayerAtRow(r);
-			if (player != null) {
-				if (c == tableModel.getPositionInArray(UserColumnFactory.AUTO_LINEUP)) {
-					var autoLineup = tableSorter.getValueAt(r,c);
-					if (autoLineup != null){
-						player.setCanBeSelectedByAssistant((boolean) autoLineup);
-						if( player.getCanBeSelectedByAssistant()){
-							// this player has been made selectable from the Lineup tab, for consistency we set its position to undefined
-							player.setUserPosFlag(IMatchRoleID.UNKNOWN);
-						}
-						else {
-							player.setUserPosFlag(IMatchRoleID.UNSELECTABLE);
-						}
-						HOMainFrame.instance().getSpielerUebersichtPanel().update();
-					}
-				}
-			}
-        });
+//		this.tableSorter.addTableModelListener(e -> {
+//			var r = e.getFirstRow();
+//			var c = e.getColumn();
+//			var player = tableSorter.getPlayerAtRow(r);
+//			if (player != null) {
+//				if (c == tableModel.getPositionInArray(UserColumnFactory.AUTO_LINEUP)) {
+//					var autoLineup = tableSorter.getValueAt(r,c);
+//					if (autoLineup != null){
+//						player.setCanBeSelectedByAssistant((boolean) autoLineup);
+//						if( player.getCanBeSelectedByAssistant()){
+//							// this player has been made selectable from the Lineup tab, for consistency we set its position to undefined
+//							player.setUserPosFlag(IMatchRoleID.UNKNOWN);
+//						}
+//						else {
+//							player.setUserPosFlag(IMatchRoleID.UNSELECTABLE);
+//						}
+//						HOMainFrame.instance().getSpielerUebersichtPanel().update();
+//					}
+//				}
+//			}
+//        });
 
 		addMouseListener(new MouseAdapter() {
 			@Override
@@ -175,7 +165,7 @@ public final class LineupPlayersTable extends JTable implements core.gui.Refresh
 					// Last match column
 					int viewColumn = columnAtPoint(e.getPoint());
 					int column = columnModel.getColumn(viewColumn).getModelIndex();
-					Player selectedPlayer = tableSorter.getPlayerAtRow(rowindex);
+					Player selectedPlayer = tableModel.getPlayerAtRow(rowindex);
 					if(selectedPlayer != null){
 						if ( column == tableModel.getPositionInArray(UserColumnFactory.LAST_MATCH_RATING)){
 							if(e.isShiftDown()){
@@ -191,5 +181,9 @@ public final class LineupPlayersTable extends JTable implements core.gui.Refresh
 				}
 			}
 		});
+	}
+
+	public TableRowSorter<HOTableModel> getTableSorter() {
+		return tableModel.getRowSorter();
 	}
 }

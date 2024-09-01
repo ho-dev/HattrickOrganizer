@@ -5,9 +5,9 @@ import javax.swing.table.TableModel;
 
 
 /**
- * TableModel, das nur eine Spalte anzeigt
+ * Table model, showing one single column
  */
-public class ReduzedTableModel implements TableModel {
+public class ReducedTableModel implements TableModel {
     //~ Instance fields ----------------------------------------------------------------------------
 
     private TableModel m_clTablemodel;
@@ -15,7 +15,7 @@ public class ReduzedTableModel implements TableModel {
 
     //~ Constructors -------------------------------------------------------------------------------
 
-    public ReduzedTableModel(TableModel tablemodel, int spaltenindex) {
+    public ReducedTableModel(TableModel tablemodel, int spaltenindex) {
         m_clTablemodel = tablemodel;
         m_iSpaltenindex = spaltenindex;
     }

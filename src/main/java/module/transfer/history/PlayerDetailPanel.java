@@ -99,11 +99,11 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
         super(new BorderLayout());
 
         var model = getTableModel();
-        var sorter = new DefaultTableSorter(model);
-        playerTable = new JTable(sorter);
+//        var sorter = new DefaultTableSorter(model);
+        playerTable = new JTable(model);
         playerTable.setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
         playerTable.setOpaque(true);
-        sorter.setTableHeader(playerTable.getTableHeader());
+//        sorter.setTableHeader(playerTable.getTableHeader());
 
         model.restoreUserSettings(playerTable);
 

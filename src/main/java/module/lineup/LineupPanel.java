@@ -145,7 +145,7 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 
 	private Component initSpielerTabelle() {
 		lineupPlayersTable = new LineupPlayersTable();
-		lineupPlayersTableNameColumn = new LineupPlayersTableNameColumn(lineupPlayersTable.getSorter());
+		lineupPlayersTableNameColumn = new LineupPlayersTableNameColumn(lineupPlayersTable.getTableModel());
 
 		final JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 

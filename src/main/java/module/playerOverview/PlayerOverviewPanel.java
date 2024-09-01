@@ -41,7 +41,7 @@ public class PlayerOverviewPanel extends ImagePanel {
 	 */
 	public void setPlayer(Player player) {
 		playerOverviewTableName.setPlayer(player.getPlayerId());
-		playerOverviewTable.setSpieler(player.getPlayerId());
+		playerOverviewTable.selectPlayer(player.getPlayerId());
 		playerDetailsPanel.setPlayer(player);
 		spielerTrainingsSimulatorPanel.setSpieler(player);
 	}
@@ -76,13 +76,11 @@ public class PlayerOverviewPanel extends ImagePanel {
 	 */
 	public final void refreshHRFComparison() {
 		playerOverviewTable.refreshHRFComparison();
-
-		Player player = playerOverviewTable.getSorter().getPlayerAtRow(playerOverviewTable.getSelectedRow());
-		playerDetailsPanel.setPlayer(player);
+		playerDetailsPanel.setPlayer(playerOverviewTable.getSelectedPlayer());
 	}
 
 	/**
-	 * Refeshes the table here and in the lineup panel when the groups / info has been changed
+	 * Refreshes the table here and in the lineup panel when the groups / info has been changed
 	 */
 	public final void update() {
 		refresh();
@@ -164,7 +162,7 @@ public class PlayerOverviewPanel extends ImagePanel {
 		playerOverviewTable = new PlayerOverviewTable();
 
 		// table with the player's name
-		playerOverviewTableName = new LineupPlayersTableNameColumn(playerOverviewTable.getSorter());
+		playerOverviewTableName = new LineupPlayersTableNameColumn(playerOverviewTable.getPlayerTableModel());
 
 		JScrollPane scrollpane = new JScrollPane(playerOverviewTableName);
 		scrollpane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
@@ -231,17 +229,20 @@ public class PlayerOverviewPanel extends ImagePanel {
 					if (row == -1) {
 						var player = HOMainFrame.instance().getSelectedPlayer();
 						if ( player != null){
-							row = playerOverviewTable.getSorter().getRow4Spieler(player.getPlayerId());
-							selectRow(playerOverviewTableName,row);
+//							row = playerOverviewTable..getRow4Spieler(player.getPlayerId());
+//							selectRow(playerOverviewTableName,row);
+
+							playerOverviewTable.selectPlayer(player.getPlayerId());
 							return;
 						}
 					}
 
 					if ( row > -1) {
-						selectRow(playerOverviewTable, row);
-
-						// Set player on HOMainFrame to notify other tabs.
-						Player player = playerOverviewTable.getSorter().getPlayerAtRow(row);
+						var player = playerOverviewTable.getSelectedPlayer();
+//						selectRow(playerOverviewTable, row);
+//
+//						// Set player on HOMainFrame to notify other tabs.
+//						Player player = playerOverviewTable.getSorter().getPlayerAtRow(row);
 						if (player != null) HOMainFrame.instance().selectPlayer(player);
 					}
 				}

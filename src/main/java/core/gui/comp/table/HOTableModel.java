@@ -4,10 +4,12 @@ import core.db.DBManager;
 import core.gui.model.UserColumnController;
 import core.model.HOVerwaltung;
 import core.util.Helper;
+import module.lineup.LineupPlayersTable;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableRowSorter;
 import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -48,6 +50,12 @@ public abstract class HOTableModel extends AbstractTableModel {
 
 	/** instance of the same class **/
 	protected int instance;
+
+	public TableRowSorter<HOTableModel> getRowSorter() {
+		return rowSorter;
+	}
+
+	private TableRowSorter<HOTableModel> rowSorter; //  = new TableRowSorter<>(this) ;
 
 	/**
 	 * constructor
@@ -171,7 +179,7 @@ public abstract class HOTableModel extends AbstractTableModel {
 	 */
 	@Override
 	public final Object getValueAt(int row, int column) {
-		if (m_clData != null) {
+		if (m_clData != null && m_clData.length>row) {
 			return m_clData[row][column];
 		}
 
@@ -330,7 +338,6 @@ public abstract class HOTableModel extends AbstractTableModel {
 				.sorted(Comparator.comparingInt(UserColumn::getIndex))
 				.forEach(i -> setColumnSettings(i, table, offset));
 
-		// TODO: Restore row order settings
 
 	}
 	public void restoreUserSettings(FixedColumnsTable table) {
@@ -429,4 +436,31 @@ public abstract class HOTableModel extends AbstractTableModel {
 		return false;
 	}
 
+	public void initTable(JTable table) {
+		var columnModel = table.getColumnModel();
+		ToolTipHeader header = new ToolTipHeader(columnModel);
+		header.setToolTipStrings(getTooltips());
+		header.setToolTipText("");
+		table.setTableHeader(header);
+		table.setModel(this);
+
+		for (int i = 0; i < columnModel.getColumnCount(); i++) {
+			columnModel.getColumn(i).setIdentifier(i);
+		}
+
+		initColumnOrder(table);
+		setColumnsSize(columnModel);
+
+
+		// TODO: Restore row order settings
+
+		if ( this.rowSorter == null){
+			List<RowSorter.SortKey> sortKeys = new  ArrayList<>();
+			Arrays.stream(this.columns).filter(i->i.sortPriority != null).sorted(Comparator.comparingInt(UserColumn::getSortPriority)).forEach(i->sortKeys.add(new RowSorter.SortKey(i.index, i.sortOrder)));
+
+			this.rowSorter = new TableRowSorter<>(this);
+			this.rowSorter.setSortKeys(sortKeys);
+			table.setRowSorter(this.rowSorter);
+		}
+	}
 }
