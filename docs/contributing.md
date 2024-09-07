@@ -63,7 +63,7 @@ git pull upstream master --ff-only
 
 *When you want to update the feature branch with changes in master after you created the branch, check the section on [updating a PR](#update-your-pull-request)*
 
-Before submitting your changes for review, make sure to pull latest vesrion of master and check that HO builds with your changes. 
+Before submitting your changes for review, make sure to pull latest version of master and check that HO builds with your changes. 
 Once your changes are ready to be submitted, make sure to push your changes to GitHub before creating a pull request. 
 You will most likely be asked to make additional changes before it is finally ready to merge. 
 However, once it's ready, we will merge it, and you will have successfully contributed to the codebase!
@@ -165,7 +165,7 @@ After the feature branch has been update locally, you can now update your pull r
 
 ```git push origin shiny-new-feature```
 
-9. Delete your merged branch (optional)
+### 9. Delete your merged branch (optional)
 
 Once your feature branch is accepted into upstream, you’ll probably want to get rid of the branch. First, merge upstream master into your branch so git knows it is safe to delete your branch:
 
