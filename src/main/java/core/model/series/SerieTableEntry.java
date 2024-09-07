@@ -352,7 +352,7 @@ public class SerieTableEntry implements Comparable<SerieTableEntry> {
      *
      * @param m_sTeamName New value of property m_sTeamName.
      */
-    public final void setTeamName(java.lang.String m_sTeamName) {
+    public final void setTeamName(String m_sTeamName) {
         this.m_sTeamName = m_sTeamName;
     }
 
@@ -361,7 +361,7 @@ public class SerieTableEntry implements Comparable<SerieTableEntry> {
      *
      * @return Value of property m_sTeamName.
      */
-    public final java.lang.String getTeamName() {
+    public final String getTeamName() {
         return m_sTeamName;
     }
 

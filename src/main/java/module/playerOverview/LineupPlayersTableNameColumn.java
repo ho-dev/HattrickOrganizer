@@ -26,7 +26,7 @@ public class LineupPlayersTableNameColumn extends JTable implements Refreshable,
 		model.addTableModelListener(this);
 		setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		setModel(new ReduzedTableModel(model, 0));
-		setDefaultRenderer(java.lang.Object.class, new HODefaultTableCellRenderer());
+		setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
 		RefreshManager.instance().registerRefreshable(this);
 		addMouseListener(new MouseAdapter() {
 			@Override

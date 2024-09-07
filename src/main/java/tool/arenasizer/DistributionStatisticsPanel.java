@@ -42,7 +42,7 @@ class DistributionStatisticsPanel extends JPanel {
 	protected JScrollPane createTable() {
 		JTable table = new JTable(getModel());
 		//table.setDefaultRenderer(Object.class, new UpdaterCellRenderer());
-		table.setDefaultRenderer(java.lang.Object.class, new HODefaultTableCellRenderer());
+		table.setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
 		table.getTableHeader().setReorderingAllowed(false);
 
 		final TableColumnModel columnModel = table.getColumnModel();

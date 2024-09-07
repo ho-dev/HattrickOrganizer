@@ -45,7 +45,7 @@ final class ArenaPanel extends JPanel {
     ArenaPanel() {
     	setLayout(new BorderLayout());
     	add(new JScrollPane(m_jtArena));
-        m_jtArena.setDefaultRenderer(java.lang.Object.class, new HODefaultTableCellRenderer());
+        m_jtArena.setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
         m_jtArena.getTableHeader().setReorderingAllowed(false);
         initTabelle();
         reInit();

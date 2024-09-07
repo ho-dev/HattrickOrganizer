@@ -23,7 +23,7 @@ public class RecapTableRenderer extends HODefaultTableCellRenderer {
 	 * 
 	 * @see
 	 * javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax
-	 * .swing.JTable, java.lang.Object, boolean, boolean, int, int)
+	 * .swing.JTable, Object, boolean, boolean, int, int)
 	 */
 	@Override
 	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {

@@ -24,7 +24,7 @@ public class SkillupTypeTableCellRenderer extends ChangeTableRenderer {
  
     /**
      * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable,
-     *      java.lang.Object, boolean, boolean, int, int)
+     *      Object, boolean, boolean, int, int)
      */
     @Override
 	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,

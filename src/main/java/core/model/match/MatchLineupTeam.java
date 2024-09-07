@@ -269,7 +269,7 @@ public class MatchLineupTeam extends AbstractTable.Storable {
 	 * @param m_sTeamName
 	 *            New value of property m_sTeamName.
 	 */
-	public final void setTeamName(java.lang.String m_sTeamName) {
+	public final void setTeamName(String m_sTeamName) {
 		this.teamName = m_sTeamName;
 	}
 
@@ -278,7 +278,7 @@ public class MatchLineupTeam extends AbstractTable.Storable {
 	 * 
 	 * @return Value of property m_sTeamName.
 	 */
-	public final java.lang.String getTeamName() {
+	public final String getTeamName() {
 		return teamName;
 	}
 

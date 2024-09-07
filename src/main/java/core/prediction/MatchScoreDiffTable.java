@@ -18,7 +18,7 @@ class MatchScoreDiffTable extends JTable {
 	MatchScoreDiffTable(MatchResult mr,boolean isHome) {
 		super();
 		initModel(mr,isHome);
-		setDefaultRenderer(java.lang.Object.class, new core.gui.comp.renderer.HODefaultTableCellRenderer());
+		setDefaultRenderer(Object.class, new core.gui.comp.renderer.HODefaultTableCellRenderer());
 		setSelectionBackground(core.gui.comp.renderer.HODefaultTableCellRenderer.SELECTION_BG);
 		setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
 	}

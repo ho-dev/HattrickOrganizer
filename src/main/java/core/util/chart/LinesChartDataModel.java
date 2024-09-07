@@ -139,7 +139,7 @@ public class LinesChartDataModel {
      *
      * @param m_sName New value of property m_sName.
      */
-    public final void setName(java.lang.String m_sName) {
+    public final void setName(String m_sName) {
         this.m_sName = m_sName;
     }
 
@@ -148,7 +148,7 @@ public class LinesChartDataModel {
      *
      * @return Value of property m_sName.
      */
-    public final java.lang.String getName() {
+    public final String getName() {
         return m_sName;
     }
 

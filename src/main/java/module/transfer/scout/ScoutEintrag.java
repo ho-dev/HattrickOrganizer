@@ -221,7 +221,7 @@ public class ScoutEintrag extends AbstractTable.Storable {
      *
      * @param m_sInfo New value of property m_sInfo.
      */
-    public final void setInfo(java.lang.String m_sInfo) {
+    public final void setInfo(String m_sInfo) {
         this.m_sInfo = m_sInfo;
     }
 
@@ -230,7 +230,7 @@ public class ScoutEintrag extends AbstractTable.Storable {
      *
      * @return Value of property m_sInfo.
      */
-    public final java.lang.String getInfo() {
+    public final String getInfo() {
         return m_sInfo;
     }
 
@@ -275,7 +275,7 @@ public class ScoutEintrag extends AbstractTable.Storable {
      *
      * @param m_sName New value of property m_sName.
      */
-    public final void setName(java.lang.String m_sName) {
+    public final void setName(String m_sName) {
         this.m_sName = m_sName;
     }
 
@@ -284,7 +284,7 @@ public class ScoutEintrag extends AbstractTable.Storable {
      *
      * @return Value of property m_sName.
      */
-    public final java.lang.String getName() {
+    public final String getName() {
         return m_sName;
     }
 

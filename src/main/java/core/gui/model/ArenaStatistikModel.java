@@ -125,7 +125,7 @@ public class ArenaStatistikModel {
      *
      * @param m_sGastName New value of property m_sGastName.
      */
-    public final void setGastName(java.lang.String m_sGastName) {
+    public final void setGastName(String m_sGastName) {
         this.m_sGastName = m_sGastName;
     }
 
@@ -134,7 +134,7 @@ public class ArenaStatistikModel {
      *
      * @return Value of property m_sGastName.
      */
-    public final java.lang.String getGastName() {
+    public final String getGastName() {
         return m_sGastName;
     }
 
@@ -161,7 +161,7 @@ public class ArenaStatistikModel {
      *
      * @param m_sHeimName New value of property m_sHeimName.
      */
-    public final void setHeimName(java.lang.String m_sHeimName) {
+    public final void setHeimName(String m_sHeimName) {
         this.m_sHeimName = m_sHeimName;
     }
 
@@ -170,7 +170,7 @@ public class ArenaStatistikModel {
      *
      * @return Value of property m_sHeimName.
      */
-    public final java.lang.String getHeimName() {
+    public final String getHeimName() {
         return m_sHeimName;
     }
 
