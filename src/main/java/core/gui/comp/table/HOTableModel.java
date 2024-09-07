@@ -4,8 +4,6 @@ import core.db.DBManager;
 import core.gui.model.UserColumnController;
 import core.model.HOVerwaltung;
 import core.util.Helper;
-import module.lineup.LineupPlayersTable;
-
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumnModel;
@@ -434,6 +432,10 @@ public abstract class HOTableModel extends AbstractTableModel {
 
 	public boolean userCanDisableColumns() {
 		return false;
+	}
+
+	public void initTable(FixedColumnsTable table){
+		var columnModel = table.getScrollTable().getColumnModel();
 	}
 
 	public void initTable(JTable table) {

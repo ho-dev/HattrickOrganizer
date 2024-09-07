@@ -6,7 +6,6 @@ import core.gui.RefreshManager;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.comp.table.HOTableModel;
 import core.gui.comp.table.TableSorter;
-import core.gui.comp.table.ToolTipHeader;
 import core.gui.comp.table.UserColumn;
 import core.gui.model.PlayerOverviewTableModel;
 import core.gui.model.UserColumnController;

@@ -18,7 +18,6 @@ import module.transfer.PlayerTransfer;
 import module.transfer.XMLParser;
 import module.transfer.ui.layout.TableLayout;
 import module.transfer.ui.layout.TableLayoutConstants;
-import module.transfer.ui.sorter.DefaultTableSorter;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;

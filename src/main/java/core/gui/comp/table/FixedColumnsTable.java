@@ -1,5 +1,6 @@
 package core.gui.comp.table;
 
+import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import module.transfer.ui.sorter.DefaultTableSorter;
 
 import javax.swing.*;
@@ -17,17 +18,17 @@ public class FixedColumnsTable extends JScrollPane {
     /**
      * Table sorter
      */
-    private final DefaultTableSorter scrollTableSorter;
+    private DefaultTableSorter scrollTableSorter;
 
     /**
      * Fixed table part (left hand side)
      */
-    private final JTable fixed;
+    private JTable fixed;
 
     /**
      * Scrollable table part (right hand side)
      */
-    private final JTable scroll;
+    private JTable scroll;
 
     /**
      * Create a fixed columns table
@@ -36,10 +37,12 @@ public class FixedColumnsTable extends JScrollPane {
      * Internally two tables are created, "fixed" for the left hand side, "scroll" for the right hand side
      *
      * @param fixedColumns number of fixed columns
-     * @param tableModel table model
      */
-    public FixedColumnsTable(int fixedColumns, HOTableModel tableModel) {
+    public FixedColumnsTable(int fixedColumns) {
         this.fixedColumns = fixedColumns;
+    }
+
+    public void setTableModel(HOTableModel tableModel) {
 
         scrollTableSorter = new DefaultTableSorter(tableModel);
         var table = new JTable(scrollTableSorter);
@@ -47,6 +50,7 @@ public class FixedColumnsTable extends JScrollPane {
 
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        table.setSelectionBackground(HODefaultTableCellRenderer.SELECTION_BG);
 
         this.setViewportView(table);
         scroll = table;
@@ -117,6 +121,15 @@ public class FixedColumnsTable extends JScrollPane {
      */
     public JTable getScrollTable() {
         return scroll;
+    }
+
+    public void setRowSelectionInterval(int rowIndex0, int rowIndex1){
+        fixed.setRowSelectionInterval(rowIndex0, rowIndex1);
+        scroll.setRowSelectionInterval(rowIndex0, rowIndex1);
+    }
+
+    public int getSelectedRow(){
+        return scroll.getSelectedRow();
     }
 
     /**

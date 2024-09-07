@@ -10,8 +10,8 @@ import javax.swing.table.TableModel;
 public class ReducedTableModel implements TableModel {
     //~ Instance fields ----------------------------------------------------------------------------
 
-    private TableModel m_clTablemodel;
-    private int m_iSpaltenindex;
+    private final TableModel m_clTablemodel;
+    private final int m_iSpaltenindex;
 
     //~ Constructors -------------------------------------------------------------------------------
 

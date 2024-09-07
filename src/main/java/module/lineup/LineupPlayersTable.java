@@ -5,19 +5,16 @@ import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
 import core.gui.comp.renderer.BooleanTableCellRenderer;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
+import core.gui.comp.table.FixedColumnsTable;
 import core.gui.comp.table.HOTableModel;
-import core.gui.comp.table.TableSorter;
-import core.gui.comp.table.ToolTipHeader;
 import core.gui.comp.table.UserColumn;
 import core.gui.model.UserColumnController;
 import core.gui.model.UserColumnFactory;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.match.MatchKurzInfo;
-import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import core.net.HattrickLink;
-import core.util.Helper;
 import module.playerOverview.LineupPlayersTableNameColumn;
 import module.playerOverview.PlayerTable;
 import org.jetbrains.annotations.Nullable;
@@ -33,17 +30,23 @@ import javax.swing.table.TableRowSorter;
  * The name of the players is displayed in {@link LineupPlayersTableNameColumn},
  * which is the same table class used in the Squad tab
  */
-public final class LineupPlayersTable extends JTable implements core.gui.Refreshable, PlayerTable {
+public final class LineupPlayersTable extends FixedColumnsTable implements core.gui.Refreshable, PlayerTable {
 
 	private LineupTableModel tableModel;
 //	private TableSorter tableSorter;
 
 	LineupPlayersTable() {
-		super();
-		initModel();
+		super(1);
+		this.tableModel = initModel();
+		setTableModel(tableModel);
+
+//		setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+//		setSelectionMode(0);
+//		setRowSelectionAllowed(true);
+
 		setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
 		setDefaultRenderer(Boolean.class, new BooleanTableCellRenderer());
-		setSelectionBackground(HODefaultTableCellRenderer.SELECTION_BG);
+//		setSelectionBackground(HODefaultTableCellRenderer.SELECTION_BG);
 		RefreshManager.instance().registerRefreshable(this);
 		initListeners();
 	}
@@ -97,22 +100,23 @@ public final class LineupPlayersTable extends JTable implements core.gui.Refresh
 	public LineupTableModel getTableModel() {return this.tableModel;}
 
 	public void saveColumnOrder() {
-		final UserColumn[] columns = tableModel.getDisplayedColumns();
-		final TableColumnModel tableColumnModel = getColumnModel();
-		for (int i = 0; i < columns.length; i++) {
-			columns[i].setIndex(convertColumnIndexToView(i));
-			columns[i].setPreferredWidth(tableColumnModel.getColumn(convertColumnIndexToView(i))
-					.getWidth());
-		}
-		tableModel.setCurrentValueToColumns(columns);
-		DBManager.instance().saveHOColumnModel(tableModel);
+		tableModel.storeUserSettings(this);
+//		final UserColumn[] columns = tableModel.getDisplayedColumns();
+//		final TableColumnModel tableColumnModel = getColumnModel();
+//		for (int i = 0; i < columns.length; i++) {
+//			columns[i].setIndex(convertColumnIndexToView(i));
+//			columns[i].setPreferredWidth(tableColumnModel.getColumn(convertColumnIndexToView(i))
+//					.getWidth());
+//		}
+//		tableModel.setCurrentValueToColumns(columns);
+//		DBManager.instance().saveHOColumnModel(tableModel);
 	}
 
-	private void initModel() {
-		setOpaque(false);
+	private LineupTableModel initModel() {
+//		setOpaque(false);
 
-		if (tableModel == null) {
-			tableModel = UserColumnController.instance().getLineupModel();
+//		if (tableModel == null) {
+			var tableModel = UserColumnController.instance().getLineupModel();
 
 			tableModel.setValues(HOVerwaltung.instance().getModel().getCurrentPlayers());
 //			tableSorter = new TableSorter(tableModel,
@@ -121,16 +125,18 @@ public final class LineupPlayersTable extends JTable implements core.gui.Refresh
 //					tableModel.getPositionInArray(UserColumnFactory.NAME));
 
 			tableModel.initTable(this);
-		} else {
-			// Reset values
-			tableModel.setValues(HOVerwaltung.instance().getModel().getCurrentPlayers());
-//			tableSorter.reallocateIndexes();
-		}
+//		} else {
+//			// Reset values
+//			tableModel.setValues(HOVerwaltung.instance().getModel().getCurrentPlayers());
+////			tableSorter.reallocateIndexes();
+//		}
 
-		setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		setSelectionMode(0);
-		setRowSelectionAllowed(true);
+//		setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+//		setSelectionMode(0);
+//		setRowSelectionAllowed(true);
 //		tableSorter.initsort();
+
+		return tableModel;
 	}
 
 	private void initListeners() {
@@ -163,18 +169,23 @@ public final class LineupPlayersTable extends JTable implements core.gui.Refresh
 				int rowindex = getSelectedRow();
 				if (rowindex >= 0){
 					// Last match column
-					int viewColumn = columnAtPoint(e.getPoint());
-					int column = columnModel.getColumn(viewColumn).getModelIndex();
+//					int viewColumn = columnAtPoint(e.getPoint());
+//					int column = columnModel.getColumn(viewColumn).getModelIndex();
 					Player selectedPlayer = tableModel.getPlayerAtRow(rowindex);
 					if(selectedPlayer != null){
-						if ( column == tableModel.getPositionInArray(UserColumnFactory.LAST_MATCH_RATING)){
-							if(e.isShiftDown()){
-								int matchId = selectedPlayer.getLastMatchId();
-								// TODO get the match type of last match from player. For the moment we hope, that going with no type will work
-								MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(matchId, null);
-								HattrickLink.showMatch(matchId + "", info.getMatchType().isOfficial());
-							}else if(e.getClickCount()==2) {
-								HOMainFrame.instance().showMatch(selectedPlayer.getLastMatchId());
+						var scrollTable = getScrollTable();
+						var viewColumn = scrollTable.columnAtPoint(e.getPoint());
+						if (viewColumn > -1) {
+							var column = scrollTable.getColumn(viewColumn).getModelIndex();
+							if (column + getFixedColumnsCount() == tableModel.getPositionInArray(UserColumnFactory.LAST_MATCH_RATING)) {
+								if (e.isShiftDown()) {
+									int matchId = selectedPlayer.getLastMatchId();
+									// TODO get the match type of last match from player. For the moment we hope, that going with no type will work
+									MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(matchId, null);
+									HattrickLink.showMatch(matchId + "", info.getMatchType().isOfficial());
+								} else if (e.getClickCount() == 2) {
+									HOMainFrame.instance().showMatch(selectedPlayer.getLastMatchId());
+								}
 							}
 						}
 					}
@@ -183,7 +194,7 @@ public final class LineupPlayersTable extends JTable implements core.gui.Refresh
 		});
 	}
 
-	public TableRowSorter<HOTableModel> getTableSorter() {
-		return tableModel.getRowSorter();
-	}
+//	public TableRowSorter<HOTableModel> getTableSorter() {
+//		return tableModel.getRowSorter();
+//	}
 }

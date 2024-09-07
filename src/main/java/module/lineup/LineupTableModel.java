@@ -1,16 +1,7 @@
 package module.lineup;
 
-import core.gui.comp.table.BooleanColumn;
-import core.gui.comp.table.UserColumn;
-import core.gui.model.PlayerColumn;
 import core.gui.model.PlayerOverviewTableModel;
 import core.gui.model.UserColumnController;
-import core.gui.model.UserColumnFactory;
-import core.model.player.Player;
-import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class LineupTableModel extends PlayerOverviewTableModel {

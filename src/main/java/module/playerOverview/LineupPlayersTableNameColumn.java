@@ -3,7 +3,6 @@ package module.playerOverview;
 import core.gui.RefreshManager;
 import core.gui.Refreshable;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
-import core.gui.comp.table.HOTableModel;
 import core.gui.model.PlayerOverviewTableModel;
 import core.gui.model.ReducedTableModel;
 import core.model.player.Player;
