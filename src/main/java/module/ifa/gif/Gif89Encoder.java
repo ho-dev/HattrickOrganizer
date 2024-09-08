@@ -101,7 +101,7 @@ public class Gif89Encoder {
 	private int bgIndex = 0;
 	private int loopCount = 1;
 	private String theComments;
-	private List<Gif89Frame> vFrames = new ArrayList<Gif89Frame>();
+	private List<Gif89Frame> vFrames = new ArrayList<>();
 
 	/**
 	 * Use this default constructor if you'll be adding multiple frames
@@ -159,7 +159,7 @@ public class Gif89Encoder {
 	 * @exception IOException
 	 *                See the addFrame() methods.
 	 */
-	public Gif89Encoder(Color[] colors, int width, int height, byte ci_pixels[]) throws IOException {
+	public Gif89Encoder(Color[] colors, int width, int height, byte[] ci_pixels) throws IOException {
 		this(colors);
 		addFrame(width, height, ci_pixels);
 	}
@@ -236,7 +236,7 @@ public class Gif89Encoder {
 	 *                IndexGif89Frame <i>per se</i>. But I might add some
 	 *                pedantic check later, to justify the generality :)
 	 */
-	public void addFrame(int width, int height, byte ci_pixels[]) throws IOException {
+	public void addFrame(int width, int height, byte[] ci_pixels) throws IOException {
 		addFrame(new IndexGif89Frame(width, height, ci_pixels));
 	}
 
@@ -316,9 +316,9 @@ public class Gif89Encoder {
 	 *            Interframe interval in centiseconds.
 	 */
 	public void setUniformDelay(int interval) {
-		for (int i = 0; i < vFrames.size(); ++i) {
-			vFrames.get(i).setDelay(interval);
-		}
+        for (Gif89Frame vFrame : vFrames) {
+            vFrame.setDelay(interval);
+        }
 	}
 
 	/**
@@ -348,7 +348,7 @@ public class Gif89Encoder {
 		colorTable.encode(out);
 		if (is_sequence && loopCount != 1)
 			writeNetscapeExtension(out);
-		if (theComments != null && theComments.length() > 0)
+		if (theComments != null && !theComments.isEmpty())
 			writeCommentExtension(out);
 
 		// write out the control and rendering data for each frame
@@ -607,9 +607,9 @@ class GifColorTable {
 	private void trackPixelUsage(IndexGif89Frame igf) {
 		byte[] ci_pixels = (byte[]) igf.getPixelSource();
 		int npixels = ci_pixels.length;
-		for (int i = 0; i < npixels; ++i)
-			if (ci_pixels[i] >= ciCount)
-				ciCount = ci_pixels[i] + 1;
+        for (byte ciPixel : ci_pixels)
+            if (ciPixel >= ciCount)
+                ciCount = ciPixel + 1;
 	}
 
 	private int computeColorDepth(int colorcount) {

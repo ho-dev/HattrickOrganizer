@@ -17,7 +17,7 @@ public class MatchList {
      * Creates a new MatchList object.
      */
     public MatchList() {
-        matchList = new ArrayList<Match>();
+        matchList = new ArrayList<>();
     }
 
     //~ Methods ------------------------------------------------------------------------------------
@@ -31,12 +31,10 @@ public class MatchList {
 
     public List<Match> filterMatches(Filter filter) {
         int counter = 0;
-        List<Match> list = new ArrayList<Match>();
+        List<Match> list = new ArrayList<>();
 
         if (filter.isAutomatic()) {
-            for (Iterator<Match> iter = matchList.iterator(); iter.hasNext();) {
-                Match match = iter.next();
-
+            for (Match match : matchList) {
                 if (TeamAnalyzerPanel.filter.isAcceptedMatch(match)) {
                     list.add(match);
                     counter++;
@@ -49,9 +47,7 @@ public class MatchList {
         } else {
             List<String> filterMatches = filter.getMatches();
 
-            for (Iterator<Match> iter = matchList.iterator(); iter.hasNext();) {
-                Match match = iter.next();
-
+            for (Match match : matchList) {
                 if (filterMatches.contains("" + match.getMatchId())) {
                     list.add(match);
                 }

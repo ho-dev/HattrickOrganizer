@@ -21,7 +21,7 @@ import java.util.Optional;
  */
 public class GnomeTheme extends BaseTheme {
 
-    public final static String THEME_NAME = "Gnome";
+    public static final String THEME_NAME = "Gnome";
 
     @Override
     public String getName() {

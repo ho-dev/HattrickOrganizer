@@ -5,7 +5,7 @@ import core.model.misc.Verein;
 import java.sql.Types;
 
 final class VereinTable extends AbstractTable {
-	final static String TABLENAME = "VEREIN";
+	static final String TABLENAME = "VEREIN";
 
 	VereinTable(ConnectionManager adapter){
 		super( TABLENAME, adapter );

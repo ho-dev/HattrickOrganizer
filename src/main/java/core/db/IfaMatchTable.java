@@ -10,7 +10,7 @@ import java.sql.Types;
 
 public class IfaMatchTable extends AbstractTable {
 
-	public final static String TABLENAME = "IFA_MATCHES";
+	public static final String TABLENAME = "IFA_MATCHES";
 
 	IfaMatchTable(ConnectionManager adapter) {
 		super(TABLENAME, adapter);

@@ -84,7 +84,7 @@ public class Skills {
             return value;
         }
 
-        final static private EnumMap<ScoutCommentSkillTypeID, PlayerSkill> hTskillIdmap = new EnumMap<>(ScoutCommentSkillTypeID.class) {{
+        private static final EnumMap<ScoutCommentSkillTypeID, PlayerSkill> hTskillIdmap = new EnumMap<>(ScoutCommentSkillTypeID.class) {{
             put(KEEPER, PlayerSkill.KEEPER);
             put(DEFENDING, PlayerSkill.DEFENDING);
             put(PLAYMAKER, PlayerSkill.PLAYMAKING);

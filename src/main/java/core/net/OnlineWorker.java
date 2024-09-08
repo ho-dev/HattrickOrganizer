@@ -940,7 +940,7 @@ public class OnlineWorker {
 				if (indexEqualsSign > 0) {
 					properties.setProperty(
 							lineString.substring(0, indexEqualsSign).toLowerCase(
-									java.util.Locale.ENGLISH),
+									Locale.ENGLISH),
 							lineString.substring(indexEqualsSign + 1));
 				}
 			}

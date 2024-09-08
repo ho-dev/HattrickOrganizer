@@ -22,7 +22,7 @@ public class TeamData  {
      * @param _level Tacticlevel from 1 to 20
      */
     public TeamData(String name, TeamRatings _ratings, int _tactic, int _level) {
-        actions = new ArrayList<Action>();
+        actions = new ArrayList<>();
         ratings = _ratings;
         tacticLevel = _level;
         tacticType = _tactic;
@@ -68,7 +68,7 @@ public class TeamData  {
 
     @Override
 	public final String toString() {
-        final StringBuffer buffer = new StringBuffer();
+        final StringBuilder buffer = new StringBuilder();
         buffer.append("TeamData[");
         buffer.append("actions = " + actions);
         buffer.append(", ratings = " + ratings);

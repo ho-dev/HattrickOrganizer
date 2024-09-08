@@ -21,7 +21,7 @@ import javax.swing.JOptionPane;
 public class LineupCheck {
 
 	public static boolean doUpload(@Nullable MatchOrdersCBItem match, Lineup lineup) {
-		List<JLabel> problems = new ArrayList<JLabel>();
+		List<JLabel> problems = new ArrayList<>();
 		if (hasFreePosition(lineup)) {
 			problems.add(getErrorLabel("lineup.upload.check.lineupIncomplete"));
 		}
@@ -37,7 +37,7 @@ public class LineupCheck {
 		if (!penaltyTakersOK(match, lineup)) {
 			problems.add(getWarningLabel("lineup.upload.check.lessThan11PenaltytakersSet"));
 		}
-		if (problems.size() > 0) {
+		if (!problems.isEmpty()) {
 			JLabel label = new JLabel(HOVerwaltung.instance().getLanguageString("lineup.upload.check.uploadAnywayQ"));
 			label.setBorder(BorderFactory.createEmptyBorder(10, 20, 2, 10));
 			problems.add(label);

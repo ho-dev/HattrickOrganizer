@@ -5,7 +5,7 @@ import java.util.Vector;
 public class ScoutThread implements Runnable {
     //~ Instance fields ----------------------------------------------------------------------------
 
-    private Vector<ScoutEintrag> m_vScoutEintraege = new Vector<ScoutEintrag>();
+    private Vector<ScoutEintrag> m_vScoutEintraege = new Vector<>();
     private int difference = core.model.UserParameter.instance().TimeZoneDifference * 3600000;
 
     //~ Constructors -------------------------------------------------------------------------------
@@ -14,7 +14,7 @@ public class ScoutThread implements Runnable {
      * Creates a new instance of ScoutThread
      */
     public ScoutThread(Vector<ScoutEintrag> scouts) {
-        m_vScoutEintraege = new Vector<ScoutEintrag>(scouts);
+        m_vScoutEintraege = new Vector<>(scouts);
     }
 
     //~ Methods ------------------------------------------------------------------------------------

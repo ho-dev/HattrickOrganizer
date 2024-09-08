@@ -12,7 +12,7 @@ public enum MatchTeamAttitude {
         this.id=i;
     }
 
-    static public MatchTeamAttitude fromInt(Integer i) {
+    public static MatchTeamAttitude fromInt(Integer i) {
         if (i == null) return null;
         return switch (i) {
             case 1 -> MatchOfTheSeason;
@@ -21,7 +21,7 @@ public enum MatchTeamAttitude {
         };
     }
 
-    static public int toInt( MatchTeamAttitude in){
+    public static int toInt( MatchTeamAttitude in){
         if ( in != null ) return in.id;
         return Normal.id;
     }

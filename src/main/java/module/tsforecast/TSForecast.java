@@ -31,13 +31,13 @@ public class TSForecast extends LazyImagePanel implements ActionListener, ItemLi
 	private final DBManager dbManager;
 
 	private static final long serialVersionUID = 1L;
-	final static String TS_SHOWCUPMATCHES = "TS_ShowCupMatches";
-	final static String TS_SHOWQUALIFICATIONMATCH = "TS_ShowQualificationMatch";
-	final static String TS_HISTORY = "TS_History";
-	final static String TS_LOEPIFORECAST = "TS_LoepiForecast";
-	final static String TS_LOEPIHISTORY = "TS_LoepiHistory";
-	final static String TS_CONFIDENCE = "TS_Confidence";
-	final static String TS_GENERALSPIRIT = "TS_GeneralSpirit";
+	static final String TS_SHOWCUPMATCHES = "TS_ShowCupMatches";
+	static final String TS_SHOWQUALIFICATIONMATCH = "TS_ShowQualificationMatch";
+	static final String TS_HISTORY = "TS_History";
+	static final String TS_LOEPIFORECAST = "TS_LoepiForecast";
+	static final String TS_LOEPIHISTORY = "TS_LoepiHistory";
+	static final String TS_CONFIDENCE = "TS_Confidence";
+	static final String TS_GENERALSPIRIT = "TS_GeneralSpirit";
 
 	private JPanel m_jpSettingsPanel;
 	private JPanel m_jpGamesPanel;

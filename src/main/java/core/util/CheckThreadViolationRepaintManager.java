@@ -98,19 +98,18 @@ public class CheckThreadViolationRepaintManager extends RepaintManager {
 			// exception, and get it from that.
 			StackTraceElement[] stackTrace = (new Throwable()).getStackTrace();
 			// for (StackTraceElement st : stackTrace) {
-			for (int i = 0; i < stackTrace.length; i++) {
-				StackTraceElement st = stackTrace[i];
-				if (repaint && st.getClassName().startsWith("javax.swing.")) {
-					fromSwing = true;
-				}
-				if (repaint && "imageUpdate".equals(st.getMethodName())) {
-					imageUpdate = true;
-				}
-				if ("repaint".equals(st.getMethodName())) {
-					repaint = true;
-					fromSwing = false;
-				}
-			}
+            for (StackTraceElement st : stackTrace) {
+                if (repaint && st.getClassName().startsWith("javax.swing.")) {
+                    fromSwing = true;
+                }
+                if (repaint && "imageUpdate".equals(st.getMethodName())) {
+                    imageUpdate = true;
+                }
+                if ("repaint".equals(st.getMethodName())) {
+                    repaint = true;
+                    fromSwing = false;
+                }
+            }
 			if (imageUpdate) {
 				// assuming it is java.awt.image.ImageObserver.imageUpdate(...)
 				// image was asynchronously updated, that's ok
@@ -124,7 +123,7 @@ public class CheckThreadViolationRepaintManager extends RepaintManager {
 			if (lastComponent != null && c == lastComponent.get()) {
 				return;
 			}
-			lastComponent = new WeakReference<JComponent>(c);
+			lastComponent = new WeakReference<>(c);
 			violationDetected(c, stackTrace);
 		}
 	}

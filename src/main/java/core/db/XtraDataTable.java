@@ -5,7 +5,7 @@ import core.util.HODateTime;
 import java.sql.Types;
 
 final class XtraDataTable extends AbstractTable {
-	final static String TABLENAME = "XTRADATA";
+	static final String TABLENAME = "XTRADATA";
 
 	XtraDataTable(ConnectionManager adapter) {
 		super(TABLENAME, adapter);

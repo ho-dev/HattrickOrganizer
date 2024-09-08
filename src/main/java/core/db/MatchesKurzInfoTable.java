@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
  * Class used to store in DB, [Matches] Table fetched via CHPP
  */
 final class MatchesKurzInfoTable extends AbstractTable {
-	final static String TABLENAME = "MATCHESKURZINFO";
+	static final String TABLENAME = "MATCHESKURZINFO";
 
 	MatchesKurzInfoTable(ConnectionManager adapter) {
 		super(TABLENAME, adapter);

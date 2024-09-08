@@ -16,8 +16,8 @@ public class VersionInfo {
 	private int build;
 	private Date released;
 	private String versionType;
-	final static private DecimalFormat DECF = new DecimalFormat("0.000##");
-	final static private DateFormat DATF = new SimpleDateFormat("dd.MM.yyyy");
+	private static final DecimalFormat DECF = new DecimalFormat("0.000##");
+	private static final DateFormat DATF = new SimpleDateFormat("dd.MM.yyyy");
 
 	
 	static {

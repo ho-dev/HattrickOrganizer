@@ -19,7 +19,7 @@ final class SpielerTable extends AbstractTable {
 	/**
 	 * Table name
 	 **/
-	final static String TABLENAME = "SPIELER";
+	static final String TABLENAME = "SPIELER";
 
 	SpielerTable(ConnectionManager adapter) {
 		super(TABLENAME, adapter);

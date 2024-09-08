@@ -413,7 +413,7 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
      * @see #getOverlappingEntry
      */
     public java.util.List<Object> getInvalidEntry() {
-        LinkedList<Object> listInvalid = new LinkedList<Object>();
+        LinkedList<Object> listInvalid = new LinkedList<>();
 
         try {
             ListIterator<Entry> iterator = list.listIterator(0);
@@ -492,7 +492,7 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
      * @see #getInvalidEntry
      */
     public java.util.List<Object> getOverlappingEntry() {
-        LinkedList<Object> listOverlapping = new LinkedList<Object>();
+        LinkedList<Object> listOverlapping = new LinkedList<>();
 
         try {
             // Count contraints
@@ -829,7 +829,7 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
         Component[] component = container.getComponents();
 
         // Layout components
-        for (int counter = 0; counter < component.length; counter++) {
+        for (Component item : component) {
             try {
                 // Get the entry for the next component
                 ListIterator<Entry> iterator = list.listIterator(0);
@@ -838,10 +838,9 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
                 while (iterator.hasNext()) {
                     entry = iterator.next();
 
-                    if (entry.component == component[counter]) {
+                    if (entry.component == item) {
                         break;
-                    }
-                    else {
+                    } else {
                         entry = null;
                     }
                 }
@@ -849,7 +848,7 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
                 // Skip any components that have not been place in a specific cell,
                 // setting the skip component's bounds to zero
                 if (entry == null) {
-                    component[counter].setBounds(0, 0, 0, 0);
+                    item.setBounds(0, 0, 0, 0);
 
                     continue;
                 }
@@ -864,9 +863,9 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
                 int preferredHeight = 0;
 
                 if ((entry.alignment[C] != FULL)
-                    || (entry.alignment[R] != FULL)) {
-                    Dimension preferredSize = component[counter]
-                        .getPreferredSize();
+                        || (entry.alignment[R] != FULL)) {
+                    Dimension preferredSize = item
+                            .getPreferredSize();
 
                     preferredWidth = preferredSize.width;
                     preferredHeight = preferredSize.height;
@@ -890,12 +889,11 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
                 }
 
                 // Move and resize component
-                component[counter].setBounds(x, y, w, h);
-            }
-            catch (Exception error) {
+                item.setBounds(x, y, w, h);
+            } catch (Exception error) {
                 // If any error occurs, set the bounds of this component to zero
                 // and continue
-                component[counter].setBounds(0, 0, 0, 0);
+                item.setBounds(0, 0, 0, 0);
 
                 continue;
             }
@@ -1768,7 +1766,7 @@ nextComponent:
         }
 
         // Create an empty list of components
-        list = new LinkedList<Entry>();
+        list = new LinkedList<>();
 
         // Indicate that the cell sizes are not known
         dirty = true;

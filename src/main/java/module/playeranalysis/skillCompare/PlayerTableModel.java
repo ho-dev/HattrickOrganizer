@@ -148,57 +148,57 @@ public class PlayerTableModel extends DefaultTableModel{
 		int counter = 0;
 
 		data = new Object[spieler.length][columnNames.length];
-		for(int i = 0; i < spieler.length; i++) {
-			tmpPlayer = spieler[i];
-			if(call == 1) {
-				data[counter][0] = Boolean.FALSE;
-				data[counter][4] = tmpPlayer.getOldBestPosition() + (tmpPlayer.getOldBestPositionRating()) / 1000;
-			} else {
-				data[counter][0] = "";
-				data[counter][4] = tmpPlayer.getBestPosition() + (tmpPlayer.getBestPositionRating()) / 1000;
-			}
+        for (Player player : spieler) {
+            tmpPlayer = player;
+            if (call == 1) {
+                data[counter][0] = Boolean.FALSE;
+                data[counter][4] = tmpPlayer.getOldBestPosition() + (tmpPlayer.getOldBestPositionRating()) / 1000;
+            } else {
+                data[counter][0] = "";
+                data[counter][4] = tmpPlayer.getBestPosition() + (tmpPlayer.getBestPositionRating()) / 1000;
+            }
 
-			data[counter][1] = tmpPlayer.getFullName()+";"+tmpPlayer.getSpeciality();
-			data[counter][2] = tmpPlayer.getNationality();
-			data[counter][3] = tmpPlayer.getAge();
-			data[counter][5] = tmpPlayer.getGroup();
-			data[counter][6] = tmpPlayer.getSkillCompareAsDouble(11);
-			data[counter][7] = tmpPlayer.getLeadership() + (tmpPlayer.getLeadership() * 0.01);
-			data[counter][8] = tmpPlayer.getSkillCompareAsDouble(0);
-			data[counter][9] = tmpPlayer.getSkillCompareAsDouble(1);
-			data[counter][10] = tmpPlayer.getSkillCompareAsDouble(2);
-			data[counter][11] = tmpPlayer.getSkillCompareAsDouble(10);
-			data[counter][12] = tmpPlayer.getSkillCompareAsDouble(3);
-			data[counter][13] = tmpPlayer.getSkillCompareAsDouble(4);
-			data[counter][14] = tmpPlayer.getSkillCompareAsDouble(5);
-			data[counter][15] = tmpPlayer.getSkillCompareAsDouble(6);
-			data[counter][16] = tmpPlayer.getSkillCompareAsDouble(7);
-			data[counter][17] = tmpPlayer.getSkillCompareAsDouble(8);
-			data[counter][18] = tmpPlayer.getSkillCompareAsDouble(9);
-			data[counter][19] = tmpPlayer.getPositionCompareAsString(IMatchRoleID.KEEPER);
-			data[counter][20] = tmpPlayer.getPositionCompareAsString(IMatchRoleID.CENTRAL_DEFENDER);
-			data[counter][21] = tmpPlayer.getPositionCompareAsString(IMatchRoleID.CENTRAL_DEFENDER_TOWING);
-			data[counter][22] = tmpPlayer.getPositionCompareAsString(IMatchRoleID.CENTRAL_DEFENDER_OFF);
-			data[counter][23] = tmpPlayer.getPositionCompareAsString(IMatchRoleID.BACK);
-			data[counter][24] = tmpPlayer.getPositionCompareAsString(IMatchRoleID.BACK_TOMID);
-			data[counter][25] = tmpPlayer.getPositionCompareAsString(IMatchRoleID.BACK_OFF);
-			data[counter][26] = tmpPlayer.getPositionCompareAsString(IMatchRoleID.BACK_DEF);
-			data[counter][27] = tmpPlayer.getPositionCompareAsString(IMatchRoleID.MIDFIELDER);
-			data[counter][28] = tmpPlayer.getPositionCompareAsString(IMatchRoleID.MIDFIELDER_TOWING);
-			data[counter][29] = tmpPlayer.getPositionCompareAsString(IMatchRoleID.MIDFIELDER_OFF);
-			data[counter][30] = tmpPlayer.getPositionCompareAsString(IMatchRoleID.MIDFIELDER_DEF);
-			data[counter][31] = tmpPlayer.getPositionCompareAsString(IMatchRoleID.WINGER);
-			data[counter][32] = tmpPlayer.getPositionCompareAsString(IMatchRoleID.WINGER_TOMID);
-			data[counter][33] = tmpPlayer.getPositionCompareAsString(IMatchRoleID.WINGER_OFF);
-			data[counter][34] = tmpPlayer.getPositionCompareAsString(IMatchRoleID.WINGER_DEF);
-			data[counter][35] = tmpPlayer.getPositionCompareAsString(IMatchRoleID.FORWARD);
-			data[counter][36] = tmpPlayer.getPositionCompareAsString(IMatchRoleID.FORWARD_DEF);
-			data[counter][37] = tmpPlayer.getPositionCompareAsString(IMatchRoleID.FORWARD_TOWING);
-			data[counter][38] = (tmpPlayer.getWages()) / 10;
-			data[counter][39] = tmpPlayer.getTSI();
-			data[counter][40] = tmpPlayer.getId();
-			counter++;
-		}
+            data[counter][1] = tmpPlayer.getFullName() + ";" + tmpPlayer.getSpeciality();
+            data[counter][2] = tmpPlayer.getNationality();
+            data[counter][3] = tmpPlayer.getAge();
+            data[counter][5] = tmpPlayer.getGroup();
+            data[counter][6] = tmpPlayer.getSkillCompareAsDouble(11);
+            data[counter][7] = tmpPlayer.getLeadership() + (tmpPlayer.getLeadership() * 0.01);
+            data[counter][8] = tmpPlayer.getSkillCompareAsDouble(0);
+            data[counter][9] = tmpPlayer.getSkillCompareAsDouble(1);
+            data[counter][10] = tmpPlayer.getSkillCompareAsDouble(2);
+            data[counter][11] = tmpPlayer.getSkillCompareAsDouble(10);
+            data[counter][12] = tmpPlayer.getSkillCompareAsDouble(3);
+            data[counter][13] = tmpPlayer.getSkillCompareAsDouble(4);
+            data[counter][14] = tmpPlayer.getSkillCompareAsDouble(5);
+            data[counter][15] = tmpPlayer.getSkillCompareAsDouble(6);
+            data[counter][16] = tmpPlayer.getSkillCompareAsDouble(7);
+            data[counter][17] = tmpPlayer.getSkillCompareAsDouble(8);
+            data[counter][18] = tmpPlayer.getSkillCompareAsDouble(9);
+            data[counter][19] = tmpPlayer.getPositionCompareAsString(IMatchRoleID.KEEPER);
+            data[counter][20] = tmpPlayer.getPositionCompareAsString(IMatchRoleID.CENTRAL_DEFENDER);
+            data[counter][21] = tmpPlayer.getPositionCompareAsString(IMatchRoleID.CENTRAL_DEFENDER_TOWING);
+            data[counter][22] = tmpPlayer.getPositionCompareAsString(IMatchRoleID.CENTRAL_DEFENDER_OFF);
+            data[counter][23] = tmpPlayer.getPositionCompareAsString(IMatchRoleID.BACK);
+            data[counter][24] = tmpPlayer.getPositionCompareAsString(IMatchRoleID.BACK_TOMID);
+            data[counter][25] = tmpPlayer.getPositionCompareAsString(IMatchRoleID.BACK_OFF);
+            data[counter][26] = tmpPlayer.getPositionCompareAsString(IMatchRoleID.BACK_DEF);
+            data[counter][27] = tmpPlayer.getPositionCompareAsString(IMatchRoleID.MIDFIELDER);
+            data[counter][28] = tmpPlayer.getPositionCompareAsString(IMatchRoleID.MIDFIELDER_TOWING);
+            data[counter][29] = tmpPlayer.getPositionCompareAsString(IMatchRoleID.MIDFIELDER_OFF);
+            data[counter][30] = tmpPlayer.getPositionCompareAsString(IMatchRoleID.MIDFIELDER_DEF);
+            data[counter][31] = tmpPlayer.getPositionCompareAsString(IMatchRoleID.WINGER);
+            data[counter][32] = tmpPlayer.getPositionCompareAsString(IMatchRoleID.WINGER_TOMID);
+            data[counter][33] = tmpPlayer.getPositionCompareAsString(IMatchRoleID.WINGER_OFF);
+            data[counter][34] = tmpPlayer.getPositionCompareAsString(IMatchRoleID.WINGER_DEF);
+            data[counter][35] = tmpPlayer.getPositionCompareAsString(IMatchRoleID.FORWARD);
+            data[counter][36] = tmpPlayer.getPositionCompareAsString(IMatchRoleID.FORWARD_DEF);
+            data[counter][37] = tmpPlayer.getPositionCompareAsString(IMatchRoleID.FORWARD_TOWING);
+            data[counter][38] = (tmpPlayer.getWages()) / 10;
+            data[counter][39] = tmpPlayer.getTSI();
+            data[counter][40] = tmpPlayer.getId();
+            counter++;
+        }
 	}
 
 	@Override

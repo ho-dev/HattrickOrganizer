@@ -8,7 +8,7 @@ import java.awt.*;
  */
 public class ColorIcon implements Icon {
 
-    private final static int ICON_SIZE = 8;
+    private static final int ICON_SIZE = 8;
     private final Color colour;
 
     public ColorIcon(Color colour) {

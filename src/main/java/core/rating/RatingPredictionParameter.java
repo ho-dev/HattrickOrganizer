@@ -8,6 +8,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Locale;
 import java.util.Properties;
 
 public class RatingPredictionParameter  {
@@ -45,7 +46,7 @@ public class RatingPredictionParameter  {
 					String line;
 					Properties curProperties = null;
 					while((line = br.readLine()) != null) {
-						line = line.toLowerCase(java.util.Locale.ENGLISH);
+						line = line.toLowerCase(Locale.ENGLISH);
 						// # begins a Comment
 						line = line.replaceFirst ("#.*", "");
 						// Trim
@@ -102,8 +103,8 @@ public class RatingPredictionParameter  {
     }
     
     public double getParam (String section, String key, double defVal) {
-    	key = key.toLowerCase(java.util.Locale.ENGLISH);
-    	section = section.toLowerCase(java.util.Locale.ENGLISH);
+    	key = key.toLowerCase(Locale.ENGLISH);
+    	section = section.toLowerCase(Locale.ENGLISH);
     	if (allProps.containsKey(section)) {
     		Properties props = allProps.get(section);
     		String propString = props.getProperty(key, "" + defVal);

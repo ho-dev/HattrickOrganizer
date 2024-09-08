@@ -210,7 +210,7 @@ class ControlPanel extends JPanel implements ActionListener{
 
     @Override
 	public void actionPerformed(java.awt.event.ActionEvent actionEvent) {
-            BigDecimal groesse = BigDecimal.ZERO;;
+            BigDecimal groesse = BigDecimal.ZERO;
 
             try {
                 groesse = new BigDecimal(Integer.parseInt(m_jtfGesamtgroesse.getText()));

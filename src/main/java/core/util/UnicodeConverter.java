@@ -16,7 +16,7 @@ import java.io.OutputStreamWriter;
  * C:\Java\jdk6\bin\native2ascii -encoding utf-16 Hebrew.utf16.properties Hebrew.properties
  */
 public class UnicodeConverter {
-	private final static String CRLF = "\r\n";
+	private static final String CRLF = "\r\n";
 
 	public static void main(String[] args) throws Exception {
 		String input = args.length > 0 ? args[0] : "Hebrew.properties";

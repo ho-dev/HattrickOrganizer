@@ -11,7 +11,7 @@ import java.util.Map;
 
 public class ModuleConfig {
 
-	private Map<String, Object> configMap = new HashMap<String, Object>();
+	private Map<String, Object> configMap = new HashMap<>();
 
 	// singleton
 	private static ModuleConfig configuration = null;
@@ -19,7 +19,7 @@ public class ModuleConfig {
 	private ModuleConfig() {
 	}
 
-	public static final ModuleConfig instance() {
+	public static ModuleConfig instance() {
 		if (configuration == null) {
 			configuration = new ModuleConfig();
 			configuration.load();
@@ -99,7 +99,7 @@ public class ModuleConfig {
 	}
 
 	public void setBoolean(String key, boolean value) {
-		configMap.put(key, Boolean.valueOf(value));
+		configMap.put(key, value);
 	}
 
 	public void setString(String key, String value) {
@@ -125,7 +125,7 @@ public class ModuleConfig {
 	public final int[] getIntArray(String key) {
 		int[] values = new int[1];
 		String value = getString(key);
-		if (value == null || value.length() == 0)
+		if (value == null || value.isEmpty())
 			return new int[0];
 
 		if (value.contains(",")) {

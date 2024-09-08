@@ -57,11 +57,9 @@ public class RosterPlayerData {
 
     public List<RosterRoleData> getSecondaryRoles() {
         int main = getMainPosition();
-        List<RosterRoleData> l = new ArrayList<RosterRoleData>();
+        List<RosterRoleData> l = new ArrayList<>();
 
-        for (int i = 0; i < app.length; i++) {
-            RosterRoleData array_element = app[i];
-
+        for (RosterRoleData array_element : app) {
             if ((array_element.getApp() > 0) && (array_element.getPos() != main)) {
                 l.add(array_element);
             }

@@ -26,6 +26,7 @@ import tool.updater.UpdateController;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -64,6 +65,10 @@ public class DownloadDialog extends JDialog implements ActionListener {
 		return m_clDownloadDialog;
 	}
 
+	private static void clearInstance() {
+		m_clDownloadDialog = null;
+	}
+
 	/**
 	 * Singleton
 	 */
@@ -98,7 +103,12 @@ public class DownloadDialog extends JDialog implements ActionListener {
 	private void close(){
 		setVisible(false);
 		dispose();
-		m_clDownloadDialog = null;
+	}
+
+	@Override
+	public void dispose() {
+		super.dispose();
+		clearInstance();
 	}
 
 	/**
@@ -164,7 +174,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 			m_jchMatchArchive.setOpaque(false);
 			matchArchivePanel.add(m_jchMatchArchive, BorderLayout.WEST);
 
-			m_clSpinnerModel.setCalendarField(java.util.Calendar.MONTH);
+			m_clSpinnerModel.setCalendarField(Calendar.MONTH);
 			((JSpinner.DateEditor) m_jsSpinner.getEditor()).getFormat().applyPattern("dd.MM.yyyy");
 			matchArchivePanel.add(m_jsSpinner, BorderLayout.EAST);
 

@@ -66,9 +66,7 @@ public class DeletePanel extends JPanel {
     private void fillCombo() {
         teams.removeAllItems();
 
-        for (Iterator<Team> iter = menu.teams.iterator(); iter.hasNext();) {
-            Team element = iter.next();
-
+        for (Team element : menu.teams) {
             teams.addItem(element);
         }
 
@@ -113,7 +111,7 @@ public class DeletePanel extends JPanel {
                     DBManager.instance().removeTAFavoriteTeam(team.getTeamId());
                     fillCombo();
 
-                    if (menu.teams.size() == 0) {
+                    if (menu.teams.isEmpty()) {
                         menu.itemDelete.setVisible(false);
                     }
                 }

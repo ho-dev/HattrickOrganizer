@@ -40,7 +40,7 @@ public class SQLDialog extends JDialog implements ActionListener {
     private JTextPane txtArea;
     private JLabel lbl;
     protected JTree tree;
-    private String columnNames[];
+    private String[] columnNames;
     protected ArrayList<String> statements;
     private int index;
     boolean CRState;
@@ -54,7 +54,7 @@ public class SQLDialog extends JDialog implements ActionListener {
     public SQLDialog() {
         super(HOMainFrame.instance(), "Simple SQL Editor");
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        statements = new ArrayList<String>();
+        statements = new ArrayList<>();
         CRState = false;
         butBook = new JButton("History");
         butExecute = new JButton(ThemeManager.getIcon(HOIconName.TOOTHEDWHEEL));
@@ -119,8 +119,8 @@ public class SQLDialog extends JDialog implements ActionListener {
     }
 
     protected void showAllStatements() {
-        Object tmp[] = statements.toArray();
-        String display[] = new String[tmp.length];
+        Object[] tmp = statements.toArray();
+        String[] display = new String[tmp.length];
         for(int i = 0; i < tmp.length; i++)
         {
             display[i] = tmp[i].toString();
@@ -203,7 +203,7 @@ public class SQLDialog extends JDialog implements ActionListener {
     }
 
     private Object[][] getValues() {
-        Object values[][] = (Object[][])null;
+        Object[][] values = (Object[][])null;
         int rowCount = 0;
         String txt = getTextArea().getText().toUpperCase();
         int index1 = txt.indexOf("FROM");

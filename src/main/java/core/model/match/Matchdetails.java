@@ -556,7 +556,7 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
      *
      * @param m_sArenaName New value of property m_sArenaName.
      */
-    public final void setArenaName(java.lang.String m_sArenaName) {
+    public final void setArenaName(String m_sArenaName) {
         this.m_sArenaName = m_sArenaName;
     }
 
@@ -565,7 +565,7 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
      *
      * @return Value of property m_sArenaName.
      */
-    public final java.lang.String getArenaName() {
+    public final String getArenaName() {
         return m_sArenaName;
     }
 
@@ -635,7 +635,7 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
      *
      * @param m_sGastName New value of property m_sGastName.
      */
-    public final void setGastName(java.lang.String m_sGastName) {
+    public final void setGastName(String m_sGastName) {
         this.m_sGastName = m_sGastName;
     }
 
@@ -644,7 +644,7 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
      *
      * @return Value of property m_sGastName.
      */
-    public final java.lang.String getGuestTeamName() {
+    public final String getGuestTeamName() {
         return m_sGastName;
     }
 
@@ -916,7 +916,7 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
      *
      * @param m_sHeimName New value of property m_sHeimName.
      */
-    public final void setHeimName(java.lang.String m_sHeimName) {
+    public final void setHeimName(String m_sHeimName) {
         this.m_sHeimName = m_sHeimName;
     }
 
@@ -925,7 +925,7 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
      *
      * @return Value of property m_sHeimName.
      */
-    public final java.lang.String getHomeTeamName() {
+    public final String getHomeTeamName() {
         return m_sHeimName;
     }
 
@@ -1280,7 +1280,7 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
      *
      * @param m_sMatchreport New value of property m_sMatchreport.
      */
-    public final void setMatchreport(java.lang.String m_sMatchreport) {
+    public final void setMatchreport(String m_sMatchreport) {
         this.m_sMatchreport = m_sMatchreport;
     }
 
@@ -1289,7 +1289,7 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
      *
      * @return Value of property m_sMatchreport.
      */
-    public final java.lang.String getMatchreport() {
+    public final String getMatchreport() {
         return m_sMatchreport;
     }
 

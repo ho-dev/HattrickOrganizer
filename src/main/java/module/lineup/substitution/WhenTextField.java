@@ -50,7 +50,7 @@ public class WhenTextField extends JFormattedTextField {
 		DefaultFormatterFactory factory = new DefaultFormatterFactory(displayFormatter, displayFormatter,
 				editFormatter);
 		setFormatterFactory(factory);
-		setValue(Integer.valueOf(-1));
+		setValue(-1);
 	}
 
 	private void addListeners() {
@@ -95,7 +95,7 @@ public class WhenTextField extends JFormattedTextField {
 		@Override
 		public String valueToString(Object obj) throws ParseException {
 			Integer value = (Integer) obj;
-			if (value == null || value.intValue() < 0) {
+			if (value == null || value < 0) {
 				return noValueDisplayString;
 			}
 			return MessageFormat.format(valueDisplayString, value);
@@ -110,7 +110,7 @@ public class WhenTextField extends JFormattedTextField {
 
 		@Override
 		public Object stringToValue(String text) throws ParseException {
-			return (StringUtils.isEmpty(text)) ? Integer.valueOf(0) : Integer.parseInt(text);
+			return (StringUtils.isEmpty(text)) ? 0 : Integer.parseInt(text);
 		}
 
 		@Override

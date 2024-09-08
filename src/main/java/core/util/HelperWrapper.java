@@ -14,7 +14,7 @@ public class HelperWrapper {
     //~ Static fields/initializers -----------------------------------------------------------------
 
     private static HelperWrapper m_clInstance;
-    final static long WEEK = 24 * 7 * 3600 * 1000L;
+    static final long WEEK = 24 * 7 * 3600 * 1000L;
 
     //~ Constructors -------------------------------------------------------------------------------
 

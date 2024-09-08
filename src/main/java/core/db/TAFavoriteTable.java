@@ -13,7 +13,7 @@ import java.util.List;
  *
  */
 final class TAFavoriteTable extends AbstractTable {
-	final static String TABLENAME = "TA_FAVORITE";
+	static final String TABLENAME = "TA_FAVORITE";
 
 	TAFavoriteTable(ConnectionManager adapter) {
 		super(TABLENAME, adapter);

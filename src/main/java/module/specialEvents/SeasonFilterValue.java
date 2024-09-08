@@ -4,9 +4,9 @@ public enum SeasonFilterValue {
 
 	CURRENT_SEASON(3), LAST_TWO_SEASONS(2), ALL_SEASONS(1);
 
-	private int id;
+	private final int id;
 
-	private SeasonFilterValue(int id) {
+	SeasonFilterValue(int id) {
 		this.id = id;
 	}
 

@@ -6,7 +6,7 @@ import java.sql.Types;
 import java.util.List;
 
 public class MatchTeamRatingTable extends AbstractTable {
-    public final static String TABLENAME = "MATCHTEAMRATING";
+    public static final String TABLENAME = "MATCHTEAMRATING";
 
     protected MatchTeamRatingTable(ConnectionManager adapter) {
         super(TABLENAME, adapter);

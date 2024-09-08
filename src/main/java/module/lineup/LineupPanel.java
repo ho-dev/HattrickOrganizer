@@ -30,7 +30,7 @@ import java.util.Map;
  */
 public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 
-	public final static Color TITLE_FG = ThemeManager.getColor(HOColorName.LINEUP_HIGHLIGHT_FG);
+	public static final Color TITLE_FG = ThemeManager.getColor(HOColorName.LINEUP_HIGHLIGHT_FG);
 	private LineupPositionsPanel lineupPositionsPanel;
 	private LineupPlayersTable lineupPlayersTable;
 	private LineupRatingAssistantPanel lineupRatingAssistantPanel;
@@ -41,7 +41,7 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 
 	public LineupPanel() {
 		initComponents();
-		addListeners();
+//		addListeners();
 	}
 
 	public void setPlayer(int idPlayer) {
@@ -183,47 +183,47 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 		return splitPane;
 	}
 
-	private void addListeners() {
+//	private void addListeners() {
+//
+//		ListSelectionListener lsl = new ListSelectionListener() {
+//
+//			@Override
+//			public void valueChanged(ListSelectionEvent e) {
+//				if (e.getSource() == lineupPlayersTable.getSelectionModel()) {
+//					synchronizeSelection(lineupPlayersTable);
+//				} else if (e.getSource() == lineupPlayersTableNameColumn.getSelectionModel()) {
+//					synchronizeSelection(lineupPlayersTableNameColumn);
+//				}
+//			}
+//
+//			private void synchronizeSelection(JTable sourceTable) {
+//				JTable targetTable;
+//				if (sourceTable == lineupPlayersTable) {
+//					targetTable = lineupPlayersTableNameColumn;
+//				} else {
+//					targetTable = lineupPlayersTable;
+//				}
+//
+//				int row = sourceTable.getSelectedRow();
+//				if (row == -1) {
+//					targetTable.clearSelection();
+//				} else {
+//					if (targetTable.getSelectedRow() != row) {
+//						targetTable.setRowSelectionInterval(row, row);
+//					}
+//					var tableModel = (PlayerOverviewTableModel)sourceTable.getModel();
+//					var player = tableModel.getPlayerAtRow(row);
+////					Player player = ((PlayerTable) sourceTable).getPlayer(row);
+//					if (player != null) {
+//						HOMainFrame.instance().selectPlayer(player);
+//					}
+//				}
+//			}
+//		};
 
-		ListSelectionListener lsl = new ListSelectionListener() {
-
-			@Override
-			public void valueChanged(ListSelectionEvent e) {
-				if (e.getSource() == lineupPlayersTable.getSelectionModel()) {
-					synchronizeSelection(lineupPlayersTable);
-				} else if (e.getSource() == lineupPlayersTableNameColumn.getSelectionModel()) {
-					synchronizeSelection(lineupPlayersTableNameColumn);
-				}
-			}
-
-			private void synchronizeSelection(JTable sourceTable) {
-				JTable targetTable;
-				if (sourceTable == lineupPlayersTable) {
-					targetTable = lineupPlayersTableNameColumn;
-				} else {
-					targetTable = lineupPlayersTable;
-				}
-
-				int row = sourceTable.getSelectedRow();
-				if (row == -1) {
-					targetTable.clearSelection();
-				} else {					
-					if (targetTable.getSelectedRow() != row) {
-						targetTable.setRowSelectionInterval(row, row);
-					}
-					var tableModel = (PlayerOverviewTableModel)sourceTable.getModel();
-					var player = tableModel.getPlayerAtRow(row);
-//					Player player = ((PlayerTable) sourceTable).getPlayer(row);
-					if (player != null) {
-						HOMainFrame.instance().selectPlayer(player);
-					}
-				}
-			}
-		};
-
-		this.lineupPlayersTable.getSelectionModel().addListSelectionListener(lsl);
-		this.lineupPlayersTableNameColumn.getSelectionModel().addListSelectionListener(lsl);
-	}
+//		this.lineupPlayersTable.getSelectionModel().addListSelectionListener(lsl);
+//		this.lineupPlayersTableNameColumn.getSelectionModel().addListSelectionListener(lsl);
+//	}
 
 	public Weather getWeather() {
 		return getLineupSettingsPanel().getWeather();

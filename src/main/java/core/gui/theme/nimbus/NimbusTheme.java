@@ -18,7 +18,7 @@ import javax.swing.plaf.DimensionUIResource;
 
 public class NimbusTheme extends BaseTheme {
 
-	public final static String THEME_NAME = "Nimbus";
+	public static final String THEME_NAME = "Nimbus";
 
 	@Override
 	public String getName() {

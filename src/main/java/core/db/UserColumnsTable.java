@@ -9,7 +9,7 @@ import javax.swing.*;
 import java.sql.Types;
 
 class UserColumnsTable extends AbstractTable {
-	final static String TABLENAME = "USERCOLUMNS";
+	static final String TABLENAME = "USERCOLUMNS";
 
 	protected UserColumnsTable(ConnectionManager adapter) {
 		super(TABLENAME, adapter);

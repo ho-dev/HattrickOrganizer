@@ -77,7 +77,7 @@ public class PlayerMatchCBItem {
      *
      * @param m_clGastteam New value of property m_clGastteam.
      */
-    public final void setGastteam(java.lang.String m_clGastteam) {
+    public final void setGastteam(String m_clGastteam) {
         this.m_clGastteam = m_clGastteam;
     }
 
@@ -86,7 +86,7 @@ public class PlayerMatchCBItem {
      *
      * @return Value of property m_clGastteam.
      */
-    public final java.lang.String getGuestTeamName() {
+    public final String getGuestTeamName() {
         return m_clGastteam;
     }
 
@@ -113,7 +113,7 @@ public class PlayerMatchCBItem {
      *
      * @param m_clHeimteam New value of property m_clHeimteam.
      */
-    public final void setHeimteam(java.lang.String m_clHeimteam) {
+    public final void setHeimteam(String m_clHeimteam) {
         this.m_clHeimteam = m_clHeimteam;
     }
 
@@ -122,7 +122,7 @@ public class PlayerMatchCBItem {
      *
      * @return Value of property m_clHeimteam.
      */
-    public final java.lang.String getHomeTeamName() {
+    public final String getHomeTeamName() {
         return m_clHeimteam;
     }
 
@@ -239,7 +239,7 @@ public class PlayerMatchCBItem {
      *
      * @param m_sSelbstvertrauen New value of property m_sSelbstvertrauen.
      */
-    public final void setConfidence(java.lang.String m_sSelbstvertrauen) {
+    public final void setConfidence(String m_sSelbstvertrauen) {
         this.m_sSelbstvertrauen = m_sSelbstvertrauen;
     }
 
@@ -248,7 +248,7 @@ public class PlayerMatchCBItem {
      *
      * @return Value of property m_sSelbstvertrauen.
      */
-    public final java.lang.String getSelbstvertrauen() {
+    public final String getSelbstvertrauen() {
         return m_sSelbstvertrauen;
     }
 
@@ -275,7 +275,7 @@ public class PlayerMatchCBItem {
      *
      * @param m_sStimmung New value of property m_sStimmung.
      */
-    public final void setTeamSpirit(java.lang.String m_sStimmung) {
+    public final void setTeamSpirit(String m_sStimmung) {
         this.m_sTeamSpirit = m_sStimmung;
     }
 
@@ -284,7 +284,7 @@ public class PlayerMatchCBItem {
      *
      * @return Value of property m_sStimmung.
      */
-    public final java.lang.String getStimmung() {
+    public final String getStimmung() {
         return m_sTeamSpirit;
     }
 }

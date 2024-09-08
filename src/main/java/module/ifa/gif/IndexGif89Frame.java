@@ -32,7 +32,7 @@ public class IndexGif89Frame extends Gif89Frame {
 	 * @param ci_pixels
 	 *            Array containing at least width*height color-index pixels.
 	 */
-	public IndexGif89Frame(int width, int height, byte ci_pixels[]) {
+	public IndexGif89Frame(int width, int height, byte[] ci_pixels) {
 		theWidth = width;
 		theHeight = height;
 		ciPixels = new byte[theWidth * theHeight];

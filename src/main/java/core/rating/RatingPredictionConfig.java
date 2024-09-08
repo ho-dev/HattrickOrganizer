@@ -73,7 +73,7 @@ public class RatingPredictionConfig {
     	if (allPredictionNames != null)
     		return allPredictionNames;
     	else {
-    		ArrayList<String> list = new ArrayList<String>();
+    		ArrayList<String> list = new ArrayList<>();
     		try {
     			InputStream predictionIS = FileLoader.instance().getFileInputStream(new String[]{predConfigFile, predDir + "/predictionTypes.conf"});
     			if (predictionIS==null) {
@@ -86,7 +86,7 @@ public class RatingPredictionConfig {
         				line = line.replaceFirst("#.*", "");
         				// Trim
         				line = line.trim();
-        				if (line.length() != 0) {
+        				if (!line.isEmpty()) {
         					list.add(line);
         				}
         			}
@@ -154,7 +154,7 @@ public class RatingPredictionConfig {
     	tacticsParam.readFromFile(prefix + "tactics.dat");
     	
     	// Check all params for re-parsed files
-    	RatingPredictionParameter allParams [] = 
+    	RatingPredictionParameter[] allParams =
     		{sideDefenseParam, centralDefenseParam, midfieldParam, 
     			sideAttackParam, centralAttackParam, playerStrengthParam, tacticsParam};
     	

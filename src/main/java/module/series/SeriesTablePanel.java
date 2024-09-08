@@ -165,7 +165,7 @@ class SeriesTablePanel extends ImagePanel {
 		// serie Table
 		constraints.gridy = 1;
 		constraints.insets = new Insets(0, 4, 4, 4);
-		seriesTable.setDefaultRenderer(java.lang.Object.class, new HODefaultTableCellRenderer());
+		seriesTable.setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
 		seriesTable.setRowHeight(30);
 		layout.setConstraints(seriesTable, constraints);
 		panel.add(seriesTable);

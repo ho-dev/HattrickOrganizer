@@ -17,7 +17,7 @@ import javax.swing.table.AbstractTableModel;
  */
 public class ChangesTableModel extends AbstractTableModel {
 
-	public final static int COL_PLAYER_ID = 6;
+	public static final int COL_PLAYER_ID = 6;
 	@Serial
 	private static final long serialVersionUID = -9082549798814304017L;
 	private final List<PlayerSkillChange> values;

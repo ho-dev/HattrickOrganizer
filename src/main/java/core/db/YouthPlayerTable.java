@@ -16,7 +16,7 @@ public class YouthPlayerTable  extends AbstractTable {
     /**
      * tablename
      **/
-    final static String TABLENAME = "YOUTHPLAYER";
+    static final String TABLENAME = "YOUTHPLAYER";
 
     YouthPlayerTable(ConnectionManager adapter) {
         super(TABLENAME, adapter);

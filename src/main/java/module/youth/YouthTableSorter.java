@@ -124,7 +124,7 @@ public class YouthTableSorter extends AbstractTableModel {
     }
 
     public boolean isSorting() {
-        return sortingColumns.size() != 0;
+        return !sortingColumns.isEmpty();
     }
 
     private ColumnSorting getColumnSorting(int column) {

@@ -27,7 +27,7 @@ public class XMLAvatarsParser {
 
     private static List<PlayerAvatar> parseDetails(Document doc) {
 
-        List<PlayerAvatar> playerAvatars = new ArrayList<>();;
+        List<PlayerAvatar> playerAvatars = new ArrayList<>();
 
         if (doc == null) {
             return playerAvatars;

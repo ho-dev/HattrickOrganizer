@@ -15,7 +15,7 @@ import javax.swing.ImageIcon;
 public abstract class Schema  {
 
 	/** cached all Strings, Boolean, Integer,  Color, Icons **/
-	protected Hashtable<String, Object> cache = new Hashtable<String, Object>();
+	protected Hashtable<String, Object> cache = new Hashtable<>();
 
 	
 	public Schema(){

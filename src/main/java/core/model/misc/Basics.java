@@ -193,7 +193,7 @@ public final class Basics extends AbstractTable.Storable {
      *
      * @param m_sManager New value of property m_sManager.
      */
-    public void setManager(java.lang.String m_sManager) {
+    public void setManager(String m_sManager) {
         this.m_sManager = m_sManager;
     }
 
@@ -202,7 +202,7 @@ public final class Basics extends AbstractTable.Storable {
      *
      * @return Value of property m_sManager.
      */
-    public java.lang.String getManager() {
+    public String getManager() {
         return m_sManager;
     }
 
@@ -297,7 +297,7 @@ public final class Basics extends AbstractTable.Storable {
      *
      * @param m_sTeamName New value of property m_sTeamName.
      */
-    public void setTeamName(java.lang.String m_sTeamName) {
+    public void setTeamName(String m_sTeamName) {
         this.m_sTeamName = m_sTeamName;
     }
 
@@ -306,7 +306,7 @@ public final class Basics extends AbstractTable.Storable {
      *
      * @return Value of property m_sTeamName.
      */
-    public java.lang.String getTeamName() {
+    public String getTeamName() {
         return m_sTeamName;
     }
     

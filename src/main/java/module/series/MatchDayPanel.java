@@ -168,7 +168,7 @@ final class MatchDayPanel extends JPanel implements ActionListener {
 
         String bordertext = HOVerwaltung.instance().getLanguageString("Spieltag") + " " + spieltag;
 
-        if (paarungen != null && paarungen.size() > 0) {
+        if (paarungen != null && !paarungen.isEmpty()) {
             bordertext += ("  ( " + paarungen.get(0).getDatum().toLocaleDateTime() + " )");
         }
 

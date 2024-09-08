@@ -113,7 +113,7 @@ public class HODateTime implements Comparable<HODateTime> {
      * @param ts HODateTime
      * @return long, seconds since epoch
      */
-    static public long toEpochSecond(HODateTime ts){
+    public static long toEpochSecond(HODateTime ts){
         if ( ts!= null) return ts.instant.getEpochSecond();
         return 0L;
     }
@@ -206,7 +206,25 @@ public class HODateTime implements Comparable<HODateTime> {
         return instant.compareTo(o.instant);
     }
 
-    public boolean equals(HODateTime t){ return this.instant.equals(t.instant);}
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+        if (o instanceof HODateTime that) {
+            return that.canEqual(this) && instant.equals(that.instant);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return instant.hashCode();
+    }
+
+    protected boolean canEqual(Object o) {
+        return o instanceof HODateTime;
+    }
 
     public HODateTime minus(int i, ChronoUnit unit) {
         return new HODateTime(instant.minus(i, unit));

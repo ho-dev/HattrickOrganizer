@@ -36,9 +36,9 @@ public class FinancesStatisticsPanel extends LazyImagePanel {
 
 	private JCheckBox c_jcbInclTransferts;
 	private JPanel c_jpCharts;
-	final static String BALANCE_CHART_PANEL = "Balance Chart";
-	final static String DEVELOPMENT_CHART_PANEL = "Development Chart";
-	final static String REVENUE_AND_EXPENSES_CHART_PANEL = "P&L Chart";
+	static final String BALANCE_CHART_PANEL = "Balance Chart";
+	static final String DEVELOPMENT_CHART_PANEL = "Development Chart";
+	static final String REVENUE_AND_EXPENSES_CHART_PANEL = "P&L Chart";
 	private HOLinesChart c_jpBalanceChart;
 	private HOLinesChart c_jpDevelopmentChart;
 	private HODoublePieChart c_jpRevenueAndExpensesChart;

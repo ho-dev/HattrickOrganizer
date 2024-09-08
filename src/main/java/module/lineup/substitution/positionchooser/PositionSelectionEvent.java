@@ -6,8 +6,8 @@ public class PositionSelectionEvent {
 	private Change change;
 
 	public enum Change {
-		SELECTED, DESELECTED;
-	}
+		SELECTED, DESELECTED
+    }
 
 	public PositionSelectionEvent(Integer position, Change change) {
 		this.position = position;

@@ -12,7 +12,7 @@ import org.w3c.dom.NodeList;
 
 class NtLineupParser {
 
-	private List<NtPlayerPosition> players = new ArrayList<NtPlayerPosition>(); // <NtPlayerPosition>
+	private List<NtPlayerPosition> players = new ArrayList<>(); // <NtPlayerPosition>
 	private boolean parsingSuccess;
 
 	NtLineupParser(String xmlData) {
@@ -79,7 +79,8 @@ class NtLineupParser {
 
 	@Override
 	public String toString() {
-		StringBuffer sb = new StringBuffer("NtPlayers, parsingSuccess: " + parsingSuccess);
+		StringBuilder sb2 = new StringBuilder();
+		StringBuilder sb = new StringBuilder("NtPlayers, parsingSuccess: " + parsingSuccess);
 		sb.append("\n\tPlayer IDs("+players.size()+"):");
 		int m = 1;
 		for (Iterator<NtPlayerPosition> i=players.iterator(); i.hasNext(); m++) {

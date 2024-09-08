@@ -4,7 +4,7 @@ import tool.arenasizer.Stadium;
 import java.sql.Types;
 
 final class StadionTable extends AbstractTable {
-	final static String TABLENAME = "STADION";
+	static final String TABLENAME = "STADION";
 
 	StadionTable(ConnectionManager adapter) {
 		super(TABLENAME, adapter);

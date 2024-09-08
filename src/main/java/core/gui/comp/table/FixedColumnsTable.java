@@ -151,6 +151,7 @@ public class FixedColumnsTable extends JScrollPane {
         rowSM.addListSelectionListener(listener);
     }
 
+    public ListSelectionModel getSelectionModel() {return scroll.getSelectionModel();}
     /**
      * Return the created table sorter
      * @return DefaultTableSorter

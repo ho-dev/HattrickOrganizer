@@ -239,15 +239,15 @@ public class Quantize {
 %
 */
     
-    final static boolean QUICK = true;
+    static final boolean QUICK = true;
     
-    final static int MAX_RGB = 255;
-    final static int MAX_NODES = 266817;
-    final static int MAX_TREE_DEPTH = 8;
+    static final int MAX_RGB = 255;
+    static final int MAX_NODES = 266817;
+    static final int MAX_TREE_DEPTH = 8;
 
     // these are precomputed in advance
-    static int SQUARES[];
-    static int SHIFT[];
+    static int[] SQUARES;
+    static int[] SHIFT;
 
     static {
         SQUARES = new int[MAX_RGB + MAX_RGB + 1];
@@ -266,7 +266,7 @@ public class Quantize {
      * reduced in place.
      * @return The new color palette.
      */
-    public static int[] quantizeImage(int pixels[][], int max_colors) {
+    public static int[] quantizeImage(int[][] pixels, int max_colors) {
         Cube cube = new Cube(pixels, max_colors);
         cube.classification();
         cube.reduction();
@@ -276,9 +276,9 @@ public class Quantize {
     }
     
     static class Cube {
-        int pixels[][];
+        int[][] pixels;
         int max_colors;
-        int colormap[];
+        int[] colormap;
         
         Node root;
         int depth;
@@ -290,7 +290,7 @@ public class Quantize {
         // counter for the number of nodes in the tree
         int nodes;
 
-        Cube(int pixels[][], int max_colors) {
+        Cube(int[][] pixels, int max_colors) {
             this.pixels = pixels;
             this.max_colors = max_colors;
 
@@ -351,7 +351,7 @@ public class Quantize {
          *   represented by this node.
          */
         void classification() {
-            int pixels[][] = this.pixels;
+            int[][] pixels = this.pixels;
 
             int width = pixels.length;
             int height = pixels[0].length;
@@ -447,7 +447,7 @@ public class Quantize {
             colors = 0;
             root.colormap();
   
-            int pixels[][] = this.pixels;
+            int[][] pixels = this.pixels;
 
             int width = pixels.length;
             int height = pixels[0].length;
@@ -499,7 +499,7 @@ public class Quantize {
             Node parent;
 
             // child nodes
-            Node child[];
+            Node[] child;
             int nchild;
 
             // our index within our parent
@@ -674,7 +674,7 @@ public class Quantize {
             /**
              * Figure out the distance between this node and som color.
              */
-            final static int distance(int color, int r, int g, int b) {
+            static final int distance(int color, int r, int g, int b) {
                 return (SQUARES[((color >> 16) & 0xFF) - r + MAX_RGB] +
                         SQUARES[((color >>  8) & 0xFF) - g + MAX_RGB] +
                         SQUARES[((color >>  0) & 0xFF) - b + MAX_RGB]);
@@ -682,7 +682,7 @@ public class Quantize {
 
             @Override
 			public String toString() {
-                StringBuffer buf = new StringBuffer();
+                StringBuilder buf = new StringBuilder();
                 if (parent == this) {
                     buf.append("root");
                 } else {

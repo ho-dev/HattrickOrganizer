@@ -143,7 +143,7 @@ public class PluginIfaPanel extends LazyPanel {
 		table.getColumnModel().getColumn(5).setCellRenderer(renderer);
 		table.getColumnModel().getColumn(6).setCellRenderer(renderer);
 
-		TableRowSorter<TableModel> sorter = new SummaryTableSorter<TableModel>(table.getModel());
+		TableRowSorter<TableModel> sorter = new SummaryTableSorter<>(table.getModel());
 		table.setRowSorter(sorter);
 		sorter.setComparator(0, new Comparator<Country>() {
 
@@ -153,7 +153,7 @@ public class PluginIfaPanel extends LazyPanel {
 			}
 
 		});
-		List<SortKey> list = new ArrayList<SortKey>();
+		List<SortKey> list = new ArrayList<>();
 		list.add(new SortKey(5, SortOrder.DESCENDING));
 		sorter.setSortKeys(list);
 

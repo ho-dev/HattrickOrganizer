@@ -11,5 +11,5 @@ public interface IRefreshable {
     /**
      * Called, if the data changed
      */
-    public void refresh();
+    void refresh();
 }

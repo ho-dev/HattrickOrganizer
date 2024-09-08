@@ -2,6 +2,7 @@ package core.constants.player
 
 import core.HOModelBuilder
 import core.model.HOVerwaltung
+import core.model.Translator
 import core.util.Helper
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -16,7 +17,7 @@ class PlayerAbilityTest {
             .hrfId(42)
             .build()
         hoAdmin.model = hoModel
-        hoAdmin.setLanguageBundle(null)
+        hoAdmin.setTranslator(Translator.LANGUAGE_NO_TRANSLATION)
     }
 
     @Test

@@ -20,7 +20,7 @@ import static java.lang.Math.min;
 
 public class SpecialEventsPredictionManager {
 
-    static private final OppPlayerSkillEstimator oppPlayerSkillEstimator = new OppPlayerSkillEstimator();
+    private static final OppPlayerSkillEstimator oppPlayerSkillEstimator = new OppPlayerSkillEstimator();
     static ArrayList<ISpecialEventPredictionAnalyzer> analyzers;
     private Lineup lineup = null;
     private Lineup opponentLineup = null;

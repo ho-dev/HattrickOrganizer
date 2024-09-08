@@ -11,7 +11,7 @@ import java.awt.*;
 
 public class SolarizedDarkTheme extends DarkTheme {
 
-    public final static String THEME_NAME = "Solarized";
+    public static final String THEME_NAME = "Solarized";
 
     /**
      * @inheritDoc

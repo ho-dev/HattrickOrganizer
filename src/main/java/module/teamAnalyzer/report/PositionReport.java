@@ -17,7 +17,7 @@ public class PositionReport extends Report {
     //~ Instance fields ----------------------------------------------------------------------------
 
     /** List of tactics used offensive, defensive etc */
-    private Map<String,TacticReport> tacticReports = new HashMap<String,TacticReport>();
+    private Map<String,TacticReport> tacticReports = new HashMap<>();
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -53,7 +53,7 @@ public class PositionReport extends Report {
      */
     @Override
 	public String toString() {
-        StringBuffer buffer = new StringBuffer();
+        StringBuilder buffer = new StringBuilder();
 
         buffer.append("PositionReport[");
         buffer.append(super.toString());

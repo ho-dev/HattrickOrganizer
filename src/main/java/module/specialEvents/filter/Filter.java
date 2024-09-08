@@ -31,7 +31,7 @@ public class Filter {
 	private boolean showCurrentOwnPlayersOnly;
 	private boolean showOwnPlayersOnly;
 	
-	private final List<FilterChangeListener> listeners = new ArrayList<FilterChangeListener>();
+	private final List<FilterChangeListener> listeners = new ArrayList<>();
 	
 	public Integer getTactic() {
 		return tactic;

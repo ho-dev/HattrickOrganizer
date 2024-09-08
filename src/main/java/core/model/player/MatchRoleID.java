@@ -549,7 +549,7 @@ public class MatchRoleID extends AbstractTable.Storable implements java.io.Seria
 		return behaviour;
 	}
 
-	static public List<Byte> getBehaviours(int roleId){
+	public static List<Byte> getBehaviours(int roleId){
 		switch (roleId){
 			case keeper -> {
 				return List.of(NORMAL);

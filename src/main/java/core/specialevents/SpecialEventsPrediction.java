@@ -318,7 +318,7 @@ public class SpecialEventsPrediction {
 
     public void setInvolvedPositions(ArrayList<IMatchRoleID> m_cInvolvedPositions) {
         if (this.involvedPositions == null) {
-            this.involvedPositions = new ArrayList<IMatchRoleID>();
+            this.involvedPositions = new ArrayList<>();
 
         } else {
             this.involvedPositions.clear();
@@ -329,7 +329,7 @@ public class SpecialEventsPrediction {
 
     public void setInvolvedPosition(MatchRoleID mid) {
         if (this.involvedPositions == null) {
-            this.involvedPositions = new ArrayList<IMatchRoleID>();
+            this.involvedPositions = new ArrayList<>();
         } else {
             this.involvedPositions.clear();
         }
@@ -338,7 +338,7 @@ public class SpecialEventsPrediction {
 
     public void addInvolvedPosition(MatchRoleID mid) {
         if (this.involvedPositions == null) {
-            this.involvedPositions = new ArrayList<IMatchRoleID>();
+            this.involvedPositions = new ArrayList<>();
         }
         this.involvedPositions.add(mid);
     }
@@ -349,7 +349,7 @@ public class SpecialEventsPrediction {
 
     public void setInvolvedOpponentPositions(ArrayList<IMatchRoleID> m_cInvolvedPositions) {
         if (this.involvedOpponentPositions == null) {
-            this.involvedOpponentPositions = new ArrayList<IMatchRoleID>();
+            this.involvedOpponentPositions = new ArrayList<>();
 
         } else {
             this.involvedOpponentPositions.clear();
@@ -360,7 +360,7 @@ public class SpecialEventsPrediction {
 
     public void setInvolvedOpponentPosition(MatchRoleID mid) {
         if (this.involvedOpponentPositions == null) {
-            this.involvedOpponentPositions = new ArrayList<IMatchRoleID>();
+            this.involvedOpponentPositions = new ArrayList<>();
         } else {
             this.involvedOpponentPositions.clear();
         }
@@ -369,12 +369,12 @@ public class SpecialEventsPrediction {
 
     public void addInvolvedOpponentPosition(MatchRoleID mid) {
         if (this.involvedOpponentPositions == null) {
-            this.involvedOpponentPositions = new ArrayList<IMatchRoleID>();
+            this.involvedOpponentPositions = new ArrayList<>();
         }
         this.involvedOpponentPositions.add(mid);
     }
 
-    static public SpecialEventsPrediction createIfInRange(IMatchRoleID position,
+    public static SpecialEventsPrediction createIfInRange(IMatchRoleID position,
                                                           ISpecialEventPredictionAnalyzer.SpecialEventType eventName,
                                                           double maxProbability,
                                                           double valueAtMaxProbability,

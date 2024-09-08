@@ -26,7 +26,7 @@ public class LanguageComboBoxModel extends AbstractListModel implements ComboBox
 	private String selected = null;
 
 	public LanguageComboBoxModel() {
-		comboBoxItemList = new ArrayList<String>();
+		comboBoxItemList = new ArrayList<>();
 		loadData();
 	}
 
@@ -73,7 +73,7 @@ public class LanguageComboBoxModel extends AbstractListModel implements ComboBox
 				}
 	
 				@Override
-				public void characters(char ch[], int start, int length) throws SAXException {
+				public void characters(char[] ch, int start, int length) throws SAXException {
 
 					if (blname) {
 						String s = new String(ch, start, length);
@@ -86,7 +86,7 @@ public class LanguageComboBoxModel extends AbstractListModel implements ComboBox
 
 		     };
 		     
-		     URL languages = this.getClass().getClassLoader().getResource("sprache/languages.xml");
+		     URL languages = this.getClass().getClassLoader().getResource("language/languages.xml");
 		     saxParser.parse(languages.getPath(), handler);
 		     
 		 } catch (Exception e) {

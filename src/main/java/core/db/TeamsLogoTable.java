@@ -13,7 +13,7 @@ public class TeamsLogoTable extends AbstractTable {
     /**
      * tablename
      **/
-    final static String TABLENAME = "CLUBS_LOGO";
+    static final String TABLENAME = "CLUBS_LOGO";
 
     TeamsLogoTable(ConnectionManager adapter) {
         super(TABLENAME, adapter);

@@ -43,18 +43,18 @@ class TransferTypeSorter extends DefaultTableSorter {
     @Override
 	public final Comparator<Integer> getCustomComparator(int column) {
         if ((column == 0) || (column == 3)) {
-            return new Comparator<Integer>() {
-                    @Override
-					public boolean equals(Object arg0) {
-                        return false;
-                    }
+            return new Comparator<>() {
+                @Override
+                public boolean equals(Object arg0) {
+                    return false;
+                }
 
-                    public int compare(Integer arg0, Integer arg1) {
-                        final Integer d1 = arg0;
-                        final Integer d2 = arg1;
-                        return d1.compareTo(d2);
-                    }
-                };
+                public int compare(Integer arg0, Integer arg1) {
+                    final Integer d1 = arg0;
+                    final Integer d2 = arg1;
+                    return d1.compareTo(d2);
+                }
+            };
         }
 
         return null;

@@ -4,8 +4,8 @@ package core.util;
  * Provides OS-specific utility functions.
  */
 public final class OSUtils {
-    public final static String OS_NAME = System.getProperty("os.name").toLowerCase();
-    public enum OS {WINDOWS, LINUX, MAC};
+    public static final String OS_NAME = System.getProperty("os.name").toLowerCase();
+    public enum OS {WINDOWS, LINUX, MAC}
     private static OS os = determineOS();
 
     public static OS getOS() {return os;}

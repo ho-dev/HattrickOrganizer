@@ -10,7 +10,7 @@ public class FlagDisplayModel {
 	private int flagWidth = 8;
 	private boolean grey = true;
 	private boolean roundFlag = false;
-	private List<FlagModelChangeListener> listeners = new ArrayList<FlagModelChangeListener>();
+	private List<FlagModelChangeListener> listeners = new ArrayList<>();
 
 	public int getBrightness() {
 		return brightness;

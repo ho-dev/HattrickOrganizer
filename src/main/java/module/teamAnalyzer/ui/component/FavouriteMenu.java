@@ -80,7 +80,7 @@ public class FavouriteMenu extends JMenu {
         add(itemAdd);
         add(itemDelete);
 
-        if (teams.size() == 0) {
+        if (teams.isEmpty()) {
             itemDelete.setVisible(false);
         }
 
@@ -91,7 +91,6 @@ public class FavouriteMenu extends JMenu {
                                           + " "
                                           + HOVerwaltung.instance().getLanguageString("Verein"),
                                           JOptionPane.PLAIN_MESSAGE);
-            ;
         });
 
         itemAdd.addActionListener(arg0 -> {
@@ -101,7 +100,6 @@ public class FavouriteMenu extends JMenu {
                                           + " "
                                           + HOVerwaltung.instance().getLanguageString("Verein"),
                                           JOptionPane.PLAIN_MESSAGE);
-            ;
         });
     }
 }

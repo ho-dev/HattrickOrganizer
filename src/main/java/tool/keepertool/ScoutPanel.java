@@ -54,9 +54,7 @@ class ScoutPanel extends JPanel {
                                                                          .getTransferTable()
                                                                          .getTransferTableModel();
 
-        for (Iterator<ScoutEintrag> iter = model.getScoutListe().iterator(); iter.hasNext();) {
-            final ScoutEintrag element = iter.next();
-
+        for (final ScoutEintrag element : model.getScoutListe()) {
             if (element.getTorwart() > 4) {
                 players.addItem(new PlayerItem(element));
             }

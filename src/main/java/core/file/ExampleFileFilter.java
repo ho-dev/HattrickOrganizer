@@ -34,6 +34,7 @@ package core.file;
 import java.io.File;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Locale;
 
 
 /**
@@ -66,7 +67,7 @@ public class ExampleFileFilter extends javax.swing.filechooser.FileFilter
      * @see #addExtension
      */
     public ExampleFileFilter() {
-        this.filters = new Hashtable<String,ExampleFileFilter>();
+        this.filters = new Hashtable<>();
     }
 
     /**
@@ -118,9 +119,9 @@ public class ExampleFileFilter extends javax.swing.filechooser.FileFilter
     public ExampleFileFilter(String[] filters, String description) {
         this();
 
-        for (int i = 0; i < filters.length; i++) {
+        for (String filter : filters) {
             // add filters one by one
-            addExtension(filters[i]);
+            addExtension(filter);
         }
 
         if (description != null) {
@@ -187,10 +188,9 @@ public class ExampleFileFilter extends javax.swing.filechooser.FileFilter
             final int i = filename.lastIndexOf('.');
 
             if ((i > 0) && (i < (filename.length() - 1))) {
-                return filename.substring(i + 1).toLowerCase(java.util.Locale.ENGLISH);
+                return filename.substring(i + 1).toLowerCase(Locale.ENGLISH);
             }
 
-            ;
         }
 
         return null;
@@ -240,7 +240,6 @@ public class ExampleFileFilter extends javax.swing.filechooser.FileFilter
                 return true;
             }
 
-            ;
         }
 
         return false;
@@ -255,10 +254,10 @@ public class ExampleFileFilter extends javax.swing.filechooser.FileFilter
      */
     public final void addExtension(String extension) {
         if (filters == null) {
-            filters = new Hashtable<String,ExampleFileFilter>(5);
+            filters = new Hashtable<>(5);
         }
 
-        filters.put(extension.toLowerCase(java.util.Locale.ENGLISH), this);
+        filters.put(extension.toLowerCase(Locale.ENGLISH), this);
         fullDescription = null;
     }
 

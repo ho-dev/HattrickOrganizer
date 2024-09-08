@@ -31,7 +31,7 @@ public class PlayerPositionTableCellRenderer extends DefaultTableCellRenderer {
      * (non-Javadoc)
      *
      * @see javax.swing.table.TableCellRenderer#getTableCellRendererComponent(javax.swing.JTable,
-     *      java.lang.Object, boolean, boolean, int, int)
+     *      Object, boolean, boolean, int, int)
      */
     @Override
 	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
@@ -39,7 +39,7 @@ public class PlayerPositionTableCellRenderer extends DefaultTableCellRenderer {
         if (value instanceof Integer) {
             super.getTableCellRendererComponent(table, null, isSelected, hasFocus, row, col);
 
-            int pos = ((Integer) value).intValue();
+            int pos = (Integer) value;
 
             Icon icon;
 

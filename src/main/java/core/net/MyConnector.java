@@ -39,8 +39,8 @@ public class MyConnector {
 	private static final String htUrl = "https://chpp.hattrick.org/chppxml.ashx";
 	public static String m_sIDENTIFIER = "HO! Hattrick Organizer V" + HO.VERSION;
 	private static MyConnector m_clInstance;
-	private final static String CONSUMER_KEY = ">Ij-pDTDpCq+TDrKA^nnE9";
-	private final static String CONSUMER_SECRET = "2/Td)Cprd/?q`nAbkAL//F+eGD@KnnCc>)dQgtP,p+p";
+	private static final String CONSUMER_KEY = ">Ij-pDTDpCq+TDrKA^nnE9";
+	private static final String CONSUMER_SECRET = "2/Td)Cprd/?q`nAbkAL//F+eGD@KnnCc>)dQgtP,p+p";
 	private ProxySettings proxySettings;
 	private final OAuth10aService m_OAService;
 	private OAuth1AccessToken m_OAAccessToken;
@@ -399,10 +399,10 @@ public class MyConnector {
 		GregorianCalendar cal = new GregorianCalendar();
 		cal.setTimeInMillis(System.currentTimeMillis());
 		if (upcoming) {
-			cal.add(java.util.Calendar.MONTH, 5);
+			cal.add(Calendar.MONTH, 5);
 		}
 		// Paranoia against inaccurate system clock.
-		cal.add(java.util.Calendar.DAY_OF_MONTH, 1);
+		cal.add(Calendar.DAY_OF_MONTH, 1);
 
 		url += "&LastMatchDate=";
 		url += new SimpleDateFormat("yyyy-MM-dd").format(cal.getTime());

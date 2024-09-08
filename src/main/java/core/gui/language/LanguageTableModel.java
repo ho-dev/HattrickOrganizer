@@ -1,8 +1,11 @@
 package core.gui.language;
 
+import core.model.Translator;
 import core.util.HOLogger;
-import core.util.UTF8Control;
 
+import javax.swing.*;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileInputStream;
@@ -19,11 +22,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
 
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableModel;
-
 /**
  * This class represents the table model for editing language resource files.
  * @author edswifa
@@ -34,7 +32,7 @@ public class LanguageTableModel extends AbstractTableModel implements TableModel
 	private static final long serialVersionUID = -1926494264955036043L;
 	private String[] columnNames = {"Key", "Value"};
 	private Map<String, String> data;
-	private List<String> keys = new ArrayList<String>();
+	private List<String> keys = new ArrayList<>();
 	private boolean isDestinationFile = false;
 	private String langauageName = "";
 	
@@ -44,9 +42,9 @@ public class LanguageTableModel extends AbstractTableModel implements TableModel
 	public LanguageTableModel() {
 		this.langauageName = "English";
 		
-		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+		LinkedHashMap<String, String> map = new LinkedHashMap<>();
 		
-		URL englishPath = this.getClass().getClassLoader().getResource("sprache/English.properties");
+		URL englishPath = this.getClass().getClassLoader().getResource("language/English.properties");
 		
 		FileInputStream fis = null;
 		try {
@@ -88,12 +86,12 @@ public class LanguageTableModel extends AbstractTableModel implements TableModel
 		this.isDestinationFile = true;
 		this.langauageName = languageName;
 		
-		ResourceBundle englishBundle = ResourceBundle.getBundle("sprache.English", new UTF8Control());
-		ResourceBundle destBundle = ResourceBundle.getBundle("sprache." + languageName, new UTF8Control());
+		ResourceBundle englishBundle = Translator.loadDefault().getResourceBundle();
+		ResourceBundle destBundle = Translator.load(languageName).getResourceBundle();
 		Iterator<String> rbKeys = this.keys.iterator();
 		String value = null;
 		
-		LinkedHashMap<String, String> map = new LinkedHashMap<String, String>();
+		LinkedHashMap<String, String> map = new LinkedHashMap<>();
 
 		while(rbKeys.hasNext()) {
 			String key = rbKeys.next();
@@ -144,7 +142,7 @@ public class LanguageTableModel extends AbstractTableModel implements TableModel
 	}
 	
 	/* (non-Javadoc)
-	 * @see javax.swing.table.AbstractTableModel#setValueAt(java.lang.Object, int, int)
+	 * @see javax.swing.table.AbstractTableModel#setValueAt(Object, int, int)
 	 */
 	@Override
 	public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
@@ -158,7 +156,7 @@ public class LanguageTableModel extends AbstractTableModel implements TableModel
 	 * Save the table model back to a properties file
 	 */
 	public void save() {
-		StringBuilder fileName = new StringBuilder("sprache/");
+		StringBuilder fileName = new StringBuilder("language/");
 		fileName.append(this.langauageName);
 		fileName.append(".properties");
 		URL destinationPath = this.getClass().getClassLoader().getResource(fileName.toString());
@@ -169,15 +167,13 @@ public class LanguageTableModel extends AbstractTableModel implements TableModel
 			bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(destinationPath.getPath()), "UTF-8"));
 
 			// Loop over table and put into properties
-			Iterator<String> rbKeys = this.keys.iterator();
-			while(rbKeys.hasNext()) {
-				String key = rbKeys.next();
-				StringBuffer sb = new StringBuffer(key);
-				sb.append("=");
-				sb.append(this.data.get(key));
-				bw.write(sb.toString());
-				bw.newLine();
-			}
+            for (String key : this.keys) {
+                StringBuilder sb = new StringBuilder(key);
+                sb.append("=");
+                sb.append(this.data.get(key));
+                bw.write(sb.toString());
+                bw.newLine();
+            }
 			
 			String message = "Please pass the file " + destinationPath.getPath() + " to a developer who will commit it for you.";
 			JOptionPane.showMessageDialog(new JFrame(), message, "Saved", JOptionPane.INFORMATION_MESSAGE);

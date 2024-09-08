@@ -6,6 +6,19 @@ import com.install4j.gradle.Install4jTask
 //   `./gradlew run` runs HO locally
 //   `./gradlew tiTree <task>` shows the task graph for the task <task>
 
+// Temporary workaround for #2116
+// Thx to https://github.com/kordamp/markdown-gradle-plugin/issues/36#issuecomment-2277317737
+buildscript {
+    configurations.all {
+        resolutionStrategy.dependencySubstitution {
+            substitute module("com.overzealous:remark:1.1.0") \
+                using module("com.wavefront:remark:2023-07.07") \
+                because "not available on maven central anymore"
+        }
+    }
+}
+
+
 plugins {
     id "java"
     id "groovy"
@@ -49,7 +62,8 @@ dependencies {
     implementation "org.jetbrains:annotations:24.1.0"
     implementation 'org.codehaus.groovy:groovy-all:3.0.21'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.3'
+    testImplementation "org.junit.jupiter:junit-jupiter:5.10.2"
+    testImplementation "org.assertj:assertj-core:3.26.3"
 }
 
 test {
@@ -124,43 +138,43 @@ poeditor {
     apiKey = System.getenv('POEDITOR_APIKEY') ?: 'xxx'
     projectId = '206221'
 
-    trans.add type:'properties', lang: 'bg',      file: "${projectDir}/src/main/resources/sprache/Bulgarian.properties"
-    trans.add type:'properties', lang: 'ca',      file: "${projectDir}/src/main/resources/sprache/Catalan.properties"
-    trans.add type:'properties', lang: 'hr',      file: "${projectDir}/src/main/resources/sprache/Hrvatski(Croatian).properties"
-    trans.add type:'properties', lang: 'cs',      file: "${projectDir}/src/main/resources/sprache/Czech.properties"
-    trans.add type:'properties', lang: 'da',      file: "${projectDir}/src/main/resources/sprache/Danish.properties"
-    trans.add type:'properties', lang: 'nl',      file: "${projectDir}/src/main/resources/sprache/Nederlands.properties"
-    trans.add type:'properties', lang: 'fi',      file: "${projectDir}/src/main/resources/sprache/Finnish.properties"
-    trans.add type:'properties', lang: 'fr',      file: "${projectDir}/src/main/resources/sprache/French.properties"
-    trans.add type:'properties', lang: 'de',      file: "${projectDir}/src/main/resources/sprache/Deutsch.properties"
-    trans.add type:'properties', lang: 'el',      file: "${projectDir}/src/main/resources/sprache/Greeklish.properties"
-    trans.add type:'properties', lang: 'he',      file: "${projectDir}/src/main/resources/sprache/Hebrew.properties" //Hebrew
-    trans.add type:'properties', lang: 'hu',      file: "${projectDir}/src/main/resources/sprache/Magyar.properties"  //Hungarian
-    trans.add type:'properties', lang: 'it',      file: "${projectDir}/src/main/resources/sprache/Italiano.properties"
-    trans.add type:'properties', lang: 'ko',      file: "${projectDir}/src/main/resources/sprache/Hangul(Korean).properties"
-    trans.add type:'properties', lang: 'lv',      file: "${projectDir}/src/main/resources/sprache/Latvija.properties" //Lettonie
-    trans.add type:'properties', lang: 'lt',      file: "${projectDir}/src/main/resources/sprache/Lithuanian.properties"
-    trans.add type:'properties', lang: 'fa',      file: "${projectDir}/src/main/resources/sprache/Persian.properties"
-    trans.add type:'properties', lang: 'pl',      file: "${projectDir}/src/main/resources/sprache/Polish.properties"
-    trans.add type:'properties', lang: 'pt',      file: "${projectDir}/src/main/resources/sprache/Portugues.properties"
-    trans.add type:'properties', lang: 'pt-br',   file: "${projectDir}/src/main/resources/sprache/PortuguesBrasil.properties"
-    trans.add type:'properties', lang: 'ro',      file: "${projectDir}/src/main/resources/sprache/Romanian.properties"
-    trans.add type:'properties', lang: 'ru',      file: "${projectDir}/src/main/resources/sprache/Russian.properties"
-    trans.add type:'properties', lang: 'sr-cyrl', file: "${projectDir}/src/main/resources/sprache/Serbian(Cyrillic).properties"
-    trans.add type:'properties', lang: 'sk',      file: "${projectDir}/src/main/resources/sprache/Slovak.properties" //Slovak
-    trans.add type:'properties', lang: 'es',      file: "${projectDir}/src/main/resources/sprache/Spanish.properties"
-    trans.add type:'properties', lang: 'sv',      file: "${projectDir}/src/main/resources/sprache/Svenska.properties" //Swedish
-    trans.add type:'properties', lang: 'tr',      file: "${projectDir}/src/main/resources/sprache/Turkish.properties"
-    trans.add type:'properties', lang: 'no',      file: "${projectDir}/src/main/resources/sprache/Norsk.properties"     // Norwegian
-    trans.add type:'properties', lang: 'id',      file: "${projectDir}/src/main/resources/sprache/Indonesian.properties"
-    trans.add type:'properties', lang: 'ja',      file: "${projectDir}/src/main/resources/sprache/Japanese.properties"
-    trans.add type:'properties', lang: 'sl',      file: "${projectDir}/src/main/resources/sprache/Slovenian.properties"
-    trans.add type:'properties', lang: 'uk',      file: "${projectDir}/src/main/resources/sprache/Ukranian.properties"
-    trans.add type:'properties', lang: 'ka',      file: "${projectDir}/src/main/resources/sprache/Georgian.properties"
-    trans.add type:'properties', lang: 'zh-CN',   file: "${projectDir}/src/main/resources/sprache/Chinese.properties"
-    trans.add type:'properties', lang: 'gl',      file: "${projectDir}/src/main/resources/sprache/Galego.properties"    // Galician
-    trans.add type:'properties', lang: 'nl-be',   file: "${projectDir}/src/main/resources/sprache/Vlaams.properties"    // Flemish
-    trans.add type:'properties', lang: 'es-ar',   file: "${projectDir}/src/main/resources/sprache/Spanish(AR).properties"    // Argentina
+    trans.add type:'properties', lang: 'bg',      file: "${projectDir}/src/main/resources/language/Bulgarian.properties"
+    trans.add type:'properties', lang: 'ca',      file: "${projectDir}/src/main/resources/language/Catalan.properties"
+    trans.add type:'properties', lang: 'hr',      file: "${projectDir}/src/main/resources/language/Hrvatski(Croatian).properties"
+    trans.add type:'properties', lang: 'cs',      file: "${projectDir}/src/main/resources/language/Czech.properties"
+    trans.add type:'properties', lang: 'da',      file: "${projectDir}/src/main/resources/language/Danish.properties"
+    trans.add type:'properties', lang: 'nl',      file: "${projectDir}/src/main/resources/language/Nederlands.properties"
+    trans.add type:'properties', lang: 'fi',      file: "${projectDir}/src/main/resources/language/Finnish.properties"
+    trans.add type:'properties', lang: 'fr',      file: "${projectDir}/src/main/resources/language/French.properties"
+    trans.add type:'properties', lang: 'de',      file: "${projectDir}/src/main/resources/language/German.properties"
+    trans.add type:'properties', lang: 'el',      file: "${projectDir}/src/main/resources/language/Greeklish.properties"
+    trans.add type:'properties', lang: 'he',      file: "${projectDir}/src/main/resources/language/Hebrew.properties" //Hebrew
+    trans.add type:'properties', lang: 'hu',      file: "${projectDir}/src/main/resources/language/Magyar.properties"  //Hungarian
+    trans.add type:'properties', lang: 'it',      file: "${projectDir}/src/main/resources/language/Italiano.properties"
+    trans.add type:'properties', lang: 'ko',      file: "${projectDir}/src/main/resources/language/Hangul(Korean).properties"
+    trans.add type:'properties', lang: 'lv',      file: "${projectDir}/src/main/resources/language/Latvija.properties" //Lettonie
+    trans.add type:'properties', lang: 'lt',      file: "${projectDir}/src/main/resources/language/Lithuanian.properties"
+    trans.add type:'properties', lang: 'fa',      file: "${projectDir}/src/main/resources/language/Persian.properties"
+    trans.add type:'properties', lang: 'pl',      file: "${projectDir}/src/main/resources/language/Polish.properties"
+    trans.add type:'properties', lang: 'pt',      file: "${projectDir}/src/main/resources/language/Portugues.properties"
+    trans.add type:'properties', lang: 'pt-br',   file: "${projectDir}/src/main/resources/language/PortuguesBrasil.properties"
+    trans.add type:'properties', lang: 'ro',      file: "${projectDir}/src/main/resources/language/Romanian.properties"
+    trans.add type:'properties', lang: 'ru',      file: "${projectDir}/src/main/resources/language/Russian.properties"
+    trans.add type:'properties', lang: 'sr-cyrl', file: "${projectDir}/src/main/resources/language/Serbian(Cyrillic).properties"
+    trans.add type:'properties', lang: 'sk',      file: "${projectDir}/src/main/resources/language/Slovak.properties" //Slovak
+    trans.add type:'properties', lang: 'es',      file: "${projectDir}/src/main/resources/language/Spanish.properties"
+    trans.add type:'properties', lang: 'sv',      file: "${projectDir}/src/main/resources/language/Svenska.properties" //Swedish
+    trans.add type:'properties', lang: 'tr',      file: "${projectDir}/src/main/resources/language/Turkish.properties"
+    trans.add type:'properties', lang: 'no',      file: "${projectDir}/src/main/resources/language/Norsk.properties"     // Norwegian
+    trans.add type:'properties', lang: 'id',      file: "${projectDir}/src/main/resources/language/Indonesian.properties"
+    trans.add type:'properties', lang: 'ja',      file: "${projectDir}/src/main/resources/language/Japanese.properties"
+    trans.add type:'properties', lang: 'sl',      file: "${projectDir}/src/main/resources/language/Slovenian.properties"
+    trans.add type:'properties', lang: 'uk',      file: "${projectDir}/src/main/resources/language/Ukranian.properties"
+    trans.add type:'properties', lang: 'ka',      file: "${projectDir}/src/main/resources/language/Georgian.properties"
+    trans.add type:'properties', lang: 'zh-CN',   file: "${projectDir}/src/main/resources/language/Chinese.properties"
+    trans.add type:'properties', lang: 'gl',      file: "${projectDir}/src/main/resources/language/Galego.properties"    // Galician
+    trans.add type:'properties', lang: 'nl-be',   file: "${projectDir}/src/main/resources/language/Vlaams.properties"    // Flemish
+    trans.add type:'properties', lang: 'es-ar',   file: "${projectDir}/src/main/resources/language/Spanish(AR).properties"    // Argentina
 }
 
 
@@ -450,15 +464,15 @@ tasks.register("createLanguageFileList")  {
     outputs.upToDateWhen { false }
 
     def lTranslationFiles = []
-    fileTree(dir: "${projectDir}/src/main/resources/sprache", include: '*.properties').visit {
+    fileTree(dir: "${projectDir}/src/main/resources/language", include: '*.properties').visit {
         FileVisitDetails details -> lTranslationFiles << details.file.name
     }
 
     doLast {
-        println("listing available translation in ${projectDir}/src/main/resources/sprache")
+        println("listing available translation in ${projectDir}/src/main/resources/language")
         lTranslationFiles = lTranslationFiles.collect { it.take(it.lastIndexOf('.'))}
         lTranslationFiles.each {out.println it}
-        File lstFile = new File("${projectDir}/src/main/resources/sprache/ListLanguages.txt")
+        File lstFile = new File("${projectDir}/src/main/resources/language/ListLanguages.txt")
         lstFile.withWriter{ out -> lTranslationFiles.each {out.println it} }
     }
 }

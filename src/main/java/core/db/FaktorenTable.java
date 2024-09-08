@@ -8,7 +8,7 @@ import java.sql.Types;
 public final class FaktorenTable extends AbstractTable {
 
 	/** tablename **/
-	public final static String TABLENAME = "FAKTOREN";
+	public static final String TABLENAME = "FAKTOREN";
 	
 	FaktorenTable(ConnectionManager adapter){
 		super(TABLENAME, adapter);

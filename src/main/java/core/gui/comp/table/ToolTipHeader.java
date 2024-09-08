@@ -29,13 +29,11 @@ public class ToolTipHeader extends JTableHeader {
 
         try {
             retStr = toolTips[modelCol];
-        } catch (NullPointerException ex) {
-            retStr = "";
-        } catch (ArrayIndexOutOfBoundsException ex) {
+        } catch (NullPointerException | ArrayIndexOutOfBoundsException ex) {
             retStr = "";
         }
 
-        if (retStr == null || retStr.length() < 1) {
+        if (retStr == null || retStr.isEmpty()) {
             retStr = super.getToolTipText(e);
         }
 

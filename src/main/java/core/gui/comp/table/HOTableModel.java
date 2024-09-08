@@ -435,6 +435,7 @@ public abstract class HOTableModel extends AbstractTableModel {
 	}
 
 	public void initTable(FixedColumnsTable table){
+		table.setTableModel(this);
 		var columnModel = table.getScrollTable().getColumnModel();
 	}
 

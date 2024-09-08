@@ -25,7 +25,7 @@ public class DoubleLabelEntries extends AbstractHOTableEntry {
 
     private LayoutManager layout;
 
-    private final static Color DIFF_COLOR = ThemeManager.getColor(HOColorName.FG_INJURED);
+    private static final Color DIFF_COLOR = ThemeManager.getColor(HOColorName.FG_INJURED);
 
     //~ Constructors -------------------------------------------------------------------------------
 

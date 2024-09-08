@@ -28,7 +28,7 @@ import javax.swing.table.AbstractTableModel;
 public class OutputTableModel extends AbstractTableModel {
 
     // common column of fixed and scrolled tables
-    private final static int COL_PLAYER_ID = 11;
+    private static final int COL_PLAYER_ID = 11;
     private List<FutureTrainingManager> data = new ArrayList<>();
     private final TrainingModel model;
 
