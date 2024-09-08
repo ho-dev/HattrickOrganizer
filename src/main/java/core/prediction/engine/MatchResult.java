@@ -3,7 +3,7 @@ package core.prediction.engine;
 
 public class MatchResult  {
 
-	private int[] resultDetail = new int[25];
+	private final int[] resultDetail = new int[25];
 
 	private int matchNumber = 0;
 	private int homeWin = 0;
@@ -34,9 +34,7 @@ public class MatchResult  {
 		final int[] matchGuestSuccess = { 0, 0, 0 };
 		final int[] matchGuestFailed = { 0, 0, 0 };
 
-        for (Action action : actions) {
-            final Action element = (Action) action;
-
+        for (Action element : actions) {
             if (element.isHomeTeam()) {
                 matchHomeChances++;
 

@@ -3,7 +3,6 @@ package core.db;
 import core.gui.comp.table.HOTableModel;
 import core.gui.comp.table.UserColumn;
 import core.gui.model.UserColumnFactory;
-import core.model.StaffMember;
 
 import javax.swing.*;
 import java.sql.Types;
