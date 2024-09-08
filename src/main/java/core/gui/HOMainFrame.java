@@ -31,6 +31,7 @@ import module.playeranalysis.PlayerAnalysisModulePanel;
 import module.transfer.TransfersPanel;
 import tool.ToolManager;
 import tool.dbcleanup.DBCleanupTool;
+import tool.dbencrypter.DbEncrypterDialog;
 import tool.updater.UpdateController;
 
 import javax.swing.*;
@@ -437,6 +438,12 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 		helpMenu.add(bugReportMenuItem);
 		helpMenu.addSeparator();
 
+        final JMenuItem dbEncryptedExport = new JMenuItem(TranslationFacility.tr("Send Encrypted DB"));
+		dbEncryptedExport.addActionListener(e -> {
+			new DbEncrypterDialog(HOMainFrame.instance());
+		});
+		helpMenu.add(dbEncryptedExport);
+
 		final JMenuItem checkUpdateMuenuItem = new JMenuItem(TranslationFacility.tr("ls.menu.file.update.ho"));
 
 		checkUpdateMuenuItem.addActionListener(e -> UpdateController.check4update(true));
@@ -544,7 +551,6 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 		}
 		fullScreenMenuItem.addActionListener(e -> FullScreen.instance().toggle(this));
 		fileMenu.add(fullScreenMenuItem);
-
 		fileMenu.addSeparator();
 
 		// Quit
@@ -556,8 +562,7 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 			this.processWindowEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
 		});
 		fileMenu.add(quitMenuItem);
-
-		return fileMenu;
+        return fileMenu;
 	}
 
 	/**
