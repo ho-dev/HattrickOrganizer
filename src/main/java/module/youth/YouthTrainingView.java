@@ -1,22 +1,15 @@
 package module.youth;
 
-import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
 import core.gui.Refreshable;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.model.UserColumnController;
-import core.module.IModule;
-
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 
 public class YouthTrainingView extends JScrollPane implements Refreshable {
 
-    private JTable table;
+    private final JTable table;
     private YouthTrainingViewTableModel tableModel;
 
     public YouthTrainingView() {

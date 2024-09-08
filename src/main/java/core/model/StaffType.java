@@ -2,14 +2,14 @@ package core.model;
 
 public enum StaffType {
 
-	NONE((int) 0),
-	ASSISTANTTRAINER((int) 1),
-	MEDIC((int) 2),
-	SPOKESPERSON((int) 3),
-	SPORTPSYCHOLOGIST((int) 4),
-	FORMCOACH((int) 5),
-	FINANCIALDIRECTOR((int) 6),
-	TACTICALASSISTANT((int) 7);
+	NONE(0),
+	ASSISTANTTRAINER(1),
+	MEDIC(2),
+	SPOKESPERSON(3),
+	SPORTPSYCHOLOGIST(4),
+	FORMCOACH(5),
+	FINANCIALDIRECTOR(6),
+	TACTICALASSISTANT(7);
 		
 	private final int id;
 
@@ -32,32 +32,17 @@ public enum StaffType {
 		}
 
 		public String getName() {
-			 switch (this) {
-		         case ASSISTANTTRAINER:
-		             return core.model.HOVerwaltung.instance().getLanguageString("ls.club.staff.assistantcoach");
+            return switch (this) {
+                case ASSISTANTTRAINER -> HOVerwaltung.instance().getLanguageString("ls.club.staff.assistantcoach");
+                case MEDIC -> HOVerwaltung.instance().getLanguageString("ls.club.staff.medic");
+                case SPOKESPERSON -> HOVerwaltung.instance().getLanguageString("ls.club.staff.spokesperson");
+                case SPORTPSYCHOLOGIST -> HOVerwaltung.instance().getLanguageString("ls.club.staff.sportspsychologist");
+                case FORMCOACH -> HOVerwaltung.instance().getLanguageString("ls.club.staff.formcoach");
+                case FINANCIALDIRECTOR -> HOVerwaltung.instance().getLanguageString("ls.club.staff.financialdirector");
+                case TACTICALASSISTANT -> HOVerwaltung.instance().getLanguageString("ls.club.staff.tacticalassistant");
 
-		         case MEDIC:
-		             return core.model.HOVerwaltung.instance().getLanguageString("ls.club.staff.medic");
-
-		         case SPOKESPERSON:
-		             return core.model.HOVerwaltung.instance().getLanguageString("ls.club.staff.spokesperson");
-
-		         case SPORTPSYCHOLOGIST:
-		             return core.model.HOVerwaltung.instance().getLanguageString("ls.club.staff.sportspsychologist");
-
-		         case FORMCOACH:
-		             return core.model.HOVerwaltung.instance().getLanguageString("ls.club.staff.formcoach");
-
-		         case FINANCIALDIRECTOR:
-		             return core.model.HOVerwaltung.instance().getLanguageString("ls.club.staff.financialdirector");
-		         
-		         case TACTICALASSISTANT:
-		           return core.model.HOVerwaltung.instance().getLanguageString("ls.club.staff.tacticalassistant");
-				 
-		           //Error?
-		         default:
-		             return "unknown";
-
-			 }
+                //Error?
+                default -> "unknown";
+            };
 		}
 }

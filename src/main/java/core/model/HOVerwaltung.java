@@ -1,7 +1,6 @@
 package core.model;
 
 import core.db.DBManager;
-import core.file.FileLoader;
 import core.file.hrf.HRF;
 import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
@@ -10,7 +9,6 @@ import core.util.HOLogger;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.io.InputStream;
 import java.sql.Timestamp;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
