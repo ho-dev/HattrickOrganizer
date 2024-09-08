@@ -53,7 +53,7 @@ public class YouthTrainingView extends JScrollPane implements Refreshable {
                 }
             }
 
-            tableModel.restoreUserSettings(table);
+            tableModel.initTable(table);
         }
         tableModel.initData();
     }

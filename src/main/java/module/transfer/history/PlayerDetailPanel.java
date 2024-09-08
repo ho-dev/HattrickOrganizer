@@ -104,7 +104,7 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
         playerTable.setOpaque(true);
 //        sorter.setTableHeader(playerTable.getTableHeader());
 
-        model.restoreUserSettings(playerTable);
+        model.initTable(playerTable);
 
         final JScrollPane playerPane = new JScrollPane(playerTable);
         playerPane.setOpaque(false);

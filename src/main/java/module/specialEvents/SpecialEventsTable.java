@@ -44,7 +44,7 @@ public class SpecialEventsTable extends JTable {
 		setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
 		SpecialEventsTableModel tblModel = UserColumnController.instance().getSpecialEventsTableModel();
 		setModel(tblModel);
-		tblModel.restoreUserSettings(this);
+		tblModel.initTable(this);
 	}
 
 	public void storeUserSettings() {

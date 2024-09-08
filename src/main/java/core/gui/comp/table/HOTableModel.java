@@ -252,7 +252,7 @@ public abstract class HOTableModel extends AbstractTableModel {
 		UserColumn[] tmp = getDisplayedColumns();
 		int[][] order = new int[tmp.length][2];
 		for (int i = 0; i < order.length; i++) {
-			order[i][0] = i;
+			order[i][0] = tmp[i].getId();
 			order[i][1] = tmp[i].getIndex();
 		}
 		return order;
@@ -283,8 +283,8 @@ public abstract class HOTableModel extends AbstractTableModel {
 	public void setColumnsSize(TableColumnModel tableColumnModel) {
 		final UserColumn[] tmpColumns = getDisplayedColumns();
 		for (int i = 0; i < tmpColumns.length; i++) {
-			tmpColumns[i].setSize(tableColumnModel.getColumn(tableColumnModel
-					.getColumnIndex(i)));
+			var id = tmpColumns[i].getId();
+			tmpColumns[i].setSize(tableColumnModel.getColumn(tableColumnModel.getColumnIndex(id)));
 		}
 	}
 
@@ -322,13 +322,16 @@ public abstract class HOTableModel extends AbstractTableModel {
 	 *
 	 * @param table the table object
 	 */
-	public void restoreUserSettings(JTable table) {
+	private void restoreUserSettings(JTable table) {
 		restoreUserSettings(table, 0);
 	}
-	public void restoreUserSettings(JTable table, int offset) {
-		for (int i = 0; i < table.getColumnCount(); i++) {
-			table.getColumnModel().getColumn(i).setIdentifier(i+offset);
-		}
+
+	private void restoreUserSettings(JTable table, int offset) {
+//		for (int i = 0; i < table.getColumnCount(); i++) {
+//			table.getColumnModel().getColumn(i).setIdentifier(i+offset);
+//		}
+
+		// Restore column order setting
 		Arrays.stream(this.columns)
 				.skip(offset)
 				.limit(table.getColumnCount())
@@ -336,9 +339,19 @@ public abstract class HOTableModel extends AbstractTableModel {
 				.sorted(Comparator.comparingInt(UserColumn::getIndex))
 				.forEach(i -> setColumnSettings(i, table, offset));
 
+		// TODO: Restore row order setting
 
+		if ( this.rowSorter == null){
+			List<RowSorter.SortKey> sortKeys = new  ArrayList<>();
+			Arrays.stream(this.columns).filter(i->i.sortPriority != null).sorted(Comparator.comparingInt(UserColumn::getSortPriority)).forEach(i->sortKeys.add(new RowSorter.SortKey(i.index, i.sortOrder)));
+
+			this.rowSorter = new TableRowSorter<>(this);
+			this.rowSorter.setSortKeys(sortKeys);
+			table.setRowSorter(this.rowSorter);
+		}
 	}
-	public void restoreUserSettings(FixedColumnsTable table) {
+
+	private void restoreUserSettings(FixedColumnsTable table) {
 		restoreUserSettings(table.getFixedTable(), 0);
 		restoreUserSettings(table.getScrollTable(), table.getFixedColumnsCount());
 	}
@@ -436,7 +449,8 @@ public abstract class HOTableModel extends AbstractTableModel {
 
 	public void initTable(FixedColumnsTable table){
 		table.setTableModel(this);
-		var columnModel = table.getScrollTable().getColumnModel();
+		restoreUserSettings(table);
+//		var columnModel = table.getScrollTable().getColumnModel();
 	}
 
 	public void initTable(JTable table) {
@@ -447,23 +461,18 @@ public abstract class HOTableModel extends AbstractTableModel {
 		table.setTableHeader(header);
 		table.setModel(this);
 
-		for (int i = 0; i < columnModel.getColumnCount(); i++) {
-			columnModel.getColumn(i).setIdentifier(i);
+
+		for (int i=0; i<columnModel.getColumnCount(); i++){
+			var tm = this.columns[i];
+			var cm = table.getColumnModel().getColumn(i);
+			cm.setIdentifier(tm.getId());
 		}
 
-		initColumnOrder(table);
-		setColumnsSize(columnModel);
+		restoreUserSettings(table);
+
+//		initColumnOrder(table);
+//		setColumnsSize(columnModel);
 
 
-		// TODO: Restore row order settings
-
-		if ( this.rowSorter == null){
-			List<RowSorter.SortKey> sortKeys = new  ArrayList<>();
-			Arrays.stream(this.columns).filter(i->i.sortPriority != null).sorted(Comparator.comparingInt(UserColumn::getSortPriority)).forEach(i->sortKeys.add(new RowSorter.SortKey(i.index, i.sortOrder)));
-
-			this.rowSorter = new TableRowSorter<>(this);
-			this.rowSorter.setSortKeys(sortKeys);
-			table.setRowSorter(this.rowSorter);
-		}
 	}
 }

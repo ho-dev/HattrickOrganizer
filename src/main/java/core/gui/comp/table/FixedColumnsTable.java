@@ -58,6 +58,7 @@ public class FixedColumnsTable extends JScrollPane {
         for (int i=0; i<scroll.getColumnCount(); i++){
             var tm = tableModel.columns[i];
             var cm = scroll.getColumnModel().getColumn(i);
+            cm.setIdentifier(tm.getId());
             cm.setMinWidth(tm.minWidth);
         }
 
@@ -71,6 +72,10 @@ public class FixedColumnsTable extends JScrollPane {
         int width = 0;
         int i=0;
         for (; i < fixedColumns; i++) {
+            var tm = tableModel.columns[i];
+            var cm = fixed.getColumnModel().getColumn(i);
+            cm.setIdentifier(tm.getId());   // identifier has to be resetted
+
             var _columnModel = scroll.getColumnModel();
             var column = _columnModel.getColumn(0);
             width += column.getMinWidth();
@@ -91,7 +96,6 @@ public class FixedColumnsTable extends JScrollPane {
         setRowHeaderView(fixed);
         setCorner(ScrollPaneConstants.UPPER_LEFT_CORNER, fixed.getTableHeader());
 
-        tableModel.restoreUserSettings(this);
     }
 
     private void setTooltipHeader(JTable table, String[] tooltips) {

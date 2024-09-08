@@ -1,4 +1,3 @@
-// %1329240092:de.hattrickorganizer.gui.transferscout%
 package module.transfer.scout;
 
 import core.constants.player.PlayerSpeciality;

@@ -1,24 +1,18 @@
 package module.lineup;
 
-import core.gui.HOMainFrame;
 import core.gui.Updatable;
-import core.gui.model.PlayerOverviewTableModel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.UserParameter;
 import core.model.match.Weather;
-import core.model.player.Player;
 import module.lineup.assistant.LineupAssistantPanel;
 import module.lineup.lineup.LineupPositionsPanel;
 import module.lineup.lineup.MatchAndLineupSelectionPanel;
 import module.lineup.lineup.PlayerPositionPanel;
 import module.lineup.ratings.LineupRatingPanel;
 import module.playerOverview.LineupPlayersTableNameColumn;
-import module.playerOverview.PlayerTable;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.AdjustmentListener;
 import java.util.ArrayList;

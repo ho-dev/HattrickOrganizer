@@ -159,7 +159,7 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
             selectionModel.addListSelectionListener(this);
             playerOverviewTableSorter = new YouthTableSorter(playerOverviewTableModel, playerOverviewTable);
             playerOverviewTable.setModel(playerOverviewTableSorter);
-            playerOverviewTableModel.restoreUserSettings(playerOverviewTable);
+            playerOverviewTableModel.initTable(playerOverviewTable);
         }
     }
 
@@ -186,7 +186,7 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
 
             YouthTableSorter playerDetailsTableSorter = new YouthTableSorter(playerDetailsTableModel, playerDetailsTable);
             playerDetailsTable.setModel(playerDetailsTableSorter);
-            playerDetailsTableModel.restoreUserSettings(playerDetailsTable);
+            playerDetailsTableModel.initTable(playerDetailsTable);
         }
     }
 
