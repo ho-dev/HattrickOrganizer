@@ -30,6 +30,7 @@ import module.playeranalysis.PlayerAnalysisModulePanel;
 import module.transfer.TransfersPanel;
 import tool.ToolManager;
 import tool.dbcleanup.DBCleanupTool;
+import tool.dbencrypter.DbEncrypterDialog;
 import tool.updater.UpdateController;
 
 import javax.swing.*;
@@ -69,6 +70,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	//private final JMenu databaseMenu = new JMenu(HOVerwaltung.instance().getLanguageString("ls.menu.file.database"));
 	private final JMenuItem userAdministrationOptionsMenu = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.database.dbuseradministration"));
 	private final JMenuItem m_jmiDbCleanupTool = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.database.databasecleanup"));
+	private final JMenuItem dbEncryptedExport = new JMenuItem(HOVerwaltung.instance().getLanguageString("Send Encrypted DB"));
 	private final JMenuItem m_jmFullScreenItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.fullscreen"));
 	private final JMenuItem m_jmBeendenItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.quit"));
 
@@ -161,7 +163,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 //		String teamName = DBManager.instance().getBasics(DBManager.instance().getLatestHRF().getHrfId()).getTeamName();
 
 		String frameTitle = StringUtils.isEmpty(teamName) ? "" : teamName;
-		
+
 		if (!HO.isRelease()) {
 			frameTitle += " (" + HOVerwaltung.instance().getLanguageString("ls.java.version") + ": " + System.getProperty("java.version") + ")";
 		}
@@ -563,6 +565,11 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		if (!HO.isRelease()) {
 			m_jmMenuBar.add(DebugMode.getDeveloperMenu());
 		}
+
+		dbEncryptedExport.addActionListener(e -> {
+			new DbEncrypterDialog(HOMainFrame.instance());
+		});
+		m_jmMenuBar.add(dbEncryptedExport);
 
 		SwingUtilities.updateComponentTreeUI(m_jmMenuBar);
 		this.setJMenuBar(m_jmMenuBar);
