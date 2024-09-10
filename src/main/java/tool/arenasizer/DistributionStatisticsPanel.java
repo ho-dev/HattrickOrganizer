@@ -9,20 +9,16 @@ import core.gui.model.ArenaStatistikModel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.util.Helper;
 import module.matches.MatchesPanel;
 import tool.updater.TableModel;
 
-import java.awt.BorderLayout;
+import javax.swing.*;
+import javax.swing.table.TableColumnModel;
+import java.awt.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.SwingConstants;
-import javax.swing.table.TableColumnModel;
 
 
 class DistributionStatisticsPanel extends JPanel {
@@ -54,11 +50,10 @@ class DistributionStatisticsPanel extends JPanel {
 	}
 
 	protected TableModel getModel() {
-		HOVerwaltung hoV = HOVerwaltung.instance();
 		// DATUM SpielerRenderer
-		String[] columnNames = {hoV.getLanguageString("ls.match.id"),hoV.getLanguageString("ls.match.weather"),hoV.getLanguageString("Zuschauer"),hoV.getLanguageString("ls.club.arena.terraces")+" ( %)",
-					hoV.getLanguageString("ls.club.arena.basicseating")+" ( %)",hoV.getLanguageString("ls.club.arena.seatsunderroof")+" ( %)",hoV.getLanguageString("ls.club.arena.seatsinvipboxes")+" ( %)",
-					hoV.getLanguageString("Fans")+" ( )"};
+		String[] columnNames = {TranslationFacility.tr("ls.match.id"), TranslationFacility.tr("ls.match.weather"), TranslationFacility.tr("Zuschauer"), TranslationFacility.tr("ls.club.arena.terraces")+" ( %)",
+					TranslationFacility.tr("ls.club.arena.basicseating")+" ( %)", TranslationFacility.tr("ls.club.arena.seatsunderroof")+" ( %)", TranslationFacility.tr("ls.club.arena.seatsinvipboxes")+" ( %)",
+					TranslationFacility.tr("Fans")+" ( )"};
 
 		ArenaStatistikModel[] matches=  DBManager.instance().getArenaStatistikModel(MatchesPanel.OWN_LEAGUE_GAMES).getMatches();
 		IHOTableEntry[][] value = new IHOTableEntry[matches.length][columnNames.length];

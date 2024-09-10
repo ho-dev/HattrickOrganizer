@@ -1,7 +1,7 @@
 package module.teamAnalyzer.ui;
 
 import core.gui.comp.panel.LazyPanel;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
 import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.report.TeamReport;
@@ -9,10 +9,8 @@ import module.teamAnalyzer.ui.controller.SimButtonListener;
 import module.teamAnalyzer.vo.Filter;
 import module.training.ui.comp.DividerListener;
 
-import java.awt.BorderLayout;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JSplitPane;
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * Base panel of the module.
@@ -67,7 +65,7 @@ public class TeamAnalyzerPanel extends LazyPanel {
 
 		setLayout(new BorderLayout());
 
-		simButton = new JButton(HOVerwaltung.instance().getLanguageString("Simulate"));
+		simButton = new JButton(TranslationFacility.tr("Simulate"));
 
 		JSplitPane splitPane = createTopSplitPane();
 

@@ -1,17 +1,13 @@
 package tool.injury;
 
 import core.gui.comp.panel.ImagePanel;
-import core.model.HOVerwaltung;
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
+import core.model.TranslationFacility;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
 
 /**
  * Abstract Injury Calculator Panel Component
@@ -132,7 +128,7 @@ public abstract class AbstractInjuryPanel extends JPanel {
         final JPanel pan = new ImagePanel();
         pan.setLayout(new GridLayout(1, 4));
 
-        final JButton button = new JButton(HOVerwaltung.instance().getLanguageString("Calculate"));
+        final JButton button = new JButton(TranslationFacility.tr("Calculate"));
         pan.add(inputMsg);
         pan.add(input);
         pan.add(outputMsg);

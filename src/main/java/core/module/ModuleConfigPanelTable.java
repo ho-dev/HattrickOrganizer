@@ -4,21 +4,17 @@ import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.module.config.ModuleConfigDialog;
 import core.option.OptionManager;
 import tool.updater.TableEditor;
 import tool.updater.TableModel;
 
+import javax.swing.*;
+import javax.swing.table.TableColumn;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.Serial;
-
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JTable;
-import javax.swing.table.TableColumn;
 
 import static core.gui.theme.HOColorName.DARK_GRAY;
 
@@ -26,8 +22,8 @@ import static core.gui.theme.HOColorName.DARK_GRAY;
 class ModuleConfigPanelTable extends JTable implements ActionListener{
 	@Serial
 	private static final long serialVersionUID = 1L;
-	private static final String[] stateDescriptions = {HOVerwaltung.instance().getLanguageString("Deactivated"),HOVerwaltung.instance().getLanguageString("Activated"),HOVerwaltung.instance().getLanguageString("Autostart")};
-	protected String[] columnNames = {HOVerwaltung.instance().getLanguageString("Status"),HOVerwaltung.instance().getLanguageString("Name"),HOVerwaltung.instance().getLanguageString("Optionen")};
+	private static final String[] stateDescriptions = {TranslationFacility.tr("Deactivated"),TranslationFacility.tr("Activated"),TranslationFacility.tr("Autostart")};
+	protected String[] columnNames = {TranslationFacility.tr("Status"),TranslationFacility.tr("Name"),TranslationFacility.tr("Optionen")};
 	private final TableEditor editor = new TableEditor();
 
 	

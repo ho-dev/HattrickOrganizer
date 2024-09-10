@@ -1,13 +1,10 @@
 package module.matches;
 
-import java.awt.event.KeyEvent;
-
-import javax.swing.JPanel;
-import javax.swing.KeyStroke;
-
-
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.module.DefaultModule;
+
+import javax.swing.*;
+import java.awt.event.KeyEvent;
 
 public final class MatchesModule extends DefaultModule {
 
@@ -22,7 +19,7 @@ public final class MatchesModule extends DefaultModule {
 
 	@Override
 	public String getDescription() {
-		return HOVerwaltung.instance().getLanguageString("Tab_Title_Matches");
+		return TranslationFacility.tr("Tab_Title_Matches");
 	}
 
 	@Override

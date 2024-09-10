@@ -1,11 +1,6 @@
 package module.playerOverview;
 
-import core.constants.player.PlayerAbility;
-import core.constants.player.PlayerAggressiveness;
-import core.constants.player.PlayerAgreeability;
-import core.constants.player.PlayerHonesty;
-import core.constants.player.PlayerSkill;
-import core.constants.player.PlayerSpeciality;
+import core.constants.player.*;
 import core.datatype.CBItem;
 import core.db.DBManager;
 import core.gui.HOMainFrame;
@@ -18,7 +13,7 @@ import core.gui.comp.renderer.SmilieListCellRenderer;
 import core.gui.theme.*;
 import core.model.FactorObject;
 import core.model.FormulaFactors;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.match.MatchKurzInfo;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
@@ -28,15 +23,23 @@ import core.net.HattrickLink;
 import core.util.HODateTime;
 import core.util.Helper;
 import module.statistics.StatistikMainPanel;
-import java.awt.*;
-import java.awt.event.*;
-import java.util.ArrayList;
-import java.util.Collections;
+
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import javax.swing.border.TitledBorder;
 import javax.swing.plaf.basic.BasicProgressBarUI;
-import static core.gui.theme.HOIconName.*;
+import java.awt.*;
+import java.awt.event.ActionListener;
+import java.awt.event.ItemListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Collections;
+
+import static core.gui.theme.HOIconName.GOTOANALYSEBOTTOM;
+import static core.gui.theme.HOIconName.GOTOANALYSETOP;
+import static core.gui.theme.HOIconName.GOTOSTATISTIK;
+import static core.gui.theme.HOIconName.SMILEYS;
 import static core.gui.theme.ImageUtilities.getSvgIcon;
 import static core.model.player.IMatchRoleID.UNKNOWN;
 import static core.model.player.IMatchRoleID.UNSELECTABLE;
@@ -434,7 +437,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         constraintsPlayerGeneralPanel.gridheight = 8;
         layoutPlayerGeneralPanel.setConstraints(jlPlayerAvatar, constraintsPlayerGeneralPanel);
         jlPlayerAvatar.addActionListener(this);
-        jlPlayerAvatar.setToolTipText(HOVerwaltung.instance().getLanguageString("ls.player.download.avatar"));
+        jlPlayerAvatar.setToolTipText(TranslationFacility.tr("ls.player.download.avatar"));
         jpPlayerGeneral.add(jlPlayerAvatar);
 
         constraintsPlayerGeneralPanel.gridx = 1;
@@ -790,10 +793,10 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         final GridBagLayout layoutButtonPanel = new GridBagLayout();
         jpButtonsPanel.setLayout(layoutButtonPanel);
 
-        initButton(m_jbStatistics, HOVerwaltung.instance().getLanguageString("tt_Spieler_statistik"), jpButtonsPanel);
-        initButton(m_jbAnalysisTop, HOVerwaltung.instance().getLanguageString("tt_Spieler_analyse1"), jpButtonsPanel);
-        initButton(m_jbAnalysisBottom, HOVerwaltung.instance().getLanguageString("tt_Spieler_analyse2"), jpButtonsPanel);
-        initButton(m_jbOffsets, HOVerwaltung.instance().getLanguageString("tt_Spieler_offset"), jpButtonsPanel);
+        initButton(m_jbStatistics, TranslationFacility.tr("tt_Spieler_statistik"), jpButtonsPanel);
+        initButton(m_jbAnalysisTop, TranslationFacility.tr("tt_Spieler_analyse1"), jpButtonsPanel);
+        initButton(m_jbAnalysisBottom, TranslationFacility.tr("tt_Spieler_analyse2"), jpButtonsPanel);
+        initButton(m_jbOffsets, TranslationFacility.tr("tt_Spieler_offset"), jpButtonsPanel);
 
         constraintsPlayerOtherInfos.gridy = 0;
         constraintsPlayerOtherInfos.gridx = 4;

@@ -2,7 +2,7 @@
 package module.teamAnalyzer.ui;
 
 import core.constants.player.PlayerAbility;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 
 import java.util.List;
 import java.util.StringTokenizer;
@@ -51,16 +51,16 @@ public final class RatingUtil {
 	        subLevel = st2.nextToken();
         }
 
-        if (subLevel.contains(HOVerwaltung.instance().getLanguageString("veryhigh"))) {
+        if (subLevel.contains(TranslationFacility.tr("veryhigh"))) {
             level = level + "++";
         }
-        else if (subLevel.contains(HOVerwaltung.instance().getLanguageString("high"))) {
+        else if (subLevel.contains(TranslationFacility.tr("high"))) {
             level = level + "+";
         }
-        else if (subLevel.contains(HOVerwaltung.instance().getLanguageString("verylow"))) {
+        else if (subLevel.contains(TranslationFacility.tr("verylow"))) {
             level = level + "--";
         }
-        else if (subLevel.contains(HOVerwaltung.instance().getLanguageString("low"))) {
+        else if (subLevel.contains(TranslationFacility.tr("low"))) {
             level = level + "-";
         }
 

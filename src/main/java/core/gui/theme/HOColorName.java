@@ -1,6 +1,7 @@
 package core.gui.theme;
 
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 
 /**
  * Constants for Colors used in HO.
@@ -184,6 +185,6 @@ public enum HOColorName {
 
 	@Override
 	public String toString(){
-		return HOVerwaltung.instance().getLanguageString("ls.color." + super.toString().toLowerCase());
+		return TranslationFacility.tr("ls.color." + super.toString().toLowerCase());
 	}
 }

@@ -1,21 +1,17 @@
 package tool.dbcleanup
 
-import core.model.HOVerwaltung
+import core.model.TranslationFacility
 import java.awt.FlowLayout
 import java.awt.event.FocusEvent
 import java.awt.event.FocusListener
-import javax.swing.BorderFactory
-import javax.swing.JCheckBox
-import javax.swing.JLabel
-import javax.swing.JPanel
-import javax.swing.JTextField
+import javax.swing.*
 
 internal class WeekSelectionPanel(weeks: Int, showRemoveAll: Boolean) : JPanel() {
-    private val labelRemoveOlderThan = JLabel(HOVerwaltung.instance().getLanguageString("dbcleanup.removeOlderThan"))
-    private val labelWeeks = JLabel(HOVerwaltung.instance().getLanguageString("dbcleanup.weeks"))
+    private val labelRemoveOlderThan = JLabel(TranslationFacility.tr("dbcleanup.removeOlderThan"))
+    private val labelWeeks = JLabel(TranslationFacility.tr("dbcleanup.weeks"))
 
-    private val noneCheckBox = JCheckBox(HOVerwaltung.instance().getLanguageString("dbcleanup.none"))
-    private val allCheckBox = JCheckBox(HOVerwaltung.instance().getLanguageString("dbcleanup.allTime"))
+    private val noneCheckBox = JCheckBox(TranslationFacility.tr("dbcleanup.none"))
+    private val allCheckBox = JCheckBox(TranslationFacility.tr("dbcleanup.allTime"))
     private val weeksTextField = JTextField(3)
 
     constructor(weeks: Int) : this(weeks, true)

@@ -7,33 +7,14 @@ import core.constants.player.PlayerAbility;
 import core.datatype.CBItem;
 import core.gui.comp.panel.LazyImagePanel;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.util.List;
 import java.util.Vector;
-
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTable;
 
 /**
  * @author KickMuck
@@ -154,20 +135,19 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 		// Default values for skill changes
 		changedRating = new int[] { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
-		HOVerwaltung hoV = HOVerwaltung.instance();
 		// Set the labels
-		JLabel m_L_Experience = new JLabel(hoV.getLanguageString("ls.player.experience"));
-		JLabel m_L_Form = new JLabel(hoV.getLanguageString("ls.player.form"));
-		JLabel m_L_Stamina = new JLabel(hoV.getLanguageString("ls.player.skill.stamina"));
-		JLabel m_L_Keeping = new JLabel(hoV.getLanguageString("ls.player.skill.keeper"));
-		JLabel m_L_Defending = new JLabel(hoV.getLanguageString("ls.player.skill.defending"));
-		JLabel m_L_Playmaking = new JLabel(hoV.getLanguageString("ls.player.skill.playmaking"));
-		JLabel m_L_Passing = new JLabel(hoV.getLanguageString("ls.player.skill.passing"));
-		JLabel m_L_Winger = new JLabel(hoV.getLanguageString("ls.player.skill.winger"));
-		JLabel m_L_Scoring = new JLabel(hoV.getLanguageString("ls.player.skill.scoring"));
-		JLabel m_L_SetPieces = new JLabel(hoV.getLanguageString("ls.player.skill.setpieces"));
-		JLabel m_L_Loyalty = new JLabel(hoV.getLanguageString("ls.player.loyalty"));
-		JLabel m_L_HomeGrown = new JLabel(hoV.getLanguageString("ls.player.motherclub"));
+		JLabel m_L_Experience = new JLabel(TranslationFacility.tr("ls.player.experience"));
+		JLabel m_L_Form = new JLabel(TranslationFacility.tr("ls.player.form"));
+		JLabel m_L_Stamina = new JLabel(TranslationFacility.tr("ls.player.skill.stamina"));
+		JLabel m_L_Keeping = new JLabel(TranslationFacility.tr("ls.player.skill.keeper"));
+		JLabel m_L_Defending = new JLabel(TranslationFacility.tr("ls.player.skill.defending"));
+		JLabel m_L_Playmaking = new JLabel(TranslationFacility.tr("ls.player.skill.playmaking"));
+		JLabel m_L_Passing = new JLabel(TranslationFacility.tr("ls.player.skill.passing"));
+		JLabel m_L_Winger = new JLabel(TranslationFacility.tr("ls.player.skill.winger"));
+		JLabel m_L_Scoring = new JLabel(TranslationFacility.tr("ls.player.skill.scoring"));
+		JLabel m_L_SetPieces = new JLabel(TranslationFacility.tr("ls.player.skill.setpieces"));
+		JLabel m_L_Loyalty = new JLabel(TranslationFacility.tr("ls.player.loyalty"));
+		JLabel m_L_HomeGrown = new JLabel(TranslationFacility.tr("ls.player.motherclub"));
 
 		// Create table model for top table
 		m_playerTableModelTop = new PlayerTableModel(m_ar_allPlayers, 1);
@@ -186,30 +166,30 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 		GridBagConstraints gbc = new GridBagConstraints();
 		m_topButtonPanel.setLayout(gbl);
 
-		m_btCompare = new JButton(hoV.getLanguageString("Vergleichen"));
-		m_btCompare.setToolTipText(hoV.getLanguageString("ttCompare"));
+		m_btCompare = new JButton(TranslationFacility.tr("Vergleichen"));
+		m_btCompare.setToolTipText(TranslationFacility.tr("ttCompare"));
 
-		m_btReset = new JButton(hoV.getLanguageString("ls.button.reset"));
-		m_btReset.setToolTipText(hoV.getLanguageString("btReset"));
+		m_btReset = new JButton(TranslationFacility.tr("ls.button.reset"));
+		m_btReset.setToolTipText(TranslationFacility.tr("btReset"));
 
-		JLabel m_L_GroupBy = new JLabel(hoV.getLanguageString("vergleichen_alle"));
-		JLabel m_L_Header = new JLabel(hoV.getLanguageString("setze_alle"));
+		JLabel m_L_GroupBy = new JLabel(TranslationFacility.tr("vergleichen_alle"));
+		JLabel m_L_Header = new JLabel(TranslationFacility.tr("setze_alle"));
 
 		// Create controls
 		m_CB_type = new JComboBox();
-		m_CB_type.addItem(hoV.getLanguageString("gewaehlte"));
-		m_CB_type.addItem(hoV.getLanguageString("ls.player.position.keeper"));
-		m_CB_type.addItem(hoV.getLanguageString("defender"));
-		m_CB_type.addItem(hoV.getLanguageString("ls.player.position.innermidfielder"));
-		m_CB_type.addItem(hoV.getLanguageString("ls.player.position.winger"));
-		m_CB_type.addItem(hoV.getLanguageString("ls.player.position.forward"));
-		m_CB_type.addItem(hoV.getLanguageString("GruppeA"));
-		m_CB_type.addItem(hoV.getLanguageString("GruppeB"));
-		m_CB_type.addItem(hoV.getLanguageString("GruppeC"));
-		m_CB_type.addItem(hoV.getLanguageString("GruppeD"));
-		m_CB_type.addItem(hoV.getLanguageString("GruppeE"));
-		m_CB_type.addItem(hoV.getLanguageString("GruppeF"));
-		m_CB_type.addItem(hoV.getLanguageString("alle"));
+		m_CB_type.addItem(TranslationFacility.tr("gewaehlte"));
+		m_CB_type.addItem(TranslationFacility.tr("ls.player.position.keeper"));
+		m_CB_type.addItem(TranslationFacility.tr("defender"));
+		m_CB_type.addItem(TranslationFacility.tr("ls.player.position.innermidfielder"));
+		m_CB_type.addItem(TranslationFacility.tr("ls.player.position.winger"));
+		m_CB_type.addItem(TranslationFacility.tr("ls.player.position.forward"));
+		m_CB_type.addItem(TranslationFacility.tr("GruppeA"));
+		m_CB_type.addItem(TranslationFacility.tr("GruppeB"));
+		m_CB_type.addItem(TranslationFacility.tr("GruppeC"));
+		m_CB_type.addItem(TranslationFacility.tr("GruppeD"));
+		m_CB_type.addItem(TranslationFacility.tr("GruppeE"));
+		m_CB_type.addItem(TranslationFacility.tr("GruppeF"));
+		m_CB_type.addItem(TranslationFacility.tr("alle"));
 		m_CB_type.addItemListener(this);
 
 		// Experience
@@ -288,8 +268,8 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 		// Homegrown
 		m_CB_Homegrown = new JComboBox();
 		m_CB_Homegrown.addItem("---");
-		m_CB_Homegrown.addItem(hoV.getLanguageString("ls.button.no"));
-		m_CB_Homegrown.addItem(hoV.getLanguageString("ls.button.yes"));
+		m_CB_Homegrown.addItem(TranslationFacility.tr("ls.button.no"));
+		m_CB_Homegrown.addItem(TranslationFacility.tr("ls.button.yes"));
 		m_CB_Homegrown.setSelectedIndex(0);
 		m_CB_Homegrown.addItemListener(this);
 
@@ -941,7 +921,7 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 		module.playeranalysis.skillCompare.Player dummy = new module.playeranalysis.skillCompare.Player();
 		JLabel l_SpielerName = new JLabel();
 		l_SpielerName.setPreferredSize(new Dimension(100, 30));
-		l_SpielerName.setText(HOVerwaltung.instance().getLanguageString("ls.player.name"));
+		l_SpielerName.setText(TranslationFacility.tr("ls.player.name"));
 		l_SpielerName.setOpaque(true);
 
 		JLabel platzhalter = new JLabel();

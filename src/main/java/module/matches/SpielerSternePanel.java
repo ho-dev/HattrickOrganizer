@@ -6,7 +6,7 @@ import core.gui.comp.entry.RatingTableEntry;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.match.MatchLineup;
 import core.model.match.MatchLineupPosition;
 import core.model.player.IMatchRoleID;
@@ -15,23 +15,10 @@ import core.model.player.Player;
 import core.util.Helper;
 import core.util.StringUtils;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 
 /**
  * Zeigt den Player an der Position an und dessen Sterne
@@ -135,7 +122,7 @@ final class SpielerSternePanel extends ImagePanel implements ActionListener {
 		panel.setBackground(ColorLabelEntry.BG_STANDARD);
 		panel.setOpaque(true);
 
-		m_jbSpieler.setToolTipText(core.model.HOVerwaltung.instance().getLanguageString(
+		m_jbSpieler.setToolTipText(TranslationFacility.tr(
 				"tt_Spiel_Spielerdetails"));
 		m_jbSpieler.setHorizontalAlignment(SwingConstants.LEFT);
 		m_jbSpieler.setMargin(new Insets(0, 1, 0, 1));
@@ -254,38 +241,38 @@ final class SpielerSternePanel extends ImagePanel implements ActionListener {
 		switch (posid) {
 
 		case IMatchRoleID.setPieces: {
-			m_jlPosition.setText(HOVerwaltung.instance().getLanguageString("match.setpiecestaker"));
+			m_jlPosition.setText(TranslationFacility.tr("match.setpiecestaker"));
 			break;
 		}
 		case IMatchRoleID.captain: {
-			m_jlPosition.setText(HOVerwaltung.instance().getLanguageString("Spielfuehrer"));
+			m_jlPosition.setText(TranslationFacility.tr("Spielfuehrer"));
 			break;
 		}
 		case IMatchRoleID.substCD1: {
-			m_jlPosition.setText(HOVerwaltung.instance().getLanguageString("Reserve") + " "
-					+ HOVerwaltung.instance().getLanguageString("defender"));
+			m_jlPosition.setText(TranslationFacility.tr("Reserve") + " "
+					+ TranslationFacility.tr("defender"));
 			break;
 		}
 		case IMatchRoleID.substFW1: {
-			m_jlPosition.setText(HOVerwaltung.instance().getLanguageString("Reserve") + " "
-					+ HOVerwaltung.instance().getLanguageString("ls.player.position.forward"));
+			m_jlPosition.setText(TranslationFacility.tr("Reserve") + " "
+					+ TranslationFacility.tr("ls.player.position.forward"));
 			break;
 		}
 		case IMatchRoleID.substWI1: {
-			m_jlPosition.setText(HOVerwaltung.instance().getLanguageString("Reserve") + " "
-					+ HOVerwaltung.instance().getLanguageString("ls.player.position.winger"));
+			m_jlPosition.setText(TranslationFacility.tr("Reserve") + " "
+					+ TranslationFacility.tr("ls.player.position.winger"));
 			break;
 		}
 		case IMatchRoleID.substIM1: {
-			m_jlPosition.setText(HOVerwaltung.instance().getLanguageString("Reserve")
+			m_jlPosition.setText(TranslationFacility.tr("Reserve")
 					+ " "
-					+ HOVerwaltung.instance().getLanguageString(
+					+ TranslationFacility.tr(
 							"ls.player.position.innermidfielder"));
 			break;
 		}
 		case IMatchRoleID.substGK1: {
-			m_jlPosition.setText(HOVerwaltung.instance().getLanguageString("Reserve") + " "
-					+ HOVerwaltung.instance().getLanguageString("ls.player.position.keeper"));
+			m_jlPosition.setText(TranslationFacility.tr("Reserve") + " "
+					+ TranslationFacility.tr("ls.player.position.keeper"));
 			break;
 		}
 		default: {
@@ -293,7 +280,7 @@ final class SpielerSternePanel extends ImagePanel implements ActionListener {
 			// least 3...
 			if ((posid >= IMatchRoleID.FirstPlayerReplaced)
 					&& (posid <= IMatchRoleID.ThirdPlayerReplaced)) {
-				m_jlPosition.setText(HOVerwaltung.instance().getLanguageString("Ausgewechselt"));
+				m_jlPosition.setText(TranslationFacility.tr("Ausgewechselt"));
 				break;
 			} else {
 

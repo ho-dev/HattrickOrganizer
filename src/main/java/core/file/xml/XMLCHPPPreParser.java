@@ -1,9 +1,7 @@
 package core.file.xml;
 
-
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.util.HOLogger;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -15,7 +13,6 @@ public final class XMLCHPPPreParser {
 	
 	public static String getError(String xmlIn) {
 		String sReturnError = "";
-		final HOVerwaltung hov = HOVerwaltung.instance();
 		if(!xmlIn.isEmpty()) {
 	        Document doc = XMLManager.parseString(xmlIn);
 	        if (doc != null) {
@@ -24,7 +21,7 @@ public final class XMLCHPPPreParser {
 	            try {
 	            	// See if an error is found
 	            	if (root.getElementsByTagName("ErrorCode").getLength() > 0) {
-	            		sReturnError = "CHPP " + hov.getLanguageString("Fehler");
+	            		sReturnError = "CHPP " + TranslationFacility.tr("Fehler");
 	            		ele = (Element) root.getElementsByTagName("ErrorCode").item(0);
 	            		if (ele != null) {
 	            			sReturnError += " - " + XMLManager.getFirstChildNodeValue(ele);
@@ -42,10 +39,10 @@ public final class XMLCHPPPreParser {
 	        	}
 	                
 	        } else {
-	        	sReturnError = hov.getLanguageString("XML_PARSE_ERRROR");
+	        	sReturnError = TranslationFacility.tr("XML_PARSE_ERRROR");
 	        }
 		} else {
-			sReturnError = hov.getLanguageString("NO_HRF_ERROR");
+			sReturnError = TranslationFacility.tr("NO_HRF_ERROR");
         }
         return sReturnError;
     }

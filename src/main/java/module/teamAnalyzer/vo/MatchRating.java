@@ -1,6 +1,7 @@
 package module.teamAnalyzer.vo;
 
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.Translator;
 import core.model.match.IMatchDetails;
 
@@ -49,19 +50,19 @@ public class MatchRating {
         HOVerwaltung hoi = HOVerwaltung.instance();
 
         String english_attitudeType = englishBundle.getString("ls.team.teamattitude.normal").toLowerCase();
-        String local_attitudeType = hoi.getLanguageString("ls.team.teamattitude.normal").toLowerCase();
+        String local_attitudeType = TranslationFacility.tr("ls.team.teamattitude.normal").toLowerCase();
         if ((attitude.equals(english_attitudeType)) || (attitude.equals(local_attitudeType))) {
             return 0;
         }
 
         english_attitudeType = englishBundle.getString("ls.team.teamattitude.playitcool").toLowerCase();
-        local_attitudeType = hoi.getLanguageString("ls.team.teamattitude.playitcool").toLowerCase();
+        local_attitudeType = TranslationFacility.tr("ls.team.teamattitude.playitcool").toLowerCase();
         if ((attitude.equals(english_attitudeType)) || (attitude.equals(local_attitudeType))) {
             return -1;
         }
 
         english_attitudeType = englishBundle.getString("ls.team.teamattitude.matchoftheseason").toLowerCase();
-        local_attitudeType = hoi.getLanguageString("ls.team.teamattitude.matchoftheseason").toLowerCase();
+        local_attitudeType = TranslationFacility.tr("ls.team.teamattitude.matchoftheseason").toLowerCase();
         if ((attitude.equals(english_attitudeType)) || (attitude.equals(local_attitudeType))) {
             return 1;
         }
@@ -85,31 +86,31 @@ public class MatchRating {
         HOVerwaltung hoi = HOVerwaltung.instance();
 
         String english_tactictype = englishBundle.getString("ls.team.tactic.normal").toLowerCase();
-        String local_tactictype = hoi.getLanguageString("ls.team.tactic.normal").toLowerCase();
+        String local_tactictype = TranslationFacility.tr("ls.team.tactic.normal").toLowerCase();
         if ((tacticType.equals(english_tactictype)) || (tacticType.equals(local_tactictype))) {return 0;}
 
         english_tactictype = englishBundle.getString("ls.team.tactic.pressing").toLowerCase();
-        local_tactictype = hoi.getLanguageString("ls.team.tactic.pressing").toLowerCase();
+        local_tactictype = TranslationFacility.tr("ls.team.tactic.pressing").toLowerCase();
         if ((tacticType.equals(english_tactictype)) || (tacticType.equals(local_tactictype))) {return 1;}
 
         english_tactictype = englishBundle.getString("ls.team.tactic.counter-attacks").toLowerCase();
-        local_tactictype = hoi.getLanguageString("ls.team.tactic.counter-attacks").toLowerCase();
+        local_tactictype = TranslationFacility.tr("ls.team.tactic.counter-attacks").toLowerCase();
         if ((tacticType.equals(english_tactictype)) || (tacticType.equals(local_tactictype))) {return 2;}
 
         english_tactictype = englishBundle.getString("ls.team.tactic.attackinthemiddle").toLowerCase();
-        local_tactictype = hoi.getLanguageString("ls.team.tactic.attackinthemiddle").toLowerCase();
+        local_tactictype = TranslationFacility.tr("ls.team.tactic.attackinthemiddle").toLowerCase();
         if ((tacticType.equals(english_tactictype)) || (tacticType.equals(local_tactictype))) {return 3;}
 
         english_tactictype = englishBundle.getString("ls.team.tactic.attackonwings").toLowerCase();
-        local_tactictype = hoi.getLanguageString("ls.team.tactic.attackonwings").toLowerCase();
+        local_tactictype = TranslationFacility.tr("ls.team.tactic.attackonwings").toLowerCase();
         if ((tacticType.equals(english_tactictype)) || (tacticType.equals(local_tactictype))) {return 4;}
 
         english_tactictype = englishBundle.getString("ls.team.tactic.playcreatively").toLowerCase();
-        local_tactictype = hoi.getLanguageString("ls.team.tactic.playcreatively").toLowerCase();
+        local_tactictype = TranslationFacility.tr("ls.team.tactic.playcreatively").toLowerCase();
         if ((tacticType.equals(english_tactictype)) || (tacticType.equals(local_tactictype))) {return 7;}
 
         english_tactictype = englishBundle.getString("ls.team.tactic.longshots").toLowerCase();
-        local_tactictype = hoi.getLanguageString("ls.team.tactic.longshots").toLowerCase();
+        local_tactictype = TranslationFacility.tr("ls.team.tactic.longshots").toLowerCase();
         if ((tacticType.equals(english_tactictype)) || (tacticType.equals(local_tactictype))) {return 8;}
 
         else return ERROR;

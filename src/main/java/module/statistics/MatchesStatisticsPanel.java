@@ -7,43 +7,32 @@ import core.gui.HOMainFrame;
 import core.gui.comp.ImageCheckbox;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
-import core.model.match.MatchLineupPosition;
-import core.util.HODateTime;
-import core.util.chart.LinesChartDataModel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
+import core.model.match.MatchLineupPosition;
 import core.model.match.Matchdetails;
 import core.model.player.IMatchRoleID;
+import core.util.HODateTime;
 import core.util.HOLogger;
 import core.util.Helper;
 import core.util.chart.HOLinesChart;
+import core.util.chart.LinesChartDataModel;
 import module.matches.MatchLocation;
 import module.matches.MatchesPanel;
 import org.knowm.xchart.style.lines.SeriesLines;
 import org.knowm.xchart.style.markers.SeriesMarkers;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.ItemEvent;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 
 /**
  * Panel Matches in Module Statistics
@@ -74,8 +63,8 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 	private final String sSum = "Σ ";
 	private final String sAvg = "Ø ";
 
-	private final String avgRating = sAvg + HOVerwaltung.instance().getLanguageString("Rating");
-	private final String sumStars = sSum + HOVerwaltung.instance().getLanguageString("RecapPanel.Stars");
+	private final String avgRating = sAvg + TranslationFacility.tr("Rating");
+	private final String sumStars = sSum + TranslationFacility.tr("RecapPanel.Stars");
 
 	@Override
 	protected void initialize() {
@@ -617,7 +606,7 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 	}
 
 	private String getLangStr(String key) {
-		return HOVerwaltung.instance().getLanguageString(key);
+		return TranslationFacility.tr(key);
 	}
 
 }

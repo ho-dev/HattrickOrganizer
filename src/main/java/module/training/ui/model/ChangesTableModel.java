@@ -1,14 +1,12 @@
-// %2597556203:hoplugins.trainingExperience.ui.model%
 package module.training.ui.model;
 
 import core.constants.player.PlayerAbility;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import module.training.PlayerSkillChange;
 
+import javax.swing.table.AbstractTableModel;
 import java.io.Serial;
 import java.util.List;
-
-import javax.swing.table.AbstractTableModel;
 
 /**
  * TableModel representing skill changes for individual players.
@@ -31,12 +29,11 @@ public class ChangesTableModel extends AbstractTableModel {
 	 */
 	public ChangesTableModel(List<PlayerSkillChange> values) {
 		super();
-		HOVerwaltung hoV = HOVerwaltung.instance();
-		this.colNames[0] = hoV.getLanguageString("Week");
-		this.colNames[1] = hoV.getLanguageString("Season");
-		this.colNames[2] = hoV.getLanguageString("Spieler");
-		this.colNames[3] = hoV.getLanguageString("ls.player.skill");
-		this.colNames[4] = hoV.getLanguageString("TO");
+		this.colNames[0] = TranslationFacility.tr("Week");
+		this.colNames[1] = TranslationFacility.tr("Season");
+		this.colNames[2] = TranslationFacility.tr("Spieler");
+		this.colNames[3] = TranslationFacility.tr("ls.player.skill");
+		this.colNames[4] = TranslationFacility.tr("TO");
 		this.colNames[5] = "isOld";
 		this.colNames[COL_PLAYER_ID] = "playerId";
 

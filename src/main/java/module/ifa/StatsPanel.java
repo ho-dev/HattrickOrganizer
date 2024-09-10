@@ -3,24 +3,16 @@ package module.ifa;
 import core.gui.HOMainFrame;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
-import core.model.WorldDetailsManager;
+import core.model.TranslationFacility;
 import core.util.GUIUtils;
 import module.ifa.model.IfaModel;
 import module.ifa.model.ModelChangeListener;
 
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.NumberFormat;
-
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 public class StatsPanel extends JPanel {
 
@@ -55,11 +47,11 @@ public class StatsPanel extends JPanel {
 
 	private void initComponents() {
 		setLayout(new GridBagLayout());
-		setBorder(BorderFactory.createTitledBorder(HOVerwaltung.instance().getLanguageString(
+		setBorder(BorderFactory.createTitledBorder(TranslationFacility.tr(
 				"ifa.statisticsTable.stats.title")));
 		GridBagConstraints gbc = new GridBagConstraints();
 
-		JLabel visitedLabel = new JLabel(HOVerwaltung.instance().getLanguageString(
+		JLabel visitedLabel = new JLabel(TranslationFacility.tr(
 				"ifa.statisticsTable.stats.visitedCountries"));
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 		gbc.insets = new Insets(4, 10, 3, 6);
@@ -71,7 +63,7 @@ public class StatsPanel extends JPanel {
 		gbc.insets = new Insets(4, 2, 3, 6);
 		add(this.visitedValueLabel, gbc);
 
-		JLabel ofLabel = new JLabel(HOVerwaltung.instance().getLanguageString(
+		JLabel ofLabel = new JLabel(TranslationFacility.tr(
 				"ifa.statisticsTable.stats.of"));
 		gbc.gridx = 2;
 		add(ofLabel, gbc);
@@ -80,7 +72,7 @@ public class StatsPanel extends JPanel {
 		gbc.gridx = 3;
 		add(this.countriesTotalValueLabel, gbc);
 
-		JLabel visitedCoolnessLabel = new JLabel(HOVerwaltung.instance().getLanguageString(
+		JLabel visitedCoolnessLabel = new JLabel(TranslationFacility.tr(
 				"ifa.statisticsTable.stats.coolness"));
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 		gbc.gridx = 4;
@@ -93,7 +85,7 @@ public class StatsPanel extends JPanel {
 		gbc.insets = new Insets(4, 2, 3, 6);
 		add(this.visitedCoolnessValueLabel, gbc);
 
-		ofLabel = new JLabel(HOVerwaltung.instance().getLanguageString(
+		ofLabel = new JLabel(TranslationFacility.tr(
 				"ifa.statisticsTable.stats.of"));
 		gbc.gridx = 6;
 		add(ofLabel, gbc);
@@ -104,7 +96,7 @@ public class StatsPanel extends JPanel {
 
 		// ROW 2
 
-		JLabel hostedLabel = new JLabel(HOVerwaltung.instance().getLanguageString(
+		JLabel hostedLabel = new JLabel(TranslationFacility.tr(
 				"ifa.statisticsTable.stats.hostedCountries"));
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 		gbc.insets = new Insets(4, 10, 3, 6);
@@ -118,7 +110,7 @@ public class StatsPanel extends JPanel {
 		gbc.insets = new Insets(4, 2, 3, 6);
 		add(this.hostedValueLabel, gbc);
 
-		ofLabel = new JLabel(HOVerwaltung.instance().getLanguageString(
+		ofLabel = new JLabel(TranslationFacility.tr(
 				"ifa.statisticsTable.stats.of"));
 		gbc.gridx = 2;
 		add(ofLabel, gbc);
@@ -127,7 +119,7 @@ public class StatsPanel extends JPanel {
 		gbc.gridx = 3;
 		add(this.countriesTotalValueLabel2, gbc);
 
-		JLabel hostedCoolnessLabel = new JLabel(HOVerwaltung.instance().getLanguageString(
+		JLabel hostedCoolnessLabel = new JLabel(TranslationFacility.tr(
 				"ifa.statisticsTable.stats.coolness"));
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 		gbc.gridx = 4;
@@ -140,7 +132,7 @@ public class StatsPanel extends JPanel {
 		gbc.insets = new Insets(4, 2, 3, 6);
 		add(this.hostedCoolnessValueLabel, gbc);
 
-		ofLabel = new JLabel(HOVerwaltung.instance().getLanguageString(
+		ofLabel = new JLabel(TranslationFacility.tr(
 				"ifa.statisticsTable.stats.of"));
 		gbc.gridx = 6;
 		add(ofLabel, gbc);
@@ -151,7 +143,7 @@ public class StatsPanel extends JPanel {
 
 		// ROW 3
 
-		JLabel coolnessSumTotalLabel = new JLabel(HOVerwaltung.instance().getLanguageString(
+		JLabel coolnessSumTotalLabel = new JLabel(TranslationFacility.tr(
 				"ifa.statisticsTable.stats.coolnessTotal"));
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 		gbc.insets = new Insets(4, 20, 3, 6);
@@ -165,7 +157,7 @@ public class StatsPanel extends JPanel {
 		gbc.insets = new Insets(4, 2, 3, 6);
 		add(this.coolnessSumValueLabel, gbc);
 
-		ofLabel = new JLabel(HOVerwaltung.instance().getLanguageString(
+		ofLabel = new JLabel(TranslationFacility.tr(
 				"ifa.statisticsTable.stats.of"));
 		gbc.gridx = 6;
 		add(ofLabel, gbc);

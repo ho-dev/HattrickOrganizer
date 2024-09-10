@@ -2,8 +2,8 @@ package core.rating;
 
 import core.constants.player.PlayerSkill;
 import core.constants.player.PlayerSpeciality;
-import core.model.HOVerwaltung;
 import core.model.Team;
+import core.model.TranslationFacility;
 import core.model.match.IMatchDetails;
 import core.model.match.MatchLineupPosition;
 import core.model.match.MatchTacticType;
@@ -14,13 +14,18 @@ import core.model.player.Specialty;
 import module.lineup.Lineup;
 import module.lineup.substitution.model.Substitution;
 import org.jetbrains.annotations.NotNull;
+
 import java.util.*;
+
 import static core.constants.player.PlayerSkill.*;
 import static core.model.match.IMatchDetails.*;
-import static core.model.player.IMatchRoleID.*;
 import static core.model.player.IMatchRoleID.KEEPER;
 import static core.model.player.IMatchRoleID.WINGER;
-import static java.lang.Math.*;
+import static core.model.player.IMatchRoleID.*;
+import static java.lang.Math.max;
+import static java.lang.Math.min;
+import static java.lang.Math.pow;
+import static java.lang.Math.sqrt;
 import static java.util.Map.entry;
 
 /**
@@ -199,7 +204,7 @@ public class RatingPredictionModel {
     protected double calcSectorRating(Lineup lineup, RatingSector s, int minute) {
         if (copyrightSchumTranslated == null) {
             // the author of the formulas";
-            copyrightSchumTranslated = "© Schum - " + HOVerwaltung.instance().getLanguageString("ls.copyright.authoroftheformulas");
+            copyrightSchumTranslated = "© Schum - " + TranslationFacility.tr("ls.copyright.authoroftheformulas");
         }
         addCopyright(copyrightSchumTranslated);
 

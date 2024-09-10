@@ -6,31 +6,19 @@ import core.gui.HOMainFrame;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.ImageUtilities;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
-import core.util.Helper;
 import core.util.CurrencyUtils;
+import core.util.Helper;
 import module.training.ui.comp.DividerListener;
 import module.transfer.PlayerTransfer;
 import module.transfer.XMLParser;
 import module.transfer.ui.layout.TableLayout;
 import module.transfer.ui.layout.TableLayoutConstants;
-import java.awt.BorderLayout;
+
+import javax.swing.*;
+import java.awt.*;
 import java.util.List;
-import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
-import javax.swing.ButtonModel;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
-import javax.swing.JSpinner;
-import javax.swing.JSplitPane;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.SpinnerNumberModel;
-import javax.swing.SwingConstants;
 
 /**
  * Pane to show transfer history information for your own team.
@@ -77,11 +65,11 @@ public class HistoryPane extends JSplitPane {
                                                   {10, TableLayoutConstants.PREFERRED, TableLayoutConstants.PREFERRED,TableLayoutConstants.PREFERRED}
                                               }));
 
-        final JRadioButton rb1 = new JRadioButton(hoV.getLanguageString("AllSeasons")); //$NON-NLS-1$
+        final JRadioButton rb1 = new JRadioButton(TranslationFacility.tr("AllSeasons")); //$NON-NLS-1$
         rb1.setFocusable(false);
         rb1.setOpaque(false);
 
-        final JRadioButton rb2 = new JRadioButton(hoV.getLanguageString("Season")); //$NON-NLS-1$
+        final JRadioButton rb2 = new JRadioButton(TranslationFacility.tr("Season")); //$NON-NLS-1$
         spinSeason = rb2.getModel();
         rb2.setFocusable(false);
         rb2.setOpaque(false);
@@ -115,21 +103,21 @@ public class HistoryPane extends JSplitPane {
             }
         });
 
-        JButton button = new JButton(HOVerwaltung.instance().getLanguageString("Menu.refreshData"));
+        JButton button = new JButton(TranslationFacility.tr("Menu.refreshData"));
         button.addActionListener(e -> {
 
             HOVerwaltung hoV1 = HOVerwaltung.instance();
             int teamId = hoV1.getModel().getBasics().getTeamId();
             if (teamId != 0 && !hoV1.getModel().getBasics().isNationalTeam()) {
 
-                String sBuffer = hoV1.getLanguageString("UpdConfirmMsg.0") +
-                        "\n" + hoV1.getLanguageString("UpdConfirmMsg.1") +
-                        "\n" + hoV1.getLanguageString("UpdConfirmMsg.2") +
-                        "\n\n" + hoV1.getLanguageString("UpdConfirmMsg.3");
+                String sBuffer = TranslationFacility.tr("UpdConfirmMsg.0") +
+                        "\n" + TranslationFacility.tr("UpdConfirmMsg.1") +
+                        "\n" + TranslationFacility.tr("UpdConfirmMsg.2") +
+                        "\n\n" + TranslationFacility.tr("UpdConfirmMsg.3");
 
                 final int choice = JOptionPane.showConfirmDialog(HOMainFrame.instance(),
                         sBuffer,
-                        HOVerwaltung.instance().getLanguageString("confirmation.title"),
+                        TranslationFacility.tr("confirmation.title"),
                         JOptionPane.YES_NO_OPTION);
 
                 if (choice == JOptionPane.YES_OPTION) {
@@ -144,7 +132,7 @@ public class HistoryPane extends JSplitPane {
                     refresh();
                 }
             } else {
-                Helper.showMessage(HOMainFrame.instance(), hoV1.getLanguageString("UpdMsg"), "", 1);
+                Helper.showMessage(HOMainFrame.instance(), TranslationFacility.tr("UpdMsg"), "", 1);
             }
 
         });
@@ -166,11 +154,11 @@ public class HistoryPane extends JSplitPane {
                                                   {10, 20, 20}
                                               }));
 
-        final JLabel amTrans = new JLabel(hoV.getLanguageString("Transfers") + ":", SwingConstants.LEFT);
-        final JLabel amTransIn = new JLabel(hoV.getLanguageString("In") + ":", SwingConstants.LEFT);
+        final JLabel amTrans = new JLabel(TranslationFacility.tr("Transfers") + ":", SwingConstants.LEFT);
+        final JLabel amTransIn = new JLabel(TranslationFacility.tr("In") + ":", SwingConstants.LEFT);
         amTransIn.setIcon(ImageUtilities.getTransferInIcon());
 
-        final JLabel amTransOut = new JLabel(hoV.getLanguageString("Out") + ":", SwingConstants.LEFT);
+        final JLabel amTransOut = new JLabel(TranslationFacility.tr("Out") + ":", SwingConstants.LEFT);
         amTransOut.setIcon(ImageUtilities.getTransferOutIcon());
         amountPanel.add(amTrans, "1, 1");
         amountPanel.add(amountTransfers, "2, 1");
@@ -178,9 +166,9 @@ public class HistoryPane extends JSplitPane {
         amountPanel.add(amountTransfersIn, "5, 1");
         amountPanel.add(amTransOut, "4, 2");
         amountPanel.add(amountTransfersOut, "5, 2");
-        pricePanel = new TotalsPanel(hoV.getLanguageString("Price"),
+        pricePanel = new TotalsPanel(TranslationFacility.tr("Price"),
         		CurrencyUtils.CURRENCYSYMBOL);
-        tsiPanel = new TotalsPanel(hoV.getLanguageString("ls.player.tsi")); //$NON-NLS-1$
+        tsiPanel = new TotalsPanel(TranslationFacility.tr("ls.player.tsi")); //$NON-NLS-1$
 
         sidePanel.add(filterPanel, "0, 0");
         sidePanel.add(new JSeparator(), "0, 2");

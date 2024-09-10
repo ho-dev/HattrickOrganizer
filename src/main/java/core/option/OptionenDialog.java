@@ -3,19 +3,18 @@ package core.option;
 import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
 import core.gui.comp.panel.ImagePanel;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.module.ModuleConfigPanel;
 import core.module.ModuleManager;
 import core.module.config.ModuleConfig;
 import core.util.Helper;
 import core.util.Updater;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Font;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import javax.swing.*;
 
 /**
  * A dialog for all HO options/preferences
@@ -28,10 +27,11 @@ public class OptionenDialog extends JDialog {
 	private UserColorsPanel userColorsPanel;
 
 	public OptionenDialog(JFrame owner) {
-		super(owner, HOVerwaltung.instance().getLanguageString("ls.menu.file.preferences"), true);
+		super(owner, TranslationFacility.tr("ls.menu.file.preferences"), true);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		initComponents();
 		addListeners();
+		setLocationByPlatform(true);
 	}
 
 	private void addListeners() {
@@ -56,8 +56,8 @@ public class OptionenDialog extends JDialog {
 				if (OptionManager.instance().isOptionsChanged()){
 					// Warning user
 					var choice = JOptionPane.showConfirmDialog(null,
-							HOVerwaltung.instance().getLanguageString("ls.options.changed.save.question"),
-							HOVerwaltung.instance().getLanguageString("ls.options.warning"),
+							TranslationFacility.tr("ls.options.changed.save.question"),
+							TranslationFacility.tr("ls.options.warning"),
 							JOptionPane.YES_NO_CANCEL_OPTION);
 					if (choice == JOptionPane.YES_OPTION){
 						save();
@@ -79,34 +79,34 @@ public class OptionenDialog extends JDialog {
 
 		// Misc
 		GeneralSettingsPanel m_jpSonstigeOptionen = new GeneralSettingsPanel();
-		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Verschiedenes"), new JScrollPane(m_jpSonstigeOptionen));
+		tabbedPane.addTab(TranslationFacility.tr("Verschiedenes"), new JScrollPane(m_jpSonstigeOptionen));
 
 		// Lineup settings
 		LineupSettingsPanel m_jpLineupSettings = new LineupSettingsPanel();
-		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Aufstellung"), new JScrollPane(m_jpLineupSettings));
+		tabbedPane.addTab(TranslationFacility.tr("Aufstellung"), new JScrollPane(m_jpLineupSettings));
 
 		// Modules
-		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Module"), new JScrollPane(new ModuleConfigPanel()));
+		tabbedPane.addTab(TranslationFacility.tr("Module"), new JScrollPane(new ModuleConfigPanel()));
 
 		// Formula
 		FormelPanel m_jpFormeln = new FormelPanel();
-		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Formeln"), new JScrollPane(m_jpFormeln));
+		tabbedPane.addTab(TranslationFacility.tr("Formeln"), new JScrollPane(m_jpFormeln));
 
 		// Training
 		TrainingPreferencesPanel m_jpTrainingsOptionen = new TrainingPreferencesPanel();
-		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Training"), new JScrollPane(m_jpTrainingsOptionen));
+		tabbedPane.addTab(TranslationFacility.tr("Training"), new JScrollPane(m_jpTrainingsOptionen));
 
 		// Release Channels
 		m_jpReleaseChannelsPanel = new ReleaseChannelPanel();
-		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("options.tabtitle.release_channels"), new JScrollPane(m_jpReleaseChannelsPanel));
+		tabbedPane.addTab(TranslationFacility.tr("options.tabtitle.release_channels"), new JScrollPane(m_jpReleaseChannelsPanel));
 
 		// Columns
 		UserColumnsPanel m_jpUserColumns = new UserColumnsPanel();
-		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("columns"), new JScrollPane(m_jpUserColumns));
+		tabbedPane.addTab(TranslationFacility.tr("columns"), new JScrollPane(m_jpUserColumns));
 
 		// Colors
 		userColorsPanel = new UserColorsPanel();
-        tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("colors"), new JScrollPane(userColorsPanel));
+        tabbedPane.addTab(TranslationFacility.tr("colors"), new JScrollPane(userColorsPanel));
 
 		// Colors
 
@@ -122,11 +122,11 @@ public class OptionenDialog extends JDialog {
 		ImagePanel buttonPanel = new ImagePanel();
 		// Add Buttons
 		saveButton = new JButton();
-		saveButton.setText(HOVerwaltung.instance().getLanguageString("ls.button.save"));
+		saveButton.setText(TranslationFacility.tr("ls.button.save"));
 		saveButton.setFont(saveButton.getFont().deriveFont(Font.BOLD));
 		buttonPanel.add(saveButton);
 		cancelButton = new JButton();
-		cancelButton.setText(HOVerwaltung.instance().getLanguageString("ls.button.cancel"));
+		cancelButton.setText(TranslationFacility.tr("ls.button.cancel"));
 		buttonPanel.add(cancelButton);
 
 		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
@@ -161,7 +161,7 @@ public class OptionenDialog extends JDialog {
 
 		if (OptionManager.instance().isRestartNeeded()) {
 			Helper.showMessage(OptionenDialog.this,
-					HOVerwaltung.instance().getLanguageString("NeustartErforderlich"), "",
+					TranslationFacility.tr("NeustartErforderlich"), "",
 					JOptionPane.INFORMATION_MESSAGE);
 		}
 		if (OptionManager.instance().isReInitNeeded()) {

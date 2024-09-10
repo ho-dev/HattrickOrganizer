@@ -10,6 +10,7 @@ import core.gui.comp.CheckBoxTree.CheckBoxTree;
 import core.gui.comp.panel.ImagePanel;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.enums.MatchType;
 import core.model.match.MatchKurzInfo;
@@ -23,16 +24,14 @@ import module.nthrf.NtTeamChooser;
 import module.nthrf.NthrfUtil;
 import module.series.Spielplan;
 import tool.updater.UpdateController;
-import java.awt.*;
-import java.awt.event.*;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
+
 import javax.swing.*;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.List;
+import java.util.*;
 
 /**
  * User dialog to download different hattrick data
@@ -42,16 +41,16 @@ public class DownloadDialog extends JDialog implements ActionListener {
 	// ~ Instance fields--/
 	private static DownloadDialog m_clDownloadDialog;
 	private static final HOVerwaltung hov = HOVerwaltung.instance();
-	private final JButton m_jbAbort = new JButton(hov.getLanguageString("ls.button.cancel"));
-	final private JButton m_jbDownload = new JButton(hov.getLanguageString("ls.button.download"));
-	private final JButton m_jbProxy = new JButton(hov.getLanguageString("ConfigureProxy"));
+	private final JButton m_jbAbort = new JButton(TranslationFacility.tr("ls.button.cancel"));
+	final private JButton m_jbDownload = new JButton(TranslationFacility.tr("ls.button.download"));
+	private final JButton m_jbProxy = new JButton(TranslationFacility.tr("ConfigureProxy"));
 	private final DownloadFilter filterRoot = new DownloadFilter();
 	private final CheckBoxTree downloadFilter = new CheckBoxTree();
 
-	private final JCheckBox m_jchMatchArchive = new JCheckBox(hov.getLanguageString("download.oldmatches"), false);
+	private final JCheckBox m_jchMatchArchive = new JCheckBox(TranslationFacility.tr("download.oldmatches"), false);
 	private final SpinnerDateModel m_clSpinnerModel = new SpinnerDateModel();
 	private final JSpinner m_jsSpinner = new JSpinner(m_clSpinnerModel);
-	private final JCheckBox m_jchShowSaveDialog = new JCheckBox(hov.getLanguageString("Show_SaveHRF_Dialog"), core.model.UserParameter.instance().showHRFSaveDialog);
+	private final JCheckBox m_jchShowSaveDialog = new JCheckBox(TranslationFacility.tr("Show_SaveHRF_Dialog"), core.model.UserParameter.instance().showHRFSaveDialog);
 	private final boolean isNtTeam;
 
 	/**
@@ -73,9 +72,9 @@ public class DownloadDialog extends JDialog implements ActionListener {
 	 * Singleton
 	 */
 	private DownloadDialog() {
-		super(HOMainFrame.instance(), hov.getLanguageString("ls.menu.file.download"), ModalityType.MODELESS);
+		super(HOMainFrame.instance(), TranslationFacility.tr("ls.menu.file.download"), ModalityType.MODELESS);
 		this.isNtTeam = UserManager.instance().getCurrentUser().isNtTeam();
-		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+		setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
 		initComponents();
 	}
 
@@ -121,7 +120,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 
 		if (!isNtTeam) {
 			final JPanel normalDownloadPanel = new ImagePanel(new BorderLayout());
-			normalDownloadPanel.setBorder(BorderFactory.createTitledBorder(hov.getLanguageString("ls.button.download")));
+			normalDownloadPanel.setBorder(BorderFactory.createTitledBorder(TranslationFacility.tr("ls.button.download")));
 
 			// Download Filter
 			final DefaultTreeModel newModel = new DefaultTreeModel(filterRoot);
@@ -160,7 +159,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 			getContentPane().add(normalDownloadPanel, c);
 
 			final JPanel specialDownload = new ImagePanel(new BorderLayout());
-			specialDownload.setBorder(BorderFactory.createTitledBorder(hov.getLanguageString("Verschiedenes")));
+			specialDownload.setBorder(BorderFactory.createTitledBorder(TranslationFacility.tr("Verschiedenes")));
 
 			// Alte Spielpläne
 			final JPanel oldFixturePanel = new ImagePanel(new BorderLayout());
@@ -169,7 +168,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 			final JPanel matchArchivePanel = new JPanel(new BorderLayout(1, 2));
 			matchArchivePanel.setOpaque(false);
 
-			m_jchMatchArchive.setToolTipText(hov.getLanguageString("download.oldmatches.tt"));
+			m_jchMatchArchive.setToolTipText(TranslationFacility.tr("download.oldmatches.tt"));
 			m_jchMatchArchive.addActionListener(this);
 			m_jchMatchArchive.setOpaque(false);
 			matchArchivePanel.add(m_jchMatchArchive, BorderLayout.WEST);
@@ -179,7 +178,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 			matchArchivePanel.add(m_jsSpinner, BorderLayout.EAST);
 
 			// Show HRF FileDialog
-			m_jchShowSaveDialog.setToolTipText(hov.getLanguageString("tt_Optionen_Show_SaveHRF_Dialog"));
+			m_jchShowSaveDialog.setToolTipText(TranslationFacility.tr("tt_Optionen_Show_SaveHRF_Dialog"));
 			m_jchShowSaveDialog.setOpaque(false);
 			m_jchShowSaveDialog.addActionListener(this);
 
@@ -195,14 +194,14 @@ public class DownloadDialog extends JDialog implements ActionListener {
 		} else {
 			// isNtTeam
 			final JPanel normalDownloadPanel = new ImagePanel(new GridLayout(3, 1, 4, 4));
-			normalDownloadPanel.setBorder(BorderFactory.createTitledBorder(hov.getLanguageString("ls.button.download")));
+			normalDownloadPanel.setBorder(BorderFactory.createTitledBorder(TranslationFacility.tr("ls.button.download")));
 			JTextArea ta = new JTextArea();
-			ta.append(hov.getLanguageString("nthrf.hint1") + "\n");
-			ta.append(hov.getLanguageString("nthrf.hint2") + "\n");
-			ta.append(hov.getLanguageString("nthrf.hint3") + "\n");
-			ta.append(hov.getLanguageString("nthrf.hint4") + " '");
-			ta.append(hov.getLanguageString("Start") + "' ");
-			ta.append(hov.getLanguageString("nthrf.hint5"));
+			ta.append(TranslationFacility.tr("nthrf.hint1") + "\n");
+			ta.append(TranslationFacility.tr("nthrf.hint2") + "\n");
+			ta.append(TranslationFacility.tr("nthrf.hint3") + "\n");
+			ta.append(TranslationFacility.tr("nthrf.hint4") + " '");
+			ta.append(TranslationFacility.tr("Start") + "' ");
+			ta.append(TranslationFacility.tr("nthrf.hint5"));
 			ta.setEditable(false);
 
 			normalDownloadPanel.setLayout(new BorderLayout());
@@ -214,7 +213,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 
 		}
 		var buttonRowPanel = new JPanel(new GridLayout(1, 3, 10, 10));
-		m_jbDownload.setToolTipText(hov.getLanguageString("tt_Download_Start"));
+		m_jbDownload.setToolTipText(TranslationFacility.tr("tt_Download_Start"));
 		m_jbDownload.addActionListener(this);
 		m_jbDownload.setFont(m_jbDownload.getFont().deriveFont(Font.BOLD));
 		InputMap buttonKeys = m_jbDownload.getInputMap(JButton.WHEN_FOCUSED);
@@ -222,12 +221,12 @@ public class DownloadDialog extends JDialog implements ActionListener {
 		buttonKeys.put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, true), "released");
 		buttonRowPanel.add(m_jbDownload);
 
-		m_jbProxy.setToolTipText(hov.getLanguageString("tt_ConfigureProxy"));
+		m_jbProxy.setToolTipText(TranslationFacility.tr("tt_ConfigureProxy"));
 		m_jbProxy.addActionListener(this);
 		m_jbProxy.setFont(m_jbProxy.getFont().deriveFont(Font.BOLD));
 		buttonRowPanel.add(m_jbProxy);
 
-		m_jbAbort.setToolTipText(hov.getLanguageString("tt_Download_Abbrechen"));
+		m_jbAbort.setToolTipText(TranslationFacility.tr("tt_Download_Abbrechen"));
 		m_jbAbort.addActionListener(this);
 		buttonRowPanel.add(m_jbAbort);
 

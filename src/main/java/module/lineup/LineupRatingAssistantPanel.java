@@ -2,7 +2,7 @@ package module.lineup;
 
 import core.gui.RefreshManager;
 import core.gui.Updatable;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.util.HOLogger;
 import module.lineup.assistant.LineupAssistantPanel;
 import module.lineup.lineup.MatchAndLineupSelectionPanel;
@@ -71,9 +71,9 @@ public class LineupRatingAssistantPanel extends JPanel implements core.gui.Refre
         pane.add(lineupRatingPanel, BorderLayout.NORTH);
 
         var tabView = new JTabbedPane();
-        tabView.addTab(HOVerwaltung.instance().getLanguageString("ls.module.lineup.assistant"), new JScrollPane(lineupAssistantPanel));
-        tabView.addTab(HOVerwaltung.instance().getLanguageString("ls.module.lineup.lineup_simulator"), new JScrollPane(lineupSettingsPanel));
-        tabView.addTab(HOVerwaltung.instance().getLanguageString("ls.menu.file.database"), new JScrollPane(lineupDatabasePanel));
+        tabView.addTab(TranslationFacility.tr("ls.module.lineup.assistant"), new JScrollPane(lineupAssistantPanel));
+        tabView.addTab(TranslationFacility.tr("ls.module.lineup.lineup_simulator"), new JScrollPane(lineupSettingsPanel));
+        tabView.addTab(TranslationFacility.tr("ls.menu.file.database"), new JScrollPane(lineupDatabasePanel));
         pane.add(tabView, BorderLayout.CENTER);
 
         var matchPanel = new JPanel(new BorderLayout());

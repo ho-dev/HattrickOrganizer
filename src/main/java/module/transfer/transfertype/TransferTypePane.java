@@ -4,6 +4,7 @@ package module.transfer.transfertype;
 import core.db.DBManager;
 import core.gui.comp.panel.ImagePanel;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.player.Player;
 import core.util.CurrencyUtils;
@@ -184,7 +185,7 @@ public class TransferTypePane extends JSplitPane implements ListSelectionListene
         c.col2 = c.col1;
         c.hAlign = TableLayoutConstants.LEFT;
 
-        final JLabel type = new JLabel(HOVerwaltung.instance().getLanguageString("Type"));
+        final JLabel type = new JLabel(TranslationFacility.tr("Type"));
         type.setFont(new Font(type.getFont().getName(), Font.BOLD, type.getFont().getSize()));
 
         this.sidePanel.add(type, c);
@@ -193,7 +194,7 @@ public class TransferTypePane extends JSplitPane implements ListSelectionListene
         c.col2 = c.col1;
         c.hAlign = TableLayoutConstants.LEFT;
 
-        final JLabel income = new JLabel(HOVerwaltung.instance().getLanguageString("Income"));
+        final JLabel income = new JLabel(TranslationFacility.tr("Income"));
         income.setFont(new Font(income.getFont().getName(), Font.BOLD, income.getFont().getSize()));
         this.sidePanel.add(income, c);
 
@@ -241,7 +242,7 @@ public class TransferTypePane extends JSplitPane implements ListSelectionListene
         c.col2 = c.col1;
         c.hAlign = TableLayoutConstants.CENTER;
 
-        final JLabel total = new JLabel(HOVerwaltung.instance().getLanguageString("Total"));
+        final JLabel total = new JLabel(TranslationFacility.tr("Total"));
         total.setFont(new Font(total.getFont().getName(), Font.BOLD, total.getFont().getSize()));
         this.sidePanel.add(total, c);
 

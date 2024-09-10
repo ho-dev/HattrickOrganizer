@@ -4,7 +4,7 @@ import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
 import core.gui.comp.NumericDocument;
 import core.gui.comp.panel.LazyImagePanel;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.enums.MatchType;
 import core.model.player.Player;
 import core.net.OnlineWorker;
@@ -16,19 +16,17 @@ import module.training.ui.model.ModelChange;
 import module.training.ui.model.OutputTableModel;
 import module.training.ui.model.TrainingModel;
 import module.training.ui.renderer.OutputTableRenderer;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.Point;
+
+import javax.swing.*;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
+import java.awt.*;
 import java.awt.event.AdjustmentListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.*;
-import javax.swing.table.*;
 
 /**
  * The Panel where the main training table is shown ("Training").
@@ -84,10 +82,10 @@ public class OutputPanel extends LazyImagePanel {
 
         JTextField tf = new JTextField();
         tf.setDocument(new NumericDocument(10));
-        Object[] objs = {HOVerwaltung.instance().getLanguageString("ls.match.id"), tf};
+        Object[] objs = {TranslationFacility.tr("ls.match.id"), tf};
 
-        int value = JOptionPane.showConfirmDialog(HOMainFrame.instance(), objs, HOVerwaltung
-                .instance().getLanguageString("ImportMatch"), JOptionPane.OK_CANCEL_OPTION);
+        int value = JOptionPane.showConfirmDialog(HOMainFrame.instance(), objs,
+                TranslationFacility.tr("ImportMatch"), JOptionPane.OK_CANCEL_OPTION);
 
         String input = tf.getText();
         if (value == JOptionPane.YES_OPTION && !StringUtils.isEmpty(input)) {
@@ -97,13 +95,13 @@ public class OutputPanel extends LazyImagePanel {
             if (HelperWrapper.instance().isUserMatch(input, MatchType.LEAGUE)) {
                 if (OnlineWorker.downloadMatchData(matchID, MatchType.LEAGUE, false)) {
                     Helper.showMessage(null,
-                            HOVerwaltung.instance().getLanguageString("MatchImported"),
-                            HOVerwaltung.instance().getLanguageString("ImportOK"), 1);
+                            TranslationFacility.tr("MatchImported"),
+                            TranslationFacility.tr("ImportOK"), 1);
                     RefreshManager.instance().doRefresh();
                 }
             } else {
-                Helper.showMessage(null, HOVerwaltung.instance().getLanguageString("NotUserMatch"),
-                        HOVerwaltung.instance().getLanguageString("ImportError"), 1);
+                Helper.showMessage(null, TranslationFacility.tr("NotUserMatch"),
+                        TranslationFacility.tr("ImportError"), 1);
             }
         }
     }
@@ -246,13 +244,13 @@ public class OutputPanel extends LazyImagePanel {
 
         JPanel buttonPanel = new JPanel(new GridBagLayout());
 
-        this.importButton = new JButton(HOVerwaltung.instance().getLanguageString("ImportMatch"));
+        this.importButton = new JButton(TranslationFacility.tr("ImportMatch"));
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.anchor = GridBagConstraints.NORTHWEST;
         gbc.insets = new Insets(6, 8, 6, 4);
         buttonPanel.add(this.importButton, gbc);
 
-        this.calculateButton = new JButton(HOVerwaltung.instance().getLanguageString("ls.menu.file.subskillrecalculation"));
+        this.calculateButton = new JButton(TranslationFacility.tr("ls.menu.file.subskillrecalculation"));
         gbc.gridx = 1;
         gbc.weightx = 1.0;
         gbc.insets = new Insets(6, 4, 6, 8);

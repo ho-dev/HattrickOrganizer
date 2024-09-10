@@ -4,15 +4,17 @@ import core.constants.player.PlayerAbility;
 import core.datatype.CBItem;
 import core.datatype.ComboItem;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
+
+import javax.swing.*;
 import java.awt.*;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.Vector;
-import javax.swing.*;
 
 /**
  * Helper class
@@ -207,7 +209,7 @@ public class Helper {
 			final int temp = Integer.parseInt(field.getText());
 
 			if (!negativErlaubt && (temp < 0)) {
-				message = HOVerwaltung.instance().getLanguageString("negativVerboten");
+				message = TranslationFacility.tr("negativVerboten");
 				throw new NumberFormatException();
 			}
 
@@ -215,11 +217,11 @@ public class Helper {
 			return true;
 		} catch (NumberFormatException nfe) {
 			if (message.equals("")) {
-				message = HOVerwaltung.instance().getLanguageString("keineZahl");
+				message = TranslationFacility.tr("keineZahl");
 			}
 
 			showMessage(parent, message,
-					HOVerwaltung.instance().getLanguageString("Fehler"), JOptionPane.ERROR_MESSAGE);
+					TranslationFacility.tr("Fehler"), JOptionPane.ERROR_MESSAGE);
 
 			field.setText(String.valueOf(0));
 			return false;
@@ -464,7 +466,7 @@ public class Helper {
 	 * @return String, translation
 	 */
 	public static String getTranslation(String key) {
-		return core.model.HOVerwaltung.instance().getLanguageString(key);
+		return TranslationFacility.tr(key);
 	}
 
 	/**
@@ -474,7 +476,7 @@ public class Helper {
 	 * @return String translation
 	 */
 	public static String getTranslation(String key, Object... messageArguments) {
-		return core.model.HOVerwaltung.instance().getLanguageString(key, messageArguments);
+		return TranslationFacility.tr(key, messageArguments);
 	}
 
 

@@ -2,20 +2,20 @@ package module.matches.statistics;
 
 import core.db.DBManager;
 import core.gui.comp.renderer.TableHeaderRenderer1;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.match.MatchesHighlightsStat;
 import module.matches.MatchLocation;
 import module.matches.MatchesPanel;
 import tool.updater.TableModel;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
+
+import javax.swing.*;
 import java.awt.*;
 
 
 public class MatchesHighlightsTable extends JTable {
 
-	private String[] columns = {HOVerwaltung.instance().getLanguageString("Highlights"),HOVerwaltung.instance().getLanguageString("Gesamt"),HOVerwaltung.instance().getLanguageString("Tore"),"%"};
+	private String[] columns = {TranslationFacility.tr("Highlights"),TranslationFacility.tr("Gesamt"),TranslationFacility.tr("Tore"),"%"};
 	
 	public MatchesHighlightsTable(int iMatchType){
 		super();

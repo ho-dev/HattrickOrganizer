@@ -5,19 +5,17 @@ import core.constants.player.PlayerSkill;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.player.Player;
 import core.training.WeeklyTrainingType;
 import core.util.HOLogger;
 import module.training.ui.TrainingLegendPanel;
 import module.training.ui.model.TrainingModel;
 
-import java.awt.Color;
-import java.awt.Component;
-import java.io.Serial;
-
-import javax.swing.Icon;
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
+import java.awt.*;
+import java.io.Serial;
 
 
 /**
@@ -123,9 +121,9 @@ public class TrainingRecapRenderer extends DefaultTableCellRenderer {
             	int calcPlayerAgeThisCol = (int) (realPlayerAge + (column+1)*7d/112d);
             	// Birthday in this week! Set BG color
             	if (calcPlayerAgePrevCol < calcPlayerAgeThisCol) {
-            		String ageText =  HOVerwaltung.instance().getLanguageString("ls.player.age.birthday")
+            		String ageText =  TranslationFacility.tr("ls.player.age.birthday")
     								+ " (" + calcPlayerAgeThisCol + " "
-    								+  HOVerwaltung.instance().getLanguageString("ls.player.age.years")
+    								+  TranslationFacility.tr("ls.player.age.years")
     								+ ")";
 
             		if (text == null || text.isEmpty()) {

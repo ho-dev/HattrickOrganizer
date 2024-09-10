@@ -2,6 +2,7 @@ package module.teamAnalyzer.ui.controller;
 
 import core.constants.player.PlayerAbility;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.match.IMatchDetails;
 import core.model.match.Matchdetails;
 import core.prediction.MatchEnginePanel;
@@ -13,12 +14,9 @@ import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.ui.RecapPanel;
 import module.teamAnalyzer.ui.TeamLineupData;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 
 
 
@@ -63,9 +61,9 @@ public class SimButtonListener implements ActionListener {
         if ((myTeam.getMidfield() < 1) || (opponentTeam.getMidfield() < 1)) {
             JPanel pan = new JPanel();
 
-            pan.add(new JLabel(HOVerwaltung.instance().getLanguageString("Error.SetFormation")));
+            pan.add(new JLabel(TranslationFacility.tr("Error.SetFormation")));
             JOptionPane.showMessageDialog(SystemManager.getPlugin(), pan,
-            		HOVerwaltung.instance().getLanguageString("Error"),
+            		TranslationFacility.tr("Error"),
                                           JOptionPane.PLAIN_MESSAGE);
 
             return;

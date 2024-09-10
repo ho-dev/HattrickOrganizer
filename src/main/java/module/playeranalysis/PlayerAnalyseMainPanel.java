@@ -6,15 +6,13 @@ import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JSplitPane;
 
 
 public class PlayerAnalyseMainPanel extends LazyImagePanel {
@@ -84,7 +82,7 @@ public class PlayerAnalyseMainPanel extends LazyImagePanel {
 		JPanel panel = new ImagePanel(new BorderLayout());
 
 		arrangeButton = new JButton(ImageUtilities.getSvgIcon(HOIconName.TURN));
-		arrangeButton.setToolTipText(core.model.HOVerwaltung.instance().getLanguageString(
+		arrangeButton.setToolTipText(TranslationFacility.tr(
 				"tt_SpielerAnalyse_drehen"));
 		arrangeButton.setPreferredSize(new Dimension(24, 24));
 		panel.add(arrangeButton, BorderLayout.WEST);

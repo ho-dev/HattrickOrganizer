@@ -10,32 +10,17 @@ import core.gui.comp.entry.DoubleLabelEntries;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.ImageUtilities;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.module.IModule;
 import core.util.Helper;
 
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Insets;
-import java.awt.event.ItemEvent;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.ItemListener;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.io.Serial;
-
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 
 
 /**
@@ -126,8 +111,8 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
 
     private final ColorLabelEntry m_jpEPV = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
             ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
-    private final JButton m_jbAddTempSpieler = new JButton(HOVerwaltung.instance().getLanguageString("AddTempspieler"));
-    private final JButton m_jbRemoveTempSpieler = new JButton(HOVerwaltung.instance().getLanguageString("RemoveTempspieler"));
+    private final JButton m_jbAddTempSpieler = new JButton(TranslationFacility.tr("AddTempspieler"));
+    private final JButton m_jbRemoveTempSpieler = new JButton(TranslationFacility.tr("RemoveTempspieler"));
     private final JComboBox m_jcbErfahrung = new JComboBox(PlayerAbility.ITEMS);
     private final JComboBox m_jcbFluegel = new JComboBox(PlayerAbility.ITEMS);
     private final JComboBox m_jcbForm = new JComboBox(Helper.EINSTUFUNG_FORM);
@@ -429,7 +414,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
         panel = new ImagePanel();
         panel.setLayout(eingabenLayout);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.name"));
+        label = new JLabel(TranslationFacility.tr("ls.player.name"));
         eingabenconstraints.gridx = 0;
         eingabenconstraints.gridy = 0;
         eingabenLayout.setConstraints(label, eingabenconstraints);
@@ -440,7 +425,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
         eingabenLayout.setConstraints(m_jlName, eingabenconstraints);
         panel.add(m_jlName);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.speciality"));
+        label = new JLabel(TranslationFacility.tr("ls.player.speciality"));
         eingabenconstraints.gridx = 0;
         eingabenconstraints.gridy = 1;
         eingabenconstraints.gridwidth = 1;
@@ -453,7 +438,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
         eingabenLayout.setConstraints(m_jcbSpeciality, eingabenconstraints);
         panel.add(m_jcbSpeciality);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.age"));
+        label = new JLabel(TranslationFacility.tr("ls.player.age"));
         eingabenconstraints.gridx = 3;
         eingabenconstraints.gridy = 1;
         eingabenLayout.setConstraints(label, eingabenconstraints);
@@ -465,7 +450,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
         eingabenLayout.setConstraints(jtfAge, eingabenconstraints);
         panel.add(jtfAge);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.experience"));
+        label = new JLabel(TranslationFacility.tr("ls.player.experience"));
         eingabenconstraints.gridx = 0;
         eingabenconstraints.gridy = 2;
         eingabenconstraints.gridwidth = 1;
@@ -483,7 +468,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
         eingabenLayout.setConstraints(m_jlErfahrung, eingabenconstraints);
         panel.add(m_jlErfahrung);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.form"));
+        label = new JLabel(TranslationFacility.tr("ls.player.form"));
         eingabenconstraints.gridx = 3;
         eingabenconstraints.gridy = 2;
         eingabenLayout.setConstraints(label, eingabenconstraints);
@@ -500,7 +485,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
         eingabenLayout.setConstraints(m_jlForm, eingabenconstraints);
         panel.add(m_jlForm);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.skill.stamina"));
+        label = new JLabel(TranslationFacility.tr("ls.player.skill.stamina"));
         eingabenconstraints.gridx = 0;
         eingabenconstraints.gridy = 3;
         eingabenLayout.setConstraints(label, eingabenconstraints);
@@ -517,7 +502,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
         eingabenLayout.setConstraints(m_jlKondition, eingabenconstraints);
         panel.add(m_jlKondition);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.skill.keeper"));
+        label = new JLabel(TranslationFacility.tr("ls.player.skill.keeper"));
         eingabenconstraints.gridx = 3;
         eingabenconstraints.gridy = 3;
         eingabenLayout.setConstraints(label, eingabenconstraints);
@@ -534,7 +519,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
         eingabenLayout.setConstraints(m_jlTorwart, eingabenconstraints);
         panel.add(m_jlTorwart);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.skill.playmaking"));
+        label = new JLabel(TranslationFacility.tr("ls.player.skill.playmaking"));
         eingabenconstraints.gridx = 0;
         eingabenconstraints.gridy = 4;
         eingabenLayout.setConstraints(label, eingabenconstraints);
@@ -551,7 +536,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
         eingabenLayout.setConstraints(m_jlSpielaufbau, eingabenconstraints);
         panel.add(m_jlSpielaufbau);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.skill.passing"));
+        label = new JLabel(TranslationFacility.tr("ls.player.skill.passing"));
         eingabenconstraints.gridx = 3;
         eingabenconstraints.gridy = 4;
         eingabenLayout.setConstraints(label, eingabenconstraints);
@@ -568,7 +553,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
         eingabenLayout.setConstraints(m_jlPasspiel, eingabenconstraints);
         panel.add(m_jlPasspiel);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.skill.winger"));
+        label = new JLabel(TranslationFacility.tr("ls.player.skill.winger"));
         eingabenconstraints.gridx = 0;
         eingabenconstraints.gridy = 5;
         eingabenLayout.setConstraints(label, eingabenconstraints);
@@ -585,7 +570,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
         eingabenLayout.setConstraints(m_jlFluegel, eingabenconstraints);
         panel.add(m_jlFluegel);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.skill.defending"));
+        label = new JLabel(TranslationFacility.tr("ls.player.skill.defending"));
         eingabenconstraints.gridx = 3;
         eingabenconstraints.gridy = 5;
         eingabenLayout.setConstraints(label, eingabenconstraints);
@@ -602,7 +587,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
         eingabenLayout.setConstraints(m_jlVerteidigung, eingabenconstraints);
         panel.add(m_jlVerteidigung);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.skill.scoring"));
+        label = new JLabel(TranslationFacility.tr("ls.player.skill.scoring"));
         eingabenconstraints.gridx = 0;
         eingabenconstraints.gridy = 6;
         eingabenLayout.setConstraints(label, eingabenconstraints);
@@ -619,7 +604,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
         eingabenLayout.setConstraints(m_jlTorschuss, eingabenconstraints);
         panel.add(m_jlTorschuss);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.skill.setpieces"));
+        label = new JLabel(TranslationFacility.tr("ls.player.skill.setpieces"));
         eingabenconstraints.gridx = 3;
         eingabenconstraints.gridy = 6;
         eingabenLayout.setConstraints(label, eingabenconstraints);
@@ -637,7 +622,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
         panel.add(m_jlStandard);
 
         // Add loyalty label and combo
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.loyalty"));
+        label = new JLabel(TranslationFacility.tr("ls.player.loyalty"));
         eingabenconstraints.gridx = 0;
         eingabenconstraints.gridy = 7;
         eingabenLayout.setConstraints(label, eingabenconstraints);
@@ -655,7 +640,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
         panel.add(m_jlLoyalty);
 
         // Add homegrown label and checkbox
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.motherclub"));
+        label = new JLabel(TranslationFacility.tr("ls.player.motherclub"));
         eingabenconstraints.gridx = 3;
         eingabenconstraints.gridy = 7;
         eingabenLayout.setConstraints(label, eingabenconstraints);
@@ -679,10 +664,10 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
 
         //Button--------
         panel = new JPanel();
-        m_jbAddTempSpieler.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_add_tempspieler"));
+        m_jbAddTempSpieler.setToolTipText(TranslationFacility.tr("tt_add_tempspieler"));
         m_jbAddTempSpieler.addActionListener(this);
         panel.add(m_jbAddTempSpieler);
-        m_jbRemoveTempSpieler.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_remove_tempspieler"));
+        m_jbRemoveTempSpieler.setToolTipText(TranslationFacility.tr("tt_remove_tempspieler"));
         m_jbRemoveTempSpieler.addActionListener(this);
         m_jbRemoveTempSpieler.setEnabled(false);
         panel.add(m_jbRemoveTempSpieler);
@@ -697,7 +682,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
         panel = new ImagePanel();
         panel.setLayout(new GridLayout(21, 2, 2, 2));
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("BestePosition"));
+        label = new JLabel(TranslationFacility.tr("BestePosition"));
         panel.add(label);
         panel.add(m_jpBestPos.getComponent(false));
 
@@ -708,7 +693,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
             panel.add(playerPositionValues[i].getComponent(false));
         }
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("Marktwert"));
+        label = new JLabel(TranslationFacility.tr("Marktwert"));
         panel.add(label);
         panel.add(m_jpEPV.getComponent(false));
 

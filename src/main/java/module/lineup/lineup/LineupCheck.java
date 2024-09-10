@@ -4,19 +4,16 @@ import core.gui.HOMainFrame;
 import core.gui.model.MatchOrdersCBItem;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.match.MatchKurzInfo;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import module.lineup.Lineup;
 import org.jetbrains.annotations.Nullable;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 
 public class LineupCheck {
 
@@ -38,14 +35,14 @@ public class LineupCheck {
 			problems.add(getWarningLabel("lineup.upload.check.lessThan11PenaltytakersSet"));
 		}
 		if (!problems.isEmpty()) {
-			JLabel label = new JLabel(HOVerwaltung.instance().getLanguageString("lineup.upload.check.uploadAnywayQ"));
+			JLabel label = new JLabel(TranslationFacility.tr("lineup.upload.check.uploadAnywayQ"));
 			label.setBorder(BorderFactory.createEmptyBorder(10, 20, 2, 10));
 			problems.add(label);
 		} else {
 			return true;
 		}
 
-		String title = HOVerwaltung.instance().getLanguageString("lineup.upload.check.title");
+		String title = TranslationFacility.tr("lineup.upload.check.title");
 		int result = JOptionPane.showConfirmDialog(HOMainFrame.instance(),
 				problems.toArray(), title, JOptionPane.YES_NO_OPTION,
 				JOptionPane.PLAIN_MESSAGE);
@@ -76,13 +73,13 @@ public class LineupCheck {
 	}
 
 	private static JLabel getWarningLabel(String key) {
-		JLabel label = new JLabel(HOVerwaltung.instance().getLanguageString(key));
+		JLabel label = new JLabel(TranslationFacility.tr(key));
 		label.setIcon(ThemeManager.getIcon(HOIconName.EXCLAMATION));
 		return label;
 	}
 
 	private static JLabel getErrorLabel(String key) {
-		JLabel label = new JLabel(HOVerwaltung.instance().getLanguageString(key));
+		JLabel label = new JLabel(TranslationFacility.tr(key));
 		label.setIcon(ThemeManager.getIcon(HOIconName.EXCLAMATION_RED));
 		return label;
 	}

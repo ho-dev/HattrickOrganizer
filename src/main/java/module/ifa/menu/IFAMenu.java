@@ -1,8 +1,8 @@
 package module.ifa.menu;
 
-import core.model.HOVerwaltung;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
+import core.model.TranslationFacility;
+
+import javax.swing.*;
 
 
 public class IFAMenu extends JMenu {
@@ -10,7 +10,7 @@ public class IFAMenu extends JMenu {
 	private static final long serialVersionUID = 1L;
 
 	public IFAMenu() {
-		super(HOVerwaltung.instance().getLanguageString("Tab_IFA"));
+		super(TranslationFacility.tr("Tab_IFA"));
 		initialize();
 	}
 
@@ -20,7 +20,7 @@ public class IFAMenu extends JMenu {
 	}
 	
 	private JMenuItem getRebuildItem(){
-		JMenuItem ifaItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.modules.ifa.reloadallmatches"));
+		JMenuItem ifaItem = new JMenuItem(TranslationFacility.tr("ls.menu.modules.ifa.reloadallmatches"));
 		ifaItem.addActionListener(new MenuItemListener());
 		return ifaItem;
 	}

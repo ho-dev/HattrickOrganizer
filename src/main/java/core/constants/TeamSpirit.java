@@ -1,7 +1,7 @@
 package core.constants;
 
 import core.datatype.CBItem;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 
 public final class TeamSpirit {
 
@@ -18,17 +18,17 @@ public final class TeamSpirit {
 	public static final int PARADISE_ON_EARTH 	= 10;
 
 	public static CBItem[] ITEMS = {
-			new CBItem(HOVerwaltung.instance().getLanguageString("ls.team.teamspirit.likethecoldwar"),	LIKE_THE_COLD_WAR),
-			new CBItem(HOVerwaltung.instance().getLanguageString("ls.team.teamspirit.murderous"),	MURDEROUS),
-			new CBItem(HOVerwaltung.instance().getLanguageString("ls.team.teamspirit.furious"),	FURIOUS),
-			new CBItem(HOVerwaltung.instance().getLanguageString("ls.team.teamspirit.irritated"),	IRRITATED),
-			new CBItem(HOVerwaltung.instance().getLanguageString("ls.team.teamspirit.composed"), COMPOSED),
-			new CBItem(HOVerwaltung.instance().getLanguageString("ls.team.teamspirit.calm"), CALM),
-			new CBItem(HOVerwaltung.instance().getLanguageString("ls.team.teamspirit.content"), CONTENT),
-			new CBItem(HOVerwaltung.instance().getLanguageString("ls.team.teamspirit.satisfied"),	SATISFIED),
-			new CBItem(HOVerwaltung.instance().getLanguageString("ls.team.teamspirit.delirious"),	DELIRIOUS),
-			new CBItem(HOVerwaltung.instance().getLanguageString("ls.team.teamspirit.walkingonclouds"),	WALKING_ON_CLOUDS),
-			new CBItem(HOVerwaltung.instance().getLanguageString("ls.team.teamspirit.paradiseonearth"),	PARADISE_ON_EARTH) };
+			new CBItem(TranslationFacility.tr("ls.team.teamspirit.likethecoldwar"),	LIKE_THE_COLD_WAR),
+			new CBItem(TranslationFacility.tr("ls.team.teamspirit.murderous"),	MURDEROUS),
+			new CBItem(TranslationFacility.tr("ls.team.teamspirit.furious"),	FURIOUS),
+			new CBItem(TranslationFacility.tr("ls.team.teamspirit.irritated"),	IRRITATED),
+			new CBItem(TranslationFacility.tr("ls.team.teamspirit.composed"), COMPOSED),
+			new CBItem(TranslationFacility.tr("ls.team.teamspirit.calm"), CALM),
+			new CBItem(TranslationFacility.tr("ls.team.teamspirit.content"), CONTENT),
+			new CBItem(TranslationFacility.tr("ls.team.teamspirit.satisfied"),	SATISFIED),
+			new CBItem(TranslationFacility.tr("ls.team.teamspirit.delirious"),	DELIRIOUS),
+			new CBItem(TranslationFacility.tr("ls.team.teamspirit.walkingonclouds"),	WALKING_ON_CLOUDS),
+			new CBItem(TranslationFacility.tr("ls.team.teamspirit.paradiseonearth"),	PARADISE_ON_EARTH) };
 
 	private TeamSpirit() {
 	}
@@ -38,6 +38,6 @@ public final class TeamSpirit {
 		if(teamSpirit >= LIKE_THE_COLD_WAR && teamSpirit <= PARADISE_ON_EARTH)
 			return ITEMS[teamSpirit].getText();
 		else
-			return HOVerwaltung.instance().getLanguageString("Unbestimmt");
+			return TranslationFacility.tr("Unbestimmt");
 	}
 }

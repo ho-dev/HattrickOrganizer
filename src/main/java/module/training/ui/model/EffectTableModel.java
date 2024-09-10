@@ -1,13 +1,12 @@
 package module.training.ui.model;
 
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import module.training.TrainWeekEffect;
 
+import javax.swing.table.AbstractTableModel;
 import java.io.Serial;
 import java.text.NumberFormat;
 import java.util.List;
-
-import javax.swing.table.AbstractTableModel;
 
 
 
@@ -43,16 +42,15 @@ public class EffectTableModel extends AbstractTableModel {
         super();
         FORMATTER.setMaximumFractionDigits(2);
         FORMATTER.setMinimumFractionDigits(2);
-        HOVerwaltung hoV = HOVerwaltung.instance();
-        this.colNames[0] = hoV.getLanguageString("Week"); //$NON-NLS-1$
-        this.colNames[1] = hoV.getLanguageString("Season"); //$NON-NLS-1$
-        this.colNames[2] = hoV.getLanguageString("TotalTSI"); //$NON-NLS-1$
-        this.colNames[3] = hoV.getLanguageString("AverageTSI"); //$NON-NLS-1$
-        this.colNames[4] = hoV.getLanguageString("ls.player.tsi") + " +/-"; //$NON-NLS-1$ //$NON-NLS-2$
-        this.colNames[5] = hoV.getLanguageString("DurchschnittForm"); //$NON-NLS-1$
-        this.colNames[6] = hoV.getLanguageString("ls.player.form") + " +/-"; //$NON-NLS-1$ //$NON-NLS-2$
-        this.colNames[7] = hoV.getLanguageString("Skillups"); //$NON-NLS-1$
-        this.colNames[8] = hoV.getLanguageString("ls.player.skill"); //$NON-NLS-1$
+        this.colNames[0] = TranslationFacility.tr("Week"); //$NON-NLS-1$
+        this.colNames[1] = TranslationFacility.tr("Season"); //$NON-NLS-1$
+        this.colNames[2] = TranslationFacility.tr("TotalTSI"); //$NON-NLS-1$
+        this.colNames[3] = TranslationFacility.tr("AverageTSI"); //$NON-NLS-1$
+        this.colNames[4] = TranslationFacility.tr("ls.player.tsi") + " +/-"; //$NON-NLS-1$ //$NON-NLS-2$
+        this.colNames[5] = TranslationFacility.tr("DurchschnittForm"); //$NON-NLS-1$
+        this.colNames[6] = TranslationFacility.tr("ls.player.form") + " +/-"; //$NON-NLS-1$ //$NON-NLS-2$
+        this.colNames[7] = TranslationFacility.tr("Skillups"); //$NON-NLS-1$
+        this.colNames[8] = TranslationFacility.tr("ls.player.skill"); //$NON-NLS-1$
 
         this.values = values;
     }

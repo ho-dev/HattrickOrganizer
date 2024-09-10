@@ -1,6 +1,7 @@
 package core.model.misc;
 
 import core.db.AbstractTable;
+import core.model.TranslationFacility;
 import core.util.HODateTime;
 
 /**
@@ -206,47 +207,47 @@ public class Economy extends AbstractTable.Storable {
     	}
         switch (level) {
             case LV_FANS_SENDING_LOVE_POEMS_TO_YOU:
-                return core.model.HOVerwaltung.instance().getLanguageString("ls.club.sponsors_fans.sendinglovepoemstoyou");
+                return TranslationFacility.tr("ls.club.sponsors_fans.sendinglovepoemstoyou");
 
             case LV_FANS_DANCING_IN_THE_STREETS:
-                return core.model.HOVerwaltung.instance().getLanguageString("ls.club.sponsors_fans.dancinginthestreets");
+                return TranslationFacility.tr("ls.club.sponsors_fans.dancinginthestreets");
 
             case LV_FANS_HIGH_ON_LIFE:
-                return core.model.HOVerwaltung.instance().getLanguageString("ls.club.sponsors_fans.highonlife");
+                return TranslationFacility.tr("ls.club.sponsors_fans.highonlife");
 
             case LV_FANS_DELIRIOUS:
-                return core.model.HOVerwaltung.instance().getLanguageString("ls.club.sponsors_fans.delirious");
+                return TranslationFacility.tr("ls.club.sponsors_fans.delirious");
 
             case LV_FANS_SATISFIED:
-                return core.model.HOVerwaltung.instance().getLanguageString("ls.club.sponsors_fans.satisfied");
+                return TranslationFacility.tr("ls.club.sponsors_fans.satisfied");
 
             case LV_FANS_CONTENT:
-                return core.model.HOVerwaltung.instance().getLanguageString("ls.club.sponsors_fans.content");
+                return TranslationFacility.tr("ls.club.sponsors_fans.content");
 
             case LV_FANS_CALM:
-                return core.model.HOVerwaltung.instance().getLanguageString("ls.club.sponsors_fans.calm");
+                return TranslationFacility.tr("ls.club.sponsors_fans.calm");
 
             case LV_FANS_DISAPPOINTED:
-                return core.model.HOVerwaltung.instance().getLanguageString("ls.club.fans.disappointed");
+                return TranslationFacility.tr("ls.club.fans.disappointed");
                 
             case LV_FANS_IRRITATED:
-                return core.model.HOVerwaltung.instance().getLanguageString("ls.club.sponsors_fans.irritated");
+                return TranslationFacility.tr("ls.club.sponsors_fans.irritated");
                 
             case LV_FANS_ANGRY:
-                return core.model.HOVerwaltung.instance().getLanguageString("ls.club.fans.angry");
+                return TranslationFacility.tr("ls.club.fans.angry");
 
             case LV_FANS_FURIOUS:
-                return core.model.HOVerwaltung.instance().getLanguageString("ls.club.sponsors_fans.furious");
+                return TranslationFacility.tr("ls.club.sponsors_fans.furious");
 
             case LV_FANS_MURDEROUS:
-                return core.model.HOVerwaltung.instance().getLanguageString("ls.club.sponsors_fans.murderous");
+                return TranslationFacility.tr("ls.club.sponsors_fans.murderous");
 
             default: {
                 if (level > LV_FANS_SENDING_LOVE_POEMS_TO_YOU) {
-                    return core.model.HOVerwaltung.instance().getLanguageString("ls.club.sponsors_fans.sendinglovepoemstoyou");
+                    return TranslationFacility.tr("ls.club.sponsors_fans.sendinglovepoemstoyou");
                 }
 
-                return core.model.HOVerwaltung.instance().getLanguageString("Unbestimmt");
+                return TranslationFacility.tr("Unbestimmt");
             }
         }
     }
@@ -260,41 +261,41 @@ public class Economy extends AbstractTable.Storable {
     public static String getNameForLevelSponsors(int level) {
         switch (level) {
             case LV_SPONSORS_SENDING_LOVE_POEMS_TO_YOU:
-                return core.model.HOVerwaltung.instance().getLanguageString("ls.club.sponsors_fans.sendinglovepoemstoyou");
+                return TranslationFacility.tr("ls.club.sponsors_fans.sendinglovepoemstoyou");
 
             case LV_SPONSORS_DANCING_IN_THE_STREETS:
-                return core.model.HOVerwaltung.instance().getLanguageString("ls.club.sponsors_fans.dancinginthestreets");
+                return TranslationFacility.tr("ls.club.sponsors_fans.dancinginthestreets");
 
             case LV_SPONSORS_HIGH_ON_LIFE:
-                return core.model.HOVerwaltung.instance().getLanguageString("ls.club.sponsors_fans.highonlife");
+                return TranslationFacility.tr("ls.club.sponsors_fans.highonlife");
 
             case LV_SPONSORS_DELIRIOUS:
-                return core.model.HOVerwaltung.instance().getLanguageString("ls.club.sponsors_fans.delirious");
+                return TranslationFacility.tr("ls.club.sponsors_fans.delirious");
 
             case LV_SPONSORS_SATISFIED:
-                return core.model.HOVerwaltung.instance().getLanguageString("ls.club.sponsors_fans.satisfied");
+                return TranslationFacility.tr("ls.club.sponsors_fans.satisfied");
 
             case LV_SPONSORS_CONTENT:
-                return core.model.HOVerwaltung.instance().getLanguageString("ls.club.sponsors_fans.content");
+                return TranslationFacility.tr("ls.club.sponsors_fans.content");
 
             case LV_SPONSORS_CALM:
-                return core.model.HOVerwaltung.instance().getLanguageString("ls.club.sponsors_fans.calm");
+                return TranslationFacility.tr("ls.club.sponsors_fans.calm");
 
             case LV_SPONSORS_IRRITATED:
-                return core.model.HOVerwaltung.instance().getLanguageString("ls.club.sponsors_fans.irritated");
+                return TranslationFacility.tr("ls.club.sponsors_fans.irritated");
                 
             case LV_SPONSORS_FURIOUS:
-                return core.model.HOVerwaltung.instance().getLanguageString("ls.club.sponsors_fans.furious");
+                return TranslationFacility.tr("ls.club.sponsors_fans.furious");
 
             case LV_SPONSORS_MURDEROUS:
-                return core.model.HOVerwaltung.instance().getLanguageString("ls.club.sponsors_fans.murderous");
+                return TranslationFacility.tr("ls.club.sponsors_fans.murderous");
 
             default: {
                 if (level > LV_SPONSORS_SENDING_LOVE_POEMS_TO_YOU) {
-                    return core.model.HOVerwaltung.instance().getLanguageString("ls.club.sponsors_fans.sendinglovepoemstoyou");
+                    return TranslationFacility.tr("ls.club.sponsors_fans.sendinglovepoemstoyou");
                 }
 
-                return core.model.HOVerwaltung.instance().getLanguageString("Unbestimmt");
+                return TranslationFacility.tr("Unbestimmt");
             }
         }
     }

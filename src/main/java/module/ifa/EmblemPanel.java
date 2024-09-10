@@ -1,25 +1,15 @@
 package module.ifa;
 
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.module.config.ModuleConfig;
 import module.ifa.config.Config;
 import module.ifa.model.IfaModel;
 import module.ifa.model.ModelChangeListener;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Window;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
-import javax.swing.ImageIcon;
-import javax.swing.JComponent;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 
 public class EmblemPanel extends JPanel {
 
@@ -47,7 +37,7 @@ public class EmblemPanel extends JPanel {
 
 		this.panel.setLayout(new GridBagLayout());
 		this.panel.setBackground(Color.white);
-		this.logoLabel = new JLabel(HOVerwaltung.instance().getLanguageString(
+		this.logoLabel = new JLabel(TranslationFacility.tr(
 				"ifa.loadEmblem.clickHere"));
 		this.logoLabel.setPreferredSize(new Dimension(200, 100));
 		this.logoLabel.setVerticalAlignment(0);
@@ -72,7 +62,7 @@ public class EmblemPanel extends JPanel {
 			this.logoLabel.setPreferredSize(new Dimension(image.getIconWidth(), image
 					.getIconHeight()));
 		} else {
-			this.logoLabel.setText(HOVerwaltung.instance().getLanguageString(
+			this.logoLabel.setText(TranslationFacility.tr(
 					"ifa.loadEmblem.clickHere"));
 			this.imagePath = "";
 		}

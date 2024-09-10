@@ -1,12 +1,9 @@
 package tool.hrfExplorer;
 
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-
-import javax.swing.JDialog;
-import javax.swing.JFrame;
+import javax.swing.*;
+import java.awt.*;
 
 
 public class HrfExplorerDialog extends JDialog {
@@ -22,7 +19,7 @@ public class HrfExplorerDialog extends JDialog {
 	private void initialize() {
 		setSize(1024,668);
 		setLayout(new BorderLayout());
-		setTitle(HOVerwaltung.instance().getLanguageString("Tab_HRF-Explorer"));
+		setTitle(TranslationFacility.tr("Tab_HRF-Explorer"));
 		
 		add(new HrfExplorer(), BorderLayout.CENTER);
 		

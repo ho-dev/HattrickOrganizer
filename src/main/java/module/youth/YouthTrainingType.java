@@ -1,10 +1,11 @@
 package module.youth;
 
 import core.constants.player.PlayerSkill;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.player.MatchRoleID;
 import core.training.WeeklyTrainingType;
 import core.training.type.*;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,9 +62,8 @@ public enum YouthTrainingType {
     }
 
     public static String StringValueOf(YouthTrainingType value) {
-        var hov = HOVerwaltung.instance();
-        if ( value == null) return hov.getLanguageString("ls.youth.trainingtype.undefined");
-        return hov.getLanguageString("ls.youth.trainingtype."+value._toString());
+        if ( value == null) return TranslationFacility.tr("ls.youth.trainingtype.undefined");
+        return TranslationFacility.tr("ls.youth.trainingtype."+value._toString());
     }
 
     private String _toString() {
