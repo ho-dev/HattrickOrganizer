@@ -14,10 +14,9 @@ import java.util.StringTokenizer;
  * @author <a href=mailto:draghetto@users.sourceforge.net>Massimiliano Amato</a>
  */
 public final class RatingUtil {
-    /**
-     * Private default constructor to prevent class instantiation.
-     */
+
     private RatingUtil() {
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 
     /**
