@@ -50,10 +50,14 @@ public abstract class HOTableModel extends AbstractTableModel {
 	protected int instance;
 
 	public TableRowSorter<HOTableModel> getRowSorter() {
-		return rowSorter;
+		if ( table != null) return (TableRowSorter<HOTableModel>) table.getRowSorter();
+		if ( fixedColumnsTable != null) return fixedColumnsTable.getTableSorter();
+		return null;
 	}
 
-	private TableRowSorter<HOTableModel> rowSorter; //  = new TableRowSorter<>(this) ;
+//	private TableRowSorter<HOTableModel> rowSorter; //  = new TableRowSorter<>(this) ;
+	private JTable table;
+	private FixedColumnsTable fixedColumnsTable;
 
 	/**
 	 * constructor
@@ -203,7 +207,7 @@ public abstract class HOTableModel extends AbstractTableModel {
 	@Override
 	public final String getColumnName(int columnIndex) {
 		if (getDisplayedColumnCount() > columnIndex) {
-			return getColumnNames()[columnIndex];
+			return getDisplayedColumns()[columnIndex].getColumnName();
 		}
 
 		return null;
@@ -341,13 +345,14 @@ public abstract class HOTableModel extends AbstractTableModel {
 
 		// TODO: Restore row order setting
 
-		if ( this.rowSorter == null){
+		var rowSorter = getRowSorter();
+		if ( rowSorter == null){
 			List<RowSorter.SortKey> sortKeys = new  ArrayList<>();
 			Arrays.stream(this.columns).filter(i->i.sortPriority != null).sorted(Comparator.comparingInt(UserColumn::getSortPriority)).forEach(i->sortKeys.add(new RowSorter.SortKey(i.index, i.sortOrder)));
 
-			this.rowSorter = new TableRowSorter<>(this);
-			this.rowSorter.setSortKeys(sortKeys);
-			table.setRowSorter(this.rowSorter);
+			rowSorter = new TableRowSorter<>(this);
+			rowSorter.setSortKeys(sortKeys);
+			table.setRowSorter(rowSorter);
 		}
 	}
 
@@ -377,7 +382,7 @@ public abstract class HOTableModel extends AbstractTableModel {
 	 *
 	 * @param table table object
 	 */
-	public void storeUserSettings(JTable table) {
+	private void storeUserSettings(JTable table) {
 		var changed = storeUserSettings(table, 0);
 		if (changed){
 			DBManager.instance().saveHOColumnModel(this);
@@ -435,7 +440,7 @@ public abstract class HOTableModel extends AbstractTableModel {
 		return changed;
 	}
 
-	public void storeUserSettings(FixedColumnsTable table) {
+	private void storeUserSettings(FixedColumnsTable table) {
 		var changed = storeUserSettings(table.getFixedTable(), 0);
 		changed = changed || storeUserSettings(table.getScrollTable(), table.getFixedColumnsCount());
 		if (changed){
@@ -448,12 +453,14 @@ public abstract class HOTableModel extends AbstractTableModel {
 	}
 
 	public void initTable(FixedColumnsTable table){
+		this.fixedColumnsTable = table;
 		table.setTableModel(this);
 		restoreUserSettings(table);
 //		var columnModel = table.getScrollTable().getColumnModel();
 	}
 
 	public void initTable(JTable table) {
+		this.table = table;
 		var columnModel = table.getColumnModel();
 		ToolTipHeader header = new ToolTipHeader(columnModel);
 		header.setToolTipStrings(getTooltips());
@@ -472,7 +479,10 @@ public abstract class HOTableModel extends AbstractTableModel {
 
 //		initColumnOrder(table);
 //		setColumnsSize(columnModel);
+	}
 
-
+	public void closeTable(){
+		if (table != null){ storeUserSettings(table);}
+		else if ( fixedColumnsTable != null){ restoreUserSettings(fixedColumnsTable);}
 	}
 }

@@ -684,7 +684,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 			parameter.spielerUebersichtsPanel_horizontalLeftSplitPane = sup[0];
 			parameter.spielerUebersichtsPanel_horizontalRightSplitPane = sup[1];
 			parameter.spielerUebersichtsPanel_verticalSplitPane = sup[2];
-			getSpielerUebersichtPanel().saveColumnOrder();
+//			getSpielerUebersichtPanel().saveColumnOrder();
 		}
 
 		// Lineup Panel

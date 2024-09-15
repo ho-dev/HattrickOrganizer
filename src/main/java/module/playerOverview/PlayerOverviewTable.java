@@ -4,6 +4,7 @@ import core.db.DBManager;
 import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
+import core.gui.comp.table.FixedColumnsTable;
 import core.gui.comp.table.HOTableModel;
 import core.gui.comp.table.TableSorter;
 import core.gui.comp.table.UserColumn;
@@ -19,6 +20,7 @@ import core.net.HattrickLink;
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.Serial;
@@ -39,7 +41,7 @@ import java.io.Serial;
  * 
  * @author Thorsten Dietz
  */
-public class PlayerOverviewTable extends JTable implements core.gui.Refreshable {
+public class PlayerOverviewTable extends FixedColumnsTable implements core.gui.Refreshable {
 
 	@Serial
 	private static final long serialVersionUID = -6074136156090331418L;
@@ -47,10 +49,10 @@ public class PlayerOverviewTable extends JTable implements core.gui.Refreshable 
 //	private TableSorter tableSorter;
 
 	public PlayerOverviewTable() {
-		super();
+		super(1);
 		initModel();
 		setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
-		setSelectionBackground(HODefaultTableCellRenderer.SELECTION_BG);
+//		setSelectionBackground(HODefaultTableCellRenderer.SELECTION_BG);
 		RefreshManager.instance().registerRefreshable(this);
 
 		// Add a mouse listener that, when clicking on the “Last match” column
@@ -65,7 +67,8 @@ public class PlayerOverviewTable extends JTable implements core.gui.Refreshable 
 					int columnAtPoint = columnAtPoint(e.getPoint());
 					// Get name of the actual column at columnAtPoint, i.e. post-ordering of the columns
 					// based on preferences.
-					String columnName = PlayerOverviewTable.this.getColumnName(columnAtPoint);
+					var columnName = tableModel.getColumnName(columnAtPoint);
+//					String columnName = PlayerOverviewTable.this.getColumnName(columnAtPoint);
 					String lastMatchRating = (HOVerwaltung.instance().getLanguageString("LastMatchRating"));
 
 					if (columnName.equalsIgnoreCase(lastMatchRating)) {
@@ -83,10 +86,18 @@ public class PlayerOverviewTable extends JTable implements core.gui.Refreshable 
 		});
 	}
 
+	private int columnAtPoint(Point point) {
+		var ret = this.getScrollTable().columnAtPoint(point);
+		if (ret > -1){
+			return ret + getFixedColumnsCount();
+		}
+		return this.getFixedTable().columnAtPoint(point);
+	}
+
 	public Player getSelectedPlayer(){
 		var rowIndex = getSelectedRow();
 		if (rowIndex >= 0) {
-			return tableModel.getPlayers().get(convertRowIndexToModel(rowIndex));
+			return tableModel.getPlayers().get(getScrollTable().convertRowIndexToModel(rowIndex));
 		}
 		return null;
 	}
@@ -95,16 +106,16 @@ public class PlayerOverviewTable extends JTable implements core.gui.Refreshable 
 //		return tableSorter;
 //	}
 
-	public final void saveColumnOrder() {
-		UserColumn[] columns = tableModel.getDisplayedColumns();
-		TableColumnModel tableColumnModel = getColumnModel();
-		for (int i = 0; i < columns.length; i++) {
-			columns[i].setIndex(convertColumnIndexToView(i));
-			columns[i].setPreferredWidth(tableColumnModel.getColumn(convertColumnIndexToView(i)).getWidth());
-		}
-		tableModel.setCurrentValueToColumns(columns);
-		DBManager.instance().saveHOColumnModel(tableModel);
-	}
+//	public final void saveColumnOrder() {
+//		UserColumn[] columns = tableModel.getDisplayedColumns();
+//		TableColumnModel tableColumnModel = getColumnModel();
+//		for (int i = 0; i < columns.length; i++) {
+//			columns[i].setIndex(convertColumnIndexToView(i));
+//			columns[i].setPreferredWidth(tableColumnModel.getColumn(convertColumnIndexToView(i)).getWidth());
+//		}
+//		tableModel.setCurrentValueToColumns(columns);
+//		DBManager.instance().saveHOColumnModel(tableModel);
+//	}
 
 	public final void selectPlayer(int playerId) {
 		var index = tableModel.getPlayerIndex(playerId);
@@ -173,9 +184,9 @@ public class PlayerOverviewTable extends JTable implements core.gui.Refreshable 
 //			tableSorter.reallocateIndexes();
 		}
 
-		setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		setRowSelectionAllowed(true);
+//		setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+//		setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+//		setRowSelectionAllowed(true);
 //		tableSorter.initsort();
 	}
 

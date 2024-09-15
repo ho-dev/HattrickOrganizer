@@ -6,8 +6,6 @@ import core.gui.RefreshManager;
 import core.gui.comp.renderer.BooleanTableCellRenderer;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.comp.table.FixedColumnsTable;
-import core.gui.comp.table.HOTableModel;
-import core.gui.comp.table.UserColumn;
 import core.gui.model.UserColumnController;
 import core.gui.model.UserColumnFactory;
 import core.model.HOVerwaltung;
@@ -21,9 +19,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.JTable;
-import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableRowSorter;
 
 /**
  * Table displaying the players' details in Lineup tab.
@@ -32,13 +27,13 @@ import javax.swing.table.TableRowSorter;
  */
 public final class LineupPlayersTable extends FixedColumnsTable implements core.gui.Refreshable, PlayerTable {
 
-	private LineupTableModel tableModel;
+	private final LineupTableModel tableModel;
 //	private TableSorter tableSorter;
 
 	LineupPlayersTable() {
 		super(1);
 		this.tableModel = initModel();
-		setTableModel(tableModel);
+//		setTableModel(tableModel);
 
 //		setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 //		setSelectionMode(0);
@@ -100,7 +95,7 @@ public final class LineupPlayersTable extends FixedColumnsTable implements core.
 	public LineupTableModel getTableModel() {return this.tableModel;}
 
 	public void saveColumnOrder() {
-		tableModel.storeUserSettings(this);
+		tableModel.closeTable();
 //		final UserColumn[] columns = tableModel.getDisplayedColumns();
 //		final TableColumnModel tableColumnModel = getColumnModel();
 //		for (int i = 0; i < columns.length; i++) {
@@ -192,6 +187,10 @@ public final class LineupPlayersTable extends FixedColumnsTable implements core.
 				}
 			}
 		});
+	}
+
+	public void closeTable(){
+		tableModel.closeTable();
 	}
 
 //	public TableRowSorter<HOTableModel> getTableSorter() {

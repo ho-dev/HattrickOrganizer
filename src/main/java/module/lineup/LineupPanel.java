@@ -30,7 +30,7 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 	private LineupRatingAssistantPanel lineupRatingAssistantPanel;
 	private JSplitPane horizontalSplitPane;
 	private JSplitPane verticalSplitPane;
-	private LineupPlayersTableNameColumn lineupPlayersTableNameColumn;
+//	private LineupPlayersTableNameColumn lineupPlayersTableNameColumn;
 	private final List<Updatable> updatables = new ArrayList<>();
 
 	public LineupPanel() {
@@ -38,8 +38,12 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 //		addListeners();
 	}
 
+	public void storeUserSettings(){
+		this.lineupPlayersTable.closeTable();
+	}
+
 	public void setPlayer(int idPlayer) {
-		lineupPlayersTableNameColumn.setPlayer(idPlayer);
+//		lineupPlayersTableNameColumn.setPlayer(idPlayer);
 		lineupPlayersTable.setPlayer(idPlayer);
 	}
 
@@ -90,7 +94,7 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 		lineupPositionsPanel.refresh();
 		lineupRatingAssistantPanel.refresh();
 		lineupPlayersTable.refresh();
-		lineupPlayersTableNameColumn.refresh();
+//		lineupPlayersTableNameColumn.refresh();
 
 		// Refresh the table and details of the player overview
 		core.gui.HOMainFrame.instance().getSpielerUebersichtPanel().refresh();
@@ -140,41 +144,42 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 
 	private Component initSpielerTabelle() {
 		lineupPlayersTable = new LineupPlayersTable();
-		lineupPlayersTableNameColumn = new LineupPlayersTableNameColumn(lineupPlayersTable.getTableModel());
-
-		final JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-
-		JScrollPane scrollpane = new JScrollPane(lineupPlayersTableNameColumn);
-		scrollpane.setPreferredSize(new Dimension(170, 100));
-		scrollpane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-
-		JScrollPane scrollpane2 = new JScrollPane(lineupPlayersTable);
-		scrollpane2.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
-		scrollpane2.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-
-		final JScrollBar bar = scrollpane.getVerticalScrollBar();
-		final JScrollBar bar2 = scrollpane2.getVerticalScrollBar();
-		// setVisible(false) does not have an effect, so we set the size to
-		// false
-		// we can't disable the scrollbar with VERTICAL_SCROLLBAR_NEVER
-		// because this will disable mouse wheel scrolling
-		bar.setPreferredSize(new Dimension(0, 0));
-
-		// Synchronize vertical scrolling
-		AdjustmentListener adjustmentListener = e -> {
-			if (e.getSource() == bar2) {
-				bar.setValue(e.getValue());
-			} else {
-				bar2.setValue(e.getValue());
-			}
-		};
-		bar.addAdjustmentListener(adjustmentListener);
-		bar2.addAdjustmentListener(adjustmentListener);
-
-		splitPane.add(scrollpane);
-		splitPane.add(scrollpane2);
-
-		return splitPane;
+		return lineupPlayersTable;
+//		lineupPlayersTableNameColumn = new LineupPlayersTableNameColumn(lineupPlayersTable.getTableModel());
+//
+//		final JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
+//
+//		JScrollPane scrollpane = new JScrollPane(lineupPlayersTableNameColumn);
+//		scrollpane.setPreferredSize(new Dimension(170, 100));
+//		scrollpane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+//
+//		JScrollPane scrollpane2 = new JScrollPane(lineupPlayersTable);
+//		scrollpane2.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
+//		scrollpane2.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+//
+//		final JScrollBar bar = scrollpane.getVerticalScrollBar();
+//		final JScrollBar bar2 = scrollpane2.getVerticalScrollBar();
+//		// setVisible(false) does not have an effect, so we set the size to
+//		// false
+//		// we can't disable the scrollbar with VERTICAL_SCROLLBAR_NEVER
+//		// because this will disable mouse wheel scrolling
+//		bar.setPreferredSize(new Dimension(0, 0));
+//
+//		// Synchronize vertical scrolling
+//		AdjustmentListener adjustmentListener = e -> {
+//			if (e.getSource() == bar2) {
+//				bar.setValue(e.getValue());
+//			} else {
+//				bar2.setValue(e.getValue());
+//			}
+//		};
+//		bar.addAdjustmentListener(adjustmentListener);
+//		bar2.addAdjustmentListener(adjustmentListener);
+//
+//		splitPane.add(scrollpane);
+//		splitPane.add(scrollpane2);
+//
+//		return splitPane;
 	}
 
 //	private void addListeners() {

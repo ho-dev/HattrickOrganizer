@@ -118,7 +118,7 @@ class TeamTransfersPane extends JPanel implements ListSelectionListener {
 
     public void storeUserSettings(){
         var model = getTransferTableModel();
-        model.storeUserSettings(this.transferTable);
+        model.closeTable();
         playerDetailPanel.storeUserSettings();
     }
 

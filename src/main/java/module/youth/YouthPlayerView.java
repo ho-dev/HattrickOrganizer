@@ -346,8 +346,8 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
     }
 
     public void storeUserSettings() {
-        this.playerOverviewTableModel.storeUserSettings(playerOverviewTable);
-        this.playerDetailsTableModel.storeUserSettings(playerDetailsTable);
+        this.playerOverviewTableModel.closeTable();
+        this.playerDetailsTableModel.closeTable();
         // store split pane divider positions
         var split2Pane = (JSplitPane)this.getComponent(0);
         ModuleConfig.instance().setInteger(VERTICALSPLIT2_POSITION, split2Pane.getDividerLocation());

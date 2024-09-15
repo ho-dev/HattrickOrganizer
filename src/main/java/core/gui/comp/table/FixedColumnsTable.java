@@ -6,6 +6,7 @@ import module.transfer.ui.sorter.DefaultTableSorter;
 import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
 
 public class FixedColumnsTable extends JScrollPane {
@@ -18,7 +19,7 @@ public class FixedColumnsTable extends JScrollPane {
     /**
      * Table sorter
      */
-    private DefaultTableSorter scrollTableSorter;
+    private TableRowSorter<HOTableModel> scrollTableSorter;
 
     /**
      * Fixed table part (left hand side)
@@ -44,8 +45,9 @@ public class FixedColumnsTable extends JScrollPane {
 
     public void setTableModel(HOTableModel tableModel) {
 
-        scrollTableSorter = new DefaultTableSorter(tableModel);
-        var table = new JTable(scrollTableSorter);
+        scrollTableSorter = new TableRowSorter<>(tableModel);
+        var table = new JTable(tableModel);
+        table.setRowSorter(scrollTableSorter);
         setTooltipHeader(table, tableModel.getTooltips());
 
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -66,7 +68,6 @@ public class FixedColumnsTable extends JScrollPane {
         fixed.setFocusable(false);
         fixed.setSelectionModel(scroll.getSelectionModel());
         fixed.getTableHeader().setReorderingAllowed(false);
-
 
         //  Remove the fixed columns from the main table
         int width = 0;
@@ -95,7 +96,6 @@ public class FixedColumnsTable extends JScrollPane {
         fixed.setPreferredScrollableViewportSize(new Dimension(width, 0));
         setRowHeaderView(fixed);
         setCorner(ScrollPaneConstants.UPPER_LEFT_CORNER, fixed.getTableHeader());
-
     }
 
     private void setTooltipHeader(JTable table, String[] tooltips) {
@@ -103,7 +103,7 @@ public class FixedColumnsTable extends JScrollPane {
         header.setToolTipStrings(tooltips);
         header.setToolTipText("");
         table.setTableHeader(header);
-        scrollTableSorter.setTableHeader(table.getTableHeader());
+//        scrollTableSorter.setTableHeader(table.getTableHeader());
     }
 
 
@@ -160,7 +160,7 @@ public class FixedColumnsTable extends JScrollPane {
      * Return the created table sorter
      * @return DefaultTableSorter
      */
-    public DefaultTableSorter getTableSorter() {
+    public TableRowSorter<HOTableModel> getTableSorter() {
         return scrollTableSorter;
     }
 
