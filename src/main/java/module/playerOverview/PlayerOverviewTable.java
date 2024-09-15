@@ -7,7 +7,6 @@ import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.comp.table.FixedColumnsTable;
 import core.gui.comp.table.HOTableModel;
 import core.gui.comp.table.TableSorter;
-import core.gui.comp.table.UserColumn;
 import core.gui.model.PlayerOverviewTableModel;
 import core.gui.model.UserColumnController;
 import core.gui.model.UserColumnFactory;
@@ -18,7 +17,6 @@ import core.model.player.Player;
 import core.net.HattrickLink;
 
 import javax.swing.*;
-import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -71,7 +69,7 @@ public class PlayerOverviewTable extends FixedColumnsTable implements core.gui.R
 //					String columnName = PlayerOverviewTable.this.getColumnName(columnAtPoint);
 					String lastMatchRating = (HOVerwaltung.instance().getLanguageString("LastMatchRating"));
 
-					if (columnName.equalsIgnoreCase(lastMatchRating)) {
+					if (columnName != null && columnName.equalsIgnoreCase(lastMatchRating)) {
 						if (e.isShiftDown()) {
 							int matchId = player.getLastMatchId();
 							// TODO: get match type ?
@@ -149,18 +147,18 @@ public class PlayerOverviewTable extends FixedColumnsTable implements core.gui.R
 		repaint();
 	}
 
-	/**
-	 * Returns the sorting column.
-	 */
-	private int getSortSpalte() {
-		return switch (UserParameter.instance().standardsortierung) {
-			case UserParameter.SORT_NAME -> tableModel.getPositionInArray(UserColumnFactory.NAME);
-			case UserParameter.SORT_AUFGESTELLT -> tableModel.getPositionInArray(UserColumnFactory.LINEUP);
-			case UserParameter.SORT_GRUPPE -> tableModel.getPositionInArray(UserColumnFactory.GROUP);
-			case UserParameter.SORT_BEWERTUNG -> tableModel.getPositionInArray(UserColumnFactory.RATING);
-			default -> tableModel.getPositionInArray(UserColumnFactory.BEST_POSITION);
-		};
-	}
+//	/**
+//	 * Returns the sorting column.
+//	 */
+//	private int getSortSpalte() {
+//		return switch (UserParameter.instance().standardsortierung) {
+//			case UserParameter.SORT_NAME -> tableModel.getPositionInArray(UserColumnFactory.NAME);
+//			case UserParameter.SORT_AUFGESTELLT -> tableModel.getPositionInArray(UserColumnFactory.LINEUP);
+//			case UserParameter.SORT_GRUPPE -> tableModel.getPositionInArray(UserColumnFactory.GROUP);
+//			case UserParameter.SORT_BEWERTUNG -> tableModel.getPositionInArray(UserColumnFactory.RATING);
+//			default -> tableModel.getPositionInArray(UserColumnFactory.BEST_POSITION);
+//		};
+//	}
 
 	/**
 	 * Initialises the model.
@@ -190,9 +188,9 @@ public class PlayerOverviewTable extends FixedColumnsTable implements core.gui.R
 //		tableSorter.initsort();
 	}
 
-	public TableRowSorter<HOTableModel> getTableRowSorter() {
-		return tableModel.getRowSorter();
-	}
+//	public TableRowSorter<HOTableModel> getTableRowSorter() {
+//		return tableModel.getRowSorter();
+//	}
 
 	public PlayerOverviewTableModel getPlayerTableModel(){
 		return tableModel;

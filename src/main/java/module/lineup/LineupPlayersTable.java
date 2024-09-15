@@ -75,18 +75,18 @@ public final class LineupPlayersTable extends FixedColumnsTable implements core.
 		repaint();
 	}
 
-	/**
-	 *Returns the column for sorting
-	 */
-    private int getSortSpalte() {
-		return switch (UserParameter.instance().standardsortierung) {
-			case UserParameter.SORT_NAME -> tableModel.getPositionInArray(UserColumnFactory.NAME);
-			case UserParameter.SORT_AUFGESTELLT -> tableModel.getPositionInArray(UserColumnFactory.LINEUP);
-			case UserParameter.SORT_GRUPPE -> tableModel.getPositionInArray(UserColumnFactory.GROUP);
-			case UserParameter.SORT_BEWERTUNG -> tableModel.getPositionInArray(UserColumnFactory.RATING);
-			default -> tableModel.getPositionInArray(UserColumnFactory.BEST_POSITION);
-		};
-	}
+//	/**
+//	 *Returns the column for sorting
+//	 */
+//    private int getSortSpalte() {
+//		return switch (UserParameter.instance().standardsortierung) {
+//			case UserParameter.SORT_NAME -> tableModel.getPositionInArray(UserColumnFactory.NAME);
+//			case UserParameter.SORT_AUFGESTELLT -> tableModel.getPositionInArray(UserColumnFactory.LINEUP);
+//			case UserParameter.SORT_GRUPPE -> tableModel.getPositionInArray(UserColumnFactory.GROUP);
+//			case UserParameter.SORT_BEWERTUNG -> tableModel.getPositionInArray(UserColumnFactory.RATING);
+//			default -> tableModel.getPositionInArray(UserColumnFactory.BEST_POSITION);
+//		};
+//	}
 
 //	TableSorter getSorter() {
 //		return tableSorter;

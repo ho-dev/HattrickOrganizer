@@ -1,8 +1,6 @@
 package core.gui.comp.table;
 
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
-import module.transfer.ui.sorter.DefaultTableSorter;
-
 import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableCellRenderer;
@@ -93,9 +91,11 @@ public class FixedColumnsTable extends JScrollPane {
         }
 
         //  Add the fixed table to the scroll pane
+        if ( width == 0) width = 60;
         fixed.setPreferredScrollableViewportSize(new Dimension(width, 0));
         setRowHeaderView(fixed);
         setCorner(ScrollPaneConstants.UPPER_LEFT_CORNER, fixed.getTableHeader());
+
     }
 
     private void setTooltipHeader(JTable table, String[] tooltips) {

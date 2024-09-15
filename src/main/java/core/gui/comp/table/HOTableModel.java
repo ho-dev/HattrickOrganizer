@@ -233,19 +233,19 @@ public abstract class HOTableModel extends AbstractTableModel {
 		fireTableCellUpdated(row,column);
 	}
 
-	/**
-	 * 
-	 * @param searchId
-	 * @return
-	 */
-	protected int getColumnIndexOfDisplayedColumn(int searchId) {
-		UserColumn[] tmp = getDisplayedColumns();
-		for (int i = 0; i < tmp.length; i++) {
-			if (tmp[i].getId() == searchId)
-				return i;
-		}
-		return -1;
-	}
+//	/**
+//	 *
+//	 * @param searchId
+//	 * @return
+//	 */
+//	protected int getColumnIndexOfDisplayedColumn(int searchId) {
+//		UserColumn[] tmp = getDisplayedColumns();
+//		for (int i = 0; i < tmp.length; i++) {
+//			if (tmp[i].getId() == searchId)
+//				return i;
+//		}
+//		return -1;
+//	}
 
 	/**
 	 * return the order of the column like old method getSpaltenreihenfolge
@@ -286,10 +286,10 @@ public abstract class HOTableModel extends AbstractTableModel {
 	 */
 	public void setColumnsSize(TableColumnModel tableColumnModel) {
 		final UserColumn[] tmpColumns = getDisplayedColumns();
-		for (int i = 0; i < tmpColumns.length; i++) {
-			var id = tmpColumns[i].getId();
-			tmpColumns[i].setSize(tableColumnModel.getColumn(tableColumnModel.getColumnIndex(id)));
-		}
+        for (UserColumn tmpColumn : tmpColumns) {
+            var id = tmpColumn.getId();
+            tmpColumn.setSize(tableColumnModel.getColumn(tableColumnModel.getColumnIndex(id)));
+        }
 	}
 
 	protected abstract void initData();

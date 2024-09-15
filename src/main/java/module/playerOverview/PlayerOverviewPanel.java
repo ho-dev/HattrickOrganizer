@@ -7,7 +7,6 @@ import core.model.UserParameter;
 import core.model.player.Player;
 
 import java.awt.*;
-import java.awt.event.AdjustmentListener;
 import java.util.Objects;
 
 import javax.swing.*;
@@ -205,14 +204,6 @@ public class PlayerOverviewPanel extends ImagePanel {
 		overviewPanel.add(teamSummaryPanel, BorderLayout.SOUTH);
 
 		return overviewPanel;
-	}
-
-	private void selectRow(JTable table, int row) {
-		if (row > -1) {
-			table.setRowSelectionInterval(row, row);
-		} else {
-			table.clearSelection();
-		}
 	}
 
 	/**

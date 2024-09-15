@@ -10,11 +10,8 @@ import module.lineup.lineup.LineupPositionsPanel;
 import module.lineup.lineup.MatchAndLineupSelectionPanel;
 import module.lineup.lineup.PlayerPositionPanel;
 import module.lineup.ratings.LineupRatingPanel;
-import module.playerOverview.LineupPlayersTableNameColumn;
-
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.AdjustmentListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
