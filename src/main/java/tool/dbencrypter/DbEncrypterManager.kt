@@ -4,14 +4,15 @@ import core.db.backup.HOZip
 import core.db.user.UserManager
 import core.model.HOVerwaltung
 import java.io.File
-import java.security.PublicKey
+import java.security.KeyFactory
 import java.security.SecureRandom
-import java.security.interfaces.ECPublicKey
 import java.security.spec.KeySpec
+import java.security.spec.PKCS8EncodedKeySpec
+import java.security.spec.RSAPublicKeySpec
+import java.security.spec.X509EncodedKeySpec
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.crypto.Cipher
-import javax.crypto.SecretKey
 import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.PBEKeySpec
@@ -24,7 +25,15 @@ private val s = listOf("script", "data", "backup", "log", "properties")
 
 class DbEncrypterManager(private val userManager: UserManager) {
 
-	val publicKey = "MCowBQYDK2VwAyEAXge8ZKacaVdVvws1R/5teB0/Y8rDzr05Sk/uBhDwUhw="
+	private val publicKey = "-----BEGIN PUBLIC KEY-----\n" +
+		"MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAiW37V9KL7yJ09U5N4i46\n" +
+		"Ab7SZfUZIrIXpGwG33gVPRyTk9snKMxVhSdM1ur6D5AWgTHZwoHAjkDFmcMVAd7j\n" +
+		"8SlI/7g5Tnh/B2zpaEdF1Sk/ZaCD7jX6BH5f+graGzR73Axu1zDdXyf8GWusGxUn\n" +
+		"vAympZUeKk5vzeAJkNITo4+C/tT+7oMjAv+yMqeiMxMUSDVPxZUxVWMYeF6RnGhE\n" +
+		"ClaBHjbNh7AyvGF5/GePtG5w6zKYB5wsO00WmWtDCeLGCPbZQOEdSGE2A9Ihv+HE\n" +
+		"SFybbNgpf8Ye0O6+GqtySgTKg2tfHQAXdJ9QHxMEtRH9ZkON4hFh+nRtewGrQmKM\n" +
+		"zQIDAQAB\n" +
+		"-----END PUBLIC KEY-----\n"
 
 	fun createZipName():String {
 		val sdf = SimpleDateFormat("yyyy-MM-dd")
@@ -33,7 +42,7 @@ class DbEncrypterManager(private val userManager: UserManager) {
 
 	fun encrypt() {
 		val hoZip = zipDatabase()
-		createSecretKey(hoZip.path)
+		encryptFile(hoZip.path)
 	}
 
 	private fun zipDatabase():HOZip {
@@ -50,8 +59,33 @@ class DbEncrypterManager(private val userManager: UserManager) {
 		return hoZip
 	}
 
-	private fun createSecretKey(path:String):String {
+	private fun encryptFile(path:String):String {
+		val randomSecret = encryptFileSymmetrically(path)
+		encryptKeyAsymmetrically(randomSecret)
+		return Base64.getEncoder().encodeToString(randomSecret.toByteArray())
+	}
 
+	private fun encryptKeyAsymmetrically(randomSecret: String) {
+		val normalized = publicKey
+			.replace("-----BEGIN PUBLIC KEY-----", "")
+			.replace(System.lineSeparator(), "")
+			.replace("-----END PUBLIC KEY-----", "")
+		val decodedKey = Base64.getDecoder().decode(normalized)
+		val encodedKeySpec = X509EncodedKeySpec(decodedKey)
+		val keyFactory = KeyFactory.getInstance("RSA")
+		val encodedKey = keyFactory.generatePublic(encodedKeySpec)
+
+		// Vanilla JDK does not support ECC, it seems.
+		val asymCipher = Cipher.getInstance("RSA")
+		asymCipher.init(Cipher.ENCRYPT_MODE, encodedKey)
+		val encryptedKey = asymCipher.doFinal(randomSecret.toByteArray())
+
+		val keyFile = kotlin.io.path.createTempFile(createZipName() + "-key", ".txt")
+		//keyFile.writeText(Base64.getEncoder().encodeToString(encryptedKey))
+		keyFile.writeText(String(encryptedKey))
+	}
+
+	private fun encryptFileSymmetrically(path: String): String {
 		val secureRandom = SecureRandom()
 		val iv = ByteArray(16)
 		secureRandom.nextBytes(iv)
@@ -76,19 +110,8 @@ class DbEncrypterManager(private val userManager: UserManager) {
 		val encryptedFile = kotlin.io.path.createTempFile(createZipName() + "-enc", ".zip")
 		encryptedFile.writeBytes(cipherText)
 
-		val decodedKey = Base64.getDecoder().decode(publicKey)
-		//val originalKey: PublicKey = ECPublicKeyImpl()
-
-		// Vanilla JDK does not support ECC, it seems.
-		val asymCipher = Cipher.getInstance("EC")
-		//asymCipher.init(Cipher.ENCRYPT_MODE, originalKey)
-		val encryptedKey = asymCipher.doFinal(randomSecret.toByteArray())
-
-
-		val keyFile = kotlin.io.path.createTempFile(createZipName() + "-key", ".txt")
-		keyFile.writeText(Base64.getEncoder().encodeToString(encryptedKey))
-
-		return Base64.getEncoder().encodeToString(randomSecret.toByteArray())
+		// Retrn random secret we just generated to encrypt
+		return randomSecret
 	}
 }
 
