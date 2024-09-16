@@ -7,6 +7,7 @@ import javax.swing.JFrame
 internal class DbEncrypterDialog(private var owner:JFrame): JDialog(owner, true) {
 
 	init {
+		setSize(450, 300)
 		defaultCloseOperation = DISPOSE_ON_CLOSE
 		initComponents()
 	}
@@ -15,8 +16,6 @@ internal class DbEncrypterDialog(private var owner:JFrame): JDialog(owner, true)
 		val mainPanel = DbEncrypterPanel()
 		contentPane.layout = BorderLayout()
 		contentPane.add(mainPanel, BorderLayout.CENTER)
-
-		pack()
 		isVisible = true
 	}
 }

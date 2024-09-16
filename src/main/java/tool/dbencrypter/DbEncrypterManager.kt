@@ -4,11 +4,14 @@ import core.db.backup.HOZip
 import core.db.user.UserManager
 import core.model.HOVerwaltung
 import java.io.File
+import java.security.PublicKey
 import java.security.SecureRandom
+import java.security.interfaces.ECPublicKey
 import java.security.spec.KeySpec
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.crypto.Cipher
+import javax.crypto.SecretKey
 import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.PBEKeySpec
@@ -20,6 +23,8 @@ import kotlin.io.path.writeText
 private val s = listOf("script", "data", "backup", "log", "properties")
 
 class DbEncrypterManager(private val userManager: UserManager) {
+
+	val publicKey = "MCowBQYDK2VwAyEAXge8ZKacaVdVvws1R/5teB0/Y8rDzr05Sk/uBhDwUhw="
 
 	fun createZipName():String {
 		val sdf = SimpleDateFormat("yyyy-MM-dd")
@@ -71,8 +76,17 @@ class DbEncrypterManager(private val userManager: UserManager) {
 		val encryptedFile = kotlin.io.path.createTempFile(createZipName() + "-enc", ".zip")
 		encryptedFile.writeBytes(cipherText)
 
+		val decodedKey = Base64.getDecoder().decode(publicKey)
+		//val originalKey: PublicKey = ECPublicKeyImpl()
+
+		// Vanilla JDK does not support ECC, it seems.
+		val asymCipher = Cipher.getInstance("EC")
+		//asymCipher.init(Cipher.ENCRYPT_MODE, originalKey)
+		val encryptedKey = asymCipher.doFinal(randomSecret.toByteArray())
+
+
 		val keyFile = kotlin.io.path.createTempFile(createZipName() + "-key", ".txt")
-		keyFile.writeText(Base64.getEncoder().encodeToString(randomSecret.toByteArray()))
+		keyFile.writeText(Base64.getEncoder().encodeToString(encryptedKey))
 
 		return Base64.getEncoder().encodeToString(randomSecret.toByteArray())
 	}
