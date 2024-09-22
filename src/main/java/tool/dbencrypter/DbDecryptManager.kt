@@ -14,6 +14,7 @@ import javax.crypto.spec.SecretKeySpec
 class DbDecryptManager {
 
 	// TODO Extract private key for tests.
+	// (Don't worry, this key below is just for testing, the real key won't be published!)
 	private val privateKey = "-----BEGIN PRIVATE KEY-----\n" +
 		"MIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCJbftX0ovvInT1\n" +
 		"Tk3iLjoBvtJl9RkishekbAbfeBU9HJOT2ycozFWFJ0zW6voPkBaBMdnCgcCOQMWZ\n" +
