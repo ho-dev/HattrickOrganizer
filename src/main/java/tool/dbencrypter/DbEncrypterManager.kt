@@ -7,8 +7,6 @@ import java.io.File
 import java.security.KeyFactory
 import java.security.SecureRandom
 import java.security.spec.KeySpec
-import java.security.spec.PKCS8EncodedKeySpec
-import java.security.spec.RSAPublicKeySpec
 import java.security.spec.X509EncodedKeySpec
 import java.text.SimpleDateFormat
 import java.util.*
@@ -17,6 +15,7 @@ import javax.crypto.SecretKeyFactory
 import javax.crypto.spec.IvParameterSpec
 import javax.crypto.spec.PBEKeySpec
 import javax.crypto.spec.SecretKeySpec
+import kotlin.io.path.pathString
 import kotlin.io.path.writeBytes
 import kotlin.io.path.writeText
 
@@ -81,8 +80,8 @@ class DbEncrypterManager(private val userManager: UserManager) {
 		val encryptedKey = asymCipher.doFinal(randomSecret.toByteArray())
 
 		val keyFile = kotlin.io.path.createTempFile(createZipName() + "-key", ".txt")
-		//keyFile.writeText(Base64.getEncoder().encodeToString(encryptedKey))
-		keyFile.writeText(String(encryptedKey))
+		println("Key File: ${keyFile.pathString}")
+		keyFile.writeText(Base64.getEncoder().encodeToString(encryptedKey))
 	}
 
 	private fun encryptFileSymmetrically(path: String): String {
@@ -108,16 +107,16 @@ class DbEncrypterManager(private val userManager: UserManager) {
 		System.arraycopy(cipherText, 0, encryptedData, iv.size, cipherText.size)
 
 		val encryptedFile = kotlin.io.path.createTempFile(createZipName() + "-enc", ".zip")
-		encryptedFile.writeBytes(cipherText)
+		println("Encrypted DB: ${encryptedFile.pathString}")
+		encryptedFile.writeBytes(encryptedData)
 
-		// Retrn random secret we just generated to encrypt
+		// Return random secret we just generated to encrypt
 		return randomSecret
 	}
 }
 
 fun main() {
 	HOVerwaltung.instance().loadLatestHoModel()
-//	System.setProperty("AppData", "/home/sebastien/dev/HO-work/db")
 	val encrypter = DbEncrypterManager(UserManager.instance())
 	encrypter.encrypt()
 }
