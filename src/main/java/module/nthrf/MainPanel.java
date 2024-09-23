@@ -1,16 +1,12 @@
 package module.nthrf;
 
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 
-import java.awt.BorderLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
-
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
 
 
 
@@ -41,17 +37,16 @@ public class MainPanel extends JPanel implements ActionListener {
      */
     private void buildGui() {
     	setLayout(new BorderLayout());
-    	HOVerwaltung hoV = HOVerwaltung.instance();
     	JTextArea ta = new JTextArea();
-    	ta.append(hoV.getLanguageString("nthrf.hint1")+"\n");
-    	ta.append(hoV.getLanguageString("nthrf.hint2")+"\n");
-    	ta.append(hoV.getLanguageString("nthrf.hint3")+"\n");
-    	ta.append(hoV.getLanguageString("nthrf.hint4")+" '");
-    	ta.append(hoV.getLanguageString("Start")+"' ");
-    	ta.append(hoV.getLanguageString("nthrf.hint5"));
+    	ta.append(TranslationFacility.tr("nthrf.hint1")+"\n");
+    	ta.append(TranslationFacility.tr("nthrf.hint2")+"\n");
+    	ta.append(TranslationFacility.tr("nthrf.hint3")+"\n");
+    	ta.append(TranslationFacility.tr("nthrf.hint4")+" '");
+    	ta.append(TranslationFacility.tr("Start")+"' ");
+    	ta.append(TranslationFacility.tr("nthrf.hint5"));
     	ta.setEditable(false);
     	add(new JScrollPane(ta), BorderLayout.CENTER);
-    	btnStart = new JButton(HOVerwaltung.instance().getLanguageString("Start"));
+    	btnStart = new JButton(TranslationFacility.tr("Start"));
     	btnStart.addActionListener(this);
     	add(btnStart, BorderLayout.SOUTH);
     }

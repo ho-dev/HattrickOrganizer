@@ -5,16 +5,22 @@ import core.gui.model.BaseTableModel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
-import core.training.FutureTrainingManager;
 import core.model.player.SkillChange;
+import core.training.FutureTrainingManager;
 import core.training.TrainingPreviewPlayers;
 import module.training.ui.model.TrainingModel;
 import module.training.ui.renderer.TrainingRecapRenderer;
-import java.awt.Color;
-import java.awt.Component;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.time.temporal.ChronoUnit;
@@ -22,11 +28,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Vector;
-import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableModel;
 
 
 public class TrainingRecapTable extends JScrollPane {
@@ -45,11 +46,11 @@ public class TrainingRecapTable extends JScrollPane {
      */
     Vector<String> getColumns() {
         var columns = new Vector<String>();
-        columns.add(HOVerwaltung.instance().getLanguageString("Spieler"));
-        columns.add(HOVerwaltung.instance().getLanguageString("ls.player.age"));
-        columns.add(HOVerwaltung.instance().getLanguageString("BestePosition"));
+        columns.add(TranslationFacility.tr("Spieler"));
+        columns.add(TranslationFacility.tr("ls.player.age"));
+        columns.add(TranslationFacility.tr("BestePosition"));
         columns.add("Speed");
-        columns.add(HOVerwaltung.instance().getLanguageString("ls.player.id"));
+        columns.add(TranslationFacility.tr("ls.player.id"));
 
         var actualWeek = HOVerwaltung.instance().getModel().getBasics().getHattrickWeek(); //.getSpieltag();
 
@@ -69,7 +70,7 @@ public class TrainingRecapTable extends JScrollPane {
             actualWeek = actualWeek.plus(7, ChronoUnit.DAYS);
         }
 
-        columns.add(HOVerwaltung.instance().getLanguageString("ls.player.id"));
+        columns.add(TranslationFacility.tr("ls.player.id"));
         return columns;
     }
 

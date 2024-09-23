@@ -12,22 +12,14 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.match.*;
-import core.model.match.MatchLineupPosition;
 import core.model.player.IMatchRoleID;
 import core.util.Helper;
 
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import javax.swing.*;
+import java.awt.*;
 import java.util.List;
-
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 
 /**
  * Zeigt die Stärken eines Matches an
@@ -130,7 +122,7 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 
 			String name4matchtyp = info.getMatchType().getName();
 			if ((details.getZuschauer() <= 0) && (info.getMatchType().getSourceString().equals("hattrick"))) {
-				name4matchtyp += (" ( " + HOVerwaltung.instance().getLanguageString("Reload_Match") + " )");
+				name4matchtyp += (" ( " + TranslationFacility.tr("Reload_Match") + " )");
 			}
 			matchtypLabel.setText(name4matchtyp);
 
@@ -295,7 +287,7 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 		layout.setConstraints(label, constraints);
 		panel.add(label);
 
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("Zuschauer"));
+		label = new JLabel(TranslationFacility.tr("Zuschauer"));
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.weightx = 0.0;
@@ -316,7 +308,7 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 		layout.setConstraints(zuschauerLabel, constraints);
 		panel.add(zuschauerLabel);
 
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.match.weather"));
+		label = new JLabel(TranslationFacility.tr("ls.match.weather"));
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.weightx = 0.0;
@@ -349,7 +341,7 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 		layout.setConstraints(label, constraints);
 		panel.add(label);
 
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("Heim"));
+		label = new JLabel(TranslationFacility.tr("Heim"));
 		label.setFont(label.getFont().deriveFont(Font.BOLD, label.getFont().getSize() + 1));
 		label.setHorizontalAlignment(SwingConstants.LEFT);
 		constraints.anchor = GridBagConstraints.CENTER;
@@ -361,7 +353,7 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 		layout.setConstraints(label, constraints);
 		panel.add(label);
 
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("Gast"));
+		label = new JLabel(TranslationFacility.tr("Gast"));
 		label.setFont(label.getFont().deriveFont(Font.BOLD, label.getFont().getSize() + 1));
 		label.setHorizontalAlignment(SwingConstants.LEFT);
 		constraints.anchor = GridBagConstraints.CENTER;
@@ -374,7 +366,7 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 		panel.add(label);
 
 		// Teams mit Ergebnis
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.match.result"));
+		label = new JLabel(TranslationFacility.tr("ls.match.result"));
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.weightx = 0.0;
@@ -426,7 +418,7 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 		panel.add(gastTeamToreLabel);
 
 		// Sterne
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("Rating"));
+		label = new JLabel(TranslationFacility.tr("Rating"));
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.weightx = 0.0;
@@ -475,8 +467,7 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 		panel.add(gastSterneLabel);
 
 		// HatStats
-		label = new JLabel(HOVerwaltung.instance()
-				.getLanguageString("ls.match.ratingtype.hatstats"));
+		label = new JLabel(TranslationFacility.tr("ls.match.ratingtype.hatstats"));
 		add(panel, label, layout, constraints, 0, 6);
 		heimTeamHatstatsLabel = new JLabel();
 		add(panel, heimTeamHatstatsLabel, layout, constraints, 1, 6);
@@ -484,7 +475,7 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 		add(panel, gastTeamHatstatsLabel, layout, constraints, 4, 6);
 
 		// LoddarStats
-		label = new JLabel(HOVerwaltung.instance().getLanguageString(
+		label = new JLabel(TranslationFacility.tr(
 				"ls.match.ratingtype.loddarstats"));
 		add(panel, label, layout, constraints, 0, 7);
 		heimTeamLoddarLabel = new JLabel();
@@ -493,7 +484,7 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 		add(panel, gastTeamLoddarLabel, layout, constraints, 4, 7);
 
 		// Einstellung
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.team.teamattitude"));
+		label = new JLabel(TranslationFacility.tr("ls.team.teamattitude"));
 		add(panel, label, layout, constraints, 0, 8);
 		heimEinstellungLabel = new JLabel();
 		add(panel, heimEinstellungLabel, layout, constraints, 1, 8);
@@ -501,7 +492,7 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 		add(panel, gastEinstellungLabel, layout, constraints, 4, 8);
 
 		// Taktiktyp
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.team.tactic"));
+		label = new JLabel(TranslationFacility.tr("ls.team.tactic"));
 		add(panel, label, layout, constraints, 0, 9);
 		heimTaktikLabel = new JLabel();
 		add(panel, heimTaktikLabel, layout, constraints, 1, 9);
@@ -509,7 +500,7 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 		add(panel, gastTaktikLabel, layout, constraints, 4, 9);
 
 		// Taktikskill
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.team.tacticalskill"));
+		label = new JLabel(TranslationFacility.tr("ls.team.tacticalskill"));
 		add(panel, label, layout, constraints, 0, 10);
 		heimTaktikskillLabel = new JLabel();
 		add(panel, heimTaktikskillLabel, layout, constraints, 1, 10);
@@ -517,7 +508,7 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 		add(panel, gastTaktikskillLabel, layout, constraints, 4, 10);
 		
 		// StyleOfPlay
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.team.styleofPlay"));
+		label = new JLabel(TranslationFacility.tr("ls.team.styleofPlay"));
 		add(panel, label, layout, constraints, 0, 11);
 		homeStyleOfPlayLabel = new JLabel();
 		add(panel, homeStyleOfPlayLabel, layout, constraints, 1, 11);
@@ -525,7 +516,7 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 		add(panel, awayStyleOfPlayLabel, layout, constraints, 4, 11);
 
 		// Stimmung
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.team.teamspirit"));
+		label = new JLabel(TranslationFacility.tr("ls.team.teamspirit"));
 		add(panel, label, layout, constraints, 0, 12);
 		heimStimmungLabel = new JLabel();
 		add(panel, heimStimmungLabel, layout, constraints, 1, 12);
@@ -533,7 +524,7 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 		add(panel, gastStimmungLabel, layout, constraints, 4, 12);
 
 		// Selbstvertrauen
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.team.confidence"));
+		label = new JLabel(TranslationFacility.tr("ls.team.confidence"));
 		label.setPreferredSize(new Dimension(label.getPreferredSize().width + 10, label
 				.getPreferredSize().height));
 		add(panel, label, layout, constraints, 0, 13);
@@ -618,9 +609,9 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 
 	private String getEinstellungText(int einstellung) {
 		return switch (einstellung) {
-			case IMatchDetails.EINSTELLUNG_NORMAL -> HOVerwaltung.instance().getLanguageString("ls.team.teamattitude.normal");
-			case IMatchDetails.EINSTELLUNG_PIC -> HOVerwaltung.instance().getLanguageString("ls.team.teamattitude.playitcool");
-			case IMatchDetails.EINSTELLUNG_MOTS -> HOVerwaltung.instance().getLanguageString(
+			case IMatchDetails.EINSTELLUNG_NORMAL -> TranslationFacility.tr("ls.team.teamattitude.normal");
+			case IMatchDetails.EINSTELLUNG_PIC -> TranslationFacility.tr("ls.team.teamattitude.playitcool");
+			case IMatchDetails.EINSTELLUNG_MOTS -> TranslationFacility.tr(
 					"ls.team.teamattitude.matchoftheseason");
 			default -> "";
 		};

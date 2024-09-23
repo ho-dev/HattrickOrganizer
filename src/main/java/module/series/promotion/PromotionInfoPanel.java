@@ -8,11 +8,12 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.misc.Basics;
 
 import javax.swing.*;
-import javax.swing.border.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.Collections;
 import java.util.List;
@@ -73,16 +74,16 @@ public class PromotionInfoPanel extends ImagePanel {
         final Basics basics = DBManager.instance().getBasics(HOVerwaltung.instance().getId());
         final JButton downloadLeagueButton = new JButton(ImageUtilities.getDownloadIcon(getColor(HOColorName.DOWNLOAD_MATCH), 14, 14));
         this.add(downloadLeagueButton);
-        final JLabel downloadLabel = new JLabel(verwaltung.getLanguageString("pd_status.download.unavailable.data"));
+        final JLabel downloadLabel = new JLabel(TranslationFacility.tr("pd_status.download.unavailable.data"));
         downloadLabel.setFont(defaultFont);
         downloadLabel.setForeground(fgColor);
         this.add(downloadLabel);
 
-        downloadLeagueButton.setToolTipText(verwaltung.getLanguageString("pd_status.download.data"));
+        downloadLeagueButton.setToolTipText(TranslationFacility.tr("pd_status.download.data"));
         downloadLeagueButton.addActionListener(e -> {
             int choice = JOptionPane.showConfirmDialog(HOMainFrame.instance(),
-                    verwaltung.getLanguageString("pd_status.download.warning.message"),
-                    verwaltung.getLanguageString("pd_status.download.warning.title"),
+                    TranslationFacility.tr("pd_status.download.warning.message"),
+                    TranslationFacility.tr("pd_status.download.warning.title"),
                     JOptionPane.OK_CANCEL_OPTION,
                     JOptionPane.QUESTION_MESSAGE);
 
@@ -90,7 +91,7 @@ public class PromotionInfoPanel extends ImagePanel {
                 promotionHandler.downloadLeagueData(basics.getLiga());
                 downloadLeagueButton.setEnabled(false);
                 downloadLeagueButton.setIcon(ThemeManager.getIcon(HOIconName.SPINNER));
-                downloadLabel.setText(verwaltung.getLanguageString("pd_status.download.unavailable.loading"));
+                downloadLabel.setText(TranslationFacility.tr("pd_status.download.unavailable.loading"));
                 this.revalidate();
                 this.repaint();
             }
@@ -115,7 +116,7 @@ public class PromotionInfoPanel extends ImagePanel {
         this.removeAll();
 
         final Basics basics = DBManager.instance().getBasics(HOVerwaltung.instance().getId());
-        JLabel processingLabel = new JLabel(HOVerwaltung.instance().getLanguageString(
+        JLabel processingLabel = new JLabel(TranslationFacility.tr(
                 "pd_status.download.pending",
                 basics.getLiga()));
         processingLabel.setFont(defaultFont);
@@ -143,9 +144,9 @@ public class PromotionInfoPanel extends ImagePanel {
         }
 
         if (leagueDetails.isEmpty()) {
-            return HOVerwaltung.instance().getLanguageString("pd_status." + leaguePromotionInfo.status.name());
+            return TranslationFacility.tr("pd_status." + leaguePromotionInfo.status.name());
         } else {
-            return HOVerwaltung.instance().getLanguageString("pd_status." + leaguePromotionInfo.status.name(),
+            return TranslationFacility.tr("pd_status." + leaguePromotionInfo.status.name(),
                     String.join(", ", leagueDetails),
                     String.join(", ", teamDetails.stream()
                             .map(stringStringMap -> stringStringMap.get("TeamName"))

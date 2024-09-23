@@ -6,24 +6,30 @@ import core.constants.player.Specialty;
 import core.db.AbstractTable;
 import core.db.DBManager;
 import core.model.*;
+import core.model.enums.MatchType;
 import core.model.match.MatchLineupPosition;
 import core.model.match.MatchLineupTeam;
-import core.model.enums.MatchType;
 import core.net.MyConnector;
 import core.net.OnlineWorker;
 import core.rating.RatingPredictionModel;
 import core.training.*;
-import core.util.*;
+import core.util.HODateTime;
+import core.util.HOLogger;
+import core.util.HelperWrapper;
+import core.util.Htms;
+
 import java.time.Duration;
 import java.util.*;
 
-import static core.constants.player.PlayerSkill.KEEPER;
-import static core.constants.player.PlayerSkill.WINGER;
-import static core.model.player.MatchRoleID.*;
+import static core.constants.player.PlayerSkill.*;
+import static core.model.player.MatchRoleID.getPosition;
+import static core.model.player.MatchRoleID.isFieldMatchRoleId;
 import static java.lang.Integer.MAX_VALUE;
 import static java.lang.Integer.min;
-import static core.constants.player.PlayerSkill.*;
-import static java.lang.Math.*;
+import static java.lang.Math.max;
+import static java.lang.Math.pow;
+import static java.lang.Math.round;
+import static java.lang.Math.sqrt;
 
 public class Player extends AbstractTable.Storable {
 
@@ -602,14 +608,14 @@ public class Player extends AbstractTable.Storable {
         StringBuilder ret = new StringBuilder();
         ret.append(age.seasons);
         ret.append(" ");
-        ret.append(HOVerwaltung.instance().getLanguageString("ls.player.age.years"));
+        ret.append(TranslationFacility.tr("ls.player.age.years"));
         ret.append(" ");
         ret.append(age.days);
         ret.append(" ");
-        ret.append(HOVerwaltung.instance().getLanguageString("ls.player.age.days"));
+        ret.append(TranslationFacility.tr("ls.player.age.days"));
         if (birthday) {
             ret.append(" (");
-            ret.append(HOVerwaltung.instance().getLanguageString("ls.player.age.birthday"));
+            ret.append(TranslationFacility.tr("ls.player.age.birthday"));
             ret.append(")");
         }
         return ret.toString();
@@ -1172,7 +1178,7 @@ public class Player extends AbstractTable.Storable {
         if (s.equals(Specialty.NO_SPECIALITY)) {
             return EMPTY;
         } else {
-            return HOVerwaltung.instance().getLanguageString("ls.player.speciality." + s.toString().toLowerCase(Locale.ROOT));
+            return TranslationFacility.tr("ls.player.speciality." + s.toString().toLowerCase(Locale.ROOT));
         }
     }
 
@@ -1996,7 +2002,7 @@ public class Player extends AbstractTable.Storable {
             //
             if (!t.endsBefore(nextWeek)) {
                 if (ret != null) {
-                    ret = HOVerwaltung.instance().getLanguageString("trainpre.individual.prios");
+                    ret = TranslationFacility.tr("trainpre.individual.prios");
                     break;
                 }
                 ret = t.getPriority().toString();

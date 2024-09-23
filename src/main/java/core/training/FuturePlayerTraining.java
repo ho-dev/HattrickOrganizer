@@ -1,8 +1,9 @@
 package core.training;
 
 import core.db.AbstractTable;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.util.HODateTime;
+
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -86,10 +87,10 @@ public class FuturePlayerTraining extends AbstractTable.Storable {
 
         public String toString() {
             return switch (value) {
-                case 3 -> HOVerwaltung.instance().getLanguageString("trainpre.fulltrain");
-                case 2 -> HOVerwaltung.instance().getLanguageString("trainpre.partialtrain");
-                case 1 -> HOVerwaltung.instance().getLanguageString("trainpre.osmosistrain");
-                case 0 -> HOVerwaltung.instance().getLanguageString("trainpre.notrain");
+                case 3 -> TranslationFacility.tr("trainpre.fulltrain");
+                case 2 -> TranslationFacility.tr("trainpre.partialtrain");
+                case 1 -> TranslationFacility.tr("trainpre.osmosistrain");
+                case 0 -> TranslationFacility.tr("trainpre.notrain");
                 default -> "";
             };
         }

@@ -1,7 +1,6 @@
 package module.youth;
 
-import core.model.HOVerwaltung;
-import core.module.config.ModuleConfig;
+import core.model.TranslationFacility;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,9 +14,9 @@ public class YouthPanel extends JPanel {
         setLayout(new BorderLayout());
         youthPlayerView = new YouthPlayerView();
         var tabbedPane = new JTabbedPane();
-        tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("ls.youth.player"), this.youthPlayerView);
+        tabbedPane.addTab(TranslationFacility.tr("ls.youth.player"), this.youthPlayerView);
         youthTrainingView = new YouthTrainingView();
-        tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("ls.youth.training"), this.youthTrainingView);
+        tabbedPane.addTab(TranslationFacility.tr("ls.youth.training"), this.youthTrainingView);
         add(tabbedPane, BorderLayout.CENTER);
     }
 

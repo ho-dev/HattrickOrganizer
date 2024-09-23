@@ -7,23 +7,16 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.player.MatchRoleID;
 import core.util.Helper;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.GridLayout;
+import javax.swing.*;
+import javax.swing.table.TableCellRenderer;
+import java.awt.*;
 import java.text.DecimalFormat;
 import java.util.StringTokenizer;
-
-import javax.swing.Icon;
-import javax.swing.JLabel;
-import javax.swing.JTable;
-import javax.swing.SwingConstants;
-import javax.swing.table.TableCellRenderer;
 
 class MyTableCellRenderer  implements TableCellRenderer{
 	private Color gelb;
@@ -55,7 +48,7 @@ class MyTableCellRenderer  implements TableCellRenderer{
 	{
         JLabel label = new JLabel();
 
-		if(table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.name"))) {
+		if(table.getColumnName(column).equals(TranslationFacility.tr("ls.player.name"))) {
 			int i = 0;
 			int spezWert = 0;
 			StringTokenizer tk = new StringTokenizer(table.getValueAt(row,column).toString(),";");
@@ -82,20 +75,20 @@ class MyTableCellRenderer  implements TableCellRenderer{
 			label.setHorizontalAlignment(SwingConstants.CENTER);
 			label.setBackground(table.getBackground());
 		}
-		else if(table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("Gruppe")))	{
+		else if(table.getColumnName(column).equals(TranslationFacility.tr("Gruppe")))	{
 
 
 			String group = ((String)table.getValueAt(row,column));
 			if(group != null && group.length() > 3)
 				label.setIcon(ThemeManager.getIcon(group));
 			label.setBackground(table.getBackground());
-		} else if(table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("BestePosition")))		{
+		} else if(table.getColumnName(column).equals(TranslationFacility.tr("BestePosition")))		{
 			// we parse back into best position and best rating value
 			byte tmpPos = ((Float)table.getValueAt(row,column)).byteValue();
 			float ratingValue = ((Float) table.getValueAt(row, column) - tmpPos) * 1000;
 			label.setText(MatchRoleID.getNameForPosition(tmpPos) + " ("+ String.format("%.1f", ratingValue) +"%)");
 			label.setBackground(table.getBackground());
-		} else if(table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.short_motherclub"))) {
+		} else if(table.getColumnName(column).equals(TranslationFacility.tr("ls.player.short_motherclub"))) {
 			double skillwert = 0;
 			String skillwertS;
 			try	{
@@ -120,18 +113,18 @@ class MyTableCellRenderer  implements TableCellRenderer{
 				label.setBackground(table.getBackground());
 		}
 		else if(column<19 &&
-				(table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.short_experience"))
-				|| table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.short_leadership"))
-				|| table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.short_form"))
-				|| table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.skill_short.stamina"))
-				|| table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.skill_short.keeper"))
-				|| table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.skill_short.defending"))
-				|| table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.skill_short.playmaking"))
-				|| table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.skill_short.passing"))
-				|| table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.skill_short.winger"))
-				|| table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.skill_short.scoring"))
-				|| table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.skill_short.setpieces"))
-				|| table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.short_loyalty")))
+				(table.getColumnName(column).equals(TranslationFacility.tr("ls.player.short_experience"))
+				|| table.getColumnName(column).equals(TranslationFacility.tr("ls.player.short_leadership"))
+				|| table.getColumnName(column).equals(TranslationFacility.tr("ls.player.short_form"))
+				|| table.getColumnName(column).equals(TranslationFacility.tr("ls.player.skill_short.stamina"))
+				|| table.getColumnName(column).equals(TranslationFacility.tr("ls.player.skill_short.keeper"))
+				|| table.getColumnName(column).equals(TranslationFacility.tr("ls.player.skill_short.defending"))
+				|| table.getColumnName(column).equals(TranslationFacility.tr("ls.player.skill_short.playmaking"))
+				|| table.getColumnName(column).equals(TranslationFacility.tr("ls.player.skill_short.passing"))
+				|| table.getColumnName(column).equals(TranslationFacility.tr("ls.player.skill_short.winger"))
+				|| table.getColumnName(column).equals(TranslationFacility.tr("ls.player.skill_short.scoring"))
+				|| table.getColumnName(column).equals(TranslationFacility.tr("ls.player.skill_short.setpieces"))
+				|| table.getColumnName(column).equals(TranslationFacility.tr("ls.player.short_loyalty")))
 				)
 		{
 			double skillwert = 0;
@@ -150,9 +143,9 @@ class MyTableCellRenderer  implements TableCellRenderer{
 			Icon ii =  ImageUtilities.getImageIcon4Change(changeWert,true);
 			label = new JLabel(""+skillWertNew,ii,SwingConstants.CENTER);
 			label.setHorizontalTextPosition(SwingConstants.LEADING);
-			if(table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.short_experience"))
-				|| table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.short_leadership"))
-				|| table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.short_form"))
+			if(table.getColumnName(column).equals(TranslationFacility.tr("ls.player.short_experience"))
+				|| table.getColumnName(column).equals(TranslationFacility.tr("ls.player.short_leadership"))
+				|| table.getColumnName(column).equals(TranslationFacility.tr("ls.player.short_form"))
 				)
 			{
 				label.setBackground(gruen);
@@ -164,25 +157,25 @@ class MyTableCellRenderer  implements TableCellRenderer{
 
 		}
 		else if(column>=19 &&
-				(table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.position_short.centraldefendertowardswing"))
-				|| table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.position_short.centraldefenderoffensive"))
-				|| table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingbacktowardsmiddle"))
-				|| table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingbackdefensive"))
-				|| table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingbackoffensive"))
-				|| table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.position_short.innermidfieldertowardswing"))
-				|| table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.position_short.innermidfielderdefensive"))
-				|| table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.position_short.innermidfielderoffensive"))
-				|| table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingertowardsmiddle"))
-				|| table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingeroffensive"))
-				|| table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingerdefensive"))
-				|| table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.position_short.forwarddefensive"))
-				|| table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.position_short.keeper"))
-				|| table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.position_short.centraldefender"))
-				|| table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingback"))
-				|| table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.position_short.innermidfielder"))
-				|| table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.position_short.winger"))
-				|| table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.position_short.forward"))
-				|| table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.position_short.forwardtowardswing")))
+				(table.getColumnName(column).equals(TranslationFacility.tr("ls.player.position_short.centraldefendertowardswing"))
+				|| table.getColumnName(column).equals(TranslationFacility.tr("ls.player.position_short.centraldefenderoffensive"))
+				|| table.getColumnName(column).equals(TranslationFacility.tr("ls.player.position_short.wingbacktowardsmiddle"))
+				|| table.getColumnName(column).equals(TranslationFacility.tr("ls.player.position_short.wingbackdefensive"))
+				|| table.getColumnName(column).equals(TranslationFacility.tr("ls.player.position_short.wingbackoffensive"))
+				|| table.getColumnName(column).equals(TranslationFacility.tr("ls.player.position_short.innermidfieldertowardswing"))
+				|| table.getColumnName(column).equals(TranslationFacility.tr("ls.player.position_short.innermidfielderdefensive"))
+				|| table.getColumnName(column).equals(TranslationFacility.tr("ls.player.position_short.innermidfielderoffensive"))
+				|| table.getColumnName(column).equals(TranslationFacility.tr("ls.player.position_short.wingertowardsmiddle"))
+				|| table.getColumnName(column).equals(TranslationFacility.tr("ls.player.position_short.wingeroffensive"))
+				|| table.getColumnName(column).equals(TranslationFacility.tr("ls.player.position_short.wingerdefensive"))
+				|| table.getColumnName(column).equals(TranslationFacility.tr("ls.player.position_short.forwarddefensive"))
+				|| table.getColumnName(column).equals(TranslationFacility.tr("ls.player.position_short.keeper"))
+				|| table.getColumnName(column).equals(TranslationFacility.tr("ls.player.position_short.centraldefender"))
+				|| table.getColumnName(column).equals(TranslationFacility.tr("ls.player.position_short.wingback"))
+				|| table.getColumnName(column).equals(TranslationFacility.tr("ls.player.position_short.innermidfielder"))
+				|| table.getColumnName(column).equals(TranslationFacility.tr("ls.player.position_short.winger"))
+				|| table.getColumnName(column).equals(TranslationFacility.tr("ls.player.position_short.forward"))
+				|| table.getColumnName(column).equals(TranslationFacility.tr("ls.player.position_short.forwardtowardswing")))
 				)
 		{
 			int i = 0;
@@ -228,12 +221,12 @@ class MyTableCellRenderer  implements TableCellRenderer{
 			label.add(wertNeu);
 			label.add(wertAlt);
 
-			if(table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.position_short.keeper"))
-				|| table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.position_short.centraldefender"))
-				|| table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingback"))
-				|| table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.position_short.innermidfielder"))
-				|| table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.position_short.winger"))
-				|| table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.position_short.forward"))
+			if(table.getColumnName(column).equals(TranslationFacility.tr("ls.player.position_short.keeper"))
+				|| table.getColumnName(column).equals(TranslationFacility.tr("ls.player.position_short.centraldefender"))
+				|| table.getColumnName(column).equals(TranslationFacility.tr("ls.player.position_short.wingback"))
+				|| table.getColumnName(column).equals(TranslationFacility.tr("ls.player.position_short.innermidfielder"))
+				|| table.getColumnName(column).equals(TranslationFacility.tr("ls.player.position_short.winger"))
+				|| table.getColumnName(column).equals(TranslationFacility.tr("ls.player.position_short.forward"))
 				)
 			{
 				label.setBackground(dunkelblau);
@@ -249,14 +242,14 @@ class MyTableCellRenderer  implements TableCellRenderer{
 
 			label.validate();
 		}
-		else if(table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.wage")))	{
+		else if(table.getColumnName(column).equals(TranslationFacility.tr("ls.player.wage")))	{
 			label.setText(Helper.getNumberFormat(true, 0).format(value));
 
 			label.setHorizontalAlignment(SwingConstants.RIGHT);
 			label.setBackground(table.getBackground());
 		}
-		else if(table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.tsi"))
-				|| table.getColumnName(column).equals(HOVerwaltung.instance().getLanguageString("ls.player.id"))){
+		else if(table.getColumnName(column).equals(TranslationFacility.tr("ls.player.tsi"))
+				|| table.getColumnName(column).equals(TranslationFacility.tr("ls.player.id"))){
 			label.setText(value.toString());
 			label.setHorizontalAlignment(SwingConstants.RIGHT);
 			label.setBackground(table.getBackground());

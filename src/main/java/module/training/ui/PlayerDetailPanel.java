@@ -6,7 +6,7 @@ import core.constants.player.PlayerSkill;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.player.FuturePlayer;
 import core.model.player.MatchRoleID;
@@ -17,6 +17,7 @@ import module.training.Skills;
 import module.training.ui.comp.HTColorBar;
 import module.training.ui.model.TrainingModel;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
@@ -24,8 +25,6 @@ import java.awt.event.FocusListener;
 import java.io.Serial;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-
-import javax.swing.*;
 
 import static core.constants.player.PlayerSkill.FORM;
 import static core.constants.player.PlayerSkill.STAMINA;
@@ -86,7 +85,7 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
                     select.setEnabled(false);
                 }
             }
-            playerLabel.setText(HOVerwaltung.instance().getLanguageString("PlayerSelect"));
+            playerLabel.setText(TranslationFacility.tr("PlayerSelect"));
             m_jtaNotes.setEditable(false);
             m_jtaNotes.setText("");
 
@@ -255,7 +254,7 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
                 bottom.add(trainingPlanSelection[i], gbc); // individual training
             }
             else if ( i == 0){
-                bottom.add(new JLabel(HOVerwaltung.instance().getLanguageString("trainpre.plan")), gbc);
+                bottom.add(new JLabel(TranslationFacility.tr("trainpre.plan")), gbc);
             }
 
         }
@@ -274,7 +273,7 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
 
         JPanel panel2 = new ImagePanel();
         panel2.setLayout(new BorderLayout());
-        panel2.setBorder(javax.swing.BorderFactory.createTitledBorder(HOVerwaltung.instance().getLanguageString("Notizen")));
+        panel2.setBorder(javax.swing.BorderFactory.createTitledBorder(TranslationFacility.tr("Notizen")));
         panel2.add(new JScrollPane(m_jtaNotes), BorderLayout.CENTER);
 
         maingbc.gridx = 0;

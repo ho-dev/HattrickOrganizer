@@ -1,6 +1,7 @@
 package core.util;
 
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 
 /**
  * Utility class for various String related operations.
@@ -55,7 +56,7 @@ public class StringUtils {
 	private static String _separator = null;
 	private static String getSeparator(){
 		if (_separator==null ) {
-			_separator = " " + HOVerwaltung.instance().getLanguageString("ls.match.result.separation") + " ";
+			_separator = " " + TranslationFacility.tr("ls.match.result.separation") + " ";
 		}
 		return _separator;
 	}

@@ -3,18 +3,17 @@ package module.lineup;
 import core.gui.RefreshManager;
 import core.gui.Refreshable;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.match.MatchLineupPosition;
 import core.model.player.IMatchRoleID;
 import module.lineup.penalties.PenaltyTaker;
 import module.lineup.penalties.PenaltyTakersView;
 import module.lineup.substitution.SubstitutionOverview;
 
-import java.awt.BorderLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
 
 /**
  * Top-Level Container for the Lineups (contains a tab for the lineup, a tab for
@@ -45,15 +44,15 @@ public class LineupMasterView extends JPanel {
 		HOVerwaltung hov = HOVerwaltung.instance();
 
 		this.lineupPanel = new LineupPanel();
-		this.tabbedPane.addTab(hov.getLanguageString("Aufstellung"), this.lineupPanel);
+		this.tabbedPane.addTab(TranslationFacility.tr("Aufstellung"), this.lineupPanel);
 
 		this.substitutionOverview = new SubstitutionOverview(hov.getModel().getCurrentLineup());
-		this.tabbedPane.addTab(hov.getLanguageString("subs.Title"), this.substitutionOverview);
+		this.tabbedPane.addTab(TranslationFacility.tr("subs.Title"), this.substitutionOverview);
 
 		this.penaltyTakersView = new PenaltyTakersView();
 		this.penaltyTakersView.setPlayers(hov.getModel().getCurrentPlayers());
 		this.penaltyTakersView.setLineup(hov.getModel().getCurrentLineup());
-		this.tabbedPane.addTab(hov.getLanguageString("lineup.penaltytakers.tab.title"), this.penaltyTakersView);
+		this.tabbedPane.addTab(TranslationFacility.tr("lineup.penaltytakers.tab.title"), this.penaltyTakersView);
 
 		setLayout(new BorderLayout());
 		add(this.tabbedPane, BorderLayout.CENTER);

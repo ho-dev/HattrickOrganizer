@@ -1,6 +1,6 @@
 package core.constants.player;
 
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 
 
 public enum  PlayerSkill {
@@ -34,7 +34,7 @@ public enum  PlayerSkill {
 			case KEEPER, DEFENDING, WINGER, PLAYMAKING, SCORING, PASSING, STAMINA, SETPIECES -> b.append("skill.");
 		}
 		b.append(super.toString().toLowerCase());
-		return HOVerwaltung.instance().getLanguageString(b.toString());
+		return TranslationFacility.tr(b.toString());
 	}
 
 	public static PlayerSkill fromInteger(Integer i) {

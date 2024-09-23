@@ -2,15 +2,11 @@
 package module.teamAnalyzer.ui.component;
 
 import core.gui.comp.panel.ImagePanel;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import module.teamAnalyzer.SystemManager;
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
-import javax.swing.JCheckBox;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
+
+import javax.swing.*;
+import java.awt.*;
 
 
 
@@ -144,15 +140,15 @@ public class SettingPanel extends JPanel {
 
         mainPanel.setLayout(new GridLayout(12, 1));
         mainPanel.setOpaque(false);
-        mainPanel.add(createPanel(HOVerwaltung.instance().getLanguageString("SettingPanel.MyLineup"), myLineup));
-        mainPanel.add(createPanel(HOVerwaltung.instance().getLanguageString("SettingPanel.TacticDetail"), tacticDetail));
-        mainPanel.add(createPanel(HOVerwaltung.instance().getLanguageString("SettingPanel.MixedLineup"), mixedLineup));
-        mainPanel.add(createPanel(HOVerwaltung.instance().getLanguageString("SettingPanel.NumericRatings"), numberRating));
-        mainPanel.add(createPanel(HOVerwaltung.instance().getLanguageString("SettingPanel.DescriptionRatings"), descRating));
-        mainPanel.add(createPanel(HOVerwaltung.instance().getLanguageString("SettingPanel.ShowUnavailable"), unavailable));
-        mainPanel.add(createPanel(HOVerwaltung.instance().getLanguageString("SettingPanel.Playerinformations"), playerInfo));
-        mainPanel.add(createPanel(HOVerwaltung.instance().getLanguageString("SettingPanel.CheckName"), checkName));
-        mainPanel.add(createPanel(HOVerwaltung.instance().getLanguageString("SettingPanel.SpecialEventVisible"), specialEventsVisible));
+        mainPanel.add(createPanel(TranslationFacility.tr("SettingPanel.MyLineup"), myLineup));
+        mainPanel.add(createPanel(TranslationFacility.tr("SettingPanel.TacticDetail"), tacticDetail));
+        mainPanel.add(createPanel(TranslationFacility.tr("SettingPanel.MixedLineup"), mixedLineup));
+        mainPanel.add(createPanel(TranslationFacility.tr("SettingPanel.NumericRatings"), numberRating));
+        mainPanel.add(createPanel(TranslationFacility.tr("SettingPanel.DescriptionRatings"), descRating));
+        mainPanel.add(createPanel(TranslationFacility.tr("SettingPanel.ShowUnavailable"), unavailable));
+        mainPanel.add(createPanel(TranslationFacility.tr("SettingPanel.Playerinformations"), playerInfo));
+        mainPanel.add(createPanel(TranslationFacility.tr("SettingPanel.CheckName"), checkName));
+        mainPanel.add(createPanel(TranslationFacility.tr("SettingPanel.SpecialEventVisible"), specialEventsVisible));
 
         setLayout(new BorderLayout());
         setOpaque(false);

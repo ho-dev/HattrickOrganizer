@@ -2,21 +2,17 @@
 package module.teamAnalyzer.ui.component;
 
 import core.db.DBManager;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import module.teamAnalyzer.ht.HattrickManager;
 import module.teamAnalyzer.manager.TeamManager;
 import module.teamAnalyzer.ui.NumberTextField;
 import module.teamAnalyzer.ui.controller.FavoriteItemListener;
 import module.teamAnalyzer.vo.Team;
 
-import java.awt.BorderLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 
 
 
@@ -37,10 +33,10 @@ public class AddPanel extends JPanel {
     FavouriteMenu menu;
 
     /** The add button */
-    JButton addButton = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.add"));
+    JButton addButton = new JButton(TranslationFacility.tr("ls.button.add"));
 
     /** The ID-Label */
-    JLabel idlabel = new JLabel(HOVerwaltung.instance().getLanguageString("ls.team.id") + ": ");
+    JLabel idlabel = new JLabel(TranslationFacility.tr("ls.team.id") + ": ");
 
     /** A status label */
     JLabel status = new JLabel();
@@ -87,14 +83,14 @@ public class AddPanel extends JPanel {
                     team.setTeamId(teamId.getValue());
 
                     if (TeamManager.isTeamInList(teamId.getValue())) {
-                        status.setText(HOVerwaltung.instance().getLanguageString("Favourite.InList"));
+                        status.setText(TranslationFacility.tr("Favourite.InList"));
                         teamId.setText("");
 
                         return;
                     }
 
                     if (DBManager.instance().isTAFavourite(teamId.getValue())) {
-                        status.setText(HOVerwaltung.instance().getLanguageString("Favourite.Already"));
+                        status.setText(TranslationFacility.tr("Favourite.Already"));
                         teamId.setText("");
 
                         return;
@@ -105,14 +101,14 @@ public class AddPanel extends JPanel {
 
                         team.setName(teamName);
                     } catch (Exception e1) {
-                        status.setText(HOVerwaltung.instance().getLanguageString("Favourite.Error"));
+                        status.setText(TranslationFacility.tr("Favourite.Error"));
                         teamId.setText("");
 
                         return;
                     }
 
                     status.setText(team.getName() + " "
-                                   + HOVerwaltung.instance().getLanguageString("hinzugefuegt"));
+                                   + TranslationFacility.tr("hinzugefuegt"));
                     menu.teams.add(team);
 
                     JMenuItem item = new JMenuItem(team.getName());

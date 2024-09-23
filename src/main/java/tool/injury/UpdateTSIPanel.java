@@ -1,5 +1,6 @@
 package tool.injury;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 
 
 /**
@@ -13,7 +14,7 @@ class UpdateTSIPanel extends AbstractInjuryPanel {
 	
     //~ Instance fields ----------------------------------------------------------------------------
 
-	private String msg = HOVerwaltung.instance().getLanguageString("UpdatesNeeded");
+	private String msg = TranslationFacility.tr("UpdatesNeeded");
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -50,9 +51,9 @@ class UpdateTSIPanel extends AbstractInjuryPanel {
      * Reset the panel to default data
      */
     final void reset() {
-        setInputMsg(HOVerwaltung.instance().getLanguageString("Injury4"));
+        setInputMsg(TranslationFacility.tr("Injury4"));
         setOutputMsg(msg);
-        setHeader(HOVerwaltung.instance().getLanguageString("Injury3"));
+        setHeader(TranslationFacility.tr("Injury3"));
         setInputValue(HOVerwaltung.instance().getModel().getClub().getAerzte() + "");
     }
 }

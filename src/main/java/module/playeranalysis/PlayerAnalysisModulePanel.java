@@ -2,6 +2,7 @@ package module.playeranalysis;
 
 import core.gui.comp.panel.LazyImagePanel;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.module.config.ModuleConfig;
 import module.playeranalysis.skillCompare.PlayerComparePanel;
 
@@ -40,10 +41,10 @@ public class PlayerAnalysisModulePanel extends LazyImagePanel {
 		if (tabbedPane == null) {
 			tabbedPane = new JTabbedPane();
 			tabbedPane.add(getSpielerAnalyseMainPanel(),
-					HOVerwaltung.instance().getLanguageString("Spiele"));
+					TranslationFacility.tr("Spiele"));
 			if (ModuleConfig.instance().getBoolean(PlayerAnalysisModule.SHOW_PLAYERCOMPARE))
 				tabbedPane.add(getPlayerComparePanel(),
-						HOVerwaltung.instance().getLanguageString("PlayerCompare"));
+						TranslationFacility.tr("PlayerCompare"));
 		}
 		return tabbedPane;
 	}

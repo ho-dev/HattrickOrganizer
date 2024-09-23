@@ -2,21 +2,14 @@
 package module.teamAnalyzer.ui.component;
 
 import core.db.DBManager;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.ui.controller.FavoriteItemListener;
 import module.teamAnalyzer.vo.Team;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import javax.swing.*;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JSeparator;
 
 
 
@@ -34,10 +27,10 @@ public class FavouriteMenu extends JMenu {
 	private static final long serialVersionUID = -3404254214435543226L;
 
     /** Add menu item */
-    public JMenuItem itemAdd = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.button.add"));
+    public JMenuItem itemAdd = new JMenuItem(TranslationFacility.tr("ls.button.add"));
 
     /** Delete menu item */
-    public JMenuItem itemDelete = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.button.delete"));
+    public JMenuItem itemDelete = new JMenuItem(TranslationFacility.tr("ls.button.delete"));
 
     /** List of favourite team menu items */
     public List<JMenuItem> items;
@@ -54,7 +47,7 @@ public class FavouriteMenu extends JMenu {
      * Creates a new FavouriteMenu object.
      */
     public FavouriteMenu() {
-        super(HOVerwaltung.instance().getLanguageString("Favourite"));
+        super(TranslationFacility.tr("Favourite"));
         jbInit();
         me = this;
     }
@@ -87,18 +80,18 @@ public class FavouriteMenu extends JMenu {
         itemDelete.addActionListener(arg0 -> {
             JOptionPane.showMessageDialog(SystemManager.getPlugin(),
                                           new DeletePanel(me),
-                                          HOVerwaltung.instance().getLanguageString("ls.button.delete")
+                                          TranslationFacility.tr("ls.button.delete")
                                           + " "
-                                          + HOVerwaltung.instance().getLanguageString("Verein"),
+                                          + TranslationFacility.tr("Verein"),
                                           JOptionPane.PLAIN_MESSAGE);
         });
 
         itemAdd.addActionListener(arg0 -> {
             JOptionPane.showMessageDialog(SystemManager.getPlugin(),
                                           new AddPanel(me),
-                                          HOVerwaltung.instance().getLanguageString("ls.button.add")
+                                          TranslationFacility.tr("ls.button.add")
                                           + " "
-                                          + HOVerwaltung.instance().getLanguageString("Verein"),
+                                          + TranslationFacility.tr("Verein"),
                                           JOptionPane.PLAIN_MESSAGE);
         });
     }

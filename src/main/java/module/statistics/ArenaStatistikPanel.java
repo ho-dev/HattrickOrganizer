@@ -4,17 +4,13 @@ package module.statistics;
 import core.datatype.CBItem;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import module.matches.MatchesPanel;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Font;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-
-import javax.swing.JComboBox;
-import javax.swing.JScrollPane;
 
 public class ArenaStatistikPanel extends LazyImagePanel {
 	private static final long serialVersionUID = 2679088584924124183L;
@@ -72,20 +68,19 @@ public class ArenaStatistikPanel extends LazyImagePanel {
 
 	private CBItem[] getMatchFilterItems() {
 		CBItem[] matchFilterItems = {
-				new CBItem(HOVerwaltung.instance().getLanguageString("NurEigeneSpiele"),
+				new CBItem(TranslationFacility.tr("NurEigeneSpiele"),
 						MatchesPanel.OWN_GAMES),
-				new CBItem(HOVerwaltung.instance().getLanguageString("NurEigenePflichtspiele"),
+				new CBItem(TranslationFacility.tr("NurEigenePflichtspiele"),
 						MatchesPanel.OWN_OFFICIAL_GAMES),
-				new CBItem(HOVerwaltung.instance().getLanguageString("NurEigenePokalspiele"),
+				new CBItem(TranslationFacility.tr("NurEigenePokalspiele"),
 						MatchesPanel.OWN_NATIONAL_CUP_GAMES),
-				new CBItem(HOVerwaltung.instance().getLanguageString("OnlySecondaryCup"),
+				new CBItem(TranslationFacility.tr("OnlySecondaryCup"),
 						MatchesPanel.OWN_SECONDARY_CUP_GAMES),
-				new CBItem(HOVerwaltung.instance().getLanguageString("NurEigeneLigaspiele"),
+				new CBItem(TranslationFacility.tr("NurEigeneLigaspiele"),
 						MatchesPanel.OWN_LEAGUE_GAMES),
-				new CBItem(HOVerwaltung.instance().getLanguageString("OnlyQualificationMatches"),
+				new CBItem(TranslationFacility.tr("OnlyQualificationMatches"),
 						MatchesPanel.OWN_QUALIF_GAMES),
-				new CBItem(HOVerwaltung.instance()
-						.getLanguageString("NurEigeneFreundschaftsspiele"),
+				new CBItem(TranslationFacility.tr("NurEigeneFreundschaftsspiele"),
 						MatchesPanel.OWN_FRIENDLY_GAMES) };
 		return matchFilterItems;
 	}

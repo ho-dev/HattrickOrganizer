@@ -1,20 +1,18 @@
 package module.teamAnalyzer.ui;
 
 import core.gui.theme.ImageUtilities;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.util.Helper;
 import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.ui.model.UiRatingTableModel;
 import module.teamAnalyzer.ui.renderer.RatingTableCellRenderer;
 import module.teamAnalyzer.vo.TeamLineup;
-import java.awt.BorderLayout;
+
+import javax.swing.*;
+import java.awt.*;
 import java.io.Serial;
 import java.util.Arrays;
 import java.util.Vector;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.ScrollPaneConstants;
 
 public class RatingPanel extends JPanel {
 	@Serial
@@ -25,10 +23,10 @@ public class RatingPanel extends JPanel {
 	private JTable table;
     private UiRatingTableModel tableModel;
     private final String[] columns = {
-    		HOVerwaltung.instance().getLanguageString("RatingPanel.Area"),
-    		HOVerwaltung.instance().getLanguageString("Rating"),
-    		HOVerwaltung.instance().getLanguageString("Differenz_kurz"),
-    		HOVerwaltung.instance().getLanguageString("RatingPanel.Relative")
+    		TranslationFacility.tr("RatingPanel.Area"),
+    		TranslationFacility.tr("Rating"),
+    		TranslationFacility.tr("Differenz_kurz"),
+    		TranslationFacility.tr("RatingPanel.Relative")
     };
 
     //~ Constructors -------------------------------------------------------------------------------
@@ -53,19 +51,19 @@ public class RatingPanel extends JPanel {
         TeamLineupData opponentTeam = SystemManager.getPlugin().getMainPanel()
                                                    .getOpponentTeamLineupPanel();
 
-        tableModel.addRow(getRow(HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.midfield"),
+        tableModel.addRow(getRow(TranslationFacility.tr("ls.match.ratingsector.midfield"),
                                  myTeam.getMidfield(), opponentTeam.getMidfield()));
-        tableModel.addRow(getRow(HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.rightdefence"),
+        tableModel.addRow(getRow(TranslationFacility.tr("ls.match.ratingsector.rightdefence"),
                                  myTeam.getRightDefence(), opponentTeam.getLeftAttack()));
-        tableModel.addRow(getRow(HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.centraldefence"),
+        tableModel.addRow(getRow(TranslationFacility.tr("ls.match.ratingsector.centraldefence"),
                                  myTeam.getMiddleDefence(), opponentTeam.getMiddleAttack()));
-        tableModel.addRow(getRow(HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.leftdefence"),
+        tableModel.addRow(getRow(TranslationFacility.tr("ls.match.ratingsector.leftdefence"),
                                  myTeam.getLeftDefence(), opponentTeam.getRightAttack()));
-        tableModel.addRow(getRow(HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.rightattack"),
+        tableModel.addRow(getRow(TranslationFacility.tr("ls.match.ratingsector.rightattack"),
                                  myTeam.getRightAttack(), opponentTeam.getLeftDefence()));
-        tableModel.addRow(getRow(HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.centralattack"),
+        tableModel.addRow(getRow(TranslationFacility.tr("ls.match.ratingsector.centralattack"),
                                  myTeam.getMiddleAttack(), opponentTeam.getMiddleDefence()));
-        tableModel.addRow(getRow(HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.leftattack"),
+        tableModel.addRow(getRow(TranslationFacility.tr("ls.match.ratingsector.leftattack"),
                                  myTeam.getLeftAttack(), opponentTeam.getRightDefence()));
 
         table.getTableHeader().getColumnModel().getColumn(0).setWidth(130);

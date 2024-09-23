@@ -1,6 +1,6 @@
 package core.constants.player;
 
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 
 public class PlayerAggressiveness {
 	private static final String[] languageKeys = {
@@ -24,7 +24,7 @@ public class PlayerAggressiveness {
 
 	public static String toString(Integer aggressiveness) {
 		if (aggressiveness != null && aggressiveness >= TRANQUIL && aggressiveness <= UNSTABLE)
-			return HOVerwaltung.instance().getLanguageString(languageKeys[aggressiveness]);
-		return HOVerwaltung.instance().getLanguageString("Unbestimmt");
+			return TranslationFacility.tr(languageKeys[aggressiveness]);
+		return TranslationFacility.tr("Unbestimmt");
 	}
 }

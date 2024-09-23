@@ -4,14 +4,13 @@ import core.gui.model.PlayerCBItem;
 import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
+
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Map;
-
-import javax.swing.JComboBox;
-import javax.swing.JToggleButton;
 
 
 public class SwapPositionFeature {
@@ -86,7 +85,7 @@ public class SwapPositionFeature {
 	}
 
 	private void customizeSwapButton() {
-		swapButton.setToolTipText(HOVerwaltung.instance().getLanguageString("Lineup.Swap.ToolTip"));
+		swapButton.setToolTipText(TranslationFacility.tr("Lineup.Swap.ToolTip"));
 		swapButton.setIcon(ImageUtilities.getSvgIcon(HOIconName.SWAP, Map.of("fillColor", HOColorName.SWAP_COLOR), 18, 18));
 		swapButton.setSelectedIcon(ImageUtilities.getSvgIcon(HOIconName.SWAP, Map.of("fillColor", HOColorName.SWAP_COLOR_PRESSED), 18, 18));
 		swapButton.setPreferredSize(new Dimension(18, 18));

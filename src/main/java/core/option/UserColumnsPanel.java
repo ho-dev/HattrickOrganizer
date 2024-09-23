@@ -7,17 +7,17 @@ import core.gui.comp.table.UserColumn;
 import core.gui.model.UserColumnController;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import tool.updater.TableEditor;
 import tool.updater.TableModel;
 import tool.updater.UpdaterCellRenderer;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
+
+import javax.swing.*;
+import javax.swing.table.TableColumnModel;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.Serial;
-import javax.swing.*;
-import javax.swing.table.TableColumnModel;
 
 
 /**
@@ -33,7 +33,7 @@ public class UserColumnsPanel extends JPanel implements ActionListener {
 	private static final long serialVersionUID = 1L;
 	private JComboBox m_jcbColumnModel = null;
 	private JTable table = null;
-	private final String[] columnNames = new String[]{" ", HOVerwaltung.instance().getLanguageString("column")};
+	private final String[] columnNames = new String[]{" ", TranslationFacility.tr("column")};
 	private final Icon lockedImage = ThemeManager.getIcon(HOIconName.LOCKED);
 
 	protected UserColumnsPanel() {

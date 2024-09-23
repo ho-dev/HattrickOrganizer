@@ -1,14 +1,10 @@
 package module.teamAnalyzer.ui.renderer;
 
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 
-import java.awt.Color;
-import java.awt.Component;
-
-import javax.swing.ImageIcon;
-import javax.swing.JTable;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
+import java.awt.*;
 
 
 /**
@@ -35,7 +31,7 @@ public class RatingTableCellRenderer extends DefaultTableCellRenderer {
 			  String curText = value.toString();
 			  this.setIcon(null);
 			  this.setHorizontalAlignment(SwingConstants.TRAILING);
-			  this.setToolTipText(HOVerwaltung.instance().getLanguageString("RatingPanel.Relative.Tooltip"));
+			  this.setToolTipText(TranslationFacility.tr("RatingPanel.Relative.Tooltip"));
 			  if (curText != null) {
 				  if (curText.startsWith("+")) {
 					  this.setForeground(Color.GREEN.darker().darker());

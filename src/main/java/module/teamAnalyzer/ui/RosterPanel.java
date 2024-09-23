@@ -1,24 +1,14 @@
 package module.teamAnalyzer.ui;
 
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import module.teamAnalyzer.ui.model.UiRosterTableModel;
 import module.teamAnalyzer.vo.PlayerInfo;
 import module.teamAnalyzer.vo.RosterPlayerData;
 
-import java.awt.BorderLayout;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
+import javax.swing.*;
+import java.awt.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Vector;
-
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-import javax.swing.ScrollPaneConstants;
+import java.util.*;
 
 public class RosterPanel extends JPanel {
     //~ Instance fields ----------------------------------------------------------------------------
@@ -28,19 +18,19 @@ public class RosterPanel extends JPanel {
     private Map<String,RosterPlayerData> players = new HashMap<>();
     private UiRosterTableModel tableModel;
     private String[] columns = {
-            HOVerwaltung.instance().getLanguageString("ls.player.name"),
-            HOVerwaltung.instance().getLanguageString("Role"),
-            HOVerwaltung.instance().getLanguageString("Position"),
-            HOVerwaltung.instance().getLanguageString("Secondary"),
-            HOVerwaltung.instance().getLanguageString("ls.match.id"),
-            HOVerwaltung.instance().getLanguageString("ls.player.age"),
-            HOVerwaltung.instance().getLanguageString("ls.player.form"),
-            HOVerwaltung.instance().getLanguageString("ls.player.short_experience"),
-            HOVerwaltung.instance().getLanguageString("ls.player.tsi"),
-            HOVerwaltung.instance().getLanguageString("SpecialEvent"),
-            HOVerwaltung.instance().getLanguageString("Maximal"),
-            HOVerwaltung.instance().getLanguageString("Durchschnitt"),
-            HOVerwaltung.instance().getLanguageString("Minimal"),
+            TranslationFacility.tr("ls.player.name"),
+            TranslationFacility.tr("Role"),
+            TranslationFacility.tr("Position"),
+            TranslationFacility.tr("Secondary"),
+            TranslationFacility.tr("ls.match.id"),
+            TranslationFacility.tr("ls.player.age"),
+            TranslationFacility.tr("ls.player.form"),
+            TranslationFacility.tr("ls.player.short_experience"),
+            TranslationFacility.tr("ls.player.tsi"),
+            TranslationFacility.tr("SpecialEvent"),
+            TranslationFacility.tr("Maximal"),
+            TranslationFacility.tr("Durchschnitt"),
+            TranslationFacility.tr("Minimal"),
             "Status",
             "PlayerId"
     };
@@ -74,7 +64,7 @@ public class RosterPanel extends JPanel {
         table = new JTable(tableModel);
 
         // Set up tool tips for column headers.
-        table.getTableHeader().setToolTipText(HOVerwaltung.instance().getLanguageString("RecapPanel.Tooltip")); //$NON-NLS-1$
+        table.getTableHeader().setToolTipText(TranslationFacility.tr("RecapPanel.Tooltip")); //$NON-NLS-1$
         table.getTableHeader().setReorderingAllowed(false);
 
         table.setDefaultRenderer(Object.class, new RosterTableRenderer());

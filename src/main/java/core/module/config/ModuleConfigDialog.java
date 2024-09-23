@@ -1,19 +1,13 @@
 package core.module.config;
 
 import core.gui.comp.panel.ImagePanel;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.module.IModule;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 
 
 public class ModuleConfigDialog extends JDialog implements ActionListener{
@@ -21,7 +15,6 @@ public class ModuleConfigDialog extends JDialog implements ActionListener{
 	private static final long serialVersionUID = -6012059855852713150L;
 	private IModule module;
 	JButton okButton;
-//	JButton cancelButton;
 
 	public ModuleConfigDialog(JDialog owner, IModule module){
 		super(owner,module.getDescription());
@@ -55,14 +48,10 @@ public class ModuleConfigDialog extends JDialog implements ActionListener{
         JPanel buttonPanel = new ImagePanel();
         ((FlowLayout) buttonPanel.getLayout()).setAlignment(FlowLayout.CENTER);
 
-        okButton = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.save"));
+        okButton = new JButton(TranslationFacility.tr("ls.button.save"));
         okButton.addActionListener(this);
 
-//        cancelButton = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.cancel"));
-//        cancelButton.addActionListener(this);
-
         buttonPanel.add(okButton);
-       // buttonPanel.add(cancelButton);
         return buttonPanel;
     }
 

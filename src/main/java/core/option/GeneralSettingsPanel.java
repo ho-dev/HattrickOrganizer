@@ -4,33 +4,34 @@ import core.datatype.CBItem;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.Theme;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.Translator;
 import core.model.UserParameter;
 import core.util.DateTimeUtils;
 import core.util.HOLogger;
 
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
-import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 
 public final class GeneralSettingsPanel extends ImagePanel implements ChangeListener, ItemListener {
 
     public static CBItem[] NB_DECIMALS = {new CBItem("1 (1.2)", 1), new CBItem("2 (1.23)", 2)};
 
-    public CBItem[] DEFAULT_SORTING = {new CBItem(HOVerwaltung.instance().getLanguageString("ls.player.name"), core.model.UserParameter.SORT_NAME),
-            new CBItem(HOVerwaltung.instance().getLanguageString("BestePosition"), core.model.UserParameter.SORT_BESTPOS),
-            new CBItem(HOVerwaltung.instance().getLanguageString("Aufgestellt"), core.model.UserParameter.SORT_AUFGESTELLT),
-            new CBItem(HOVerwaltung.instance().getLanguageString("Gruppe"), core.model.UserParameter.SORT_GRUPPE),
-            new CBItem(HOVerwaltung.instance().getLanguageString("Rating"), core.model.UserParameter.SORT_BEWERTUNG),};
+    public CBItem[] DEFAULT_SORTING = {new CBItem(TranslationFacility.tr("ls.player.name"), core.model.UserParameter.SORT_NAME),
+            new CBItem(TranslationFacility.tr("BestePosition"), core.model.UserParameter.SORT_BESTPOS),
+            new CBItem(TranslationFacility.tr("Aufgestellt"), core.model.UserParameter.SORT_AUFGESTELLT),
+            new CBItem(TranslationFacility.tr("Gruppe"), core.model.UserParameter.SORT_GRUPPE),
+            new CBItem(TranslationFacility.tr("Rating"), core.model.UserParameter.SORT_BEWERTUNG),};
 
 
     private ComboBoxPanel m_jcbNbDecimals;
@@ -97,15 +98,15 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
 
         var width = UserParameter.instance().fontSize * 10;
 
-        m_jslFontSize = new SliderPanel(HOVerwaltung.instance().getLanguageString("Schriftgroesse"), 16, 8, 1, 1.0f, width);
-        m_jslFontSize.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Optionen_Schriftgroesse"));
+        m_jslFontSize = new SliderPanel(TranslationFacility.tr("Schriftgroesse"), 16, 8, 1, 1.0f, width);
+        m_jslFontSize.setToolTipText(TranslationFacility.tr("tt_Optionen_Schriftgroesse"));
         m_jslFontSize.setValue(core.model.UserParameter.temp().fontSize);
         m_jslFontSize.addChangeListener(this);
         add(m_jslFontSize);
 
         List<Theme> registeredThemes = ThemeManager.instance().getRegisteredThemes();
         m_jcbSkin = new ComboBoxPanel(
-                HOVerwaltung.instance().getLanguageString("options.misc.skin"),
+                TranslationFacility.tr("options.misc.skin"),
                 registeredThemes.stream().map(Theme::getName).toArray(),
                 width
         );
@@ -118,15 +119,15 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
             java.util.Arrays.sort(sprachdateien);
         } catch (Exception ignored) {
         }
-        m_jcbLanguage = new ComboBoxPanel(HOVerwaltung.instance().getLanguageString("ls.core.preferences.misc.language"), sprachdateien, width);
-        m_jcbLanguage.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Optionen_Sprachdatei"));
+        m_jcbLanguage = new ComboBoxPanel(TranslationFacility.tr("ls.core.preferences.misc.language"), sprachdateien, width);
+        m_jcbLanguage.setToolTipText(TranslationFacility.tr("tt_Optionen_Sprachdatei"));
         m_jcbLanguage.setSelectedItem(core.model.UserParameter.temp().sprachDatei);
         m_jcbLanguage.addItemListener(this);
         add(m_jcbLanguage);
 
         // TimeZone selection =========================================================
         CBItem[] allZoneIdsAndItsOffSet = getAllZoneIdsAndItsOffSet();
-        m_jcbTimeZone = new ComboBoxPanel(HOVerwaltung.instance().getLanguageString("ls.core.preferences.misc.timezone"), allZoneIdsAndItsOffSet, width);
+        m_jcbTimeZone = new ComboBoxPanel(TranslationFacility.tr("ls.core.preferences.misc.timezone"), allZoneIdsAndItsOffSet, width);
         var sZoneIDs = ZoneId.getAvailableZoneIds();
         var sZoneIDCodes = sZoneIDs.stream().map(String::hashCode).collect(Collectors.toSet());
         if (sZoneIDs.size() != sZoneIDCodes.size()){
@@ -150,33 +151,33 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
         m_jcbTimeZone.addItemListener(this);
         add(m_jcbTimeZone);
 
-        m_jcbDefaultSorting = new ComboBoxPanel(HOVerwaltung.instance().getLanguageString("Defaultsortierung"), DEFAULT_SORTING, width);
-        m_jcbDefaultSorting.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Optionen_Defaultsortierung"));
+        m_jcbDefaultSorting = new ComboBoxPanel(TranslationFacility.tr("Defaultsortierung"), DEFAULT_SORTING, width);
+        m_jcbDefaultSorting.setToolTipText(TranslationFacility.tr("tt_Optionen_Defaultsortierung"));
         m_jcbDefaultSorting.setSelectedId(core.model.UserParameter.temp().standardsortierung);
         m_jcbDefaultSorting.addItemListener(this);
         add(m_jcbDefaultSorting);
 
-        m_jcbNbDecimals = new ComboBoxPanel(HOVerwaltung.instance().getLanguageString("ls.core.preferences.misc.nb_decimals"), NB_DECIMALS, width);
-        m_jcbNbDecimals.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Optionen_Nachkommastellen"));
+        m_jcbNbDecimals = new ComboBoxPanel(TranslationFacility.tr("ls.core.preferences.misc.nb_decimals"), NB_DECIMALS, width);
+        m_jcbNbDecimals.setToolTipText(TranslationFacility.tr("tt_Optionen_Nachkommastellen"));
         m_jcbNbDecimals.setSelectedId(core.model.UserParameter.temp().nbDecimals);
         m_jcbNbDecimals.addItemListener(this);
         add(m_jcbNbDecimals);
 
-        m_jchShowSkillNumericalValue = new JCheckBox(HOVerwaltung.instance().getLanguageString("SkillZahlen") + " : "
-                + HOVerwaltung.instance().getLanguageString("ls.player.skill.value.passable") + " (6)");
-        m_jchShowSkillNumericalValue.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Optionen_SkillZahlen"));
+        m_jchShowSkillNumericalValue = new JCheckBox(TranslationFacility.tr("SkillZahlen") + " : "
+                + TranslationFacility.tr("ls.player.skill.value.passable") + " (6)");
+        m_jchShowSkillNumericalValue.setToolTipText(TranslationFacility.tr("tt_Optionen_SkillZahlen"));
         m_jchShowSkillNumericalValue.setOpaque(false);
         m_jchShowSkillNumericalValue.setSelected(core.model.UserParameter.temp().zahlenFuerSkill);
         m_jchShowSkillNumericalValue.addItemListener(this);
         add(m_jchShowSkillNumericalValue);
 
-        m_jslAlternativePositionsTolerance = new SliderPanel(HOVerwaltung.instance().getLanguageString("options.Alternative_Position_Tolerance"), 100, -1, 100, 1f, width);
-        m_jslAlternativePositionsTolerance.setToolTipText(HOVerwaltung.instance().getLanguageString("options.tt_Alternative_Position_Tolerance"));
+        m_jslAlternativePositionsTolerance = new SliderPanel(TranslationFacility.tr("options.Alternative_Position_Tolerance"), 100, -1, 100, 1f, width);
+        m_jslAlternativePositionsTolerance.setToolTipText(TranslationFacility.tr("options.tt_Alternative_Position_Tolerance"));
         m_jslAlternativePositionsTolerance.setValue(UserParameter.temp().alternativePositionsTolerance);
         m_jslAlternativePositionsTolerance.addChangeListener(this);
         add(m_jslAlternativePositionsTolerance);
 
-        m_jcbPromotionStatusTest = new JCheckBox(HOVerwaltung.instance().getLanguageString("PMStatusTest"));
+        m_jcbPromotionStatusTest = new JCheckBox(TranslationFacility.tr("PMStatusTest"));
         m_jcbPromotionStatusTest.setOpaque(false);
         m_jcbPromotionStatusTest.setSelected(UserParameter.temp().promotionManagerTest);
         m_jcbPromotionStatusTest.addItemListener(this);

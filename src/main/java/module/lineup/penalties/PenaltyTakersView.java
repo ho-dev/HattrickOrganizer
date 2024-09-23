@@ -5,43 +5,24 @@ import core.constants.player.PlayerAbility;
 import core.gui.comp.table.RowNumberTable;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.match.MatchLineupPosition;
-import core.model.player.Player;
 import core.model.player.MatchRoleID;
+import core.model.player.Player;
 import core.util.GUIUtils;
 import module.lineup.Lineup;
 
-import java.awt.Component;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.event.ItemListener;
-import java.io.Serial;
-import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
-
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.RowFilter;
-import javax.swing.RowSorter;
-import javax.swing.SortOrder;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
+import java.awt.*;
+import java.awt.event.ItemListener;
+import java.io.Serial;
+import java.text.NumberFormat;
+import java.util.List;
+import java.util.*;
 
 public class PenaltyTakersView extends JPanel {
 
@@ -534,7 +515,7 @@ public class PenaltyTakersView extends JPanel {
 	}
 
 	private String getLangStr(String key) {
-		return HOVerwaltung.instance().getLanguageString(key);
+		return TranslationFacility.tr(key);
 	}
 
 	private class PenaltyTakersTableModel extends AbstractTableModel {

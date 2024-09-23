@@ -1,6 +1,6 @@
 package core.constants.player;
 
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 
 public final class PlayerAgreeability {
 	private static final String[] languageKeys = {
@@ -22,8 +22,8 @@ public final class PlayerAgreeability {
 
 	public static String toString(Integer agreeability){
 		if(agreeability!=null && agreeability >= NASTY_FELLOW && agreeability <= BELOVED_TEAM_MEMBER)
-			return HOVerwaltung.instance().getLanguageString(languageKeys[agreeability]);
-		return HOVerwaltung.instance().getLanguageString("Unbestimmt");
+			return TranslationFacility.tr(languageKeys[agreeability]);
+		return TranslationFacility.tr("Unbestimmt");
 	}
 
 

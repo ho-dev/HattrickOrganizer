@@ -2,22 +2,16 @@
 package module.teamAnalyzer.ui.component;
 
 import core.db.DBManager;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.enums.MatchType;
 import core.model.match.Matchdetails;
 import core.net.OnlineWorker;
 import module.teamAnalyzer.ui.NumberTextField;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 
 
 /**
@@ -33,12 +27,12 @@ public class DownloadPanel extends JPanel {
 	 */
 	private static final long serialVersionUID = -3212179990708350342L;
 
-	String[] matchTypes = {HOVerwaltung.instance().getLanguageString("NormalMatch"),
-   		 HOVerwaltung.instance().getLanguageString("TournamentMatch")};
+	String[] matchTypes = {TranslationFacility.tr("NormalMatch"),
+   		 TranslationFacility.tr("TournamentMatch")};
 
 
 	/** Download Button */
-    JButton downloadButton = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.download"));
+    JButton downloadButton = new JButton(TranslationFacility.tr("ls.button.download"));
 
     /** Description label */
     JLabel jLabel1 = new JLabel();
@@ -49,8 +43,8 @@ public class DownloadPanel extends JPanel {
     /** The matchid text field */
     NumberTextField matchId = new NumberTextField(10);
 
-    JRadioButton normal = new JRadioButton(HOVerwaltung.instance().getLanguageString("NormalMatch"));
-    JRadioButton tournament = new JRadioButton(HOVerwaltung.instance().getLanguageString("TournamentMatch"));
+    JRadioButton normal = new JRadioButton(TranslationFacility.tr("NormalMatch"));
+    JRadioButton tournament = new JRadioButton(TranslationFacility.tr("TournamentMatch"));
     ButtonGroup radioGroup = new ButtonGroup();
 
     //~ Constructors -------------------------------------------------------------------------------
@@ -68,7 +62,7 @@ public class DownloadPanel extends JPanel {
      * Initializes the state of this instance.
      */
     private void jbInit() {
-        jLabel1.setText(HOVerwaltung.instance().getLanguageString("ls.match.id"));
+        jLabel1.setText(TranslationFacility.tr("ls.match.id"));
         setLayout(new GridBagLayout());
 
         final GridBagConstraints constraints = new GridBagConstraints();
@@ -109,7 +103,7 @@ public class DownloadPanel extends JPanel {
                     }
 
 //                    if (id == 0) {
-//                        status.setText(HOVerwaltung.instance().getLanguageString("ImportError"));
+//                        status.setText(TranslationFacility.tr("ImportError"));
 //
 //                        return;
 //                    }
@@ -119,10 +113,10 @@ public class DownloadPanel extends JPanel {
                     	Matchdetails md = DBManager.instance().loadMatchDetails(type.getId(), id);
 
 	                    if (md.getFetchDatum() != null) {
-	                        status.setText(HOVerwaltung.instance().getLanguageString("ImportOK"));
+	                        status.setText(TranslationFacility.tr("ImportOK"));
 	                        matchId.setText("");
 	                    } else {
-	                        status.setText(HOVerwaltung.instance().getLanguageString("ImportError"));
+	                        status.setText(TranslationFacility.tr("ImportError"));
 	                    }
                     }
                 }

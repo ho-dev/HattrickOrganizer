@@ -13,6 +13,7 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.match.IMatchDetails;
 import core.model.match.MatchKurzInfo;
@@ -35,13 +36,12 @@ import module.matches.statistics.MatchesOverviewTable;
 import module.teamAnalyzer.ui.RatingUtil;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-
-import javax.swing.*;
-import javax.swing.event.ChangeEvent;
 
 import static core.util.Helper.getTranslation;
 
@@ -195,10 +195,10 @@ public final class MatchesPanel extends LazyImagePanel {
 		}
 
 		StringBuilder text = new StringBuilder(100);
-		text.append(HOVerwaltung.instance().getLanguageString("ls.button.delete"));
+		text.append(TranslationFacility.tr("ls.button.delete"));
 		if (infos.length > 1) {
 			text.append(" (").append(infos.length).append(" ");
-			text.append(HOVerwaltung.instance().getLanguageString("Spiele"));
+			text.append(TranslationFacility.tr("Spiele"));
 			text.append(")");
 		}
 		text.append(":");
@@ -211,7 +211,7 @@ public final class MatchesPanel extends LazyImagePanel {
 		}
 
 		int value = JOptionPane.showConfirmDialog(MatchesPanel.this, text,
-				HOVerwaltung.instance().getLanguageString("confirmation.title"), JOptionPane.YES_NO_OPTION);
+				TranslationFacility.tr("confirmation.title"), JOptionPane.YES_NO_OPTION);
 
 		if (value == JOptionPane.YES_OPTION) {
 			for (MatchKurzInfo info : infos) {
@@ -389,23 +389,23 @@ public final class MatchesPanel extends LazyImagePanel {
 
 		// Allgemein
 		StaerkenvergleichPanel teamsComparePanel = new StaerkenvergleichPanel(this.matchesModel);
-		matchDetailsTabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Allgemein"),
+		matchDetailsTabbedPane.addTab(TranslationFacility.tr("Allgemein"),
 				new JScrollPane(teamsComparePanel));
 
 
 		// Rating Panel
 		TeamsRatingPanel m_jpTeamsRatingPanel = new TeamsRatingPanel(this.matchesModel);
-		matchDetailsTabbedPane.addTab(HOVerwaltung.instance().getLanguageString("matches.tabtitle.ratings"),
+		matchDetailsTabbedPane.addTab(TranslationFacility.tr("matches.tabtitle.ratings"),
 				new JScrollPane(m_jpTeamsRatingPanel));
 
 		// Highlights
 		SpielHighlightPanel matchHighlightPanel = new SpielHighlightPanel(this.matchesModel);
-		matchDetailsTabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Highlights"),
+		matchDetailsTabbedPane.addTab(TranslationFacility.tr("Highlights"),
 				new JScrollPane(matchHighlightPanel));
 
 		// Match report
 		MatchReportPanel matchReportPanel = new MatchReportPanel(this.matchesModel);
-		matchDetailsTabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Matchbericht"),
+		matchDetailsTabbedPane.addTab(TranslationFacility.tr("Matchbericht"),
 				matchReportPanel);
 
 		mainpanel.add(matchDetailsTabbedPane, BorderLayout.CENTER);
@@ -414,7 +414,7 @@ public final class MatchesPanel extends LazyImagePanel {
 
 		// Reloadbutton
 		reloadMatchButton = new JButton(ThemeManager.getIcon(HOIconName.RELOAD));
-		reloadMatchButton.setToolTipText(HOVerwaltung.instance().getLanguageString(
+		reloadMatchButton.setToolTipText(TranslationFacility.tr(
 				"tt_Spiel_reload"));
 		reloadMatchButton.setPreferredSize(new Dimension(24, 24));
 		reloadMatchButton.setEnabled(false);
@@ -422,20 +422,20 @@ public final class MatchesPanel extends LazyImagePanel {
 
 		deleteButton = new JButton(ThemeManager.getIcon(HOIconName.REMOVE));
 		deleteButton.setBackground(ThemeManager.getColor(HOColorName.BUTTON_BG));
-		deleteButton.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Spiel_loeschen"));
+		deleteButton.setToolTipText(TranslationFacility.tr("tt_Spiel_loeschen"));
 		deleteButton.setPreferredSize(new Dimension(24, 24));
 		deleteButton.setEnabled(false);
 		buttonPanel.add(deleteButton);
 
 		adoptLineupButton = new JButton(ThemeManager.getIcon(HOIconName.GETLINEUP));
-		adoptLineupButton.setToolTipText(HOVerwaltung.instance().getLanguageString(
+		adoptLineupButton.setToolTipText(TranslationFacility.tr(
 				"tt_Spiel_aufstellunguebernehmen"));
 		adoptLineupButton.setPreferredSize(new Dimension(24, 24));
 		adoptLineupButton.setEnabled(false);
 		buttonPanel.add(adoptLineupButton);
 
 		simulateMatchButton = new JButton(ThemeManager.getIcon(HOIconName.SIMULATEMATCH));
-		simulateMatchButton.setToolTipText(HOVerwaltung.instance().getLanguageString("Simulate"));
+		simulateMatchButton.setToolTipText(TranslationFacility.tr("Simulate"));
 		simulateMatchButton.setPreferredSize(new Dimension(24, 24));
 		simulateMatchButton.setEnabled(false);
 		buttonPanel.add(simulateMatchButton);
@@ -478,15 +478,14 @@ public final class MatchesPanel extends LazyImagePanel {
 		JScrollPane scrollpane3 = new JScrollPane(matchesHighlightsTable);
 
 		JTabbedPane pane = new JTabbedPane();
-		HOVerwaltung hov = HOVerwaltung.instance();
-		pane.addTab(hov.getLanguageString("Spiele"), scrollpane);
+		pane.addTab(TranslationFacility.tr("Spiele"), scrollpane);
 		pane.addTab(
-				hov.getLanguageString("Statistik") + " ("
-						+ hov.getLanguageString("SerieAuswaertsSieg") + "-"
-						+ hov.getLanguageString("SerieAuswaertsUnendschieden") + "-"
-						+ hov.getLanguageString("SerieAuswaertsNiederlage") + ")", matchesOverviewPanel);
+				TranslationFacility.tr("Statistik") + " ("
+						+ TranslationFacility.tr("SerieAuswaertsSieg") + "-"
+						+ TranslationFacility.tr("SerieAuswaertsUnendschieden") + "-"
+						+ TranslationFacility.tr("SerieAuswaertsNiederlage") + ")", matchesOverviewPanel);
 
-		pane.addTab(hov.getLanguageString("Statistik") + " (" + hov.getLanguageString("Tore")
+		pane.addTab(TranslationFacility.tr("Statistik") + " (" + TranslationFacility.tr("Tore")
 				+ ")", scrollpane3);
 		panel.add(pane);
 

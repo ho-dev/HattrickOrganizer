@@ -3,14 +3,14 @@ package module.playerOverview;
 import core.gui.HOMainFrame;
 import core.gui.comp.panel.ImagePanel;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.player.Player;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.AdjustmentListener;
 import java.util.Objects;
-
-import javax.swing.*;
 
 /**
  * Overview of all the players on the team (main class of the package)
@@ -120,13 +120,13 @@ public class PlayerOverviewPanel extends ImagePanel {
 		JScrollPane scrollPane = new JScrollPane(playerDetailsPanel);
 		scrollPane.getVerticalScrollBar().setBlockIncrement(100);
 		scrollPane.getVerticalScrollBar().setUnitIncrement(20);
-		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("SpielerDetails"), scrollPane);
+		tabbedPane.addTab(TranslationFacility.tr("SpielerDetails"), scrollPane);
 
 		spielerTrainingsSimulatorPanel = new SpielerTrainingsSimulatorPanel();
 		scrollPane = new JScrollPane(spielerTrainingsSimulatorPanel);
 		scrollPane.getVerticalScrollBar().setBlockIncrement(100);
 		scrollPane.getVerticalScrollBar().setUnitIncrement(20);
-		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Skilltester"), scrollPane);
+		tabbedPane.addTab(TranslationFacility.tr("Skilltester"), scrollPane);
 
 		return tabbedPane;
 	}

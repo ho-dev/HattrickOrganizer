@@ -10,6 +10,7 @@ import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.FormulaFactors;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.match.Weather;
 import core.model.player.Player;
@@ -53,24 +54,24 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	private InfoPanel m_jpInfoPanel;
 	private final JMenuBar m_jmMenuBar = new JMenuBar();
 	// Top level Menu
-	private final JMenu m_jmFile = new JMenu(HOVerwaltung.instance().getLanguageString("ls.menu.file"));       //File
-	private final JMenu m_jmFunctions = new JMenu(HOVerwaltung.instance().getLanguageString("ls.menu.functions")); //Functions
-	private final JMenu m_jmModules = new JMenu(HOVerwaltung.instance().getLanguageString("ls.menu.modules"));   //Modules
-	private final JMenu m_jmHelp = new JMenu(HOVerwaltung.instance().getLanguageString("ls.menu.help"));      //Help
+	private final JMenu m_jmFile = new JMenu(TranslationFacility.tr("ls.menu.file"));       //File
+	private final JMenu m_jmFunctions = new JMenu(TranslationFacility.tr("ls.menu.functions")); //Functions
+	private final JMenu m_jmModules = new JMenu(TranslationFacility.tr("ls.menu.modules"));   //Modules
+	private final JMenu m_jmHelp = new JMenu(TranslationFacility.tr("ls.menu.help"));      //Help
 
 	// Sub Level Menus
 
 	// -----------  File
-	private final JMenuItem m_jmDownloadItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.download"));
-	private final JMenuItem m_jmImportItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.importfromhrf"));
-	private final JMenuItem m_jmSubksillFull = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.subskillrecalculation"));
-	private final JMenuItem m_jmSubksillRecalc7 = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.subskillrecalculation7weeks"));
-	private final JMenuItem m_jmOptionen = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.preferences"));
-	//private final JMenu databaseMenu = new JMenu(HOVerwaltung.instance().getLanguageString("ls.menu.file.database"));
-	private final JMenuItem userAdministrationOptionsMenu = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.database.dbuseradministration"));
-	private final JMenuItem m_jmiDbCleanupTool = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.database.databasecleanup"));
-	private final JMenuItem m_jmFullScreenItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.fullscreen"));
-	private final JMenuItem m_jmBeendenItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.quit"));
+	private final JMenuItem m_jmDownloadItem = new JMenuItem(TranslationFacility.tr("ls.menu.file.download"));
+	private final JMenuItem m_jmImportItem = new JMenuItem(TranslationFacility.tr("ls.menu.file.importfromhrf"));
+	private final JMenuItem m_jmSubksillFull = new JMenuItem(TranslationFacility.tr("ls.menu.file.subskillrecalculation"));
+	private final JMenuItem m_jmSubksillRecalc7 = new JMenuItem(TranslationFacility.tr("ls.menu.file.subskillrecalculation7weeks"));
+	private final JMenuItem m_jmOptionen = new JMenuItem(TranslationFacility.tr("ls.menu.file.preferences"));
+	//private final JMenu databaseMenu = new JMenu(TranslationFacility.tr("ls.menu.file.database"));
+	private final JMenuItem userAdministrationOptionsMenu = new JMenuItem(TranslationFacility.tr("ls.menu.file.database.dbuseradministration"));
+	private final JMenuItem m_jmiDbCleanupTool = new JMenuItem(TranslationFacility.tr("ls.menu.file.database.databasecleanup"));
+	private final JMenuItem m_jmFullScreenItem = new JMenuItem(TranslationFacility.tr("ls.menu.file.fullscreen"));
+	private final JMenuItem m_jmBeendenItem = new JMenuItem(TranslationFacility.tr("ls.menu.file.quit"));
 
 
 	// -----------  Functions
@@ -78,12 +79,12 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 	// -----------  Modules
 
 	// -----------  Help
-	private final JMenuItem m_jmHomepageItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.help.projecthomepage"));
-	private final JMenuItem m_jmWikiItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.help.help"));
-	private final JMenuItem m_jmReportAbug = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.help.reportabug"));
-	private final JMenuItem m_jmAboutAbout = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.help.about"));
-	private final JMenuItem m_jmCheckUpdate = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.file.update.ho"));
-	private final JMenuItem m_jmChangelog = new JMenuItem(HOVerwaltung.instance().getLanguageString("ls.menu.help.changelog"));
+	private final JMenuItem m_jmHomepageItem = new JMenuItem(TranslationFacility.tr("ls.menu.help.projecthomepage"));
+	private final JMenuItem m_jmWikiItem = new JMenuItem(TranslationFacility.tr("ls.menu.help.help"));
+	private final JMenuItem m_jmReportAbug = new JMenuItem(TranslationFacility.tr("ls.menu.help.reportabug"));
+	private final JMenuItem m_jmAboutAbout = new JMenuItem(TranslationFacility.tr("ls.menu.help.about"));
+	private final JMenuItem m_jmCheckUpdate = new JMenuItem(TranslationFacility.tr("ls.menu.file.update.ho"));
+	private final JMenuItem m_jmChangelog = new JMenuItem(TranslationFacility.tr("ls.menu.help.changelog"));
 
 	public static AtomicBoolean launching = new AtomicBoolean(false);
 
@@ -163,7 +164,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		String frameTitle = StringUtils.isEmpty(teamName) ? "" : teamName;
 		
 		if (!HO.isRelease()) {
-			frameTitle += " (" + HOVerwaltung.instance().getLanguageString("ls.java.version") + ": " + System.getProperty("java.version") + ")";
+			frameTitle += " (" + TranslationFacility.tr("ls.java.version") + ": " + System.getProperty("java.version") + ")";
 		}
 
 		setTitle(frameTitle);
@@ -249,7 +250,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		}
 		return m_jpInfoPanel;
 	}
-	public void setWaitInformation(){setInformation(HOVerwaltung.instance().getLanguageString("BitteWarten"), 1);}
+	public void setWaitInformation(){setInformation(TranslationFacility.tr("BitteWarten"), 1);}
 	public void resetInformation(){setInformation("",-100);}
 	public void setInformation( String information) { setInformation(information,-100);}
 	public void setInformationCompleted() { setInformation(Helper.getTranslation("ls.update_status.complete"), -100);}
@@ -316,7 +317,7 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		} else if (source.equals(m_jmSubksillFull)) { // recalc training (8 seasons = 128)
 			var from = HODateTime.now().minus(128*7, ChronoUnit.DAYS);
 			if (JOptionPane.showConfirmDialog(this,
-					HOVerwaltung.instance().getLanguageString("Subskill.Recalc.Full")+"\n"+HOVerwaltung.instance().getLanguageString("subskill.Recalc.Start"),
+					TranslationFacility.tr("Subskill.Recalc.Full")+"\n"+ TranslationFacility.tr("subskill.Recalc.Start"),
 					Helper.getTranslation("ls.menu.file.subskillrecalculation"), JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
 				HOVerwaltung.instance().recalcSubskills(true, from.toDbTimestamp());
 			}
@@ -324,10 +325,10 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 			var nextTraining = HOVerwaltung.instance().getModel().getXtraDaten().getNextTrainingDate();
 			var from = nextTraining.minus(7*7, ChronoUnit.DAYS);
 			if (JOptionPane.showConfirmDialog(this,
-					HOVerwaltung.instance().getLanguageString("subskill.Recalc.7w")+"\n"+
-							HOVerwaltung.instance().getLanguageString("subskill.Recalc.1stTrainingweek") + ": " +
+					TranslationFacility.tr("subskill.Recalc.7w")+"\n"+
+							TranslationFacility.tr("subskill.Recalc.1stTrainingweek") + ": " +
 							from.toLocaleHTWeek().toString() + "\n" +
-							HOVerwaltung.instance().getLanguageString("subskill.Recalc.Start"),
+							TranslationFacility.tr("subskill.Recalc.Start"),
 					Helper.getTranslation("ls.menu.file.subskillrecalculation7weeks"), JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
 				HOVerwaltung.instance().recalcSubskills(true, from.toDbTimestamp());
 			}
@@ -359,8 +360,8 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 					Desktop.getDesktop().browse(logFile);
 				} catch (Exception e) {
 					JOptionPane.showMessageDialog(this,
-							HOVerwaltung.instance().getLanguageString("Changelog.error"),
-							HOVerwaltung.instance().getLanguageString("Fehler"),
+							TranslationFacility.tr("Changelog.error"),
+							TranslationFacility.tr("Fehler"),
 							JOptionPane.ERROR_MESSAGE
 					);
 					e.printStackTrace();

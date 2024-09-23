@@ -1,11 +1,18 @@
 package core.net;
 
 
-import com.github.scribejava.core.model.*;
+import com.github.scribejava.core.builder.ServiceBuilder;
+import com.github.scribejava.core.model.OAuth1AccessToken;
+import com.github.scribejava.core.model.OAuthRequest;
+import com.github.scribejava.core.model.Response;
+import com.github.scribejava.core.model.Verb;
+import com.github.scribejava.core.oauth.OAuth10aService;
+import core.HO;
 import core.file.xml.XMLCHPPPreParser;
 import core.gui.CursorToolkit;
 import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.enums.MatchType;
 import core.model.match.SourceSystem;
@@ -14,13 +21,11 @@ import core.net.login.ProxyDialog;
 import core.net.login.ProxySettings;
 import core.util.*;
 import org.jetbrains.annotations.Nullable;
+import org.w3c.dom.Document;
 import tool.updater.VersionInfo;
-import core.HO;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+
+import javax.swing.*;
+import java.io.*;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -29,10 +34,6 @@ import java.util.*;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
-import javax.swing.JOptionPane;
-import com.github.scribejava.core.builder.ServiceBuilder;
-import com.github.scribejava.core.oauth.OAuth10aService;
-import org.w3c.dom.Document;
 
 
 public class MyConnector {
@@ -660,7 +661,7 @@ public class MyConnector {
 				HOLogger.instance().error(getClass(), sox);
 				JOptionPane.showMessageDialog(null,
 						sox.getMessage() + "\n\n" + "URL:" + surl + "\n",
-						HOVerwaltung.instance().getLanguageString("Fehler"),
+						TranslationFacility.tr("Fehler"),
 						JOptionPane.ERROR_MESSAGE);
 			}
 			returnString = "";
@@ -679,7 +680,7 @@ public class MyConnector {
 			HOLogger.instance().error(getClass(), sox);
 			if (showErrorMessage)
 				JOptionPane.showMessageDialog(null, sox.getMessage() + "\nURL: " + url,
-						HOVerwaltung.instance().getLanguageString("Fehler"),
+						TranslationFacility.tr("Fehler"),
 						JOptionPane.ERROR_MESSAGE);
 		}
 		return null;
@@ -703,7 +704,7 @@ public class MyConnector {
 			HOLogger.instance().error(getClass(), sox);
 			if (showErrorMessage)
 				JOptionPane.showMessageDialog(null, sox.getMessage() + "\nURL: " + surl,
-						HOVerwaltung.instance().getLanguageString("Fehler"),
+						TranslationFacility.tr("Fehler"),
 						JOptionPane.ERROR_MESSAGE);
 		}
 		return returnStream;
@@ -777,7 +778,7 @@ public class MyConnector {
 			HOLogger.instance().error(getClass(), sox);
 			if (showErrorMessage) {
 				JOptionPane.showMessageDialog(null, sox.getMessage() + "\nURL: " + surl,
-						HOVerwaltung.instance().getLanguageString("Fehler"),
+						TranslationFacility.tr("Fehler"),
 						JOptionPane.ERROR_MESSAGE);
 			}
 		}

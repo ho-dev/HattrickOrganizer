@@ -1,5 +1,6 @@
 package tool.injury;
-import core.model.HOVerwaltung;
+
+import core.model.TranslationFacility;
 
 /**
  * The Panel to calculate the number of needed doctors
@@ -12,7 +13,7 @@ public class DoctorPanel extends AbstractInjuryPanel {
 	
     //~ Instance fields ----------------------------------------------------------------------------
 
-	private String msg = HOVerwaltung.instance().getLanguageString("DoctorsNeeded");
+	private String msg = TranslationFacility.tr("DoctorsNeeded");
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -50,8 +51,8 @@ public class DoctorPanel extends AbstractInjuryPanel {
      */
     public final void reset() {
         setInputValue("");
-        setInputMsg(HOVerwaltung.instance().getLanguageString("Updates"));
+        setInputMsg(TranslationFacility.tr("Updates"));
         setOutputMsg(msg);
-        setHeader(HOVerwaltung.instance().getLanguageString("Injury1"));
+        setHeader(TranslationFacility.tr("Injury1"));
     }
 }

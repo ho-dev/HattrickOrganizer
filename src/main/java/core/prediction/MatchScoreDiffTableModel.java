@@ -6,10 +6,10 @@
 package core.prediction;
 
 import core.gui.comp.entry.ColorLabelEntry;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.prediction.engine.MatchResult;
 
-import javax.swing.SwingConstants;
+import javax.swing.*;
 
 
 public class MatchScoreDiffTableModel extends AbstractMatchTableModel {
@@ -17,8 +17,8 @@ public class MatchScoreDiffTableModel extends AbstractMatchTableModel {
 	private static final long serialVersionUID = -2114489862284776054L;
 	protected static String[] columnNames =
 	{
-		HOVerwaltung.instance().getLanguageString("ls.match.result"),
-		HOVerwaltung.instance().getLanguageString("frequency")
+		TranslationFacility.tr("ls.match.result"),
+		TranslationFacility.tr("frequency")
 	};
 
 	//~ Constructors -------------------------------------------------------------------------------
@@ -50,11 +50,11 @@ public class MatchScoreDiffTableModel extends AbstractMatchTableModel {
 			result[diff + 4] += n;
 		}
 
-		String homeWin = HOVerwaltung.instance().getLanguageString("Winby");
-		String awayWin = HOVerwaltung.instance().getLanguageString("Lostby");
+		String homeWin = TranslationFacility.tr("Winby");
+		String awayWin = TranslationFacility.tr("Lostby");
 		if (!isHomeMatch()) {
-			awayWin = HOVerwaltung.instance().getLanguageString("Winby");
-			homeWin  = HOVerwaltung.instance().getLanguageString("Lostby");
+			awayWin = TranslationFacility.tr("Winby");
+			homeWin  = TranslationFacility.tr("Lostby");
 
 		}
 		for (int i = 8; i > 4; i--) {
@@ -71,7 +71,7 @@ public class MatchScoreDiffTableModel extends AbstractMatchTableModel {
 
 		m_clData[4][0] =
 			new ColorLabelEntry(
-				HOVerwaltung.instance().getLanguageString("Unendschieden"),
+				TranslationFacility.tr("Unendschieden"),
 				ColorLabelEntry.FG_STANDARD,
 				ColorLabelEntry.BG_STANDARD,
 				SwingConstants.LEFT);

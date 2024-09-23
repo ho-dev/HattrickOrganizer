@@ -1,34 +1,17 @@
 package module.ifa;
 
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.module.config.ModuleConfig;
 import module.ifa.config.Config;
 import module.ifa.model.IfaModel;
 
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.io.File;
-import java.math.BigDecimal;
-
-import javax.swing.ImageIcon;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSlider;
-import javax.swing.JSpinner;
-import javax.swing.JTextField;
-import javax.swing.SpinnerNumberModel;
+import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.File;
+import java.math.BigDecimal;
 
 public class ImageDesignPanel extends JPanel {
 
@@ -74,7 +57,7 @@ public class ImageDesignPanel extends JPanel {
 			emblemPath = ModuleConfig.instance().getString(Config.VISITED_EMBLEM_PATH.toString(),
 					"");
 			headerText = ModuleConfig.instance().getString(Config.VISITED_HEADER_TEXT.toString(),
-					HOVerwaltung.instance().getLanguageString("ifa.visitedHeader.defaultText"));
+					TranslationFacility.tr("ifa.visitedHeader.defaultText"));
 			brightness = ModuleConfig.instance()
                     .getInteger(Config.VISITED_BRIGHTNESS.toString(), 50);
 			grey = ModuleConfig.instance()
@@ -89,7 +72,7 @@ public class ImageDesignPanel extends JPanel {
 			emblemPath = ModuleConfig.instance()
 					.getString(Config.HOSTED_EMBLEM_PATH.toString(), "");
 			headerText = ModuleConfig.instance().getString(Config.HOSTED_HEADER_TEXT.toString(),
-					HOVerwaltung.instance().getLanguageString("ifa.hostedHeader.defaultText"));
+					TranslationFacility.tr("ifa.hostedHeader.defaultText"));
 			brightness = ModuleConfig.instance()
                     .getInteger(Config.HOSTED_BRIGHTNESS.toString(), 50);
 			grey = ModuleConfig.instance().getBoolean(Config.HOSTED_GREY.toString(), Boolean.FALSE);
@@ -365,6 +348,6 @@ public class ImageDesignPanel extends JPanel {
 	 * @return
 	 */
 	private static String getLangString(String key) {
-		return HOVerwaltung.instance().getLanguageString(key);
+		return TranslationFacility.tr(key);
 	}
 }

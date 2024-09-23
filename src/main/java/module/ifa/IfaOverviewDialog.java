@@ -3,35 +3,24 @@ package module.ifa;
 import core.gui.comp.renderer.DoubleTableCellRenderer;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.WorldDetailLeague;
 import core.model.WorldDetailsManager;
 import module.ifa.model.Country;
 import module.ifa.model.IfaModel;
 
-import java.awt.Component;
-import java.awt.Frame;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import javax.swing.*;
+import javax.swing.RowSorter.SortKey;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableRowSorter;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.RowSorter;
-import javax.swing.RowSorter.SortKey;
-import javax.swing.SortOrder;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableRowSorter;
 
 import static module.ifa.model.IfaModel.APACHE_LEAGUE_ID;
 
@@ -48,7 +37,7 @@ public class IfaOverviewDialog extends JDialog {
 	}
 
 	private void initComponents() {
-		setTitle(HOVerwaltung.instance().getLanguageString("ifa.infoDialog.title"));
+		setTitle(TranslationFacility.tr("ifa.infoDialog.title"));
 
 		MyTableModel tblModel = new MyTableModel();
 		JTable table = new JTable(tblModel);
@@ -87,7 +76,7 @@ public class IfaOverviewDialog extends JDialog {
 		table.setRowSorter(sorter);
 
 		JButton closeButton = new JButton();
-		closeButton.setText(HOVerwaltung.instance().getLanguageString("ls.button.close"));
+		closeButton.setText(TranslationFacility.tr("ls.button.close"));
 		closeButton.addActionListener(new ActionListener() {
 
 			@Override
@@ -141,16 +130,15 @@ public class IfaOverviewDialog extends JDialog {
 		public String getColumnName(int columnIndex) {
 			switch (columnIndex) {
 			case COL_COUNTRY:
-				return HOVerwaltung.instance().getLanguageString("ifa.statisticsTable.col.country");
+				return TranslationFacility.tr("ifa.statisticsTable.col.country");
 			case COL_ACTIVE_USERS:
-				return HOVerwaltung.instance().getLanguageString("ifa.infoDialog.col.activeUsers");
+				return TranslationFacility.tr("ifa.infoDialog.col.activeUsers");
 			case COL_COOLNESS:
-				return HOVerwaltung.instance()
-						.getLanguageString("ifa.statisticsTable.col.coolness");
+				return TranslationFacility.tr("ifa.statisticsTable.col.coolness");
 			case COL_VISITED:
-				return HOVerwaltung.instance().getLanguageString("ifa.infoDialog.col.visited");
+				return TranslationFacility.tr("ifa.infoDialog.col.visited");
 			case COL_HOSTED:
-				return HOVerwaltung.instance().getLanguageString("ifa.infoDialog.col.hosted");
+				return TranslationFacility.tr("ifa.infoDialog.col.hosted");
 			default:
 				return super.getColumnName(columnIndex);
 			}

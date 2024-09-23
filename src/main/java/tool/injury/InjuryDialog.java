@@ -1,13 +1,10 @@
 package tool.injury;
 
 import core.gui.comp.panel.ImagePanel;
-import core.model.HOVerwaltung;
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.GridLayout;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import core.model.TranslationFacility;
+
+import javax.swing.*;
+import java.awt.*;
 
 
 /**
@@ -33,7 +30,7 @@ public class InjuryDialog extends JDialog {
      */
     public InjuryDialog(JFrame owner) {
         super(owner, false);
-        setTitle(HOVerwaltung.instance().getLanguageString("InjuryCalculator"));
+        setTitle(TranslationFacility.tr("InjuryCalculator"));
 
         initComponents();
 

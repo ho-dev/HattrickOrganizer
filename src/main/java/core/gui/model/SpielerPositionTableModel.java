@@ -3,13 +3,12 @@ package core.gui.model;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.RatingTableEntry;
 import core.gui.theme.ImageUtilities;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.player.MatchRoleID;
 
-import java.util.Vector;
-
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
+import java.util.Vector;
 
 public class SpielerPositionTableModel extends AbstractTableModel {
     //~ Instance fields ----------------------------------------------------------------------------
@@ -17,31 +16,31 @@ public class SpielerPositionTableModel extends AbstractTableModel {
 	private static final long serialVersionUID = -4407511039452889638L;
 
     public String[] m_sToolTipStrings = {
-    	HOVerwaltung.instance().getLanguageString("Position"),
+    	TranslationFacility.tr("Position"),
         //Maximal
-	    HOVerwaltung.instance().getLanguageString("Maximal"),
+	    TranslationFacility.tr("Maximal"),
         //Minimal
-	    HOVerwaltung.instance().getLanguageString("Minimal"),
+	    TranslationFacility.tr("Minimal"),
         //Durchschnitt
-	    HOVerwaltung.instance().getLanguageString("Durchschnitt"),
+	    TranslationFacility.tr("Durchschnitt"),
     };
 
     protected Object[][] m_clData;
 
     protected String[] m_sColumnNames = {
-                                            HOVerwaltung.instance().getLanguageString("Position"),
+                                            TranslationFacility.tr("Position"),
                                             
 
     //Maximal
-    HOVerwaltung.instance().getLanguageString("Maximal"),
+    TranslationFacility.tr("Maximal"),
                                             
 
     //Minimal
-    HOVerwaltung.instance().getLanguageString("Minimal"),
+    TranslationFacility.tr("Minimal"),
                                             
 
     //Durchschnitt
-    HOVerwaltung.instance().getLanguageString("Durchschnitt"),
+    TranslationFacility.tr("Durchschnitt"),
                                         };
     private Vector<float[]> m_playersEvaluation;
 

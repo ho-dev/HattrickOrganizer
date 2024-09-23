@@ -1,6 +1,6 @@
 package module.teamAnalyzer.manager;
 
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.match.IMatchType;
 import core.model.player.IMatchRoleID;
 import core.prediction.engine.TeamData;
@@ -10,12 +10,7 @@ import module.teamAnalyzer.report.TacticReport;
 import module.teamAnalyzer.report.TeamReport;
 import module.teamAnalyzer.vo.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.SortedSet;
-import java.util.TreeSet;
+import java.util.*;
 
 public class TeamLineupBuilder {
     //~ Instance fields ----------------------------------------------------------------------------
@@ -94,7 +89,7 @@ public class TeamLineupBuilder {
 
         if ((appearances.length > 2)
             && (appearances[2].getAppearance() == appearances[0].getAppearance())) {
-            app.setName(HOVerwaltung.instance().getLanguageString("TeamLineupBuilder.Unknown")); //$NON-NLS-1$
+            app.setName(TranslationFacility.tr("TeamLineupBuilder.Unknown")); //$NON-NLS-1$
         } else {
             //			String status1 = (appearances[0].getStatus()!=PlayerManager.AVAILABLE)? "*":"";			
             //			String status2 = (appearances[1].getStatus()!=PlayerManager.AVAILABLE)? "*":"";

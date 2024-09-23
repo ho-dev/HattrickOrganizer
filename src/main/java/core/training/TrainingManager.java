@@ -3,14 +3,16 @@ package core.training;
 import core.db.DBManager;
 import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.util.HODateTime;
 import core.util.HOLogger;
+
+import javax.swing.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.List;
 import java.util.stream.Collectors;
-import javax.swing.JOptionPane;
 
 /**
  * Singleton class that holds training information.
@@ -115,8 +117,8 @@ public class TrainingManager implements PropertyChangeListener {
     @Deprecated
     public void recalcSubskills(boolean showBar) {
         if (JOptionPane.showConfirmDialog(HOMainFrame.instance(),
-        		HOVerwaltung.instance().getLanguageString("Subskill.Recalc.Full")+"\n"+HOVerwaltung.instance().getLanguageString("subskill.Recalc.Start"),
-				HOVerwaltung.instance().getLanguageString("ls.menu.file.subskillrecalculation"), JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
+        		TranslationFacility.tr("Subskill.Recalc.Full")+"\n"+TranslationFacility.tr("subskill.Recalc.Start"),
+				TranslationFacility.tr("ls.menu.file.subskillrecalculation"), JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
             HOVerwaltung.instance().recalcSubskills(showBar, null);
         }
     }

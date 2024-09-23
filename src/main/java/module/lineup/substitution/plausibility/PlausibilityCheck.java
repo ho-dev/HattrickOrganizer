@@ -1,13 +1,17 @@
 package module.lineup.substitution.plausibility;
 
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.player.Player;
 import module.lineup.Lineup;
 import module.lineup.assistant.LineupAssistant;
 import module.lineup.substitution.LanguageStringLookup;
 import module.lineup.substitution.model.Substitution;
 
-import static module.lineup.substitution.model.MatchOrderType.*;
+import static module.lineup.substitution.model.MatchOrderType.MAN_MARKING;
+import static module.lineup.substitution.model.MatchOrderType.NEW_BEHAVIOUR;
+import static module.lineup.substitution.model.MatchOrderType.POSITION_SWAP;
+import static module.lineup.substitution.model.MatchOrderType.SUBSTITUTION;
 
 public class PlausibilityCheck {
 
@@ -68,19 +72,19 @@ public class PlausibilityCheck {
 			switch ((Error) problem) {
 			case PLAYERIN_NOT_IN_LINEUP:
 			case PLAYERIN_NOT_REAL:
-				return HOVerwaltung.instance().getLanguageString(problem.getLanguageKey(),
+				return TranslationFacility.tr(problem.getLanguageKey(),
 						getPlayerIn(substitution).getFullName());
 			case PLAYEROUT_NOT_IN_LINEUP:
 			case PLAYEROUT_NOT_REAL:
-				return HOVerwaltung.instance().getLanguageString(problem.getLanguageKey(),
+				return TranslationFacility.tr(problem.getLanguageKey(),
 						getPlayerOut(substitution).getFullName());
 			default:
-				return HOVerwaltung.instance().getLanguageString(problem.getLanguageKey());
+				return TranslationFacility.tr(problem.getLanguageKey());
 			}
 		} else if (problem instanceof Uncertainty) {
 			switch ((Uncertainty) problem) {
 			case SAME_TACTIC:
-				return HOVerwaltung.instance().getLanguageString(problem.getLanguageKey(),
+				return TranslationFacility.tr(problem.getLanguageKey(),
 						getPlayerOut(substitution).getFullName(),
 						LanguageStringLookup.getBehaviour(substitution.getBehaviour()));
 			}

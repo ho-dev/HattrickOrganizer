@@ -2,7 +2,7 @@ package module.training.ui.comp;
 
 import core.datatype.CBItem;
 import core.gui.RefreshManager;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.constants.TrainingConstants;
 import core.model.enums.DBDataSource;
 import core.training.TrainingPerWeek;
@@ -10,13 +10,15 @@ import core.util.HODateTime;
 import core.util.Helper;
 import module.training.ui.model.FutureTrainingsTableModel;
 import module.training.ui.model.TrainingModel;
+
+import javax.swing.*;
 import java.awt.*;
-import static module.lineup.LineupPanel.TITLE_FG;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import javax.swing.*;
+
+import static module.lineup.LineupPanel.TITLE_FG;
 
 
 /**
@@ -220,7 +222,7 @@ public class FutureTrainingsEditionPanel extends JPanel {
         add(m_jcbAssitantsTotalLevelEditor, gbc);
 
 
-        JButton button = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.apply"));
+        JButton button = new JButton(TranslationFacility.tr("ls.button.apply"));
         button.addActionListener(arg0 -> updateFutureTrainings());
         gbc.gridx = 5;
         add(button, gbc);

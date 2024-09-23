@@ -2,7 +2,7 @@
 package module.transfer;
 
 import core.db.AbstractTable;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 
 
 /**
@@ -75,27 +75,27 @@ public final class TransferType extends AbstractTable.Storable {
      * @return Transfer type
      */
     public static int getTransferCode(String type) {
-        if (type.equalsIgnoreCase(HOVerwaltung.instance().getLanguageString("TransferTypes.Trained_on_Roster"))) { //$NON-NLS-1$
+        if (type.equalsIgnoreCase(TranslationFacility.tr("TransferTypes.Trained_on_Roster"))) { //$NON-NLS-1$
             return TRAINED_ROSTER;
-        } else if (type.equalsIgnoreCase(HOVerwaltung.instance().getLanguageString("TransferTypes.Starter_on_Roster"))) { //$NON-NLS-1$
+        } else if (type.equalsIgnoreCase(TranslationFacility.tr("TransferTypes.Starter_on_Roster"))) { //$NON-NLS-1$
             return STARTER_ROSTER;
-        } else if (type.equalsIgnoreCase(HOVerwaltung.instance().getLanguageString("TransferTypes.Backup_on_Roster"))) { //$NON-NLS-1$
+        } else if (type.equalsIgnoreCase(TranslationFacility.tr("TransferTypes.Backup_on_Roster"))) { //$NON-NLS-1$
             return BACKUP_ROSTER;
-        } else if (type.equalsIgnoreCase(HOVerwaltung.instance().getLanguageString("TransferTypes.Youth_Pull"))) { //$NON-NLS-1$
+        } else if (type.equalsIgnoreCase(TranslationFacility.tr("TransferTypes.Youth_Pull"))) { //$NON-NLS-1$
             return YOUTH_PULL;
-        } else if (type.equalsIgnoreCase(HOVerwaltung.instance().getLanguageString("TransferTypes.Original_Player"))) { //$NON-NLS-1$
+        } else if (type.equalsIgnoreCase(TranslationFacility.tr("TransferTypes.Original_Player"))) { //$NON-NLS-1$
             return ORIGINAL_ROSTER;
-        } else if (type.equalsIgnoreCase(HOVerwaltung.instance().getLanguageString("TransferTypes.Day_Trading"))) { //$NON-NLS-1$
+        } else if (type.equalsIgnoreCase(TranslationFacility.tr("TransferTypes.Day_Trading"))) { //$NON-NLS-1$
             return DAY_TRADING;
-        } else if (type.equalsIgnoreCase(HOVerwaltung.instance().getLanguageString("TransferTypes.Skill_Trading"))) { //$NON-NLS-1$
+        } else if (type.equalsIgnoreCase(TranslationFacility.tr("TransferTypes.Skill_Trading"))) { //$NON-NLS-1$
             return SKILL_TRADING;
-        } else if (type.equalsIgnoreCase(HOVerwaltung.instance().getLanguageString("TransferTypes.Future_Trainer"))) { //$NON-NLS-1$
+        } else if (type.equalsIgnoreCase(TranslationFacility.tr("TransferTypes.Future_Trainer"))) { //$NON-NLS-1$
             return FUTURE_TRAINER;
-        } else if (type.equalsIgnoreCase(HOVerwaltung.instance().getLanguageString("TransferTypes.Old_Trained_Player"))) { //$NON-NLS-1$
+        } else if (type.equalsIgnoreCase(TranslationFacility.tr("TransferTypes.Old_Trained_Player"))) { //$NON-NLS-1$
             return OLD_TRAINED;
-        } else if (type.equalsIgnoreCase(HOVerwaltung.instance().getLanguageString("TransferTypes.Old_Starter_Player"))) { //$NON-NLS-1$
+        } else if (type.equalsIgnoreCase(TranslationFacility.tr("TransferTypes.Old_Starter_Player"))) { //$NON-NLS-1$
             return OLD_STARTER;
-        } else if (type.equalsIgnoreCase(HOVerwaltung.instance().getLanguageString("TransferTypes.Old_Backup_Player"))) { //$NON-NLS-1$
+        } else if (type.equalsIgnoreCase(TranslationFacility.tr("TransferTypes.Old_Backup_Player"))) { //$NON-NLS-1$
             return OLD_BACKUP;
         }  else {
             return FIRED_PLAYER;
@@ -112,37 +112,37 @@ public final class TransferType extends AbstractTable.Storable {
     public static String getTransferDesc(int type) {
         return switch (type) {
             case TRAINED_ROSTER ->
-                    HOVerwaltung.instance().getLanguageString("TransferTypes.Trained_on_Roster"); //$NON-NLS-1$
+                    TranslationFacility.tr("TransferTypes.Trained_on_Roster"); //$NON-NLS-1$
 
             case STARTER_ROSTER ->
-                    HOVerwaltung.instance().getLanguageString("TransferTypes.Starter_on_Roster"); //$NON-NLS-1$
+                    TranslationFacility.tr("TransferTypes.Starter_on_Roster"); //$NON-NLS-1$
 
             case BACKUP_ROSTER ->
-                    HOVerwaltung.instance().getLanguageString("TransferTypes.Backup_on_Roster"); //$NON-NLS-1$
+                    TranslationFacility.tr("TransferTypes.Backup_on_Roster"); //$NON-NLS-1$
 
-            case YOUTH_PULL -> HOVerwaltung.instance().getLanguageString("TransferTypes.Youth_Pull"); //$NON-NLS-1$
+            case YOUTH_PULL -> TranslationFacility.tr("TransferTypes.Youth_Pull"); //$NON-NLS-1$
 
             case ORIGINAL_ROSTER ->
-                    HOVerwaltung.instance().getLanguageString("TransferTypes.Original_Player"); //$NON-NLS-1$
+                    TranslationFacility.tr("TransferTypes.Original_Player"); //$NON-NLS-1$
 
-            case DAY_TRADING -> HOVerwaltung.instance().getLanguageString("TransferTypes.Day_Trading"); //$NON-NLS-1$
+            case DAY_TRADING -> TranslationFacility.tr("TransferTypes.Day_Trading"); //$NON-NLS-1$
 
             case SKILL_TRADING ->
-                    HOVerwaltung.instance().getLanguageString("TransferTypes.Skill_Trading"); //$NON-NLS-1$
+                    TranslationFacility.tr("TransferTypes.Skill_Trading"); //$NON-NLS-1$
 
             case FUTURE_TRAINER ->
-                    HOVerwaltung.instance().getLanguageString("TransferTypes.Future_Trainer"); //$NON-NLS-1$
+                    TranslationFacility.tr("TransferTypes.Future_Trainer"); //$NON-NLS-1$
 
             case OLD_TRAINED ->
-                    HOVerwaltung.instance().getLanguageString("TransferTypes.Old_Trained_Player"); //$NON-NLS-1$
+                    TranslationFacility.tr("TransferTypes.Old_Trained_Player"); //$NON-NLS-1$
 
             case OLD_STARTER ->
-                    HOVerwaltung.instance().getLanguageString("TransferTypes.Old_Starter_Player"); //$NON-NLS-1$
+                    TranslationFacility.tr("TransferTypes.Old_Starter_Player"); //$NON-NLS-1$
 
             case OLD_BACKUP ->
-                    HOVerwaltung.instance().getLanguageString("TransferTypes.Old_Backup_Player"); //$NON-NLS-1$
+                    TranslationFacility.tr("TransferTypes.Old_Backup_Player"); //$NON-NLS-1$
 
-            case FIRED_PLAYER -> HOVerwaltung.instance().getLanguageString("FiredPlayer"); //$NON-NLS-1$
+            case FIRED_PLAYER -> TranslationFacility.tr("FiredPlayer"); //$NON-NLS-1$
 
             default -> ""; //$NON-NLS-1$
         };

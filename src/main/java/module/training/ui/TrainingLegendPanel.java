@@ -6,22 +6,14 @@ package module.training.ui;
 import core.constants.player.PlayerSkill;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.ImageUtilities;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import module.training.Skills;
 
-import java.awt.Color;
-import java.awt.GridLayout;
-import java.awt.Image;
-import java.awt.Toolkit;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.image.FilteredImageSource;
 import java.awt.image.RGBImageFilter;
 import java.io.Serial;
-
-import javax.swing.BorderFactory;
-import javax.swing.Icon;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
 
 public class TrainingLegendPanel extends ImagePanel {
     //~ Constructors -------------------------------------------------------------------------------
@@ -34,7 +26,7 @@ public class TrainingLegendPanel extends ImagePanel {
     public TrainingLegendPanel() {
         this.setLayout(new GridLayout(2, 5));
 
-        JLabel title = new JLabel(HOVerwaltung.instance().getLanguageString("Legenda"), SwingConstants.LEFT); //$NON-NLS-1$
+        JLabel title = new JLabel(TranslationFacility.tr("Legenda"), SwingConstants.LEFT); //$NON-NLS-1$
         this.add(title);
 
         for (int i = 0; i < 4; i++) {

@@ -4,34 +4,16 @@ package core.net.login;
 import core.gui.HOMainFrame;
 import core.gui.comp.NumericDocument;
 import core.gui.comp.panel.ImagePanel;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.net.MyConnector;
 import core.util.GUIUtils;
 import core.util.StringUtils;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import java.awt.*;
+import java.awt.event.*;
 
 /**
  * ProxyDialog
@@ -81,8 +63,6 @@ public class ProxyDialog extends JDialog {
 	 * Komponenten des Panels initial setzen
 	 */
 	private void initComponents() {
-		HOVerwaltung hov = HOVerwaltung.instance();
-
 		setContentPane(new ImagePanel());
 		getContentPane().setLayout(new BorderLayout());
 
@@ -97,8 +77,8 @@ public class ProxyDialog extends JDialog {
 		JPanel panel = new ImagePanel(new GridBagLayout());
 
 		useProxyCheckBox
-				.setToolTipText(hov.getLanguageString("tt_Login_Proxy"));
-		useProxyCheckBox.setText(hov.getLanguageString("ProxyAktiv"));
+				.setToolTipText(TranslationFacility.tr("tt_Login_Proxy"));
+		useProxyCheckBox.setText(TranslationFacility.tr("ProxyAktiv"));
 		useProxyCheckBox.setOpaque(false);
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.gridx = 0;
@@ -108,8 +88,8 @@ public class ProxyDialog extends JDialog {
 		gbc.insets = new Insets(8, 8, 4, 8);
 		panel.add(useProxyCheckBox, gbc);
 
-		JLabel label = new JLabel(hov.getLanguageString("ProxyHost"));
-		label.setToolTipText(hov.getLanguageString("tt_Login_ProxyHost"));
+		JLabel label = new JLabel(TranslationFacility.tr("ProxyHost"));
+		label.setToolTipText(TranslationFacility.tr("tt_Login_ProxyHost"));
 		gbc.gridx = 0;
 		gbc.gridy = 1;
 		gbc.gridwidth = 1;
@@ -121,8 +101,8 @@ public class ProxyDialog extends JDialog {
 		gbc.insets = new Insets(4, 2, 4, 8);
 		panel.add(proxyHostTextField, gbc);
 
-		label = new JLabel(hov.getLanguageString("ProxyPort"));
-		label.setToolTipText(hov.getLanguageString("tt_Login_ProxyPort"));
+		label = new JLabel(TranslationFacility.tr("ProxyPort"));
+		label.setToolTipText(TranslationFacility.tr("tt_Login_ProxyPort"));
 		gbc.gridx = 0;
 		gbc.gridy = 2;
 		gbc.insets = new Insets(4, 8, 4, 2);
@@ -135,9 +115,8 @@ public class ProxyDialog extends JDialog {
 		panel.add(proxyPortTextField, gbc);
 
 		// Auth
-		useProxyAuthCheckBox.setToolTipText(hov
-				.getLanguageString("tt_Login_ProxyAuth"));
-		useProxyAuthCheckBox.setText(hov.getLanguageString("ProxyAuthAktiv"));
+		useProxyAuthCheckBox.setToolTipText(TranslationFacility.tr("tt_Login_ProxyAuth"));
+		useProxyAuthCheckBox.setText(TranslationFacility.tr("ProxyAuthAktiv"));
 		useProxyAuthCheckBox.setOpaque(false);
 		gbc.gridx = 0;
 		gbc.gridy = 3;
@@ -145,8 +124,8 @@ public class ProxyDialog extends JDialog {
 		gbc.insets = new Insets(8, 8, 4, 8);
 		panel.add(useProxyAuthCheckBox, gbc);
 
-		label = new JLabel(hov.getLanguageString("ProxyAuthName"));
-		label.setToolTipText(hov.getLanguageString("tt_Login_ProxyAuthName"));
+		label = new JLabel(TranslationFacility.tr("ProxyAuthName"));
+		label.setToolTipText(TranslationFacility.tr("tt_Login_ProxyAuthName"));
 		label.setLocation(10, 155);
 		label.setSize(185, 25);
 		gbc.gridx = 0;
@@ -160,9 +139,8 @@ public class ProxyDialog extends JDialog {
 		gbc.insets = new Insets(4, 2, 4, 8);
 		panel.add(proxyAuthNameTextField, gbc);
 
-		label = new JLabel(hov.getLanguageString("ProxyAuthPassword"));
-		label.setToolTipText(hov
-				.getLanguageString("tt_Login_ProxyAuthPassword"));
+		label = new JLabel(TranslationFacility.tr("ProxyAuthPassword"));
+		label.setToolTipText(TranslationFacility.tr("tt_Login_ProxyAuthPassword"));
 		gbc.gridx = 0;
 		gbc.gridy = 5;
 		gbc.weighty = 1.0;
@@ -174,13 +152,13 @@ public class ProxyDialog extends JDialog {
 		gbc.insets = new Insets(4, 2, 4, 8);
 		panel.add(proxyPasswordField, gbc);
 
-		panel.setBorder(new TitledBorder(hov.getLanguageString("Proxydaten")));
+		panel.setBorder(new TitledBorder(TranslationFacility.tr("Proxydaten")));
 		getContentPane().add(panel, BorderLayout.CENTER);
 
 		// Buttons
 		JPanel buttonPanel = new ImagePanel(new GridBagLayout());
-		okButton.setToolTipText(hov.getLanguageString("tt_Login_Anmelden"));
-		okButton.setText(hov.getLanguageString("ls.button.save"));
+		okButton.setToolTipText(TranslationFacility.tr("tt_Login_Anmelden"));
+		okButton.setText(TranslationFacility.tr("ls.button.save"));
 		gbc = new GridBagConstraints();
 		gbc.gridx = 0;
 		gbc.anchor = GridBagConstraints.NORTHEAST;
@@ -189,8 +167,8 @@ public class ProxyDialog extends JDialog {
 		buttonPanel.add(okButton, gbc);
 
 		cancelButton
-				.setToolTipText(hov.getLanguageString("tt_Login_Abbrechen"));
-		cancelButton.setText(hov.getLanguageString("ls.button.cancel"));
+				.setToolTipText(TranslationFacility.tr("tt_Login_Abbrechen"));
+		cancelButton.setText(TranslationFacility.tr("ls.button.cancel"));
 		gbc.gridx = 1;
 		gbc.weightx = 0.0;
 		gbc.insets = new Insets(6, 4, 6, 6);

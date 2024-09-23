@@ -2,6 +2,7 @@ package module.lineup.substitution;
 
 import core.datatype.CBItem;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import module.lineup.Lineup;
 import module.lineup.substitution.model.GoalDiffCriteria;
 import module.teamAnalyzer.SystemManager;
@@ -81,19 +82,19 @@ public class SubstitutionDataProvider {
 	 */
 	public static CBItem[] getRedCardItems() {
 		return new CBItem[]{
-				new CBItem(HOVerwaltung.instance().getLanguageString("subs.RedIgnore"), -1),
-				new CBItem(HOVerwaltung.instance().getLanguageString("subs.RedMy"), 1),
-				new CBItem(HOVerwaltung.instance().getLanguageString("subs.RedOpp"), 2),
-				new CBItem(HOVerwaltung.instance().getLanguageString("subs.RedMyCD"), 11),
-				new CBItem(HOVerwaltung.instance().getLanguageString("subs.RedMyMF"), 12),
-				new CBItem(HOVerwaltung.instance().getLanguageString("subs.RedMyFW"), 13),
-				new CBItem(HOVerwaltung.instance().getLanguageString("subs.RedMyWB"), 14),
-				new CBItem(HOVerwaltung.instance().getLanguageString("subs.RedMyWI"), 15),
-				new CBItem(HOVerwaltung.instance().getLanguageString("subs.RedOppCD"), 21),
-				new CBItem(HOVerwaltung.instance().getLanguageString("subs.RedOppMF"), 22),
-				new CBItem(HOVerwaltung.instance().getLanguageString("subs.RedOppFW"), 23),
-				new CBItem(HOVerwaltung.instance().getLanguageString("subs.RedOppWB"), 24),
-				new CBItem(HOVerwaltung.instance().getLanguageString("subs.RedOppWi"), 25), };
+				new CBItem(TranslationFacility.tr("subs.RedIgnore"), -1),
+				new CBItem(TranslationFacility.tr("subs.RedMy"), 1),
+				new CBItem(TranslationFacility.tr("subs.RedOpp"), 2),
+				new CBItem(TranslationFacility.tr("subs.RedMyCD"), 11),
+				new CBItem(TranslationFacility.tr("subs.RedMyMF"), 12),
+				new CBItem(TranslationFacility.tr("subs.RedMyFW"), 13),
+				new CBItem(TranslationFacility.tr("subs.RedMyWB"), 14),
+				new CBItem(TranslationFacility.tr("subs.RedMyWI"), 15),
+				new CBItem(TranslationFacility.tr("subs.RedOppCD"), 21),
+				new CBItem(TranslationFacility.tr("subs.RedOppMF"), 22),
+				new CBItem(TranslationFacility.tr("subs.RedOppFW"), 23),
+				new CBItem(TranslationFacility.tr("subs.RedOppWB"), 24),
+				new CBItem(TranslationFacility.tr("subs.RedOppWi"), 25), };
 	}
 
 	/**
@@ -104,15 +105,14 @@ public class SubstitutionDataProvider {
 	 */
 	public static List<CBItem> getBehaviourItems(boolean withInheritItem) {
 		List<CBItem> behaviourValues = new ArrayList<>();
-		HOVerwaltung hov = HOVerwaltung.instance();
 		if (withInheritItem) {
-			behaviourValues.add(new CBItem(hov.getLanguageString("subs.BehNoChange"), -1));
+			behaviourValues.add(new CBItem(TranslationFacility.tr("subs.BehNoChange"), -1));
 		}
-		behaviourValues.add(new CBItem(hov.getLanguageString("ls.player.behaviour.normal"), 0));
-		behaviourValues.add(new CBItem(hov.getLanguageString("ls.player.behaviour.offensive"), 1));
-		behaviourValues.add(new CBItem(hov.getLanguageString("ls.player.behaviour.defensive"), 2));
-		behaviourValues.add(new CBItem(hov.getLanguageString("ls.player.behaviour.towardsmiddle"), 3));
-		behaviourValues.add(new CBItem(hov.getLanguageString("ls.player.behaviour.towardswing"), 4));
+		behaviourValues.add(new CBItem(TranslationFacility.tr("ls.player.behaviour.normal"), 0));
+		behaviourValues.add(new CBItem(TranslationFacility.tr("ls.player.behaviour.offensive"), 1));
+		behaviourValues.add(new CBItem(TranslationFacility.tr("ls.player.behaviour.defensive"), 2));
+		behaviourValues.add(new CBItem(TranslationFacility.tr("ls.player.behaviour.towardsmiddle"), 3));
+		behaviourValues.add(new CBItem(TranslationFacility.tr("ls.player.behaviour.towardswing"), 4));
 		return behaviourValues;
 	}
 

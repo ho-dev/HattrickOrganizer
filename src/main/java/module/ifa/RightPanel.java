@@ -3,7 +3,7 @@ package module.ifa;
 import core.db.DBManager;
 import core.file.xml.XMLManager;
 import core.file.xml.XMLWorldDetailsParser;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.WorldDetailLeague;
 import core.model.WorldDetailsManager;
 import core.net.MyConnector;
@@ -13,25 +13,12 @@ import core.util.IOUtils;
 import module.ifa.gif.Gif89Encoder;
 import module.ifa.model.IfaModel;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.List;
-
-import javax.swing.BorderFactory;
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.SwingUtilities;
 
 import static java.lang.Double.parseDouble;
 
@@ -54,15 +41,15 @@ public class RightPanel extends JPanel {
 
 	private void initComponents() {
 		setLayout(new GridBagLayout());
-		setBorder(BorderFactory.createTitledBorder(HOVerwaltung.instance().getLanguageString(
+		setBorder(BorderFactory.createTitledBorder(TranslationFacility.tr(
 				"ifa.imageBuilder.title")));
 
 		JPanel buttonPanel = new JPanel();
 		GridBagConstraints gbc = new GridBagConstraints();
-		this.updateButton = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.update"));
+		this.updateButton = new JButton(TranslationFacility.tr("ls.button.update"));
 		gbc.anchor = GridBagConstraints.EAST;
 		buttonPanel.add(this.updateButton, gbc);
-		this.saveImageButton = new JButton(HOVerwaltung.instance().getLanguageString("ifa.imageBuilder.button.save"));
+		this.saveImageButton = new JButton(TranslationFacility.tr("ifa.imageBuilder.button.save"));
 		gbc.gridx = 1;
 		gbc.anchor = GridBagConstraints.WEST;
 		buttonPanel.add(this.saveImageButton, gbc);
@@ -73,13 +60,13 @@ public class RightPanel extends JPanel {
 		gbc.gridwidth = 2;
 		add(buttonPanel, gbc);
 
-		this.awayRadioButton = new JRadioButton(HOVerwaltung.instance().getLanguageString("ifa.imageBuilder.visited"), true);
+		this.awayRadioButton = new JRadioButton(TranslationFacility.tr("ifa.imageBuilder.visited"), true);
 		gbc.insets = new Insets(5, 6, 5, 6);
 		gbc.gridy = 1;
 		gbc.gridwidth = 1;
 		add(this.awayRadioButton, gbc);
 
-		this.homeRadioButton = new JRadioButton(HOVerwaltung.instance().getLanguageString("ifa.imageBuilder.hosted"), false);
+		this.homeRadioButton = new JRadioButton(TranslationFacility.tr("ifa.imageBuilder.hosted"), false);
 		gbc.gridx = 1;
 		add(this.homeRadioButton, gbc);
 

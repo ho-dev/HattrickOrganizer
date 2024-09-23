@@ -1,13 +1,11 @@
 package module.tsforecast;
 
-import java.awt.event.KeyEvent;
-
 import core.db.DBManager;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.module.DefaultModule;
 
-import javax.swing.JPanel;
-import javax.swing.KeyStroke;
+import javax.swing.*;
+import java.awt.event.KeyEvent;
 
 public final class TSForecastModule extends DefaultModule {
 
@@ -18,7 +16,7 @@ public final class TSForecastModule extends DefaultModule {
 
 	@Override
 	public String getDescription() {
-		return HOVerwaltung.instance().getLanguageString("Tab_TSForecast");
+		return TranslationFacility.tr("Tab_TSForecast");
 	}
 
 	@Override

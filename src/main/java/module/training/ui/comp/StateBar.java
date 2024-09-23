@@ -1,13 +1,10 @@
 // %1126721451073:hoplugins.trainingExperience.ui.bar%
 package module.training.ui.comp;
 
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-
-import javax.swing.JComponent;
+import javax.swing.*;
+import java.awt.*;
 
 
 
@@ -66,11 +63,11 @@ public class StateBar extends JComponent {
         String desc = ""; 
 
         if (lvl1 > 0) {
-            desc = desc + HOVerwaltung.instance().getLanguageString("Aktuell") + lvl1 + "% ";
+            desc = desc + TranslationFacility.tr("Aktuell") + lvl1 + "% ";
         }
 
         if (lvl2 > 0) {
-            desc = desc + HOVerwaltung.instance().getLanguageString("Final") + lvl2 + "% ";
+            desc = desc + TranslationFacility.tr("Final") + lvl2 + "% ";
         }
 
         setToolTipText(desc);
