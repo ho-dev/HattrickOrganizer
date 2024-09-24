@@ -52,7 +52,7 @@ public class FixedColumnsTable extends JScrollPane {
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.setSelectionBackground(HODefaultTableCellRenderer.SELECTION_BG);
 
-        this.setViewportView(table);
+//        this.setViewportView(table);
         scroll = table;
 
         for (int i=0; i<scroll.getColumnCount(); i++){
@@ -65,6 +65,7 @@ public class FixedColumnsTable extends JScrollPane {
         fixed = new JTable(scroll.getModel());
         fixed.setFocusable(false);
         fixed.setSelectionModel(scroll.getSelectionModel());
+        fixed.setRowSorter(scroll.getRowSorter());
         fixed.getTableHeader().setReorderingAllowed(false);
 
         //  Remove the fixed columns from the main table
@@ -92,9 +93,14 @@ public class FixedColumnsTable extends JScrollPane {
 
         //  Add the fixed table to the scroll pane
         if ( width == 0) width = 60;
-        fixed.setPreferredScrollableViewportSize(new Dimension(width, 0));
-        setRowHeaderView(fixed);
-        setCorner(ScrollPaneConstants.UPPER_LEFT_CORNER, fixed.getTableHeader());
+//        fixed.setPreferredScrollableViewportSize(new Dimension(width, 0));
+//        setRowHeaderView(fixed);
+//        setCorner(ScrollPaneConstants.UPPER_LEFT_CORNER, fixed.getTableHeader());
+
+        var split = new JSplitPane( JSplitPane.HORIZONTAL_SPLIT, new JScrollPane(fixed), new JScrollPane(scroll) );
+        split.setDividerLocation(width);
+
+        setViewportView(split);
 
     }
 
