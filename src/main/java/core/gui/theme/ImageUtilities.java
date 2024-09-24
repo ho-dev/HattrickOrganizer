@@ -27,6 +27,10 @@ import javax.swing.*;
 
 public class ImageUtilities {
 
+	private ImageUtilities() {
+		throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
+	}
+
     /** Hashtable mit Veränderungspfeilgrafiken nach Integer als Key */
     private static final Hashtable<Integer,ImageIcon> m_clPfeilCache = new Hashtable<>();
     private static final Hashtable<Integer,ImageIcon> m_clPfeilWideCache = new Hashtable<>();

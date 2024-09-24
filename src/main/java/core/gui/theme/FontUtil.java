@@ -6,6 +6,7 @@ import java.awt.GraphicsEnvironment;
 public class FontUtil {
 	
 	private FontUtil() {
+		throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
 	}
 	
     private static String checkInstalledFont(String targetFont, String sample, Font[] allfonts) {

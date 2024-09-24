@@ -9,10 +9,8 @@ import core.model.TranslationFacility;
  */
 public class StringUtils {
 
-	/**
-	 * Utility class - private constructor enforces noninstantiability.
-	 */
 	private StringUtils() {
+		throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
 	}
 
 	/**

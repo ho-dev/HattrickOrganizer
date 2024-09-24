@@ -22,6 +22,10 @@ import java.util.Vector;
  */
 public class Helper {
 
+	private Helper() {
+		throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
+	}
+
 	/**
 	 * Form selections
 	 */

@@ -18,10 +18,8 @@ import java.io.Writer;
  */
 public class IOUtils {
 
-	/**
-	 * Utility class - private constructor enforces noninstantiability.
-	 */
 	private IOUtils() {
+		throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
 	}
 
 	/**
