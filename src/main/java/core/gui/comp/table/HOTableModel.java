@@ -233,20 +233,6 @@ public abstract class HOTableModel extends AbstractTableModel {
 		fireTableCellUpdated(row,column);
 	}
 
-//	/**
-//	 *
-//	 * @param searchId
-//	 * @return
-//	 */
-//	protected int getColumnIndexOfDisplayedColumn(int searchId) {
-//		UserColumn[] tmp = getDisplayedColumns();
-//		for (int i = 0; i < tmp.length; i++) {
-//			if (tmp[i].getId() == searchId)
-//				return i;
-//		}
-//		return -1;
-//	}
-
 	/**
 	 * return the order of the column like old method getSpaltenreihenfolge
 	 * 
@@ -331,10 +317,6 @@ public abstract class HOTableModel extends AbstractTableModel {
 	}
 
 	private void restoreUserSettings(JTable table, int offset) {
-//		for (int i = 0; i < table.getColumnCount(); i++) {
-//			table.getColumnModel().getColumn(i).setIdentifier(i+offset);
-//		}
-
 		// Restore column order setting
 		Arrays.stream(this.columns)
 				.skip(offset)
@@ -454,7 +436,6 @@ public abstract class HOTableModel extends AbstractTableModel {
 
 	public void initTable(FixedColumnsTable table){
 		this.fixedColumnsTable = table;
-		table.setTableModel(this);
 		restoreUserSettings(table);
 //		var columnModel = table.getScrollTable().getColumnModel();
 	}

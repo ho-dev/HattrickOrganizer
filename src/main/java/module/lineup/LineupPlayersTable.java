@@ -27,20 +27,14 @@ import java.awt.event.MouseEvent;
 public final class LineupPlayersTable extends FixedColumnsTable implements core.gui.Refreshable, PlayerTable {
 
 	private final LineupTableModel tableModel;
-//	private TableSorter tableSorter;
 
 	LineupPlayersTable() {
-		super(1);
-		this.tableModel = initModel();
-//		setTableModel(tableModel);
-
-//		setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-//		setSelectionMode(0);
-//		setRowSelectionAllowed(true);
-
+		super(UserColumnController.instance().getLineupModel(), 1);
+		tableModel = (LineupTableModel)this.getScrollTable().getModel();
+		tableModel.setValues(HOVerwaltung.instance().getModel().getCurrentPlayers());
+		tableModel.initTable(this);
 		setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
 		setDefaultRenderer(Boolean.class, new BooleanTableCellRenderer());
-//		setSelectionBackground(HODefaultTableCellRenderer.SELECTION_BG);
 		RefreshManager.instance().registerRefreshable(this);
 		initListeners();
 	}
@@ -60,7 +54,7 @@ public final class LineupPlayersTable extends FixedColumnsTable implements core.
 
 	@Override
 	public void reInit() {
-		initModel();
+		resetPlayers();
 		repaint();
 	}
 
@@ -70,26 +64,9 @@ public final class LineupPlayersTable extends FixedColumnsTable implements core.
 
 	@Override
 	public void refresh() {
-		reInitModel();
+		resetPlayers();
 		repaint();
 	}
-
-//	/**
-//	 *Returns the column for sorting
-//	 */
-//    private int getSortSpalte() {
-//		return switch (UserParameter.instance().standardsortierung) {
-//			case UserParameter.SORT_NAME -> tableModel.getPositionInArray(UserColumnFactory.NAME);
-//			case UserParameter.SORT_AUFGESTELLT -> tableModel.getPositionInArray(UserColumnFactory.LINEUP);
-//			case UserParameter.SORT_GRUPPE -> tableModel.getPositionInArray(UserColumnFactory.GROUP);
-//			case UserParameter.SORT_BEWERTUNG -> tableModel.getPositionInArray(UserColumnFactory.RATING);
-//			default -> tableModel.getPositionInArray(UserColumnFactory.BEST_POSITION);
-//		};
-//	}
-
-//	TableSorter getSorter() {
-//		return tableSorter;
-//	}
 
 	public LineupTableModel getTableModel() {return this.tableModel;}
 
@@ -106,31 +83,8 @@ public final class LineupPlayersTable extends FixedColumnsTable implements core.
 //		DBManager.instance().saveHOColumnModel(tableModel);
 	}
 
-	private LineupTableModel initModel() {
-//		setOpaque(false);
-
-//		if (tableModel == null) {
-			var tableModel = UserColumnController.instance().getLineupModel();
-
+	private void resetPlayers() {
 			tableModel.setValues(HOVerwaltung.instance().getModel().getCurrentPlayers());
-//			tableSorter = new TableSorter(tableModel,
-//					tableModel.getPositionInArray(UserColumnFactory.ID),
-//					getSortSpalte(),
-//					tableModel.getPositionInArray(UserColumnFactory.NAME));
-
-			tableModel.initTable(this);
-//		} else {
-//			// Reset values
-//			tableModel.setValues(HOVerwaltung.instance().getModel().getCurrentPlayers());
-////			tableSorter.reallocateIndexes();
-//		}
-
-//		setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-//		setSelectionMode(0);
-//		setRowSelectionAllowed(true);
-//		tableSorter.initsort();
-
-		return tableModel;
 	}
 
 	private void initListeners() {

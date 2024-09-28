@@ -1,11 +1,12 @@
 package core.gui.comp.table;
 
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
+import core.model.HOConfigurationIntParameter;
+
 import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableRowSorter;
-import java.awt.*;
 
 public class FixedColumnsTable extends JScrollPane {
 
@@ -13,6 +14,8 @@ public class FixedColumnsTable extends JScrollPane {
      * Number of fixed columns in table
      */
     private final int fixedColumns;
+
+    private final HOConfigurationIntParameter dividerLocation;
 
     /**
      * Table sorter
@@ -29,6 +32,8 @@ public class FixedColumnsTable extends JScrollPane {
      */
     private JTable scroll;
 
+    private JSplitPane splitPane;
+
     /**
      * Create a fixed columns table
      * Columns and Header tooltips are taken from table model.
@@ -37,31 +42,30 @@ public class FixedColumnsTable extends JScrollPane {
      *
      * @param fixedColumns number of fixed columns
      */
-    public FixedColumnsTable(int fixedColumns) {
+    public FixedColumnsTable(HOTableModel tableModel, int fixedColumns) {
         this.fixedColumns = fixedColumns;
-    }
-
-    public void setTableModel(HOTableModel tableModel) {
+        this.dividerLocation = new HOConfigurationIntParameter("TableDividerLocation_" + tableModel.getId(), 60);
 
         scrollTableSorter = new TableRowSorter<>(tableModel);
         var table = new JTable(tableModel);
-        table.setRowSorter(scrollTableSorter);
-        setTooltipHeader(table, tableModel.getTooltips());
 
+        var columnModel = table.getColumnModel();
+        ToolTipHeader header = new ToolTipHeader(columnModel);
+        header.setToolTipStrings(tableModel.getTooltips());
+        header.setToolTipText("");
+        table.setTableHeader(header);
+
+        table.setRowSorter(scrollTableSorter);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.setSelectionBackground(HODefaultTableCellRenderer.SELECTION_BG);
-
-//        this.setViewportView(table);
         scroll = table;
-
         for (int i=0; i<scroll.getColumnCount(); i++){
             var tm = tableModel.columns[i];
             var cm = scroll.getColumnModel().getColumn(i);
             cm.setIdentifier(tm.getId());
             cm.setMinWidth(tm.minWidth);
         }
-
         fixed = new JTable(scroll.getModel());
         fixed.setFocusable(false);
         fixed.setSelectionModel(scroll.getSelectionModel());
@@ -69,7 +73,7 @@ public class FixedColumnsTable extends JScrollPane {
         fixed.getTableHeader().setReorderingAllowed(false);
 
         //  Remove the fixed columns from the main table
-        int width = 0;
+        int width = dividerLocation.getIntValue();
         int i=0;
         for (; i < fixedColumns; i++) {
             var tm = tableModel.columns[i];
@@ -93,27 +97,22 @@ public class FixedColumnsTable extends JScrollPane {
 
         //  Add the fixed table to the scroll pane
         if ( width == 0) width = 60;
-//        fixed.setPreferredScrollableViewportSize(new Dimension(width, 0));
-//        setRowHeaderView(fixed);
-//        setCorner(ScrollPaneConstants.UPPER_LEFT_CORNER, fixed.getTableHeader());
+        splitPane = new JSplitPane( JSplitPane.HORIZONTAL_SPLIT, new JScrollPane(fixed), new JScrollPane(scroll) );
 
-        var split = new JSplitPane( JSplitPane.HORIZONTAL_SPLIT, new JScrollPane(fixed), new JScrollPane(scroll) );
-        split.setDividerLocation(width);
+        splitPane.setDividerLocation(width);
 
-        setViewportView(split);
-
+        setViewportView(splitPane);
     }
 
-    private void setTooltipHeader(JTable table, String[] tooltips) {
-        ToolTipHeader header = new ToolTipHeader(table.getColumnModel());
-        header.setToolTipStrings(tooltips);
-        header.setToolTipText("");
-        table.setTableHeader(header);
-//        scrollTableSorter.setTableHeader(table.getTableHeader());
+    // Todo: Save the divider location on program exit
+    public int getSplitDividerLocation(){
+        return splitPane.getDividerLocation();
     }
 
-
-    //~ Methods ------------------------------------------------------------------------------------
+    // Todo: restore divider location
+    public void setSplitDividerLocation(int location){
+        splitPane.setDividerLocation(location);
+    }
 
     /**
      * Returns the Locked LeftTable

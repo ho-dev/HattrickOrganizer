@@ -1367,6 +1367,11 @@ public class DBManager implements PersistenceManager {
 		table.storeConfigurations(HOParameter.instance());
 	}
 
+	public String loadHOConfigurationParameter(String key) {
+		UserConfigurationTable table = (UserConfigurationTable) getTable(UserConfigurationTable.TABLENAME);
+		return table.loadParameter(key);
+	}
+
 	// ------------------------------- PaarungTable
 	// -------------------------------------------------
 
@@ -1922,7 +1927,7 @@ public class DBManager implements PersistenceManager {
 	 * @param fieldName the name of the parameter to set
 	 * @param value     the target value
 	 */
-	void saveUserParameter(String fieldName, String value) {
+	public void saveUserParameter(String fieldName, String value) {
 		((UserConfigurationTable) getTable(UserConfigurationTable.TABLENAME))
 				.storeConfiguration(fieldName, value);
 	}

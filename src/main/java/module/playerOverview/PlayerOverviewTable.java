@@ -44,8 +44,11 @@ public class PlayerOverviewTable extends FixedColumnsTable implements core.gui.R
 //	private TableSorter tableSorter;
 
 	public PlayerOverviewTable() {
-		super(1);
-		initModel();
+		super(UserColumnController.instance().getPlayerOverviewModel(), 1);
+		tableModel = (PlayerOverviewTableModel)this.getScrollTable().getModel();
+		tableModel.setValues(HOVerwaltung.instance().getModel().getCurrentPlayers());
+		tableModel.initTable(this);
+		setOpaque(false);
 		setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
 //		setSelectionBackground(HODefaultTableCellRenderer.SELECTION_BG);
 		RefreshManager.instance().registerRefreshable(this);
@@ -97,21 +100,6 @@ public class PlayerOverviewTable extends FixedColumnsTable implements core.gui.R
 		return null;
 	}
 
-//	public final TableSorter getSorter() {
-//		return tableSorter;
-//	}
-
-//	public final void saveColumnOrder() {
-//		UserColumn[] columns = tableModel.getDisplayedColumns();
-//		TableColumnModel tableColumnModel = getColumnModel();
-//		for (int i = 0; i < columns.length; i++) {
-//			columns[i].setIndex(convertColumnIndexToView(i));
-//			columns[i].setPreferredWidth(tableColumnModel.getColumn(convertColumnIndexToView(i)).getWidth());
-//		}
-//		tableModel.setCurrentValueToColumns(columns);
-//		DBManager.instance().saveHOColumnModel(tableModel);
-//	}
-
 	public final void selectPlayer(int playerId) {
 		var index = tableModel.getPlayerIndex(playerId);
 		if (index >= 0) {
@@ -121,7 +109,7 @@ public class PlayerOverviewTable extends FixedColumnsTable implements core.gui.R
 
 	@Override
 	public final void reInit() {
-		initModel();
+		resetPlayers();
 		repaint();
 	}
 
@@ -144,50 +132,9 @@ public class PlayerOverviewTable extends FixedColumnsTable implements core.gui.R
 		repaint();
 	}
 
-//	/**
-//	 * Returns the sorting column.
-//	 */
-//	private int getSortSpalte() {
-//		return switch (UserParameter.instance().standardsortierung) {
-//			case UserParameter.SORT_NAME -> tableModel.getPositionInArray(UserColumnFactory.NAME);
-//			case UserParameter.SORT_AUFGESTELLT -> tableModel.getPositionInArray(UserColumnFactory.LINEUP);
-//			case UserParameter.SORT_GRUPPE -> tableModel.getPositionInArray(UserColumnFactory.GROUP);
-//			case UserParameter.SORT_BEWERTUNG -> tableModel.getPositionInArray(UserColumnFactory.RATING);
-//			default -> tableModel.getPositionInArray(UserColumnFactory.BEST_POSITION);
-//		};
-//	}
-
-	/**
-	 * Initialises the model.
-	 */
-	private void initModel() {
-		setOpaque(false);
-
-		if (tableModel == null) {
-			tableModel = UserColumnController.instance().getPlayerOverviewModel();
-			tableModel.setValues(HOVerwaltung.instance().getModel().getCurrentPlayers());
-//			tableSorter = new TableSorter(tableModel,
-//					tableModel.getPositionInArray(UserColumnFactory.ID),
-//					getSortSpalte(),
-//					tableModel.getPositionInArray(UserColumnFactory.NAME)
-//			);
-
-			tableModel.initTable(this);
-		} else {
-			// Set new value.
-			tableModel.setValues(HOVerwaltung.instance().getModel().getCurrentPlayers());
-//			tableSorter.reallocateIndexes();
-		}
-
-//		setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-//		setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-//		setRowSelectionAllowed(true);
-//		tableSorter.initsort();
+	private void resetPlayers() {
+		tableModel.setValues(HOVerwaltung.instance().getModel().getCurrentPlayers());
 	}
-
-//	public TableRowSorter<HOTableModel> getTableRowSorter() {
-//		return tableModel.getRowSorter();
-//	}
 
 	public PlayerOverviewTableModel getPlayerTableModel(){
 		return tableModel;
