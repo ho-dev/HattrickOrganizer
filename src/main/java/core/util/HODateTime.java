@@ -2,11 +2,15 @@ package core.util;
 
 import core.model.HOVerwaltung;
 import org.jetbrains.annotations.NotNull;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Timestamp;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.time.temporal.ChronoUnit;
+import java.util.concurrent.TimeUnit;
 
 public class HODateTime implements Comparable<HODateTime> {
 
@@ -32,7 +36,7 @@ public class HODateTime implements Comparable<HODateTime> {
     /**
      * internal time representation
      */
-    final public Instant instant;
+    public final Instant instant;
 
     /**
      * create an HODateTime instance (should it be private?)
@@ -43,6 +47,14 @@ public class HODateTime implements Comparable<HODateTime> {
         this.instant = in;
     }
     public HODateTime(@NotNull HODateTime in){this.instant=in.instant;}
+
+    public Instant getInstant() {
+        return instant;
+    }
+
+    public LocalDateTime getLocalDateTime() {
+        return LocalDateTime.ofInstant(instant, DEFAULT_TIMEZONE);
+    }
 
     /**
      * Create instance from HT (chpp) string
@@ -381,6 +393,26 @@ public class HODateTime implements Comparable<HODateTime> {
         var ret = toHTWeek();
         ret.season += HOVerwaltung.instance().getModel().getBasics().getSeasonOffset();
         return ret;
+    }
+
+    public static BigDecimal daysFromNow(HODateTime to, int scale) {
+        return daysBetween(HODateTime.now(), to, scale);
+    }
+
+    public static BigDecimal daysToNow(HODateTime from, int scale) {
+        return daysBetween(from, HODateTime.now(), scale);
+    }
+
+    public static BigDecimal daysBetween(HODateTime from, HODateTime to, int scale) {
+        return BigDecimal.valueOf(between(from, to).toMillis())
+                .divide(BigDecimal.valueOf(TimeUnit.DAYS.toMillis(1)), scale, RoundingMode.HALF_UP);
+    }
+
+    public HODateTime nextLocalDay() {
+        final var localDate = getLocalDateTime().toLocalDate();
+        final var nextDay = localDate.plusDays(1);
+        final var newInstant = Instant.from(nextDay.atStartOfDay(DEFAULT_TIMEZONE));
+        return new HODateTime(newInstant);
     }
 
     public static class HODuration implements Comparable<HODuration>{

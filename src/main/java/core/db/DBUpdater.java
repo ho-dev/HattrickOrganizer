@@ -95,6 +95,10 @@ final class DBUpdater {
 		var playerTable = dbManager.getTable(SpielerTable.TABLENAME);
 		playerTable.tryAddColumn("SubForm", "FLOAT DEFAULT 0");
 
+		var arenaTable = dbManager.getTable(StadionTable.TABLENAME);
+		arenaTable.tryAddColumn("REBUILT_DATE", "TIMESTAMP");
+		arenaTable.tryAddColumn("EXPANSION_DATE", "TIMESTAMP");
+
 		updateDBVersion(dbVersion, 900);
 	}
 

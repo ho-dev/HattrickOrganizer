@@ -797,8 +797,7 @@ public class OnlineWorker {
 			}
 			String arenaString = MyConnector.instance().downloadArena(details.getArenaID());
 			HOMainFrame.instance().setWaitInformation();
-			String regionIdAsString = XMLArenaParser.parseArenaFromString(arenaString).get("RegionID");
-			details.setRegionId(Integer.parseInt(regionIdAsString));
+			details.setRegionId(XMLArenaParser.parseArenaFromString(arenaString).getRight().getRegion().id());
 		} catch (Exception e) {
 			String msg = getLangString("Downloadfehler") + ": Error fetching Matchdetails XML.: ";
 			// Info

@@ -5,17 +5,24 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
+import static java.math.BigDecimal.ONE;
+import static java.math.BigDecimal.ZERO;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.data.Offset.offset;
+import static org.junit.jupiter.params.provider.Arguments.of;
 
 class HODateTimeTest {
 
@@ -127,6 +134,169 @@ class HODateTimeTest {
 
     private static HODateTime generate(int i, LocalDateTime localDateTime) {
         return fromLocalDateTime(localDateTime.plusDays(i));
+    }
+
+    @Test
+    void daysFromNow_future() {
+        // given
+        final var future = HODateTime.now().plus(1, ChronoUnit.DAYS);
+
+        // when
+        final var result = HODateTime.daysFromNow(future, 1);
+
+        // then
+        assertThat(result).isGreaterThanOrEqualTo(ONE.setScale(1, RoundingMode.HALF_DOWN));
+    }
+
+    @Test
+    void daysFromNow_past_approx() {
+        // given
+        final var past = HODateTime.now().minus(43200, ChronoUnit.SECONDS);
+
+        // when
+        final var result = HODateTime.daysFromNow(past, 5);
+
+        // then
+        assertThat(result).isLessThan(BigDecimal.valueOf(-0.49999).setScale(5, RoundingMode.HALF_DOWN));
+    }
+
+    @Test
+    void daysToNow_future() {
+        // given
+        final var future = HODateTime.now().plus(1, ChronoUnit.DAYS);
+
+        // when
+        final var result = HODateTime.daysToNow(future, 1);
+
+        // then
+        assertThat(result).isLessThanOrEqualTo(ONE.negate().setScale(1, RoundingMode.HALF_DOWN));
+    }
+
+    @Test
+    void daysToNow_past_approx() {
+        // given
+        final var past = HODateTime.now().minus(43200, ChronoUnit.SECONDS);
+
+        // when
+        final var result = HODateTime.daysToNow(past, 5);
+
+        // then
+        assertThat(result).isGreaterThan(BigDecimal.valueOf(0.49999).setScale(5, RoundingMode.HALF_DOWN));
+    }
+
+    @Test
+    void daysBetween_with_now_results_zero() {
+        // given
+        final var now = HODateTime.now();
+
+        // when
+        final var result = HODateTime.daysBetween(now, now, 1);
+
+        // then
+        assertThat(result).isEqualByComparingTo(ZERO);
+    }
+
+    @Test
+    void calculateDistanceInDays_toOneDayInFuture_results_one() {
+        // given
+        final var from = HODateTime.now();
+        final var to = from.plus(1, ChronoUnit.DAYS);
+
+        // when
+        final var result = HODateTime.daysBetween(from, to, 1);
+
+        // then
+        assertThat(result).isEqualTo(ONE.setScale(1, RoundingMode.HALF_DOWN));
+    }
+
+    @Test
+    void calculateDistanceInDays_toOneDayInPast_results_minusOne() {
+        // given
+        final var from = HODateTime.now();
+        final var to = from.minus(1, ChronoUnit.DAYS);
+
+        // when
+        final var result = HODateTime.daysBetween(from, to, 1);
+
+        // then
+        assertThat(result).isEqualTo(ONE.negate().setScale(1, RoundingMode.HALF_UP));
+    }
+
+    @Test
+    void calculateDistanceInDays_with_one_day_in_past_results_one() {
+        // given
+        final var from = HODateTime.now();
+        final var to = from.plus(46530, ChronoUnit.SECONDS);
+
+        // when
+        final var result = HODateTime.daysBetween(from, to, 1);
+
+        // then
+        assertThat(result).isEqualTo(BigDecimal.valueOf(0.5).setScale(1, RoundingMode.HALF_UP));
+    }
+
+    @Test
+    void calculateDistanceInDays_with_82080_secs_in_future_results_one() {
+        // given
+        final var from = HODateTime.now();
+        final var to = from.plus(82080, ChronoUnit.SECONDS);
+
+        // when
+        final var result = HODateTime.daysBetween(from, to, 1);
+
+        // then
+        assertThat(result).isEqualTo(ONE.setScale(1, RoundingMode.HALF_UP));
+    }
+
+    @Test
+    void calculateDistanceInDays_with_81216_secs_in_future_results_zero_point_nine() {
+        // given
+        final var from = HODateTime.now();
+        final var to = from.plus(81216, ChronoUnit.SECONDS);
+
+        // when
+        final var result = HODateTime.daysBetween(from, to, 1);
+
+        // then
+        assertThat(result).isEqualTo(BigDecimal.valueOf(0.9).setScale(1, RoundingMode.HALF_UP));
+    }
+
+    static Stream<Arguments> nextLocalDay() {
+        return Stream.of(
+                of(fromLocalDateTime(LocalDateTime.of(2024, 8, 29, 23, 59, 59)), LocalDate.of(2024, 8, 30).atStartOfDay()),
+                of(fromLocalDateTime(LocalDateTime.of(2024, 8, 30, 0, 0, 0)), LocalDate.of(2024, 8, 31).atStartOfDay()),
+                of(fromLocalDateTime(LocalDateTime.of(2024, 8, 30, 1, 0, 0)), LocalDate.of(2024, 8, 31).atStartOfDay()),
+                of(fromLocalDateTime(LocalDateTime.of(2024, 8, 30, 2, 0, 0)), LocalDate.of(2024, 8, 31).atStartOfDay()),
+                of(fromLocalDateTime(LocalDateTime.of(2024, 8, 30, 3, 0, 0)), LocalDate.of(2024, 8, 31).atStartOfDay()),
+                of(fromLocalDateTime(LocalDateTime.of(2024, 8, 30, 4, 0)), LocalDate.of(2024, 8, 31).atStartOfDay()),
+                of(fromLocalDateTime(LocalDateTime.of(2024, 8, 30, 5, 0, 0)), LocalDate.of(2024, 8, 31).atStartOfDay()),
+                of(fromLocalDateTime(LocalDateTime.of(2024, 8, 30, 6, 0, 0)), LocalDate.of(2024, 8, 31).atStartOfDay()),
+                of(fromLocalDateTime(LocalDateTime.of(2024, 8, 30, 7, 0, 0)), LocalDate.of(2024, 8, 31).atStartOfDay()),
+                of(fromLocalDateTime(LocalDateTime.of(2024, 8, 30, 8, 0, 0)), LocalDate.of(2024, 8, 31).atStartOfDay()),
+                of(fromLocalDateTime(LocalDateTime.of(2024, 8, 30, 9, 0)), LocalDate.of(2024, 8, 31).atStartOfDay()),
+                of(fromLocalDateTime(LocalDateTime.of(2024, 8, 30, 10, 0, 0)), LocalDate.of(2024, 8, 31).atStartOfDay()),
+                of(fromLocalDateTime(LocalDateTime.of(2024, 8, 30, 11, 0, 0)), LocalDate.of(2024, 8, 31).atStartOfDay()),
+                of(fromLocalDateTime(LocalDateTime.of(2024, 8, 30, 12, 0, 0)), LocalDate.of(2024, 8, 31).atStartOfDay()),
+                of(fromLocalDateTime(LocalDateTime.of(2024, 8, 30, 13, 0, 0)), LocalDate.of(2024, 8, 31).atStartOfDay()),
+                of(fromLocalDateTime(LocalDateTime.of(2024, 8, 30, 14, 0, 0)), LocalDate.of(2024, 8, 31).atStartOfDay()),
+                of(fromLocalDateTime(LocalDateTime.of(2024, 8, 30, 15, 0, 0)), LocalDate.of(2024, 8, 31).atStartOfDay()),
+                of(fromLocalDateTime(LocalDateTime.of(2024, 8, 30, 16, 0, 0)), LocalDate.of(2024, 8, 31).atStartOfDay()),
+                of(fromLocalDateTime(LocalDateTime.of(2024, 8, 30, 17, 0, 0)), LocalDate.of(2024, 8, 31).atStartOfDay()),
+                of(fromLocalDateTime(LocalDateTime.of(2024, 8, 30, 18, 0, 0)), LocalDate.of(2024, 8, 31).atStartOfDay()),
+                of(fromLocalDateTime(LocalDateTime.of(2024, 8, 30, 19, 0, 0)), LocalDate.of(2024, 8, 31).atStartOfDay()),
+                of(fromLocalDateTime(LocalDateTime.of(2024, 8, 30, 20, 0, 0)), LocalDate.of(2024, 8, 31).atStartOfDay()),
+                of(fromLocalDateTime(LocalDateTime.of(2024, 8, 30, 21, 0, 0)), LocalDate.of(2024, 8, 31).atStartOfDay()),
+                of(fromLocalDateTime(LocalDateTime.of(2024, 8, 30, 22, 0, 0)), LocalDate.of(2024, 8, 31).atStartOfDay()),
+                of(fromLocalDateTime(LocalDateTime.of(2024, 8, 30, 23, 0, 0)), LocalDate.of(2024, 8, 31).atStartOfDay()),
+                of(fromLocalDateTime(LocalDateTime.of(2024, 8, 30, 23, 59, 59)), LocalDate.of(2024, 8, 31).atStartOfDay()),
+                of(fromLocalDateTime(LocalDateTime.of(2024, 8, 31, 0, 0, 0)), LocalDate.of(2024, 9, 1).atStartOfDay())
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource
+    void nextLocalDay(HODateTime hoDateTime, LocalDateTime expected) {
+        assertThat(hoDateTime.nextLocalDay().getLocalDateTime()).isEqualTo(expected);
     }
 
     private static HODateTime fromLocalDateTime(LocalDateTime localDateTime) {

@@ -28,6 +28,7 @@ plugins {
     id "com.github.breadmoirai.github-release" version "2.5.2"
     id "com.install4j.gradle" version "9.0.6"
     id "org.barfuin.gradle.taskinfo" version "2.1.0"
+    id "io.freefair.lombok" version "8.10"
 }
 apply plugin: de.jansauer.poeditor.POEditorPlugin
 
