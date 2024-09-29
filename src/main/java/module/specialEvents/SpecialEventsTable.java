@@ -49,7 +49,7 @@ public class SpecialEventsTable extends JTable {
 
 	public void storeUserSettings() {
 		var tableModel = (HOTableModel)getModel();
-		tableModel.closeTable();
+		tableModel.storeUserSettings();
 	}
 
 	@Override

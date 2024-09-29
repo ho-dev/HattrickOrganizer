@@ -239,4 +239,8 @@ public class PlayerOverviewPanel extends ImagePanel {
 //				}
 //		);
 	}
+
+    public void storeUserSettings() {
+		playerOverviewTable.getPlayerTableModel().storeUserSettings();
+    }
 }

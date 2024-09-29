@@ -71,7 +71,7 @@ public final class LineupPlayersTable extends FixedColumnsTable implements core.
 	public LineupTableModel getTableModel() {return this.tableModel;}
 
 	public void saveColumnOrder() {
-		tableModel.closeTable();
+		tableModel.storeUserSettings();
 //		final UserColumn[] columns = tableModel.getDisplayedColumns();
 //		final TableColumnModel tableColumnModel = getColumnModel();
 //		for (int i = 0; i < columns.length; i++) {
@@ -141,12 +141,4 @@ public final class LineupPlayersTable extends FixedColumnsTable implements core.
 			}
 		});
 	}
-
-	public void closeTable(){
-		tableModel.closeTable();
-	}
-
-//	public TableRowSorter<HOTableModel> getTableSorter() {
-//		return tableModel.getRowSorter();
-//	}
 }

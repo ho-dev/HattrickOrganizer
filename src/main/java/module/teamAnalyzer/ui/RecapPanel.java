@@ -52,6 +52,6 @@ public class RecapPanel extends JPanel {
     }
 
     public void storeUserSettings() {
-        this.tableModel.closeTable();
+        this.tableModel.storeUserSettings();
     }
 }

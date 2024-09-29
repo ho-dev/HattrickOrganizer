@@ -11,6 +11,7 @@ import core.module.DefaultModule;
 
 public final class PlayerOverviewModule extends DefaultModule {
 
+	private PlayerOverviewPanel overviewPanel;
 	public PlayerOverviewModule(){
 		super(true);
 	}
@@ -27,7 +28,14 @@ public final class PlayerOverviewModule extends DefaultModule {
 
 	@Override
 	public JPanel createTabPanel() {
-		return new PlayerOverviewPanel();
+		overviewPanel = new PlayerOverviewPanel();
+		return overviewPanel;
+	}
+
+	@Override
+	public void storeUserSettings()
+	{
+		if (overviewPanel != null) overviewPanel.storeUserSettings();
 	}
 
 	public KeyStroke getKeyStroke() {

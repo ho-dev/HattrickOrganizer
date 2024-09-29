@@ -459,10 +459,11 @@ public abstract class HOTableModel extends AbstractTableModel {
 		restoreUserSettings(table);
 
 //		initColumnOrder(table);
+
 //		setColumnsSize(columnModel);
 	}
 
-	public void closeTable(){
+	public void storeUserSettings(){
 		if (table != null){ storeUserSettings(table);}
 		else if ( fixedColumnsTable != null){ storeUserSettings(fixedColumnsTable);}
 	}

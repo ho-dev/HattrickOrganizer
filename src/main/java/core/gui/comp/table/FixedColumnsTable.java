@@ -7,8 +7,6 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableRowSorter;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 public class FixedColumnsTable extends JScrollPane {
 
@@ -93,8 +91,9 @@ public class FixedColumnsTable extends JScrollPane {
             _columnModel.removeColumn(_columnModel.getColumn(fixedColumns));
         }
 
-        //  Add the fixed table to the scroll pane
         JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JScrollPane(fixed), new JScrollPane(scroll));
+
+
         if ( width == 0) width = 60;
         this.dividerLocation = new HOConfigurationIntParameter("TableDividerLocation_" + tableModel.getId(), width);
         splitPane.setDividerLocation(this.dividerLocation.getIntValue());
@@ -171,4 +170,5 @@ public class FixedColumnsTable extends JScrollPane {
     public int getFixedColumnsCount() {
         return fixedColumns;
     }
+
 }

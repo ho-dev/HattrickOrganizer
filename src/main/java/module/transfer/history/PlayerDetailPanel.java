@@ -378,6 +378,6 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
 
     public void storeUserSettings() {
         var model = getTableModel();
-        model.closeTable();
+        model.storeUserSettings();
     }
 }
