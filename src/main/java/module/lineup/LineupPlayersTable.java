@@ -12,7 +12,6 @@ import core.model.HOVerwaltung;
 import core.model.match.MatchKurzInfo;
 import core.model.player.Player;
 import core.net.HattrickLink;
-import module.playerOverview.LineupPlayersTableNameColumn;
 import module.playerOverview.PlayerTable;
 import org.jetbrains.annotations.Nullable;
 
@@ -21,7 +20,6 @@ import java.awt.event.MouseEvent;
 
 /**
  * Table displaying the players' details in Lineup tab.
- * The name of the players is displayed in {@link LineupPlayersTableNameColumn},
  * which is the same table class used in the Squad tab
  */
 public final class LineupPlayersTable extends FixedColumnsTable implements core.gui.Refreshable, PlayerTable {
@@ -30,7 +28,7 @@ public final class LineupPlayersTable extends FixedColumnsTable implements core.
 
 	LineupPlayersTable() {
 		super(UserColumnController.instance().getLineupModel(), 1);
-		tableModel = (LineupTableModel)this.getScrollTable().getModel();
+		tableModel = (LineupTableModel) this.getScrollTable().getModel();
 		tableModel.setValues(HOVerwaltung.instance().getModel().getCurrentPlayers());
 		tableModel.initTable(this);
 		setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
@@ -58,33 +56,22 @@ public final class LineupPlayersTable extends FixedColumnsTable implements core.
 		repaint();
 	}
 
-	public void reInitModel() {
-		tableModel.reInitData();
-	}
-
 	@Override
 	public void refresh() {
 		resetPlayers();
 		repaint();
 	}
 
-	public LineupTableModel getTableModel() {return this.tableModel;}
+	public LineupTableModel getTableModel() {
+		return this.tableModel;
+	}
 
 	public void saveColumnOrder() {
 		tableModel.storeUserSettings();
-//		final UserColumn[] columns = tableModel.getDisplayedColumns();
-//		final TableColumnModel tableColumnModel = getColumnModel();
-//		for (int i = 0; i < columns.length; i++) {
-//			columns[i].setIndex(convertColumnIndexToView(i));
-//			columns[i].setPreferredWidth(tableColumnModel.getColumn(convertColumnIndexToView(i))
-//					.getWidth());
-//		}
-//		tableModel.setCurrentValueToColumns(columns);
-//		DBManager.instance().saveHOColumnModel(tableModel);
 	}
 
 	private void resetPlayers() {
-			tableModel.setValues(HOVerwaltung.instance().getModel().getCurrentPlayers());
+		tableModel.setValues(HOVerwaltung.instance().getModel().getCurrentPlayers());
 	}
 
 	private void initListeners() {
@@ -115,12 +102,12 @@ public final class LineupPlayersTable extends FixedColumnsTable implements core.
 			@Override
 			public void mouseReleased(MouseEvent e) {
 				int rowindex = getSelectedRow();
-				if (rowindex >= 0){
+				if (rowindex >= 0) {
 					// Last match column
 //					int viewColumn = columnAtPoint(e.getPoint());
 //					int column = columnModel.getColumn(viewColumn).getModelIndex();
 					Player selectedPlayer = tableModel.getPlayerAtRow(rowindex);
-					if(selectedPlayer != null){
+					if (selectedPlayer != null) {
 						var scrollTable = getScrollTable();
 						var viewColumn = scrollTable.columnAtPoint(e.getPoint());
 						if (viewColumn > -1) {

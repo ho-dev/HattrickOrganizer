@@ -20,7 +20,6 @@ public class PlayerOverviewPanel extends ImagePanel {
 	private JSplitPane verticalSplitPane;
 	private PlayerDetailsPanel playerDetailsPanel;
 	private SpielerTrainingsSimulatorPanel spielerTrainingsSimulatorPanel;
-//	private LineupPlayersTableNameColumn playerOverviewTableName;
 	private PlayerOverviewTable playerOverviewTable;
 	private TeamSummaryPanel teamSummaryPanel;
 
