@@ -98,14 +98,11 @@ public class FixedColumnsTable extends JScrollPane {
         if ( width == 0) width = 60;
         this.dividerLocation = new HOConfigurationIntParameter("TableDividerLocation_" + tableModel.getId(), width);
         splitPane.setDividerLocation(this.dividerLocation.getIntValue());
-        splitPane.addPropertyChangeListener(new PropertyChangeListener() {
-            @Override
-            public void propertyChange(PropertyChangeEvent evt) {
-                var propertyName = evt.getPropertyName();
-                if (propertyName.equals("dividerLocation")) {
-                    var pane = (JSplitPane)evt.getSource();
-                    dividerLocation.setIntValue(pane.getDividerLocation());
-                }
+        splitPane.addPropertyChangeListener(evt -> {
+            var propertyName = evt.getPropertyName();
+            if (propertyName.equals("dividerLocation")) {
+                var pane = (JSplitPane)evt.getSource();
+                dividerLocation.setIntValue(pane.getDividerLocation());
             }
         });
 

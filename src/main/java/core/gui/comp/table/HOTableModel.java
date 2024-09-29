@@ -464,6 +464,6 @@ public abstract class HOTableModel extends AbstractTableModel {
 
 	public void closeTable(){
 		if (table != null){ storeUserSettings(table);}
-		else if ( fixedColumnsTable != null){ restoreUserSettings(fixedColumnsTable);}
+		else if ( fixedColumnsTable != null){ storeUserSettings(fixedColumnsTable);}
 	}
 }
