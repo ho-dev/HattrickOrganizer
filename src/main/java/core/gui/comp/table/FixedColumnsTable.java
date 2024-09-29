@@ -7,6 +7,8 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableRowSorter;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 public class FixedColumnsTable extends JScrollPane {
 
@@ -20,19 +22,17 @@ public class FixedColumnsTable extends JScrollPane {
     /**
      * Table sorter
      */
-    private TableRowSorter<HOTableModel> scrollTableSorter;
+    private final TableRowSorter<HOTableModel> scrollTableSorter;
 
     /**
      * Fixed table part (left hand side)
      */
-    private JTable fixed;
+    private final JTable fixed;
 
     /**
      * Scrollable table part (right hand side)
      */
-    private JTable scroll;
-
-    private JSplitPane splitPane;
+    private final JTable scroll;
 
     /**
      * Create a fixed columns table
@@ -44,8 +44,6 @@ public class FixedColumnsTable extends JScrollPane {
      */
     public FixedColumnsTable(HOTableModel tableModel, int fixedColumns) {
         this.fixedColumns = fixedColumns;
-        this.dividerLocation = new HOConfigurationIntParameter("TableDividerLocation_" + tableModel.getId(), 60);
-
         scrollTableSorter = new TableRowSorter<>(tableModel);
         var table = new JTable(tableModel);
 
@@ -73,7 +71,7 @@ public class FixedColumnsTable extends JScrollPane {
         fixed.getTableHeader().setReorderingAllowed(false);
 
         //  Remove the fixed columns from the main table
-        int width = dividerLocation.getIntValue();
+        int width = 0;
         int i=0;
         for (; i < fixedColumns; i++) {
             var tm = tableModel.columns[i];
@@ -96,22 +94,22 @@ public class FixedColumnsTable extends JScrollPane {
         }
 
         //  Add the fixed table to the scroll pane
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JScrollPane(fixed), new JScrollPane(scroll));
         if ( width == 0) width = 60;
-        splitPane = new JSplitPane( JSplitPane.HORIZONTAL_SPLIT, new JScrollPane(fixed), new JScrollPane(scroll) );
-
-        splitPane.setDividerLocation(width);
+        this.dividerLocation = new HOConfigurationIntParameter("TableDividerLocation_" + tableModel.getId(), width);
+        splitPane.setDividerLocation(this.dividerLocation.getIntValue());
+        splitPane.addPropertyChangeListener(new PropertyChangeListener() {
+            @Override
+            public void propertyChange(PropertyChangeEvent evt) {
+                var propertyName = evt.getPropertyName();
+                if (propertyName.equals("dividerLocation")) {
+                    var pane = (JSplitPane)evt.getSource();
+                    dividerLocation.setIntValue(pane.getDividerLocation());
+                }
+            }
+        });
 
         setViewportView(splitPane);
-    }
-
-    // Todo: Save the divider location on program exit
-    public int getSplitDividerLocation(){
-        return splitPane.getDividerLocation();
-    }
-
-    // Todo: restore divider location
-    public void setSplitDividerLocation(int location){
-        splitPane.setDividerLocation(location);
     }
 
     /**

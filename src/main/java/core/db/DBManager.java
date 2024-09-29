@@ -1365,6 +1365,8 @@ public class DBManager implements PersistenceManager {
 		UserConfigurationTable table = (UserConfigurationTable) getTable(UserConfigurationTable.TABLENAME);
 		table.storeConfigurations(UserParameter.instance());
 		table.storeConfigurations(HOParameter.instance());
+
+		HOConfigurationParameter.storeParameters();
 	}
 
 	public String loadHOConfigurationParameter(String key) {
