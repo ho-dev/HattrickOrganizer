@@ -403,10 +403,13 @@ public abstract class HOTableModel extends AbstractTableModel {
 				}
 
 				// Check row order settings, after column index is evaluated
-				var sortKey = rowSortKeys.stream().filter(k -> k.getColumn() == column.getIndex()).findAny();
+				int finalI = i;
+				var sortKey = rowSortKeys.stream().filter(k -> k.getColumn() == finalI).findAny();
 				if (sortKey.isPresent() && sortKey.get().getSortOrder() != SortOrder.UNSORTED) {
 					var sortPriority = rowSortKeys.indexOf(sortKey.get());
-					if (sortPriority != column.getSortPriority() || sortKey.get().getSortOrder() != column.getSortOrder()) {
+					if (column.getSortPriority() == null ||
+							sortPriority != column.getSortPriority() ||
+							sortKey.get().getSortOrder() != column.getSortOrder()) {
 						changed = true;
 						column.setSortPriority(sortPriority);
 						column.setSortOrder(sortKey.get().getSortOrder());
