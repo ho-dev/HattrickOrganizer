@@ -8,7 +8,6 @@ import core.util.Helper;
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import java.io.Serial;
 import java.util.ArrayList;
@@ -56,7 +55,6 @@ public abstract class HOTableModel extends AbstractTableModel {
 		return null;
 	}
 
-//	private TableRowSorter<HOTableModel> rowSorter; //  = new TableRowSorter<>(this) ;
 	private JTable table;
 	private FixedColumnsTable fixedColumnsTable;
 
@@ -403,7 +401,7 @@ public abstract class HOTableModel extends AbstractTableModel {
 
 		getUserColumnSettings(table,0);
 
-		var rowSorter = new TableRowSorter(this);
+		var rowSorter = new TableRowSorter<>(this);
 		getRowOrderSettings(rowSorter);
 		table.setRowSorter(rowSorter);
 	}
@@ -413,7 +411,7 @@ public abstract class HOTableModel extends AbstractTableModel {
 		RowSorter<HOTableModel> sorter = null;
 		if (table != null){
 			changed = setUserColumnSettings(table);
-			sorter = (RowSorter<HOTableModel>) table.getRowSorter();
+			sorter = (TableRowSorter<HOTableModel>) table.getRowSorter();
 		}
 		else if ( fixedColumnsTable != null){
 			changed = setUserColumnSettings(fixedColumnsTable);
