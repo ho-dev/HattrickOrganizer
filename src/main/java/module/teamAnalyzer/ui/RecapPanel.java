@@ -37,7 +37,7 @@ public class RecapPanel extends JPanel {
         FixedColumnsTable table = new FixedColumnsTable(tableModel, 2);
         table.setDefaultRenderer(Object.class, new RecapTableRenderer());
         table.setDefaultRenderer(ImageIcon.class, new RecapTableRenderer());
-        recapListener = new RecapListSelectionListener(table.getTableSorter(), tableModel);
+        recapListener = new RecapListSelectionListener(table.getTableRowSorter(), tableModel);
         table.addListSelectionListener(recapListener);
         setLayout(new BorderLayout());
         add(table);

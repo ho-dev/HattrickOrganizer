@@ -20,7 +20,7 @@ public class FixedColumnsTable extends JScrollPane {
     /**
      * Table sorter
      */
-    private final TableRowSorter<HOTableModel> scrollTableSorter;
+    private final TableRowSorter<HOTableModel> tableRowSorter;
 
     /**
      * Fixed table part (left hand side)
@@ -42,7 +42,7 @@ public class FixedColumnsTable extends JScrollPane {
      */
     public FixedColumnsTable(HOTableModel tableModel, int fixedColumns) {
         this.fixedColumns = fixedColumns;
-        scrollTableSorter = new TableRowSorter<>(tableModel);
+        tableRowSorter = new TableRowSorter<>(tableModel);
         var table = new JTable(tableModel);
 
         var columnModel = table.getColumnModel();
@@ -51,7 +51,7 @@ public class FixedColumnsTable extends JScrollPane {
         header.setToolTipText("");
         table.setTableHeader(header);
 
-        table.setRowSorter(scrollTableSorter);
+        table.setRowSorter(tableRowSorter);
         table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.setSelectionBackground(HODefaultTableCellRenderer.SELECTION_BG);
@@ -159,8 +159,8 @@ public class FixedColumnsTable extends JScrollPane {
      * Return the created table sorter
      * @return DefaultTableSorter
      */
-    public TableRowSorter<HOTableModel> getTableSorter() {
-        return scrollTableSorter;
+    public TableRowSorter<HOTableModel> getTableRowSorter() {
+        return tableRowSorter;
     }
 
     /**
