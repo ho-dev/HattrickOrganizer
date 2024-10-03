@@ -11,7 +11,6 @@ import core.gui.model.UserColumnController;
 import core.gui.model.UserColumnFactory;
 import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
-import core.model.UserParameter;
 import core.model.match.MatchKurzInfo;
 import core.model.player.Player;
 import core.net.HattrickLink;
@@ -42,8 +41,7 @@ public class PlayerOverviewTable extends FixedColumnsTable implements core.gui.R
 
 	@Serial
 	private static final long serialVersionUID = -6074136156090331418L;
-	private PlayerOverviewTableModel tableModel;
-//	private TableSorter tableSorter;
+	private final PlayerOverviewTableModel tableModel;
 
 	public PlayerOverviewTable() {
 		super(UserColumnController.instance().getPlayerOverviewModel(), 1);
@@ -52,7 +50,6 @@ public class PlayerOverviewTable extends FixedColumnsTable implements core.gui.R
 		tableModel.initTable(this);
 		setOpaque(false);
 		setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
-//		setSelectionBackground(HODefaultTableCellRenderer.SELECTION_BG);
 		RefreshManager.instance().registerRefreshable(this);
 
 		// Add a mouse listener that, when clicking on the “Last match” column
