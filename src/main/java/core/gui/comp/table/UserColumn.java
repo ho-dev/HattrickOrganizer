@@ -2,6 +2,7 @@ package core.gui.comp.table;
 
 import core.model.TranslationFacility;
 
+import javax.swing.*;
 import javax.swing.table.TableColumn;
 
 public abstract class UserColumn {
