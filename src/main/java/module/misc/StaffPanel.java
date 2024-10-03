@@ -6,17 +6,12 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.StaffMember;
+import core.model.TranslationFacility;
 import core.model.misc.Verein;
 
-import java.awt.Component;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import javax.swing.*;
+import java.awt.*;
 import java.util.List;
-
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 import static core.util.Helper.getTranslation;
 
@@ -70,7 +65,6 @@ final class StaffPanel extends JPanel {
 
 		this.setBackground(ThemeManager.getColor(HOColorName.PANEL_BG));
 
-		HOVerwaltung hoV = HOVerwaltung.instance();
 		var title = getTranslation("Trainerstab");
 		var titledBorder = BorderFactory.createTitledBorder(title);
 		titledBorder.setTitleColor(ThemeManager.getColor(HOColorName.LINEUP_HIGHLIGHT_FG));
@@ -94,7 +88,7 @@ final class StaffPanel extends JPanel {
 				add(new JLabel(staffMember.getStaffType().getName()), constraints);
 				constraints.gridx = 1;
 				add(new JLabel(staffMember.getName()), constraints);
-				String levelText = core.model.HOVerwaltung.instance().getLanguageString("ls.club.staff.level") +
+				String levelText = TranslationFacility.tr("ls.club.staff.level") +
 									": " + staffMember.getLevel();
 				constraints.gridx = 2;
 				add(new JLabel(levelText), constraints);
@@ -107,35 +101,35 @@ final class StaffPanel extends JPanel {
 			constraints.gridwidth = 3;
 			
 			
-			add(new JLabel("------ "+ hoV.getLanguageString("ls.club.staff.stafflevels") + "------"), constraints);
+			add(new JLabel("------ "+ TranslationFacility.tr("ls.club.staff.stafflevels") + "------"), constraints);
 			nextYvalue++;
 		}
 
-		label = new JLabel(hoV.getLanguageString("ls.club.staff.assistantcoach"));
+		label = new JLabel(TranslationFacility.tr("ls.club.staff.assistantcoach"));
 		add(label,assistantCoachesLabel.getComponent(false), nextYvalue);
 		nextYvalue++;
 
-		label = new JLabel(hoV.getLanguageString("ls.club.staff.medic"));
+		label = new JLabel(TranslationFacility.tr("ls.club.staff.medic"));
 		add(label,doctorsLabel.getComponent(false), nextYvalue);
 		nextYvalue++;
 		
-		label = new JLabel(hoV.getLanguageString("ls.club.staff.spokesperson"));
+		label = new JLabel(TranslationFacility.tr("ls.club.staff.spokesperson"));
 		add(label,spokepersonsLabel.getComponent(false), nextYvalue);
 		nextYvalue++;
 		
-		label = new JLabel(hoV.getLanguageString("ls.club.staff.sportspsychologist"));
+		label = new JLabel(TranslationFacility.tr("ls.club.staff.sportspsychologist"));
 		add(label,psychologistsLabel.getComponent(false), nextYvalue);
 		nextYvalue++;
 		
-		label = new JLabel(hoV.getLanguageString("ls.club.staff.formcoach"));
+		label = new JLabel(TranslationFacility.tr("ls.club.staff.formcoach"));
 		add(label,formCoachLabel.getComponent(false), nextYvalue);
 		nextYvalue++;
 		
-		label = new JLabel(hoV.getLanguageString("ls.club.staff.financialdirector"));
+		label = new JLabel(TranslationFacility.tr("ls.club.staff.financialdirector"));
 		add(label,financialdirectorLabel.getComponent(false), nextYvalue);
 		nextYvalue++;
 		
-		label = new JLabel(hoV.getLanguageString("ls.club.staff.tacticalassistant"));
+		label = new JLabel(TranslationFacility.tr("ls.club.staff.tacticalassistant"));
 		add(label,tacticalAssistantLabel.getComponent(false), nextYvalue);
 		nextYvalue++;
 		

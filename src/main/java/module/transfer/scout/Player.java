@@ -1,5 +1,6 @@
 // %3800124443:de.hattrickorganizer.gui.transferscout%
 package module.transfer.scout;
+import core.model.TranslationFacility;
 import core.util.HODateTime;
 
 /**
@@ -200,7 +201,7 @@ public class Player {
         String info = "";
 
         if (getInjury() > 0) {
-            final String tmp = core.model.HOVerwaltung.instance().getLanguageString("scout_injury");
+            final String tmp = TranslationFacility.tr("scout_injury");
             info = info + tmp.replaceAll("%weeks%", String.valueOf(getInjury())) + "\r\n";
         }
 

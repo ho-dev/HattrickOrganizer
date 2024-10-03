@@ -2,6 +2,7 @@ package module.transfer.scout;
 
 import core.constants.player.PlayerSpeciality;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.util.HODateTime;
 import core.util.HOLogger;
 
@@ -65,27 +66,27 @@ public class PlayerConverter {
         try{
             // Get all skills for active language
             // This should be the same language as in Hattrick
-            skills.add(homodel.getLanguageString("ls.player.skill.value.non-existent").toLowerCase(Locale.ENGLISH));
-            skills.add(homodel.getLanguageString("ls.player.skill.value.disastrous").toLowerCase(Locale.ENGLISH));
-            skills.add(homodel.getLanguageString("ls.player.skill.value.wretched").toLowerCase(Locale.ENGLISH));
-            skills.add(homodel.getLanguageString("ls.player.skill.value.poor").toLowerCase(Locale.ENGLISH));
-            skills.add(homodel.getLanguageString("ls.player.skill.value.weak").toLowerCase(Locale.ENGLISH));
-            skills.add(homodel.getLanguageString("ls.player.skill.value.inadequate").toLowerCase(Locale.ENGLISH));
-            skills.add(homodel.getLanguageString("ls.player.skill.value.passable").toLowerCase(Locale.ENGLISH));
-            skills.add(homodel.getLanguageString("ls.player.skill.value.solid").toLowerCase(Locale.ENGLISH));
-            skills.add(homodel.getLanguageString("ls.player.skill.value.excellent").toLowerCase(Locale.ENGLISH));
-            skills.add(homodel.getLanguageString("ls.player.skill.value.formidable").toLowerCase(Locale.ENGLISH));
-            skills.add(homodel.getLanguageString("ls.player.skill.value.outstanding").toLowerCase(Locale.ENGLISH));
-            skills.add(homodel.getLanguageString("ls.player.skill.value.brilliant").toLowerCase(Locale.ENGLISH));
-            skills.add(homodel.getLanguageString("ls.player.skill.value.magnificent").toLowerCase(Locale.ENGLISH));
-            skills.add(homodel.getLanguageString("ls.player.skill.value.worldclass").toLowerCase(Locale.ENGLISH));
-            skills.add(homodel.getLanguageString("ls.player.skill.value.supernatural").toLowerCase(Locale.ENGLISH));
-            skills.add(homodel.getLanguageString("ls.player.skill.value.titanic").toLowerCase(Locale.ENGLISH));
-            skills.add(homodel.getLanguageString("ls.player.skill.value.extra-terrestrial").toLowerCase(Locale.ENGLISH));
-            skills.add(homodel.getLanguageString("ls.player.skill.value.mythical").toLowerCase(Locale.ENGLISH));
-            skills.add(homodel.getLanguageString("ls.player.skill.value.magical").toLowerCase(Locale.ENGLISH));
-            skills.add(homodel.getLanguageString("ls.player.skill.value.utopian").toLowerCase(Locale.ENGLISH));
-            skills.add(homodel.getLanguageString("ls.player.skill.value.divine").toLowerCase(Locale.ENGLISH));
+            skills.add(TranslationFacility.tr("ls.player.skill.value.non-existent").toLowerCase(Locale.ENGLISH));
+            skills.add(TranslationFacility.tr("ls.player.skill.value.disastrous").toLowerCase(Locale.ENGLISH));
+            skills.add(TranslationFacility.tr("ls.player.skill.value.wretched").toLowerCase(Locale.ENGLISH));
+            skills.add(TranslationFacility.tr("ls.player.skill.value.poor").toLowerCase(Locale.ENGLISH));
+            skills.add(TranslationFacility.tr("ls.player.skill.value.weak").toLowerCase(Locale.ENGLISH));
+            skills.add(TranslationFacility.tr("ls.player.skill.value.inadequate").toLowerCase(Locale.ENGLISH));
+            skills.add(TranslationFacility.tr("ls.player.skill.value.passable").toLowerCase(Locale.ENGLISH));
+            skills.add(TranslationFacility.tr("ls.player.skill.value.solid").toLowerCase(Locale.ENGLISH));
+            skills.add(TranslationFacility.tr("ls.player.skill.value.excellent").toLowerCase(Locale.ENGLISH));
+            skills.add(TranslationFacility.tr("ls.player.skill.value.formidable").toLowerCase(Locale.ENGLISH));
+            skills.add(TranslationFacility.tr("ls.player.skill.value.outstanding").toLowerCase(Locale.ENGLISH));
+            skills.add(TranslationFacility.tr("ls.player.skill.value.brilliant").toLowerCase(Locale.ENGLISH));
+            skills.add(TranslationFacility.tr("ls.player.skill.value.magnificent").toLowerCase(Locale.ENGLISH));
+            skills.add(TranslationFacility.tr("ls.player.skill.value.worldclass").toLowerCase(Locale.ENGLISH));
+            skills.add(TranslationFacility.tr("ls.player.skill.value.supernatural").toLowerCase(Locale.ENGLISH));
+            skills.add(TranslationFacility.tr("ls.player.skill.value.titanic").toLowerCase(Locale.ENGLISH));
+            skills.add(TranslationFacility.tr("ls.player.skill.value.extra-terrestrial").toLowerCase(Locale.ENGLISH));
+            skills.add(TranslationFacility.tr("ls.player.skill.value.mythical").toLowerCase(Locale.ENGLISH));
+            skills.add(TranslationFacility.tr("ls.player.skill.value.magical").toLowerCase(Locale.ENGLISH));
+            skills.add(TranslationFacility.tr("ls.player.skill.value.utopian").toLowerCase(Locale.ENGLISH));
+            skills.add(TranslationFacility.tr("ls.player.skill.value.divine").toLowerCase(Locale.ENGLISH));
 
             for (int k = 0; k < skills.size(); k++) {
                 skillvalues.add(k);
@@ -115,13 +116,13 @@ public class PlayerConverter {
             // Get all specialities for active language
             // This should be the same language as in Hattrick
             specialities.add(""); // No speciality
-            specialities.add(homodel.getLanguageString("ls.player.speciality.technical").toLowerCase(Locale.ENGLISH));
-            specialities.add(homodel.getLanguageString("ls.player.speciality.quick").toLowerCase(Locale.ENGLISH));
-            specialities.add(homodel.getLanguageString("ls.player.speciality.powerful").toLowerCase(Locale.ENGLISH));
-            specialities.add(homodel.getLanguageString("ls.player.speciality.unpredictable").toLowerCase(Locale.ENGLISH));
-            specialities.add(homodel.getLanguageString("ls.player.speciality.head").toLowerCase(Locale.ENGLISH));
-            specialities.add(homodel.getLanguageString("ls.player.speciality.regainer").toLowerCase(Locale.ENGLISH));
-            specialities.add(homodel.getLanguageString("ls.player.speciality.support").toLowerCase(Locale.ENGLISH));
+            specialities.add(TranslationFacility.tr("ls.player.speciality.technical").toLowerCase(Locale.ENGLISH));
+            specialities.add(TranslationFacility.tr("ls.player.speciality.quick").toLowerCase(Locale.ENGLISH));
+            specialities.add(TranslationFacility.tr("ls.player.speciality.powerful").toLowerCase(Locale.ENGLISH));
+            specialities.add(TranslationFacility.tr("ls.player.speciality.unpredictable").toLowerCase(Locale.ENGLISH));
+            specialities.add(TranslationFacility.tr("ls.player.speciality.head").toLowerCase(Locale.ENGLISH));
+            specialities.add(TranslationFacility.tr("ls.player.speciality.regainer").toLowerCase(Locale.ENGLISH));
+            specialities.add(TranslationFacility.tr("ls.player.speciality.support").toLowerCase(Locale.ENGLISH));
 
             for (int i = 0; i<PlayerSpeciality.ITEMS.length; i++){
                 for (int k = 0; k < 8; k++) {
@@ -285,7 +286,7 @@ Mindestgebot: [money]0[/money]
         if (!txtTmp.toString().isEmpty()) {
             player.setPlayerName(txtTmp.toString());
         } else {
-            addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.id"));
+            addErrorField(TranslationFacility.tr("ls.player.id"));
         }
         // Player Id
         sc.useDelimiter("\\]");
@@ -293,7 +294,7 @@ Mindestgebot: [money]0[/money]
         if (!txtTmp.toString().isEmpty()) {
             player.setPlayerID(Integer.parseInt(txtTmp.toString()));
         } else {
-            addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.name"));
+            addErrorField(TranslationFacility.tr("ls.player.name"));
         }
         sc.close();
         // Age
@@ -304,7 +305,7 @@ Mindestgebot: [money]0[/money]
         if (!txtTmp.toString().isEmpty()) {
             player.setAge(Integer.parseInt(txtTmp.toString()));
         } else {
-            addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.age"));
+            addErrorField(TranslationFacility.tr("ls.player.age"));
         }
         // Age Days
         sc.useDelimiter(" ");
@@ -318,7 +319,7 @@ Mindestgebot: [money]0[/money]
         if (!txtTmp.toString().isEmpty()) {
             player.setAgeDays(Integer.parseInt(txtTmp.toString()));
         } else {
-            addErrorField(HOVerwaltung.instance().getLanguageString("s.player.age.days"));
+            addErrorField(TranslationFacility.tr("s.player.age.days"));
         }
         sc.close();
         //Analyze Player Description
@@ -339,7 +340,7 @@ Mindestgebot: [money]0[/money]
             sc.next();
         }
         if (!found) {
-            addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.experience"));
+            addErrorField(TranslationFacility.tr("ls.player.experience"));
         }
         // Leadership
         found = false;
@@ -354,7 +355,7 @@ Mindestgebot: [money]0[/money]
             sc.next();
         }
         if (!found) {
-            addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.leadership"));
+            addErrorField(TranslationFacility.tr("ls.player.leadership"));
         }
 
         /*
@@ -373,14 +374,14 @@ Mindestgebot: [money]0[/money]
             sc.next();
         }
         if(!found){
-            addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.loyalty"));
+            addErrorField(TranslationFacility.tr("ls.player.loyalty"));
         }
         sc.close();
         // Mother Club
         row = rows.get(indexMotherClub).toLowerCase(java.util.Locale.ENGLISH);
-        if (!HOVerwaltung.instance().getLanguageString("ls.player.motherclub.bonus").isEmpty() && row.indexOf(HOVerwaltung.instance().getLanguageString("ls.player.motherclub.bonus").toLowerCase(java.util.Locale.ENGLISH))>=0) {
+        if (!TranslationFacility.tr("ls.player.motherclub.bonus").isEmpty() && row.indexOf(TranslationFacility.tr("ls.player.motherclub.bonus").toLowerCase(java.util.Locale.ENGLISH))>=0) {
             player.setHomeGrown(true);
-        }else if (!HOVerwaltung.instance().getLanguageString("ls.player.motherclub").isEmpty() && row.indexOf(HOVerwaltung.instance().getLanguageString("ls.player.motherclub").toLowerCase(java.util.Locale.ENGLISH))>=0) {
+        }else if (!TranslationFacility.tr("ls.player.motherclub").isEmpty() && row.indexOf(TranslationFacility.tr("ls.player.motherclub").toLowerCase(java.util.Locale.ENGLISH))>=0) {
             player.setHomeGrown(true);
         }
         */
@@ -401,7 +402,7 @@ Mindestgebot: [money]0[/money]
         if (!txtTmp.toString().isEmpty()) {
             player.setTSI(Integer.parseInt(txtTmp.toString()));
         } else {
-            addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.tsi"));
+            addErrorField(TranslationFacility.tr("ls.player.tsi"));
         }
         sc.close();
 
@@ -441,7 +442,7 @@ Mindestgebot: [money]0[/money]
         if (!txtTmp.toString().isEmpty()) {
             player.setBooked(row.trim());
         } else {
-            addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.warningstatus"));
+            addErrorField(TranslationFacility.tr("ls.player.warningstatus"));
         }
         // Injure
         row = rows.get(indexRowInjure);
@@ -481,7 +482,7 @@ Mindestgebot: [money]0[/money]
         if (!txtTmp.toString().isEmpty()) {
             player.setForm(Integer.parseInt(txtTmp.toString()));
         } else {
-            addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.form"));
+            addErrorField(TranslationFacility.tr("ls.player.form"));
         }
         txtTmp = new StringBuilder();
         findValue = false;
@@ -499,20 +500,20 @@ Mindestgebot: [money]0[/money]
         if (!txtTmp.toString().isEmpty()) {
             player.setStamina(Integer.parseInt(txtTmp.toString()));
         } else {
-            addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.skill.stamina"));
+            addErrorField(TranslationFacility.tr("ls.player.skill.stamina"));
         }
 
         // scan skills
         row = rows.get(indexRowSkills);
         sc = new Scanner(row);
         sc.useDelimiter("");
-        player.setGoalKeeping(scanSkill(sc, HOVerwaltung.instance().getLanguageString("ls.player.skill.keeper")));
-        player.setDefense(scanSkill(sc, HOVerwaltung.instance().getLanguageString("ls.player.skill.defending")));
-        player.setPlayMaking(scanSkill(sc, HOVerwaltung.instance().getLanguageString("ls.player.skill.playmaking")));
-        player.setWing(scanSkill(sc, HOVerwaltung.instance().getLanguageString("ls.player.skill.winger")));
-        player.setPassing(scanSkill(sc, HOVerwaltung.instance().getLanguageString("ls.player.skill.passing")));
-        player.setAttack(scanSkill(sc, HOVerwaltung.instance().getLanguageString("ls.player.skill.scoring")));
-        player.setSetPieces(scanSkill(sc, HOVerwaltung.instance().getLanguageString("ls.player.skill.setpieces")));
+        player.setGoalKeeping(scanSkill(sc, TranslationFacility.tr("ls.player.skill.keeper")));
+        player.setDefense(scanSkill(sc, TranslationFacility.tr("ls.player.skill.defending")));
+        player.setPlayMaking(scanSkill(sc, TranslationFacility.tr("ls.player.skill.playmaking")));
+        player.setWing(scanSkill(sc, TranslationFacility.tr("ls.player.skill.winger")));
+        player.setPassing(scanSkill(sc, TranslationFacility.tr("ls.player.skill.passing")));
+        player.setAttack(scanSkill(sc, TranslationFacility.tr("ls.player.skill.scoring")));
+        player.setSetPieces(scanSkill(sc, TranslationFacility.tr("ls.player.skill.setpieces")));
 
         if ( rows.size() > indexRowDeadline) {
             // scan deadline
@@ -729,7 +730,7 @@ Mindestgebot: [money]0[/money]
             if (!age.isEmpty()) {
                 player.setAge(Integer.parseInt(age));
             } else {
-                addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.age"));
+                addErrorField(TranslationFacility.tr("ls.player.age"));
             }
 
             //-- get ageDays
@@ -766,7 +767,7 @@ Mindestgebot: [money]0[/money]
             if (!ageDays.isEmpty()) {
                 player.setAgeDays(Integer.parseInt(ageDays));
             } else {
-                addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.age.days"));
+                addErrorField(TranslationFacility.tr("ls.player.age.days"));
             }
 
             // clean lines till here
@@ -822,7 +823,7 @@ Mindestgebot: [money]0[/money]
             if (!tsi.toString().isEmpty()) {
                 player.setTSI(Integer.parseInt(tsi.toString()));
             } else {
-                addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.tsi"));
+                addErrorField(TranslationFacility.tr("ls.player.tsi"));
             }
 
             // -- check for line wage / season (since FoxTrick 0.4.8.2)
@@ -964,7 +965,7 @@ Mindestgebot: [money]0[/money]
 				player.setExpiryDate(parseLocalDateTime(new SimpleDateFormat("dd.MM.yyyy").format(new Date()),
                                      new SimpleDateFormat("HH:mm").format(new Date())));
 				if (status == 0) {
-                    addErrorField(HOVerwaltung.instance().getLanguageString("Ablaufdatum"));
+                    addErrorField(TranslationFacility.tr("Ablaufdatum"));
                 }
 			}
 
@@ -1018,7 +1019,7 @@ Mindestgebot: [money]0[/money]
             }
 
             if ((foundskills.size() < 11) && (status == 0)) {
-                addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.skill"));
+                addErrorField(TranslationFacility.tr("ls.player.skill"));
             }
 
             // Sort skills by location
@@ -1054,7 +1055,7 @@ Mindestgebot: [money]0[/money]
 					setSkillsBarStyle(player, foundskills);
 				}
 			} catch (Exception e) {
-                addErrorField(HOVerwaltung.instance().getLanguageString("ls.player.skill"));
+                addErrorField(TranslationFacility.tr("ls.player.skill"));
 			}
 
             // We can search the speciality in text now

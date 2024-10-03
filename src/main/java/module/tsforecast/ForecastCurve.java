@@ -22,19 +22,21 @@ package module.tsforecast;
 
 import core.db.DBManager;
 import core.model.HOVerwaltung;
-import core.model.match.IMatchDetails;
+import core.model.TranslationFacility;
 import core.model.enums.MatchType;
+import core.model.match.IMatchDetails;
 import core.model.match.MatchKurzInfo;
 import core.model.misc.Basics;
 import core.model.series.Liga;
 import core.util.HODateTime;
 
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.Properties;
 
 import static java.lang.Integer.parseInt;
 
@@ -207,8 +209,7 @@ abstract class ForecastCurve extends Curve {
 										IMatchDetails.EINSTELLUNG_NORMAL,
 										ibasics.getSpieltag() + s,
 										MatchType.QUALIFICATION);
-								point.m_strTooltip = HOVerwaltung
-										.instance().getLanguageString(
+								point.m_strTooltip = TranslationFacility.tr(
 												"ls.match.matchtype.qualification");
 							}
 							default -> {
@@ -217,8 +218,7 @@ abstract class ForecastCurve extends Curve {
 										ibasics.getSpieltag() + s, MatchType.LEAGUE);
 								point.m_strTooltip = (ibasics.getSpieltag() + s)
 										+ ". "
-										+ HOVerwaltung.instance()
-										.getLanguageString(
+										+ TranslationFacility.tr(
 												"ls.match.matchtype.league");
 							}
 						}
@@ -232,7 +232,7 @@ abstract class ForecastCurve extends Curve {
 							ibasics.getSpieltag() + s, MatchType.CUP);
 					point.m_strTooltip = (ibasics.getSpieltag() + s)
 							+ ". "
-							+ HOVerwaltung.instance().getLanguageString(
+							+ TranslationFacility.tr(
 							"ls.match.matchtype.cup");
 					m_clPoints.add(point);
 					addUpdatePoints(point);

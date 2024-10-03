@@ -1,18 +1,19 @@
 package core.prediction;
 
 import core.gui.comp.entry.ColorLabelEntry;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.prediction.engine.MatchResult;
-import javax.swing.SwingConstants;
+
+import javax.swing.*;
 
 public class MatchScoreTableModel extends AbstractMatchTableModel {
 	//~ Instance fields ----------------------------------------------------------------------------
 	private static final long serialVersionUID = -2007343001155380888L;
 	protected static String[] columnNames =
 		{
-			HOVerwaltung.instance().getLanguageString("Tore"),
-			HOVerwaltung.instance().getLanguageString("Heim"),
-			HOVerwaltung.instance().getLanguageString("Gast")};
+			TranslationFacility.tr("Tore"),
+			TranslationFacility.tr("Heim"),
+			TranslationFacility.tr("Gast")};
 
 	//~ Constructors -------------------------------------------------------------------------------
 

@@ -2,21 +2,14 @@ package tool.keepertool;
 
 import core.constants.player.PlayerAbility;
 import core.gui.comp.panel.ImagePanel;
+import core.model.TranslationFacility;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.GridLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 
 
 /**
@@ -70,11 +63,11 @@ class ManualPanel extends JPanel {
         buttonPanel.setLayout(new GridLayout(6, 2));
         buttonPanel.add(label(""));
         buttonPanel.add(label(""));
-        buttonPanel.add(label(core.model.HOVerwaltung.instance().getLanguageString("ls.player.tsi")));
+        buttonPanel.add(label(TranslationFacility.tr("ls.player.tsi")));
         buttonPanel.add(tsi);
         buttonPanel.add(label(""));
         buttonPanel.add(label(""));
-        buttonPanel.add(label(core.model.HOVerwaltung.instance().getLanguageString("ls.player.form")));
+        buttonPanel.add(label(TranslationFacility.tr("ls.player.form")));
         buttonPanel.add(form);
         buttonPanel.add(label(""));
         buttonPanel.add(label(""));
@@ -90,7 +83,7 @@ class ManualPanel extends JPanel {
                 }
             });
 
-        final JButton b = new JButton(core.model.HOVerwaltung.instance().getLanguageString("Calculate"));
+        final JButton b = new JButton(TranslationFacility.tr("Calculate"));
         b.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent arg0) {
                     final int tsiValue = Integer.parseInt(tsi.getText());

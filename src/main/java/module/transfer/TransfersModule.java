@@ -1,13 +1,10 @@
 package module.transfer;
 
-import java.awt.event.KeyEvent;
-
-import javax.swing.JPanel;
-import javax.swing.KeyStroke;
-
-
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.module.DefaultModule;
+
+import javax.swing.*;
+import java.awt.event.KeyEvent;
 
 public final class TransfersModule extends DefaultModule {
 	private TransfersPanel panel;
@@ -23,7 +20,7 @@ public final class TransfersModule extends DefaultModule {
 
 	@Override
 	public String getDescription() {
-		return HOVerwaltung.instance().getLanguageString("Transfers");
+		return TranslationFacility.tr("Transfers");
 	}
 
 	@Override

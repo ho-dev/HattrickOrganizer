@@ -32,17 +32,32 @@ public enum StaffType {
 		}
 
 		public String getName() {
-            return switch (this) {
-                case ASSISTANTTRAINER -> HOVerwaltung.instance().getLanguageString("ls.club.staff.assistantcoach");
-                case MEDIC -> HOVerwaltung.instance().getLanguageString("ls.club.staff.medic");
-                case SPOKESPERSON -> HOVerwaltung.instance().getLanguageString("ls.club.staff.spokesperson");
-                case SPORTPSYCHOLOGIST -> HOVerwaltung.instance().getLanguageString("ls.club.staff.sportspsychologist");
-                case FORMCOACH -> HOVerwaltung.instance().getLanguageString("ls.club.staff.formcoach");
-                case FINANCIALDIRECTOR -> HOVerwaltung.instance().getLanguageString("ls.club.staff.financialdirector");
-                case TACTICALASSISTANT -> HOVerwaltung.instance().getLanguageString("ls.club.staff.tacticalassistant");
+			 switch (this) {
+		         case ASSISTANTTRAINER:
+		             return TranslationFacility.tr("ls.club.staff.assistantcoach");
 
-                //Error?
-                default -> "unknown";
-            };
+		         case MEDIC:
+		             return TranslationFacility.tr("ls.club.staff.medic");
+
+		         case SPOKESPERSON:
+		             return TranslationFacility.tr("ls.club.staff.spokesperson");
+
+		         case SPORTPSYCHOLOGIST:
+		             return TranslationFacility.tr("ls.club.staff.sportspsychologist");
+
+		         case FORMCOACH:
+		             return TranslationFacility.tr("ls.club.staff.formcoach");
+
+		         case FINANCIALDIRECTOR:
+		             return TranslationFacility.tr("ls.club.staff.financialdirector");
+
+		         case TACTICALASSISTANT:
+		           return TranslationFacility.tr("ls.club.staff.tacticalassistant");
+				 
+		           //Error?
+		         default:
+		             return "unknown";
+
+			 }
 		}
 }

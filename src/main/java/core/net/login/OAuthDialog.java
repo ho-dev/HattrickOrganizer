@@ -5,7 +5,7 @@ import com.github.scribejava.core.model.OAuth1RequestToken;
 import com.github.scribejava.core.oauth.OAuth10aService;
 import core.gui.HOMainFrame;
 import core.gui.comp.panel.ImagePanel;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.util.BrowserLauncher;
 import core.util.HOLogger;
@@ -42,7 +42,7 @@ public class OAuthDialog extends JDialog {
 	private String scopes;
 
 	public OAuthDialog(HOMainFrame mainFrame, OAuth10aService service, String scope) {
-		super(mainFrame, HOVerwaltung.instance().getLanguageString(
+		super(mainFrame, TranslationFacility.tr(
 				"oauth.Title"), true);
 
 		this.m_clMainFrame = mainFrame;
@@ -96,9 +96,9 @@ public class OAuthDialog extends JDialog {
 	@Override
 	public void setVisible(boolean b) {
 		if (!m_bFirstTry) {
-			JOptionPane.showMessageDialog(null, HOVerwaltung.instance()
-					.getLanguageString("oauth.FailedTry"), HOVerwaltung
-					.instance().getLanguageString("oauth.FailedTryHeader"),
+			JOptionPane.showMessageDialog(null,
+					TranslationFacility.tr("oauth.FailedTry"),
+					TranslationFacility.tr("oauth.FailedTryHeader"),
 					JOptionPane.INFORMATION_MESSAGE);
 			m_jtfAuthString.setText("");
 		}
@@ -154,7 +154,7 @@ public class OAuthDialog extends JDialog {
 		constraints.insets = new Insets(2, 2, 2, 2);
 
 		JLabel infoLabel = new JLabel();
-		infoLabel.setText(HOVerwaltung.instance().getLanguageString(
+		infoLabel.setText(TranslationFacility.tr(
 				"oauth.Intro"));
 		constraints.gridx = 0;
 		constraints.gridy = 0;
@@ -170,7 +170,7 @@ public class OAuthDialog extends JDialog {
 		panel.add(spacer, constraints);
 
 		JLabel authLink = new JLabel();
-		authLink.setText(HOVerwaltung.instance().getLanguageString(
+		authLink.setText(TranslationFacility.tr(
 				"oauth.URLOrButton"));
 
 		constraints.gridx = 0;
@@ -178,7 +178,7 @@ public class OAuthDialog extends JDialog {
 		constraints.gridwidth = 2;
 		panel.add(authLink, constraints);
 
-		m_jbBrowse.setText(HOVerwaltung.instance().getLanguageString(
+		m_jbBrowse.setText(TranslationFacility.tr(
 				"oauth.OpenUrl"));
 		m_jbBrowse.setSize(170, 35);
 		m_jbBrowse.setEnabled(true);
@@ -196,7 +196,7 @@ public class OAuthDialog extends JDialog {
 		panel.add(m_jtfAuthURL, constraints);
 
 		JLabel authInput = new JLabel();
-		authInput.setText(HOVerwaltung.instance().getLanguageString(
+		authInput.setText(TranslationFacility.tr(
 				"oauth.EnterCode"));
 		constraints.gridx = 0;
 		constraints.gridy = 5;
@@ -208,7 +208,7 @@ public class OAuthDialog extends JDialog {
 		constraints.gridwidth = 2;
 		panel.add(m_jtfAuthString, constraints);
 
-		m_jbOK.setText(HOVerwaltung.instance().getLanguageString("ls.button.ok"));
+		m_jbOK.setText(TranslationFacility.tr("ls.button.ok"));
 		m_jbOK.setSize(170, 35);
 		constraints.gridx = 0;
 		constraints.gridy = 7;
@@ -216,7 +216,7 @@ public class OAuthDialog extends JDialog {
 		constraints.fill = GridBagConstraints.NONE;
 		panel.add(m_jbOK, constraints);
 
-		m_jbCancel.setText(HOVerwaltung.instance().getLanguageString(
+		m_jbCancel.setText(TranslationFacility.tr(
 				"ls.button.cancel"));
 		m_jbCancel.setEnabled(true);
 		constraints.gridx = 1;

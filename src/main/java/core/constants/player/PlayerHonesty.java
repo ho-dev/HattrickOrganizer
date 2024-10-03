@@ -1,6 +1,6 @@
 package core.constants.player;
 
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 
 public final class PlayerHonesty {
 	private static final String[] languageKeys = {
@@ -22,8 +22,8 @@ public final class PlayerHonesty {
 
 	public static String toString(Integer honesty){
 		if(honesty != null && honesty >= INFAMOUS && honesty <= SAINTLY)
-			return HOVerwaltung.instance().getLanguageString(languageKeys[honesty]);
-		return HOVerwaltung.instance().getLanguageString("Unbestimmt");
+			return TranslationFacility.tr(languageKeys[honesty]);
+		return TranslationFacility.tr("Unbestimmt");
 	}
 
 }

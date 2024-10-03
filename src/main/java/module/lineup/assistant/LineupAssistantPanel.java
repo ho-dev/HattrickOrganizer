@@ -4,24 +4,30 @@ import core.datatype.CBItem;
 import core.gui.HOMainFrame;
 import core.gui.Refreshable;
 import core.gui.comp.panel.ImagePanel;
-import core.gui.theme.*;
+import core.gui.theme.GroupTeamFactory;
+import core.gui.theme.HOColorName;
+import core.gui.theme.ImageUtilities;
+import core.gui.theme.ThemeManager;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import core.util.Helper;
-import module.lineup.*;
+import module.lineup.LineupAssistantSelectorOverlay;
 import module.lineup.lineup.PlayerPositionPanel;
+
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.*;
 import java.util.List;
-import javax.swing.*;
-import static module.lineup.LineupPanel.TITLE_FG;
+import java.util.*;
+
 import static core.util.Helper.getTranslation;
+import static module.lineup.LineupPanel.TITLE_FG;
 
 
 //TODO check if it needs to implement Refreshable
@@ -46,22 +52,22 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 	private final JCheckBox m_jcbxIdealPositionFirst = new JCheckBox("", userParameter.aufstellungsAssistentPanel_idealPosition);
 
 	private final CBItem[] PRIORITIES = {
-			new CBItem(HOVerwaltung.instance().getLanguageString("AW-MF-ST"),
+			new CBItem(TranslationFacility.tr("AW-MF-ST"),
 					LineupAssistant.AW_MF_ST),
 
-			new CBItem(HOVerwaltung.instance().getLanguageString("AW-ST-MF"),
+			new CBItem(TranslationFacility.tr("AW-ST-MF"),
 					LineupAssistant.AW_ST_MF),
 
-			new CBItem(HOVerwaltung.instance().getLanguageString("MF-AW-ST"),
+			new CBItem(TranslationFacility.tr("MF-AW-ST"),
 					LineupAssistant.MF_AW_ST),
 
-			new CBItem(HOVerwaltung.instance().getLanguageString("MF-ST-AW"),
+			new CBItem(TranslationFacility.tr("MF-ST-AW"),
 					LineupAssistant.MF_ST_AW),
 
-			new CBItem(HOVerwaltung.instance().getLanguageString("ST-AW-MF"),
+			new CBItem(TranslationFacility.tr("ST-AW-MF"),
 					LineupAssistant.ST_AW_MF),
 
-			new CBItem(HOVerwaltung.instance().getLanguageString("ST-MF-AW"),
+			new CBItem(TranslationFacility.tr("ST-MF-AW"),
 					LineupAssistant.ST_MF_AW) };
 	private final JComboBox<CBItem> m_jcbPriority = new JComboBox<>(PRIORITIES);
 
@@ -133,7 +139,7 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
             lineup.resetSubstituteBench();
             lineup.setKicker(0);
             lineup.setCaptain(0);
-            HOMainFrame.instance().setInformation(HOVerwaltung.instance().getLanguageString("Aufstellung_geloescht"));
+            HOMainFrame.instance().setInformation(TranslationFacility.tr("Aufstellung_geloescht"));
             mainFrame.getLineupPanel().update();
         }
 		else if (actionEvent.getSource().equals(m_jbStartAssistant)) {
@@ -164,8 +170,8 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 				// Return.
 				javax.swing.JOptionPane.showMessageDialog(HOMainFrame.instance()
 						.getLineupPanel(),
-						HOVerwaltung.instance().getLanguageString("lineupassist.Error"),
-						HOVerwaltung.instance().getLanguageString("lineupassist.ErrorHeader"),
+						TranslationFacility.tr("lineupassist.Error"),
+						TranslationFacility.tr("lineupassist.ErrorHeader"),
 						javax.swing.JOptionPane.INFORMATION_MESSAGE);
 				return;
 			}
@@ -241,7 +247,7 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 						isIgnoreSuspended()
 				);
 
-		mainFrame.setInformation(HOVerwaltung.instance().getLanguageString("Autoaufstellung_fertig"));
+		mainFrame.setInformation(TranslationFacility.tr("Autoaufstellung_fertig"));
 		mainFrame.getLineupPanel().update();
 
 		// gui.RefreshManager.instance ().doRefresh ();
@@ -289,7 +295,7 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 		constraints.gridwidth = 2;
 		if (infoLabel == null) {
 			infoLabel = new JLabel();
-			infoLabel.setText(HOVerwaltung.instance().getLanguageString("lineupassist.Info"));
+			infoLabel.setText(TranslationFacility.tr("lineupassist.Info"));
 			infoLabel.setOpaque(true);
 			infoLabel.setHorizontalAlignment(JLabel.CENTER);
 			infoLabel.setFont(getFont().deriveFont(Font.BOLD));
@@ -302,7 +308,7 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 		constraints.gridheight = 1;
 
 		if (overlayOk == null) {
-			overlayOk = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.ok"));
+			overlayOk = new JButton(TranslationFacility.tr("ls.button.ok"));
 			overlayOk.setFont(new Font("serif", Font.BOLD, 16));
 			overlayOk.setBackground(ThemeManager.getColor(HOColorName.BUTTON_ASSIST_OK_BG));
 			overlayOk.setForeground(ImageUtilities.getColorForContrast(HOColorName.BUTTON_ASSIST_OK_BG));
@@ -312,7 +318,7 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 
 		constraints.gridy = 2;
 		if (overlayCancel == null) {
-			overlayCancel = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.cancel"));
+			overlayCancel = new JButton(TranslationFacility.tr("ls.button.cancel"));
 			overlayCancel.addActionListener(this);
 			overlayCancel.setFont(new Font("serif", Font.BOLD, 16));
 			overlayCancel.setBackground(ThemeManager.getColor(HOColorName.BUTTON_ASSIST_CANCEL_BG));

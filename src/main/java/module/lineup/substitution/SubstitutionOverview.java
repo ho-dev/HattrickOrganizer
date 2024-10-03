@@ -5,6 +5,7 @@ import core.gui.HOMainFrame;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.util.GUIUtils;
 import module.lineup.Lineup;
 import module.lineup.substitution.model.MatchOrderType;
@@ -14,36 +15,19 @@ import module.lineup.substitution.plausibility.PlausibilityCheck;
 import module.lineup.substitution.plausibility.Problem;
 import module.lineup.substitution.plausibility.Uncertainty;
 
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dialog;
-import java.awt.Frame;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.Window;
+import javax.swing.*;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.TableColumn;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.Serial;
-import java.util.*;
-
-import javax.swing.AbstractAction;
-import javax.swing.Icon;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTable;
-import javax.swing.KeyStroke;
-import javax.swing.ListSelectionModel;
-import javax.swing.SwingUtilities;
-import javax.swing.table.AbstractTableModel;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.TableColumn;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * Main Panel for Match Orders (i.e. substitutions) in the Lineup tab.
@@ -434,18 +418,18 @@ public class SubstitutionOverview extends JPanel {
 		public SubstitutionsTableModel() {
 			this.columnNames = new String[COLUMN_COUNT];
 			this.columnNames[WARNING_COL_IDX] = "";
-			this.columnNames[ORDERTYPE_COL_IDX] = HOVerwaltung.instance().getLanguageString(
+			this.columnNames[ORDERTYPE_COL_IDX] = TranslationFacility.tr(
 					"subs.orders.colheadline.order");
-			this.columnNames[SUBJECTPLAYER_COL_IDX] = HOVerwaltung.instance().getLanguageString(
+			this.columnNames[SUBJECTPLAYER_COL_IDX] = TranslationFacility.tr(
 					"subs.orders.colheadline.player1");
 			this.columnNames[ORDERTYPE_ICON_COL_IDX] = "";
-			this.columnNames[OBJECTPLAYER_COL_IDX] = HOVerwaltung.instance().getLanguageString(
+			this.columnNames[OBJECTPLAYER_COL_IDX] = TranslationFacility.tr(
 					"subs.orders.colheadline.player2");
-			this.columnNames[WHEN_COL_IDX] = HOVerwaltung.instance().getLanguageString(
+			this.columnNames[WHEN_COL_IDX] = TranslationFacility.tr(
 					"subs.orders.colheadline.when");
-			this.columnNames[STANDING_COL_IDX] = HOVerwaltung.instance().getLanguageString(
+			this.columnNames[STANDING_COL_IDX] = TranslationFacility.tr(
 					"subs.orders.colheadline.standing");
-			this.columnNames[CARDS_COL_IDX] = HOVerwaltung.instance().getLanguageString(
+			this.columnNames[CARDS_COL_IDX] = TranslationFacility.tr(
 					"subs.orders.colheadline.cards");
 		}
 
@@ -501,9 +485,9 @@ public class SubstitutionOverview extends JPanel {
 				return sub.getObjectPlayerName();
 			case WHEN_COL_IDX:
 				if (sub.getMatchMinuteCriteria() > 0) {
-					return HOVerwaltung.instance().getLanguageString("subs.MinuteAfterX", (int) sub.getMatchMinuteCriteria());
+					return TranslationFacility.tr("subs.MinuteAfterX", (int) sub.getMatchMinuteCriteria());
 				}
-				return HOVerwaltung.instance().getLanguageString("subs.MinuteAnytime");
+				return TranslationFacility.tr("subs.MinuteAnytime");
 			case STANDING_COL_IDX:
 				return LanguageStringLookup.getStanding(sub.getStanding());
 			case CARDS_COL_IDX:
@@ -559,7 +543,7 @@ public class SubstitutionOverview extends JPanel {
 	private class BehaviorAction extends AbstractAction {
 
 		public BehaviorAction() {
-			super(HOVerwaltung.instance().getLanguageString("subs.Behavior"));
+			super(TranslationFacility.tr("subs.Behavior"));
 		}
 
 		@Override
@@ -571,7 +555,7 @@ public class SubstitutionOverview extends JPanel {
 	private class PositionSwapAction extends AbstractAction {
 
 		public PositionSwapAction() {
-			super(HOVerwaltung.instance().getLanguageString("subs.TypeSwap"));
+			super(TranslationFacility.tr("subs.TypeSwap"));
 		}
 
 		@Override
@@ -583,7 +567,7 @@ public class SubstitutionOverview extends JPanel {
 	private class SubstitutionAction extends AbstractAction {
 
 		public SubstitutionAction() {
-			super(HOVerwaltung.instance().getLanguageString("subs.TypeSub"));
+			super(TranslationFacility.tr("subs.TypeSub"));
 		}
 
 		@Override
@@ -595,7 +579,7 @@ public class SubstitutionOverview extends JPanel {
 	private class ManMarkingAction extends AbstractAction {
 
 		public ManMarkingAction() {
-			super(HOVerwaltung.instance().getLanguageString("subs.TypeManMarking"));
+			super(TranslationFacility.tr("subs.TypeManMarking"));
 		}
 
 		@Override
@@ -607,7 +591,7 @@ public class SubstitutionOverview extends JPanel {
 	private class RemoveAction extends AbstractAction {
 
 		public RemoveAction() {
-			super(HOVerwaltung.instance().getLanguageString("ls.button.delete"));
+			super(TranslationFacility.tr("ls.button.delete"));
 		}
 
 		@Override
@@ -623,7 +607,7 @@ public class SubstitutionOverview extends JPanel {
 	private class RemoveAllAction extends AbstractAction {
 
 		public RemoveAllAction() {
-			super(HOVerwaltung.instance().getLanguageString("ls.button.deleteall"));
+			super(TranslationFacility.tr("ls.button.deleteall"));
 		}
 
 		@Override
@@ -637,7 +621,7 @@ public class SubstitutionOverview extends JPanel {
 	private class EditAction extends AbstractAction {
 
 		public EditAction() {
-			super(HOVerwaltung.instance().getLanguageString("ls.button.edit"));
+			super(TranslationFacility.tr("ls.button.edit"));
 		}
 
 		@Override

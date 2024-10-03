@@ -1,10 +1,9 @@
 package module.transfer.scout;
 
 import core.gui.HOMainFrame;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 
-import javax.swing.JButton;
-import javax.swing.JTextArea;
+import javax.swing.*;
 
 /**
  * @author thomas.werth
@@ -25,11 +24,11 @@ class Wecker extends javax.swing.JFrame implements java.awt.event.ActionListener
 
         ta.setEditable(false);
         ta.setText(text);
-        m_jbOK.setText(HOVerwaltung.instance().getLanguageString("ls.button.ok"));
+        m_jbOK.setText(TranslationFacility.tr("ls.button.ok"));
         m_jbOK.addActionListener(this);
 
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setTitle(HOVerwaltung.instance().getLanguageString("TransferScout"));
+        setTitle(TranslationFacility.tr("TransferScout"));
         this.setIconImage(HOMainFrame.instance().getIconImage());
 
         //this.setContentPane(temp);

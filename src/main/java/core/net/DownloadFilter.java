@@ -2,6 +2,7 @@ package core.net;
 
 import core.db.DBManager;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -9,27 +10,27 @@ import javax.swing.tree.DefaultMutableTreeNode;
 public class DownloadFilter extends DefaultMutableTreeNode {
 
     private static final HOVerwaltung hov = HOVerwaltung.instance();
-    private final DefaultMutableTreeNode currentMatches = new DefaultMutableTreeNode(hov.getLanguageString("download.currentmatches"));
-    private final DefaultMutableTreeNode currentSeriesData = new DefaultMutableTreeNode(hov.getLanguageString("download.currentseriesdata"));
-    private final DefaultMutableTreeNode previousSeriesData = new DefaultMutableTreeNode(hov.getLanguageString("download.oldseriesdata"));
-    private final DefaultMutableTreeNode teamData = new DefaultMutableTreeNode(hov.getLanguageString("download.teamdata"));
-    private final DefaultMutableTreeNode officialMatches = new DefaultMutableTreeNode(hov.getLanguageString("download.OfficialMatches"));
-    private final DefaultMutableTreeNode singleMatches = new DefaultMutableTreeNode(hov.getLanguageString("download.SingleMatches"));
-    private final DefaultMutableTreeNode ladderMatches = new DefaultMutableTreeNode(hov.getLanguageString("download.LadderMatches"));
-    private final DefaultMutableTreeNode tournamentGroupMatches = new DefaultMutableTreeNode(hov.getLanguageString("download.TournamentGroupMatches"));
-    private final DefaultMutableTreeNode tournamentPlayoffMatches = new DefaultMutableTreeNode(hov.getLanguageString("download.TournamentPlayoffMatches"));
-    private final DefaultMutableTreeNode divisionBattleMatches = new DefaultMutableTreeNode(hov.getLanguageString("download.DivisionBattleMatches"));
+    private final DefaultMutableTreeNode currentMatches = new DefaultMutableTreeNode(TranslationFacility.tr("download.currentmatches"));
+    private final DefaultMutableTreeNode currentSeriesData = new DefaultMutableTreeNode(TranslationFacility.tr("download.currentseriesdata"));
+    private final DefaultMutableTreeNode previousSeriesData = new DefaultMutableTreeNode(TranslationFacility.tr("download.oldseriesdata"));
+    private final DefaultMutableTreeNode teamData = new DefaultMutableTreeNode(TranslationFacility.tr("download.teamdata"));
+    private final DefaultMutableTreeNode officialMatches = new DefaultMutableTreeNode(TranslationFacility.tr("download.OfficialMatches"));
+    private final DefaultMutableTreeNode singleMatches = new DefaultMutableTreeNode(TranslationFacility.tr("download.SingleMatches"));
+    private final DefaultMutableTreeNode ladderMatches = new DefaultMutableTreeNode(TranslationFacility.tr("download.LadderMatches"));
+    private final DefaultMutableTreeNode tournamentGroupMatches = new DefaultMutableTreeNode(TranslationFacility.tr("download.TournamentGroupMatches"));
+    private final DefaultMutableTreeNode tournamentPlayoffMatches = new DefaultMutableTreeNode(TranslationFacility.tr("download.TournamentPlayoffMatches"));
+    private final DefaultMutableTreeNode divisionBattleMatches = new DefaultMutableTreeNode(TranslationFacility.tr("download.DivisionBattleMatches"));
 
     public DownloadFilter() {
-        super(hov.getLanguageString("download.Filter"));
+        super(TranslationFacility.tr("download.Filter"));
 
         this.add(currentMatches);
-        DefaultMutableTreeNode seriesData = new DefaultMutableTreeNode(hov.getLanguageString("download.seriesdata"));
+        DefaultMutableTreeNode seriesData = new DefaultMutableTreeNode(TranslationFacility.tr("download.seriesdata"));
         this.add(seriesData);
         this.add(teamData);
 
         currentMatches.add(officialMatches);
-        DefaultMutableTreeNode integratedMatches = new DefaultMutableTreeNode(hov.getLanguageString("download.IntegratedMatches"));
+        DefaultMutableTreeNode integratedMatches = new DefaultMutableTreeNode(TranslationFacility.tr("download.IntegratedMatches"));
         currentMatches.add(integratedMatches);
 
         integratedMatches.add(singleMatches);
@@ -52,7 +53,7 @@ public class DownloadFilter extends DefaultMutableTreeNode {
         for (int i = currentSeason; i >= htWeek.season; i--) {
             int finalI = i;
             var season = seasons.stream().filter(f -> f.getSaison() == finalI).findFirst();
-            var itemText = new StringBuilder(hov.getLanguageString("Season")).append(" ").append(i);
+            var itemText = new StringBuilder(TranslationFacility.tr("Season")).append(" ").append(i);
             if (season.isPresent()) {
                 itemText.append(" / ").append(season.get().getLigaName());
             }

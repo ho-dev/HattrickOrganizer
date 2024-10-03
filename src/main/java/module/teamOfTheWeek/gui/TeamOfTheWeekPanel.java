@@ -6,20 +6,21 @@ import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyPanel;
 import core.gui.comp.panel.RasenPanel;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.match.MatchLineupPosition;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.series.Paarung;
 import module.series.Spielplan;
 
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.Serial;
 import java.util.List;
-import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 public class TeamOfTheWeekPanel extends LazyPanel implements ChangeListener, ActionListener {
 
@@ -181,7 +182,7 @@ public class TeamOfTheWeekPanel extends LazyPanel implements ChangeListener, Act
 		weekSpinner.setPreferredSize(new Dimension(60, 22));
 		weekSpinner.setFocusable(false);
 
-		JLabel jl = new JLabel(HOVerwaltung.instance().getLanguageString("Spieltag"));
+		JLabel jl = new JLabel(TranslationFacility.tr("Spieltag"));
 		JPanel north = new ImagePanel();
 		jl.setForeground(Color.BLACK);
 		jl.setLabelFor(weekSpinner);
@@ -194,16 +195,16 @@ public class TeamOfTheWeekPanel extends LazyPanel implements ChangeListener, Act
 
 		JTabbedPane tab = new JTabbedPane();
 		bestOfWeek = new LineupPanel();
-		tab.addTab(HOVerwaltung.instance().getLanguageString("bestOfWeek"),
+		tab.addTab(TranslationFacility.tr("bestOfWeek"),
 				createTabPanel(bestOfWeek));
 		worstOfWeek = new LineupPanel();
-		tab.addTab(HOVerwaltung.instance().getLanguageString("worstOfWeek"),
+		tab.addTab(TranslationFacility.tr("worstOfWeek"),
 				createTabPanel(worstOfWeek));
 		bestOfYear = new LineupPanel();
-		tab.addTab(HOVerwaltung.instance().getLanguageString("bestOfSeason"),
+		tab.addTab(TranslationFacility.tr("bestOfSeason"),
 				createTabPanel(bestOfYear));
 		worstOfYear = new LineupPanel();
-		tab.addTab(HOVerwaltung.instance().getLanguageString("worstOfSeason"),
+		tab.addTab(TranslationFacility.tr("worstOfSeason"),
 				createTabPanel(worstOfYear));
 		m_jpPanel.add(tab, BorderLayout.CENTER);
 		setLayout(new BorderLayout());

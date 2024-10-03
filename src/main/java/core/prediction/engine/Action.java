@@ -1,5 +1,6 @@
 package core.prediction.engine;
 
+import core.model.TranslationFacility;
 import core.model.match.IMatchDetails;
 
 public class Action implements  Comparable<Object> {
@@ -47,25 +48,25 @@ public class Action implements  Comparable<Object> {
         final StringBuilder buffer = new StringBuilder();
 
         if (type == IMatchDetails.TAKTIK_KONTER) {
-            buffer.append(core.model.HOVerwaltung.instance().getLanguageString("Counter"));
+            buffer.append(TranslationFacility.tr("Counter"));
         } else {
-            buffer.append(core.model.HOVerwaltung.instance().getLanguageString("Attack"));
+            buffer.append(TranslationFacility.tr("Attack"));
         }
 
         buffer.append(" ");
 
         if (area == -1) {
-            buffer.append(core.model.HOVerwaltung.instance().getLanguageString("on_the_left"));
+            buffer.append(TranslationFacility.tr("on_the_left"));
         } else if (area == 0) {
-            buffer.append(core.model.HOVerwaltung.instance().getLanguageString("on_the_middle"));
+            buffer.append(TranslationFacility.tr("on_the_middle"));
         } else {
-            buffer.append(core.model.HOVerwaltung.instance().getLanguageString("on_the_right"));
+            buffer.append(TranslationFacility.tr("on_the_right"));
         }
 
         buffer.append(". ");
 
         if (score) {
-            buffer.append(core.model.HOVerwaltung.instance().getLanguageString("TOR"));
+            buffer.append(TranslationFacility.tr("TOR"));
             buffer.append("!");
         }
 

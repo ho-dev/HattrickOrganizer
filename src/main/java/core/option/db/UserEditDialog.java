@@ -2,24 +2,19 @@ package core.option.db;
 
 import core.db.user.User;
 import core.gui.comp.NumericDocument;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.util.GUIUtils;
 import core.util.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.Window;
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.Serial;
-
-import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 public class UserEditDialog extends JDialog {
 
@@ -101,7 +96,7 @@ public class UserEditDialog extends JDialog {
 		gbc.weightx = 1;
 		gbc.insets = new Insets(6, 6, 6, 2);
 		this.saveButton = new JButton();
-		this.saveButton.setText(HOVerwaltung.instance().getLanguageString("ls.button.save"));
+		this.saveButton.setText(getLangStr("ls.button.save"));
 		this.saveButton.setEnabled(false);
 		buttonPanel.add(this.saveButton, gbc);
 
@@ -109,7 +104,7 @@ public class UserEditDialog extends JDialog {
 		gbc.weightx = 0;
 		gbc.insets = new Insets(6, 2, 6, 6);
 		this.cancelButton = new JButton();
-		this.cancelButton.setText(HOVerwaltung.instance().getLanguageString("ls.button.cancel"));
+		this.cancelButton.setText(getLangStr("ls.button.cancel"));
 		buttonPanel.add(this.cancelButton, gbc);
 
 		GUIUtils.equalizeComponentSizes(this.saveButton, this.cancelButton);
@@ -179,9 +174,9 @@ public class UserEditDialog extends JDialog {
 		gbc.gridwidth = 1;
 		contentPanel.add(ntTeamLabel, gbc);
 
-		ntTeamNo = new JRadioButton(HOVerwaltung.instance().getLanguageString("ls.button.no"));
+		ntTeamNo = new JRadioButton(getLangStr("ls.button.no"));
 		ntTeamNo.setSelected(true);
-		ntTeamYes = new JRadioButton(HOVerwaltung.instance().getLanguageString("ls.button.yes"));
+		ntTeamYes = new JRadioButton(getLangStr("ls.button.yes"));
 		ButtonGroup group = new ButtonGroup();
 		group.add(ntTeamNo);
 		group.add(ntTeamYes);
@@ -269,7 +264,7 @@ public class UserEditDialog extends JDialog {
 
 
 	private String getLangStr(String key) {
-		return HOVerwaltung.instance().getLanguageString(key);
+		return TranslationFacility.tr(key);
 	}
 
 }

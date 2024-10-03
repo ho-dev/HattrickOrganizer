@@ -7,9 +7,10 @@ import core.gui.comp.panel.LazyImagePanel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
-import module.series.promotion.*;
+import module.series.promotion.LeaguePromotionHandler;
+import module.series.promotion.PromotionInfoPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -51,9 +52,9 @@ public class SeriesPanel extends LazyImagePanel {
 		if (seasonComboBox.getSelectedItem() != null) {
 			Spielplan spielplan = (Spielplan) seasonComboBox.getSelectedItem();
 			int value = JOptionPane.showConfirmDialog(this,
-					HOVerwaltung.instance().getLanguageString("ls.button.delete") + " "
-							+ HOVerwaltung.instance().getLanguageString("Ligatabelle") + ":\n"
-							+ spielplan.toString(), HOVerwaltung.instance().getLanguageString("confirmation.title"), JOptionPane.YES_NO_OPTION);
+					TranslationFacility.tr("ls.button.delete") + " "
+							+ TranslationFacility.tr("Ligatabelle") + ":\n"
+							+ spielplan.toString(), TranslationFacility.tr("confirmation.title"), JOptionPane.YES_NO_OPTION);
 
 			if (value == JOptionPane.YES_OPTION) {
 				DBManager.instance().deleteSpielplanTabelle(spielplan.getSaison(), spielplan.getLigaId());
@@ -144,14 +145,14 @@ public class SeriesPanel extends LazyImagePanel {
 
 		final JPanel toolbarPanel = new ImagePanel(null);
 		seasonComboBox = new JComboBox();
-		seasonComboBox.setToolTipText(HOVerwaltung.instance().getLanguageString(
+		seasonComboBox.setToolTipText(TranslationFacility.tr(
 				"tt_Ligatabelle_Saisonauswahl"));
 		seasonComboBox.setSize(200, 25);
 		seasonComboBox.setLocation(10, 5);
 		toolbarPanel.add(seasonComboBox);
 
 		deleteButton = new JButton(ThemeManager.getIcon(HOIconName.REMOVE));
-		deleteButton.setToolTipText(HOVerwaltung.instance().getLanguageString(
+		deleteButton.setToolTipText(TranslationFacility.tr(
 				"tt_Ligatabelle_SaisonLoeschen"));
 		deleteButton.setSize(25, 25);
 		deleteButton.setLocation(220, 5);

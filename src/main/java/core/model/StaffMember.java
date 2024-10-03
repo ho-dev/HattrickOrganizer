@@ -61,7 +61,7 @@ public class StaffMember extends AbstractTable.Storable implements Comparable<St
 	@Override
 	public String toString() {
 		return getStaffType().getName() + " - " + getName() +
-				" - " + HOVerwaltung.instance().getLanguageString("ls.club.staff.level") +
+				" - " + TranslationFacility.tr("ls.club.staff.level") +
 				": " + getLevel();
 	}
 

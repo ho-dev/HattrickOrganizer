@@ -10,11 +10,8 @@ import java.io.Writer;
  */
 public class ExceptionUtils {
 
-	/**
-	 * Utility class - private constructor enforces noninstantiability.
-	 */
 	private ExceptionUtils() {
-		// do nothing
+		throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
 	}
 
 	/**

@@ -3,24 +3,17 @@ package module.lineup.substitution;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.util.Helper;
 import module.lineup.substitution.model.GoalDiffCriteria;
 import module.lineup.substitution.model.MatchOrderType;
 import module.lineup.substitution.model.RedCardCriteria;
 import module.lineup.substitution.model.Substitution;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import javax.swing.*;
+import java.awt.*;
 import java.io.Serial;
 import java.text.MessageFormat;
-
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 
 public class DetailsView extends JPanel {
 
@@ -87,25 +80,25 @@ public class DetailsView extends JPanel {
 
 			switch (this.substitution.getOrderType()) {
 				case SUBSTITUTION -> {
-					this.playerLabel.setText(HOVerwaltung.instance().getLanguageString("subs.Out"));
-					this.playerInLabel.setText(HOVerwaltung.instance().getLanguageString("subs.In"));
+					this.playerLabel.setText(TranslationFacility.tr("subs.Out"));
+					this.playerInLabel.setText(TranslationFacility.tr("subs.In"));
 				}
 				case NEW_BEHAVIOUR -> {
-					this.playerLabel.setText(HOVerwaltung.instance().getLanguageString("subs.Player"));
+					this.playerLabel.setText(TranslationFacility.tr("subs.Player"));
 					this.playerInLabel.setText("");
 				}
 				case POSITION_SWAP -> {
-					this.playerLabel.setText(HOVerwaltung.instance().getLanguageString("subs.Reposition"));
-					this.playerInLabel.setText(HOVerwaltung.instance().getLanguageString("subs.RepositionWith"));
+					this.playerLabel.setText(TranslationFacility.tr("subs.Reposition"));
+					this.playerInLabel.setText(TranslationFacility.tr("subs.RepositionWith"));
 				}
 				case MAN_MARKING -> {
-					this.playerLabel.setText(HOVerwaltung.instance().getLanguageString("subs.manMarkingPlayer"));
-					this.playerInLabel.setText(HOVerwaltung.instance().getLanguageString("subs.manMarkedOpponentPlayer"));
+					this.playerLabel.setText(TranslationFacility.tr("subs.manMarkingPlayer"));
+					this.playerInLabel.setText(TranslationFacility.tr("subs.manMarkedOpponentPlayer"));
 				}
 			}
 		} else {
-			this.playerLabel.setText(HOVerwaltung.instance().getLanguageString("subs.Out"));
-			this.playerInLabel.setText(HOVerwaltung.instance().getLanguageString("subs.In"));
+			this.playerLabel.setText(TranslationFacility.tr("subs.Out"));
+			this.playerInLabel.setText(TranslationFacility.tr("subs.In"));
 
 			Color color = ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
 			this.firstPlayerEntry.setBackground(color);
@@ -136,10 +129,10 @@ public class DetailsView extends JPanel {
 
 			if (this.substitution.getMatchMinuteCriteria() > 0) {
 				when = MessageFormat.format(
-						HOVerwaltung.instance().getLanguageString("subs.MinuteAfterX"),
+						TranslationFacility.tr("subs.MinuteAfterX"),
                         this.substitution.getMatchMinuteCriteria());
 			} else {
-				when = HOVerwaltung.instance().getLanguageString("subs.MinuteAnytime");
+				when = TranslationFacility.tr("subs.MinuteAnytime");
 			}
 
 			if (this.substitution.getRoleId() != -1) {
@@ -170,7 +163,7 @@ public class DetailsView extends JPanel {
 		gbc.insets = new Insets(10, 10, 2, 2);
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
-		add(new JLabel(HOVerwaltung.instance().getLanguageString("subs.Order")), gbc);
+		add(new JLabel(TranslationFacility.tr("subs.Order")), gbc);
 
 		this.orderTypeEntry = createValueLabel();
 		gbc.gridx = 1;
@@ -181,7 +174,7 @@ public class DetailsView extends JPanel {
 		gbc.gridx = 0;
 		gbc.gridy++;
 		gbc.insets = new Insets(2, 10, 2, 2);
-		this.playerLabel = new JLabel(HOVerwaltung.instance().getLanguageString("subs.Out"));
+		this.playerLabel = new JLabel(TranslationFacility.tr("subs.Out"));
 		add(this.playerLabel, gbc);
 
 		this.firstPlayerEntry = createValueLabel();
@@ -193,7 +186,7 @@ public class DetailsView extends JPanel {
 		gbc.gridx = 0;
 		gbc.gridy++;
 		gbc.insets = new Insets(2, 10, 2, 2);
-		this.playerInLabel = new JLabel(HOVerwaltung.instance().getLanguageString("subs.In"));
+		this.playerInLabel = new JLabel(TranslationFacility.tr("subs.In"));
 		add(this.playerInLabel, gbc);
 
 		this.secondPlayerEntry = createValueLabel();
@@ -205,7 +198,7 @@ public class DetailsView extends JPanel {
 		gbc.gridx = 0;
 		gbc.gridy++;
 		gbc.insets = new Insets(2, 10, 2, 2);
-		add(new JLabel(HOVerwaltung.instance().getLanguageString("subs.When")), gbc);
+		add(new JLabel(TranslationFacility.tr("subs.When")), gbc);
 
 		this.whenEntry = createValueLabel();
 		gbc.gridx = 1;
@@ -216,7 +209,7 @@ public class DetailsView extends JPanel {
 		gbc.gridx = 0;
 		gbc.gridy++;
 		gbc.insets = new Insets(2, 10, 2, 2);
-		add(new JLabel(HOVerwaltung.instance().getLanguageString("subs.Behavior")), gbc);
+		add(new JLabel(TranslationFacility.tr("subs.Behavior")), gbc);
 
 		this.newBehaviourEntry = createValueLabel();
 		gbc.gridx = 1;
@@ -227,7 +220,7 @@ public class DetailsView extends JPanel {
 		gbc.gridx = 0;
 		gbc.gridy++;
 		gbc.insets = new Insets(2, 10, 2, 2);
-		add(new JLabel(HOVerwaltung.instance().getLanguageString("subs.Position")), gbc);
+		add(new JLabel(TranslationFacility.tr("subs.Position")), gbc);
 
 		this.newPositionEntry = createValueLabel();
 		gbc.gridx = 1;
@@ -238,7 +231,7 @@ public class DetailsView extends JPanel {
 		gbc.gridx = 0;
 		gbc.gridy++;
 		gbc.insets = new Insets(2, 10, 2, 2);
-		add(new JLabel(HOVerwaltung.instance().getLanguageString("subs.RedCard")), gbc);
+		add(new JLabel(TranslationFacility.tr("subs.RedCard")), gbc);
 
 		this.redCardsEntry = createValueLabel();
 		gbc.gridx = 1;
@@ -249,7 +242,7 @@ public class DetailsView extends JPanel {
 		gbc.gridx = 0;
 		gbc.gridy++;
 		gbc.insets = new Insets(2, 10, 2, 2);
-		add(new JLabel(HOVerwaltung.instance().getLanguageString("subs.Standing")), gbc);
+		add(new JLabel(TranslationFacility.tr("subs.Standing")), gbc);
 
 		this.standingEntry = createValueLabel();
 		gbc.gridx = 1;

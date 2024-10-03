@@ -5,7 +5,7 @@ import core.db.user.UserManager;
 import core.gui.comp.HyperLinkLabel;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.util.BrowserLauncher;
 import core.util.HOLogger;
 
@@ -28,7 +28,7 @@ public class Credits {
 		creditsPanel.add(new JLabel(" "), gbc);
 
 		gbc.gridy = 2;
-		String[] text = HOVerwaltung.instance().getLanguageString("window.about.text").split("\\n");
+		String[] text = TranslationFacility.tr("window.about.text").split("\\n");
 		for (String line : text) {
 			creditsPanel.add(new JLabel(line), gbc);
 			gbc.gridy++;
@@ -58,21 +58,21 @@ public class Credits {
 
 		gbc.gridy = 4;
 		gbc.gridx = 0;
-		hoPanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("ls.about.database.folder") + ": "), gbc);
+		hoPanel.add(new JLabel(TranslationFacility.tr("ls.about.database.folder") + ": "), gbc);
 		gbc.gridx = 1;
 		hoPanel.add(new HyperLinkLabel(new File(UserManager.instance().getDbParentFolder() + "\\" + UserManager.instance().getCurrentUser().getDbName()).toURI().toString()), gbc);
 
 		gbc.gridy++;
 		gbc.gridx = 0;
-		hoPanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("ls.about.logs.folder") + ": "), gbc);
+		hoPanel.add(new JLabel(TranslationFacility.tr("ls.about.logs.folder") + ": "), gbc);
 		gbc.gridx = 1;
 		hoPanel.add(new HyperLinkLabel(new File(HOLogger.getLogsFolderName()).toURI().toString()), gbc);
 
 		creditsPanel.add(hoPanel, gbc);
 
-		Object[] options1 = {HOVerwaltung.instance().getLanguageString("window.about.licence"), HOVerwaltung.instance().getLanguageString("ls.button.ok")};
+		Object[] options1 = {TranslationFacility.tr("window.about.licence"), TranslationFacility.tr("ls.button.ok")};
 
-		int result = JOptionPane.showOptionDialog(parent, creditsPanel, HOVerwaltung.instance().getLanguageString("window.about.title"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options1, null);
+		int result = JOptionPane.showOptionDialog(parent, creditsPanel, TranslationFacility.tr("window.about.title"), JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options1, null);
 		if (result == JOptionPane.YES_OPTION) {
 			try {
 				BrowserLauncher.openURL("https://raw.githubusercontent.com/ho-dev/HattrickOrganizer/master/LICENSE");

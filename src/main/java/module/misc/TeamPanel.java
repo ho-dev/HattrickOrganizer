@@ -5,17 +5,12 @@ import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.misc.Basics;
 import core.model.series.Liga;
 
-import java.awt.Component;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
+import java.awt.*;
 
 import static core.util.Helper.getTranslation;
 
@@ -85,36 +80,34 @@ class TeamPanel extends JPanel {
         setBorder(titledBorder);
 
         setLayout(layout);
-        HOVerwaltung hoV = HOVerwaltung.instance();
-
-        label = new JLabel(hoV.getLanguageString("ls.team.id"));
+        label = new JLabel(TranslationFacility.tr("ls.team.id"));
         add(label,teamIdLabel.getComponent(false),1);
 
-        label = new JLabel(hoV.getLanguageString("Verein"));
+        label = new JLabel(TranslationFacility.tr("Verein"));
         add(label,teamLabel.getComponent(false),2);
 
-        label = new JLabel(hoV.getLanguageString("Manager"));
+        label = new JLabel(TranslationFacility.tr("Manager"));
         add(label,managerLabel.getComponent(false),3);
 
-        label = new JLabel(hoV.getLanguageString("Stadion"));
+        label = new JLabel(TranslationFacility.tr("Stadion"));
         add(label,arenaLabel.getComponent(false),4);
 
-        label = new JLabel(hoV.getLanguageString("Season"));
+        label = new JLabel(TranslationFacility.tr("Season"));
         add(label,seasonLabel.getComponent(false),5);
 
-        label = new JLabel(hoV.getLanguageString("Spieltag"));
+        label = new JLabel(TranslationFacility.tr("Spieltag"));
         add(label,matchRoundLabel.getComponent(false),6);
 
-        label = new JLabel(hoV.getLanguageString("Liga"));
+        label = new JLabel(TranslationFacility.tr("Liga"));
         add(label,leagueLabel.getComponent(false),7);
 
-        label = new JLabel(hoV.getLanguageString("Platzierung"));
+        label = new JLabel(TranslationFacility.tr("Platzierung"));
         add(label,posLabel.getComponent(false),8);
 
-        label = new JLabel(hoV.getLanguageString("Punkte"));
+        label = new JLabel(TranslationFacility.tr("Punkte"));
         add(label,pointsLabel.getComponent(false),9);
 
-        label = new JLabel(hoV.getLanguageString("Torverhaeltnis"));
+        label = new JLabel(TranslationFacility.tr("Torverhaeltnis"));
         add(label,goalsLabel.getComponent(false),10);
 
     }

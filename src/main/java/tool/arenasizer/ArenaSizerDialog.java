@@ -1,18 +1,12 @@
 package tool.arenasizer;
 
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
 
 
 public class ArenaSizerDialog extends JDialog implements ActionListener {
@@ -24,7 +18,7 @@ public class ArenaSizerDialog extends JDialog implements ActionListener {
 	private ArenaPanel infoPanel;
 	private ControlPanel controlPanel;
 	private JPanel toolbar;
-	private JButton refreshButton = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.apply"));
+	private JButton refreshButton = new JButton(TranslationFacility.tr("ls.button.apply"));
 
 	public ArenaSizerDialog(JFrame owner){
 		super(owner,true);
@@ -35,7 +29,7 @@ public class ArenaSizerDialog extends JDialog implements ActionListener {
 	private void initialize() {
 		setSize(900,430);
 		setLayout(new BorderLayout());
-		setTitle(HOVerwaltung.instance().getLanguageString("ArenaSizer"));
+		setTitle(TranslationFacility.tr("ArenaSizer"));
 		add(getToolbar(), BorderLayout.NORTH);
 
 		JPanel centerPanel = new JPanel(new BorderLayout());
@@ -92,9 +86,9 @@ public class ArenaSizerDialog extends JDialog implements ActionListener {
 		if(tabbedPane == null){
 			tabbedPane = new JTabbedPane();
 			HOVerwaltung hoV = HOVerwaltung.instance();
-			tabbedPane.addTab(hoV.getLanguageString("Stadion"), getArenaPanel());
+			tabbedPane.addTab(TranslationFacility.tr("Stadion"), getArenaPanel());
 			tabbedPane.addTab(hoV.getModel().getStadium().getStadienname(), getInfoPanel());
-			tabbedPane.addTab(hoV.getLanguageString("Statistik"), getHistoryPanel());
+			tabbedPane.addTab(TranslationFacility.tr("Statistik"), getHistoryPanel());
 		}
 		return tabbedPane;
 	}

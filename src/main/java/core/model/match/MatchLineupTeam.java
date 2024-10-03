@@ -2,7 +2,7 @@ package core.model.match;
 
 import core.db.AbstractTable;
 import core.db.DBManager;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.enums.MatchType;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
@@ -12,7 +12,9 @@ import module.lineup.Lineup;
 import module.lineup.substitution.model.MatchOrderType;
 import module.lineup.substitution.model.Substitution;
 import org.jetbrains.annotations.NotNull;
+
 import java.util.*;
+
 import static core.model.player.MatchRoleID.Sector.None;
 import static java.lang.Math.max;
 import static java.lang.Math.min;
@@ -232,14 +234,13 @@ public class MatchLineupTeam extends AbstractTable.Storable {
 	// returns offensive, defensive or neutral depending on styleOfPlay
 	// e.g. -3 is 30% defensive, 10 is 100% offensive
 	public static String getStyleOfPlayName(StyleOfPlay styleOfPlay) {
-		HOVerwaltung hov = HOVerwaltung.instance();
 		String s;
 		var style = StyleOfPlay.toInt(styleOfPlay);
 		if (style == 0) {
-			return hov.getLanguageString("ls.team.styleofplay.neutral");
+			return TranslationFacility.tr("ls.team.styleofplay.neutral");
 		} else {
-			s = (style > 0) ? hov.getLanguageString("ls.team.styleofplay.offensive") :
-				hov.getLanguageString("ls.team.styleofplay.defensive"); 
+			s = (style > 0) ? TranslationFacility.tr("ls.team.styleofplay.offensive") :
+				TranslationFacility.tr("ls.team.styleofplay.defensive"); 
 		}
 		return Math.abs(style * 10) + "% " + s;
 	}

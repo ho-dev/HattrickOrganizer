@@ -2,6 +2,7 @@ package module.teamAnalyzer.ui;
 
 import core.gui.comp.panel.RasenPanel;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import core.rating.RatingPredictionModel;
@@ -11,12 +12,12 @@ import module.teamAnalyzer.manager.PlayerDataManager;
 import module.teamAnalyzer.ui.lineup.FormationPanel;
 import module.teamAnalyzer.vo.TeamLineup;
 import module.teamAnalyzer.vo.UserTeamSpotLineup;
+
+import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.HashMap;
-
-import javax.swing.*;
 
 public class TeamPanel extends JPanel {
     //~ Instance fields ----------------------------------------------------------------------------
@@ -142,7 +143,7 @@ public class TeamPanel extends JPanel {
             }
 
         } else {
-            lineupPanel.getOpponentTeam().setTeamName(HOVerwaltung.instance().getLanguageString("TeamPanel.TeamMessage")); //$NON-NLS-1$
+            lineupPanel.getOpponentTeam().setTeamName(TranslationFacility.tr("TeamPanel.TeamMessage")); //$NON-NLS-1$
 
             keeper.reload(null, 0, 0);
             leftBack.reload(null, 0, 0);

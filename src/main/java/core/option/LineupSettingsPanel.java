@@ -2,8 +2,9 @@ package core.option;
 
 import core.datatype.CBItem;
 import core.gui.comp.panel.ImagePanel;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
@@ -12,20 +13,20 @@ import java.awt.event.ItemListener;
 public final class LineupSettingsPanel extends ImagePanel implements ItemListener {
 
     private static CBItem[] orientationSetting = {
-            new CBItem(HOVerwaltung.instance().getLanguageString("ls.lineupsettings.goalkeeperattop"), UserParameter.GOALKEEPER_AT_TOP),
-            new CBItem(HOVerwaltung.instance().getLanguageString("ls.lineupsettings.goalkeeperatbottom"), UserParameter.GOALKEEPER_AT_BOTTOM)
+            new CBItem(TranslationFacility.tr("ls.lineupsettings.goalkeeperattop"), UserParameter.GOALKEEPER_AT_TOP),
+            new CBItem(TranslationFacility.tr("ls.lineupsettings.goalkeeperatbottom"), UserParameter.GOALKEEPER_AT_BOTTOM)
     };
 
     private static CBItem[] positionNameSetting = {
-            new CBItem(HOVerwaltung.instance().getLanguageString("ls.lineupsettings.positionnames.short"), UserParameter.POSITIONNAMES_SHORT),
-            new CBItem(HOVerwaltung.instance().getLanguageString("ls.lineupsettings.positionnames.long"), UserParameter.POSITIONNAMES_LONG)
+            new CBItem(TranslationFacility.tr("ls.lineupsettings.positionnames.short"), UserParameter.POSITIONNAMES_SHORT),
+            new CBItem(TranslationFacility.tr("ls.lineupsettings.positionnames.long"), UserParameter.POSITIONNAMES_LONG)
     };
 
     /* TODO: check usability (option settings versus toggle box in lineup rating panel
              prediction list needs to be dynamic (loaded from prediction/predictionTypes.conf)
     private static CBItem[] ratingPredictionModelSetting = {
-            new CBItem(HOVerwaltung.instance().getLanguageString("ls.lineupsettings.ratingpredictionmodel.new"), UserParameter.RATINGPREDICTIONMODEL_NEW),
-            new CBItem(HOVerwaltung.instance().getLanguageString("ls.lineupsettings.ratingpredictionmodel.old"), UserParameter.RATINGPREDICTIONMODEL_OLD)
+            new CBItem(TranslationFacility.tr("ls.lineupsettings.ratingpredictionmodel.new"), UserParameter.RATINGPREDICTIONMODEL_NEW),
+            new CBItem(TranslationFacility.tr("ls.lineupsettings.ratingpredictionmodel.old"), UserParameter.RATINGPREDICTIONMODEL_OLD)
     };
     */
 
@@ -80,8 +81,8 @@ public final class LineupSettingsPanel extends ImagePanel implements ItemListene
     }
 
     private ComboBoxPanel addLineupSettingComboBox( String languageKey, CBItem[] cbItems, int settingValue) {
-        var comboBoxPanel = new ComboBoxPanel(HOVerwaltung.instance().getLanguageString("ls.lineupsettings."+ languageKey), cbItems, 120 );
-        comboBoxPanel.setToolTipText(HOVerwaltung.instance().getLanguageString("ls.lineupsettings."+ languageKey + ".tooltip"));
+        var comboBoxPanel = new ComboBoxPanel(TranslationFacility.tr("ls.lineupsettings."+ languageKey), cbItems, 120 );
+        comboBoxPanel.setToolTipText(TranslationFacility.tr("ls.lineupsettings."+ languageKey + ".tooltip"));
         comboBoxPanel.setSelectedId(settingValue);
         comboBoxPanel.addItemListener(this);
         add(comboBoxPanel);

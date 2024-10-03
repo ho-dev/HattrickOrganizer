@@ -1,14 +1,11 @@
 package module.teamOfTheWeek;
 
-import java.awt.event.KeyEvent;
-
-import javax.swing.JPanel;
-import javax.swing.KeyStroke;
-
-
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.module.DefaultModule;
 import module.teamOfTheWeek.gui.TeamOfTheWeekPanel;
+
+import javax.swing.*;
+import java.awt.event.KeyEvent;
 
 public class TeamOfTheWeekModule extends DefaultModule {
 
@@ -24,7 +21,7 @@ public class TeamOfTheWeekModule extends DefaultModule {
 
 	@Override
 	public String getDescription() {
-		return HOVerwaltung.instance().getLanguageString("Tab_TeamOfTheWeek");
+		return TranslationFacility.tr("Tab_TeamOfTheWeek");
 	}
 
 	@Override

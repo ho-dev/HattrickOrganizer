@@ -1,19 +1,17 @@
 package module.lineup.ratings;
 
-import core.model.HOVerwaltung;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
-import java.util.List;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.ListIterator;
-import java.awt.Color;
-import java.awt.GridBagLayout;
-import java.awt.GridBagConstraints;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseAdapter;
+import core.model.TranslationFacility;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.ListIterator;
 
 public final class MinuteTogglerPanel extends JPanel {
 	
@@ -96,9 +94,9 @@ public final class MinuteTogglerPanel extends JPanel {
 			}
 		});
 
-		avg90Clock.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Lineup_RatingsPanel_Green_Clock"));
-		avg120Clock.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Lineup_RatingsPanel_Red_Clock"));
-		ratingsGraph.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Lineup_RatingsPanel_RatingGraph"));
+		avg90Clock.setToolTipText(TranslationFacility.tr("tt_Lineup_RatingsPanel_Green_Clock"));
+		avg120Clock.setToolTipText(TranslationFacility.tr("tt_Lineup_RatingsPanel_Red_Clock"));
+		ratingsGraph.setToolTipText(TranslationFacility.tr("tt_Lineup_RatingsPanel_RatingGraph"));
 
 		JPanel clocksPanel = new JPanel();
 		clocksPanel.add(avg90Clock);

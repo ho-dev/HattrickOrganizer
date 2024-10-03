@@ -1,8 +1,7 @@
 package core.gui.comp.table;
 
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 
-import javax.swing.*;
 import javax.swing.table.TableColumn;
 
 public abstract class UserColumn {
@@ -52,7 +51,7 @@ public abstract class UserColumn {
 	 * @return String
 	 */
 	public final String getColumnName() {
-		return (columnName.equals("TSI") || columnName.equals(" ")) ? columnName: HOVerwaltung.instance().getLanguageString(columnName);
+		return (columnName.equals("TSI") || columnName.equals(" ")) ? columnName: TranslationFacility.tr(columnName);
 	}
 	
 	/**
@@ -72,7 +71,7 @@ public abstract class UserColumn {
 	 * @return String
 	 */
 	public final String getTooltip() {
-		return (columnName.equals("TSI") || tooltip.equals(" "))?tooltip:HOVerwaltung.instance().getLanguageString(tooltip);
+		return (columnName.equals("TSI") || tooltip.equals(" "))?tooltip: TranslationFacility.tr(tooltip);
 	}
 	
 	/**

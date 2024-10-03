@@ -1,7 +1,7 @@
 package module.training.ui;
 
 import core.gui.comp.panel.LazyImagePanel;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.training.FuturePlayerTraining;
 import core.util.HODateTime;
 import core.util.HOLogger;
@@ -13,10 +13,10 @@ import java.awt.event.ActionListener;
 
 public class FutureTrainingPrioPopup  extends JPopupMenu implements ActionListener {
 
-    private final JMenuItem fullTrainingMenuItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("trainpre.fulltrain"));
-    private final JMenuItem partialTrainingMenuItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("trainpre.partialtrain"));
-    private final JMenuItem osmosisTrainingMenuItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("trainpre.osmosistrain"));
-    private final JMenuItem noTrainingMenuItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("trainpre.notrain"));
+    private final JMenuItem fullTrainingMenuItem = new JMenuItem(TranslationFacility.tr("trainpre.fulltrain"));
+    private final JMenuItem partialTrainingMenuItem = new JMenuItem(TranslationFacility.tr("trainpre.partialtrain"));
+    private final JMenuItem osmosisTrainingMenuItem = new JMenuItem(TranslationFacility.tr("trainpre.osmosistrain"));
+    private final JMenuItem noTrainingMenuItem = new JMenuItem(TranslationFacility.tr("trainpre.notrain"));
     private final JMenuItem bestPositionTrainingMenuItem = new JMenuItem("");
 
     private final LazyImagePanel panel;

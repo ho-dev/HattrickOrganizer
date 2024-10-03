@@ -1,6 +1,6 @@
 package module.youth;
 
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.module.DefaultModule;
 
 import javax.swing.*;
@@ -20,7 +20,7 @@ public class YouthModule extends DefaultModule {
 
     @Override
     public String getDescription() {
-        return HOVerwaltung.instance().getLanguageString("ls.youth");
+        return TranslationFacility.tr("ls.youth");
     }
 
     @Override

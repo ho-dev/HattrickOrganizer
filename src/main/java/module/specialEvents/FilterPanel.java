@@ -5,30 +5,19 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.match.IMatchDetails;
 import core.model.player.Player;
 import module.specialEvents.filter.Filter;
 
-import java.awt.Component;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
-import javax.swing.BorderFactory;
-import javax.swing.ComboBoxModel;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.ListCellRenderer;
 
 public class FilterPanel extends JPanel {
 
@@ -440,7 +429,7 @@ public class FilterPanel extends JPanel {
 	 * @return
 	 */
 	private String getLangStr(String key) {
-		return HOVerwaltung.instance().getLanguageString(key);
+		return TranslationFacility.tr(key);
 	}
 
 	private void updatePlayerComboBoxData(boolean currentPlayersOnly) {

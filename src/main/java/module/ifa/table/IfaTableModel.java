@@ -1,16 +1,15 @@
 package module.ifa.table;
 
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import module.ifa.PluginIfaUtils;
 import module.ifa.model.IfaModel;
 import module.ifa.model.IfaStatistic;
 import module.ifa.model.ModelChangeListener;
 import module.ifa.model.Summary;
 
+import javax.swing.table.AbstractTableModel;
 import java.util.Date;
 import java.util.List;
-
-import javax.swing.table.AbstractTableModel;
 
 public class IfaTableModel extends AbstractTableModel implements ModelChangeListener {
 
@@ -110,13 +109,13 @@ public class IfaTableModel extends AbstractTableModel implements ModelChangeList
 	@Override
 	public String getColumnName(int columnIndex) {
 		return switch (columnIndex) {
-			case COL_COUNTRY -> HOVerwaltung.instance().getLanguageString("ifa.statisticsTable.col.country");
-			case COL_PLAYED -> HOVerwaltung.instance().getLanguageString("ifa.statisticsTable.col.played");
-			case COL_WON -> HOVerwaltung.instance().getLanguageString("Gewonnen");
-			case COL_DRAW -> HOVerwaltung.instance().getLanguageString("Unendschieden");
-			case COL_LOST -> HOVerwaltung.instance().getLanguageString("Verloren");
-			case COL_LASTMATCH -> HOVerwaltung.instance().getLanguageString("ifa.statisticsTable.col.lastMatch");
-			case COL_COOLNESS -> HOVerwaltung.instance().getLanguageString("ifa.statisticsTable.col.coolness");
+			case COL_COUNTRY -> TranslationFacility.tr("ifa.statisticsTable.col.country");
+			case COL_PLAYED -> TranslationFacility.tr("ifa.statisticsTable.col.played");
+			case COL_WON -> TranslationFacility.tr("Gewonnen");
+			case COL_DRAW -> TranslationFacility.tr("Unendschieden");
+			case COL_LOST -> TranslationFacility.tr("Verloren");
+			case COL_LASTMATCH -> TranslationFacility.tr("ifa.statisticsTable.col.lastMatch");
+			case COL_COOLNESS -> TranslationFacility.tr("ifa.statisticsTable.col.coolness");
 			default -> null;
 		};
 

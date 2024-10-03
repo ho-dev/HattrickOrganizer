@@ -1,6 +1,6 @@
 package core.specialevents;
 
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 
@@ -407,7 +407,7 @@ public class SpecialEventsPrediction {
     }
 
     public String getEventTypeAsString() {
-        return HOVerwaltung.instance().getLanguageString("ls.teamanalyzer." + this.eventType.toString());
+        return TranslationFacility.tr("ls.teamanalyzer." + this.eventType.toString());
     }
 
     public ISpecialEventPredictionAnalyzer.SpecialEventType getEventType() {

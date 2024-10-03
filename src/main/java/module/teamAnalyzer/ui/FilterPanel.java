@@ -3,7 +3,7 @@ package module.teamAnalyzer.ui;
 import core.file.xml.TeamStats;
 import core.gui.HOMainFrame;
 import core.gui.comp.panel.ImagePanel;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.util.HOLogger;
 import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.ht.HattrickManager;
@@ -11,12 +11,12 @@ import module.teamAnalyzer.manager.TeamManager;
 import module.teamAnalyzer.vo.Team;
 import org.jetbrains.annotations.NotNull;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
-import javax.swing.*;
 
 /**
  * Panel to filter and download opponent's matches.
@@ -27,8 +27,8 @@ public class FilterPanel extends JPanel {
 	private static final String CARD_MANUAL = "MANUAL CARD";
 	private static boolean teamComboUpdating = false;
 	private AutoFilterPanel autoPanel;
-	private final JButton downloadButton = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.update"));
-	private final JButton analyzeButton = new JButton(HOVerwaltung.instance().getLanguageString("AutoFilterPanel.Analyze"));
+	private final JButton downloadButton = new JButton(TranslationFacility.tr("ls.button.update"));
+	private final JButton analyzeButton = new JButton(TranslationFacility.tr("AutoFilterPanel.Analyze"));
 	private final JComboBox<Team> teamCombo = new JComboBox<>();
 	private final JPanel cards = new JPanel(new CardLayout());
 	private JRadioButton radioAutomatic;
@@ -61,7 +61,7 @@ public class FilterPanel extends JPanel {
 		}
 
 		downloadButton.setEnabled(true);
-		downloadButton.setText(HOVerwaltung.instance().getLanguageString("ls.button.update"));
+		downloadButton.setText(TranslationFacility.tr("ls.button.update"));
 		analyzeButton.setEnabled(true);
 
 		CardLayout cLayout = (CardLayout) (cards.getLayout());
@@ -153,7 +153,7 @@ public class FilterPanel extends JPanel {
 		JPanel topPanel = new ImagePanel();
 
 		topPanel.setLayout(new BorderLayout());
-		radioAutomatic = new JRadioButton(HOVerwaltung.instance().getLanguageString("Option.Auto")); //$NON-NLS-1$
+		radioAutomatic = new JRadioButton(TranslationFacility.tr("Option.Auto")); //$NON-NLS-1$
 		radioAutomatic.setSelected(true);
 		radioAutomatic.addActionListener(e -> {
 			final CardLayout cLayout = (CardLayout) cards.getLayout();
@@ -162,7 +162,7 @@ public class FilterPanel extends JPanel {
 			cLayout.show(cards, CARD_AUTOMATIC);
 		});
 		radioAutomatic.setOpaque(false);
-		radioManual = new JRadioButton(HOVerwaltung.instance().getLanguageString("Manual")); //$NON-NLS-1$
+		radioManual = new JRadioButton(TranslationFacility.tr("Manual")); //$NON-NLS-1$
 		radioManual.addActionListener(e -> {
 			final CardLayout cLayout = (CardLayout) cards.getLayout();
 			cLayout.show(cards, CARD_MANUAL);

@@ -1,9 +1,9 @@
 package module.youth;
 
 import core.constants.player.PlayerSkill;
-import core.model.HOVerwaltung;
-import core.model.match.MatchLineupTeam;
+import core.model.TranslationFacility;
 import core.model.enums.MatchType;
+import core.model.match.MatchLineupTeam;
 import core.model.player.Player;
 import core.model.player.Specialty;
 import core.util.HODateTime;
@@ -229,7 +229,7 @@ public class YouthTrainingDevelopmentEntry {
      * @return String
      */
     public String getSpecialtyString() {
-        if ( this.specialty != null ) return HOVerwaltung.instance().getLanguageString("ls.player.speciality." + this.specialty.toString().toLowerCase());
+        if ( this.specialty != null ) return TranslationFacility.tr("ls.player.speciality." + this.specialty.toString().toLowerCase());
         return "";
     }
 
@@ -242,7 +242,7 @@ public class YouthTrainingDevelopmentEntry {
     }
 
     public String getSupendedAsString() {
-        if ( isSuspended ) return HOVerwaltung.instance().getLanguageString("ls.youth.isSuspended");
+        if ( isSuspended ) return TranslationFacility.tr("ls.youth.isSuspended");
         return "";
     }
 

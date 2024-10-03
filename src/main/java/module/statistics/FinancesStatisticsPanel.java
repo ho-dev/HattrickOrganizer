@@ -4,21 +4,22 @@ import core.db.DBManager;
 import core.gui.HOMainFrame;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
-import core.util.chart.LinesChartDataModel;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.util.HOLogger;
 import core.util.Helper;
-import core.util.chart.HOLinesChart;
 import core.util.chart.HODoublePieChart;
+import core.util.chart.HOLinesChart;
+import core.util.chart.LinesChartDataModel;
 import core.util.chart.PieChartDataModel;
+
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.ItemEvent;
 import java.text.NumberFormat;
 import java.util.Arrays;
-import javax.swing.*;
 
 import static core.gui.theme.HOColorName.*;
 
@@ -334,7 +335,7 @@ public class FinancesStatisticsPanel extends LazyImagePanel {
 		}
 	}
 
-	private String getLangStr(String key) {return HOVerwaltung.instance().getLanguageString(key);}
+	private String getLangStr(String key) {return TranslationFacility.tr(key);}
 
 	private String getChartCode(int i) {
 

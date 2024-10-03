@@ -4,15 +4,18 @@ import core.constants.player.PlayerSkill;
 import core.db.AbstractTable;
 import core.db.DBManager;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.player.CommentType;
 import core.model.player.Specialty;
 import core.util.HODateTime;
 import core.util.HOLogger;
 import module.training.Skills.ScoutCommentSkillTypeID;
+
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+
 import static java.lang.Math.max;
 import static java.lang.Math.min;
 
@@ -675,7 +678,7 @@ public class YouthPlayer extends AbstractTable.Storable {
     public String getSpecialtyString() {
         this.getTrainingDevelopment(); // may add specialties from highlights
         if (this.specialty != Specialty.NoSpecialty) {
-            return HOVerwaltung.instance().getLanguageString("ls.player.speciality." + this.specialty.toString().toLowerCase());
+            return TranslationFacility.tr("ls.player.speciality." + this.specialty.toString().toLowerCase());
         }
         return "";
     }

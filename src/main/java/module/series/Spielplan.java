@@ -1,10 +1,12 @@
 package module.series;
 
 import core.db.AbstractTable;
+import core.model.TranslationFacility;
 import core.model.series.*;
 import core.net.OnlineWorker;
 import core.util.HODateTime;
 import core.util.HOLogger;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -184,9 +186,9 @@ public class Spielplan  extends AbstractTable.Storable {
 
     @Override
 	public final String toString() {
-        return core.model.HOVerwaltung.instance().getLanguageString("Season")
+        return TranslationFacility.tr("Season")
                + " " + getSaison() + " "
-               + core.model.HOVerwaltung.instance().getLanguageString("Liga")
+               + TranslationFacility.tr("Liga")
                + " " + getLigaName() + " (" + getLigaId() + ")";
     }
 

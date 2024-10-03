@@ -6,6 +6,7 @@ import core.constants.TrainingType;
 import core.datatype.CBItem;
 import core.db.AbstractTable;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.util.HOLogger;
 import module.lineup.Lineup;
 import org.jetbrains.annotations.NotNull;
@@ -193,27 +194,27 @@ public class MatchRoleID extends AbstractTable.Storable implements java.io.Seria
 		// HOLogger.instance().log(getClass(), "Unbestimmte Position: " +
 		// posId );
 		return switch (posId) {
-			case KEEPER -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.keeper");
-			case CENTRAL_DEFENDER -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.centraldefender");
-			case CENTRAL_DEFENDER_TOWING -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.centraldefendertowardswing");
-			case CENTRAL_DEFENDER_OFF -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.centraldefenderoffensive");
-			case BACK -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingback");
-			case BACK_TOMID -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingbacktowardsmiddle");
-			case BACK_OFF -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingbackoffensive");
-			case BACK_DEF -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingbackdefensive");
-			case MIDFIELDER -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.innermidfielder");
-			case MIDFIELDER_OFF -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.innermidfielderoffensive");
-			case MIDFIELDER_DEF -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.innermidfielderdefensive");
-			case MIDFIELDER_TOWING -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.innermidfieldertowardswing");
-			case WINGER -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.winger");
-			case WINGER_TOMID -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingertowardsmiddle");
-			case WINGER_OFF -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingeroffensive");
-			case WINGER_DEF -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingerdefensive");
-			case FORWARD -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.forward");
-			case FORWARD_TOWING -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.forwardtowardswing");
-			case FORWARD_DEF -> HOVerwaltung.instance().getLanguageString("ls.player.position_short.forwarddefensive");
-			case SUBSTITUTED1, SUBSTITUTED2, SUBSTITUTED3 -> HOVerwaltung.instance().getLanguageString("Ausgewechselt");
-			default -> HOVerwaltung.instance().getLanguageString("Unbestimmt");
+			case KEEPER -> TranslationFacility.tr("ls.player.position_short.keeper");
+			case CENTRAL_DEFENDER -> TranslationFacility.tr("ls.player.position_short.centraldefender");
+			case CENTRAL_DEFENDER_TOWING -> TranslationFacility.tr("ls.player.position_short.centraldefendertowardswing");
+			case CENTRAL_DEFENDER_OFF -> TranslationFacility.tr("ls.player.position_short.centraldefenderoffensive");
+			case BACK -> TranslationFacility.tr("ls.player.position_short.wingback");
+			case BACK_TOMID -> TranslationFacility.tr("ls.player.position_short.wingbacktowardsmiddle");
+			case BACK_OFF -> TranslationFacility.tr("ls.player.position_short.wingbackoffensive");
+			case BACK_DEF -> TranslationFacility.tr("ls.player.position_short.wingbackdefensive");
+			case MIDFIELDER -> TranslationFacility.tr("ls.player.position_short.innermidfielder");
+			case MIDFIELDER_OFF -> TranslationFacility.tr("ls.player.position_short.innermidfielderoffensive");
+			case MIDFIELDER_DEF -> TranslationFacility.tr("ls.player.position_short.innermidfielderdefensive");
+			case MIDFIELDER_TOWING -> TranslationFacility.tr("ls.player.position_short.innermidfieldertowardswing");
+			case WINGER -> TranslationFacility.tr("ls.player.position_short.winger");
+			case WINGER_TOMID -> TranslationFacility.tr("ls.player.position_short.wingertowardsmiddle");
+			case WINGER_OFF -> TranslationFacility.tr("ls.player.position_short.wingeroffensive");
+			case WINGER_DEF -> TranslationFacility.tr("ls.player.position_short.wingerdefensive");
+			case FORWARD -> TranslationFacility.tr("ls.player.position_short.forward");
+			case FORWARD_TOWING -> TranslationFacility.tr("ls.player.position_short.forwardtowardswing");
+			case FORWARD_DEF -> TranslationFacility.tr("ls.player.position_short.forwarddefensive");
+			case SUBSTITUTED1, SUBSTITUTED2, SUBSTITUTED3 -> TranslationFacility.tr("Ausgewechselt");
+			default -> TranslationFacility.tr("Unbestimmt");
 		};
 	}
 
@@ -223,46 +224,46 @@ public class MatchRoleID extends AbstractTable.Storable implements java.io.Seria
 	public static String getNameForPosition(byte posId) {
 
 		return switch (posId) {
-			case KEEPER -> getLangStr("ls.player.position.keeper");
-			case CENTRAL_DEFENDER -> getLangStr("ls.player.position.centraldefender");
-			case CENTRAL_DEFENDER_TOWING -> getLangStr("ls.player.position.centraldefendertowardswing");
-			case CENTRAL_DEFENDER_OFF -> getLangStr("ls.player.position.centraldefenderoffensive");
-			case BACK -> getLangStr("ls.player.position.wingback");
-			case BACK_TOMID -> getLangStr("ls.player.position.wingbacktowardsmiddle");
-			case BACK_OFF -> getLangStr("ls.player.position.wingbackoffensive");
-			case BACK_DEF -> getLangStr("ls.player.position.wingbackdefensive");
-			case MIDFIELDER -> getLangStr("ls.player.position.innermidfielder");
-			case MIDFIELDER_OFF -> getLangStr("ls.player.position.innermidfielderoffensive");
-			case MIDFIELDER_DEF -> getLangStr("ls.player.position.innermidfielderdefensive");
-			case MIDFIELDER_TOWING -> getLangStr("ls.player.position.innermidfieldertowardswing");
-			case WINGER -> getLangStr("ls.player.position.winger");
-			case WINGER_TOMID -> getLangStr("ls.player.position.wingertowardsmiddle");
-			case WINGER_OFF -> getLangStr("ls.player.position.wingeroffensive");
-			case WINGER_DEF -> getLangStr("ls.player.position.wingerdefensive");
-			case FORWARD -> getLangStr("ls.player.position.forward");
-			case FORWARD_DEF -> getLangStr("ls.player.position.forwarddefensive");
-			case FORWARD_DEF_TECH -> getLangStr("ls.player.position.forwarddefensivetechnical");
-			case FORWARD_TOWING -> getLangStr("ls.player.position.forwardtowardswing");
-			case EXTRA -> getLangStr("ls.player.position.extra_substitute");
-			case SUBSTITUTED1, SUBSTITUTED2, SUBSTITUTED3 -> getLangStr("Ausgewechselt");
-			case UNSELECTABLE -> getLangStr("Unselectable");
-			default -> getLangStr("ls.player.position.no_override");
+			case KEEPER -> TranslationFacility.tr("ls.player.position.keeper");
+			case CENTRAL_DEFENDER -> TranslationFacility.tr("ls.player.position.centraldefender");
+			case CENTRAL_DEFENDER_TOWING -> TranslationFacility.tr("ls.player.position.centraldefendertowardswing");
+			case CENTRAL_DEFENDER_OFF -> TranslationFacility.tr("ls.player.position.centraldefenderoffensive");
+			case BACK -> TranslationFacility.tr("ls.player.position.wingback");
+			case BACK_TOMID -> TranslationFacility.tr("ls.player.position.wingbacktowardsmiddle");
+			case BACK_OFF -> TranslationFacility.tr("ls.player.position.wingbackoffensive");
+			case BACK_DEF -> TranslationFacility.tr("ls.player.position.wingbackdefensive");
+			case MIDFIELDER -> TranslationFacility.tr("ls.player.position.innermidfielder");
+			case MIDFIELDER_OFF -> TranslationFacility.tr("ls.player.position.innermidfielderoffensive");
+			case MIDFIELDER_DEF -> TranslationFacility.tr("ls.player.position.innermidfielderdefensive");
+			case MIDFIELDER_TOWING -> TranslationFacility.tr("ls.player.position.innermidfieldertowardswing");
+			case WINGER -> TranslationFacility.tr("ls.player.position.winger");
+			case WINGER_TOMID -> TranslationFacility.tr("ls.player.position.wingertowardsmiddle");
+			case WINGER_OFF -> TranslationFacility.tr("ls.player.position.wingeroffensive");
+			case WINGER_DEF -> TranslationFacility.tr("ls.player.position.wingerdefensive");
+			case FORWARD -> TranslationFacility.tr("ls.player.position.forward");
+			case FORWARD_DEF -> TranslationFacility.tr("ls.player.position.forwarddefensive");
+			case FORWARD_DEF_TECH -> TranslationFacility.tr("ls.player.position.forwarddefensivetechnical");
+			case FORWARD_TOWING -> TranslationFacility.tr("ls.player.position.forwardtowardswing");
+			case EXTRA -> TranslationFacility.tr("ls.player.position.extra_substitute");
+			case SUBSTITUTED1, SUBSTITUTED2, SUBSTITUTED3 -> TranslationFacility.tr("Ausgewechselt");
+			case UNSELECTABLE -> TranslationFacility.tr("Unselectable");
+			default -> TranslationFacility.tr("ls.player.position.no_override");
 		};
 	}
 
 	public static String getNameForPositionWithoutTactic(byte posId) {
 
 		return switch (posId) {
-			case KEEPER -> getLangStr("ls.player.position.keeper");
-			case CENTRAL_DEFENDER, CENTRAL_DEFENDER_TOWING, CENTRAL_DEFENDER_OFF -> getLangStr("ls.player.position.centraldefender");
-			case BACK, BACK_TOMID, BACK_OFF, BACK_DEF -> getLangStr("ls.player.position.wingback");
-			case MIDFIELDER, MIDFIELDER_OFF, MIDFIELDER_DEF, MIDFIELDER_TOWING -> getLangStr("ls.player.position.innermidfielder");
-			case WINGER, WINGER_TOMID, WINGER_OFF, WINGER_DEF -> getLangStr("ls.player.position.winger");
-			case FORWARD, FORWARD_DEF, FORWARD_DEF_TECH, FORWARD_TOWING -> getLangStr("ls.player.position.forward");
-			case EXTRA -> getLangStr("ls.player.position.extra_substitute");
-			case SUBSTITUTED1, SUBSTITUTED2, SUBSTITUTED3 -> getLangStr("Ausgewechselt");
-			case UNSELECTABLE -> getLangStr("Unselectable");
-			default -> getLangStr("Unbestimmt");
+			case KEEPER -> TranslationFacility.tr("ls.player.position.keeper");
+			case CENTRAL_DEFENDER, CENTRAL_DEFENDER_TOWING, CENTRAL_DEFENDER_OFF -> TranslationFacility.tr("ls.player.position.centraldefender");
+			case BACK, BACK_TOMID, BACK_OFF, BACK_DEF -> TranslationFacility.tr("ls.player.position.wingback");
+			case MIDFIELDER, MIDFIELDER_OFF, MIDFIELDER_DEF, MIDFIELDER_TOWING -> TranslationFacility.tr("ls.player.position.innermidfielder");
+			case WINGER, WINGER_TOMID, WINGER_OFF, WINGER_DEF -> TranslationFacility.tr("ls.player.position.winger");
+			case FORWARD, FORWARD_DEF, FORWARD_DEF_TECH, FORWARD_TOWING -> TranslationFacility.tr("ls.player.position.forward");
+			case EXTRA -> TranslationFacility.tr("ls.player.position.extra_substitute");
+			case SUBSTITUTED1, SUBSTITUTED2, SUBSTITUTED3 -> TranslationFacility.tr("Ausgewechselt");
+			case UNSELECTABLE -> TranslationFacility.tr("Unselectable");
+			default -> TranslationFacility.tr("Unbestimmt");
 		};
 	}
 
@@ -702,8 +703,6 @@ public class MatchRoleID extends AbstractTable.Storable implements java.io.Seria
 		return result;
 
 	}
-
-	private static String getLangStr(String key) {return HOVerwaltung.instance().getLanguageString(key);}
 
 	public Sector getSector(){
 		return getSector(this.m_iId);

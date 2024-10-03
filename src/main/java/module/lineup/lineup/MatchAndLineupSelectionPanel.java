@@ -10,6 +10,7 @@ import core.gui.model.MatchOrdersRenderer;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.match.*;
 import core.model.player.TrainerType;
 import core.net.OnlineWorker;
@@ -18,11 +19,14 @@ import module.lineup.Lineup;
 import module.lineup.LineupPanel;
 import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Document;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -45,9 +49,9 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
 
     private @Nullable MatchOrdersCBItem m_clSelectedMatch;
 
-    final String offensive_sop = HOVerwaltung.instance().getLanguageString("ls.team.styleofplay.offensive");
-    final String defensive_sop = HOVerwaltung.instance().getLanguageString("ls.team.styleofplay.defensive");
-    final String neutral_sop = HOVerwaltung.instance().getLanguageString("ls.team.styleofplay.neutral");
+    final String offensive_sop = TranslationFacility.tr("ls.team.styleofplay.offensive");
+    final String defensive_sop = TranslationFacility.tr("ls.team.styleofplay.defensive");
+    final String neutral_sop = TranslationFacility.tr("ls.team.styleofplay.neutral");
 
     public MatchOrdersCBItem getSelectedMatch() {
         return m_clSelectedMatch;
@@ -91,11 +95,11 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         gbc.gridx = 1;
         m_jcbTeamAttitude = new JComboBox<>(new CBItem[]{
                 new CBItem(
-                        HOVerwaltung.instance().getLanguageString("ls.team.teamattitude.playitcool"),
+                        TranslationFacility.tr("ls.team.teamattitude.playitcool"),
                         IMatchDetails.EINSTELLUNG_PIC),
-                new CBItem(HOVerwaltung.instance().getLanguageString("ls.team.teamattitude.normal"),
+                new CBItem(TranslationFacility.tr("ls.team.teamattitude.normal"),
                         IMatchDetails.EINSTELLUNG_NORMAL),
-                new CBItem(HOVerwaltung.instance().getLanguageString(
+                new CBItem(TranslationFacility.tr(
                         "ls.team.teamattitude.matchoftheseason"), IMatchDetails.EINSTELLUNG_MOTS)});
         layout.setConstraints(m_jcbTeamAttitude, gbc);
         add(m_jcbTeamAttitude);

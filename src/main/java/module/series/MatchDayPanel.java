@@ -7,6 +7,7 @@ import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ImageUtilities;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.enums.MatchType;
 import core.model.series.Paarung;
 import core.net.OnlineWorker;
@@ -15,12 +16,12 @@ import core.util.HOLogger;
 import core.util.Helper;
 import core.util.StringUtils;
 import org.jetbrains.annotations.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
-import java.text.DateFormat;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
 import java.util.List;
 
 import static core.gui.theme.ThemeManager.getColor;
@@ -113,13 +114,13 @@ final class MatchDayPanel extends JPanel implements ActionListener {
         if ( gameFinished ) {
             //Match already in the database
             if (DBManager.instance().isMatchInDB(paarung.getMatchId(), MatchType.LEAGUE)) {
-                button.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Ligatabelle_SpielAnzeigen"));
+                button.setToolTipText(TranslationFacility.tr("tt_Ligatabelle_SpielAnzeigen"));
                 button.setEnabled(true);
                 button.setIcon(ImageUtilities.getRightArrowIcon(getColor(HOColorName.SHOW_MATCH), 14, 14));
             }
             // Match not yet in the database
             else {
-                button.setToolTipText(HOVerwaltung.instance().getLanguageString(
+                button.setToolTipText(TranslationFacility.tr(
                         "tt_Ligatabelle_SpielDownloaden"));
                 button.setEnabled(true);
                 button.setIcon(ImageUtilities.getDownloadIcon(getColor(HOColorName.DOWNLOAD_MATCH), 14, 14));
@@ -127,7 +128,7 @@ final class MatchDayPanel extends JPanel implements ActionListener {
         }
         // Match has not taken place yet
         else {
-            button.setToolTipText(HOVerwaltung.instance().getLanguageString(
+            button.setToolTipText(TranslationFacility.tr(
                     "tt_Ligatabelle_SpielNochnichtgespielt"));
             button.setEnabled(false);
             button.setIcon(ImageUtilities.getUnavailableIcon(getColor(HOColorName.DOWNLOAD_MATCH), 14, 14));
@@ -166,7 +167,7 @@ final class MatchDayPanel extends JPanel implements ActionListener {
 
        List<Paarung> paarungen = this.model.getCurrentSeries().getPaarungenBySpieltag(spieltag);
 
-        String bordertext = HOVerwaltung.instance().getLanguageString("Spieltag") + " " + spieltag;
+        String bordertext = TranslationFacility.tr("Spieltag") + " " + spieltag;
 
         if (paarungen != null && !paarungen.isEmpty()) {
             bordertext += ("  ( " + paarungen.get(0).getDatum().toLocaleDateTime() + " )");
@@ -280,7 +281,7 @@ final class MatchDayPanel extends JPanel implements ActionListener {
 
         setLayout(layout);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("Heim"));
+        label = new JLabel(TranslationFacility.tr("Heim"));
         label.setFont(label.getFont().deriveFont(Font.BOLD));
         label.setHorizontalAlignment(SwingConstants.CENTER);
         setConstraintsValues(constraints, GridBagConstraints.HORIZONTAL, 1.0, 0, 0, 1);
@@ -293,14 +294,14 @@ final class MatchDayPanel extends JPanel implements ActionListener {
         layout.setConstraints(label, constraints);
         add(label);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("Gast"));
+        label = new JLabel(TranslationFacility.tr("Gast"));
         label.setFont(label.getFont().deriveFont(Font.BOLD));
         label.setHorizontalAlignment(SwingConstants.CENTER);
         setConstraintsValues(constraints, GridBagConstraints.HORIZONTAL, 1.0, 2, 0, 1);
         layout.setConstraints(label, constraints);
         add(label);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.match.result"));
+        label = new JLabel(TranslationFacility.tr("ls.match.result"));
         label.setFont(label.getFont().deriveFont(Font.BOLD));
         label.setHorizontalAlignment(SwingConstants.CENTER);
         setConstraintsValues(constraints, GridBagConstraints.NONE, 0.5, 3, 0, 3);

@@ -22,10 +22,8 @@ public class DateTimeUtils {
 
 	private static Map<String, String> cl_availableZoneIds;
 
-	/**
-	 * Utility class - private constructor enforces non-instantiability.
-	 */
 	private DateTimeUtils() {
+		throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
 	}
 
 	public static Map<String, String> getAvailableZoneIds() {

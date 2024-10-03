@@ -3,21 +3,12 @@ package core.prediction;
 
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
+import core.model.TranslationFacility;
 import core.prediction.engine.MatchResult;
 import core.util.HOLogger;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JProgressBar;
-import javax.swing.SwingConstants;
+import javax.swing.*;
+import java.awt.*;
 
 
 class PredictPanel extends JPanel {
@@ -154,7 +145,7 @@ class PredictPanel extends JPanel {
 
         constraints.gridx = 0;
         constraints.gridy = 1;
-        label = new JLabel(core.model.HOVerwaltung.instance().getLanguageString("Heim"));
+        label = new JLabel(TranslationFacility.tr("Heim"));
         label.setFont(m_jlHomeTeam.getFont().deriveFont(Font.BOLD));
         toppanel.add(label, constraints);
 
@@ -165,7 +156,7 @@ class PredictPanel extends JPanel {
 
         constraints.gridx = 2;
         constraints.gridy = 1;
-        label = new JLabel(core.model.HOVerwaltung.instance().getLanguageString("Unendschieden"));
+        label = new JLabel(TranslationFacility.tr("Unendschieden"));
         label.setFont(m_jlHomeTeam.getFont().deriveFont(Font.BOLD));
         toppanel.add(label, constraints);
 
@@ -176,7 +167,7 @@ class PredictPanel extends JPanel {
 
         constraints.gridx = 4;
         constraints.gridy = 1;
-        label = new JLabel(core.model.HOVerwaltung.instance().getLanguageString("Gast"));
+        label = new JLabel(TranslationFacility.tr("Gast"));
         label.setFont(m_jlHomeTeam.getFont().deriveFont(Font.BOLD));
         toppanel.add(label, constraints);
 
@@ -237,7 +228,7 @@ class PredictPanel extends JPanel {
         constraints.gridx = 0;
         constraints.gridy = 1;
         constraints.gridwidth = 1;
-        label = new JLabel(core.model.HOVerwaltung.instance().getLanguageString("Gesamt"));
+        label = new JLabel(TranslationFacility.tr("Gesamt"));
         bottompanel.add(label, constraints);
 
         constraints.gridx = 1;
@@ -293,7 +284,7 @@ class PredictPanel extends JPanel {
         constraints.gridx = 0;
         constraints.gridy = 2;
         constraints.gridwidth = 1;
-        label = new JLabel(core.model.HOVerwaltung.instance().getLanguageString("Rechts"));
+        label = new JLabel(TranslationFacility.tr("Rechts"));
         bottompanel.add(label, constraints);
 
         constraints.gridx = 1;
@@ -349,7 +340,7 @@ class PredictPanel extends JPanel {
         constraints.gridx = 0;
         constraints.gridy = 3;
         constraints.gridwidth = 1;
-        label = new JLabel(core.model.HOVerwaltung.instance().getLanguageString("Mitte"));
+        label = new JLabel(TranslationFacility.tr("Mitte"));
         bottompanel.add(label, constraints);
 
         constraints.gridx = 1;
@@ -405,7 +396,7 @@ class PredictPanel extends JPanel {
         constraints.gridx = 0;
         constraints.gridy = 4;
         constraints.gridwidth = 1;
-        label = new JLabel(core.model.HOVerwaltung.instance().getLanguageString("Links"));
+        label = new JLabel(TranslationFacility.tr("Links"));
         bottompanel.add(label, constraints);
 
         constraints.gridx = 1;

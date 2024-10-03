@@ -1,17 +1,18 @@
 package core.option;
 
 import core.gui.comp.panel.ImagePanel;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.training.SkillDrops;
 import core.util.Helper;
+
+import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
+
 import static module.lineup.LineupPanel.TITLE_FG;
 
 /**
@@ -32,8 +33,8 @@ final class TrainingPreferencesPanel extends ImagePanel implements ChangeListene
 //    private TrainingAdjustmentPanel m_jtapDefending;
 //    private TrainingAdjustmentPanel m_jtapOsmosis;
     private SliderPanel m_jslFutureWeeks;
-    private final JCheckBox m_jcSkillDrops = new JCheckBox(HOVerwaltung.instance().getLanguageString("skillDrops"));
-    private final JCheckBox m_jcSkillDropsInPrediction = new JCheckBox(HOVerwaltung.instance().getLanguageString("ls.options.training.showSkillDrops"));
+    private final JCheckBox m_jcSkillDrops = new JCheckBox(TranslationFacility.tr("skillDrops"));
+    private final JCheckBox m_jcSkillDropsInPrediction = new JCheckBox(TranslationFacility.tr("ls.options.training.showSkillDrops"));
 
 
     TrainingPreferencesPanel() {
@@ -78,31 +79,31 @@ final class TrainingPreferencesPanel extends ImagePanel implements ChangeListene
 //        add(label);
 
 
-//        m_jtapGoalkeeping = new TrainingAdjustmentPanel(HOVerwaltung.instance().getLanguageString("ls.team.trainingtype.goalkeeping"),
+//        m_jtapGoalkeeping = new TrainingAdjustmentPanel(TranslationFacility.tr("ls.team.trainingtype.goalkeeping"),
 //                WeeklyTrainingType.instance(TrainingType.GOALKEEPING).getBaseTrainingLength(), UserParameter.temp().TRAINING_OFFSET_GOALKEEPING, this);
 //        add(m_jtapGoalkeeping);
 //
-//        m_jtapDefending = new TrainingAdjustmentPanel(HOVerwaltung.instance().getLanguageString("ls.team.trainingtype.defending"),
+//        m_jtapDefending = new TrainingAdjustmentPanel(TranslationFacility.tr("ls.team.trainingtype.defending"),
 //        		WeeklyTrainingType.instance(TrainingType.DEFENDING).getBaseTrainingLength(),UserParameter.temp().TRAINING_OFFSET_DEFENDING, this);
 //        add(m_jtapDefending);
 //
-//        m_jtapPlaymaking = new TrainingAdjustmentPanel(HOVerwaltung.instance().getLanguageString("ls.team.trainingtype.playmaking"),
+//        m_jtapPlaymaking = new TrainingAdjustmentPanel(TranslationFacility.tr("ls.team.trainingtype.playmaking"),
 //        		WeeklyTrainingType.instance(TrainingType.PLAYMAKING).getBaseTrainingLength(), UserParameter.temp().TRAINING_OFFSET_PLAYMAKING, this);
 //        add(m_jtapPlaymaking);
 //
-//        m_jtapPassing = new TrainingAdjustmentPanel(HOVerwaltung.instance().getLanguageString("ls.team.trainingtype.shortpasses"),
+//        m_jtapPassing = new TrainingAdjustmentPanel(TranslationFacility.tr("ls.team.trainingtype.shortpasses"),
 //        		WeeklyTrainingType.instance(TrainingType.SHORT_PASSES).getBaseTrainingLength(), UserParameter.temp().TRAINING_OFFSET_PASSING, this);
 //        add(m_jtapPassing);
 //
-//        m_jtapWinger = new TrainingAdjustmentPanel(HOVerwaltung.instance().getLanguageString("ls.team.trainingtype.crossing"),
+//        m_jtapWinger = new TrainingAdjustmentPanel(TranslationFacility.tr("ls.team.trainingtype.crossing"),
 //        		WeeklyTrainingType.instance(TrainingType.CROSSING_WINGER).getBaseTrainingLength(), UserParameter.temp().TRAINING_OFFSET_WINGER, this);
 //        add(m_jtapWinger);
 //
-//        m_jtapScoring = new TrainingAdjustmentPanel(HOVerwaltung.instance().getLanguageString("ls.team.trainingtype.scoring"),
+//        m_jtapScoring = new TrainingAdjustmentPanel(TranslationFacility.tr("ls.team.trainingtype.scoring"),
 //        		WeeklyTrainingType.instance(TrainingType.SCORING).getBaseTrainingLength(), UserParameter.temp().TRAINING_OFFSET_SCORING, this);
 //        add(m_jtapScoring);
 //
-//        m_jtapSetPieces = new TrainingAdjustmentPanel(HOVerwaltung.instance().getLanguageString("ls.team.trainingtype.setpieces"),
+//        m_jtapSetPieces = new TrainingAdjustmentPanel(TranslationFacility.tr("ls.team.trainingtype.setpieces"),
 //        		WeeklyTrainingType.instance(TrainingType.SET_PIECES).getBaseTrainingLength(), UserParameter.temp().TRAINING_OFFSET_SETPIECES, this);
 //        add(m_jtapSetPieces);
 
@@ -111,23 +112,23 @@ final class TrainingPreferencesPanel extends ImagePanel implements ChangeListene
 //        label.setFont(getFont().deriveFont(Font.BOLD));
 //        add(label);
 
-//        m_jtapOsmosis = new TrainingAdjustmentPanel(HOVerwaltung.instance().getLanguageString("training.osmosis"),
+//        m_jtapOsmosis = new TrainingAdjustmentPanel(TranslationFacility.tr("training.osmosis"),
 //        		WeeklyTrainingType.OSMOSIS_BASE_PERCENTAGE, UserParameter.temp().TRAINING_OFFSET_OSMOSIS, this);
 //        add(m_jtapOsmosis);
 //
-//        m_tapAgeFactor = new TrainingAdjustmentPanel(HOVerwaltung.instance().getLanguageString("ls.player.age"),
+//        m_tapAgeFactor = new TrainingAdjustmentPanel(TranslationFacility.tr("ls.player.age"),
 //        		WeeklyTrainingType.BASE_AGE_FACTOR, UserParameter.temp().TRAINING_OFFSET_AGE, this);
 //        add(m_tapAgeFactor);
 //
-//        m_jtapCoachFactor = new TrainingAdjustmentPanel(HOVerwaltung.instance().getLanguageString("ls.team.coachingskill"),
+//        m_jtapCoachFactor = new TrainingAdjustmentPanel(TranslationFacility.tr("ls.team.coachingskill"),
 //        		WeeklyTrainingType.BASE_COACH_FACTOR, UserParameter.temp().TrainerFaktor, this);
 //        add(m_jtapCoachFactor);
 //
-//        m_jtapAssisstantFactor = new TrainingAdjustmentPanel(HOVerwaltung.instance().getLanguageString("FaktorCoTraineranzahl"),
+//        m_jtapAssisstantFactor = new TrainingAdjustmentPanel(TranslationFacility.tr("FaktorCoTraineranzahl"),
 //        		WeeklyTrainingType.BASE_ASSISTANT_COACH_FACTOR, UserParameter.temp().TRAINING_OFFSET_ASSISTANTS, this);
 //        add(m_jtapAssisstantFactor);
 //
-//        m_jtapIntensityFactor = new TrainingAdjustmentPanel(HOVerwaltung.instance().getLanguageString("ls.team.trainingintensity"),
+//        m_jtapIntensityFactor = new TrainingAdjustmentPanel(TranslationFacility.tr("ls.team.trainingintensity"),
 //        		WeeklyTrainingType.BASE_INTENSITY_FACTOR, UserParameter.temp().TRAINING_OFFSET_INTENSITY, this);
 //        add(m_jtapIntensityFactor);
 
@@ -137,8 +138,8 @@ final class TrainingPreferencesPanel extends ImagePanel implements ChangeListene
         add(label);
 
         var width = UserParameter.instance().fontSize * 10;
-        m_jslFutureWeeks = new SliderPanel(HOVerwaltung.instance().getLanguageString("futureWeeks"), 80, 0, 1, 1f, width);
-        m_jslFutureWeeks.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Optionen_futureWeeks"));
+        m_jslFutureWeeks = new SliderPanel(TranslationFacility.tr("futureWeeks"), 80, 0, 1, 1f, width);
+        m_jslFutureWeeks.setToolTipText(TranslationFacility.tr("tt_Optionen_futureWeeks"));
         m_jslFutureWeeks.setValue(core.model.UserParameter.temp().futureWeeks);
         m_jslFutureWeeks.addChangeListener(this);
         add(m_jslFutureWeeks);

@@ -3,24 +3,20 @@ package module.matches;
 import core.gui.comp.panel.LazyImagePanel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.match.MatchEvent;
 import core.model.match.MatchKurzInfo;
 import core.model.match.Matchdetails;
-import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.BorderLayout;
-import java.awt.Insets;
-import java.util.ArrayList;
-import java.util.List;
+
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
-import static core.gui.theme.HOColorName.*;
+import static core.gui.theme.HOColorName.GUEST_ACTION;
+import static core.gui.theme.HOColorName.HOME_ACTION;
+import static core.gui.theme.HOColorName.NEUTRAL_ACTION;
 
 
 public class MatchReportPanel extends LazyImagePanel {
@@ -216,7 +212,7 @@ public class MatchReportPanel extends LazyImagePanel {
 					constraints.gridx = 0;
 					constraints.gridy = i + 4;
 					constraints.gridwidth = 5;
-					JLabel penaltyContestLabel = new JLabel(HOVerwaltung.instance().getLanguageString("MatchEvent_71_report"), SwingConstants.CENTER);
+					JLabel penaltyContestLabel = new JLabel(TranslationFacility.tr("MatchEvent_71_report"), SwingConstants.CENTER);
 					f = penaltyContestLabel.getFont();
 					penaltyContestLabel.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
 					penaltyContestLabel.setBackground(Color.lightGray);
@@ -229,7 +225,7 @@ public class MatchReportPanel extends LazyImagePanel {
 			}
 
 			if (bPenaltyContest) {
-				String subtitle = HOVerwaltung.instance().getLanguageString("penalites") + "  (" + homePenalitiesScored + "-" + guestPenalitiesScored + ")";
+				String subtitle = TranslationFacility.tr("penalites") + "  (" + homePenalitiesScored + "-" + guestPenalitiesScored + ")";
 				penaltyContestresults.setText(subtitle);
 			}
 

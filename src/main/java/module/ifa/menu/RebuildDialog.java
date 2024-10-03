@@ -1,36 +1,29 @@
 package module.ifa.menu;
 
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 import core.db.DBManager;
 import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import module.ifa.PluginIfaUtils;
 
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class RebuildDialog extends JDialog implements ActionListener {
 
 	private static final long serialVersionUID = -5212562044591100095L;
 	
-	JLabel infoLabel = new JLabel(HOVerwaltung.instance().getLanguageString("ifa.reload.info"));
-	JButton okButton = new JButton(HOVerwaltung.instance().getLanguageString("ifa.reload.reloadbutton"));
-	JButton cancelButton = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.cancel"));
+	JLabel infoLabel = new JLabel(TranslationFacility.tr("ifa.reload.info"));
+	JButton okButton = new JButton(TranslationFacility.tr("ifa.reload.reloadbutton"));
+	JButton cancelButton = new JButton(TranslationFacility.tr("ls.button.cancel"));
 	HOMainFrame mainFrame = null;
 	Boolean updatePerformed = false;
 	
 	
 	public RebuildDialog (HOMainFrame mainFrame) {
-		super(mainFrame, HOVerwaltung.instance().getLanguageString("ls.menu.modules.ifa.reloadallmatches"));
+		super(mainFrame, TranslationFacility.tr("ls.menu.modules.ifa.reloadallmatches"));
 		this.mainFrame = mainFrame;
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		init();

@@ -2,19 +2,24 @@ package module.nthrf;
 
 import core.file.ExampleFileFilter;
 import core.file.xml.XMLManager;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.net.MyConnector;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import javax.swing.*;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import javax.swing.JFileChooser;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 public class NthrfUtil {
+
+    private NthrfUtil() {
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
+    }
 
     /**
      * TODO
@@ -34,7 +39,7 @@ public class NthrfUtil {
             final File path = new File(core.model.UserParameter.instance().hrfImport_HRFPath);
             File file = new File(core.model.UserParameter.instance().hrfImport_HRFPath + File.separator + fname);
             fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
-            fileChooser.setDialogTitle(HOVerwaltung.instance().getLanguageString("ls.button.save"));
+            fileChooser.setDialogTitle(TranslationFacility.tr("ls.button.save"));
 
             fileChooser.setFileFilter(new ExampleFileFilter("hrf"));
             try {

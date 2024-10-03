@@ -1,13 +1,10 @@
 package module.training;
 
-import java.awt.event.KeyEvent;
-
-import javax.swing.JPanel;
-import javax.swing.KeyStroke;
-
-
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.module.DefaultModule;
+
+import javax.swing.*;
+import java.awt.event.KeyEvent;
 
 public final class TrainingModule extends DefaultModule {
 
@@ -22,7 +19,7 @@ public final class TrainingModule extends DefaultModule {
 
 	@Override
 	public String getDescription() {
-		return HOVerwaltung.instance().getLanguageString("Training");
+		return TranslationFacility.tr("Training");
 	}
 
 	@Override
