@@ -68,14 +68,12 @@ public class PlayerOverviewTable extends FixedColumnsTable implements core.gui.R
 					// Get name of the actual column at columnAtPoint, i.e. post-ordering of the columns
 					// based on preferences.
 					var columnName = tableModel.getColumnName(columnAtPoint);
-//					String columnName = PlayerOverviewTable.this.getColumnName(columnAtPoint);
-					String lastMatchRating = (HOVerwaltung.instance().getLanguageString("LastMatchRating"));
-
+					String lastMatchRating = TranslationFacility.tr("LastMatchRating");
 					if (columnName != null && columnName.equalsIgnoreCase(lastMatchRating)) {
 						if (e.isShiftDown()) {
 							int matchId = player.getLastMatchId();
-							// TODO: get match type ?
-							MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(matchId, null);
+							var matchType = player.getLastMatchType();
+							MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(matchId, matchType);
 							HattrickLink.showMatch(String.valueOf(matchId), info.getMatchType().isOfficial());
 						} else if (e.getClickCount() == 2) {
 							HOMainFrame.instance().showMatch(player.getLastMatchId());
