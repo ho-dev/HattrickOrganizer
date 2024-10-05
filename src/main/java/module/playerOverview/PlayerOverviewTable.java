@@ -44,7 +44,7 @@ public class PlayerOverviewTable extends FixedColumnsTable implements core.gui.R
 	private final PlayerOverviewTableModel tableModel;
 
 	public PlayerOverviewTable() {
-		super(UserColumnController.instance().getPlayerOverviewModel(), 1);
+		super(UserColumnController.instance().getPlayerOverviewModel());
 		tableModel = (PlayerOverviewTableModel)this.getScrollTable().getModel();
 		tableModel.setValues(HOVerwaltung.instance().getModel().getCurrentPlayers());
 		tableModel.initTable(this);

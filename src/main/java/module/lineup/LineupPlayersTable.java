@@ -27,7 +27,7 @@ public final class LineupPlayersTable extends FixedColumnsTable implements core.
 	private final LineupTableModel tableModel;
 
 	LineupPlayersTable() {
-		super(UserColumnController.instance().getLineupModel(), 1);
+		super(UserColumnController.instance().getLineupModel());
 		tableModel = (LineupTableModel) this.getScrollTable().getModel();
 		tableModel.setValues(HOVerwaltung.instance().getModel().getCurrentPlayers());
 		tableModel.initTable(this);

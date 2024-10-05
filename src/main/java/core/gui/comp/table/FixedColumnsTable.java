@@ -32,6 +32,10 @@ public class FixedColumnsTable extends JScrollPane {
      */
     private final JTable scroll;
 
+    public FixedColumnsTable(HOTableModel tableModel) {
+        this(tableModel, 1);
+    }
+
     /**
      * Create a fixed columns table
      * Columns and Header tooltips are taken from table model.
