@@ -1,6 +1,7 @@
 ## Highlights
 
 * Calculation of the tsi sub by approximating the tsi formula (#235)
+* Restoring user's table sorting settings (#2119)
 
 ## [Detailed Changelog](https://github.com/ho-dev/HattrickOrganizer/issues?q=milestone%3A9.0)
 
@@ -43,8 +44,12 @@
 
 ## Translations
 
-Reports by Contributors - June 23, 2024 - July 01, 2024
+Reports by Contributors - June 23, 2024 - October 06, 2024
 
-* wsbrenk 0
+* wsbrenk 18
+* Sebastian Reddig 12
+* Achilles 10
+* Billy Dikkanen 10
+* Lidegang 9
 
-Total 0
+Total 59
