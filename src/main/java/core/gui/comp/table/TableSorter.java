@@ -3,7 +3,7 @@ package core.gui.comp.table;
 
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.IHOTableEntry;
-import core.gui.model.PlayerOverviewModel;
+import core.gui.model.PlayerOverviewTableModel;
 import core.gui.model.UserColumnFactory;
 import core.model.player.Player;
 import core.util.HOLogger;
@@ -167,8 +167,8 @@ public class TableSorter extends TableMap {
                     var text = entry.getText();
                     if (text != null && !text.isEmpty()) {
                         final int id = Integer.parseInt(text);
-                        if (getModel() instanceof PlayerOverviewModel) {
-                            return ((PlayerOverviewModel) getModel()).getPlayer(id);
+                        if (getModel() instanceof PlayerOverviewTableModel) {
+                            return ((PlayerOverviewTableModel) getModel()).getPlayer(id);
                         } else if (getModel() instanceof LineupTableModel) {
                             return ((LineupTableModel) getModel()).getPlayer(id);
                         } else {

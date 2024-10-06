@@ -1,11 +1,9 @@
 package module.transfer.ui.sorter;
 
-import java.util.Iterator;
-
 // Helper classes
 class Row implements Comparable<Row> {
     private final AbstractTableSorter sorter;
-    private int modelIndex;
+    private final int modelIndex;
 
     /**
      * Creates a new Row object.
@@ -42,7 +40,7 @@ class Row implements Comparable<Row> {
             Object o1 = this.sorter.tableModel.getValueAt(row1, column);
             Object o2 = this.sorter.tableModel.getValueAt(row2, column);
 
-            int comparison = 0;
+            int comparison;
 
             // Define null less than everything, except null.
             if ((o1 == null) && (o2 == null)) {

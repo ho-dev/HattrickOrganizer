@@ -1,7 +1,6 @@
 package core.constants;
 
 import core.datatype.CBItem;
-import core.model.HOVerwaltung;
 import core.util.Helper;
 
 public final class TrainingType {

@@ -1,7 +1,6 @@
 package module.series.statistics;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import core.model.enums.RatingsStatistics;
 import core.module.config.ModuleConfig;

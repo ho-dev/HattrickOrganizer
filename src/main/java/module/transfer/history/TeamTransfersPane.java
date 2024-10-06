@@ -54,7 +54,7 @@ class TeamTransfersPane extends JPanel implements ListSelectionListener {
         pane.setOpaque(false);
         mainPanel.add(pane, BorderLayout.CENTER);
 
-        model.restoreUserSettings(transferTable);
+        model.initTable(transferTable);
         refresh(new Vector<>());
     }
 
@@ -118,7 +118,7 @@ class TeamTransfersPane extends JPanel implements ListSelectionListener {
 
     public void storeUserSettings(){
         var model = getTransferTableModel();
-        model.storeUserSettings(this.transferTable);
+        model.storeUserSettings();
         playerDetailPanel.storeUserSettings();
     }
 

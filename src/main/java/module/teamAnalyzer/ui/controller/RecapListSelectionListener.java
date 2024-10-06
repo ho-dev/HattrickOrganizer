@@ -1,16 +1,16 @@
 package module.teamAnalyzer.ui.controller;
 
 import core.gui.comp.entry.ColorLabelEntry;
+import core.gui.comp.table.HOTableModel;
 import core.util.HODateTime;
 import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.ui.RecapPanel;
 import module.teamAnalyzer.ui.RecapPanelTableModel;
 import module.teamAnalyzer.vo.TeamLineup;
-import module.transfer.ui.sorter.DefaultTableSorter;
-
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableRowSorter;
 
 
 /**
@@ -22,13 +22,13 @@ public class RecapListSelectionListener implements ListSelectionListener {
 
     private String selectedTacticType = RecapPanel.VALUE_NA;
     private String selectedTacticSkill = RecapPanel.VALUE_NA;
-    private final DefaultTableSorter sorter;
+    private final TableRowSorter<HOTableModel> sorter;
     private final RecapPanelTableModel tableModel;
 
     /**
      * Consructor.
      */
-    public RecapListSelectionListener(DefaultTableSorter sorter, RecapPanelTableModel tableModel) {
+    public RecapListSelectionListener(TableRowSorter<HOTableModel> sorter, RecapPanelTableModel tableModel) {
         this.sorter = sorter;
         this.tableModel = tableModel;
     }
@@ -44,7 +44,7 @@ public class RecapListSelectionListener implements ListSelectionListener {
         ListSelectionModel lsm = (ListSelectionModel) e.getSource();
 
         if (!lsm.isSelectionEmpty()) {
-            int selectedRow = sorter.modelIndex(lsm.getMinSelectionIndex());
+            int selectedRow = sorter.convertRowIndexToModel(lsm.getMinSelectionIndex());
             var colorLabelEntry = (ColorLabelEntry)tableModel.getValueAt(selectedRow, 17);
             if ( colorLabelEntry != null ) selectedTacticType = colorLabelEntry.getText();
             colorLabelEntry = (ColorLabelEntry)tableModel.getValueAt(selectedRow,18);

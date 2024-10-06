@@ -10,23 +10,15 @@ import java.util.List;
 
 public class MatchData {
 
-    private ActionGenerator generator = new ActionGenerator();
-    private TeamData awayTeam;
-    private TeamData homeTeam;
+    private final ActionGenerator generator = new ActionGenerator();
+    private final TeamData awayTeam;
+    private final TeamData homeTeam;
     private int minute;
 
     MatchData(TeamData home, TeamData away) {
         homeTeam = home;
         awayTeam = away;
         generator.setTeams(homeTeam, awayTeam);
-    }
-
-    public final List<Action> getAwayTeamActionList() {
-        return awayTeam.getActions();
-    }
-
-    public final List<Action> getHomeTeamActionList() {
-        return homeTeam.getActions();
     }
 
     public final Action[] advance() {
@@ -65,10 +57,10 @@ public class MatchData {
 	public final String toString() {
         final StringBuilder buffer = new StringBuilder();
         buffer.append("Match[");
-        buffer.append("generator = " + generator);
-        buffer.append(", minute = " + minute);
-        buffer.append(", team1 = " + homeTeam);
-        buffer.append(", team2 = " + awayTeam);
+        buffer.append("generator = ").append(generator);
+        buffer.append(", minute = ").append(minute);
+        buffer.append(", team1 = ").append(homeTeam);
+        buffer.append(", team2 = ").append(awayTeam);
         buffer.append("]");
         return buffer.toString();
     }
@@ -82,19 +74,18 @@ public class MatchData {
         int ca = 0;
 
         for (Action action : actions) {
-            final Action ac = (Action) action;
 
-            if (ac.isScore()) {
+            if (((Action) action).isScore()) {
                 g++;
             }
 
-            if (ac.getType() == IMatchDetails.TAKTIK_KONTER) {
+            if (((Action) action).getType() == IMatchDetails.TAKTIK_KONTER) {
                 ca++;
             } else {
                 c++;
             }
 
-            HOLogger.instance().log(getClass(), ac);
+            HOLogger.instance().log(getClass(), (Action) action);
         }
 
         HOLogger.instance().log(getClass(),"Chances " + c);

@@ -15,9 +15,6 @@ public class RecapPanel extends JPanel {
     private static final long serialVersionUID = 486150690031160261L;
     public static final String VALUE_NA = "---"; //$NON-NLS-1$
 
-    //~ Instance fields ----------------------------------------------------------------------------
-    private FixedColumnsTable table;
-
     private RecapListSelectionListener recapListener = null;
 
     private RecapPanelTableModel tableModel;
@@ -36,10 +33,11 @@ public class RecapPanel extends JPanel {
     private void jbInit() {
         tableModel = UserColumnController.instance().getTeamAnalyzerRecapModel();
         tableModel.showTeamReport(null);
-        table = new FixedColumnsTable(2, tableModel);
+        //~ Instance fields ----------------------------------------------------------------------------
+        FixedColumnsTable table = new FixedColumnsTable(tableModel, 2);
         table.setDefaultRenderer(Object.class, new RecapTableRenderer());
         table.setDefaultRenderer(ImageIcon.class, new RecapTableRenderer());
-        recapListener = new RecapListSelectionListener(table.getTableSorter(), tableModel);
+        recapListener = new RecapListSelectionListener(table.getTableRowSorter(), tableModel);
         table.addListSelectionListener(recapListener);
         setLayout(new BorderLayout());
         add(table);
@@ -54,6 +52,6 @@ public class RecapPanel extends JPanel {
     }
 
     public void storeUserSettings() {
-        this.tableModel.storeUserSettings(table);
+        this.tableModel.storeUserSettings();
     }
 }

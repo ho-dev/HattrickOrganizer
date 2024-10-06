@@ -109,6 +109,11 @@ final class UserConfigurationTable extends AbstractTable {
 		obj.setValues(map);
 	}
 
+	public String loadParameter(String key) {
+		var value = loadOne(_Configuration.class, key);
+		if (value != null) return value.getValue();
+		return null;
+	}
 
 	public static class _Configuration extends AbstractTable.Storable {
 		public _Configuration(){}

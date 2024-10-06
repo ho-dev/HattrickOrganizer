@@ -77,17 +77,7 @@ final class SpielerMatchesTable extends JTable {
 				columModel.getColumn(i).setIdentifier(i);
 			}
 
-			int[][] targetColumn = m_clTableModel.getColumnOrder();
-
-			// Reihenfolge -> nach [][1] sortieren
-			targetColumn = core.util.Helper.sortintArray(targetColumn, 1);
-
-			if (targetColumn != null) {
-                for (int[] ints : targetColumn) {
-					this.moveColumn(getColumnModel().getColumnIndex(ints[0]), ints[1]);
-                }
-			}
-
+			m_clTableModel.initColumnOrder(this);
 			m_clTableSorter.addMouseListenerToHeaderInTable(this);
 			m_clTableModel.setColumnsSize(getColumnModel());
 		} else {

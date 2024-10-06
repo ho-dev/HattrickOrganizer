@@ -8,13 +8,13 @@ import java.util.ArrayList;
 
 /** REQUIREMENTS
  *
- * copy of https://devblog.hattrick.org/2017/12/a-new-match-engine-odyssey/
+ * copy of <a href="https://devblog.hattrick.org/2017/12/a-new-match-engine-odyssey/">...</a>
 
  A new match engine is live since Week 16 with a new Special Events framework. After the release, we received every kind
  of critic in the feedback scale of Hattrick Universe. From “This is the end of Hattrick” to “This is the best change
  ever”. In this blog post, I will try to summarize the changes we did since the previous editorial release.
 
-Why a new Special Events framework?
+ Why a new Special Events framework?
 
  “Why, why, why? Why did you change it? Why didn’t just tweak this and that, and increase the other”. That was one of
  the comments we received in the Global forum. The reason is simple. The old code had zero flexibility. We couldn’t just
@@ -269,7 +269,7 @@ Why a new Special Events framework?
 
  TODO: General Comments
 
-    Form, stamina, experience, health, loyalty, mother club and weather events affect all the above formulas
+ Form, stamina, experience, health, loyalty, mother club and weather events affect all the above formulas
 
  */
 

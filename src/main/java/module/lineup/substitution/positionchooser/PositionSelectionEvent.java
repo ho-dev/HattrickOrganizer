@@ -2,8 +2,8 @@ package module.lineup.substitution.positionchooser;
 
 public class PositionSelectionEvent {
 
-	private Integer position;
-	private Change change;
+	private final Integer position;
+	private final Change change;
 
 	public enum Change {
 		SELECTED, DESELECTED

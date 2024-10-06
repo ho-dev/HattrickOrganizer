@@ -161,7 +161,7 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
             selectionModel.addListSelectionListener(this);
             playerOverviewTableSorter = new YouthTableSorter(playerOverviewTableModel, playerOverviewTable);
             playerOverviewTable.setModel(playerOverviewTableSorter);
-            playerOverviewTableModel.restoreUserSettings(playerOverviewTable);
+            playerOverviewTableModel.initTable(playerOverviewTable);
         }
     }
 
@@ -188,7 +188,7 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
 
             YouthTableSorter playerDetailsTableSorter = new YouthTableSorter(playerDetailsTableModel, playerDetailsTable);
             playerDetailsTable.setModel(playerDetailsTableSorter);
-            playerDetailsTableModel.restoreUserSettings(playerDetailsTable);
+            playerDetailsTableModel.initTable(playerDetailsTable);
         }
     }
 
@@ -348,8 +348,8 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
     }
 
     public void storeUserSettings() {
-        this.playerOverviewTableModel.storeUserSettings(playerOverviewTable);
-        this.playerDetailsTableModel.storeUserSettings(playerDetailsTable);
+        this.playerOverviewTableModel.storeUserSettings();
+        this.playerDetailsTableModel.storeUserSettings();
         // store split pane divider positions
         var split2Pane = (JSplitPane)this.getComponent(0);
         ModuleConfig.instance().setInteger(VERTICALSPLIT2_POSITION, split2Pane.getDividerLocation());

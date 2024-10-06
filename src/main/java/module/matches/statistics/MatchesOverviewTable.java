@@ -54,17 +54,7 @@ public class MatchesOverviewTable extends JTable {
                 tableColumnModel.getColumn(i).setIdentifier(i);
             }
 
-            int[][] targetColumn = tableModel.getColumnOrder();
-
-            //Reihenfolge -> nach [][1] sortieren
-            targetColumn = Helper.sortintArray(targetColumn, 1);
-
-            if (targetColumn != null) {
-                for (int[] ints : targetColumn) {
-                    this.moveColumn(getColumnModel().getColumnIndex(ints[0]), ints[1]);
-                }
-            }
-
+            tableModel.initColumnOrder(this);
             //m_clTableSorter.addMouseListenerToHeaderInTable(this);
             tableModel.setColumnsSize(getColumnModel());
         } else {

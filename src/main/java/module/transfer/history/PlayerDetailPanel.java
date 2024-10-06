@@ -20,6 +20,8 @@ import module.transfer.ui.sorter.DefaultTableSorter;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.Serial;
@@ -90,13 +92,13 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
         super(new BorderLayout());
 
         var model = getTableModel();
-        var sorter = new DefaultTableSorter(model);
-        playerTable = new JTable(sorter);
+//        var sorter = new DefaultTableSorter(model);
+        playerTable = new JTable(model);
         playerTable.setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
         playerTable.setOpaque(true);
-        sorter.setTableHeader(playerTable.getTableHeader());
+//        sorter.setTableHeader(playerTable.getTableHeader());
 
-        model.restoreUserSettings(playerTable);
+        model.initTable(playerTable);
 
         final JScrollPane playerPane = new JScrollPane(playerTable);
         playerPane.setOpaque(false);
@@ -370,6 +372,6 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
 
     public void storeUserSettings() {
         var model = getTableModel();
-        model.storeUserSettings(this.playerTable);
+        model.storeUserSettings();
     }
 }

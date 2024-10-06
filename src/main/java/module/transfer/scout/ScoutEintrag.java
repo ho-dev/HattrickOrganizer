@@ -1,7 +1,6 @@
 package module.transfer.scout;
 
 import core.db.AbstractTable;
-import core.util.HOLogger;
 
 public class ScoutEintrag extends AbstractTable.Storable {
     //~ Instance fields ----------------------------------------------------------------------------

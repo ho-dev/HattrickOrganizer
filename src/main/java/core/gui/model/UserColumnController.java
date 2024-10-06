@@ -53,7 +53,7 @@ public final class UserColumnController {
 	private  MatchesOverviewColumnModel matchesOverview1ColumnModel		= null;
 	
 	/** model for player overview **/
-	private  PlayerOverviewModel playerOverviewColumnModel	= null;
+	private PlayerOverviewTableModel playerOverviewColumnModel	= null;
 	
 	/** model for lineup table **/
 	private  LineupTableModel lineupColumnModel			= null;
@@ -162,9 +162,9 @@ public final class UserColumnController {
 	 * 
 	 * @return PlayerOverviewModel
 	 */
-	public PlayerOverviewModel getPlayerOverviewModel(){
+	public PlayerOverviewTableModel getPlayerOverviewModel(){
 		if(playerOverviewColumnModel == null){
-			playerOverviewColumnModel = new PlayerOverviewModel(ColumnModelId.PLAYEROVERVIEW);
+			playerOverviewColumnModel = new PlayerOverviewTableModel(ColumnModelId.PLAYEROVERVIEW);
 		}
 		return playerOverviewColumnModel;
 	}

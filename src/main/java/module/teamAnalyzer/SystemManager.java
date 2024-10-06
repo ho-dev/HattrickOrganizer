@@ -5,7 +5,6 @@ import core.module.config.ModuleConfig;
 import core.prediction.engine.TeamData;
 import module.teamAnalyzer.manager.MatchManager;
 import module.teamAnalyzer.manager.MatchPopulator;
-import module.teamAnalyzer.manager.NameManager;
 import module.teamAnalyzer.manager.TeamManager;
 import module.teamAnalyzer.report.TeamReport;
 import module.teamAnalyzer.ui.TeamAnalyzerPanel;
@@ -149,7 +148,6 @@ public class SystemManager {
 	 */
 	public static void refresh() {
 		if (plugin != null) {
-			NameManager.clean();
 			TeamAnalyzerPanel.filter.setMatches(new ArrayList<>());
 
 			teamReport = null;
@@ -165,7 +163,6 @@ public class SystemManager {
 	 */
 	public static void refreshData() {
 		if (!updating) {
-			NameManager.clean();
 			TeamManager.clean();
 			refresh();
 		}
