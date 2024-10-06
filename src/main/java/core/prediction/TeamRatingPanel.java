@@ -84,12 +84,12 @@ class TeamRatingPanel extends JPanel implements ItemListener {
             tactIndex = 6;
         }
 
-        values[row][0].setSelectedIndex(tactIndex);
+        values[row][0].setSelectedIndex(Math.max(0, Math.min(tactIndex, tactics.size()-1)));
         values[row][0].addItemListener(this);
         taktikpanel.add(values[row][0]);
 
         values[row][1] = new JComboBox(levels.toArray());
-        values[row][1].setSelectedIndex(Math.min(team.getTacticLevel(), 19)); // limit tactic strength to divine
+        values[row][1].setSelectedIndex(Math.max(0,Math.min(team.getTacticLevel(), levels.size()-1)));
         values[row][1].addItemListener(this);
 
         if (team.getTacticType() == IMatchDetails.TAKTIK_NORMAL) {
