@@ -13,6 +13,7 @@
 * Calculation of the tsi sub by approximating the tsi formula (#235)
 
 ### Team Analyzer
+* Fix illegal argument exception in team rating panel (#2155)
 
 ### Rating
 
