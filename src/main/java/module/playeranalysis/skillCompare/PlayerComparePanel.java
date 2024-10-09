@@ -16,14 +16,13 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.Serial;
 import java.util.List;
 import java.util.Vector;
 
@@ -40,6 +39,7 @@ import javax.swing.JTable;
  */
 public class PlayerComparePanel extends LazyImagePanel implements ItemListener, FocusListener {
 
+	@Serial
 	private static final long serialVersionUID = -1629490436656226196L;
 	// Members for Tables
 	private PlayerTable m_jTableTop; // Table for all players
@@ -54,8 +54,7 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 	private JScrollPane m_scrollPanePlayer;
 	private JScrollPane m_scrollPanePlayerGesamt;
 	private PlayerTableModel m_playerTableModelTop;
-	private PlayerTableModel m_playerTableModelBottom;
-	private PlayerTableModel m_playerTableModelDetail;
+    private PlayerTableModel m_playerTableModelDetail;
 	private static JComboBox m_CB_type;
 	private JComboBox m_CB_Experience;
 	private JComboBox m_CB_Form;
@@ -81,17 +80,14 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 	private JComboBox m_CB_Nr_SetPieces;
 	private JComboBox m_CB_Nr_Loyalty;
 	private Vector<module.playeranalysis.skillCompare.Player> m_V_setPlayers;
-	private List<core.model.player.Player> m_V_allPlayers;
-	private module.playeranalysis.skillCompare.Player[] m_ar_allPlayers;
-	private module.playeranalysis.skillCompare.Player[] m_ar_setPlayers;
-	private CBItem[] m_rating = PlayerAbility.ITEMS;
+    private module.playeranalysis.skillCompare.Player[] m_ar_allPlayers;
+    private final CBItem[] m_rating = PlayerAbility.ITEMS;
 	private static int m_selectedRow;
 	private int m_i_ptmTopCount;
-	private int m_numberOfPlayers;
-	private static int[] newRating;
+    private static int[] newRating;
 	private static int[] changedRating;
 	private boolean m_b_refresh = true;
-	private Color lightblue = new Color(235, 235, 255);
+	private final Color lightblue = new Color(235, 235, 255);
 
 	@Override
 	protected void initialize() {
@@ -124,21 +120,9 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 	}
 
 	private void addListeners() {
-		m_btCompare.addActionListener(new ActionListener() {
+		m_btCompare.addActionListener(e -> comparePlayer());
 
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				comparePlayer();
-			}
-		});
-
-		m_btReset.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				reset();
-			}
-		});
+		m_btReset.addActionListener(e -> reset());
 	}
 
 	private void initComponents() {
@@ -301,8 +285,7 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
 		gbl.setConstraints(m_CB_type, gbc);
 		// *******************************
-		gbc.gridwidth = 4;
-		gbc.gridwidth = GridBagConstraints.REMAINDER;
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
 		gbl.setConstraints(m_L_Header, gbc);
 		gbc.gridwidth = 1;
 		// *******************************
@@ -375,17 +358,14 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 		// *******
 		gbc.gridwidth = 1;
 		gbl.setConstraints(m_L_HomeGrown, gbc);
-		gbc.gridwidth = 1;
-		gbc.gridwidth = GridBagConstraints.REMAINDER; // end row
+        gbc.gridwidth = GridBagConstraints.REMAINDER; // end row
 		gbl.setConstraints(m_CB_Homegrown, gbc);
 		// *******
-		gbc.gridwidth = 1;
-		// *******************************
+        // *******************************
 		gbc.gridwidth = GridBagConstraints.REMAINDER; // end row
 		gbc.insets = new Insets(10, 3, 0, 3);
 		gbl.setConstraints(m_btCompare, gbc);
-		gbc.gridwidth = 1;
-		// *******************************
+        // *******************************
 		gbc.gridwidth = GridBagConstraints.REMAINDER; // end row
 		gbc.insets = new Insets(0, 3, 0, 3);
 		gbl.setConstraints(m_btReset, gbc);
@@ -660,7 +640,7 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 		m_scrollPaneTableBottom.setViewportView(null);
 
 		for (int i = 0; i < m_i_ptmTopCount; i++) {
-			if ((Boolean) m_playerTableModelTop.getValueAt(i, 0) == true) {
+			if ((Boolean) m_playerTableModelTop.getValueAt(i, 0)) {
 				m_playerTableModelTop.setValueAt(Boolean.FALSE, i, 0);
 			}
 		}
@@ -674,8 +654,8 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 	 * 
 	 */
 	private void getAllPlayers() {
-		m_V_allPlayers = HOVerwaltung.instance().getModel().getCurrentPlayers();
-		m_numberOfPlayers = m_V_allPlayers.size();
+        List<core.model.player.Player> m_V_allPlayers = HOVerwaltung.instance().getModel().getCurrentPlayers();
+        int m_numberOfPlayers = m_V_allPlayers.size();
 		m_ar_allPlayers = new module.playeranalysis.skillCompare.Player[m_numberOfPlayers];
 		int i=0;
 		for ( core.model.player.Player p : m_V_allPlayers){
@@ -708,7 +688,7 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 		switch (selectedType) {
 		case 0:
 			for (int i = 0; i < m_i_ptmTopCount; i++)
-				if ((Boolean) m_playerTableModelTop.getValueAt(i, 0) == true)
+				if ((Boolean) m_playerTableModelTop.getValueAt(i, 0))
 					fetchPlayer((Integer) m_playerTableModelTop.getValueAt(i,
                             m_playerTableModelTop.getColumnCount() - 1));
 			break;
@@ -718,7 +698,7 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 
 				try {
 					tmpPos = ((Float) m_playerTableModelTop.getValueAt(i, 4)).byteValue();
-				} catch (Exception ex) {
+				} catch (Exception ignored) {
 				}
 				if (tmpPos == 0 && m_playerTableModelTop.getValueAt(i, 0) == Boolean.TRUE) {
 					fetchPlayer((Integer) m_playerTableModelTop.getValueAt(i,
@@ -734,7 +714,7 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 
 				try {
 					tmpPos = ((Float) m_playerTableModelTop.getValueAt(i, 4)).byteValue();
-				} catch (Exception ex) {
+				} catch (Exception ignored) {
 				}
 
 				if ((tmpPos > 0 && tmpPos < 8)
@@ -753,7 +733,7 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 
 				try {
 					tmpPos = ((Float) m_playerTableModelTop.getValueAt(i, 4)).byteValue();
-				} catch (Exception ex) {
+				} catch (Exception ignored) {
 				}
 				if ((tmpPos > 7 && tmpPos < 12)
 						&& m_playerTableModelTop.getValueAt(i, 0) == Boolean.TRUE) {
@@ -772,7 +752,7 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 
 				try {
 					tmpPos = ((Float) m_playerTableModelTop.getValueAt(i, 4)).byteValue();
-				} catch (Exception ex) {
+				} catch (Exception ignored) {
 				}
 				if ((tmpPos > 11 && tmpPos < 16)
 						&& m_playerTableModelTop.getValueAt(i, 0) == Boolean.TRUE) {
@@ -792,7 +772,7 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 
 				try {
 					tmpPos = ((Float) m_playerTableModelTop.getValueAt(i, 4)).byteValue();
-				} catch (Exception ex) {
+				} catch (Exception ignored) {
 				}
 				if ((tmpPos > 15 && tmpPos < 18)
 						&& m_playerTableModelTop.getValueAt(i, 0) == Boolean.TRUE) {
@@ -808,7 +788,7 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 		case 6:
 
 			for (int i = 0; i < m_i_ptmTopCount; i++) {
-				String gruppe = "";
+				String gruppe;
 
 				gruppe = m_playerTableModelTop.getValueAt(i, 5).toString();
 				if (gruppe.equals("A-Team")
@@ -825,7 +805,7 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 		case 7:
 
 			for (int i = 0; i < m_i_ptmTopCount; i++) {
-				String gruppe = "";
+				String gruppe;
 
 				gruppe = m_playerTableModelTop.getValueAt(i, 5).toString();
 				if (gruppe.equals("B-Team")
@@ -842,7 +822,7 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 		case 8:
 
 			for (int i = 0; i < m_i_ptmTopCount; i++) {
-				String gruppe = "";
+				String gruppe;
 
 				gruppe = m_playerTableModelTop.getValueAt(i, 5).toString();
 				if (gruppe.equals("C-Team")
@@ -859,7 +839,7 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 		case 9:
 
 			for (int i = 0; i < m_i_ptmTopCount; i++) {
-				String gruppe = "";
+				String gruppe;
 
 				gruppe = m_playerTableModelTop.getValueAt(i, 5).toString();
 				if (gruppe.equals("D-Team")
@@ -875,7 +855,7 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 
 		case 10:
 			for (int i = 0; i < m_i_ptmTopCount; i++) {
-				String gruppe = "";
+				String gruppe;
 
 				gruppe = m_playerTableModelTop.getValueAt(i, 5).toString();
 				if (gruppe.equals("E-Team")
@@ -897,12 +877,12 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 		}
 
 		// Create array from a table model vector
-		m_ar_setPlayers = new module.playeranalysis.skillCompare.Player[m_V_setPlayers.size()];
+        Player[] m_ar_setPlayers = new Player[m_V_setPlayers.size()];
 		for (int counter = 0; counter < m_ar_setPlayers.length; counter++) {
 			m_ar_setPlayers[counter] = m_V_setPlayers.elementAt(counter);
 		}
 
-		m_playerTableModelBottom = new PlayerTableModel(m_ar_setPlayers, 2);
+        PlayerTableModel m_playerTableModelBottom = new PlayerTableModel(m_ar_setPlayers, 2);
 		TableSorter sorter2 = new TableSorter(m_playerTableModelBottom);
 		m_jTableBottom = new PlayerTable(sorter2, m_playerTableModelBottom);
 		m_jTableBottom.setRowSelectionAllowed(true);
@@ -1039,7 +1019,7 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 			for (int u = 0; u < tmpAnzahl; u++) {
 				tmpPlayer = m_V_setPlayers.elementAt(u);
 				if (("" + tmpPlayer.getId()).compareTo(id) == 0) {
-					l_SpielerName.setText("" + tmpPlayer.getFullName());
+					l_SpielerName.setText(tmpPlayer.getFullName());
 					break;
 				}
 			}
