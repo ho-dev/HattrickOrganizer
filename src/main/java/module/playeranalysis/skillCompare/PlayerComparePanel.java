@@ -13,6 +13,7 @@ import core.model.UserParameter;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.Serial;
 import java.util.List;
 import java.util.Vector;
 
