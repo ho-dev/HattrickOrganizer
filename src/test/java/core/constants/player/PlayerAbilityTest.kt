@@ -2,6 +2,7 @@ package core.constants.player
 
 import core.HOModelBuilder
 import core.model.HOVerwaltung
+import core.model.TranslationFacility
 import core.model.Translator
 import core.util.Helper
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -17,7 +18,7 @@ class PlayerAbilityTest {
             .hrfId(42)
             .build()
         hoAdmin.model = hoModel
-        hoAdmin.setTranslator(Translator.LANGUAGE_NO_TRANSLATION)
+        TranslationFacility.setTranslator(Translator.load(Translator.LANGUAGE_NO_TRANSLATION))
     }
 
     @Test

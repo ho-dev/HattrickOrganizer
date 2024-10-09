@@ -27,6 +27,10 @@ import org.w3c.dom.Element;
 
 public class PluginIfaUtils {
 
+	private PluginIfaUtils() {
+		throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
+	}
+
 	private static String getTeamDetails(int teamID) throws Exception {
 		return MyConnector.instance().getTeamDetails(teamID);
 	}

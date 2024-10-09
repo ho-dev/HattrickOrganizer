@@ -1,7 +1,7 @@
 package tool.dbcleanup
 
 import core.gui.HOMainFrame
-import core.model.HOVerwaltung
+import core.model.TranslationFacility
 import java.awt.*
 import javax.swing.*
 
@@ -12,7 +12,7 @@ import javax.swing.*
  */
 internal class DBCleanupDialog(owner: JFrame?, private val cleanupTool: DBCleanupTool) : JDialog(
     owner,
-    HOVerwaltung.instance().getLanguageString("ls.menu.file.database.databasecleanup"),
+    TranslationFacility.tr("ls.menu.file.database.databasecleanup"),
     true
 ) {
     private val mainPanelOwnMatches = WeekSelectionPanel(DBCleanupTool.REMOVE_NONE)
@@ -45,22 +45,22 @@ internal class DBCleanupDialog(owner: JFrame?, private val cleanupTool: DBCleanu
 
         gbc.gridwidth = 2
         val textIntro = JLabel(
-            "<html>" + HOVerwaltung.instance().getLanguageString("dbcleanup.intro")
+            "<html>" + TranslationFacility.tr("dbcleanup.intro")
                 .replace("\n", "<br>") + "</html>"
         )
         mainPanel.add(textIntro, gbc)
 
         gbc.gridwidth = 1
-        val labelOwnMatches = JLabel(HOVerwaltung.instance().getLanguageString("dbcleanup.yourMatches"))
+        val labelOwnMatches = JLabel(TranslationFacility.tr("dbcleanup.yourMatches"))
         labelOwnMatches.font = labelOwnMatches.font.deriveFont(Font.BOLD)
 
-        val labelOtherMatches = JLabel(HOVerwaltung.instance().getLanguageString("dbcleanup.otherTeamsMatches"))
+        val labelOtherMatches = JLabel(TranslationFacility.tr("dbcleanup.otherTeamsMatches"))
         labelOtherMatches.font = labelOtherMatches.font.deriveFont(Font.BOLD)
 
-        val labelHrf = JLabel(HOVerwaltung.instance().getLanguageString("dbcleanup.hrf"))
+        val labelHrf = JLabel(TranslationFacility.tr("dbcleanup.hrf"))
         labelHrf.font = labelHrf.font.deriveFont(Font.BOLD)
 
-        val hrfAutoRemove = JCheckBox(HOVerwaltung.instance().getLanguageString("dbcleanup.hrfSmartRemove"))
+        val hrfAutoRemove = JCheckBox(TranslationFacility.tr("dbcleanup.hrfSmartRemove"))
         hrfAutoRemove.isSelected = true
 
         gbc.gridx = 0
@@ -94,7 +94,7 @@ internal class DBCleanupDialog(owner: JFrame?, private val cleanupTool: DBCleanu
         gbc.gridx = 0
         gbc.anchor = GridBagConstraints.WEST
         gbc.weightx = 1.0
-        mainPanel.add(JLabel(HOVerwaltung.instance().getLanguageString("dbcleanup.numMatches")), gbc)
+        mainPanel.add(JLabel(TranslationFacility.tr("dbcleanup.numMatches")), gbc)
 
         gbc.gridx = 1
         gbc.anchor = GridBagConstraints.LINE_END
@@ -104,7 +104,7 @@ internal class DBCleanupDialog(owner: JFrame?, private val cleanupTool: DBCleanu
         gbc.gridx = 0
         gbc.gridy++
         gbc.anchor = GridBagConstraints.LINE_START
-        mainPanel.add(JLabel(HOVerwaltung.instance().getLanguageString("dbcleanup.numHrfs")), gbc)
+        mainPanel.add(JLabel(TranslationFacility.tr("dbcleanup.numHrfs")), gbc)
         gbc.gridx = 1
         mainPanel.add(JLabel(cleanupTool.getHrfCount().toString()), gbc)
         gbc.gridy++
@@ -115,7 +115,7 @@ internal class DBCleanupDialog(owner: JFrame?, private val cleanupTool: DBCleanu
 
         // Add Buttons
         val buttonPanel = JPanel()
-        val cleanupNowButton = JButton(HOVerwaltung.instance().getLanguageString("dbcleanup.cleanupnow"))
+        val cleanupNowButton = JButton(TranslationFacility.tr("dbcleanup.cleanupnow"))
         cleanupNowButton.font = cleanupNowButton.font.deriveFont(Font.BOLD)
         cleanupNowButton.addActionListener {
             cleanupTool.cleanupMatches(
@@ -129,7 +129,7 @@ internal class DBCleanupDialog(owner: JFrame?, private val cleanupTool: DBCleanu
             isVisible = false
         }
 
-        val cancelButton = JButton(HOVerwaltung.instance().getLanguageString("ls.button.cancel"))
+        val cancelButton = JButton(TranslationFacility.tr("ls.button.cancel"))
         cancelButton.addActionListener {
             isVisible = false
         }

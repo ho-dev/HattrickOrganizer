@@ -1,17 +1,15 @@
 package module.teamAnalyzer.ui;
 
 import core.gui.comp.panel.ImagePanel;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import module.teamAnalyzer.vo.Filter;
 
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-
-import javax.swing.*;
 
 /**
  * Panel to automatically select games to download.
@@ -93,72 +91,72 @@ public class AutoFilterPanel extends JPanel implements ActionListener, KeyListen
         JPanel filters = new ImagePanel();
         filters.setLayout(new GridLayout(12, 2));
 
-        filters.add(new JLabel(HOVerwaltung.instance().getLanguageString("AutoFilterPanel.Max_Number"))); //$NON-NLS-1$
+        filters.add(new JLabel(TranslationFacility.tr("AutoFilterPanel.Max_Number"))); //$NON-NLS-1$
         number.setText(filter.getNumber() + "");
         number.addKeyListener(this);
         filters.add(number);
 
-        filters.add(new JLabel(HOVerwaltung.instance().getLanguageString("AutoFilterPanel.Home_Games"))); //$NON-NLS-1$
+        filters.add(new JLabel(TranslationFacility.tr("AutoFilterPanel.Home_Games"))); //$NON-NLS-1$
         homeGames.setSelected(filter.isHomeGames());
         homeGames.setOpaque(false);
         homeGames.addActionListener(this);
         filters.add(homeGames);
 
-        filters.add(new JLabel(HOVerwaltung.instance().getLanguageString("AutoFilterPanel.Away_Games"))); //$NON-NLS-1$
+        filters.add(new JLabel(TranslationFacility.tr("AutoFilterPanel.Away_Games"))); //$NON-NLS-1$
         awayGames.setSelected(filter.isAwayGames());
         awayGames.setOpaque(false);
         awayGames.addActionListener(this);
         filters.add(awayGames);
 
-        filters.add(new JLabel(HOVerwaltung.instance().getLanguageString("AutoFilterPanel.Win_Games"))); //$NON-NLS-1$
+        filters.add(new JLabel(TranslationFacility.tr("AutoFilterPanel.Win_Games"))); //$NON-NLS-1$
         win.setSelected(filter.isWin());
         win.setOpaque(false);
         win.addActionListener(this);
         filters.add(win);
 
-        filters.add(new JLabel(HOVerwaltung.instance().getLanguageString("AutoFilterPanel.Draw_Games"))); //$NON-NLS-1$
+        filters.add(new JLabel(TranslationFacility.tr("AutoFilterPanel.Draw_Games"))); //$NON-NLS-1$
         draw.setSelected(filter.isDraw());
         draw.setOpaque(false);
         draw.addActionListener(this);
         filters.add(draw);
 
-        filters.add(new JLabel(HOVerwaltung.instance().getLanguageString("AutoFilterPanel.Defeat_Games"))); //$NON-NLS-1$
+        filters.add(new JLabel(TranslationFacility.tr("AutoFilterPanel.Defeat_Games"))); //$NON-NLS-1$
         defeat.setSelected(filter.isDefeat());
         defeat.setOpaque(false);
         defeat.addActionListener(this);
         filters.add(defeat);
 
-        filters.add(new JLabel(HOVerwaltung.instance().getLanguageString("AutoFilterPanel.LeagueGame"))); //$NON-NLS-1$
+        filters.add(new JLabel(TranslationFacility.tr("AutoFilterPanel.LeagueGame"))); //$NON-NLS-1$
         league.setSelected(filter.isLeague());
         league.setOpaque(false);
         league.addActionListener(this);
         filters.add(league);
 
-        filters.add(new JLabel(HOVerwaltung.instance().getLanguageString("AutoFilterPanel.CupGame"))); //$NON-NLS-1$
+        filters.add(new JLabel(TranslationFacility.tr("AutoFilterPanel.CupGame"))); //$NON-NLS-1$
         cup.setSelected(filter.isCup());
         cup.setOpaque(false);
         cup.addActionListener(this);
         filters.add(cup);
 
-        filters.add(new JLabel(HOVerwaltung.instance().getLanguageString("AutoFilterPanel.FriendlyGame"))); //$NON-NLS-1$
+        filters.add(new JLabel(TranslationFacility.tr("AutoFilterPanel.FriendlyGame"))); //$NON-NLS-1$
         friendly.setSelected(filter.isFriendly());
         friendly.setOpaque(false);
         friendly.addActionListener(this);
         filters.add(friendly);
 
-        filters.add(new JLabel(HOVerwaltung.instance().getLanguageString("AutoFilterPanel.QualifierGame"))); //$NON-NLS-1$
+        filters.add(new JLabel(TranslationFacility.tr("AutoFilterPanel.QualifierGame"))); //$NON-NLS-1$
         qualifier.setSelected(filter.isQualifier());
         qualifier.setOpaque(false);
         qualifier.addActionListener(this);
         filters.add(qualifier);
 
-        filters.add(new JLabel(HOVerwaltung.instance().getLanguageString("AutoFilterPanel.MastersGame"))); //$NON-NLS-1$
+        filters.add(new JLabel(TranslationFacility.tr("AutoFilterPanel.MastersGame"))); //$NON-NLS-1$
         masters.setSelected(filter.isQualifier());
         masters.setOpaque(false);
         masters.addActionListener(this);
         filters.add(masters);
 
-        filters.add(new JLabel(HOVerwaltung.instance().getLanguageString("AutoFilterPanel.TournamentGame"))); //$NON-NLS-1$
+        filters.add(new JLabel(TranslationFacility.tr("AutoFilterPanel.TournamentGame"))); //$NON-NLS-1$
         tournament.setSelected(filter.isTournament());
         tournament.setOpaque(false);
         tournament.addActionListener(this);

@@ -1,5 +1,6 @@
 package tool.injury;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 
 /**
  * The Panel to calculate the number of needed updates
@@ -12,7 +13,7 @@ class UpdatePanel extends AbstractInjuryPanel {
 
     //~ Instance fields ----------------------------------------------------------------------------
 
-	private String msg = HOVerwaltung.instance().getLanguageString("UpdatesNeeded");
+	private String msg = TranslationFacility.tr("UpdatesNeeded");
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -49,9 +50,9 @@ class UpdatePanel extends AbstractInjuryPanel {
      * Reset the panel to default data
      */
     final void reset() {
-        setInputMsg(HOVerwaltung.instance().getLanguageString("ls.club.staff.medic"));
+        setInputMsg(TranslationFacility.tr("ls.club.staff.medic"));
         setOutputMsg(msg);
-        setHeader(HOVerwaltung.instance().getLanguageString("Injury2"));
+        setHeader(TranslationFacility.tr("Injury2"));
         setInputValue(HOVerwaltung.instance().getModel().getClub().getAerzte() + "");
     }
 }

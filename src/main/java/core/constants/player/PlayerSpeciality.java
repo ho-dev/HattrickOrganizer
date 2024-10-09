@@ -1,8 +1,9 @@
 package core.constants.player;
 
 import core.datatype.CBItem;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.match.Weather;
+
 import java.util.LinkedHashMap;
 
 public final class PlayerSpeciality {
@@ -24,13 +25,13 @@ public final class PlayerSpeciality {
 
 	public static final CBItem[] ITEMS = {
 			new CBItem("", NO_SPECIALITY),
-			new CBItem(HOVerwaltung.instance().getLanguageString("ls.player.speciality.technical"), TECHNICAL),
-			new CBItem(HOVerwaltung.instance().getLanguageString("ls.player.speciality.quick"), QUICK),
-			new CBItem(HOVerwaltung.instance().getLanguageString("ls.player.speciality.powerful"), POWERFUL),
-			new CBItem(HOVerwaltung.instance().getLanguageString("ls.player.speciality.unpredictable"), UNPREDICTABLE),
-			new CBItem(HOVerwaltung.instance().getLanguageString("ls.player.speciality.head"), HEAD),
-			new CBItem(HOVerwaltung.instance().getLanguageString("ls.player.speciality.regainer"), REGAINER),
-			new CBItem(HOVerwaltung.instance().getLanguageString("ls.player.speciality.support"), SUPPORT)
+			new CBItem(TranslationFacility.tr("ls.player.speciality.technical"), TECHNICAL),
+			new CBItem(TranslationFacility.tr("ls.player.speciality.quick"), QUICK),
+			new CBItem(TranslationFacility.tr("ls.player.speciality.powerful"), POWERFUL),
+			new CBItem(TranslationFacility.tr("ls.player.speciality.unpredictable"), UNPREDICTABLE),
+			new CBItem(TranslationFacility.tr("ls.player.speciality.head"), HEAD),
+			new CBItem(TranslationFacility.tr("ls.player.speciality.regainer"), REGAINER),
+			new CBItem(TranslationFacility.tr("ls.player.speciality.support"), SUPPORT)
 	};
 
 
@@ -39,13 +40,13 @@ public final class PlayerSpeciality {
 	static {
 		ITEMS2 = new LinkedHashMap<>();
 		ITEMS2.put(NO_SPECIALITY, "");
-		ITEMS2.put(TECHNICAL, HOVerwaltung.instance().getLanguageString("ls.player.speciality.technical"));
-		ITEMS2.put(QUICK, HOVerwaltung.instance().getLanguageString("ls.player.speciality.quick"));
-		ITEMS2.put(POWERFUL, HOVerwaltung.instance().getLanguageString("ls.player.speciality.powerful"));
-		ITEMS2.put(UNPREDICTABLE, HOVerwaltung.instance().getLanguageString("ls.player.speciality.unpredictable"));
-		ITEMS2.put(HEAD, HOVerwaltung.instance().getLanguageString("ls.player.speciality.head"));
-		ITEMS2.put(REGAINER, HOVerwaltung.instance().getLanguageString("ls.player.speciality.regainer"));
-		ITEMS2.put(SUPPORT, HOVerwaltung.instance().getLanguageString("ls.player.speciality.support"));
+		ITEMS2.put(TECHNICAL, TranslationFacility.tr("ls.player.speciality.technical"));
+		ITEMS2.put(QUICK, TranslationFacility.tr("ls.player.speciality.quick"));
+		ITEMS2.put(POWERFUL, TranslationFacility.tr("ls.player.speciality.powerful"));
+		ITEMS2.put(UNPREDICTABLE, TranslationFacility.tr("ls.player.speciality.unpredictable"));
+		ITEMS2.put(HEAD, TranslationFacility.tr("ls.player.speciality.head"));
+		ITEMS2.put(REGAINER, TranslationFacility.tr("ls.player.speciality.regainer"));
+		ITEMS2.put(SUPPORT, TranslationFacility.tr("ls.player.speciality.support"));
 	}
 
 
@@ -54,9 +55,9 @@ public final class PlayerSpeciality {
 
 	public static String toString(Integer speciality) {
 		if ( speciality != null) {
-			return ITEMS2.getOrDefault(speciality, HOVerwaltung.instance().getLanguageString("Unbestimmt"));
+			return ITEMS2.getOrDefault(speciality, TranslationFacility.tr("Unbestimmt"));
 		}
-		return HOVerwaltung.instance().getLanguageString("Unbestimmt");
+		return TranslationFacility.tr("Unbestimmt");
 	}
 
 

@@ -1,7 +1,7 @@
 package core.option;
 
 import core.gui.comp.panel.ImagePanel;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.util.Updater;
 
@@ -24,7 +24,7 @@ public final class ReleaseChannelPanel extends ImagePanel {
 	private final JRadioButton m_jrb_Beta = new JRadioButton(Updater.ReleaseChannel.BETA.label, false);
 	private final JRadioButton m_jrb_Dev = new JRadioButton(Updater.ReleaseChannel.DEV.label, false);
 	private final ButtonGroup m_bg_ButtonGroup = new ButtonGroup();
-	private final JLabel m_jl_PleaseSelect = new JLabel(HOVerwaltung.instance().getLanguageString("options.release_channels_pleaseSelect"));
+	private final JLabel m_jl_PleaseSelect = new JLabel(TranslationFacility.tr("options.release_channels_pleaseSelect"));
 	private final JTextArea m_jta_Description = new JTextArea("", 8, 1);
 	private Updater.ReleaseChannel rc;
     private JCheckBox m_jchUpdateCheck;
@@ -49,7 +49,7 @@ public final class ReleaseChannelPanel extends ImagePanel {
 				ReleaseChannelLabel = source.getText();
 				core.model.UserParameter.temp().ReleaseChannel = ReleaseChannelLabel;
 				m_jta_Description.setText(
-						core.model.HOVerwaltung.instance().getLanguageString("options.release_channels_" +
+						TranslationFacility.tr("options.release_channels_" +
 								source.getText().toUpperCase(Locale.ENGLISH) + "_desc")
 				);
 				rc = Updater.ReleaseChannel.byLabel(ReleaseChannelLabel);
@@ -111,8 +111,8 @@ public final class ReleaseChannelPanel extends ImagePanel {
 		placement.gridy = 2;
 		add(m_jta_Description, placement);
 
-		m_jchUpdateCheck = new JCheckBox(core.model.HOVerwaltung.instance().getLanguageString("UpdateCheck"));
-        m_jchUpdateCheck.setToolTipText(core.model.HOVerwaltung.instance().getLanguageString("tt_Optionen_UpdateCheck"));
+		m_jchUpdateCheck = new JCheckBox(TranslationFacility.tr("UpdateCheck"));
+        m_jchUpdateCheck.setToolTipText(TranslationFacility.tr("tt_Optionen_UpdateCheck"));
         m_jchUpdateCheck.setSelected(UserParameter.instance().updateCheck);
         m_jchUpdateCheck.setOpaque(false);
         m_jchUpdateCheck.setEnabled(true);

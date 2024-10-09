@@ -1,12 +1,7 @@
 // %1374340947:de.hattrickorganizer.gui.matches%
 package module.matches;
 
-import core.constants.player.PlayerAbility;
-import core.constants.player.PlayerAggressiveness;
-import core.constants.player.PlayerAgreeability;
-import core.constants.player.PlayerHonesty;
-import core.constants.player.PlayerSkill;
-import core.constants.player.PlayerSpeciality;
+import core.constants.player.*;
 import core.db.DBManager;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.DoubleLabelEntries;
@@ -16,6 +11,7 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.match.MatchLineup;
 import core.model.match.MatchLineupPosition;
@@ -26,24 +22,12 @@ import core.util.HOLogger;
 import core.util.Helper;
 import module.playerOverview.PlayerStatusLabelEntry;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.Serial;
 import java.text.NumberFormat;
-
-import javax.swing.BorderFactory;
-import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 
 /**
  * Zeigt Details zu einem Player zu einer Zeit an
@@ -213,8 +197,8 @@ final class SpielerDetailDialog extends JDialog {
 		// Nicht gefunden
 		if (player == null) {
 			Helper.showMessage(owner,
-					HOVerwaltung.instance().getLanguageString("Fehler_Spielerdetails"),
-					HOVerwaltung.instance().getLanguageString("Fehler"), JOptionPane.ERROR_MESSAGE);
+					TranslationFacility.tr("Fehler_Spielerdetails"),
+					TranslationFacility.tr("Fehler"), JOptionPane.ERROR_MESSAGE);
 			return;
 		}
 
@@ -280,7 +264,7 @@ final class SpielerDetailDialog extends JDialog {
 
 			if (m_clPlayer.getBonus() > 0) {
 				bonus = " (" + m_clPlayer.getBonus() + "% "
-						+ HOVerwaltung.instance().getLanguageString("Bonus") + ")";
+						+ TranslationFacility.tr("Bonus") + ")";
 			}
 
 			m_jpGehalt.getLeft().setText(gehalttext + bonus);
@@ -330,7 +314,7 @@ final class SpielerDetailDialog extends JDialog {
 
 			if (m_clPlayer.getBonus() > 0) {
 				bonus = " (" + m_clPlayer.getBonus() + "% "
-						+ HOVerwaltung.instance().getLanguageString("Bonus") + ")";
+						+ TranslationFacility.tr("Bonus") + ")";
 			}
 
 			m_jpGehalt.getLeft().setText(gehalttext + bonus);
@@ -452,7 +436,7 @@ final class SpielerDetailDialog extends JDialog {
 		panel.add(label);
 		constraints.gridheight = 1;
 
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.name"));
+		label = new JLabel(TranslationFacility.tr("ls.player.name"));
 		constraints.gridx = 0;
 		constraints.weightx = 0.0;
 		constraints.gridy = 0;
@@ -467,7 +451,7 @@ final class SpielerDetailDialog extends JDialog {
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.age"));
+		label = new JLabel(TranslationFacility.tr("ls.player.age"));
 		constraints.gridx = 0;
 		constraints.weightx = 0.0;
 		constraints.gridy = 1;
@@ -482,7 +466,7 @@ final class SpielerDetailDialog extends JDialog {
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.nationality"));
+		label = new JLabel(TranslationFacility.tr("ls.player.nationality"));
 		constraints.gridx = 0;
 		constraints.weightx = 0.0;
 		constraints.gridy = 2;
@@ -497,7 +481,7 @@ final class SpielerDetailDialog extends JDialog {
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("Aufgestellt"));
+		label = new JLabel(TranslationFacility.tr("Aufgestellt"));
 		constraints.gridx = 0;
 		constraints.weightx = 0.0;
 		constraints.gridy = 3;
@@ -512,8 +496,8 @@ final class SpielerDetailDialog extends JDialog {
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("Aktuell") + " "
-				+ HOVerwaltung.instance().getLanguageString("Rating"));
+		label = new JLabel(TranslationFacility.tr("Aktuell") + " "
+				+ TranslationFacility.tr("Rating"));
 		constraints.gridx = 0;
 		constraints.weightx = 0.0;
 		constraints.gridy = 4;
@@ -528,7 +512,7 @@ final class SpielerDetailDialog extends JDialog {
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("BestePosition"));
+		label = new JLabel(TranslationFacility.tr("BestePosition"));
 		constraints.gridx = 0;
 		constraints.weightx = 0.0;
 		constraints.gridy = 5;
@@ -543,7 +527,7 @@ final class SpielerDetailDialog extends JDialog {
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("Gruppe"));
+		label = new JLabel(TranslationFacility.tr("Gruppe"));
 		constraints.gridx = 4;
 		constraints.weightx = 0.0;
 		constraints.gridy = 0;
@@ -560,7 +544,7 @@ final class SpielerDetailDialog extends JDialog {
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("Status"));
+		label = new JLabel(TranslationFacility.tr("Status"));
 		constraints.gridx = 4;
 		constraints.weightx = 0.0;
 		constraints.gridy = 1;
@@ -575,7 +559,7 @@ final class SpielerDetailDialog extends JDialog {
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.wage"));
+		label = new JLabel(TranslationFacility.tr("ls.player.wage"));
 		constraints.gridx = 4;
 		constraints.weightx = 0.0;
 		constraints.gridy = 2;
@@ -590,7 +574,7 @@ final class SpielerDetailDialog extends JDialog {
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.tsi"));
+		label = new JLabel(TranslationFacility.tr("ls.player.tsi"));
 		constraints.gridx = 4;
 		constraints.weightx = 0.0;
 		constraints.gridy = 3;
@@ -605,7 +589,7 @@ final class SpielerDetailDialog extends JDialog {
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("Rating"));
+		label = new JLabel(TranslationFacility.tr("Rating"));
 		constraints.gridx = 4;
 		constraints.weightx = 0.0;
 		constraints.gridy = 4;
@@ -631,7 +615,7 @@ final class SpielerDetailDialog extends JDialog {
 		panel.add(label);
 		constraints.gridwidth = 1;
 
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.experience"));
+		label = new JLabel(TranslationFacility.tr("ls.player.experience"));
 		constraints.gridx = 0;
 		constraints.weightx = 0.0;
 		constraints.gridy = 7;
@@ -652,7 +636,7 @@ final class SpielerDetailDialog extends JDialog {
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.form"));
+		label = new JLabel(TranslationFacility.tr("ls.player.form"));
 		constraints.gridx = 4;
 		constraints.weightx = 0.0;
 		constraints.gridy = 7;
@@ -673,7 +657,7 @@ final class SpielerDetailDialog extends JDialog {
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.skill.stamina"));
+		label = new JLabel(TranslationFacility.tr("ls.player.skill.stamina"));
 		constraints.gridx = 0;
 		constraints.weightx = 0.0;
 		constraints.gridy = 8;
@@ -694,7 +678,7 @@ final class SpielerDetailDialog extends JDialog {
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.skill.keeper"));
+		label = new JLabel(TranslationFacility.tr("ls.player.skill.keeper"));
 		constraints.gridx = 4;
 		constraints.weightx = 0.0;
 		constraints.gridy = 8;
@@ -715,7 +699,7 @@ final class SpielerDetailDialog extends JDialog {
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.skill.playmaking"));
+		label = new JLabel(TranslationFacility.tr("ls.player.skill.playmaking"));
 		constraints.gridx = 0;
 		constraints.weightx = 0.0;
 		constraints.gridy = 9;
@@ -736,7 +720,7 @@ final class SpielerDetailDialog extends JDialog {
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.skill.passing"));
+		label = new JLabel(TranslationFacility.tr("ls.player.skill.passing"));
 		constraints.gridx = 4;
 		constraints.weightx = 0.0;
 		constraints.gridy = 9;
@@ -757,7 +741,7 @@ final class SpielerDetailDialog extends JDialog {
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.skill.winger"));
+		label = new JLabel(TranslationFacility.tr("ls.player.skill.winger"));
 		constraints.gridx = 0;
 		constraints.weightx = 0.0;
 		constraints.gridy = 10;
@@ -778,7 +762,7 @@ final class SpielerDetailDialog extends JDialog {
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.skill.defending"));
+		label = new JLabel(TranslationFacility.tr("ls.player.skill.defending"));
 		constraints.gridx = 4;
 		constraints.weightx = 0.0;
 		constraints.gridy = 10;
@@ -799,7 +783,7 @@ final class SpielerDetailDialog extends JDialog {
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.skill.scoring"));
+		label = new JLabel(TranslationFacility.tr("ls.player.skill.scoring"));
 		constraints.gridx = 0;
 		constraints.weightx = 0.0;
 		constraints.gridy = 11;
@@ -820,7 +804,7 @@ final class SpielerDetailDialog extends JDialog {
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.skill.setpieces"));
+		label = new JLabel(TranslationFacility.tr("ls.player.skill.setpieces"));
 		constraints.gridx = 4;
 		constraints.weightx = 0.0;
 		constraints.gridy = 11;
@@ -852,7 +836,7 @@ final class SpielerDetailDialog extends JDialog {
 		panel.add(label);
 		constraints.gridheight = 1;
 
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.leadership"));
+		label = new JLabel(TranslationFacility.tr("ls.player.leadership"));
 		constraints.gridx = 8;
 		constraints.weightx = 0.0;
 		constraints.gridy = 0;
@@ -874,7 +858,7 @@ final class SpielerDetailDialog extends JDialog {
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.speciality"));
+		label = new JLabel(TranslationFacility.tr("ls.player.speciality"));
 		constraints.gridx = 8;
 		constraints.weightx = 0.0;
 		constraints.gridy = 1;
@@ -889,7 +873,7 @@ final class SpielerDetailDialog extends JDialog {
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.aggressiveness"));
+		label = new JLabel(TranslationFacility.tr("ls.player.aggressiveness"));
 		constraints.gridx = 8;
 		constraints.weightx = 0.0;
 		constraints.gridy = 2;
@@ -904,7 +888,7 @@ final class SpielerDetailDialog extends JDialog {
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.agreeability"));
+		label = new JLabel(TranslationFacility.tr("ls.player.agreeability"));
 		constraints.gridx = 8;
 		constraints.weightx = 0.0;
 		constraints.gridy = 3;
@@ -919,7 +903,7 @@ final class SpielerDetailDialog extends JDialog {
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.honesty"));
+		label = new JLabel(TranslationFacility.tr("ls.player.honesty"));
 		constraints.gridx = 8;
 		constraints.weightx = 0.0;
 		constraints.gridy = 4;
@@ -946,7 +930,7 @@ final class SpielerDetailDialog extends JDialog {
 		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
 
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("ToreFreund"));
+		label = new JLabel(TranslationFacility.tr("ToreFreund"));
 		constraints.gridx = 8;
 		constraints.weightx = 0.0;
 		constraints.gridy = 7;
@@ -961,7 +945,7 @@ final class SpielerDetailDialog extends JDialog {
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("ToreLiga"));
+		label = new JLabel(TranslationFacility.tr("ToreLiga"));
 		constraints.gridx = 8;
 		constraints.weightx = 0.0;
 		constraints.gridy = 8;
@@ -976,7 +960,7 @@ final class SpielerDetailDialog extends JDialog {
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("TorePokal"));
+		label = new JLabel(TranslationFacility.tr("TorePokal"));
 		constraints.gridx = 8;
 		constraints.weightx = 0.0;
 		constraints.gridy = 9;
@@ -991,7 +975,7 @@ final class SpielerDetailDialog extends JDialog {
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.career_goals"));
+		label = new JLabel(TranslationFacility.tr("ls.player.career_goals"));
 		constraints.gridx = 8;
 		constraints.weightx = 0.0;
 		constraints.gridy = 10;
@@ -1006,7 +990,7 @@ final class SpielerDetailDialog extends JDialog {
 		layout.setConstraints(component, constraints);
 		panel.add(component);
 
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("Hattricks"));
+		label = new JLabel(TranslationFacility.tr("Hattricks"));
 		constraints.gridx = 8;
 		constraints.weightx = 0.0;
 		constraints.gridy = 11;
@@ -1057,31 +1041,30 @@ final class SpielerDetailDialog extends JDialog {
 		subconstraints.insets = new Insets(1, 2, 1, 1);
 
 		JPanel subpanel = new ImagePanel(sublayout);
-		subpanel.setBorder(BorderFactory.createTitledBorder(HOVerwaltung.instance()
-				.getLanguageString("Rating")));
+		subpanel.setBorder(BorderFactory.createTitledBorder(TranslationFacility.tr("Rating")));
 
 		subconstraints.gridx = 0;
 		subconstraints.gridy = 0;
 		subconstraints.weightx = 0.0;
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("Maximal"));
+		label = new JLabel(TranslationFacility.tr("Maximal"));
 		sublayout.setConstraints(label, subconstraints);
 		subpanel.add(label);
 
 		subconstraints.gridx = 0;
 		subconstraints.gridy = 1;
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("Minimal"));
+		label = new JLabel(TranslationFacility.tr("Minimal"));
 		sublayout.setConstraints(label, subconstraints);
 		subpanel.add(label);
 
 		subconstraints.gridx = 0;
 		subconstraints.gridy = 2;
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("Durchschnitt"));
+		label = new JLabel(TranslationFacility.tr("Durchschnitt"));
 		sublayout.setConstraints(label, subconstraints);
 		subpanel.add(label);
 
 		subconstraints.gridx = 0;
 		subconstraints.gridy = 3;
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("Spiele"));
+		label = new JLabel(TranslationFacility.tr("Spiele"));
 		sublayout.setConstraints(label, subconstraints);
 		subpanel.add(label);
 
@@ -1154,8 +1137,7 @@ final class SpielerDetailDialog extends JDialog {
 		subconstraints.weighty = 0.0;
 		subconstraints.insets = new Insets(1, 2, 1, 1);
 		subpanel = new ImagePanel(sublayout);
-		subpanel.setBorder(BorderFactory.createTitledBorder(HOVerwaltung.instance()
-				.getLanguageString("Rating")
+		subpanel.setBorder(BorderFactory.createTitledBorder(TranslationFacility.tr("Rating")
 				+ " "
 				+ MatchRoleID.getNameForPosition(MatchRoleID
 				.getPosition(matchplayer.getRoleId(), matchplayer.getBehaviour()))));
@@ -1163,25 +1145,25 @@ final class SpielerDetailDialog extends JDialog {
 		subconstraints.gridx = 0;
 		subconstraints.gridy = 0;
 		subconstraints.weightx = 0.0;
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("Maximal"));
+		label = new JLabel(TranslationFacility.tr("Maximal"));
 		sublayout.setConstraints(label, subconstraints);
 		subpanel.add(label);
 
 		subconstraints.gridx = 0;
 		subconstraints.gridy = 1;
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("Minimal"));
+		label = new JLabel(TranslationFacility.tr("Minimal"));
 		sublayout.setConstraints(label, subconstraints);
 		subpanel.add(label);
 
 		subconstraints.gridx = 0;
 		subconstraints.gridy = 2;
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("Durchschnitt"));
+		label = new JLabel(TranslationFacility.tr("Durchschnitt"));
 		sublayout.setConstraints(label, subconstraints);
 		subpanel.add(label);
 
 		subconstraints.gridx = 0;
 		subconstraints.gridy = 3;
-		label = new JLabel(HOVerwaltung.instance().getLanguageString("Spiele"));
+		label = new JLabel(TranslationFacility.tr("Spiele"));
 		sublayout.setConstraints(label, subconstraints);
 		subpanel.add(label);
 

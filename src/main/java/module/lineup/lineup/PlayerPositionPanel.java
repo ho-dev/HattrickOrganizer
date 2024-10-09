@@ -11,6 +11,7 @@ import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.match.Weather;
 import core.model.player.IMatchRoleID;
@@ -21,14 +22,17 @@ import core.util.Helper;
 import module.lineup.Lineup;
 import module.lineup.LineupAssistantSelectorOverlay;
 import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import javax.swing.*;
+import java.util.Objects;
 
 import static core.model.UserParameter.GOALKEEPER_AT_TOP;
 import static core.model.UserParameter.POSITIONNAMES_SHORT;
@@ -800,7 +804,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
     }
 
     private String getLangStr(String key) {
-        return HOVerwaltung.instance().getLanguageString(key);
+        return TranslationFacility.tr(key);
     }
 
 }

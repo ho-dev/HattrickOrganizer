@@ -3,6 +3,7 @@ package module.teamAnalyzer;
 import java.awt.event.KeyEvent;
 
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.module.DefaultModule;
 import module.teamAnalyzer.ui.TeamAnalyzerPanel;
 import module.teamAnalyzer.ui.component.SettingPanel;
@@ -28,7 +29,7 @@ public final class TeamAnalyzerModule extends DefaultModule {
 
 	@Override
 	public String getDescription() {
-		return HOVerwaltung.instance().getLanguageString("TeamAnalyzer");
+		return TranslationFacility.tr("TeamAnalyzer");
 	}
 
 	@Override

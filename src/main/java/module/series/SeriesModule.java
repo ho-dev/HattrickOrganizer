@@ -1,10 +1,10 @@
 package module.series;
 
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.module.DefaultModule;
 
 import javax.swing.*;
-import java.awt.event.*;
+import java.awt.event.KeyEvent;
 
 
 public final class SeriesModule extends DefaultModule {
@@ -20,7 +20,7 @@ public final class SeriesModule extends DefaultModule {
 
 	@Override
 	public String getDescription() {
-		return HOVerwaltung.instance().getLanguageString("Ligatabelle");
+		return TranslationFacility.tr("Ligatabelle");
 	}
 
 	@Override

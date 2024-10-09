@@ -5,28 +5,22 @@ import core.gui.HOMainFrame;
 import core.gui.comp.ImageCheckbox;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
-import core.util.chart.HOLinesChart;
-import core.util.chart.LinesChartDataModel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.util.HOLogger;
 import core.util.Helper;
+import core.util.chart.HOLinesChart;
+import core.util.chart.LinesChartDataModel;
 import org.knowm.xchart.style.lines.SeriesLines;
 import org.knowm.xchart.style.markers.SeriesMarkers;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.text.NumberFormat;
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 
 /**
  * Panel Club in Module Statistics
@@ -401,6 +395,6 @@ public class ClubStatisticsPanel extends LazyImagePanel {
     }
 
     private String getLangStr(String key) {
-        return HOVerwaltung.instance().getLanguageString(key);
+        return TranslationFacility.tr(key);
     }
 }

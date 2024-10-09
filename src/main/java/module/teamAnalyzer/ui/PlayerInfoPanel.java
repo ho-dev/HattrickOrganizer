@@ -5,19 +5,13 @@ package module.teamAnalyzer.ui;
 
 import core.constants.player.PlayerAbility;
 import core.gui.comp.panel.ImagePanel;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import module.teamAnalyzer.manager.PlayerDataManager;
 import module.teamAnalyzer.vo.PlayerInfo;
 
-import java.awt.BorderLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.border.EtchedBorder;
+import java.awt.*;
 
 public class PlayerInfoPanel extends JPanel {
 
@@ -30,10 +24,10 @@ public class PlayerInfoPanel extends JPanel {
 	public PlayerInfoPanel() {
 		this.setLayout(new GridBagLayout());
 
-		addInfo(HOVerwaltung.instance().getLanguageString("ls.player.age"), ageLabel, 0, 0);
-		addInfo(HOVerwaltung.instance().getLanguageString("ls.player.tsi"), tsiLabel, 0, 1);
-		addInfo(HOVerwaltung.instance().getLanguageString("ls.player.form"), formLabel, 1, 0);
-		addInfo(HOVerwaltung.instance().getLanguageString("ls.player.short_experience"), expLabel,
+		addInfo(TranslationFacility.tr("ls.player.age"), ageLabel, 0, 0);
+		addInfo(TranslationFacility.tr("ls.player.tsi"), tsiLabel, 0, 1);
+		addInfo(TranslationFacility.tr("ls.player.form"), formLabel, 1, 0);
+		addInfo(TranslationFacility.tr("ls.player.short_experience"), expLabel,
 				1, 1);
 	}
 

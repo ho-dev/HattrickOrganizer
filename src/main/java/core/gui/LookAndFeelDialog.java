@@ -2,19 +2,20 @@ package core.gui;
 
 import core.gui.comp.icon.ColorIcon;
 
-import java.awt.*;
-import java.util.*;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import javax.swing.*;
-import javax.swing.table.*;
+import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableCellRenderer;
+import java.awt.*;
+import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class LookAndFeelDialog extends JDialog {
 
 	private static final long serialVersionUID = -5492754898221009950L;
 
 	public LookAndFeelDialog() {
+		super(HOMainFrame.instance(), "Look and Feel");
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		initComponents();
 		pack();

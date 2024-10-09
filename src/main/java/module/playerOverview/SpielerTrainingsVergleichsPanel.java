@@ -7,20 +7,21 @@ import core.gui.RefreshManager;
 import core.gui.Refreshable;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.model.AufstellungsListRenderer;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.player.Player;
-import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.io.Serial;
-import java.util.ArrayList;
-import java.util.List;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.Serial;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -41,7 +42,7 @@ public class SpielerTrainingsVergleichsPanel extends ImagePanel
 
     //~ Instance fields ----------------------------------------------------------------------------
 
-    private final JButton m_jbLoeschen = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.delete"));
+    private final JButton m_jbLoeschen = new JButton(TranslationFacility.tr("ls.button.delete"));
     private final JList<CBItem> m_jlHRFs = new JList<>();
     private final List<ChangeListener> changeListeners = new ArrayList<>();
 
@@ -70,7 +71,7 @@ public class SpielerTrainingsVergleichsPanel extends ImagePanel
 
     public final void actionPerformed(ActionEvent actionEvent) {
         final var hrfs = m_jlHRFs.getSelectedValuesList();
-        StringBuilder deleteInfoText = new StringBuilder(HOVerwaltung.instance().getLanguageString("ls.button.delete"));
+        StringBuilder deleteInfoText = new StringBuilder(TranslationFacility.tr("ls.button.delete"));
 
         if (hrfs.size() > 1) {
             deleteInfoText.append(" (").append(hrfs.size()).append(" Files) : ");
@@ -92,7 +93,7 @@ public class SpielerTrainingsVergleichsPanel extends ImagePanel
         }
 
         final int value = JOptionPane.showConfirmDialog(this, deleteInfoText.toString(),
-				HOVerwaltung.instance().getLanguageString("confirmation.title"), JOptionPane.YES_NO_OPTION);
+				TranslationFacility.tr("confirmation.title"), JOptionPane.YES_NO_OPTION);
 
         if (value == JOptionPane.OK_OPTION) {
             for (CBItem hrf : hrfs) {
@@ -152,7 +153,7 @@ public class SpielerTrainingsVergleichsPanel extends ImagePanel
 	private void initComponents() {
 		setLayout(new BorderLayout());
 
-        final JLabel hrfComparisonLabel = new JLabel(HOVerwaltung.instance().getLanguageString("VergleichsHRF"));
+        final JLabel hrfComparisonLabel = new JLabel(TranslationFacility.tr("VergleichsHRF"));
         hrfComparisonLabel.setBorder(BorderFactory.createEmptyBorder(2, 4, 2, 0));
 
 		add(hrfComparisonLabel, BorderLayout.NORTH);
@@ -185,11 +186,11 @@ public class SpielerTrainingsVergleichsPanel extends ImagePanel
                     new core.datatype.CBItem(
                             date.toLocaleDateTime()
                                     + " ( "
-                                    + core.model.HOVerwaltung.instance().getLanguageString("Season")
+                                    + TranslationFacility.tr("Season")
                                     + " "
                                     + trainingWeek.season
                                     + "  "
-                                    + core.model.HOVerwaltung.instance().getLanguageString("ls.training.week")
+                                    + TranslationFacility.tr("ls.training.week")
                                     + " "
                                     + trainingWeek.week
                                     + " )",

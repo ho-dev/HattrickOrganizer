@@ -1,14 +1,11 @@
 package module.playeranalysis;
 
-import java.awt.event.KeyEvent;
-
-import javax.swing.JPanel;
-import javax.swing.KeyStroke;
-
-
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.module.DefaultModule;
 import core.module.config.ModuleConfig;
+
+import javax.swing.*;
+import java.awt.event.KeyEvent;
 
 public final class PlayerAnalysisModule extends DefaultModule {
 	static final String SHOW_GAMEANALYSIS = "PA_PlayerAnalysis";
@@ -32,7 +29,7 @@ public final class PlayerAnalysisModule extends DefaultModule {
 
 	@Override
 	public String getDescription() {
-		return HOVerwaltung.instance().getLanguageString("SpielerAnalyse");
+		return TranslationFacility.tr("SpielerAnalyse");
 	}
 
 	@Override

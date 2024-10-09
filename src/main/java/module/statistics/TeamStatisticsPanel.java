@@ -1,22 +1,22 @@
 package module.statistics;
 
-import static core.gui.theme.HOColorName.PANEL_BORDER;
-import static core.gui.theme.HOColorName.TABLEENTRY_BG;
 import core.db.DBManager;
 import core.gui.HOMainFrame;
 import core.gui.comp.ImageCheckbox;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
-import core.util.chart.LinesChartDataModel;
 import core.gui.theme.GroupTeamFactory;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.util.HOLogger;
 import core.util.Helper;
 import core.util.chart.HOLinesChart;
+import core.util.chart.LinesChartDataModel;
 import org.knowm.xchart.style.lines.SeriesLines;
 import org.knowm.xchart.style.markers.SeriesMarkers;
+
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
@@ -24,7 +24,9 @@ import java.awt.event.FocusEvent;
 import java.awt.event.ItemEvent;
 import java.io.Serial;
 import java.text.NumberFormat;
-import javax.swing.*;
+
+import static core.gui.theme.HOColorName.PANEL_BORDER;
+import static core.gui.theme.HOColorName.TABLEENTRY_BG;
 
 /**
  * The Team statistics panel
@@ -59,34 +61,34 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 	private final String sSum = "\u03A3 ";
 	private final String sAvg = "\u00D8 ";
 
-	private final String sumLeadership = sSum + HOVerwaltung.instance().getLanguageString("ls.player.leadership");
-	private final String avgLeadership = sAvg + HOVerwaltung.instance().getLanguageString("ls.player.leadership");
-	private final String sumXP = sSum + HOVerwaltung.instance().getLanguageString("ls.player.experience");
-	private final String avgXP = sAvg + HOVerwaltung.instance().getLanguageString("ls.player.experience");
-	private final String sumTSI = sSum + HOVerwaltung.instance().getLanguageString("ls.player.tsi");
-	private final String avgTSI = sAvg + HOVerwaltung.instance().getLanguageString("ls.player.tsi");
-	private final String sumWage = sSum + HOVerwaltung.instance().getLanguageString("ls.player.wage");
-	private final String avgWage = sAvg + HOVerwaltung.instance().getLanguageString("ls.player.wage");
-	private final String avgForm = sAvg + HOVerwaltung.instance().getLanguageString("ls.player.form");
-	private final String sumForm = sSum + HOVerwaltung.instance().getLanguageString("ls.player.form");
-	private final String avgStamina = sAvg + HOVerwaltung.instance().getLanguageString("ls.player.skill.stamina");
-	private final String sumStamina = sSum + HOVerwaltung.instance().getLanguageString("ls.player.skill.stamina");
-	private final String avgLoyalty = sAvg + HOVerwaltung.instance().getLanguageString("ls.player.loyalty");
-	private final String sumLoyalty = sSum + HOVerwaltung.instance().getLanguageString("ls.player.loyalty");
-	private final String sumGK = sSum + HOVerwaltung.instance().getLanguageString("ls.player.skill.keeper");
-	private final String avgGK = sAvg + HOVerwaltung.instance().getLanguageString("ls.player.skill.keeper");
-	private final String sumDE = sSum + HOVerwaltung.instance().getLanguageString("ls.player.skill.defending");
-	private final String avgDE = sAvg + HOVerwaltung.instance().getLanguageString("ls.player.skill.defending");
-	private final String sumPM = sSum + HOVerwaltung.instance().getLanguageString("ls.player.skill.playmaking");
-	private final String avgPM = sAvg + HOVerwaltung.instance().getLanguageString("ls.player.skill.playmaking");
-	private final String sumPS = sSum + HOVerwaltung.instance().getLanguageString("ls.player.skill.passing");
-	private final String avgPS = sAvg + HOVerwaltung.instance().getLanguageString("ls.player.skill.passing");
-	private final String sumWI = sSum + HOVerwaltung.instance().getLanguageString("ls.player.skill.winger");
-	private final String avgWI = sAvg + HOVerwaltung.instance().getLanguageString("ls.player.skill.winger");
-	private final String sumSC = sSum + HOVerwaltung.instance().getLanguageString("ls.player.skill.scoring");
-	private final String avgSC = sAvg + HOVerwaltung.instance().getLanguageString("ls.player.skill.scoring");
-	private final String sumSP = sSum + HOVerwaltung.instance().getLanguageString("ls.player.skill.setpieces");
-	private final String avgSP = sAvg + HOVerwaltung.instance().getLanguageString("ls.player.skill.setpieces");
+	private final String sumLeadership = sSum + TranslationFacility.tr("ls.player.leadership");
+	private final String avgLeadership = sAvg + TranslationFacility.tr("ls.player.leadership");
+	private final String sumXP = sSum + TranslationFacility.tr("ls.player.experience");
+	private final String avgXP = sAvg + TranslationFacility.tr("ls.player.experience");
+	private final String sumTSI = sSum + TranslationFacility.tr("ls.player.tsi");
+	private final String avgTSI = sAvg + TranslationFacility.tr("ls.player.tsi");
+	private final String sumWage = sSum + TranslationFacility.tr("ls.player.wage");
+	private final String avgWage = sAvg + TranslationFacility.tr("ls.player.wage");
+	private final String avgForm = sAvg + TranslationFacility.tr("ls.player.form");
+	private final String sumForm = sSum + TranslationFacility.tr("ls.player.form");
+	private final String avgStamina = sAvg + TranslationFacility.tr("ls.player.skill.stamina");
+	private final String sumStamina = sSum + TranslationFacility.tr("ls.player.skill.stamina");
+	private final String avgLoyalty = sAvg + TranslationFacility.tr("ls.player.loyalty");
+	private final String sumLoyalty = sSum + TranslationFacility.tr("ls.player.loyalty");
+	private final String sumGK = sSum + TranslationFacility.tr("ls.player.skill.keeper");
+	private final String avgGK = sAvg + TranslationFacility.tr("ls.player.skill.keeper");
+	private final String sumDE = sSum + TranslationFacility.tr("ls.player.skill.defending");
+	private final String avgDE = sAvg + TranslationFacility.tr("ls.player.skill.defending");
+	private final String sumPM = sSum + TranslationFacility.tr("ls.player.skill.playmaking");
+	private final String avgPM = sAvg + TranslationFacility.tr("ls.player.skill.playmaking");
+	private final String sumPS = sSum + TranslationFacility.tr("ls.player.skill.passing");
+	private final String avgPS = sAvg + TranslationFacility.tr("ls.player.skill.passing");
+	private final String sumWI = sSum + TranslationFacility.tr("ls.player.skill.winger");
+	private final String avgWI = sAvg + TranslationFacility.tr("ls.player.skill.winger");
+	private final String sumSC = sSum + TranslationFacility.tr("ls.player.skill.scoring");
+	private final String avgSC = sAvg + TranslationFacility.tr("ls.player.skill.scoring");
+	private final String sumSP = sSum + TranslationFacility.tr("ls.player.skill.setpieces");
+	private final String avgSP = sAvg + TranslationFacility.tr("ls.player.skill.setpieces");
 
 	@Override
 	protected void initialize() {
@@ -458,7 +460,6 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 
 	private void initComponents() {
 		UserParameter gup = UserParameter.instance();
-		HOVerwaltung hov = HOVerwaltung.instance();
 		JLabel labelWeeks, labelSquad, labelAggType;
 		String textLabel;
 
@@ -482,7 +483,7 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 		panel2.setLayout(layout2);
 
 		int gridy = 0;
-		labelWeeks = new JLabel(hov.getLanguageString("Wochen"));
+		labelWeeks = new JLabel(TranslationFacility.tr("Wochen"));
 		constraints2.anchor = GridBagConstraints.WEST;
 		constraints2.gridx = 0;
 		constraints2.gridy = ++gridy;
@@ -499,25 +500,25 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 		panel2.add(jtfNumberOfHRF);
 
 		constraints2.gridx = 2;
-		jbApply = new JButton(hov.getLanguageString("ls.button.apply"));
+		jbApply = new JButton(TranslationFacility.tr("ls.button.apply"));
 		constraints2.insets = new Insets(10,20,0,0);  //top padding
 		layout2.setConstraints(jbApply, constraints2);
-		jbApply.setToolTipText(hov.getLanguageString("tt_Statistik_HRFAnzahluebernehmen"));
+		jbApply.setToolTipText(TranslationFacility.tr("tt_Statistik_HRFAnzahluebernehmen"));
 		panel2.add(jbApply);
 
 
 		constraints2.insets = new Insets(20,0,0,0);
 		constraints2.gridwidth = 3;
-		jcbHelpLines = new JCheckBox(hov.getLanguageString("Hilflinien"), gup.statistikAlleHilfslinien);
+		jcbHelpLines = new JCheckBox(TranslationFacility.tr("Hilflinien"), gup.statistikAlleHilfslinien);
 		add(jcbHelpLines, ++gridy, layout2, constraints2);
 
 		constraints2.insets = new Insets(20,0,0,0);
 		constraints2.gridwidth = 3;
-		jcbInscribe = new JCheckBox(hov.getLanguageString("Beschriftung"), gup.statistikAlleBeschriftung);
+		jcbInscribe = new JCheckBox(TranslationFacility.tr("Beschriftung"), gup.statistikAlleBeschriftung);
 		add(jcbInscribe, ++gridy, layout2, constraints2);
 
 
-		labelSquad = new JLabel(hov.getLanguageString("Gruppe"));
+		labelSquad = new JLabel(TranslationFacility.tr("Gruppe"));
 		constraints2.gridx = 0;
 		constraints2.gridy = ++gridy;
 		constraints2.gridwidth = 1;
@@ -534,21 +535,21 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 		layout2.setConstraints(jcbTeam, constraints2);
 		panel2.add(jcbTeam);
 
-		labelAggType = new JLabel(hov.getLanguageString("ls.agg"));
+		labelAggType = new JLabel(TranslationFacility.tr("ls.agg"));
 		constraints2.gridx = 0;
 		constraints2.gridy = ++gridy;
 		constraints2.gridwidth = 1;
 		constraints2.insets = new Insets(0,0,0,0);  //top padding
 		panel2.add(labelAggType, constraints2);
 
-		String[] sAggType = { hov.getLanguageString("Gesamt"), hov.getLanguageString("Durchschnitt")};
+		String[] sAggType = { TranslationFacility.tr("Gesamt"), TranslationFacility.tr("Durchschnitt")};
 		jcbAggType = new JComboBox<>(sAggType);
 		jcbAggType.setSelectedIndex(gup.statisticsTeamSumOrAverage);
 		bSum = (gup.statisticsTeamSumOrAverage == 0);
 		constraints2.insets = new Insets(0,5,0,0);  //top padding
 		layout2.setConstraints(jcbAggType, constraints2);
 
-		jcbAggType.setToolTipText(hov.getLanguageString("ls.module.statistic.team.choose_sum_or_average"));
+		jcbAggType.setToolTipText(TranslationFacility.tr("ls.module.statistic.team.choose_sum_or_average"));
 		constraints2.gridx = 1;
 		constraints2.gridwidth = 2;
 		panel2.add(jcbAggType, constraints2);
@@ -620,7 +621,7 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 
 		// TSI =============================================================================================
 		textLabel = bSum ? sumTSI : avgTSI;
-		textLabel += " (" + hov.getLanguageString("ls.chart.second_axis") + ")";
+		textLabel += " (" + TranslationFacility.tr("ls.chart.second_axis") + ")";
 		constraints2.insets = new Insets(20,0,0,0);
 		jcbTSI = new ImageCheckbox(textLabel, Colors.getColor(Colors.COLOR_PLAYER_TSI), gup.statistikAllTSI);
 		add(jcbTSI, ++gridy, layout2, constraints2);
@@ -628,7 +629,7 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 		// WAGE ============================================================================================
 		constraints2.insets = new Insets(0,0,0,0);
 		textLabel = bSum ? sumWage : avgWage;
-		textLabel += " (" + hov.getLanguageString("ls.chart.second_axis") + ")";
+		textLabel += " (" + TranslationFacility.tr("ls.chart.second_axis") + ")";
 		jcbWage = new ImageCheckbox(textLabel, Colors.getColor(Colors.COLOR_PLAYER_WAGE), gup.statistikAllWages);
 		add(jcbWage, ++gridy, layout2, constraints2);
 
@@ -790,8 +791,8 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 						Colors.getColor(Colors.COLOR_PLAYER_SP));
 			}
 
-			mChart.setAllValues(models, statistikWerte[28], format, HOVerwaltung.instance()
-					.getLanguageString("Wochen"), "", jcbInscribe.isSelected(), jcbHelpLines.isSelected());
+			mChart.setAllValues(models, statistikWerte[28], format,
+					TranslationFacility.tr("Wochen"), "", jcbInscribe.isSelected(), jcbHelpLines.isSelected());
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(), e);
 		}

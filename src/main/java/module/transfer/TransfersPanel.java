@@ -4,16 +4,17 @@ import core.db.DBManager;
 import core.gui.IRefreshable;
 import core.gui.RefreshManager;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.player.Player;
 import module.transfer.history.HistoryPane;
 import module.transfer.scout.TransferScoutPanel;
 import module.transfer.transfertype.TransferTypePane;
-import java.awt.BorderLayout;
+
+import javax.swing.*;
+import java.awt.*;
 import java.io.Serial;
 import java.util.List;
 import java.util.Vector;
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
 
 public class TransfersPanel extends JPanel implements IRefreshable {
 
@@ -37,13 +38,13 @@ public class TransfersPanel extends JPanel implements IRefreshable {
 		final JTabbedPane tabPane = new JTabbedPane();
 
 		historyPane = new HistoryPane();
-		tabPane.add(HOVerwaltung.instance().getLanguageString("History"), historyPane); //$NON-NLS-1$
+		tabPane.add(TranslationFacility.tr("History"), historyPane); //$NON-NLS-1$
 
 		transferTypePane = new TransferTypePane();
-		tabPane.add(HOVerwaltung.instance().getLanguageString("TransferTypes"), transferTypePane);
+		tabPane.add(TranslationFacility.tr("TransferTypes"), transferTypePane);
 
 		scoutPanel = new TransferScoutPanel();
-		tabPane.add(HOVerwaltung.instance().getLanguageString("TransferScout"), scoutPanel);
+		tabPane.add(TranslationFacility.tr("TransferScout"), scoutPanel);
 
 		// this.overviewPanel = new OverviewPanel();
 		// tabPane.add("Financial", this.overviewPanel);

@@ -17,10 +17,8 @@ import org.xml.sax.SAXException;
 
 public class XMLUtils {
 
-	/**
-	 * Utility class - private constructor enforces noninstantiability.
-	 */
 	private XMLUtils() {
+		throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
 	}
 
 	/**

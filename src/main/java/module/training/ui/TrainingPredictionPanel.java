@@ -2,12 +2,13 @@ package module.training.ui;
 
 import core.gui.RefreshManager;
 import core.gui.comp.panel.LazyImagePanel;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.player.Player;
 import module.training.ui.model.ModelChange;
 import module.training.ui.model.TrainingModel;
-import java.awt.*;
+
 import javax.swing.*;
+import java.awt.*;
 
 public class TrainingPredictionPanel extends LazyImagePanel  {
 
@@ -63,7 +64,7 @@ public class TrainingPredictionPanel extends LazyImagePanel  {
 
         setOpaque(false);
 
-        JLabel title = new JLabel(HOVerwaltung.instance().getLanguageString("ls.module.training.training_prediction"),
+        JLabel title = new JLabel(TranslationFacility.tr("ls.module.training.training_prediction"),
                 SwingConstants.CENTER);
 
         title.setOpaque(false);

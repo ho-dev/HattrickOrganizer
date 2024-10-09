@@ -1,6 +1,7 @@
 package module.youth;
 
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
+
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.event.ChangeListener;
@@ -92,8 +93,8 @@ public class YouthSkillInfoEditor extends JPanel {
     }
 
     private JLabel skillLabel = new JLabel();
-    private final SkillInfoSlider skillStartValue = new SkillInfoSlider(HOVerwaltung.instance().getLanguageString("ls.youth.player.skillstartvalue") + ": ");
-    private final SkillInfoSlider skillCurrentValue = new SkillInfoSlider(HOVerwaltung.instance().getLanguageString("ls.youth.player.skillcurrentvalue") + ": ");
+    private final SkillInfoSlider skillStartValue = new SkillInfoSlider(TranslationFacility.tr("ls.youth.player.skillstartvalue") + ": ");
+    private final SkillInfoSlider skillCurrentValue = new SkillInfoSlider(TranslationFacility.tr("ls.youth.player.skillcurrentvalue") + ": ");
     private ImageIcon getImageIcon4Color(Color color) {
         final BufferedImage bufferedImage = new BufferedImage(14, 14, BufferedImage.TYPE_INT_ARGB);
 
@@ -119,7 +120,7 @@ public class YouthSkillInfoEditor extends JPanel {
 
     public void setSkillInfo(YouthSkillInfo skillInfo) {
         this.skillInfo = skillInfo;
-        skillLabel.setText(HOVerwaltung.instance().getLanguageString("ls.youth.player." + getSkillName(skillInfo.getSkillID())) + ": ");
+        skillLabel.setText(TranslationFacility.tr("ls.youth.player." + getSkillName(skillInfo.getSkillID())) + ": ");
         skillStartValue.set(skillInfo, skillInfo.getStartValue(), skillInfo.getStartValueRange());
         skillCurrentValue.set(skillInfo, skillInfo.getCurrentValue(), skillInfo.getCurrentValueRange());
     }

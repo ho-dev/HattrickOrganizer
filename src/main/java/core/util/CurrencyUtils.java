@@ -11,7 +11,9 @@ public class CurrencyUtils {
 
 	public static String CURRENCYSYMBOL = "";
 
-	private CurrencyUtils() {}
+	private CurrencyUtils() {
+		throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
+	}
 
 	/**
 	 * convert currency value in swedish krone to local currency

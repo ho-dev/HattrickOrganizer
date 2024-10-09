@@ -7,23 +7,14 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.FactorObject;
 import core.model.FormulaFactors;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Insets;
+import javax.swing.*;
+import javax.swing.event.ChangeListener;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemListener;
 import java.util.Objects;
-
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.event.ChangeListener;
 
 
 
@@ -62,8 +53,8 @@ final class FormelPanel extends ImagePanel implements ActionListener, ItemListen
 	public void actionPerformed(java.awt.event.ActionEvent actionEvent) {
         if (actionEvent.getSource().equals(m_jbResetToDefaults)) {
             final int value = JOptionPane.showConfirmDialog(this,
-                                                            HOVerwaltung.instance().getLanguageString("FrageFormelwertReset"),
-                                                            HOVerwaltung.instance().getLanguageString("confirmation.title"),
+                                                            TranslationFacility.tr("FrageFormelwertReset"),
+                                                            TranslationFacility.tr("confirmation.title"),
                                                             JOptionPane.YES_NO_OPTION);
 
             if (value == JOptionPane.YES_OPTION) {
@@ -79,7 +70,7 @@ final class FormelPanel extends ImagePanel implements ActionListener, ItemListen
             //Filechooser
             final javax.swing.JFileChooser fileChooser = new javax.swing.JFileChooser();
             fileChooser.setDialogType(javax.swing.JFileChooser.SAVE_DIALOG);
-            fileChooser.setDialogTitle(HOVerwaltung.instance().getLanguageString("FormelwertImport"));
+            fileChooser.setDialogTitle(TranslationFacility.tr("FormelwertImport"));
 
             final java.io.File pfad = new java.io.File(core.model.UserParameter.temp().hrfImport_HRFPath);
 
@@ -89,7 +80,7 @@ final class FormelPanel extends ImagePanel implements ActionListener, ItemListen
 
             final core.file.ExampleFileFilter filter = new core.file.ExampleFileFilter();
             filter.addExtension("xml");
-            filter.setDescription(HOVerwaltung.instance().getLanguageString("filetypedescription.xml"));
+            filter.setDescription(TranslationFacility.tr("filetypedescription.xml"));
             fileChooser.setFileFilter(filter);
 
             final int returnVal = fileChooser.showOpenDialog(this);
@@ -103,7 +94,7 @@ final class FormelPanel extends ImagePanel implements ActionListener, ItemListen
             //Filechooser
             final javax.swing.JFileChooser fileChooser = new javax.swing.JFileChooser();
             fileChooser.setDialogType(javax.swing.JFileChooser.SAVE_DIALOG);
-            fileChooser.setDialogTitle(HOVerwaltung.instance().getLanguageString("FormelwertExport"));
+            fileChooser.setDialogTitle(TranslationFacility.tr("FormelwertExport"));
 
             final java.io.File pfad = new java.io.File(core.model.UserParameter.temp().hrfImport_HRFPath);
 
@@ -113,7 +104,7 @@ final class FormelPanel extends ImagePanel implements ActionListener, ItemListen
 
             final core.file.ExampleFileFilter filter = new core.file.ExampleFileFilter();
             filter.addExtension("xml");
-            filter.setDescription(HOVerwaltung.instance().getLanguageString("filetypedescription.xml"));
+            filter.setDescription(TranslationFacility.tr("filetypedescription.xml"));
             fileChooser.setFileFilter(filter);
 
             final int returnVal = fileChooser.showSaveDialog(this);
@@ -204,7 +195,7 @@ final class FormelPanel extends ImagePanel implements ActionListener, ItemListen
 
         setLayout(layout);
 
-        final JLabel label = new JLabel(HOVerwaltung.instance().getLanguageString("Position"));
+        final JLabel label = new JLabel(TranslationFacility.tr("Position"));
         constraints.anchor = GridBagConstraints.WEST;
         constraints.gridx = 0;
         constraints.gridy = 0;
@@ -262,9 +253,9 @@ final class FormelPanel extends ImagePanel implements ActionListener, ItemListen
         panel.add(m_jpStandard);
 
         short NORM_FAKTOR = 52;
-        m_jpNORMALISATIONFACTOR = new SliderPanel(HOVerwaltung.instance().getLanguageString("Preference.Panel.Formula.NormalisationFactor.Short"),
+        m_jpNORMALISATIONFACTOR = new SliderPanel(TranslationFacility.tr("Preference.Panel.Formula.NormalisationFactor.Short"),
                 100, 0, NORM_FAKTOR, 1.0f, 80);
-        m_jpNORMALISATIONFACTOR.setToolTipText(HOVerwaltung.instance().getLanguageString("Preference.Panel.Formula.NormalisationFactor"));
+        m_jpNORMALISATIONFACTOR.setToolTipText(TranslationFacility.tr("Preference.Panel.Formula.NormalisationFactor"));
         m_jpNORMALISATIONFACTOR.addChangeListener(this);
         panel.add(m_jpNORMALISATIONFACTOR);
 
@@ -277,7 +268,7 @@ final class FormelPanel extends ImagePanel implements ActionListener, ItemListen
         layout.setConstraints(panel, constraints);
         add(panel);
 
-        m_jbResetToDefaults = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.reset"));
+        m_jbResetToDefaults = new JButton(TranslationFacility.tr("ls.button.reset"));
         m_jbResetToDefaults.addActionListener(this);
 
         constraints.anchor = GridBagConstraints.WEST;
@@ -287,7 +278,7 @@ final class FormelPanel extends ImagePanel implements ActionListener, ItemListen
         layout.setConstraints(m_jbResetToDefaults, constraints);
         add(m_jbResetToDefaults);
 
-        m_jbImport = new JButton(HOVerwaltung.instance().getLanguageString("FormelwertImport"));
+        m_jbImport = new JButton(TranslationFacility.tr("FormelwertImport"));
         m_jbImport.addActionListener(this);
 
         constraints.anchor = GridBagConstraints.WEST;
@@ -297,7 +288,7 @@ final class FormelPanel extends ImagePanel implements ActionListener, ItemListen
         layout.setConstraints(m_jbImport, constraints);
         add(m_jbImport);
 
-        m_jbExport = new JButton(HOVerwaltung.instance().getLanguageString("FormelwertExport"));
+        m_jbExport = new JButton(TranslationFacility.tr("FormelwertExport"));
         m_jbExport.addActionListener(this);
 
         constraints.anchor = GridBagConstraints.WEST;

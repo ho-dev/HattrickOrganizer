@@ -6,19 +6,17 @@ import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.player.Player;
 import core.option.SliderPanel;
 import core.util.Helper;
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 final class PlayerSubskillOffsetDialog extends JDialog implements ActionListener, ChangeListener {
 
@@ -49,7 +47,7 @@ final class PlayerSubskillOffsetDialog extends JDialog implements ActionListener
 	PlayerSubskillOffsetDialog(javax.swing.JFrame owner, Player player) {
 		super(owner, true);
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-		setTitle(HOVerwaltung.instance().getLanguageString("OffsetTitle") + " " + player.getShortName());
+		setTitle(TranslationFacility.tr("OffsetTitle") + " " + player.getShortName());
 
 		m_clPlayer = player;
 
@@ -149,7 +147,7 @@ final class PlayerSubskillOffsetDialog extends JDialog implements ActionListener
 		constraints.gridx = 0;
 		constraints.gridy = 2;
 		constraints.gridwidth = 1;
-		getContentPane().add(new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.tsi")), constraints);
+		getContentPane().add(new JLabel(TranslationFacility.tr("ls.player.tsi")), constraints);
 
 		constraints.anchor = GridBagConstraints.EAST;
 		constraints.gridx = 1;
@@ -159,7 +157,7 @@ final class PlayerSubskillOffsetDialog extends JDialog implements ActionListener
 		getContentPane().add(tsi, constraints);
 
 		okButton =
-				new JButton(HOVerwaltung.instance().getLanguageString("ls.button.ok"));
+				new JButton(TranslationFacility.tr("ls.button.ok"));
 		okButton.addActionListener(this);
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.gridx = 0;
@@ -170,7 +168,7 @@ final class PlayerSubskillOffsetDialog extends JDialog implements ActionListener
 		getContentPane().add(okButton);
 
 		cancelButton =
-			new JButton(HOVerwaltung.instance().getLanguageString("ls.button.cancel"));
+			new JButton(TranslationFacility.tr("ls.button.cancel"));
 		cancelButton.addActionListener(this);
 
 		constraints.anchor = GridBagConstraints.EAST;

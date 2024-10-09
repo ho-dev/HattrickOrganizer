@@ -7,8 +7,9 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
-import core.model.match.*;
+import core.model.match.Weather;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import core.util.HOLogger;
@@ -16,12 +17,12 @@ import module.lineup.AllTeamsPanel;
 import module.lineup.Lineup;
 import module.lineup.LineupPanel;
 
+import javax.swing.*;
+import javax.swing.border.Border;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.*;
-import javax.swing.border.Border;
 
 import static core.model.UserParameter.GOALKEEPER_AT_TOP;
 
@@ -359,7 +360,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 		constraints.gridy = 4;
 		constraints.gridwidth = 7;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		JLabel label1 = new JLabel(HOVerwaltung.instance().getLanguageString("moduleLineup.LineupPanel.SubstitutesLabel"), JLabel.CENTER);
+		JLabel label1 = new JLabel(TranslationFacility.tr("moduleLineup.LineupPanel.SubstitutesLabel"), JLabel.CENTER);
 		Border border = BorderFactory.createLineBorder(Color.BLACK, 2);
 		label1.setBorder(border);
 		Font labelFont = label1.getFont();

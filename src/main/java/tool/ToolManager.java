@@ -2,6 +2,7 @@ package tool;
 
 import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import tool.arenasizer.ArenaSizerDialog;
 import tool.export.CsvPlayerExport;
 import tool.hrfExplorer.HrfExplorerDialog;
@@ -13,14 +14,13 @@ import javax.swing.*;
 
 
 public class ToolManager {
-    private static final HOVerwaltung m_hov = HOVerwaltung.instance();
-    private final JMenu m_jmToolsMenu = new JMenu(m_hov.getLanguageString("ls.menu.tools"));
-    private final JMenuItem m_jmiInjuryCalculator = new JMenuItem(m_hov.getLanguageString("InjuryCalculator"));
-    private final JMenuItem m_jmiKeeperTool = new JMenuItem(m_hov.getLanguageString("KeeperTool"));
-    private final JMenuItem m_jmiNotepad = new JMenuItem(m_hov.getLanguageString("Notizen"));
-    private final JMenuItem m_jmiCsvPlayerExporter = new JMenuItem(m_hov.getLanguageString("CSVExporter"));
-    private final JMenuItem m_jmiArenaSizer = new JMenuItem(m_hov.getLanguageString("ArenaSizer"));
-    private final JMenuItem m_jmiHrfExplorer = new JMenuItem(m_hov.getLanguageString("Tab_HRF-Explorer"));
+    private final JMenu m_jmToolsMenu = new JMenu(TranslationFacility.tr("ls.menu.tools"));
+    private final JMenuItem m_jmiInjuryCalculator = new JMenuItem(TranslationFacility.tr("InjuryCalculator"));
+    private final JMenuItem m_jmiKeeperTool = new JMenuItem(TranslationFacility.tr("KeeperTool"));
+    private final JMenuItem m_jmiNotepad = new JMenuItem(TranslationFacility.tr("Notizen"));
+    private final JMenuItem m_jmiCsvPlayerExporter = new JMenuItem(TranslationFacility.tr("CSVExporter"));
+    private final JMenuItem m_jmiArenaSizer = new JMenuItem(TranslationFacility.tr("ArenaSizer"));
+    private final JMenuItem m_jmiHrfExplorer = new JMenuItem(TranslationFacility.tr("Tab_HRF-Explorer"));
 
     public JMenu getToolMenu() {
         m_jmiArenaSizer.addActionListener(e -> new ArenaSizerDialog(HOMainFrame.instance()).setVisible(true));
@@ -39,7 +39,7 @@ public class ToolManager {
         m_jmToolsMenu.add(m_jmiCsvPlayerExporter);
 
         m_jmiNotepad.addActionListener(e -> {
-            NotepadDialog notepad = new NotepadDialog(HOMainFrame.instance(), m_hov.getLanguageString("Notizen"));
+            NotepadDialog notepad = new NotepadDialog(HOMainFrame.instance(), TranslationFacility.tr("Notizen"));
             notepad.setVisible(true);
         });
         m_jmToolsMenu.add(m_jmiNotepad);

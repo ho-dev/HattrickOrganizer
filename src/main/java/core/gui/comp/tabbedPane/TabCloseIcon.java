@@ -2,17 +2,12 @@ package core.gui.comp.tabbedPane;
 
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 
-import java.awt.Component;
-import java.awt.Graphics;
-import java.awt.Rectangle;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-
-import javax.swing.Icon;
-import javax.swing.JOptionPane;
-import javax.swing.JTabbedPane;
 
 final class TabCloseIcon implements Icon {
 	private final Icon mIcon = ThemeManager.getIcon(HOIconName.TABBEDPANE_CLOSE);
@@ -63,8 +58,8 @@ final class TabCloseIcon implements Icon {
 	}
 
 	private void closeTab() {
-		String title = HOVerwaltung.instance().getLanguageString("confirmation.title");
-		String message = HOVerwaltung.instance().getLanguageString("tab.close.confirm.msg");
+		String title = TranslationFacility.tr("confirmation.title");
+		String message = TranslationFacility.tr("tab.close.confirm.msg");
 		if (JOptionPane.showConfirmDialog(mTabbedPane, message, title, JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
 			int index = mTabbedPane.getSelectedIndex();
 			mTabbedPane.remove(index);

@@ -1,6 +1,5 @@
 package core.util;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -22,57 +21,47 @@ class HODateTimeTest {
 
     private static final HODateTime HO_DATE_TIME = HODateTime.fromHT("2024-01-01 00:00:00");
 
-        @Test
-        void test() {
-            var nextTraining = HODateTime.fromHT("2022-03-31 08:30:00");
-            var localDateTime = nextTraining.toLocaleDateTime();
-            var previousTraining = nextTraining.plusDaysAtSameLocalTime(-7);
-            var localPrevious = previousTraining.toLocaleDateTime();
+    @Test
+    void test() {
+        final var fetchedDate = HODateTime.fromHT("2022-01-08 14:33:58");
+        assertThat(fetchedDate.toHT()).isEqualTo("2022-01-08 14:33:58");
 
-            var fetchedDate = HODateTime.fromHT("2022-01-08 14:33:58");
-
-            Assertions.assertEquals("2022-01-08 14:33:58", fetchedDate.toHT());
-
-//            Assertions.assertEquals("08.01.2022", fetchedDate.toLocaleDate());
-//            Assertions.assertEquals("08.01.2022, 14:33:58", fetchedDate.toLocaleDateTime());
-
-            var ts = fetchedDate.toDbTimestamp();
-            Assertions.assertEquals("2022-01-08 14:33:58", HODateTime.fromDbTimestamp(ts).toHT());
+        final var ts = fetchedDate.toDbTimestamp();
+        assertThat(HODateTime.fromDbTimestamp(ts).toHT()).isEqualTo("2022-01-08 14:33:58");
 
 
-            var dti = HODateTime.fromHT("2022-02-19 23:11:00");
-            Assertions.assertEquals(dti.toHTWeek().season, 80);
-            Assertions.assertEquals(dti.toHTWeek().week, 10);
+        var dti = HODateTime.fromHT("2022-02-19 23:11:00");
+        assertThat(dti.toHTWeek().season).isEqualTo(80);
+        assertThat(dti.toHTWeek().week).isEqualTo(10);
 
-            dti = HODateTime.fromHT("2021-02-14 23:11:00");
-            Assertions.assertEquals(dti.toHTWeek().season, 77);
-            Assertions.assertEquals(dti.toHTWeek().week, 6);
+        dti = HODateTime.fromHT("2021-02-14 23:11:00");
+        assertThat(dti.toHTWeek().season).isEqualTo(77);
+        assertThat(dti.toHTWeek().week).isEqualTo(6);
 
-            dti = HODateTime.fromHT("2020-06-27 00:00:00");
-            Assertions.assertEquals(dti.toHTWeek().season, 75);
-            Assertions.assertEquals(dti.toHTWeek().week, 4);
+        dti = HODateTime.fromHT("2020-06-27 00:00:00");
+        assertThat(dti.toHTWeek().season).isEqualTo(75);
+        assertThat(dti.toHTWeek().week).isEqualTo(4);
 
-            dti = HODateTime.fromHT("2018-05-10 00:00:00");
-            Assertions.assertEquals(dti.toHTWeek().season, 68);
-            Assertions.assertEquals(dti.toHTWeek().week, 5);
+        dti = HODateTime.fromHT("2018-05-10 00:00:00");
+        assertThat(dti.toHTWeek().season).isEqualTo(68);
+        assertThat(dti.toHTWeek().week).isEqualTo(5);
 
-            dti = HODateTime.fromHT("2009-05-28 00:00:00");
-            Assertions.assertEquals(dti.toHTWeek().season, 39);
-            Assertions.assertEquals(dti.toHTWeek().week, 2);
+        dti = HODateTime.fromHT("2009-05-28 00:00:00");
+        assertThat(dti.toHTWeek().season).isEqualTo(39);
+        assertThat(dti.toHTWeek().week).isEqualTo(2);
 
-            dti = HODateTime.fromHT("2020-09-07 00:00:00");
-            Assertions.assertEquals(dti.toHTWeek().season, 75);
-            Assertions.assertEquals(dti.toHTWeek().week, 15);
+        dti = HODateTime.fromHT("2020-09-07 00:00:00");
+        assertThat(dti.toHTWeek().season).isEqualTo(75);
+        assertThat(dti.toHTWeek().week).isEqualTo(15);
 
-            dti = HODateTime.fromHT("2020-09-14 00:00:00");
-            Assertions.assertEquals(dti.toHTWeek().season, 75);
-            Assertions.assertEquals(dti.toHTWeek().week, 16);
+        dti = HODateTime.fromHT("2020-09-14 00:00:00");
+        assertThat(dti.toHTWeek().season).isEqualTo(75);
+        assertThat(dti.toHTWeek().week).isEqualTo(16);
 
-            dti = HODateTime.fromHT("2020-09-21 01:30:00");
-            Assertions.assertEquals(dti.toHTWeek().season, 76);
-            Assertions.assertEquals(dti.toHTWeek().week, 1);
-
-        }
+        dti = HODateTime.fromHT("2020-09-21 01:30:00");
+        assertThat(dti.toHTWeek().season).isEqualTo(76);
+        assertThat(dti.toHTWeek().week).isEqualTo(1);
+    }
 
     static Stream<Arguments> equals() {
         return Stream.of(
@@ -133,7 +122,7 @@ class HODateTimeTest {
         final Set<Integer> hashCodes = objects.stream().map(Objects::hashCode).collect(Collectors.toSet());
 
         // then
-        assertThat(hashCodes.size()).isCloseTo( objects.size(), offset(10));
+        assertThat(hashCodes.size()).isCloseTo(objects.size(), offset(10));
     }
 
     private static HODateTime generate(int i, LocalDateTime localDateTime) {

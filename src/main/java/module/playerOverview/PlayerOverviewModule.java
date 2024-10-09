@@ -1,13 +1,10 @@
 package module.playerOverview;
 
-import java.awt.event.KeyEvent;
-
-import javax.swing.JPanel;
-import javax.swing.KeyStroke;
-
-
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.module.DefaultModule;
+
+import javax.swing.*;
+import java.awt.event.KeyEvent;
 
 public final class PlayerOverviewModule extends DefaultModule {
 
@@ -22,7 +19,7 @@ public final class PlayerOverviewModule extends DefaultModule {
 
 	@Override
 	public String getDescription() {
-		return HOVerwaltung.instance().getLanguageString("Spieleruebersicht");
+		return TranslationFacility.tr("Spieleruebersicht");
 	}
 
 	@Override

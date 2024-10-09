@@ -1,12 +1,10 @@
 package module.specialEvents;
 
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.module.DefaultModule;
 
+import javax.swing.*;
 import java.awt.event.KeyEvent;
-
-import javax.swing.JPanel;
-import javax.swing.KeyStroke;
 
 
 public class SpecialEventsModule extends DefaultModule {
@@ -24,7 +22,7 @@ public class SpecialEventsModule extends DefaultModule {
 
 	@Override
 	public String getDescription() {
-		return  HOVerwaltung.instance().getLanguageString("Tab_SpecialEvents");
+		return TranslationFacility.tr("Tab_SpecialEvents");
 	}
 
 	@Override

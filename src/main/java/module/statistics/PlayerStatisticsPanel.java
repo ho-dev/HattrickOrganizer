@@ -8,22 +8,21 @@ import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
 import core.gui.model.PlayerCBItem;
 import core.gui.model.PlayerCBItemRenderer;
-import core.util.chart.LinesChartDataModel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.player.Player;
 import core.util.HOLogger;
 import core.util.Helper;
 import core.util.chart.HOLinesChart;
+import core.util.chart.LinesChartDataModel;
 import org.knowm.xchart.style.lines.SeriesLines;
 import org.knowm.xchart.style.markers.SeriesMarkers;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
@@ -33,15 +32,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import javax.swing.BorderFactory;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 
 /**
  * Panel Player in Module Statistics
@@ -545,12 +535,10 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 							Colors.getColor(Colors.COLOR_PLAYER_LOYALTY));
 				}
 
-				oChartPanel.setAllValues(models, statistikWerte[15], format, HOVerwaltung
-						.instance().getLanguageString("Wochen"), "",
+				oChartPanel.setAllValues(models, statistikWerte[15], format, TranslationFacility.tr("Wochen"), "",
 						jcbInscribe.isSelected(), jcbHelpLines.isSelected());
 			} else {
-				oChartPanel.setAllValues(null, new double[0], format, HOVerwaltung
-						.instance().getLanguageString("Wochen"), "",
+				oChartPanel.setAllValues(null, new double[0], format, TranslationFacility.tr("Wochen"), "",
 						jcbInscribe.isSelected(), jcbHelpLines.isSelected());
 			}
 		} catch (Exception e) {
@@ -559,7 +547,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 	}
 
 	private String getLangStr(String key) {
-		return HOVerwaltung.instance().getLanguageString(key);
+		return TranslationFacility.tr(key);
 	}
 
 	

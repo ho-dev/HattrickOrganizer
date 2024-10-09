@@ -6,44 +6,20 @@ import core.datatype.CBItem;
 import core.gui.HOMainFrame;
 import core.gui.comp.HyperLinkLabel;
 import core.gui.comp.panel.ImagePanel;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
-import core.model.player.Player;
 import core.model.player.MatchRoleID;
+import core.model.player.Player;
 import core.util.HOLogger;
 import core.util.Helper;
 
-import java.awt.BorderLayout;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.GridLayout;
-import java.awt.Insets;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.io.Serial;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSpinner;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.SpinnerDateModel;
-import javax.swing.SwingConstants;
 
 /**
  * MiniScout dialog
@@ -56,9 +32,9 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
     private static final long serialVersionUID = -2092930481559683730L;
 
     //~ Instance fields ----------------------------------------------------------------------------
-	private final JButton jbApply = new JButton(core.model.HOVerwaltung.instance().getLanguageString("ls.button.ok"));
-    private final JButton jbApplyScout = new JButton(core.model.HOVerwaltung.instance().getLanguageString("ls.button.apply"));
-    private final JButton jbCancel = new JButton(core.model.HOVerwaltung.instance().getLanguageString("ls.button.cancel"));
+	private final JButton jbApply = new JButton(TranslationFacility.tr("ls.button.ok"));
+    private final JButton jbApplyScout = new JButton(TranslationFacility.tr("ls.button.apply"));
+    private final JButton jbCancel = new JButton(TranslationFacility.tr("ls.button.cancel"));
     private final JComboBox jcbAttacking = new JComboBox(core.constants.player.PlayerAbility.ITEMS);
     private final JComboBox jcbDefense = new JComboBox(core.constants.player.PlayerAbility.ITEMS);
     private final JComboBox jcbLeadership = new JComboBox(core.constants.player.PlayerAbility.ITEMS);
@@ -73,8 +49,8 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
     private final JComboBox jcbWinger = new JComboBox(core.constants.player.PlayerAbility.ITEMS);
     private final JComboBox jcbLoyalty = new JComboBox(core.constants.player.PlayerAbility.ITEMS);
     private final JCheckBox jchHomegrown = new JCheckBox();
-    private final JLabel jlRating = new JLabel(core.model.HOVerwaltung.instance().getLanguageString("Unbestimmt") + ": 0.0");
-    private final JLabel jlStatus = new JLabel("<html><p>" + HOVerwaltung.instance().getLanguageString("scout_status") + ":&nbsp<br />&nbsp<br />&nbsp</p></html>");
+    private final JLabel jlRating = new JLabel(TranslationFacility.tr("Unbestimmt") + ": 0.0");
+    private final JLabel jlStatus = new JLabel("<html><p>" + TranslationFacility.tr("scout_status") + ":&nbsp<br />&nbsp<br />&nbsp</p></html>");
     private final JTextArea jtaCopyPaste = new JTextArea(5, 20);
     private final JTextArea jtaNotes = new JTextArea(5, 20);
     private final JTextField jtfAge = new JTextField("17.0");
@@ -95,7 +71,7 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
      * @param owner the parent control holding this dialog
      */
     MiniScoutDialog(TransferEingabePanel owner) {
-        super(HOVerwaltung.instance().getLanguageString("ScoutMini"));
+        super(TranslationFacility.tr("ScoutMini"));
         this.setIconImage(HOMainFrame.instance().getIconImage());
         clOwner = owner;
         initComponents();
@@ -253,8 +229,8 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
             }
         } catch (Exception e) {
             HOLogger.instance().debug(getClass(), e);
-            message = core.model.HOVerwaltung.instance().getLanguageString("scout_error");
-            message += " <br>" + HOVerwaltung.instance().getLanguageString("bug_ticket");
+            message = TranslationFacility.tr("scout_error");
+            message += " <br>" + TranslationFacility.tr("bug_ticket");
         }
 
         jtaCopyPaste.setText("");
@@ -262,29 +238,29 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
         if (message.isEmpty()) {
             switch (pc.getStatus()) {
                 case PlayerConverter.WARNING -> {
-                    message = HOVerwaltung.instance().getLanguageString("scout_warning");
+                    message = TranslationFacility.tr("scout_warning");
                     message += " " + getFieldsTextList(pc.getErrorFields());
-                    message += " <br>" + HOVerwaltung.instance().getLanguageString("bug_ticket");
+                    message += " <br>" + TranslationFacility.tr("bug_ticket");
                     if (!pc.getNotSupportedFields().isEmpty()) {
-                        message += " <br>" + HOVerwaltung.instance().getLanguageString("scout_not_supported_fields");
+                        message += " <br>" + TranslationFacility.tr("scout_not_supported_fields");
                         message += " " + getFieldsTextList(pc.getNotSupportedFields());
                     }
                 }
                 case PlayerConverter.ERROR -> {
-                    message = HOVerwaltung.instance().getLanguageString("scout_error");
-                    message += " <br>" + HOVerwaltung.instance().getLanguageString("bug_ticket");
+                    message = TranslationFacility.tr("scout_error");
+                    message += " <br>" + TranslationFacility.tr("bug_ticket");
                 }
-                case PlayerConverter.EMPTY_INPUT_ERROR -> message = HOVerwaltung.instance().getLanguageString("scout_error_input_empty");
+                case PlayerConverter.EMPTY_INPUT_ERROR -> message = TranslationFacility.tr("scout_error_input_empty");
                 default -> {
-                    message = HOVerwaltung.instance().getLanguageString("scout_success");
+                    message = TranslationFacility.tr("scout_success");
                     if (!pc.getNotSupportedFields().isEmpty()) {
-                        message += " <br>" + HOVerwaltung.instance().getLanguageString("scout_not_supported_fields");
+                        message += " <br>" + TranslationFacility.tr("scout_not_supported_fields");
                         message += " " + getFieldsTextList(pc.getNotSupportedFields());
                     }
                 }
             }
         }
-        jlStatus.setText("<html><p>" + HOVerwaltung.instance().getLanguageString("scout_status") + ": " + message + "</p></html>");
+        jlStatus.setText("<html><p>" + TranslationFacility.tr("scout_status") + ": " + message + "</p></html>");
     }
 
     private String getFieldsTextList(List<String> fields){
@@ -376,41 +352,41 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
         panel = new ImagePanel();
         panel.setLayout(new GridLayout(13, 4, 4, 4));
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.id"));
+        label = new JLabel(TranslationFacility.tr("ls.player.id"));
         panel.add(label);
         jtfPlayerID.setHorizontalAlignment(SwingConstants.RIGHT);
         jtfPlayerID.addFocusListener(this);
         panel.add(jtfPlayerID);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.name"));
+        label = new JLabel(TranslationFacility.tr("ls.player.name"));
         panel.add(label);
         jtfName.addFocusListener(this);
         panel.add(jtfName);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.age"));
+        label = new JLabel(TranslationFacility.tr("ls.player.age"));
         panel.add(label);
         jtfAge.setHorizontalAlignment(SwingConstants.RIGHT);
         jtfAge.addFocusListener(this);
         panel.add(jtfAge);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.tsi"));
+        label = new JLabel(TranslationFacility.tr("ls.player.tsi"));
         panel.add(label);
         jtfTSI.setHorizontalAlignment(SwingConstants.RIGHT);
         jtfTSI.addFocusListener(this);
         panel.add(jtfTSI);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("scout_price"));
+        label = new JLabel(TranslationFacility.tr("scout_price"));
         panel.add(label);
         jtfPrice.setHorizontalAlignment(SwingConstants.RIGHT);
         jtfPrice.addFocusListener(this);
         panel.add(jtfPrice);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("Ablaufdatum"));
+        label = new JLabel(TranslationFacility.tr("Ablaufdatum"));
         panel.add(label);
         jsSpinner.addFocusListener(this);
         panel.add(jsSpinner);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.speciality"));
+        label = new JLabel(TranslationFacility.tr("ls.player.speciality"));
         panel.add(label);
         jcbSpeciality.addItemListener(this);
         panel.add(jcbSpeciality);
@@ -419,67 +395,67 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
 		panel.add(label);
 		panel.add(jtfEPV);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.leadership"));
+        label = new JLabel(TranslationFacility.tr("ls.player.leadership"));
         panel.add(label);
         jcbLeadership.addItemListener(this);
         panel.add(jcbLeadership);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.experience"));
+        label = new JLabel(TranslationFacility.tr("ls.player.experience"));
         panel.add(label);
         jcbExperience.addItemListener(this);
         panel.add(jcbExperience);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.form"));
+        label = new JLabel(TranslationFacility.tr("ls.player.form"));
         panel.add(label);
         jcbForm.addItemListener(this);
         panel.add(jcbForm);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.skill.stamina"));
+        label = new JLabel(TranslationFacility.tr("ls.player.skill.stamina"));
         panel.add(label);
         jcbStamina.addItemListener(this);
         panel.add(jcbStamina);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.skill.keeper"));
+        label = new JLabel(TranslationFacility.tr("ls.player.skill.keeper"));
         panel.add(label);
         jcbKeeper.addItemListener(this);
         panel.add(jcbKeeper);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.skill.playmaking"));
+        label = new JLabel(TranslationFacility.tr("ls.player.skill.playmaking"));
         panel.add(label);
         jcbPlaymaking.addItemListener(this);
         panel.add(jcbPlaymaking);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.skill.passing"));
+        label = new JLabel(TranslationFacility.tr("ls.player.skill.passing"));
         panel.add(label);
         jcbPassing.addItemListener(this);
         panel.add(jcbPassing);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.skill.winger"));
+        label = new JLabel(TranslationFacility.tr("ls.player.skill.winger"));
         panel.add(label);
         jcbWinger.addItemListener(this);
         panel.add(jcbWinger);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.skill.defending"));
+        label = new JLabel(TranslationFacility.tr("ls.player.skill.defending"));
         panel.add(label);
         jcbDefense.addItemListener(this);
         panel.add(jcbDefense);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.skill.scoring"));
+        label = new JLabel(TranslationFacility.tr("ls.player.skill.scoring"));
         panel.add(label);
         jcbAttacking.addItemListener(this);
         panel.add(jcbAttacking);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.skill.setpieces"));
+        label = new JLabel(TranslationFacility.tr("ls.player.skill.setpieces"));
         panel.add(label);
         jcbStandards.addItemListener(this);
         panel.add(jcbStandards);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.loyalty"));
+        label = new JLabel(TranslationFacility.tr("ls.player.loyalty"));
         panel.add(label);
         jcbLoyalty.addItemListener(this);
         panel.add(jcbLoyalty);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.player.motherclub"));
+        label = new JLabel(TranslationFacility.tr("ls.player.motherclub"));
         panel.add(label);
         jchHomegrown.addItemListener(this);
         panel.add(jchHomegrown);
@@ -492,7 +468,7 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
 
         panel = new ImagePanel();
         panel.setLayout(new GridLayout(1, 3, 4, 4));
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("BestePosition")
+        label = new JLabel(TranslationFacility.tr("BestePosition")
                            + ":");
         label.setFont(new Font(label.getFont().getName(), Font.BOLD, label.getFont().getSize() + 2));
         label.setHorizontalAlignment(SwingConstants.CENTER);
@@ -512,7 +488,7 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
         // Notes
         panel = new ImagePanel();
         panel.setLayout(new BorderLayout());
-        panel.setBorder(javax.swing.BorderFactory.createTitledBorder(HOVerwaltung.instance().getLanguageString("Notizen")));
+        panel.setBorder(javax.swing.BorderFactory.createTitledBorder(TranslationFacility.tr("Notizen")));
         panel.add(new JScrollPane(jtaNotes), BorderLayout.CENTER);
 
         constraints.fill = GridBagConstraints.BOTH;
@@ -525,12 +501,12 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
         // Copy & Paste
         panel = new ImagePanel();
         panel.setLayout(new BorderLayout());
-        panel.setBorder(javax.swing.BorderFactory.createTitledBorder(HOVerwaltung.instance().getLanguageString("CopyPaste")));
-        jtaCopyPaste.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Transferscout_CopyPaste"));
+        panel.setBorder(javax.swing.BorderFactory.createTitledBorder(TranslationFacility.tr("CopyPaste")));
+        jtaCopyPaste.setToolTipText(TranslationFacility.tr("tt_Transferscout_CopyPaste"));
 
         copyPastePanel = new ImagePanel();
         copyPastePanel.setLayout(new BorderLayout());
-        jlExplainGuide = new JLabel(HOVerwaltung.instance().getLanguageString("ExplainHowToUseTransferScout"));
+        jlExplainGuide = new JLabel(TranslationFacility.tr("ExplainHowToUseTransferScout"));
         copyPastePanel.add(jlExplainGuide ,BorderLayout.NORTH);
         JLabel linkLabel = new HyperLinkLabel("https://github.com/ho-dev/HattrickOrganizer/wiki/Transfer-Scout", "https://github.com/ho-dev/HattrickOrganizer/wiki/Transfer-Scout");
         copyPastePanel.add(linkLabel, BorderLayout.CENTER);
@@ -539,7 +515,7 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
 
         buttonPanel = new ImagePanel();
         buttonPanel.setLayout(new GridLayout(1,2));
-        jbApplyScout.setToolTipText(HOVerwaltung.instance().getLanguageString("ls.button.apply"));
+        jbApplyScout.setToolTipText(TranslationFacility.tr("ls.button.apply"));
         jbApplyScout.addActionListener(this);
         layout.setConstraints(jbApplyScout, constraints);
         buttonPanel.add(jbApplyScout, BorderLayout.WEST);
@@ -558,10 +534,10 @@ class MiniScoutDialog extends JFrame implements ItemListener, ActionListener, Fo
         panel = new ImagePanel();
         panel.setLayout(new GridLayout(1, 2, 4, 4));
 
-        jbApply.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Transferscout_uebernehmen"));
+        jbApply.setToolTipText(TranslationFacility.tr("tt_Transferscout_uebernehmen"));
         jbApply.addActionListener(this);
         panel.add(jbApply);
-        jbCancel.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Transferscout_abbrechen"));
+        jbCancel.setToolTipText(TranslationFacility.tr("tt_Transferscout_abbrechen"));
         jbCancel.addActionListener(this);
         panel.add(jbCancel);
 

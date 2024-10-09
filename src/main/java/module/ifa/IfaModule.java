@@ -1,14 +1,11 @@
 package module.ifa;
 
-import java.awt.event.KeyEvent;
-
-import javax.swing.JMenu;
-import javax.swing.JPanel;
-import javax.swing.KeyStroke;
-
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.module.DefaultModule;
 import module.ifa.menu.IFAMenu;
+
+import javax.swing.*;
+import java.awt.event.KeyEvent;
 
 public class IfaModule extends DefaultModule {
 
@@ -24,7 +21,7 @@ public class IfaModule extends DefaultModule {
 
 	@Override
 	public String getDescription() {
-		return HOVerwaltung.instance().getLanguageString("Tab_IFA");
+		return TranslationFacility.tr("Tab_IFA");
 	}
 
 	@Override

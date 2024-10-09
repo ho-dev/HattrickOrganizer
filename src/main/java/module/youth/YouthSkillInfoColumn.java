@@ -1,7 +1,7 @@
 package module.youth;
 
 import core.gui.comp.entry.IHOTableEntry;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -41,19 +41,18 @@ public class YouthSkillInfoColumn extends JLabel implements IHOTableEntry {
     }
 
     private String createToolTipText() {
-        var hov = HOVerwaltung.instance();
-        var unknown = hov.getLanguageString("unknown");
+        var unknown = TranslationFacility.tr("unknown");
         var skillName = getSkillName(this.skillInfo.getSkillID());
         return "<html>" +
-                hov.getLanguageString("ls.youth.player."+skillName) + "<br>" +
-                String.format(hov.getLanguageString("ls.youth.skill.start") + ": %.2f<br>", this.skillInfo.getStartValue()) +
-                String.format(hov.getLanguageString("ls.youth.skill.current") + ": %.2f<br>", this.skillInfo.getCurrentValue()) +
-                (this.skillInfo.getPotential17Value() != null ? String.format(hov.getLanguageString("ls.youth.skill.17") + ": %.2f<br>", this.skillInfo.getPotential17Value()) : "") +
-                hov.getLanguageString("ls.youth.skill.max") + ": " + (this.skillInfo.getMax() != null ? this.skillInfo.getMax() : unknown) + "<br>" +
-                (this.skillInfo.isMaxReached() ? hov.getLanguageString("ls.youth.skill.ismaxreached") + "<br>" : "") +
-                hov.getLanguageString("ls.youth.skill.startlevel") + ": " + (this.skillInfo.getStartLevel() != null ? this.skillInfo.getStartLevel() : unknown) + "<br>" +
-                hov.getLanguageString("ls.youth.skill.currentlevel") + ": " + (this.skillInfo.getCurrentLevel() != null ? this.skillInfo.getCurrentLevel() : unknown) +
-                (this.skillInfo.isTop3() != null && this.skillInfo.isTop3() ? "<br>" + hov.getLanguageString("ls.youth.skill.istop3") : "") +
+                TranslationFacility.tr("ls.youth.player."+skillName) + "<br>" +
+                String.format(TranslationFacility.tr("ls.youth.skill.start") + ": %.2f<br>", this.skillInfo.getStartValue()) +
+                String.format(TranslationFacility.tr("ls.youth.skill.current") + ": %.2f<br>", this.skillInfo.getCurrentValue()) +
+                (this.skillInfo.getPotential17Value() != null ? String.format(TranslationFacility.tr("ls.youth.skill.17") + ": %.2f<br>", this.skillInfo.getPotential17Value()) : "") +
+                TranslationFacility.tr("ls.youth.skill.max") + ": " + (this.skillInfo.getMax() != null ? this.skillInfo.getMax() : unknown) + "<br>" +
+                (this.skillInfo.isMaxReached() ? TranslationFacility.tr("ls.youth.skill.ismaxreached") + "<br>" : "") +
+                TranslationFacility.tr("ls.youth.skill.startlevel") + ": " + (this.skillInfo.getStartLevel() != null ? this.skillInfo.getStartLevel() : unknown) + "<br>" +
+                TranslationFacility.tr("ls.youth.skill.currentlevel") + ": " + (this.skillInfo.getCurrentLevel() != null ? this.skillInfo.getCurrentLevel() : unknown) +
+                (this.skillInfo.isTop3() != null && this.skillInfo.isTop3() ? "<br>" + TranslationFacility.tr("ls.youth.skill.istop3") : "") +
                 "</html>";
     }
 

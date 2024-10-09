@@ -10,6 +10,7 @@ import core.gui.model.UserColumnController;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.enums.MatchType;
 import core.model.match.Matchdetails;
 import core.util.CurrencyUtils;
@@ -266,9 +267,9 @@ public class RecapPanelTableModel extends HOTableModel {
             tipText.append(" - "); //$NON-NLS-1$
 
             if (lineup.isHomeMatch()) {
-                tipText.append(HOVerwaltung.instance().getLanguageString("Heim")); //$NON-NLS-1$
+                tipText.append(TranslationFacility.tr("Heim")); //$NON-NLS-1$
             } else {
-                tipText.append(HOVerwaltung.instance().getLanguageString("Gast")); //$NON-NLS-1$
+                tipText.append(TranslationFacility.tr("Gast")); //$NON-NLS-1$
             }
 
             ret.setToolTipText(tipText.toString());
@@ -319,7 +320,7 @@ public class RecapPanelTableModel extends HOTableModel {
         }
         if (lineup.getMatchDetail() != null && lineup.getMatchDetail().isManMarking()) {
             if (tactic != -1) str.append("/");
-            str.append(HOVerwaltung.instance().getLanguageString("ls.teamanalyzer.manmarking"));
+            str.append(TranslationFacility.tr("ls.teamanalyzer.manmarking"));
         }
 
         if (str.isEmpty()) {

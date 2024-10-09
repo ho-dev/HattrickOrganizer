@@ -1,28 +1,24 @@
 package tool.export;
 
-import core.constants.player.PlayerSkill;
+import core.constants.player.*;
 import core.file.ExampleFileFilter;
 import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import core.util.HOLogger;
 
-import java.io.*;
+import javax.swing.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStreamWriter;
 import java.math.RoundingMode;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.util.List;
 import java.util.Locale;
-
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
-
-import core.constants.player.PlayerAggressiveness;
-import core.constants.player.PlayerAgreeability;
-import core.constants.player.PlayerHonesty;
-import core.constants.player.PlayerSpeciality;
 
 /**
  * CsvPlayerExport
@@ -49,11 +45,11 @@ public class CsvPlayerExport {
 
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
-		fileChooser.setDialogTitle(HOVerwaltung.instance().getLanguageString("CSVExporter"));
+		fileChooser.setDialogTitle(TranslationFacility.tr("CSVExporter"));
 
 		ExampleFileFilter filter = new ExampleFileFilter();
 		filter.addExtension("csv");
-		filter.setDescription(HOVerwaltung.instance().getLanguageString("filetypedescription.csv"));
+		filter.setDescription(TranslationFacility.tr("filetypedescription.csv"));
 		fileChooser.setFileFilter(filter);
 		fileChooser.setSelectedFile(file);
 
@@ -63,7 +59,7 @@ public class CsvPlayerExport {
 			file = fileChooser.getSelectedFile();
 			if (file.exists() && JOptionPane.showConfirmDialog(
 					HOMainFrame.instance(),
-					HOVerwaltung.instance().getLanguageString("overwrite"), HOVerwaltung.instance().getLanguageString("CSVExporter"),
+					TranslationFacility.tr("overwrite"), TranslationFacility.tr("CSVExporter"),
                     JOptionPane.YES_NO_OPTION) != JOptionPane.YES_OPTION) {
 				// Cancel
 				return;
@@ -83,55 +79,55 @@ public class CsvPlayerExport {
 			OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(file), StandardCharsets.UTF_8);
 
 			writer.write(
-							"\"" + HOVerwaltung.instance().getLanguageString("ls.player.name") + "\","
-							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.id") + "\","
-							+ "\"" + HOVerwaltung.instance().getLanguageString("Aufgestellt") + "\","
-							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.age") + "\","
-							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.age") + " " + HOVerwaltung.instance().getLanguageString("ls.player.age.days") + "\","
-							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.tsi") + "\","
-							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.wage") + "\","
-							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.warningstatus") + "\","
-							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.injurystatus") + "\","
-							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.short_motherclub") + "\","
+							"\"" + TranslationFacility.tr("ls.player.name") + "\","
+							+ "\"" + TranslationFacility.tr("ls.player.id") + "\","
+							+ "\"" + TranslationFacility.tr("Aufgestellt") + "\","
+							+ "\"" + TranslationFacility.tr("ls.player.age") + "\","
+							+ "\"" + TranslationFacility.tr("ls.player.age") + " " + TranslationFacility.tr("ls.player.age.days") + "\","
+							+ "\"" + TranslationFacility.tr("ls.player.tsi") + "\","
+							+ "\"" + TranslationFacility.tr("ls.player.wage") + "\","
+							+ "\"" + TranslationFacility.tr("ls.player.warningstatus") + "\","
+							+ "\"" + TranslationFacility.tr("ls.player.injurystatus") + "\","
+							+ "\"" + TranslationFacility.tr("ls.player.short_motherclub") + "\","
 
-							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.agreeability") + "\","
-							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.aggressiveness") + "\","
-							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.honesty") + "\","
+							+ "\"" + TranslationFacility.tr("ls.player.agreeability") + "\","
+							+ "\"" + TranslationFacility.tr("ls.player.aggressiveness") + "\","
+							+ "\"" + TranslationFacility.tr("ls.player.honesty") + "\","
 
-							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.speciality") + "\","
-							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.short_experience") + "\","
-							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.short_leadership") + "\","
-							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.form") + "\","
+							+ "\"" + TranslationFacility.tr("ls.player.speciality") + "\","
+							+ "\"" + TranslationFacility.tr("ls.player.short_experience") + "\","
+							+ "\"" + TranslationFacility.tr("ls.player.short_leadership") + "\","
+							+ "\"" + TranslationFacility.tr("ls.player.form") + "\","
 									// ls.player.skill_short
-							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.skill_short.stamina") + "\","
-							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.short_loyalty") + "\","
-							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.skill_short.keeper") + "\","
-							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.skill_short.defending") + "\","
-							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.skill_short.winger") + "\","
-							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.skill_short.playmaking") + "\","
-							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.skill_short.passing") + "\","
-							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.skill_short.scoring") + "\","
-							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.skill_short.setpieces") + "\","
+							+ "\"" + TranslationFacility.tr("ls.player.skill_short.stamina") + "\","
+							+ "\"" + TranslationFacility.tr("ls.player.short_loyalty") + "\","
+							+ "\"" + TranslationFacility.tr("ls.player.skill_short.keeper") + "\","
+							+ "\"" + TranslationFacility.tr("ls.player.skill_short.defending") + "\","
+							+ "\"" + TranslationFacility.tr("ls.player.skill_short.winger") + "\","
+							+ "\"" + TranslationFacility.tr("ls.player.skill_short.playmaking") + "\","
+							+ "\"" + TranslationFacility.tr("ls.player.skill_short.passing") + "\","
+							+ "\"" + TranslationFacility.tr("ls.player.skill_short.scoring") + "\","
+							+ "\"" + TranslationFacility.tr("ls.player.skill_short.setpieces") + "\","
 							// ls.player.position_short
-							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.position_short.keeper") + "\","
-							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.position_short.centraldefender") + "\","
-							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.position_short.centraldefenderoffensive") + "\","
-							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.position_short.centraldefendertowardswing") + "\","
-							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingback") + "\","
-							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingbackoffensive") + "\","
-							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingbackdefensive") + "\","
-							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingbacktowardsmiddle") + "\","
-							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.position_short.innermidfielder") + "\","
-							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.position_short.innermidfielderoffensive") + "\","
-							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.position_short.innermidfielderdefensive") + "\","
-							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.position_short.innermidfieldertowardswing") + "\","
-							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.position_short.winger") + "\","
-							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingeroffensive") + "\","
-							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingerdefensive") + "\","
-							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingertowardsmiddle") + "\","
-							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.position_short.forward") + "\","
-							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.position_short.forwarddefensive") + "\","
-							+ "\"" + HOVerwaltung.instance().getLanguageString("ls.player.position_short.forwardtowardswing") + "\","
+							+ "\"" + TranslationFacility.tr("ls.player.position_short.keeper") + "\","
+							+ "\"" + TranslationFacility.tr("ls.player.position_short.centraldefender") + "\","
+							+ "\"" + TranslationFacility.tr("ls.player.position_short.centraldefenderoffensive") + "\","
+							+ "\"" + TranslationFacility.tr("ls.player.position_short.centraldefendertowardswing") + "\","
+							+ "\"" + TranslationFacility.tr("ls.player.position_short.wingback") + "\","
+							+ "\"" + TranslationFacility.tr("ls.player.position_short.wingbackoffensive") + "\","
+							+ "\"" + TranslationFacility.tr("ls.player.position_short.wingbackdefensive") + "\","
+							+ "\"" + TranslationFacility.tr("ls.player.position_short.wingbacktowardsmiddle") + "\","
+							+ "\"" + TranslationFacility.tr("ls.player.position_short.innermidfielder") + "\","
+							+ "\"" + TranslationFacility.tr("ls.player.position_short.innermidfielderoffensive") + "\","
+							+ "\"" + TranslationFacility.tr("ls.player.position_short.innermidfielderdefensive") + "\","
+							+ "\"" + TranslationFacility.tr("ls.player.position_short.innermidfieldertowardswing") + "\","
+							+ "\"" + TranslationFacility.tr("ls.player.position_short.winger") + "\","
+							+ "\"" + TranslationFacility.tr("ls.player.position_short.wingeroffensive") + "\","
+							+ "\"" + TranslationFacility.tr("ls.player.position_short.wingerdefensive") + "\","
+							+ "\"" + TranslationFacility.tr("ls.player.position_short.wingertowardsmiddle") + "\","
+							+ "\"" + TranslationFacility.tr("ls.player.position_short.forward") + "\","
+							+ "\"" + TranslationFacility.tr("ls.player.position_short.forwarddefensive") + "\","
+							+ "\"" + TranslationFacility.tr("ls.player.position_short.forwardtowardswing") + "\","
 							+ "\n");
 
 			var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();

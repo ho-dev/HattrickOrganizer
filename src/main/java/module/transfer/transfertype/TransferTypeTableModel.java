@@ -2,13 +2,12 @@
 package module.transfer.transfertype;
 
 import core.db.DBManager;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import module.transfer.TransferType;
 
+import javax.swing.table.AbstractTableModel;
 import java.io.Serial;
 import java.util.List;
-
-import javax.swing.table.AbstractTableModel;
 
 
 
@@ -38,12 +37,12 @@ class TransferTypeTableModel extends AbstractTableModel {
     TransferTypeTableModel(List<TransferredPlayer> values) {
         super();
 
-        this.colNames[0] = HOVerwaltung.instance().getLanguageString("ls.player.id");
-        this.colNames[1] = HOVerwaltung.instance().getLanguageString("ls.player.name");
-        this.colNames[2] = HOVerwaltung.instance().getLanguageString("Type");
-        this.colNames[3] = HOVerwaltung.instance().getLanguageString("Income");
+        this.colNames[0] = TranslationFacility.tr("ls.player.id");
+        this.colNames[1] = TranslationFacility.tr("ls.player.name");
+        this.colNames[2] = TranslationFacility.tr("Type");
+        this.colNames[3] = TranslationFacility.tr("Income");
 
-        //this.colNames[2] = HOVerwaltung.instance().getLanguageString("Week"); //$NON-NLS-1$
+        //this.colNames[2] = TranslationFacility.tr("Week"); //$NON-NLS-1$
         this.values = values;
     }
 

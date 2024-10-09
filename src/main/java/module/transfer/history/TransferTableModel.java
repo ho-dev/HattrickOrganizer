@@ -6,14 +6,15 @@ import core.gui.comp.entry.IHOTableEntry;
 import core.gui.comp.table.HOTableModel;
 import core.gui.comp.table.UserColumn;
 import core.gui.model.UserColumnController;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.player.Player;
 import core.util.CurrencyUtils;
 import core.util.HODateTime;
 import module.transfer.PlayerTransfer;
+
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.*;
 
 /**
  * TableModel representing the transfers for your own team.
@@ -57,7 +58,7 @@ public class TransferTableModel extends HOTableModel {
                         if ((transfer.getPlayerName() != null) && (!transfer.getPlayerName().isEmpty())) {
                             text = transfer.getPlayerName();
                         } else {
-                            text = "< " + HOVerwaltung.instance().getLanguageString("FiredPlayer") + " >";
+                            text = "< " + TranslationFacility.tr("FiredPlayer") + " >";
                         }
 
                         return new ColorLabelEntry(text, ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);

@@ -11,6 +11,7 @@ import core.gui.model.PlayerOverviewModel;
 import core.gui.model.UserColumnController;
 import core.gui.model.UserColumnFactory;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.match.MatchKurzInfo;
 import core.model.player.Player;
@@ -66,7 +67,7 @@ public class PlayerOverviewTable extends JTable implements core.gui.Refreshable 
 					// Get name of the actual column at columnAtPoint, i.e. post-ordering of the columns
 					// based on preferences.
 					String columnName = PlayerOverviewTable.this.getColumnName(columnAtPoint);
-					String lastMatchRating = (HOVerwaltung.instance().getLanguageString("LastMatchRating"));
+					String lastMatchRating = (TranslationFacility.tr("LastMatchRating"));
 
 					Player player = tableSorter.getPlayerAtRow(rowIndex);
 					if (player != null) {

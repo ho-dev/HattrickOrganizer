@@ -2,9 +2,15 @@ package module.lineup;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import core.db.DBManager;
 import core.model.HOVerwaltung;
-import core.model.match.*;
+import core.model.TranslationFacility;
+import core.model.match.IMatchDetails;
+import core.model.match.MatchKurzInfo;
+import core.model.match.MatchLineupPosition;
+import core.model.match.Weather;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
@@ -15,13 +21,10 @@ import module.lineup.substitution.model.GoalDiffCriteria;
 import module.lineup.substitution.model.MatchOrderType;
 import module.lineup.substitution.model.RedCardCriteria;
 import module.lineup.substitution.model.Substitution;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.stream.Collectors;
-
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
-import org.jetbrains.annotations.Nullable;
 
 import static java.lang.Math.max;
 
@@ -362,12 +365,11 @@ public class Lineup{
 	}
 	
 	public String getAttitudeName(int attitude) {
-		HOVerwaltung hov = HOVerwaltung.instance();
 		return switch (attitude) {
-			case IMatchDetails.EINSTELLUNG_NORMAL -> hov.getLanguageString("ls.team.teamattitude_short.normal");
-			case IMatchDetails.EINSTELLUNG_PIC -> hov.getLanguageString("ls.team.teamattitude_short.playitcool");
-			case IMatchDetails.EINSTELLUNG_MOTS -> hov.getLanguageString("ls.team.teamattitude_short.matchoftheseason");
-			default -> HOVerwaltung.instance().getLanguageString("Unbestimmt");
+			case IMatchDetails.EINSTELLUNG_NORMAL -> TranslationFacility.tr("ls.team.teamattitude_short.normal");
+			case IMatchDetails.EINSTELLUNG_PIC -> TranslationFacility.tr("ls.team.teamattitude_short.playitcool");
+			case IMatchDetails.EINSTELLUNG_MOTS -> TranslationFacility.tr("ls.team.teamattitude_short.matchoftheseason");
+			default -> TranslationFacility.tr("Unbestimmt");
 		};
 	}
 
@@ -609,7 +611,7 @@ public class Lineup{
 			case SYS_523 -> "5-2-3";
 			case SYS_550 -> "5-5-0";
 			case SYS_253 -> "2-5-3";
-			default -> HOVerwaltung.instance().getLanguageString("Unbestimmt");
+			default -> TranslationFacility.tr("Unbestimmt");
 		};
 	}
 

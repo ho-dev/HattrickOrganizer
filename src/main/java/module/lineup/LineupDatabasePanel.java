@@ -3,6 +3,7 @@ package module.lineup;
 import core.db.DBManager;
 import core.gui.Refreshable;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.enums.MatchType;
 import core.model.match.MatchKurzInfo;
@@ -91,8 +92,8 @@ public class LineupDatabasePanel extends JPanel implements Refreshable {
 
         gbc.gridy++;
         var buttonPanel = new JPanel(new FlowLayout());
-        storeButton = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.save"));
-        deleteButton = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.delete"));
+        storeButton = new JButton(TranslationFacility.tr("ls.button.save"));
+        deleteButton = new JButton(TranslationFacility.tr("ls.button.delete"));
         buttonPanel.add(storeButton);
         buttonPanel.add(deleteButton);
         layout.setConstraints(buttonPanel, gbc);
@@ -283,7 +284,7 @@ public class LineupDatabasePanel extends JPanel implements Refreshable {
     private String templateDefaultName=null;
     private String getTemplateDefaultName() {
         if ( templateDefaultName==null){
-            templateDefaultName = HOVerwaltung.instance().getLanguageString("ls.module.lineup.template") + DBManager.instance().getTemplateMatchLineupTeamNextNumber();
+            templateDefaultName = TranslationFacility.tr("ls.module.lineup.template") + DBManager.instance().getTemplateMatchLineupTeamNextNumber();
         }
         return templateDefaultName;
     }

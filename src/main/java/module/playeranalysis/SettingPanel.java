@@ -2,18 +2,12 @@
 package module.playeranalysis;
 
 import core.gui.comp.panel.ImagePanel;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.module.config.ModuleConfig;
 
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
-
-import javax.swing.JCheckBox;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 
 class SettingPanel extends JPanel {
 
@@ -73,7 +67,7 @@ class SettingPanel extends JPanel {
 		JPanel mainPanel = new ImagePanel();
 		mainPanel.setLayout(new GridLayout(12, 1));
 		mainPanel.setOpaque(false);
-		mainPanel.add(createPanel(HOVerwaltung.instance().getLanguageString("PlayerCompare"),
+		mainPanel.add(createPanel(TranslationFacility.tr("PlayerCompare"),
 				skillsCheckbox));
 		setLayout(new BorderLayout());
 		setOpaque(false);

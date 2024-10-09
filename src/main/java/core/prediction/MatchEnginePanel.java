@@ -4,34 +4,22 @@ package core.prediction;
 import core.gui.HOMainFrame;
 import core.gui.comp.panel.ImagePanel;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.prediction.engine.MatchPredictionManager;
 import core.prediction.engine.MatchResult;
 import core.prediction.engine.TeamData;
-import core.prediction.engine.TeamRatings;
 import module.teamAnalyzer.SystemManager;
-import module.teamAnalyzer.vo.MatchRating;
 
-import java.awt.BorderLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
-import javax.swing.JButton;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSlider;
-import javax.swing.JSplitPane;
-import javax.swing.SwingConstants;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 public class MatchEnginePanel extends ImagePanel implements	 ActionListener {
 	private static final long serialVersionUID = 4911590394636764762L;
 
-	JButton m_jbButton = new JButton(HOVerwaltung.instance().getLanguageString("Simulate"));
+	JButton m_jbButton = new JButton(TranslationFacility.tr("Simulate"));
 
 	private JSlider slider = new JSlider(SwingConstants.HORIZONTAL, 0, 100, 0);
 	private MatchResultTable m_jtMatchResultTable;

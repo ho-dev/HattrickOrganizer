@@ -14,9 +14,9 @@ import module.lineup.CopyListener;
 import module.lineup.Lineup;
 import module.lineup.LineupPanel;
 
+import javax.swing.*;
 import java.awt.*;
 import java.text.NumberFormat;
-import javax.swing.*;
 
 import static core.model.UserParameter.GOALKEEPER_AT_TOP;
 import static module.lineup.LineupPanel.TITLE_FG;
@@ -240,7 +240,7 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         mainPanel.add(m_jpMinuteToggler);
 
         // DEFENSE
-        var defenseLabel = new JLabel(HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.defense"));
+        var defenseLabel = new JLabel(TranslationFacility.tr("ls.match.ratingsector.defense"));
         defenseLabel.setFont(defenseLabel.getFont().deriveFont(Font.BOLD));
 
         gbcMainLayout.gridx = 0;
@@ -272,7 +272,7 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         mainPanel.add(m_jpLeftDefense);
 
         //Midfield ==================================================
-        var midfieldLabel = new JLabel(HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.midfield"));
+        var midfieldLabel = new JLabel(TranslationFacility.tr("ls.match.ratingsector.midfield"));
         midfieldLabel.setFont(midfieldLabel.getFont().deriveFont(Font.BOLD));
         gbcMainLayout.gridx = 0;
         gbcMainLayout.gridy = 1 + getLineupRatingLabelRowNumber(1);
@@ -291,7 +291,7 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
         mainPanel.add(m_jpMidfield);
 
         // Attack
-        var attackLabel = new JLabel(HOVerwaltung.instance().getLanguageString("ls.match.ratingsector.attack"));
+        var attackLabel = new JLabel(TranslationFacility.tr("ls.match.ratingsector.attack"));
         attackLabel.setFont(attackLabel.getFont().deriveFont(Font.BOLD));
         gbcMainLayout.gridx = 0;
         gbcMainLayout.gridy = 1 + getLineupRatingLabelRowNumber(2);
@@ -550,7 +550,7 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
     }
 
     private String getLangStr(String key) {
-        return HOVerwaltung.instance().getLanguageString(key);
+        return TranslationFacility.tr(key);
     }
 
     abstract static class MinuteRating {

@@ -1,7 +1,6 @@
 package core.model;
 
 import core.db.DBManager;
-import core.file.FileLoader;
 import core.file.hrf.HRF;
 import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
@@ -10,7 +9,6 @@ import core.util.HOLogger;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
-import java.io.InputStream;
 import java.sql.Timestamp;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
@@ -25,8 +23,6 @@ public class HOVerwaltung {
 
 	/** das Model */
 	protected HOModel m_clHoModel;
-
-	private Translator translator = null;
 
     public static boolean isNewModel(HOModel homodel) {
 		return (homodel != null && ((instance().getModel() == null) ||
@@ -90,9 +86,13 @@ public class HOVerwaltung {
 		setTranslator(pfad);
 	}
 
+	/**
+	 * @deprecated Provided for compatibility. Please use {@link TranslationFacility#setLanguage(String)} instead.
+	 */
+	@Deprecated(since = "9.0", forRemoval = true)
 	public void setTranslator(String language) {
 		try {
-			translator = Translator.load(language);
+			TranslationFacility.setTranslator(Translator.load(language));
 		} catch (RuntimeException e) {
 			HOLogger.instance().log(getClass(), e);
 		}
@@ -103,7 +103,7 @@ public class HOVerwaltung {
 	 */
 	@Deprecated(since = "9.0", forRemoval = true)
 	public ResourceBundle getResource() {
-		return Optional.ofNullable(translator).map(Translator::getResourceBundle).orElse(null);
+		return Optional.ofNullable(TranslationFacility.getTranslator()).map(Translator::getResourceBundle).orElse(null);
 	}
 
 	/**
@@ -197,20 +197,25 @@ public class HOVerwaltung {
 	/**
 	 * Returns the String connected to the active language file or connected to
 	 * the english language file. Returns !key! if the key can not be found.
-	 * 
+	 *
+	 * @deprecated Provided for compatibility. Please use {@link TranslationFacility#tr(String)} instead.
+	 *
 	 * @param key
 	 *            Key to be searched in language files
 	 * 
 	 * @return String connected to the key or !key! if nothing can be found in
 	 *         language files
 	 */
+	@Deprecated(since = "9.0", forRemoval = true)
 	public String getLanguageString(String key) {
-		return translator.translate(key);
+		return TranslationFacility.tr(key);
 	}
 
 	/**
 	 * Gets a parameterized message for the current language.
-	 * 
+	 *
+	 * @deprecated Provided for compatibility. Please use {@link TranslationFacility#tr(String, Object...)} instead.
+	 *
 	 * @param key
 	 *            the key for the message in the language file.
 	 * @param values
@@ -218,8 +223,9 @@ public class HOVerwaltung {
 	 * @return the message for the specified key where the placeholders are
 	 *         replaced by the given value(s).
 	 */
+	@Deprecated(since = "9.0", forRemoval = true)
 	public String getLanguageString(String key, Object... values) {
-		return translator.translate(key, values);
+		return TranslationFacility.tr(key, values);
 	}
 
 	/**
@@ -242,14 +248,18 @@ public class HOVerwaltung {
 	}
 
 	/**
-	 * @deprecated Provided for compatibility. Please use {@link #clearTranslator()} instead.
+	 * @deprecated Provided for compatibility. Will be removed without substitution!
 	 */
 	@Deprecated(since = "9.0", forRemoval = true)
     public void clearLanguageBundle() {
 		clearTranslator();
 	}
 
+	/**
+	 * @deprecated Provided for compatibility. Will be removed without substitution!
+	 */
+	@Deprecated(since = "9.0", forRemoval = true)
 	public void clearTranslator() {
-		translator = null;
+		TranslationFacility.setTranslator(null);
 	}
 }

@@ -1,28 +1,21 @@
 package module.lineup.ratings;
 
-import core.model.HOVerwaltung;
-import core.model.UserParameter;
 import core.gui.HOMainFrame;
+import core.model.TranslationFacility;
+import core.model.UserParameter;
 
-import java.awt.Dimension;
-import java.awt.BorderLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JCheckBox;
-import javax.swing.ButtonGroup;
-import javax.swing.JRadioButton;
-
 class RatingChartFrame extends JFrame {
 
-	private final HOVerwaltung hov = HOVerwaltung.instance();
 	private final UserParameter userParameter = UserParameter.instance();
-	private final JRadioButton combinedChartButton = new JRadioButton(hov.getLanguageString("lineup.CombinedChart"));
-	private final JRadioButton multiChartButton = new JRadioButton(hov.getLanguageString("lineup.MultiChart"));
+	private final JRadioButton combinedChartButton = new JRadioButton(TranslationFacility.tr("lineup.CombinedChart"));
+	private final JRadioButton multiChartButton = new JRadioButton(TranslationFacility.tr("lineup.MultiChart"));
 	private final ButtonGroup chartButtonGroup = new ButtonGroup();
-	private final JCheckBox etToggler = new JCheckBox(hov.getLanguageString("lineup.ETToggler"), userParameter.RatingChartFrame_ET);
+	private final JCheckBox etToggler = new JCheckBox(TranslationFacility.tr("lineup.ETToggler"), userParameter.RatingChartFrame_ET);
 	private final JPanel controlsPanel = new JPanel();
 	private final JPanel placeholderChart = new JPanel();
 	private final RatingChartData chartData = new RatingChartData();
@@ -63,7 +56,7 @@ class RatingChartFrame extends JFrame {
 	}
 
 	RatingChartFrame() {
-		super(HOVerwaltung.instance().getLanguageString("RatingChartFrame"));
+		super(TranslationFacility.tr("RatingChartFrame"));
 		this.setIconImage(HOMainFrame.instance().getIconImage());
 		setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		setLayout(new BorderLayout());

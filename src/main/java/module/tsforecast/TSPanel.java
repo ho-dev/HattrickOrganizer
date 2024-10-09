@@ -32,18 +32,13 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.match.IMatchDetails;
 import core.util.HODateTime;
-import core.util.HelperWrapper;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Polygon;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.font.FontRenderContext;
 import java.awt.font.TextLayout;
 import java.awt.geom.Rectangle2D;
@@ -52,8 +47,6 @@ import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Calendar;
-
-import javax.swing.*;
 
 class TSPanel extends JPanel {
 
@@ -201,7 +194,7 @@ protected void paintComponent( Graphics g) {
             graphics2d.drawImage(ImageUtilities.getImageIcon4Change(-1, true).getImage(),
                     (int) (xCoord * m_dFactor + (double) m_iCoordX0), (m_iMaxY + 10) - 2 - yCoord,
                     ImageUtilities.getImageIcon4Change(-1, true).getImageObserver());
-            graphics2d.drawString(HOVerwaltung.instance().getLanguageString("trainer_down"),
+            graphics2d.drawString(TranslationFacility.tr("trainer_down"),
                     (int) (xCoord * m_dFactor + (double) m_iCoordX0), (m_iMaxY + 10) - 2 - yCoord - 2);
             graphics2d.drawString(PlayerAbility.getNameForSkill((int) curve.getSpirit(), true),
                     (int) (xCoord * m_dFactor + (double) m_iCoordX0), ((m_iMaxY + 10) - 2 - yCoord) + 24);
@@ -210,7 +203,7 @@ protected void paintComponent( Graphics g) {
             graphics2d.drawImage(ImageUtilities.iconToImage(m_newImage),
                     (int) (xCoord * m_dFactor + (double) m_iCoordX0), (m_iMaxY + 10) - 2 - yCoord,
                     ((ImageIcon) m_newImage).getImageObserver());
-            graphics2d.drawString(HOVerwaltung.instance().getLanguageString("trainer_exchange"),
+            graphics2d.drawString(TranslationFacility.tr("trainer_exchange"),
                     (int) (xCoord * m_dFactor + (double) m_iCoordX0), (m_iMaxY + 10) - 2 - yCoord - 2);
             graphics2d.drawString(PlayerAbility.getNameForSkill((int) curve.getSpirit(), true),
                     (int) (xCoord * m_dFactor + (double) m_iCoordX0), ((m_iMaxY + 10) - 2 - yCoord) + 24);
@@ -219,7 +212,7 @@ protected void paintComponent( Graphics g) {
             graphics2d.drawImage(ImageUtilities.iconToImage(m_startImage),
                     (int) (xCoord * m_dFactor + (double) m_iCoordX0), (m_iMaxY + 10) - 2 - yCoord,
                     ((ImageIcon) m_startImage).getImageObserver());
-            graphics2d.drawString(HOVerwaltung.instance().getLanguageString("ls.team.coachingskill"),
+            graphics2d.drawString(TranslationFacility.tr("ls.team.coachingskill"),
                     (int) (xCoord * m_dFactor + (double) m_iCoordX0), (m_iMaxY + 10) - 2 - yCoord - 2);
             graphics2d.drawString(PlayerAbility.getNameForSkill((int) curve.getSpirit(), true),
                     (int) (xCoord * m_dFactor + (double) m_iCoordX0), ((m_iMaxY + 10) - 2 - yCoord) + 24);
@@ -311,7 +304,7 @@ protected void paintComponent( Graphics g) {
     graphics2d.setColor( lightBlue);
     graphics2d.fillRect( iXX2, DYFrame, iXX3-iXX2, m_iMaxY);
     graphics2d.setColor(ThemeManager.getColor(HOColorName.TSFORECAST_ALT_COLOR));
-    graphics2d.drawString( HOVerwaltung.instance().getLanguageString( "Season") + " " + iSeason,
+    graphics2d.drawString( TranslationFacility.tr( "Season") + " " + iSeason,
                            iXX2 + (iXX3-iXX2)/2, iYText);
 
     // previous seasons
@@ -321,7 +314,7 @@ protected void paintComponent( Graphics g) {
         // season -1
         graphics2d.fillRect( iXX1, DYFrame, iXX2-iXX1, m_iMaxY);
         graphics2d.setColor( darkGreen);
-        graphics2d.drawString( HOVerwaltung.instance().getLanguageString("Season") + " " + (iSeason - 1),
+        graphics2d.drawString( TranslationFacility.tr("Season") + " " + (iSeason - 1),
                                iXX1 + (iXX2-iXX1)/2, iYText);
         // season -2
         graphics2d.setColor( lightYellow);
@@ -330,7 +323,7 @@ protected void paintComponent( Graphics g) {
         // season -1
         graphics2d.fillRect( iXX1, DYFrame, iXX2-iXX1, m_iMaxY);
         graphics2d.setColor( darkGreen);
-        graphics2d.drawString( HOVerwaltung.instance().getLanguageString("Season") + " " + (iSeason - 1),
+        graphics2d.drawString( TranslationFacility.tr("Season") + " " + (iSeason - 1),
                                iXX1 + (iXX2-iXX1)/2, iYText);
       }
     }
