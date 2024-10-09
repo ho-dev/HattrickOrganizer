@@ -483,12 +483,9 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 		if (ie.getSource().equals(m_CB_type)) {
 			int cbType = m_CB_type.getSelectedIndex();
 			for (int i = 0; i < m_i_ptmTopCount; i++) {
-				int spielerID = (Integer) m_playerTableModelTop.getValueAt(i,
-                        m_playerTableModelTop.getColumnCount() - 1);
-				int pos = HOVerwaltung.instance().getModel().getCurrentPlayer(spielerID)
-						.getIdealPosition();
-				String group = HOVerwaltung.instance().getModel().getCurrentPlayer(spielerID)
-						.getTeamGroup();
+				int spielerID = (Integer) m_playerTableModelTop.getValueAt(i,m_playerTableModelTop.getColumnCount() - 1);
+				int pos = HOVerwaltung.instance().getModel().getCurrentPlayer(spielerID).getIdealPosition();
+				String group = HOVerwaltung.instance().getModel().getCurrentPlayer(spielerID).getTeamGroup();
 				// System.out.println(cbType +":"+group);
 				if (cbType == 1 && pos == 0 || cbType == 2 && (pos > 0 && pos < 8) || cbType == 3
 						&& (pos > 7 && pos < 12) || cbType == 4 && (pos > 11 && pos < 16)
@@ -899,7 +896,7 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 			}
 		}
 
-		// Create array from a tablemodel vector
+		// Create array from a table model vector
 		m_ar_setPlayers = new module.playeranalysis.skillCompare.Player[m_V_setPlayers.size()];
 		for (int counter = 0; counter < m_ar_setPlayers.length; counter++) {
 			m_ar_setPlayers[counter] = m_V_setPlayers.elementAt(counter);
