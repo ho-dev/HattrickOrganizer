@@ -12,7 +12,9 @@
 
 * Calculation of the tsi sub by approximating the tsi formula (#235)
 
-### Team Analyzer
+### Player Analysis
+
+* Fix error in rating compare table (#2153)
 
 ### Rating
 
