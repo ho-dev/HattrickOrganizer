@@ -1,8 +1,10 @@
 package tool.dbencrypter
 
 import core.db.user.UserManager
+import tool.dbencrypter.encrypt.DbEncrypterManager
 import java.awt.BorderLayout
 import javax.swing.JButton
+import javax.swing.JLabel
 import javax.swing.JPanel
 
 class DbEncrypterPanel: JPanel() {
@@ -15,6 +17,7 @@ class DbEncrypterPanel: JPanel() {
 			encrypter.encrypt()
 		}
 
-		add(encryptButton, BorderLayout.CENTER)
+		add(JLabel("Encrypt"), BorderLayout.NORTH)
+		add(encryptButton, BorderLayout.SOUTH)
 	}
 }
