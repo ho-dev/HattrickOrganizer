@@ -1,5 +1,6 @@
 package module.playeranalysis.skillCompare;
 
+import core.constants.player.PlayerSkill;
 import core.model.HOVerwaltung;
 import core.model.player.IMatchRoleID;
 
@@ -12,6 +13,13 @@ import static core.model.player.IMatchRoleID.UNKNOWN;
 public class Player
 {
 	private core.model.player.Player m_Player;
+
+	/**
+	 * Player ratings are cached in the rating prediction model.
+	 * A new instance of the player has to be created each time skills are changed
+	 */
+	private core.model.player.Player m_PlayerChangedSkills = null;
+
 	private String m_FirstName;
 	private String m_NickName;
 	private String m_LastName;
@@ -340,7 +348,7 @@ public class Player
 	public void setOldPositionValues()
 	{
 		var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
-		setOldPos_GK((float)ratingPredictionModel.getPlayerMatchAverageRating(m_Player, KEEPER));
+		setOldPosVal_GK((float)ratingPredictionModel.getPlayerMatchAverageRating(m_Player, KEEPER));
 		setOldPosVal_CD((float)ratingPredictionModel.getPlayerMatchAverageRating(m_Player, IMatchRoleID.CENTRAL_DEFENDER));
 		setOldPosVal_CD_TW((float)ratingPredictionModel.getPlayerMatchAverageRating(m_Player, IMatchRoleID.CENTRAL_DEFENDER_TOWING));
 		setOldPosVal_CD_O((float)ratingPredictionModel.getPlayerMatchAverageRating(m_Player, IMatchRoleID.CENTRAL_DEFENDER_OFF));
@@ -365,28 +373,61 @@ public class Player
 	
 	public void setNewPositionValues()
 	{
+		if (m_PlayerChangedSkills==null){
+			m_PlayerChangedSkills=new core.model.player.Player();
+			m_PlayerChangedSkills.setPlayerId(m_ID);
+			m_PlayerChangedSkills.setFirstName(m_FirstName);
+			m_PlayerChangedSkills.setLastName(m_LastName);
+			m_PlayerChangedSkills.setAge(m_Age);
+			m_PlayerChangedSkills.setTsi(m_TSI);
+			m_PlayerChangedSkills.setNationalityId(m_Nationality);
+			m_PlayerChangedSkills.setTeamInfoSmilie(m_Group);
+			m_PlayerChangedSkills.setSpecialty(m_Speciality);
+			m_PlayerChangedSkills.setHomeGrown(m_Player.isHomeGrown());
+
+			setPlayerSkill(m_PlayerChangedSkills, PlayerSkill.KEEPER, m_Keeping);
+			setPlayerSkill(m_PlayerChangedSkills, PlayerSkill.DEFENDING, m_Defending);
+			setPlayerSkill(m_PlayerChangedSkills, PlayerSkill.PLAYMAKING, m_Playmaking);
+			setPlayerSkill(m_PlayerChangedSkills, PlayerSkill.WINGER, m_Winger);
+			setPlayerSkill(m_PlayerChangedSkills, PlayerSkill.SCORING, m_Scoring);
+			setPlayerSkill(m_PlayerChangedSkills, PlayerSkill.PASSING, m_Passing);
+			setPlayerSkill(m_PlayerChangedSkills, PlayerSkill.SETPIECES, m_SetPieces);
+			setPlayerSkill(m_PlayerChangedSkills, PlayerSkill.FORM, m_Form);
+			setPlayerSkill(m_PlayerChangedSkills, PlayerSkill.LOYALTY, m_Loyalty);
+			setPlayerSkill(m_PlayerChangedSkills, PlayerSkill.LEADERSHIP, m_Leadership);
+			setPlayerSkill(m_PlayerChangedSkills, PlayerSkill.STAMINA, m_Stamina);
+			setPlayerSkill(m_PlayerChangedSkills, PlayerSkill.EXPERIENCE, m_Experience);
+		}
 		var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
-		setPosVal_GK((float)ratingPredictionModel.getPlayerMatchAverageRating(m_Player, KEEPER));
-		setPosVal_CD((float)ratingPredictionModel.getPlayerMatchAverageRating(m_Player, IMatchRoleID.CENTRAL_DEFENDER));
-		setPosVal_CD_TW((float)ratingPredictionModel.getPlayerMatchAverageRating(m_Player, IMatchRoleID.CENTRAL_DEFENDER_TOWING));
-		setPosVal_CD_O((float)ratingPredictionModel.getPlayerMatchAverageRating(m_Player, IMatchRoleID.CENTRAL_DEFENDER_OFF));
-		setPosVal_WB((float)ratingPredictionModel.getPlayerMatchAverageRating(m_Player, IMatchRoleID.BACK));
-		setPosVAL_WB_TM((float)ratingPredictionModel.getPlayerMatchAverageRating(m_Player, IMatchRoleID.BACK_TOMID));
-		setPosVal_WB_O((float)ratingPredictionModel.getPlayerMatchAverageRating(m_Player, IMatchRoleID.BACK_OFF));
-		setPosVAL_WB_D((float)ratingPredictionModel.getPlayerMatchAverageRating(m_Player, IMatchRoleID.BACK_DEF));
-		setPosVal_IM((float)ratingPredictionModel.getPlayerMatchAverageRating(m_Player, IMatchRoleID.MIDFIELDER));
-		setPosVal_IM_O((float)ratingPredictionModel.getPlayerMatchAverageRating(m_Player, IMatchRoleID.MIDFIELDER_OFF));
-		setPosVal_IM_D((float)ratingPredictionModel.getPlayerMatchAverageRating(m_Player, IMatchRoleID.MIDFIELDER_DEF));
-		setPosVal_IM_TW((float)ratingPredictionModel.getPlayerMatchAverageRating(m_Player, IMatchRoleID.MIDFIELDER_TOWING));
-		setPosVal_W((float)ratingPredictionModel.getPlayerMatchAverageRating(m_Player, IMatchRoleID.WINGER));
-		setPosVal_W_D((float)ratingPredictionModel.getPlayerMatchAverageRating(m_Player, IMatchRoleID.WINGER_DEF));
-		setPosVal_W_TM((float)ratingPredictionModel.getPlayerMatchAverageRating(m_Player, IMatchRoleID.WINGER_TOMID));
-		setPosVal_W_O((float)ratingPredictionModel.getPlayerMatchAverageRating(m_Player, IMatchRoleID.WINGER_OFF));
-		setPosVal_F((float)ratingPredictionModel.getPlayerMatchAverageRating(m_Player, IMatchRoleID.FORWARD));
-		setPosVal_F_D((float)ratingPredictionModel.getPlayerMatchAverageRating(m_Player, IMatchRoleID.FORWARD_DEF));
-		setPosVal_F_TW((float)ratingPredictionModel.getPlayerMatchAverageRating(m_Player, IMatchRoleID.FORWARD_TOWING));
-		setBestPositionRating((float)m_Player.getIdealPositionRating());
+		setPosVal_GK((float)ratingPredictionModel.getPlayerMatchAverageRating(m_PlayerChangedSkills, KEEPER));
+		setPosVal_CD((float)ratingPredictionModel.getPlayerMatchAverageRating(m_PlayerChangedSkills, IMatchRoleID.CENTRAL_DEFENDER));
+		setPosVal_CD_TW((float)ratingPredictionModel.getPlayerMatchAverageRating(m_PlayerChangedSkills, IMatchRoleID.CENTRAL_DEFENDER_TOWING));
+		setPosVal_CD_O((float)ratingPredictionModel.getPlayerMatchAverageRating(m_PlayerChangedSkills, IMatchRoleID.CENTRAL_DEFENDER_OFF));
+		setPosVal_WB((float)ratingPredictionModel.getPlayerMatchAverageRating(m_PlayerChangedSkills, IMatchRoleID.BACK));
+		setPosVAL_WB_TM((float)ratingPredictionModel.getPlayerMatchAverageRating(m_PlayerChangedSkills, IMatchRoleID.BACK_TOMID));
+		setPosVal_WB_O((float)ratingPredictionModel.getPlayerMatchAverageRating(m_PlayerChangedSkills, IMatchRoleID.BACK_OFF));
+		setPosVAL_WB_D((float)ratingPredictionModel.getPlayerMatchAverageRating(m_PlayerChangedSkills, IMatchRoleID.BACK_DEF));
+		setPosVal_IM((float)ratingPredictionModel.getPlayerMatchAverageRating(m_PlayerChangedSkills, IMatchRoleID.MIDFIELDER));
+		setPosVal_IM_O((float)ratingPredictionModel.getPlayerMatchAverageRating(m_PlayerChangedSkills, IMatchRoleID.MIDFIELDER_OFF));
+		setPosVal_IM_D((float)ratingPredictionModel.getPlayerMatchAverageRating(m_PlayerChangedSkills, IMatchRoleID.MIDFIELDER_DEF));
+		setPosVal_IM_TW((float)ratingPredictionModel.getPlayerMatchAverageRating(m_PlayerChangedSkills, IMatchRoleID.MIDFIELDER_TOWING));
+		setPosVal_W((float)ratingPredictionModel.getPlayerMatchAverageRating(m_PlayerChangedSkills, IMatchRoleID.WINGER));
+		setPosVal_W_D((float)ratingPredictionModel.getPlayerMatchAverageRating(m_PlayerChangedSkills, IMatchRoleID.WINGER_DEF));
+		setPosVal_W_TM((float)ratingPredictionModel.getPlayerMatchAverageRating(m_PlayerChangedSkills, IMatchRoleID.WINGER_TOMID));
+		setPosVal_W_O((float)ratingPredictionModel.getPlayerMatchAverageRating(m_PlayerChangedSkills, IMatchRoleID.WINGER_OFF));
+		setPosVal_F((float)ratingPredictionModel.getPlayerMatchAverageRating(m_PlayerChangedSkills, IMatchRoleID.FORWARD));
+		setPosVal_F_D((float)ratingPredictionModel.getPlayerMatchAverageRating(m_PlayerChangedSkills, IMatchRoleID.FORWARD_DEF));
+		setPosVal_F_TW((float)ratingPredictionModel.getPlayerMatchAverageRating(m_PlayerChangedSkills, IMatchRoleID.FORWARD_TOWING));
+		setBestPositionRating((float)m_PlayerChangedSkills.getIdealPositionRating());
 		changePlayerSkillValues(false);
+	}
+
+	private void setPlayerSkill(core.model.player.Player mPlayerChangedSkills, PlayerSkill playerSkill, int value) {
+		mPlayerChangedSkills.setSkillValue(playerSkill, value);
+		if (value == m_Player.getValue4Skill(playerSkill)){
+			// Skill level not changed, take the subskill from original player
+			mPlayerChangedSkills.setSubskill4PlayerSkill(playerSkill, m_Player.getSub4Skill(playerSkill));
+		}
 	}
 
 	public int getAge() {
@@ -422,6 +463,7 @@ public class Player
 		return m_Experience;
 	}
 	public void setExperience(int val) {
+		if ( val != m_Experience ) m_PlayerChangedSkills = null;
 		m_Experience = val;
 	}
 	public int getOldExperience() {
@@ -434,6 +476,7 @@ public class Player
 		return m_Winger;
 	}
 	public void setWinger(int val) {
+		if ( val != m_Winger ) m_PlayerChangedSkills = null;
 		m_Winger = val;
 	}
 	public int getOldWinger() {
@@ -446,6 +489,7 @@ public class Player
 		return m_Form;
 	}
 	public void setForm(int form) {
+		if ( form != m_Form ) m_PlayerChangedSkills = null;
 		m_Form = form;
 	}
 	public int getOldForm() {
@@ -458,6 +502,7 @@ public class Player
 		return m_Leadership;
 	}
 	public void setLeadership(int val) {
+		if ( val != m_Leadership ) m_PlayerChangedSkills = null;
 		m_Leadership = val;
 	}
 	public int getWages() {
@@ -482,6 +527,7 @@ public class Player
 		return m_Stamina;
 	}
 	public void setStamina(int val) {
+		if ( val != m_Stamina ) m_PlayerChangedSkills = null;
 		m_Stamina = val;
 	}
 	public int getOldStamina() {
@@ -736,13 +782,14 @@ public class Player
 	public float getOldPosVal_GK() {
 		return m_OldPosVal_GK;
 	}
-	public void setOldPos_GK(float val) {
+	public void setOldPosVal_GK(float val) {
 		m_OldPosVal_GK = val;
 	}
 	public int getPassing() {
 		return m_Passing;
 	}
 	public void setPassing(int val) {
+		if ( val != m_Passing ) m_PlayerChangedSkills = null;
 		m_Passing = val;
 	}
 	public int getOldPassing() {
@@ -755,6 +802,7 @@ public class Player
 		return m_Playmaking;
 	}
 	public void setPlaymaking(int val) {
+		if ( val != m_Playmaking ) m_PlayerChangedSkills = null;
 		m_Playmaking = val;
 	}
 	public int getOldPlaymaking() {
@@ -773,6 +821,7 @@ public class Player
 		return m_SetPieces;
 	}
 	public void setSetPieces(int val) {
+		if ( val != m_SetPieces ) m_PlayerChangedSkills = null;
 		m_SetPieces = val;
 	}
 	public int getOldSetPieces() {
@@ -785,6 +834,7 @@ public class Player
 		return m_Scoring;
 	}
 	public void setScoring(int val) {
+		if ( val != m_Scoring ) m_PlayerChangedSkills = null;
 		m_Scoring = val;
 	}
 	public int getOldScoring() {
@@ -803,6 +853,7 @@ public class Player
 		return m_Keeping;
 	}
 	public void setKeeping(int val) {
+		if ( val != m_Keeping ) m_PlayerChangedSkills = null;
 		m_Keeping = val;
 	}
 	public int getOldKeeping() {
@@ -815,6 +866,7 @@ public class Player
 		return m_Defending;
 	}
 	public void setDefending(int val) {
+		if ( val != m_Defending ) m_PlayerChangedSkills = null;
 		m_Defending = val;
 	}
 	public int getOldDefending() {
