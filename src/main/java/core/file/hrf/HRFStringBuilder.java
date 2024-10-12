@@ -12,15 +12,26 @@ import core.model.match.MatchTacticType;
 import core.model.match.MatchTeamAttitude;
 import core.model.match.StyleOfPlay;
 import core.model.player.IMatchRoleID;
+import core.util.HODateTime;
 import core.util.HOLogger;
 import core.util.StringUtils;
+import hattrickdata.Arena;
+import hattrickdata.Capacity;
+import hattrickdata.ExpandedCapacity;
 import module.lineup.substitution.model.Substitution;
 import module.youth.YouthPlayer;
 import org.apache.commons.lang3.math.NumberUtils;
+
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class HRFStringBuilder {
+
+    private static final String HO_DATE_TIME_NOT_SET = EMPTY;
+
     private StringBuilder basicsStringBuilder;
     private StringBuilder clubStringBuilder;
     private StringBuilder economyStringBuilder;
@@ -60,10 +71,11 @@ public class HRFStringBuilder {
     private void appendKeyValue(StringBuilder s, String key, Double value){
         s.append(key).append("=").append(value!=null?value:"").append("\n");
     }
+    private void appendKeyValue(StringBuilder s, String key, boolean value){
+        s.append(key).append("=").append(value?"1":"0").append("\n");
+    }
 
-    /**
-     * Create the arena data.
-     */
+    // TODO: fix the overload solution with 'Arena'
     public void createArena(Map<String, String> arenaDataMap) {
         arenaStringBuilder = new StringBuilder("[arena]\n");
         appendKeyValue(arenaStringBuilder, "arenaname", arenaDataMap.get("ArenaName"));
@@ -79,8 +91,30 @@ public class HRFStringBuilder {
         appendKeyValue(arenaStringBuilder, "expandingVIP", arenaDataMap.get("ExVIP"));
         appendKeyValue(arenaStringBuilder, "expandingSseatTotal", arenaDataMap.get("ExTotal"));
         appendKeyValue(arenaStringBuilder, "isExpanding", arenaDataMap.get("isExpanding"));
-        // Achtung bei keiner Erweiterung = 0!
-        appendKeyValue(arenaStringBuilder, "ExpansionDate", arenaDataMap.get("ExpansionDate"));
+        appendKeyValue(arenaStringBuilder, "RebuiltDate", Optional.ofNullable(arenaDataMap.get("RebuiltDate")).orElse(HO_DATE_TIME_NOT_SET));
+        appendKeyValue(arenaStringBuilder, "ExpansionDate", Optional.ofNullable(arenaDataMap.get("ExpansionDate")).orElse(HO_DATE_TIME_NOT_SET));
+    }
+
+    /**
+     * Create the arena data.
+     */
+    public void createArena(Arena arena) {
+        arenaStringBuilder = new StringBuilder("[arena]\n");
+        appendKeyValue(arenaStringBuilder, "arenaname", arena.getName());
+        appendKeyValue(arenaStringBuilder, "arenaid", arena.getId());
+        appendKeyValue(arenaStringBuilder, "antalStaplats", arena.getCurrentCapacity().getTerraces());
+        appendKeyValue(arenaStringBuilder, "antalSitt", arena.getCurrentCapacity().getBasic());
+        appendKeyValue(arenaStringBuilder, "antalTak", arena.getCurrentCapacity().getRoof());
+        appendKeyValue(arenaStringBuilder, "antalVIP", arena.getCurrentCapacity().getVip());
+        appendKeyValue(arenaStringBuilder, "seatTotal", arena.getCurrentCapacity().getTotal());
+        appendKeyValue(arenaStringBuilder, "expandingStaplats", arena.getExpandedCapacity().map(Capacity::getTerraces).orElse(0));
+        appendKeyValue(arenaStringBuilder, "expandingSitt", arena.getExpandedCapacity().map(Capacity::getBasic).orElse(0));
+        appendKeyValue(arenaStringBuilder, "expandingTak", arena.getExpandedCapacity().map(Capacity::getRoof).orElse(0));
+        appendKeyValue(arenaStringBuilder, "expandingVIP", arena.getExpandedCapacity().map(Capacity::getVip).orElse(0));
+        appendKeyValue(arenaStringBuilder, "expandingSseatTotal", arena.getExpandedCapacity().map(Capacity::getTotal).orElse(0));
+        appendKeyValue(arenaStringBuilder, "isExpanding", arena.getExpandedCapacity().isPresent());
+        appendKeyValue(arenaStringBuilder, "RebuiltDate", arena.getCurrentCapacity().getRebuiltDate().map(HODateTime::toHT).orElse(HO_DATE_TIME_NOT_SET));
+        appendKeyValue(arenaStringBuilder, "ExpansionDate", arena.getExpandedCapacity().map(ExpandedCapacity::getExpansionDate).map(HODateTime::toHT).orElse(HO_DATE_TIME_NOT_SET));
     }
 
     /**

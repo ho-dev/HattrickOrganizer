@@ -7,6 +7,8 @@
 ### Database
 
 * Increase match report column size (#2065)
+* Table `STADION`: Added column `REBUILT_DATE` and
+  `EXPANSION_DATE` ([#2140](https://github.com/ho-dev/HattrickOrganizer/issues/2140))
 
 ### Squad
 
@@ -38,6 +40,8 @@
 
 ### Misc
 
+* Arena sizer: Added the Arena Info Panel (feature [#2140](https://github.com/ho-dev/HattrickOrganizer/issues/2140)) in
+  the tab with name of the stadium.
 * Fix #2137: Resolved an issue where the Download Dialog would not reappear after being closed with the 'X' button. The
   dialog will now correctly reappear when triggered again.
 

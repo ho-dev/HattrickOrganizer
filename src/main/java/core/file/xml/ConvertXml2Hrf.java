@@ -20,6 +20,7 @@ import core.util.HODateTime;
 import core.util.Helper;
 import core.module.config.ModuleConfig;
 import core.net.MyConnector;
+import hattrickdata.Arena;
 import module.transfer.PlayerTransfer;
 import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
@@ -185,7 +186,7 @@ public class ConvertXml2Hrf {
 		} catch (Exception ignored) {
 
 		}
-		Map<String, String> arenaDataMap = XMLArenaParser.parseArenaFromString(mc.downloadArena(arenaId));
+		Arena arena = XMLArenaParser.parseArenaFromString(mc.downloadArena(arenaId)).getRight();
 
 		// MatchOrder
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.match_orders"), progressIncrement);
@@ -229,7 +230,7 @@ public class ConvertXml2Hrf {
 
 		// Arena
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.create_arena"), progressIncrement);
-		hrfSgtringBuilder.createArena(arenaDataMap);
+		hrfSgtringBuilder.createArena(arena);
 
 		// players
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.create_players"), progressIncrement);

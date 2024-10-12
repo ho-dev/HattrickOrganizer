@@ -5,6 +5,8 @@ import core.model.TranslationFacility;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -13,9 +15,9 @@ public class ArenaSizerDialog extends JDialog implements ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	private JTabbedPane tabbedPane;
-	private ArenaPanel panel;
+	private ArenaPanel arenaPanel;
 	private DistributionStatisticsPanel historyPanel;
-	private ArenaPanel infoPanel;
+	private ArenaInfoPanel arenaInfoPanel;
 	private ControlPanel controlPanel;
 	private JPanel toolbar;
 	private JButton refreshButton = new JButton(TranslationFacility.tr("ls.button.apply"));
@@ -27,7 +29,6 @@ public class ArenaSizerDialog extends JDialog implements ActionListener {
 	}
 
 	private void initialize() {
-		setSize(900,430);
 		setLayout(new BorderLayout());
 		setTitle(TranslationFacility.tr("ArenaSizer"));
 		add(getToolbar(), BorderLayout.NORTH);
@@ -41,6 +42,8 @@ public class ArenaSizerDialog extends JDialog implements ActionListener {
 
 		add(centerPanel,BorderLayout.CENTER);
 
+		pack();
+		setLocationByPlatform(true);
 	}
 
 	private JPanel getToolbar(){
@@ -68,18 +71,18 @@ public class ArenaSizerDialog extends JDialog implements ActionListener {
 		return historyPanel;
 	}
 
-	ArenaPanel getArenaPanel(){
-		if(panel == null){
-			panel = new ArenaPanel();
+	ArenaPanel getArenaPanel() {
+		if (arenaPanel == null) {
+			arenaPanel = new ArenaPanel();
 		}
-		return panel;
+		return arenaPanel;
 	}
 
-	ArenaPanel getInfoPanel(){
-		if(infoPanel == null){
-			infoPanel = new ArenaPanel();
+	ArenaInfoPanel getArenaInfoPanel() {
+		if (arenaInfoPanel == null) {
+			arenaInfoPanel = new ArenaInfoPanel();
 		}
-		return infoPanel;
+		return arenaInfoPanel;
 	}
 
 	private JTabbedPane getTabbedPane(){
@@ -87,21 +90,10 @@ public class ArenaSizerDialog extends JDialog implements ActionListener {
 			tabbedPane = new JTabbedPane();
 			HOVerwaltung hoV = HOVerwaltung.instance();
 			tabbedPane.addTab(TranslationFacility.tr("Stadion"), getArenaPanel());
-			tabbedPane.addTab(hoV.getModel().getStadium().getStadienname(), getInfoPanel());
+			tabbedPane.addTab(hoV.getModel().getStadium().getStadienname(), getArenaInfoPanel());
 			tabbedPane.addTab(TranslationFacility.tr("Statistik"), getHistoryPanel());
 		}
 		return tabbedPane;
-	}
-
-	@Override
-	public void setSize(int width, int height) {
-	   super.setSize(width, height);
-
-	   Dimension screenSize = getParent().getSize();
-	   int x = (screenSize.width - getWidth()) / 2;
-	   int y = (screenSize.height - getHeight()) / 2;
-
-	   setLocation(getParent().getX()+x, getParent().getY()+y);
 	}
 
 	@Override
@@ -110,7 +102,6 @@ public class ArenaSizerDialog extends JDialog implements ActionListener {
 			Stadium stadium = getControlPanel().getStadium();
 			int[] supporter = getControlPanel().getModifiedSupporter();
             getArenaPanel().reinitArena(stadium, supporter[0],supporter[1],supporter[2]);
-            getInfoPanel().reinitArena(HOVerwaltung.instance().getModel().getStadium(), supporter[0],supporter[1],supporter[2]);
 		}
 	}
 }
