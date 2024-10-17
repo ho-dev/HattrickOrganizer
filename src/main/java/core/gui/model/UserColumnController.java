@@ -59,10 +59,10 @@ public final class UserColumnController {
 	private  LineupTableModel lineupColumnModel			= null;
 	
 	/** model for player analysis **/
-	private PlayerAnalysisModel[] playerAnalysisModels 		= new PlayerAnalysisModel[2];
+	private final PlayerAnalysisModel[] playerAnalysisModels 		= new PlayerAnalysisModel[2];
 	
 	/** model for player analysis **/
-	private PlayerAnalysisModel playerAnalysis2Model 		= null;
+//	private PlayerAnalysisModel playerAnalysis2Model 		= null;
 
 	// Youth module
 	private YouthPlayerOverviewTableModel youthPlayerOverviewColumnModel;

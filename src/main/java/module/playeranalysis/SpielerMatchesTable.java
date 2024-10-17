@@ -3,28 +3,24 @@ package module.playeranalysis;
 
 import core.db.DBManager;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
-import core.gui.comp.table.UserColumn;
 import core.gui.model.PlayerAnalysisModel;
 import core.gui.model.UserColumnController;
 import javax.swing.JTable;
-import javax.swing.table.TableColumnModel;
 import java.io.Serial;
 
 final class SpielerMatchesTable extends JTable {
 
 	@Serial
 	private static final long serialVersionUID = 5959815846371146851L;
-	private PlayerAnalysisModel m_clTableModel;
-	private int playerId = -1;
-	private final int instance;
+	private final PlayerAnalysisModel m_clTableModel;
+	private int playerId;
 
-	/**
+    /**
 	 * Creates a new SpielerMatchesTable object.
 	 */
 	SpielerMatchesTable(int spielerid, int instance) {
 		super();
-		this.instance = instance;
-		playerId = spielerid;
+        playerId = spielerid;
 		m_clTableModel = UserColumnController.instance().getAnalysisModel(instance);
 		m_clTableModel.setValues(DBManager.instance().getPlayerMatchCBItems(playerId));
 		m_clTableModel.initTable(this);
@@ -47,7 +43,7 @@ final class SpielerMatchesTable extends JTable {
 	/**
 	 * Initialisiert das Model
 	 */
-	private void initModel() {
+//	private void initModel() {
 
 //		if (m_clTableModel == null) {
 //			m_clTableModel = (instance == 1) ? UserColumnController.instance().getAnalysis1Model()
@@ -89,6 +85,6 @@ final class SpielerMatchesTable extends JTable {
 //		setSelectionMode(0);
 //		setRowSelectionAllowed(true);
 //		m_clTableSorter.initsort();
-	}
+//	}
 
 }

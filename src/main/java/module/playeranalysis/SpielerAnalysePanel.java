@@ -6,7 +6,6 @@ import core.gui.HOMainFrame;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
-import core.gui.model.PlayerAnalysisModel;
 import core.gui.model.PlayerCBItem;
 import core.gui.model.PlayerCBItemRenderer;
 import core.gui.theme.HOColorName;
@@ -16,7 +15,6 @@ import core.model.match.MatchKurzInfo;
 import core.model.player.Player;
 import core.net.HattrickLink;
 import core.util.Helper;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;

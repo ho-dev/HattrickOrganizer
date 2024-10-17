@@ -1,24 +1,17 @@
 package module.matches.statistics;
 
 import core.db.DBManager;
-import core.gui.comp.renderer.TableHeaderRenderer1;
-import core.gui.comp.table.ToolTipHeader;
-import core.gui.comp.table.UserColumn;
 import core.gui.model.UserColumnController;
 import core.model.UserParameter;
 import core.model.match.MatchesOverviewRow;
-import core.util.Helper;
 import module.matches.MatchLocation;
 import module.matches.MatchesPanel;
 import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
-import javax.swing.table.TableColumnModel;
-import java.awt.*;
-
 
 public class MatchesOverviewTable extends JTable {
 	
-	private MatchesOverviewColumnModel tableModel;
+	private final MatchesOverviewColumnModel tableModel;
 	 
 	public MatchesOverviewTable(int iMatchType){
 		super();

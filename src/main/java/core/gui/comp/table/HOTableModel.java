@@ -4,10 +4,7 @@ import core.db.DBManager;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.model.UserColumnController;
 import core.model.TranslationFacility;
-
-import core.model.HOVerwaltung;
 import core.util.Helper;
-
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumnModel;
@@ -236,9 +233,7 @@ public abstract class HOTableModel extends AbstractTableModel {
 	}
 
 	/**
-	 * return the order of the column like old method getSpaltenreihenfolge
-	 * 
-	 * @return
+	 * Return the order of the column like old method getSpaltenreihenfolge
 	 */
 	private int[][] getColumnOrder() {
 		UserColumn[] tmp = getDisplayedColumns();
@@ -250,43 +245,40 @@ public abstract class HOTableModel extends AbstractTableModel {
 		return order;
 	}
 
-	/**
-	 * Move the columns of the table to their correct places
-	 * @param table JTable
-	 */
-	public void initColumnOrder(JTable table)
-	{
-		var order = getColumnOrder();
-		// Sort according to [x][1]
-		order = Helper.sortintArray(order, 1);
+//	/**
+//	 * Move the columns of the table to their correct places
+//	 * @param table JTable
+//	 */
+//	public void initColumnOrder(JTable table)
+//	{
+//		var order = getColumnOrder();
+//		// Sort according to [x][1]
+//		order = Helper.sortintArray(order, 1);
+//
+//		if (order != null) {
+//			for (int[] ints : order) {
+//				table.moveColumn(table.getColumnModel().getColumnIndex(ints[0]), ints[1]);
+//			}
+//		}
+//	}
 
-		if (order != null) {
-			for (int[] ints : order) {
-				table.moveColumn(table.getColumnModel().getColumnIndex(ints[0]), ints[1]);
-			}
-		}
-	}
-
-	/**
-	 * sets size in JTable
-	 * 
-	 * @param tableColumnModel
-	 */
-	public void setColumnsSize(TableColumnModel tableColumnModel) {
-		final UserColumn[] tmpColumns = getDisplayedColumns();
-        for (UserColumn tmpColumn : tmpColumns) {
-            var id = tmpColumn.getId();
-            tmpColumn.setSize(tableColumnModel.getColumn(tableColumnModel.getColumnIndex(id)));
-        }
-	}
+//	/**
+//	 * sets size in JTable
+//	 *
+//	 * @param tableColumnModel
+//	 */
+//	public void setColumnsSize(TableColumnModel tableColumnModel) {
+//		final UserColumn[] tmpColumns = getDisplayedColumns();
+//        for (UserColumn tmpColumn : tmpColumns) {
+//            var id = tmpColumn.getId();
+//            tmpColumn.setSize(tableColumnModel.getColumn(tableColumnModel.getColumnIndex(id)));
+//        }
+//	}
 
 	protected abstract void initData();
 
 	/**
-	 * return the array index from a Column id
-	 * 
-	 * @param searchid
-	 * @return
+	 * Return the array index from a Column id
 	 */
 	public int getPositionInArray(int searchid) {
 		final UserColumn[] tmpColumns = getDisplayedColumns();
@@ -297,17 +289,17 @@ public abstract class HOTableModel extends AbstractTableModel {
 		return -1;
 	}
 
-	public void setCurrentValueToColumns(UserColumn[] tmpColumns) {
-		for (UserColumn tmpColumn : tmpColumns) {
-			for (UserColumn column : columns) {
-				if (column.getId() == tmpColumn.getId()) {
-					column.setIndex(tmpColumn.getIndex());
-					column.setPreferredWidth(tmpColumn.getPreferredWidth());
-					break;
-				}
-			}
-		}
-	}
+//	public void setCurrentValueToColumns(UserColumn[] tmpColumns) {
+//		for (UserColumn tmpColumn : tmpColumns) {
+//			for (UserColumn column : columns) {
+//				if (column.getId() == tmpColumn.getId()) {
+//					column.setIndex(tmpColumn.getIndex());
+//					column.setPreferredWidth(tmpColumn.getPreferredWidth());
+//					break;
+//				}
+//			}
+//		}
+//	}
 
 	private void getUserColumnSettings(JTable table, int offset) {
 		// Restore column order and width settings

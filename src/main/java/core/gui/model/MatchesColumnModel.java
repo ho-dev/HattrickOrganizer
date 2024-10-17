@@ -8,8 +8,6 @@ import core.model.enums.MatchTypeExtended;
 import core.model.match.IMatchType;
 import core.model.match.MatchKurzInfo;
 import core.model.enums.MatchType;
-import core.model.player.Player;
-
 import java.awt.Color;
 
 public final class MatchesColumnModel extends HOTableModel {

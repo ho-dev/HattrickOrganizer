@@ -1,8 +1,6 @@
 package module.matches;
 
 import core.db.DBManager;
-import core.gui.comp.renderer.HODefaultTableCellRenderer;
-import core.gui.comp.renderer.TableHeaderRenderer1;
 import core.gui.model.MatchesColumnModel;
 import core.gui.model.UserColumnController;
 import core.model.HOVerwaltung;
@@ -14,10 +12,9 @@ import javax.swing.ListSelectionModel;
 
 final class MatchesTable extends JTable {
 
-	private MatchesColumnModel m_clTableModel;
-//	private TableSorter m_clTableSorter;
+	private final MatchesColumnModel m_clTableModel;
 
-	protected MatchesTable(int matchtyp) {
+	MatchesTable(int matchtyp) {
 		super();
 		setOpaque(false);
 		m_clTableModel = UserColumnController.instance().getMatchesModel();
@@ -54,7 +51,7 @@ final class MatchesTable extends JTable {
 //		return m_clTableSorter;
 //	}
 
-	protected void markiereMatch(int matchid) {
+	void markiereMatch(int matchid) {
 		final int row = m_clTableModel.getRowIndexOfMatch(matchid);
 		if (row > -1) {
 			setRowSelectionInterval(row, row);
