@@ -97,4 +97,8 @@ final class SpielerPositionTable extends JTable {
 
 		m_clTableSorter.initsort();
 	}
+
+    public void storeUserSettings() {
+		// Todo: extend HOTableMOdel
+    }
 }

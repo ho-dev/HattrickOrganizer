@@ -59,7 +59,7 @@ public final class UserColumnController {
 	private  LineupTableModel lineupColumnModel			= null;
 	
 	/** model for player analysis **/
-	private PlayerAnalysisModel playerAnalysis1Model 		= null;
+	private PlayerAnalysisModel[] playerAnalysisModels 		= new PlayerAnalysisModel[2];
 	
 	/** model for player analysis **/
 	private PlayerAnalysisModel playerAnalysis2Model 		= null;
@@ -100,8 +100,8 @@ public final class UserColumnController {
 		dbManager.loadHOColumModel(getMatchesModel());
 		dbManager.loadHOColumModel(getPlayerOverviewModel());
 		dbManager.loadHOColumModel(getLineupModel());
-		dbManager.loadHOColumModel(getAnalysis1Model());
-		dbManager.loadHOColumModel(getAnalysis2Model());
+		dbManager.loadHOColumModel(getAnalysisModel(1));
+		dbManager.loadHOColumModel(getAnalysisModel(2));
 		dbManager.loadHOColumModel(getMatchesOverview1ColumnModel());
 
 		dbManager.loadHOColumModel(getYouthTrainingViewColumnModel());
@@ -124,23 +124,13 @@ public final class UserColumnController {
 	 * 
 	 * @return PlayerAnalysisModel
 	 */
-	public PlayerAnalysisModel getAnalysis1Model(){
-		if(playerAnalysis1Model == null)
-			playerAnalysis1Model = new PlayerAnalysisModel(ColumnModelId.PLAYERANALYSIS1, 1);
+	public PlayerAnalysisModel getAnalysisModel(int instance){
+		if(playerAnalysisModels[instance-1] == null)
+			playerAnalysisModels[instance-1] = new PlayerAnalysisModel(ColumnModelId.PLAYERANALYSIS1, instance);
 		
-		return playerAnalysis1Model;
+		return playerAnalysisModels[instance-1];
 	}
 	
-	/**
-	 * 
-	 * @return PlayerAnalysisModel
-	 */
-	public PlayerAnalysisModel getAnalysis2Model(){
-		if(playerAnalysis2Model == null)
-			playerAnalysis2Model = new PlayerAnalysisModel(ColumnModelId.PLAYERANALYSIS2, 2);
-		
-		return playerAnalysis2Model;
-	}
 	/**
 	 * 
 	 * @return MatchesColumnModel
@@ -189,8 +179,8 @@ public final class UserColumnController {
 		Vector<HOTableModel> v = new Vector<>();
 		v.add(getPlayerOverviewModel());
 		v.add(getLineupModel());
-		v.add(getAnalysis1Model());
-		v.add(getAnalysis2Model());
+		v.add(getAnalysisModel(1));
+		v.add(getAnalysisModel(2));
 		v.add(getTeamAnalyzerRecapModel());
 		// MatchesOverView1Model should not add in this vector, because columns should not be edit
 		return v;

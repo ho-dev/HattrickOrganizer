@@ -197,9 +197,7 @@ public class PlayerOverviewTableModel extends HOTableModel {
 		for (int i = 0; i < m_vPlayers.size(); i++) {
 			final Player currentPlayer = m_vPlayers.get(i);
 			final Player comparisonPlayer = getPreviousPlayerDevelopmentStage(currentPlayer);
-
 			for (int j = 0; j < tmpDisplayedColumns.length; j++) {
-//    			m_clData[i][j] = ((PlayerColumn)tmpDisplayedColumns[j]).getTableEntry(currentPlayer, comparisonPlayer);
 				if (tmpDisplayedColumns[j] instanceof PlayerColumn) {
 					m_clData[i][j] = ((PlayerColumn) tmpDisplayedColumns[j]).getTableEntry(currentPlayer, comparisonPlayer);
 				} else if (tmpDisplayedColumns[j] instanceof BooleanColumn) {

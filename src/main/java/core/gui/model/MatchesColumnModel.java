@@ -8,6 +8,7 @@ import core.model.enums.MatchTypeExtended;
 import core.model.match.IMatchType;
 import core.model.match.MatchKurzInfo;
 import core.model.enums.MatchType;
+import core.model.player.Player;
 
 import java.awt.Color;
 
@@ -36,6 +37,31 @@ public final class MatchesColumnModel extends HOTableModel {
 			}
 		}
 		return null;
+	}
+
+	public int getRowIndexOfMatch(int matchid) {
+		var modelIndex = getMatchIndex(matchid);
+		if (modelIndex > -1){
+			this.getRowSorter().convertRowIndexToView(modelIndex);
+		}
+		return -1;
+
+	}
+
+	public MatchKurzInfo getMatchAtRow(int tableRow) {
+		if (tableRow > -1 ) return m_clMatches[this.getRowSorter().convertRowIndexToModel(tableRow)];
+		return null;
+	}
+
+	private int getMatchIndex(int matchid) {
+		int i = 0;
+		for (var match : m_clMatches) {
+			if (match.getMatchID() == matchid) {
+				return i;
+			}
+			i++;
+		}
+		return -1;
 	}
 
 	public boolean isEditable() {
@@ -74,27 +100,28 @@ public final class MatchesColumnModel extends HOTableModel {
 	 * Get the color for a certain match type.
 	 */
 	public static Color getColor4Matchtyp(IMatchType iMatchType) {
-		if(iMatchType instanceof MatchType){
-			return switch ((MatchType) iMatchType){
+		if (iMatchType instanceof MatchType) {
+			return switch ((MatchType) iMatchType) {
 				case LEAGUE -> ThemeManager.getColor(HOColorName.MATCHTYPE_LEAGUE_BG);
 				case CUP -> ThemeManager.getColor(HOColorName.MATCHTYPE_CUP_BG);
 				case QUALIFICATION -> ThemeManager.getColor(HOColorName.MATCHTYPE_QUALIFIKATION_BG);
 				case MASTERS, INTSPIEL -> ThemeManager.getColor(HOColorName.MATCHTYPE_MASTERS_BG);
-                case INTFRIENDLYCUPRULES, INTFRIENDLYNORMAL -> ThemeManager.getColor(HOColorName.MATCHTYPE_INTFRIENDLY_BG);
-				case NATIONALCOMPCUPRULES, NATIONALCOMPNORMAL, NATIONALFRIENDLY -> ThemeManager.getColor(HOColorName.MATCHTYPE_NATIONAL_BG);
+				case INTFRIENDLYCUPRULES, INTFRIENDLYNORMAL ->
+						ThemeManager.getColor(HOColorName.MATCHTYPE_INTFRIENDLY_BG);
+				case NATIONALCOMPCUPRULES, NATIONALCOMPNORMAL, NATIONALFRIENDLY ->
+						ThemeManager.getColor(HOColorName.MATCHTYPE_NATIONAL_BG);
 				case FRIENDLYCUPRULES, FRIENDLYNORMAL -> ThemeManager.getColor(HOColorName.MATCHTYPE_FRIENDLY_BG);
 				case TOURNAMENTGROUP -> ThemeManager.getColor(HOColorName.MATCHTYPE_TOURNAMENT_GROUP_BG);
 				case TOURNAMENTPLAYOFF -> ThemeManager.getColor(HOColorName.MATCHTYPE_TOURNAMENT_FINALS_BG);
 				default -> ThemeManager.getColor(HOColorName.MATCHTYPE_BG);
 			};
-		}
-		else {
-			return switch ((MatchTypeExtended) iMatchType){
+		} else {
+			return switch ((MatchTypeExtended) iMatchType) {
 				case DIVISIONBATTLE -> ThemeManager.getColor(HOColorName.MATCHTYPE_DIVISIONBATTLE_BG);
 				default -> ThemeManager.getColor(HOColorName.MATCHTYPE_BG);
 			};
 		}
 
-		}
+	}
 
 }

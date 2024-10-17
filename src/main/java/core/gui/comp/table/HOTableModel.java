@@ -1,6 +1,7 @@
 package core.gui.comp.table;
 
 import core.db.DBManager;
+import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.model.UserColumnController;
 import core.model.TranslationFacility;
 
@@ -394,7 +395,6 @@ public abstract class HOTableModel extends AbstractTableModel {
 		table.setTableHeader(header);
 		table.setModel(this);
 
-
 		for (int i=0; i<columnModel.getColumnCount(); i++){
 			var tm = this.columns[i];
 			var cm = table.getColumnModel().getColumn(i);
@@ -402,10 +402,11 @@ public abstract class HOTableModel extends AbstractTableModel {
 		}
 
 		getUserColumnSettings(table,0);
-
 		var rowSorter = new TableRowSorter<>(this);
 		getRowOrderSettings(rowSorter);
 		table.setRowSorter(rowSorter);
+
+		table.setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
 	}
 
 	public void storeUserSettings(){

@@ -72,8 +72,8 @@ public class PlayerAnalyseMainPanel extends LazyImagePanel {
 	private void saveSettings() {
 		UserParameter parameter = UserParameter.instance();
 		parameter.spielerAnalysePanel_horizontalSplitPane = splitPane.getDividerLocation();
-		playersPanel1.saveColumnOrder();
-		playersPanel2.saveColumnOrder();
+		playersPanel1.storeUserSettings();
+		playersPanel2.storeUserSettings();
 	}
 
 	private void initComponents() {

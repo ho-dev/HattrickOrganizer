@@ -6,6 +6,7 @@ import core.gui.HOMainFrame;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
+import core.gui.model.PlayerAnalysisModel;
 import core.gui.model.PlayerCBItem;
 import core.gui.model.PlayerCBItemRenderer;
 import core.gui.theme.HOColorName;
@@ -48,8 +49,9 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 		Helper.setComboBoxFromID(playerComboBox, spielerid);
 	}
 
-	public void saveColumnOrder() {
-		m_jtSpielerMatchesTable.saveColumnOrder();
+	public void storeUserSettings() {
+		m_jtSpielerMatchesTable.storeUserSettings();
+		m_jtSpielerPositionTable.storeUserSettings();
 	}
 
 	@Override
