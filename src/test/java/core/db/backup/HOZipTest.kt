@@ -1,11 +1,16 @@
 package core.db.backup
 
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.Assertions.*
 import java.io.File
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 internal class HOZipTest {
-	private fun generateTempZipFileName():String {
+	private val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd")
+
+	private fun generateTempZipFileName(): String {
 		val customDir = System.getProperty("java.io.tmpdir")
 		val tempFileName = System.currentTimeMillis()
 		return "${customDir}${File.separator}${tempFileName}.zip"
@@ -22,5 +27,10 @@ internal class HOZipTest {
 		hoZip.closeArchive()
 		assertTrue(File(fileName).exists())
 		assertEquals(1, hoZip.fileCount)
+	}
+
+	@Test
+	fun testCreateZipFileName() {
+		assertEquals("test-" + formatter.format(LocalDateTime.now()) + ".zip", HOZip.createZipName("test-"))
 	}
 }

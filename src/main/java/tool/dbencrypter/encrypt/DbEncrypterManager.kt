@@ -7,7 +7,6 @@ import tool.dbencrypter.FilePublicKeyRetriever
 import tool.dbencrypter.PublicKeyRetriever
 import java.io.File
 import java.security.SecureRandom
-import java.text.SimpleDateFormat
 import java.util.*
 
 
@@ -18,31 +17,26 @@ class DbEncrypterManager(private val userManager: UserManager) {
 	private val publicKeyRetriever: PublicKeyRetriever = FilePublicKeyRetriever("export")
 	private val fileSymEncryptor: SymFileEncryptor = AESSymFileEncryptor()
 
-	fun createZipName():String {
-		val sdf = SimpleDateFormat("yyyy-MM-dd")
-		return sdf.format(Date())
-	}
-
 	fun encrypt() {
 		val hoZip = zipDatabase()
 		encryptFile(hoZip.path)
 	}
 
-	private fun zipDatabase():HOZip {
+	private fun zipDatabase(): HOZip {
 		val dbFolder = File(userManager.currentUser.dbFolder)
 		val filesToZip = dbFolder.listFiles { file: File ->
 			file.isFile && s.any { suffix -> file.extension == suffix }
 		}
 
-		val tempFile = File.createTempFile(createZipName(), ".zip")
-		val hoZip = HOZip(tempFile.path)
+		val tempFile = kotlin.io.path.createTempFile(HOZip.createZipName(""))
+		val hoZip = HOZip(tempFile.toAbsolutePath().toString())
 		filesToZip?.map { file -> hoZip.addFile(file) }
 		hoZip.closeArchive()
 
 		return hoZip
 	}
 
-	private fun encryptFile(path:String):String {
+	private fun encryptFile(path: String): String {
 		val randomSecret = encryptFileSymmetrically(path)
 		encryptKeyAsymmetrically(randomSecret)
 		return Base64.getEncoder().encodeToString(randomSecret.toByteArray())
