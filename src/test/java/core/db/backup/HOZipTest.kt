@@ -24,4 +24,3 @@ internal class HOZipTest {
 		assertEquals(1, hoZip.fileCount)
 	}
 }
-
