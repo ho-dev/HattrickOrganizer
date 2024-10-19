@@ -547,6 +547,12 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		m_jmHelp.add(m_jmReportAbug);
 		m_jmHelp.addSeparator();
 
+		dbEncryptedExport.addActionListener(e -> {
+			new DbEncrypterDialog(HOMainFrame.instance());
+		});
+		m_jmHelp.add(dbEncryptedExport);
+		m_jmHelp.addSeparator();
+
 		m_jmCheckUpdate.addActionListener(e -> UpdateController.check4update(true));
 		m_jmHelp.add(m_jmCheckUpdate);				// Help | check update
 		m_jmChangelog.addActionListener(this);
@@ -566,11 +572,6 @@ public final class HOMainFrame extends JFrame implements Refreshable, ActionList
 		if (!HO.isRelease()) {
 			m_jmMenuBar.add(DebugMode.getDeveloperMenu());
 		}
-
-		dbEncryptedExport.addActionListener(e -> {
-			new DbEncrypterDialog(HOMainFrame.instance());
-		});
-		m_jmMenuBar.add(dbEncryptedExport);
 
 		SwingUtilities.updateComponentTreeUI(m_jmMenuBar);
 		this.setJMenuBar(m_jmMenuBar);
