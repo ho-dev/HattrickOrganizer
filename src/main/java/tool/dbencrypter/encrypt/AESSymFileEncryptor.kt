@@ -14,10 +14,9 @@ import kotlin.io.path.pathString
 import kotlin.io.path.writeBytes
 
 private const val AES_ALGORITHM_NAME = "AES"
-
 private const val AES_ENCRYPTION_ALGORITHM_NAME = "AES/CBC/PKCS5Padding"
-
 private const val KEY_DERIVATION_ALGORITHM_NAME = "PBKDF2WithHmacSHA256"
+private const val SALT_VALUE = "randomSalt"
 
 class AESSymFileEncryptor: SymFileEncryptor {
 	fun createZipName():String {
@@ -32,7 +31,8 @@ class AESSymFileEncryptor: SymFileEncryptor {
 		val ivspec = IvParameterSpec(iv)
 
 		val factory = SecretKeyFactory.getInstance(KEY_DERIVATION_ALGORITHM_NAME)
-		val spec: KeySpec = PBEKeySpec(secret.toCharArray(), "randomSalt".toByteArray(), 65536, 256)
+		// Derive 256-bit secret key from password.
+		val spec: KeySpec = PBEKeySpec(secret.toCharArray(), SALT_VALUE.toByteArray(), 65536, 256)
 		val tmp = factory.generateSecret(spec)
 		val secretKeySpec = SecretKeySpec(tmp.encoded, AES_ALGORITHM_NAME)
 
