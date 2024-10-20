@@ -6,7 +6,7 @@ import core.gui.theme.HOColor;
 import core.gui.theme.HOColorName;
 import core.gui.theme.Theme;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
 
 import javax.swing.*;
@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static core.gui.theme.HOColor.areDifferentColors;
-import static java.awt.event.ItemEvent.*;
+import static java.awt.event.ItemEvent.DESELECTED;
 import static javax.swing.ListSelectionModel.SINGLE_SELECTION;
 
 public class UserColorsPanel extends JPanel {
@@ -49,10 +49,10 @@ public class UserColorsPanel extends JPanel {
 	private final JTable colorTable = new JTable(tableModel);
 
 	private final String[] columnNames = new String[]{
-			HOVerwaltung.instance().getLanguageString("Name"),
-			HOVerwaltung.instance().getLanguageString("Reference"),
-			HOVerwaltung.instance().getLanguageString("Value"),
-			HOVerwaltung.instance().getLanguageString("Default"),
+			TranslationFacility.tr("Name"),
+			TranslationFacility.tr("Reference"),
+			TranslationFacility.tr("Value"),
+			TranslationFacility.tr("Default"),
 	};
 	private JPanel tablePanel;
 	private List<HOColor> colors = new ArrayList<>();

@@ -3,31 +3,21 @@ package tool.arenasizer;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.util.HOLogger;
 
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionListener;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JFormattedTextField;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 
 
 class ControlPanel extends JPanel implements ActionListener{
 
 	private static final long serialVersionUID = 1L;
 	private static final BigDecimal HUNDRED = new BigDecimal(100);
-	private JButton m_jbUbernehmenGesamt = new JButton(HOVerwaltung.instance().getLanguageString("Calculate"));
+	private JButton m_jbUbernehmenGesamt = new JButton(TranslationFacility.tr("Calculate"));
 	private JTextField m_jtfFans = new JTextField(7);
 	private JTextField m_jtfGesamtgroesse = new JTextField(7);
 
@@ -59,29 +49,29 @@ class ControlPanel extends JPanel implements ActionListener{
         setLayout(layout2);
         JLabel label;
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("Gesamtgroesse"));
+        label = new JLabel(TranslationFacility.tr("Gesamtgroesse"));
         addToLayout(label,0,0);
         setFieldProperties(m_jtfGesamtgroesse);
        // m_jtfGesamtgroesse.addFocusListener(this);
         addToLayout(m_jtfGesamtgroesse, 1, 0);
 
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.club.arena.terraces"));
+        label = new JLabel(TranslationFacility.tr("ls.club.arena.terraces"));
         addToLayout(label,2,0);
         setFieldProperties(terracesPercentField);
         addToLayout(terracesPercentField,3,0);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.club.arena.basicseating"));
+        label = new JLabel(TranslationFacility.tr("ls.club.arena.basicseating"));
         addToLayout(label,4,0);
         setFieldProperties(basicPercentField);
         addToLayout(basicPercentField,5,0);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.club.arena.seatsunderroof"));
+        label = new JLabel(TranslationFacility.tr("ls.club.arena.seatsunderroof"));
         addToLayout(label,6,0);
         setFieldProperties(roofPercentField);
         addToLayout(roofPercentField,7,0);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("ls.club.arena.seatsinvipboxes"));
+        label = new JLabel(TranslationFacility.tr("ls.club.arena.seatsinvipboxes"));
         addToLayout(label,8,0);
         setFieldProperties(vipPercentField);
         addToLayout(vipPercentField,9,0);
@@ -100,19 +90,19 @@ class ControlPanel extends JPanel implements ActionListener{
         vipField.setHorizontalAlignment(SwingConstants.RIGHT);
         addToLayout(vipField,9,1);
 
-        m_jbUbernehmenGesamt.setToolTipText(HOVerwaltung.instance().getLanguageString("Calculate"));
+        m_jbUbernehmenGesamt.setToolTipText(TranslationFacility.tr("Calculate"));
         m_jbUbernehmenGesamt.addActionListener(this);
         addToLayout (m_jbUbernehmenGesamt,1,1);
 
 
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("Fans"));
+        label = new JLabel(TranslationFacility.tr("Fans"));
         addToLayout(label,0,2);
 
         m_jtfFans.setHorizontalAlignment(SwingConstants.RIGHT);
         addToLayout(m_jtfFans,1,2);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("Durchschnitt"));
+        label = new JLabel(TranslationFacility.tr("Durchschnitt"));
         addToLayout(label,2,2);
         setFieldProperties(factorNormalField);
         addToLayout(factorNormalField,3,2);
@@ -163,7 +153,7 @@ class ControlPanel extends JPanel implements ActionListener{
         vipPercentField.setValue(ArenaSizer.VIP_PERCENT);
 
     	factorNormalField.setValue(ArenaSizer.SUPPORTER_NORMAL);
-    	exampleLabel.setText("=> " + fans+" * "+((Number)factorNormalField.getValue()).intValue()+" = "+(fans*((Number)factorNormalField.getValue()).intValue())+" ("+ HOVerwaltung.instance().getLanguageString("Zuschauer")+" )");
+    	exampleLabel.setText("=> " + fans+" * "+((Number)factorNormalField.getValue()).intValue()+" = "+(fans*((Number)factorNormalField.getValue()).intValue())+" ("+ TranslationFacility.tr("Zuschauer")+" )");
 
     }
 
@@ -203,7 +193,7 @@ class ControlPanel extends JPanel implements ActionListener{
     	supporter[2] =  (((Number)factorNormalField.getValue()).intValue()-5) * getSupporter();
 
     	// the wrong place for this, only temp playCE
-    	exampleLabel.setText("=> " + m_jtfFans.getText()+" * "+((Number)factorNormalField.getValue()).intValue()+" = "+(Integer.parseInt(m_jtfFans.getText())*((Number)factorNormalField.getValue()).intValue())+" ("+ HOVerwaltung.instance().getLanguageString("Zuschauer")+" )");
+    	exampleLabel.setText("=> " + m_jtfFans.getText()+" * "+((Number)factorNormalField.getValue()).intValue()+" = "+(Integer.parseInt(m_jtfFans.getText())*((Number)factorNormalField.getValue()).intValue())+" ("+ TranslationFacility.tr("Zuschauer")+" )");
 
     	return supporter;
     }
@@ -223,7 +213,7 @@ class ControlPanel extends JPanel implements ActionListener{
             BigDecimal vPercent = new BigDecimal(vipPercentField.getValue().toString());
             BigDecimal sum = tPercent.add(bPercent).add(rPercent).add(vPercent);
             if(sum.multiply(HUNDRED).compareTo(HUNDRED) != 0){
-            	JOptionPane.showMessageDialog(getTopLevelAncestor(), sum.multiply(HUNDRED).setScale(1)+" % <> "+HUNDRED+" %", HOVerwaltung.instance().getLanguageString("Fehler"), JOptionPane.ERROR_MESSAGE);
+            	JOptionPane.showMessageDialog(getTopLevelAncestor(), sum.multiply(HUNDRED).setScale(1)+" % <> "+HUNDRED+" %", TranslationFacility.tr("Fehler"), JOptionPane.ERROR_MESSAGE);
             	terracesPercentField.setForeground(ThemeManager.getColor(HOColorName.LABEL_ERROR_FG));
             	basicPercentField.setForeground(ThemeManager.getColor(HOColorName.LABEL_ERROR_FG));
             	roofPercentField.setForeground(ThemeManager.getColor(HOColorName.LABEL_ERROR_FG));

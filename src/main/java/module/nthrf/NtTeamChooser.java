@@ -1,19 +1,12 @@
 package module.nthrf;
 
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 
 public class NtTeamChooser extends JDialog implements ActionListener {
@@ -23,7 +16,7 @@ public class NtTeamChooser extends JDialog implements ActionListener {
 	public NtTeamChooser(List<String[]> teams) {
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		setLayout(new BorderLayout());
-		add(new JLabel(HOVerwaltung.instance().getLanguageString("Favourite.SelectTeam")), BorderLayout.NORTH);
+		add(new JLabel(TranslationFacility.tr("Favourite.SelectTeam")), BorderLayout.NORTH);
 		JPanel teamPanel = new JPanel();
 		for (String[] t : teams) {
 			JButton btn = new JButton(t[1] + " (" + t[0] + ")");

@@ -1,13 +1,13 @@
 package module.training.ui.model;
 
 import core.constants.player.PlayerAbility;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.player.Player;
 import core.model.player.SkillChange;
 
+import javax.swing.table.AbstractTableModel;
 import java.io.Serial;
 import java.util.List;
-import javax.swing.table.AbstractTableModel;
 
 public class SkillupTableModel extends AbstractTableModel {
 
@@ -49,10 +49,10 @@ public class SkillupTableModel extends AbstractTableModel {
 	@Override
 	public String getColumnName(int column) {
         return switch (column) {
-            case 0 -> HOVerwaltung.instance().getLanguageString("ls.player.skill");
-            case 1 -> HOVerwaltung.instance().getLanguageString("Week");
-            case 2 -> HOVerwaltung.instance().getLanguageString("Season");
-            case 3 -> HOVerwaltung.instance().getLanguageString("ls.player.age");
+            case 0 -> TranslationFacility.tr("ls.player.skill");
+            case 1 -> TranslationFacility.tr("Week");
+            case 2 -> TranslationFacility.tr("Season");
+            case 3 -> TranslationFacility.tr("ls.player.age");
             default -> "";
         };
 	}

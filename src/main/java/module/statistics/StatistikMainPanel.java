@@ -3,6 +3,7 @@ package module.statistics;
 
 import core.gui.comp.panel.LazyImagePanel;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 
 import java.awt.BorderLayout;
 
@@ -39,33 +40,33 @@ public class StatistikMainPanel extends LazyImagePanel {
 
 		// Spielerstatistik
 		playerStatisticsPanel = new PlayerStatisticsPanel();
-		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Spieler"),
+		tabbedPane.addTab(TranslationFacility.tr("Spieler"),
 				playerStatisticsPanel);
 
 		// Team Panel
 		teamStatisticsPanel = new TeamStatisticsPanel();
-		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Verein"),
+		tabbedPane.addTab(TranslationFacility.tr("Verein"),
 				teamStatisticsPanel);
 
 		// SpieleStatistik
 		matchesStatisticsPanel = new MatchesStatisticsPanel();
 		tabbedPane
-				.addTab(HOVerwaltung.instance().getLanguageString("Spiele"), matchesStatisticsPanel);
+				.addTab(TranslationFacility.tr("Spiele"), matchesStatisticsPanel);
 
 		// clubStatisticsPanel
 		clubStatisticsPanel = new ClubStatisticsPanel();
-		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("ls.module.statistics.club"),
+		tabbedPane.addTab(TranslationFacility.tr("ls.module.statistics.club"),
 				clubStatisticsPanel);
 
 		// Finanzstatistik
 		financesStatisticsPanel = new FinancesStatisticsPanel();
-		tabbedPane.addTab(HOVerwaltung.instance().getLanguageString("Finanzen"),
+		tabbedPane.addTab(TranslationFacility.tr("Finanzen"),
 				financesStatisticsPanel);
 
 		// Arenastatistik
 		arenaStatistikPanel = new ArenaStatistikPanel();
 		tabbedPane
-				.addTab(HOVerwaltung.instance().getLanguageString("Stadion"), arenaStatistikPanel);
+				.addTab(TranslationFacility.tr("Stadion"), arenaStatistikPanel);
 		add(tabbedPane, java.awt.BorderLayout.CENTER);
 	}
 

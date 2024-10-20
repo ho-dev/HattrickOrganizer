@@ -4,28 +4,20 @@ import core.db.DBManager;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
+import core.model.enums.MatchType;
 import core.model.match.IMatchDetails;
 import core.model.match.MatchKurzInfo;
-import core.model.enums.MatchType;
 import core.module.config.ModuleConfig;
 import core.util.HOLogger;
 
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.math.BigDecimal;
-
-import javax.swing.BoxLayout;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 
 public class TSForecast extends LazyImagePanel implements ActionListener, ItemListener {
 	private final DBManager dbManager;
@@ -240,16 +232,16 @@ public class TSForecast extends LazyImagePanel implements ActionListener, ItemLi
 
 	private void createSettingsPanel(JPanel jpanel) {
 		ModuleConfig config = ModuleConfig.instance();
-		m_jtCupMatches = new JCheckBox(HOVerwaltung.instance().getLanguageString("CupMatches"),
+		m_jtCupMatches = new JCheckBox(TranslationFacility.tr("CupMatches"),
 				config.getBoolean(TS_SHOWCUPMATCHES));
-		m_jtCupMatches.setToolTipText(HOVerwaltung.instance().getLanguageString("ShowCupMatches"));
+		m_jtCupMatches.setToolTipText(TranslationFacility.tr("ShowCupMatches"));
 		m_jtCupMatches.setAlignmentX(0.0F);
 		m_jtCupMatches.addItemListener(this);
 		jpanel.add(m_jtCupMatches);
 
-		m_jtRelegationMatch = new JCheckBox(HOVerwaltung.instance().getLanguageString(
+		m_jtRelegationMatch = new JCheckBox(TranslationFacility.tr(
 				"ls.match.matchtype.qualification"), config.getBoolean(TS_SHOWQUALIFICATIONMATCH));
-		m_jtRelegationMatch.setToolTipText(HOVerwaltung.instance().getLanguageString("ShowQMatch"));
+		m_jtRelegationMatch.setToolTipText(TranslationFacility.tr("ShowQMatch"));
 		m_jtRelegationMatch.setAlignmentX(0.0F);
 		m_jtRelegationMatch.addItemListener(this);
 		jpanel.add(m_jtRelegationMatch);
@@ -263,25 +255,25 @@ public class TSForecast extends LazyImagePanel implements ActionListener, ItemLi
 			throw new RuntimeException(e);
 		}
 
-		m_jtHistory = new CheckBox(HOVerwaltung.instance().getLanguageString("ls.team.teamspirit"),
+		m_jtHistory = new CheckBox(TranslationFacility.tr("ls.team.teamspirit"),
 				m_History.getColor(), config.getBoolean(TS_HISTORY));
 		m_jtHistory.setAlignmentX(0.0F);
 		m_jtHistory.addItemListener(this);
 		jpanel.add(m_jtHistory);
 
-		m_jtConfidence = new CheckBox(HOVerwaltung.instance().getLanguageString(
+		m_jtConfidence = new CheckBox(TranslationFacility.tr(
 				"ls.team.confidence"), m_Confidence.getColor(), config.getBoolean(TS_CONFIDENCE));
 		m_jtConfidence.setAlignmentX(0.0F);
 		m_jtConfidence.addItemListener(this);
 		jpanel.add(m_jtConfidence);
 
-		m_jtLoepiHist = new CheckBox(HOVerwaltung.instance().getLanguageString("LoepiCurve"),
+		m_jtLoepiHist = new CheckBox(TranslationFacility.tr("LoepiCurve"),
 				m_LoepiHist.getColor(), config.getBoolean(TS_LOEPIHISTORY));
 		m_jtLoepiHist.setAlignmentX(0.0F);
 		m_jtLoepiHist.addItemListener(this);
 		jpanel.add(m_jtLoepiHist);
 
-		m_jtLoepiFore = new CheckBox(HOVerwaltung.instance().getLanguageString("TSForecast"),
+		m_jtLoepiFore = new CheckBox(TranslationFacility.tr("TSForecast"),
 				m_LoepiForecast.getColor(), config.getBoolean(TS_LOEPIFORECAST));
 		m_jtLoepiFore.setAlignmentX(0.0F);
 		m_jtLoepiFore.addItemListener(this);
@@ -329,7 +321,7 @@ public class TSForecast extends LazyImagePanel implements ActionListener, ItemLi
 					gridbagconstraints.gridy++;
 					m_jpGamesPanel.add(
 							new JLabel("  "
-									+ HOVerwaltung.instance().getLanguageString("EndOFSeason")),
+									+ TranslationFacility.tr("EndOFSeason")),
 							gridbagconstraints);
 				}
 			}

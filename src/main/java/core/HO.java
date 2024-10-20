@@ -10,15 +10,17 @@ import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.jmx.StatementCacheMonitor;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.training.TrainingManager;
 import core.util.ExceptionHandler;
 import core.util.HOLogger;
 import core.util.OSUtils;
-import java.io.File;
+
 import javax.imageio.ImageIO;
 import javax.management.*;
 import javax.swing.*;
+import java.io.File;
 import java.lang.management.ManagementFactory;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -183,13 +185,13 @@ public class HO {
 		// Check if language file available
 		interruptionWindow.setInfoText(4, "Check Language files");
 		HOVerwaltung.checkLanguageFile(UserParameter.instance().sprachDatei);
-		HOVerwaltung.instance().setTranslator(UserParameter.instance().sprachDatei);
+		TranslationFacility.setLanguage(UserParameter.instance().sprachDatei);
 
 		if (DBManager.instance().isFirstStart()) {
 			interruptionWindow.setVisible(false);
 			JOptionPane.showMessageDialog(null,
-					HOVerwaltung.instance().getLanguageString("firststartup.infowinmessage"),
-					HOVerwaltung.instance().getLanguageString("firststartup.infowinmessage.title"), JOptionPane.INFORMATION_MESSAGE);
+					TranslationFacility.tr("firststartup.infowinmessage"),
+					TranslationFacility.tr("firststartup.infowinmessage.title"), JOptionPane.INFORMATION_MESSAGE);
 			interruptionWindow.setVisible(true);
 		}
 

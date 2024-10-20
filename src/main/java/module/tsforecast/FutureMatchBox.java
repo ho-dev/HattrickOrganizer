@@ -20,18 +20,13 @@ package module.tsforecast;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
-import core.model.match.IMatchDetails;
+import core.model.TranslationFacility;
 import core.model.enums.MatchType;
+import core.model.match.IMatchDetails;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionListener;
-
-import javax.swing.ButtonGroup;
-import javax.swing.JLabel;
-import javax.swing.JRadioButton;
-import javax.swing.SwingConstants;
 
 final class FutureMatchBox extends ImagePanel {
 
@@ -43,16 +38,16 @@ final class FutureMatchBox extends ImagePanel {
 	public FutureMatchBox(String text, String tooltip, int iCmd, int iSelected, MatchType iType) {
 		m_rbPIC = new JRadioButton();
 		m_rbPIC.setActionCommand("P" + iCmd);
-		m_rbPIC.setToolTipText(HOVerwaltung.instance().getLanguageString("ls.team.teamattitude.playitcool"));
+		m_rbPIC.setToolTipText(TranslationFacility.tr("ls.team.teamattitude.playitcool"));
 
 		m_rbNORM = new JRadioButton();
 		m_rbNORM.setActionCommand("N" + iCmd);
-		m_rbNORM.setToolTipText(HOVerwaltung.instance().getLanguageString(
+		m_rbNORM.setToolTipText(TranslationFacility.tr(
 				"ls.team.teamattitude.normal"));
 
 		m_rbMOTS = new JRadioButton();
 		m_rbMOTS.setActionCommand("M" + iCmd);
-		m_rbMOTS.setToolTipText(HOVerwaltung.instance().getLanguageString(
+		m_rbMOTS.setToolTipText(TranslationFacility.tr(
 				"ls.team.teamattitude.matchoftheseason"));
 
 		ButtonGroup buttongroup = new ButtonGroup();

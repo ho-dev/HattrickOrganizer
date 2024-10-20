@@ -3,18 +3,20 @@ package module.playerOverview;
 
 import core.gui.HOMainFrame;
 import core.gui.comp.panel.ImagePanel;
-import core.gui.theme.*;
-
+import core.gui.theme.GroupTeamFactory;
+import core.gui.theme.HOColorName;
+import core.gui.theme.HOIconName;
+import core.gui.theme.ImageUtilities;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.player.Player;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.Map;
-
-import javax.swing.*;
 
 
 /**
@@ -201,8 +203,8 @@ public class RemoveGruppenPanel extends ImagePanel implements ActionListener {
         setLayout(layout);
 
         final ButtonGroup bg = new ButtonGroup();
-        final String tooltipFrom = HOVerwaltung.instance().getLanguageString("tt_Gruppe_von");
-        final String tooltipTo = HOVerwaltung.instance().getLanguageString("tt_Gruppe_nach");
+        final String tooltipFrom = TranslationFacility.tr("tt_Gruppe_von");
+        final String tooltipTo = TranslationFacility.tr("tt_Gruppe_nach");
 
         initButton(noGruppe,tooltipFrom,"No-Team.png");
         constraints.gridx = 0;
@@ -292,7 +294,7 @@ public class RemoveGruppenPanel extends ImagePanel implements ActionListener {
         bg2.add(fGruppe2);
         add(fGruppe2);
 
-        doButton.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Gruppe_wechseln"));
+        doButton.setToolTipText(TranslationFacility.tr("tt_Gruppe_wechseln"));
         doButton.setPreferredSize(new Dimension(28, 28));
         doButton.setEnabled(false);
         doButton.addActionListener(this);
@@ -302,7 +304,7 @@ public class RemoveGruppenPanel extends ImagePanel implements ActionListener {
         layout.setConstraints(doButton, constraints);
         add(doButton);
 
-        m_jbClean.setToolTipText(HOVerwaltung.instance().getLanguageString("tt_Group_team_clear"));
+        m_jbClean.setToolTipText(TranslationFacility.tr("tt_Group_team_clear"));
         m_jbClean.setPreferredSize(new Dimension(28, 28));
         m_jbClean.addActionListener(this);
         constraints.gridx = 8;

@@ -3,17 +3,12 @@ package core.file.xml;
 import core.datatype.CBItem;
 import core.gui.HOMainFrame;
 import core.gui.comp.panel.ImagePanel;
-import core.model.HOVerwaltung;
-import core.model.match.IMatchDetails;
-
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import core.model.TranslationFacility;
 
 import javax.swing.*;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TeamSelectionDialog extends JDialog{
 	
@@ -30,7 +25,7 @@ public class TeamSelectionDialog extends JDialog{
 	private List<TeamInfo> infos;
 	
 	public TeamSelectionDialog(HOMainFrame mainFrame, List<TeamInfo> infos) {
-		super(mainFrame, HOVerwaltung.instance().getLanguageString("teamSelect.header"), true);
+		super(mainFrame, TranslationFacility.tr("teamSelect.header"), true);
 		this.infos = infos;
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		init(mainFrame);
@@ -67,17 +62,17 @@ public class TeamSelectionDialog extends JDialog{
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.insets = new Insets(2, 2, 2, 2);
 
-		selectedPanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("teamSelect.teamName")), gbc);
+		selectedPanel.add(new JLabel(TranslationFacility.tr("teamSelect.teamName")), gbc);
 		gbc.gridx = 1;
 		selectedPanel.add(teamName, gbc);
 		gbc.gridx=0;
 		gbc.gridy++;
-		selectedPanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("teamSelect.series")),gbc);
+		selectedPanel.add(new JLabel(TranslationFacility.tr("teamSelect.series")),gbc);
 		gbc.gridx=1;
 		selectedPanel.add(teamSeries, gbc);
 		gbc.gridx=0;
 		gbc.gridy++;
-		selectedPanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("teamSelect.country")), gbc);
+		selectedPanel.add(new JLabel(TranslationFacility.tr("teamSelect.country")), gbc);
 		gbc.gridx=1;
 		selectedPanel.add(teamCountry, gbc);
 		initTeam(0);
@@ -85,9 +80,9 @@ public class TeamSelectionDialog extends JDialog{
 		mainPanel.add(selectedPanel, BorderLayout.CENTER);
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new FlowLayout());
-		m_jbOK.setText(HOVerwaltung.instance().getLanguageString("ls.button.ok"));
+		m_jbOK.setText(TranslationFacility.tr("ls.button.ok"));
 		buttonPanel.add(m_jbOK);
-		m_jbCancel.setText(HOVerwaltung.instance().getLanguageString("ls.button.cancel"));
+		m_jbCancel.setText(TranslationFacility.tr("ls.button.cancel"));
 		buttonPanel.add(m_jbCancel);
 		mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 		this.getContentPane().add(mainPanel);
@@ -111,9 +106,9 @@ public class TeamSelectionDialog extends JDialog{
 				setVisible(false);
 			}
 			else {
-				JOptionPane.showMessageDialog(null, HOVerwaltung.instance()
-								.getLanguageString("teamSelect.doChoose"), HOVerwaltung
-								.instance().getLanguageString("teamSelect.doChooseHeader"),
+				JOptionPane.showMessageDialog(null,
+						TranslationFacility.tr("teamSelect.doChoose"),
+						TranslationFacility.tr("teamSelect.doChooseHeader"),
 						JOptionPane.INFORMATION_MESSAGE);
 			}
 		});

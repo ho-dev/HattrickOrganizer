@@ -3,20 +3,15 @@ package module.training.ui;
 
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyPanel;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import module.training.EffectDAO;
 import module.training.TrainWeekEffect;
 import module.training.ui.model.EffectTableModel;
 import module.training.ui.renderer.SkillupsTableCellRenderer;
 
-import java.awt.BorderLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.util.List;
-
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.SwingConstants;
 
 /**
  * Shows a table with training effet.
@@ -74,7 +69,7 @@ public class EffectPanel extends LazyPanel {
 		p.setOpaque(false);
 		p.setLayout(new BorderLayout());
 
-		JLabel label = new JLabel(HOVerwaltung.instance().getLanguageString("TAB_EFFECT"),
+		JLabel label = new JLabel(TranslationFacility.tr("TAB_EFFECT"),
 				SwingConstants.CENTER);
 
 		label.setOpaque(false);

@@ -1,12 +1,9 @@
 package core.model.enums;
 
+import core.model.TranslationFacility;
 import core.model.match.IMatchType;
-import core.model.match.SourceSystem;
 
-import java.util.List;
 import java.util.stream.Stream;
-
-import static java.util.stream.Collectors.toList;
 
 public enum MatchTypeExtended implements IMatchType {
 
@@ -64,11 +61,11 @@ public enum MatchTypeExtended implements IMatchType {
 	@Override
 	public String getName() {
 		return switch (this) {
-			case EMERALDCUP -> core.model.HOVerwaltung.instance().getLanguageString("ls.match.matchtype.emerald_cup");
-			case RUBYCUP -> core.model.HOVerwaltung.instance().getLanguageString("ls.match.matchtype.ruby_cup");
-			case SAPPHIRECUP -> core.model.HOVerwaltung.instance().getLanguageString("ls.match.matchtype.sapphire_cup");
-			case CONSOLANTECUP -> core.model.HOVerwaltung.instance().getLanguageString("ls.match.matchtype.consolante_cup");
-			case DIVISIONBATTLE -> core.model.HOVerwaltung.instance().getLanguageString("ls.match.matchtype.division_battle");
+			case EMERALDCUP -> TranslationFacility.tr("ls.match.matchtype.emerald_cup");
+			case RUBYCUP -> TranslationFacility.tr("ls.match.matchtype.ruby_cup");
+			case SAPPHIRECUP -> TranslationFacility.tr("ls.match.matchtype.sapphire_cup");
+			case CONSOLANTECUP -> TranslationFacility.tr("ls.match.matchtype.consolante_cup");
+			case DIVISIONBATTLE -> TranslationFacility.tr("ls.match.matchtype.division_battle");
 			default -> "unknown";
 		};
 	}

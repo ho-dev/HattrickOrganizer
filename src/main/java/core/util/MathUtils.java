@@ -2,6 +2,10 @@ package core.util;
 
 public class MathUtils {
 
+    private MathUtils() {
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
+    }
+
     static void checkNonNegative(String role, double x) {
         if (!(x >= 0)) {
             throw new IllegalArgumentException(role + " (" + x + ") must be >= 0");

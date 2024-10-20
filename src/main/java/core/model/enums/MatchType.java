@@ -1,9 +1,12 @@
 package core.model.enums;
 
+import core.model.TranslationFacility;
 import core.model.match.IMatchType;
 import core.model.match.SourceSystem;
+
 import java.util.List;
 import java.util.stream.Stream;
+
 import static java.util.stream.Collectors.toList;
 
 public enum MatchType implements IMatchType {
@@ -202,22 +205,22 @@ public enum MatchType implements IMatchType {
 	@Override
 	public String getName() {
 		return switch (this) {
-			case LEAGUE -> core.model.HOVerwaltung.instance().getLanguageString("ls.match.matchtype.league");
-			case CUP -> core.model.HOVerwaltung.instance().getLanguageString("ls.match.matchtype.cup");
-			case QUALIFICATION -> core.model.HOVerwaltung.instance().getLanguageString("ls.match.matchtype.qualification");
-			case NATIONALCOMPCUPRULES -> core.model.HOVerwaltung.instance().getLanguageString("ls.match.matchtype.nationalteamscompetition_cup");
-			case MASTERS -> core.model.HOVerwaltung.instance().getLanguageString("ls.match.matchtype.hattrickmasters");
-			case NATIONALCOMPNORMAL -> core.model.HOVerwaltung.instance().getLanguageString("ls.match.matchtype.nationalteamscompetition_normal");
-			case INTSPIEL -> core.model.HOVerwaltung.instance().getLanguageString("ls.match.matchtype.internationalcompetition_normal");
-			case INTFRIENDLYCUPRULES -> core.model.HOVerwaltung.instance().getLanguageString("ls.match.matchtype.internationalfriendly_cup");
-			case INTFRIENDLYNORMAL -> core.model.HOVerwaltung.instance().getLanguageString("ls.match.matchtype.internationalfriendly_normal");
-			case NATIONALFRIENDLY -> core.model.HOVerwaltung.instance().getLanguageString("ls.match.matchtype.nationalteamsfriendly");
-			case FRIENDLYCUPRULES -> core.model.HOVerwaltung.instance().getLanguageString("ls.match.matchtype.friendly_cup");
-			case FRIENDLYNORMAL -> core.model.HOVerwaltung.instance().getLanguageString("ls.match.matchtype.friendly_normal");
-			case TOURNAMENTGROUP -> core.model.HOVerwaltung.instance().getLanguageString("ls.match.matchtype.tournament_group");
-			case TOURNAMENTPLAYOFF -> core.model.HOVerwaltung.instance().getLanguageString("ls.match.matchtype.tournament_playoff");
-			case SINGLE -> core.model.HOVerwaltung.instance().getLanguageString("ls.match.matchtype.single");
-			case LADDER -> core.model.HOVerwaltung.instance().getLanguageString("ls.match.matchtype.ladder");
+			case LEAGUE -> TranslationFacility.tr("ls.match.matchtype.league");
+			case CUP -> TranslationFacility.tr("ls.match.matchtype.cup");
+			case QUALIFICATION -> TranslationFacility.tr("ls.match.matchtype.qualification");
+			case NATIONALCOMPCUPRULES -> TranslationFacility.tr("ls.match.matchtype.nationalteamscompetition_cup");
+			case MASTERS -> TranslationFacility.tr("ls.match.matchtype.hattrickmasters");
+			case NATIONALCOMPNORMAL -> TranslationFacility.tr("ls.match.matchtype.nationalteamscompetition_normal");
+			case INTSPIEL -> TranslationFacility.tr("ls.match.matchtype.internationalcompetition_normal");
+			case INTFRIENDLYCUPRULES -> TranslationFacility.tr("ls.match.matchtype.internationalfriendly_cup");
+			case INTFRIENDLYNORMAL -> TranslationFacility.tr("ls.match.matchtype.internationalfriendly_normal");
+			case NATIONALFRIENDLY -> TranslationFacility.tr("ls.match.matchtype.nationalteamsfriendly");
+			case FRIENDLYCUPRULES -> TranslationFacility.tr("ls.match.matchtype.friendly_cup");
+			case FRIENDLYNORMAL -> TranslationFacility.tr("ls.match.matchtype.friendly_normal");
+			case TOURNAMENTGROUP -> TranslationFacility.tr("ls.match.matchtype.tournament_group");
+			case TOURNAMENTPLAYOFF -> TranslationFacility.tr("ls.match.matchtype.tournament_playoff");
+			case SINGLE -> TranslationFacility.tr("ls.match.matchtype.single");
+			case LADDER -> TranslationFacility.tr("ls.match.matchtype.ladder");
 			default -> "unknown";
 		};
 	}

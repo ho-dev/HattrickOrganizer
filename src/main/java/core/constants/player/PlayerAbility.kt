@@ -1,7 +1,7 @@
 package core.constants.player
 
 import core.datatype.CBItem
-import core.model.HOVerwaltung
+import core.model.TranslationFacility
 import core.model.UserParameter
 import core.util.Helper
 
@@ -79,10 +79,9 @@ object PlayerAbility {
     @JvmStatic
 	fun toString(ability: Int): String {
         return if (ability in NON_EXISTENT..DIVINE) {
-            HOVerwaltung.instance().getLanguageString(languageKeys[ability])
+            TranslationFacility.tr(languageKeys[ability])
         } else {
-            var value = HOVerwaltung.instance()
-                .getLanguageString(if (ability > DIVINE) languageKeys[DIVINE] else "Unbestimmt")
+            var value = TranslationFacility.tr(if (ability > DIVINE) languageKeys[DIVINE] else "Unbestimmt")
             if (ability > 20) value += "(+${ability - 20})"
             value
         }
@@ -165,10 +164,10 @@ object PlayerAbility {
 
     private fun getName4Sublevel(sub: Int): String {
         return when (sub) {
-            0 -> " (${HOVerwaltung.instance().getLanguageString("verylow")})"
-            1 -> " (${HOVerwaltung.instance().getLanguageString("low")})"
-            2 -> " (${HOVerwaltung.instance().getLanguageString("high")})"
-            3 -> " (${HOVerwaltung.instance().getLanguageString("veryhigh")})"
+            0 -> " (${TranslationFacility.tr("verylow")})"
+            1 -> " (${TranslationFacility.tr("low")})"
+            2 -> " (${TranslationFacility.tr("high")})"
+            3 -> " (${TranslationFacility.tr("veryhigh")})"
             else -> ""
         }
     }

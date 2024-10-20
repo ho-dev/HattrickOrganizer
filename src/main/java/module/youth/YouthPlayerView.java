@@ -7,11 +7,13 @@ import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.model.UserColumnController;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.module.config.ModuleConfig;
 import core.util.Helper;
 import core.util.chart.HOLinesChart;
 import core.util.chart.LinesChartDataModel;
 import module.statistics.Colors;
+
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -67,7 +69,7 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
         var developmentPanel = new JPanel(new BorderLayout());
         var topLinePanel = new JPanel(new BorderLayout());
         topLinePanel.add(playerNameLabel, BorderLayout.NORTH);
-        topLinePanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("ls.youth.player.trainingdevelopment")));
+        topLinePanel.add(new JLabel(TranslationFacility.tr("ls.youth.player.trainingdevelopment")));
         developmentPanel.add(topLinePanel, BorderLayout.NORTH);
         developmentPanel.add(new JScrollPane(playerDetailsTable));
         split1.setRightComponent(developmentPanel);
@@ -84,11 +86,11 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
         scoutAndChartPanelConstraints.weighty=0;
         scoutAndChartPanelConstraints.weightx=1;
         scoutAndChartPanelConstraints.fill = GridBagConstraints.HORIZONTAL;
-        scoutAndChartPanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("ls.youth.player.scoutcomment")+":"), scoutAndChartPanelConstraints);
+        scoutAndChartPanel.add(new JLabel(TranslationFacility.tr("ls.youth.player.scoutcomment")+":"), scoutAndChartPanelConstraints);
         scoutAndChartPanelConstraints.gridy++;
         scoutAndChartPanel.add(playerScoutCommentField, scoutAndChartPanelConstraints);
         scoutAndChartPanelConstraints.gridy++;
-        scoutAndChartPanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("ls.youth.player.development")+":"), scoutAndChartPanelConstraints);
+        scoutAndChartPanel.add(new JLabel(TranslationFacility.tr("ls.youth.player.development")+":"), scoutAndChartPanelConstraints);
         youthSkillChart = new HOLinesChart(false, "skill", null,null, null, 0., 9. );
         var panel = new ImagePanel();
         panel.setLayout(new BorderLayout());
@@ -107,7 +109,7 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
         skillEditorPanelConstraints.gridy=0;
         skillEditorPanelConstraints.gridwidth=1;
         skillEditorPanelConstraints.anchor=GridBagConstraints.WEST;
-        skillEditorPanel.add(new JLabel(HOVerwaltung.instance().getLanguageString("ls.youth.player.skilleditors")), skillEditorPanelConstraints);
+        skillEditorPanel.add(new JLabel(TranslationFacility.tr("ls.youth.player.skilleditors")), skillEditorPanelConstraints);
 
         for ( int i=0; i<YouthPlayer.skillIds.length; i++){
             var skillInfoEditor = new YouthSkillInfoEditor(skillIDColorMap.get(YouthPlayer.skillIds[i]));
@@ -273,7 +275,7 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
                     playerSkillInfoEditors[i].setSkillInfo(player.getSkillInfo(skillId));
                     chartDataModels[i] = new LinesChartDataModel(player.getSkillDevelopment(skillId), skillId.name(), true, skillIDColorMap.get(skillId));
                 }
-                youthSkillChart.setAllValues(chartDataModels, player.getSkillDevelopmentDates(), Helper.DEFAULTDEZIMALFORMAT, HOVerwaltung.instance().getLanguageString("Wochen"), "",false, true);
+                youthSkillChart.setAllValues(chartDataModels, player.getSkillDevelopmentDates(), Helper.DEFAULTDEZIMALFORMAT, TranslationFacility.tr("Wochen"), "",false, true);
                 playerScoutCommentField.setText(getScoutComment(player));
                 playerDetailsTableModel.setYouthPlayer(player);
                 playerDetailsTableModel.initData();

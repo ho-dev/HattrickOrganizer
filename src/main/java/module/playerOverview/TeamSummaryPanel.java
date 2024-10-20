@@ -7,6 +7,7 @@ import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.util.Helper;
 
@@ -40,13 +41,13 @@ public class TeamSummaryPanel extends ImagePanel implements ChangeListener, Refr
         final BoxLayout layout = new BoxLayout(this, BoxLayout.LINE_AXIS);
         this.setLayout(layout);
 
-        createField(HOVerwaltung.instance().getLanguageString("ls.team.numplayers"), numPlayerLabel);
-        createField(HOVerwaltung.instance().getLanguageString("ls.team.averageage"), averageAgeLabel);
-        createField(HOVerwaltung.instance().getLanguageString("ls.team.averagesalary"), averageSalaryLabel);
-        createField(HOVerwaltung.instance().getLanguageString("ls.team.totaltsi"), totalTsiLabel);
-        createField(HOVerwaltung.instance().getLanguageString("ls.team.averagetsi"), averageTsiLabel);
-        createField(HOVerwaltung.instance().getLanguageString("ls.team.averagestamina"), averageStaminaLabel);
-        createField(HOVerwaltung.instance().getLanguageString("ls.team.averageform"), averageFormLabel);
+        createField(TranslationFacility.tr("ls.team.numplayers"), numPlayerLabel);
+        createField(TranslationFacility.tr("ls.team.averageage"), averageAgeLabel);
+        createField(TranslationFacility.tr("ls.team.averagesalary"), averageSalaryLabel);
+        createField(TranslationFacility.tr("ls.team.totaltsi"), totalTsiLabel);
+        createField(TranslationFacility.tr("ls.team.averagetsi"), averageTsiLabel);
+        createField(TranslationFacility.tr("ls.team.averagestamina"), averageStaminaLabel);
+        createField(TranslationFacility.tr("ls.team.averageform"), averageFormLabel);
     }
 
     private void createField(String labelName, JComponent fieldLabel) {

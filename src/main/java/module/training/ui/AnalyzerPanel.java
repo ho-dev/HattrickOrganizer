@@ -6,6 +6,7 @@ import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyPanel;
 import core.gui.theme.ImageUtilities;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.player.Player;
 import core.model.player.SkillChange;
 import core.util.GUIUtils;
@@ -267,8 +268,7 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
 		JPanel skillPanel = new ImagePanel();
 
 		skillPanel.setLayout(new BorderLayout());
-		skillPanel.setBorder(BorderFactory.createTitledBorder(HOVerwaltung.instance()
-				.getLanguageString("TAB_SKILL")));
+		skillPanel.setBorder(BorderFactory.createTitledBorder(TranslationFacility.tr("TAB_SKILL")));
 
 		// Add selection listener.
 		this.changesTable = new JTable();
@@ -276,7 +276,7 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
 
 		this.oldPlayersCheckBox = new JCheckBox();
 		this.oldPlayersCheckBox.setOpaque(false);
-		this.oldPlayersCheckBox.setText(HOVerwaltung.instance().getLanguageString("IncludeOld"));
+		this.oldPlayersCheckBox.setText(TranslationFacility.tr("IncludeOld"));
 		this.oldPlayersCheckBox.setFocusable(false);
 		this.oldPlayersCheckBox.setSelected(false);
 		this.oldPlayersCheckBox.addActionListener(this);
@@ -294,7 +294,7 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
 		filterPanel.setLayout(new GridBagLayout());
 
 		JButton btnShowAll = new JButton();
-		btnShowAll.setText(HOVerwaltung.instance().getLanguageString("ShowAll"));
+		btnShowAll.setText(TranslationFacility.tr("ShowAll"));
 		btnShowAll.setFocusable(false);
 		btnShowAll.addActionListener(this);
 		btnShowAll.setActionCommand(CMD_SELECT_ALL);
@@ -303,7 +303,7 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
 		sidePanel.add(btnShowAll, gbc);
 
 		JButton btnClearAll = new JButton();
-		btnClearAll.setText(HOVerwaltung.instance().getLanguageString("ClearAll"));
+		btnClearAll.setText(TranslationFacility.tr("ClearAll"));
 		btnClearAll.setFocusable(false);
 		btnClearAll.addActionListener(this);
 		btnClearAll.setActionCommand(CMD_CLEAR_ALL);

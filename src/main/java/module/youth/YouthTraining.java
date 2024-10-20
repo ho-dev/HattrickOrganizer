@@ -4,10 +4,15 @@ import core.constants.player.PlayerSkill;
 import core.db.AbstractTable;
 import core.db.DBManager;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.enums.MatchType;
-import core.model.match.*;
+import core.model.match.MatchLineup;
+import core.model.match.MatchLineupPosition;
+import core.model.match.MatchLineupTeam;
+import core.model.match.Matchdetails;
 import core.util.HODateTime;
+
 import java.util.Map;
 import java.util.Vector;
 
@@ -222,7 +227,7 @@ public class YouthTraining extends AbstractTable.Storable {
         var lineupTeam = this.getTeam(hov.getModel().getBasics().getYouthTeamId());
         var sectors = lineupTeam.getTrainMinutesPlayedInSectors(playerId);
         for ( var s : sectors.entrySet()){
-            ret.append(hov.getLanguageString("ls.youth.training.sector." + s.getKey()))
+            ret.append(TranslationFacility.tr("ls.youth.training.sector." + s.getKey()))
                     .append(":")
                     .append(s.getValue())
                     .append(" ");

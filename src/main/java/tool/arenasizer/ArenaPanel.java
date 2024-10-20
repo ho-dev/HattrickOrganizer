@@ -7,6 +7,7 @@ import core.gui.comp.entry.IHOTableEntry;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.util.Helper;
 import tool.updater.TableModel;
 
@@ -35,8 +36,8 @@ final class ArenaPanel extends JPanel {
 
     //Teststadium
     private Stadium m_clStadium;
-    private String[] UEBERSCHRIFT = {"", HOVerwaltung.instance().getLanguageString("Aktuell"), HOVerwaltung.instance().getLanguageString("Maximal"),
-    		HOVerwaltung.instance().getLanguageString("Durchschnitt"), HOVerwaltung.instance().getLanguageString("Minimal")};
+    private String[] UEBERSCHRIFT = {"", TranslationFacility.tr("Aktuell"), TranslationFacility.tr("Maximal"),
+    		TranslationFacility.tr("Durchschnitt"), TranslationFacility.tr("Minimal")};
     private Stadium[] m_clStadien;
     private IHOTableEntry[][] values;
 
@@ -63,11 +64,10 @@ final class ArenaPanel extends JPanel {
     private void initTabelle() {
         //Tablewerte setzen
         values = new IHOTableEntry[9][5];
-        HOVerwaltung hoV = HOVerwaltung.instance();
 
         String[] columnText = {"ls.club.arena.terraces","ls.club.arena.basicseating","ls.club.arena.seatsunderroof","ls.club.arena.seatsinvipboxes","Gesamt","Einnahmen","Unterhalt","Gewinn","Baukosten"};
         for (int i = 0; i < columnText.length; i++) {
-        	values[i][0] = new ColorLabelEntry(hoV.getLanguageString(columnText[i]),
+        	values[i][0] = new ColorLabelEntry(TranslationFacility.tr(columnText[i]),
                     ColorLabelEntry.FG_STANDARD,  ColorLabelEntry.BG_PLAYERSPOSITIONVALUES, SwingConstants.LEFT);
 		}
 

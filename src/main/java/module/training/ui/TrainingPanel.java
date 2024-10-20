@@ -3,28 +3,28 @@ package module.training.ui;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.constants.TrainingConstants;
 import core.training.TrainingManager;
 import core.training.TrainingPerWeek;
 import core.util.Helper;
-import module.training.ui.comp.DividerListener;
 import module.training.ui.comp.FutureTrainingsEditionPanel;
-import module.training.ui.comp.trainingParametersEditor;
 import module.training.ui.comp.TrainingComboBox;
+import module.training.ui.comp.trainingParametersEditor;
 import module.training.ui.model.FutureTrainingsTableModel;
 import module.training.ui.model.ModelChange;
 import module.training.ui.model.PastTrainingsTableModel;
 import module.training.ui.model.TrainingModel;
-import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.util.Map;
+
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
+import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.util.Map;
 
 import static core.gui.theme.HOIconName.TRAINING_ICON;
 import static module.lineup.LineupPanel.TITLE_FG;
@@ -127,7 +127,7 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 		uGbc.insets = new Insets(3, 3, 3, 3);
 
 		JLabel pastTrainingsLabel = new JLabel();
-		pastTrainingsLabel.setText(HOVerwaltung.instance().getLanguageString("PastTrainings"));
+		pastTrainingsLabel.setText(TranslationFacility.tr("PastTrainings"));
 		pastTrainingsLabel.setForeground(TITLE_FG);
 		pastTrainingsLabel.setFont(getFont().deriveFont(Font.BOLD));
 		uGbc.gridx = 0;

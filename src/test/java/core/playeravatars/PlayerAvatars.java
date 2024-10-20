@@ -3,6 +3,7 @@ package core.playeravatars;
 import core.HO;
 import core.db.DBManager;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.Translator;
 import core.net.MyConnector;
 
@@ -22,7 +23,7 @@ public class PlayerAvatars {
     HO.setPortable_version(true);
     DBManager.instance().loadUserParameter();
     HOVerwaltung.instance().loadLatestHoModel();
-    HOVerwaltung.instance().setTranslator(Translator.LANGUAGE_DEFAULT);
+    TranslationFacility.setLanguage(Translator.LANGUAGE_DEFAULT);
 //    HOVerwaltung.instance().set
 
     final MyConnector mc = MyConnector.instance();

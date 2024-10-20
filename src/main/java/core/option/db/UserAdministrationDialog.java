@@ -5,25 +5,16 @@ import core.db.user.User;
 import core.db.user.UserManager;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.util.GUIUtils;
 import core.util.Helper;
 
-import java.awt.Dimension;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.awt.Window;
-import java.io.File;
-import java.io.Serial;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
+import java.awt.*;
+import java.io.File;
+import java.io.Serial;
 
 public class UserAdministrationDialog extends JDialog {
 
@@ -91,7 +82,7 @@ public class UserAdministrationDialog extends JDialog {
 						var success = oldDbDirectory.renameTo(newDbDirectory);
 						if (!success) {
 							JOptionPane.showMessageDialog(null,
-									HOVerwaltung.instance().getLanguageString("ls.useradministration.rename.error_message"),
+									TranslationFacility.tr("ls.useradministration.rename.error_message"),
 									"Error",
 									JOptionPane.ERROR_MESSAGE);
 							editUser.setDbName(oldDbName); // reset db name
@@ -105,7 +96,7 @@ public class UserAdministrationDialog extends JDialog {
 				} else if (isLoggedIn) {
 					// restart HO to use new database
 					Helper.showMessage(null,
-							HOVerwaltung.instance().getLanguageString("NeustartErforderlich"), "",
+							TranslationFacility.tr("NeustartErforderlich"), "",
 							JOptionPane.INFORMATION_MESSAGE);
 				}
 				saveAndReload();
@@ -137,7 +128,7 @@ public class UserAdministrationDialog extends JDialog {
 	}
 
 	private void initComponents() {
-		setTitle(HOVerwaltung.instance().getLanguageString("ls.menu.file.database.dbuseradministration"));
+		setTitle(TranslationFacility.tr("ls.menu.file.database.dbuseradministration"));
 		setLayout(new GridBagLayout());
 
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -155,7 +146,7 @@ public class UserAdministrationDialog extends JDialog {
 		add(getButtonPanel(), gbc);
 
 		this.closeButton = new JButton();
-		this.closeButton.setText(HOVerwaltung.instance().getLanguageString("ls.button.close"));
+		this.closeButton.setText(TranslationFacility.tr("ls.button.close"));
 		gbc.gridy = 2;
 		gbc.gridx = 0;
 		gbc.gridwidth = 2;
@@ -169,7 +160,7 @@ public class UserAdministrationDialog extends JDialog {
 		JPanel buttonPanel = new JPanel(new GridBagLayout());
 
 		this.newButton = new JButton();
-		this.newButton.setText(HOVerwaltung.instance().getLanguageString("ls.button.add"));
+		this.newButton.setText(TranslationFacility.tr("ls.button.add"));
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.gridy = 0;
 		gbc.anchor = GridBagConstraints.NORTHWEST;
@@ -177,7 +168,7 @@ public class UserAdministrationDialog extends JDialog {
 		buttonPanel.add(this.newButton, gbc);
 
 		this.editButton = new JButton();
-		this.editButton.setText(HOVerwaltung.instance().getLanguageString("ls.button.edit"));
+		this.editButton.setText(TranslationFacility.tr("ls.button.edit"));
 		this.editButton.setEnabled(false);
 		gbc.gridy++;
 		gbc.insets = new Insets(2, 4, 2, 4);
@@ -197,7 +188,7 @@ public class UserAdministrationDialog extends JDialog {
 		buttonPanel.add(this.moveDownButton, gbc);
 
 		this.deleteButton = new JButton();
-		this.deleteButton.setText(HOVerwaltung.instance().getLanguageString("ls.button.delete"));
+		this.deleteButton.setText(TranslationFacility.tr("ls.button.delete"));
 		this.deleteButton.setEnabled(false);
 		gbc.gridy++;
 		gbc.weightx = 1.0;
@@ -221,9 +212,9 @@ public class UserAdministrationDialog extends JDialog {
 	private void deleteSelectedUser() {
 		User user = getSelectedUser();
 		if (user != null) {
-			int res = JOptionPane.showConfirmDialog(this, HOVerwaltung.instance()
-					.getLanguageString("db.options.dlg.delete.question", user.getTeamName()),
-					HOVerwaltung.instance().getLanguageString("confirmation.title"),
+			int res = JOptionPane.showConfirmDialog(this,
+					TranslationFacility.tr("db.options.dlg.delete.question", user.getTeamName()),
+					TranslationFacility.tr("confirmation.title"),
 					JOptionPane.YES_NO_OPTION);
 			if (res == JOptionPane.YES_OPTION) {
 				UserManager.instance().getAllUser().remove(user);
@@ -252,10 +243,10 @@ public class UserAdministrationDialog extends JDialog {
 		@Serial
 		private static final long serialVersionUID = 1975023278731081088L;
 		private final String[] columnNames = new String[] {
-				HOVerwaltung.instance().getLanguageString("teamSelect.teamName"),
-				HOVerwaltung.instance().getLanguageString("db.options.dlg.label.dbName"),
-				HOVerwaltung.instance().getLanguageString("db.options.dlg.label.zips"),
-				HOVerwaltung.instance().getLanguageString("db.options.dlg.label.nt")
+				TranslationFacility.tr("teamSelect.teamName"),
+				TranslationFacility.tr("db.options.dlg.label.dbName"),
+				TranslationFacility.tr("db.options.dlg.label.zips"),
+				TranslationFacility.tr("db.options.dlg.label.nt")
 		};
 
 		@Override
@@ -270,9 +261,9 @@ public class UserAdministrationDialog extends JDialog {
 				return user.getNumberOfBackups();
 			case 3:
 				if (user.isNtTeam())
-					return HOVerwaltung.instance().getLanguageString("ls.button.yes");
+					return TranslationFacility.tr("ls.button.yes");
 				else
-					return HOVerwaltung.instance().getLanguageString("ls.button.no");
+					return TranslationFacility.tr("ls.button.no");
 			}
 			return null;
 		}

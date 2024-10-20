@@ -4,6 +4,7 @@ import core.db.AbstractTable;
 import core.db.DBManager;
 import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.cup.CupLevel;
 import core.model.cup.CupLevelIndex;
 import core.model.enums.MatchType;
@@ -185,8 +186,8 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
         return getLastMinute();
     }
 
-    static String afterPenalties = HOVerwaltung.instance().getLanguageString("ls.match.after.penalties.abbreviation");
-    static String afterExtension = HOVerwaltung.instance().getLanguageString("ls.match.after.extension.abbreviation");
+    static String afterPenalties = TranslationFacility.tr("ls.match.after.penalties.abbreviation");
+    static String afterExtension = TranslationFacility.tr("ls.match.after.extension.abbreviation");
 
     public static String getResultExtensionAbbreviation(Integer duration) {
         if (duration != null) {
@@ -474,10 +475,10 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
      */
     public static String getNameForEinstellung(int einstellung) {
         return switch (einstellung) {
-            case EINSTELLUNG_PIC -> HOVerwaltung.instance().getLanguageString("ls.team.teamattitude.playitcool");
-            case EINSTELLUNG_NORMAL -> HOVerwaltung.instance().getLanguageString("ls.team.teamattitude.normal");
-            case EINSTELLUNG_MOTS -> HOVerwaltung.instance().getLanguageString("ls.team.teamattitude.matchoftheseason");
-            default -> HOVerwaltung.instance().getLanguageString("Unbestimmt");
+            case EINSTELLUNG_PIC -> TranslationFacility.tr("ls.team.teamattitude.playitcool");
+            case EINSTELLUNG_NORMAL -> TranslationFacility.tr("ls.team.teamattitude.normal");
+            case EINSTELLUNG_MOTS -> TranslationFacility.tr("ls.team.teamattitude.matchoftheseason");
+            default -> TranslationFacility.tr("Unbestimmt");
         };
     }
 
@@ -491,30 +492,28 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
     public static String getNameForTaktik(int taktikTyp) {
 
         return switch (taktikTyp) {
-            case TAKTIK_NORMAL -> HOVerwaltung.instance().getLanguageString("ls.team.tactic.normal");
-            case TAKTIK_PRESSING -> HOVerwaltung.instance().getLanguageString("ls.team.tactic.pressing");
-            case TAKTIK_KONTER -> HOVerwaltung.instance().getLanguageString("ls.team.tactic.counter-attacks");
-            case TAKTIK_MIDDLE -> HOVerwaltung.instance().getLanguageString("ls.team.tactic.attackinthemiddle");
-            case TAKTIK_WINGS -> HOVerwaltung.instance().getLanguageString("ls.team.tactic.attackonwings");
-            case TAKTIK_CREATIVE -> HOVerwaltung.instance().getLanguageString("ls.team.tactic.playcreatively");
-            case TAKTIK_LONGSHOTS -> HOVerwaltung.instance().getLanguageString("ls.team.tactic.longshots");
-            default -> HOVerwaltung.instance().getLanguageString("Unbestimmt");
+            case TAKTIK_NORMAL -> TranslationFacility.tr("ls.team.tactic.normal");
+            case TAKTIK_PRESSING -> TranslationFacility.tr("ls.team.tactic.pressing");
+            case TAKTIK_KONTER -> TranslationFacility.tr("ls.team.tactic.counter-attacks");
+            case TAKTIK_MIDDLE -> TranslationFacility.tr("ls.team.tactic.attackinthemiddle");
+            case TAKTIK_WINGS -> TranslationFacility.tr("ls.team.tactic.attackonwings");
+            case TAKTIK_CREATIVE -> TranslationFacility.tr("ls.team.tactic.playcreatively");
+            case TAKTIK_LONGSHOTS -> TranslationFacility.tr("ls.team.tactic.longshots");
+            default -> TranslationFacility.tr("Unbestimmt");
         };
     }
 
     // get the used tactic name in short form
     public static String getShortTacticName(int type) {
-        HOVerwaltung hov = HOVerwaltung.instance();
-
         return switch (type) {
-            case IMatchDetails.TAKTIK_NORMAL -> hov.getLanguageString("ls.team.tactic_short.normal");
-            case IMatchDetails.TAKTIK_PRESSING -> hov.getLanguageString("ls.team.tactic_short.pressing");
-            case IMatchDetails.TAKTIK_KONTER -> hov.getLanguageString("ls.team.tactic_short.counter-attacks");
-            case IMatchDetails.TAKTIK_MIDDLE -> hov.getLanguageString("ls.team.tactic_short.attackinthemiddle");
-            case IMatchDetails.TAKTIK_WINGS -> hov.getLanguageString("ls.team.tactic_short.attackonwings");
-            case IMatchDetails.TAKTIK_LONGSHOTS -> hov.getLanguageString("ls.team.tactic_short.longshots");
-            case IMatchDetails.TAKTIK_CREATIVE -> hov.getLanguageString("ls.team.tactic_short.playcreatively");
-            default -> HOVerwaltung.instance().getLanguageString("Unbestimmt");
+            case IMatchDetails.TAKTIK_NORMAL -> TranslationFacility.tr("ls.team.tactic_short.normal");
+            case IMatchDetails.TAKTIK_PRESSING -> TranslationFacility.tr("ls.team.tactic_short.pressing");
+            case IMatchDetails.TAKTIK_KONTER -> TranslationFacility.tr("ls.team.tactic_short.counter-attacks");
+            case IMatchDetails.TAKTIK_MIDDLE -> TranslationFacility.tr("ls.team.tactic_short.attackinthemiddle");
+            case IMatchDetails.TAKTIK_WINGS -> TranslationFacility.tr("ls.team.tactic_short.attackonwings");
+            case IMatchDetails.TAKTIK_LONGSHOTS -> TranslationFacility.tr("ls.team.tactic_short.longshots");
+            case IMatchDetails.TAKTIK_CREATIVE -> TranslationFacility.tr("ls.team.tactic_short.playcreatively");
+            default -> TranslationFacility.tr("Unbestimmt");
         };
     }
 

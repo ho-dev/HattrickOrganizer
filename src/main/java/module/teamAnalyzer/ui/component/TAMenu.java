@@ -1,6 +1,6 @@
 package module.teamAnalyzer.ui.component;
 
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.vo.Team;
 
@@ -10,7 +10,7 @@ import javax.swing.*;
 public class TAMenu extends JMenu {
 
 	public TAMenu() {
-		super(HOVerwaltung.instance().getLanguageString("TeamAnalyzer"));
+		super(TranslationFacility.tr("TeamAnalyzer"));
 		initialize();
 	}
 
@@ -20,12 +20,12 @@ public class TAMenu extends JMenu {
 	}
 	
 	private JMenuItem getDownloadItem() {
-		JMenuItem downloadItem = new JMenuItem(HOVerwaltung.instance().getLanguageString("Menu.DownloadMatch"));
+		JMenuItem downloadItem = new JMenuItem(TranslationFacility.tr("Menu.DownloadMatch"));
 		downloadItem.addActionListener(e -> {
 			JOptionPane.showMessageDialog(
 					SystemManager.getPlugin(),
 					new DownloadPanel(),
-					HOVerwaltung.instance().getLanguageString("Menu.DownloadMatch"),
+					TranslationFacility.tr("Menu.DownloadMatch"),
 					JOptionPane.PLAIN_MESSAGE
 			);
 

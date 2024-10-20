@@ -4,18 +4,18 @@ import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.HomegrownEntry;
 import core.gui.comp.entry.PlayerLabelEntry;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.util.Helper;
 
+import javax.swing.*;
+import javax.swing.table.AbstractTableModel;
 import java.io.Serial;
 import java.util.Objects;
 import java.util.Vector;
-import javax.swing.JLabel;
-import javax.swing.SwingConstants;
-import javax.swing.table.AbstractTableModel;
 
 import static core.model.player.IMatchRoleID.*;
 
@@ -35,87 +35,87 @@ public class TransferTableModel extends AbstractTableModel {
      */
     public String[] m_sToolTipStrings =
             {
-                    HOVerwaltung.instance().getLanguageString("ls.player.id"),
+                    TranslationFacility.tr("ls.player.id"),
                     //Name
-                    HOVerwaltung.instance().getLanguageString("ls.player.name"),
+                    TranslationFacility.tr("ls.player.name"),
                     //Current price
-                    HOVerwaltung.instance().getLanguageString("scout_price"),
+                    TranslationFacility.tr("scout_price"),
                     //Ablaufdatum
-                    HOVerwaltung.instance().getLanguageString("Ablaufdatum"),
+                    TranslationFacility.tr("Ablaufdatum"),
                     //Beste Position
-                    HOVerwaltung.instance().getLanguageString("BestePosition"),
+                    TranslationFacility.tr("BestePosition"),
                     //Age
-                    HOVerwaltung.instance().getLanguageString("ls.player.age"),
+                    TranslationFacility.tr("ls.player.age"),
                     //TSI
-                    HOVerwaltung.instance().getLanguageString("ls.player.tsi"),
+                    TranslationFacility.tr("ls.player.tsi"),
                     // Homegrown
-                    HOVerwaltung.instance().getLanguageString("ls.player.motherclub"),
+                    TranslationFacility.tr("ls.player.motherclub"),
                     //Leadership
-                    HOVerwaltung.instance().getLanguageString("ls.player.leadership"),
+                    TranslationFacility.tr("ls.player.leadership"),
                     //Erfahrung
-                    HOVerwaltung.instance().getLanguageString("ls.player.experience"),
+                    TranslationFacility.tr("ls.player.experience"),
                     //Form
-                    HOVerwaltung.instance().getLanguageString("ls.player.form"),
+                    TranslationFacility.tr("ls.player.form"),
                     //Kondition
-                    HOVerwaltung.instance().getLanguageString("ls.player.skill.stamina"),
+                    TranslationFacility.tr("ls.player.skill.stamina"),
                     //Loyalty
-                    HOVerwaltung.instance().getLanguageString("ls.player.loyalty"),
+                    TranslationFacility.tr("ls.player.loyalty"),
                     //Torwart
-                    HOVerwaltung.instance().getLanguageString("ls.player.skill.keeper"),
+                    TranslationFacility.tr("ls.player.skill.keeper"),
                     //Verteidigung
-                    HOVerwaltung.instance().getLanguageString("ls.player.skill.defending"),
+                    TranslationFacility.tr("ls.player.skill.defending"),
                     //Spielaufbau
-                    HOVerwaltung.instance().getLanguageString("ls.player.skill.playmaking"),
+                    TranslationFacility.tr("ls.player.skill.playmaking"),
                     //Passpiel
-                    HOVerwaltung.instance().getLanguageString("ls.player.skill.passing"),
+                    TranslationFacility.tr("ls.player.skill.passing"),
                     //Flügelspiel
-                    HOVerwaltung.instance().getLanguageString("ls.player.skill.winger"),
+                    TranslationFacility.tr("ls.player.skill.winger"),
                     //Torschuss
-                    HOVerwaltung.instance().getLanguageString("ls.player.skill.scoring"),
+                    TranslationFacility.tr("ls.player.skill.scoring"),
                     //Standards
-                    HOVerwaltung.instance().getLanguageString("ls.player.skill.setpieces"),
+                    TranslationFacility.tr("ls.player.skill.setpieces"),
                     //Torwart
-                    HOVerwaltung.instance().getLanguageString("ls.player.position.keeper"),
+                    TranslationFacility.tr("ls.player.position.keeper"),
                     //Innenverteidiger
-                    HOVerwaltung.instance().getLanguageString("ls.player.position.centraldefender"),
+                    TranslationFacility.tr("ls.player.position.centraldefender"),
                     //Innenverteidiger Nach Aussen
-                    HOVerwaltung.instance().getLanguageString("ls.player.position.centraldefendertowardswing"),
+                    TranslationFacility.tr("ls.player.position.centraldefendertowardswing"),
                     //Innenverteidiger Offensiv
-                    HOVerwaltung.instance().getLanguageString("ls.player.position.centraldefenderoffensive"),
+                    TranslationFacility.tr("ls.player.position.centraldefenderoffensive"),
                     //Aussenverteidiger
-                    HOVerwaltung.instance().getLanguageString("ls.player.position.wingback"),
+                    TranslationFacility.tr("ls.player.position.wingback"),
                     //Aussenverteidiger Nach Innen
-                    HOVerwaltung.instance().getLanguageString("ls.player.position.wingbacktowardsmiddle"),
+                    TranslationFacility.tr("ls.player.position.wingbacktowardsmiddle"),
                     //Aussenverteidiger Offensiv
-                    HOVerwaltung.instance().getLanguageString("ls.player.position.wingbackoffensive"),
+                    TranslationFacility.tr("ls.player.position.wingbackoffensive"),
                     //Aussenverteidiger Defensiv
-                    HOVerwaltung.instance().getLanguageString("ls.player.position.wingbackdefensive"),
+                    TranslationFacility.tr("ls.player.position.wingbackdefensive"),
                     //Mittelfeld
-                    HOVerwaltung.instance().getLanguageString("ls.player.position.innermidfielder"),
+                    TranslationFacility.tr("ls.player.position.innermidfielder"),
                     //Mittelfeld Nach Aussen
-                    HOVerwaltung.instance().getLanguageString("ls.player.position.innermidfieldertowardswing"),
+                    TranslationFacility.tr("ls.player.position.innermidfieldertowardswing"),
                     //Mittelfeld Offensiv
-                    HOVerwaltung.instance().getLanguageString("ls.player.position.innermidfielderoffensive"),
+                    TranslationFacility.tr("ls.player.position.innermidfielderoffensive"),
                     //Mittelfeld Defensiv
-                    HOVerwaltung.instance().getLanguageString("ls.player.position.innermidfielderdefensive"),
+                    TranslationFacility.tr("ls.player.position.innermidfielderdefensive"),
                     //Flügel
-                    HOVerwaltung.instance().getLanguageString("ls.player.position.winger"),
+                    TranslationFacility.tr("ls.player.position.winger"),
                     //Flügel Nach Innen
-                    HOVerwaltung.instance().getLanguageString("ls.player.position.wingertowardsmiddle"),
+                    TranslationFacility.tr("ls.player.position.wingertowardsmiddle"),
                     //Flügel Offensiv
-                    HOVerwaltung.instance().getLanguageString("ls.player.position.wingeroffensive"),
+                    TranslationFacility.tr("ls.player.position.wingeroffensive"),
                     //Flügel Defensiv
-                    HOVerwaltung.instance().getLanguageString("ls.player.position.wingerdefensive"),
+                    TranslationFacility.tr("ls.player.position.wingerdefensive"),
                     //Sturm
-                    HOVerwaltung.instance().getLanguageString("ls.player.position.forward"),
+                    TranslationFacility.tr("ls.player.position.forward"),
                     //Sturm Defensiv
-                    HOVerwaltung.instance().getLanguageString("ls.player.position.forwarddefensive"),
+                    TranslationFacility.tr("ls.player.position.forwarddefensive"),
                     //Sturm Nach Aussen
-                    HOVerwaltung.instance().getLanguageString("ls.player.position.forwardtowardswing"),
+                    TranslationFacility.tr("ls.player.position.forwardtowardswing"),
                     //Notes
-                    HOVerwaltung.instance().getLanguageString("Notizen"),
+                    TranslationFacility.tr("Notizen"),
                     //Notes
-                    HOVerwaltung.instance().getLanguageString("ls.player.wage")
+                    TranslationFacility.tr("ls.player.wage")
             };
 
     protected Object[][] m_clData;
@@ -125,88 +125,88 @@ public class TransferTableModel extends AbstractTableModel {
      */
     protected String[] m_sColumnNames =
             {
-                    HOVerwaltung.instance().getLanguageString("ls.player.id"),
+                    TranslationFacility.tr("ls.player.id"),
                     //Name
-                    HOVerwaltung.instance().getLanguageString("ls.player.name"),
+                    TranslationFacility.tr("ls.player.name"),
                     //Current price
-                    HOVerwaltung.instance().getLanguageString("scout_price"),
+                    TranslationFacility.tr("scout_price"),
                     //Ablaufdatum
-                    HOVerwaltung.instance().getLanguageString("Ablaufdatum"),
+                    TranslationFacility.tr("Ablaufdatum"),
                     //Beste Position
-                    HOVerwaltung.instance().getLanguageString("BestePosition"),
+                    TranslationFacility.tr("BestePosition"),
                     //Age
-                    HOVerwaltung.instance().getLanguageString("ls.player.age"),
+                    TranslationFacility.tr("ls.player.age"),
                     //TSI
-                    HOVerwaltung.instance().getLanguageString("ls.player.tsi"),
+                    TranslationFacility.tr("ls.player.tsi"),
                     // Homegrown
-                    HOVerwaltung.instance().getLanguageString("ls.player.short_motherclub"),
+                    TranslationFacility.tr("ls.player.short_motherclub"),
                     //Leadership
-                    HOVerwaltung.instance().getLanguageString("ls.player.leadership"),
+                    TranslationFacility.tr("ls.player.leadership"),
                     //Erfahrung
-                    HOVerwaltung.instance().getLanguageString("ls.player.short_experience"),
+                    TranslationFacility.tr("ls.player.short_experience"),
                     //Form
-                    HOVerwaltung.instance().getLanguageString("ls.player.short_form"),
+                    TranslationFacility.tr("ls.player.short_form"),
                     //Kondition
-                    HOVerwaltung.instance().getLanguageString("ls.player.skill_short.stamina"),
+                    TranslationFacility.tr("ls.player.skill_short.stamina"),
                     // Loyalty
-                    HOVerwaltung.instance().getLanguageString("ls.player.short_loyalty"),
+                    TranslationFacility.tr("ls.player.short_loyalty"),
                     //Torwart
-                    HOVerwaltung.instance().getLanguageString("ls.player.skill_short.keeper"),
+                    TranslationFacility.tr("ls.player.skill_short.keeper"),
                     //Verteidigung
-                    HOVerwaltung.instance().getLanguageString("ls.player.skill_short.defending"),
+                    TranslationFacility.tr("ls.player.skill_short.defending"),
                     //Spielaufbau
-                    HOVerwaltung.instance().getLanguageString("ls.player.skill_short.playmaking"),
+                    TranslationFacility.tr("ls.player.skill_short.playmaking"),
                     //Passpiel
-                    HOVerwaltung.instance().getLanguageString("ls.player.skill_short.passing"),
+                    TranslationFacility.tr("ls.player.skill_short.passing"),
                     //Flügelspiel
-                    HOVerwaltung.instance().getLanguageString("ls.player.skill_short.winger"),
+                    TranslationFacility.tr("ls.player.skill_short.winger"),
                     //Torschuss
-                    HOVerwaltung.instance().getLanguageString("ls.player.skill_short.scoring"),
+                    TranslationFacility.tr("ls.player.skill_short.scoring"),
                     //Standards
-                    HOVerwaltung.instance().getLanguageString("ls.player.skill_short.setpieces"),
+                    TranslationFacility.tr("ls.player.skill_short.setpieces"),
                     //Torwart
-                    HOVerwaltung.instance().getLanguageString("ls.player.position_short.keeper"),
+                    TranslationFacility.tr("ls.player.position_short.keeper"),
                     //Innenverteidiger
-                    HOVerwaltung.instance().getLanguageString("ls.player.position_short.centraldefender"),
+                    TranslationFacility.tr("ls.player.position_short.centraldefender"),
                     //Innenverteidiger Nach Aussen
-                    HOVerwaltung.instance().getLanguageString("ls.player.position_short.centraldefendertowardswing"),
+                    TranslationFacility.tr("ls.player.position_short.centraldefendertowardswing"),
                     //Innenverteidiger Offensiv
-                    HOVerwaltung.instance().getLanguageString("ls.player.position_short.centraldefenderoffensive"),
+                    TranslationFacility.tr("ls.player.position_short.centraldefenderoffensive"),
                     //Aussenverteidiger
-                    HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingback"),
+                    TranslationFacility.tr("ls.player.position_short.wingback"),
                     //Aussenverteidiger Zur Mitte
-                    HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingbacktowardsmiddle"),
+                    TranslationFacility.tr("ls.player.position_short.wingbacktowardsmiddle"),
                     //Aussenverteidiger Offensiv
-                    HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingbackoffensive"),
+                    TranslationFacility.tr("ls.player.position_short.wingbackoffensive"),
                     //Aussenverteidiger Defensiv
-                    HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingbackdefensive"),
+                    TranslationFacility.tr("ls.player.position_short.wingbackdefensive"),
                     //Mittelfeld
-                    HOVerwaltung.instance().getLanguageString("ls.player.position_short.innermidfielder"),
+                    TranslationFacility.tr("ls.player.position_short.innermidfielder"),
                     //Mittelfeld Nach Aussen
-                    HOVerwaltung.instance().getLanguageString("ls.player.position_short.innermidfieldertowardswing"),
+                    TranslationFacility.tr("ls.player.position_short.innermidfieldertowardswing"),
                     //Mittelfeld Offensiv
-                    HOVerwaltung.instance().getLanguageString("ls.player.position_short.innermidfielderoffensive"),
+                    TranslationFacility.tr("ls.player.position_short.innermidfielderoffensive"),
                     //Mittelfeld Defensiv
-                    HOVerwaltung.instance().getLanguageString("ls.player.position_short.innermidfielderdefensive"),
+                    TranslationFacility.tr("ls.player.position_short.innermidfielderdefensive"),
                     //Flügel
-                    HOVerwaltung.instance().getLanguageString("ls.player.position_short.winger"),
+                    TranslationFacility.tr("ls.player.position_short.winger"),
                     //Flügel Nach Innen
-                    HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingertowardsmiddle"),
+                    TranslationFacility.tr("ls.player.position_short.wingertowardsmiddle"),
                     //Flügel Offensiv
-                    HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingeroffensive"),
+                    TranslationFacility.tr("ls.player.position_short.wingeroffensive"),
                     //Flügel Defensiv
-                    HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingerdefensive"),
+                    TranslationFacility.tr("ls.player.position_short.wingerdefensive"),
                     //Sturm
-                    HOVerwaltung.instance().getLanguageString("ls.player.position_short.forward"),
+                    TranslationFacility.tr("ls.player.position_short.forward"),
                     //Sturm Defensiv
-                    HOVerwaltung.instance().getLanguageString("ls.player.position_short.forwarddefensive"),
+                    TranslationFacility.tr("ls.player.position_short.forwarddefensive"),
 
                     //Sturm Nach Aussen
-                    HOVerwaltung.instance().getLanguageString("ls.player.position_short.forwardtowardswing"),
+                    TranslationFacility.tr("ls.player.position_short.forwardtowardswing"),
                     //Notes
-                    HOVerwaltung.instance().getLanguageString("Notizen"),
+                    TranslationFacility.tr("Notizen"),
                     //Notes
-                    HOVerwaltung.instance().getLanguageString("ls.player.wage")
+                    TranslationFacility.tr("ls.player.wage")
             };
 
     private Vector<ScoutEintrag> m_vScoutEintraege;

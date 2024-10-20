@@ -5,11 +5,12 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.enums.MatchType;
 import core.model.player.Specialty;
 import core.util.HODateTime;
 import core.util.HOLogger;
+
 import javax.swing.*;
 import java.util.*;
 import java.util.stream.IntStream;
@@ -776,7 +777,7 @@ public class MatchEvent extends AbstractTable.Storable {
     }
 
     public static String getEventTextDescription(int iMatchEventID) {
-        return iMatchEventID + ": " + HOVerwaltung.instance().getLanguageString("MatchEvent_" + iMatchEventID);
+        return iMatchEventID + ": " + TranslationFacility.tr("MatchEvent_" + iMatchEventID);
     }
 
     public List<Icon> getIcons() {

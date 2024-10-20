@@ -9,38 +9,12 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
-import core.model.match.MatchKurzInfo;
+import core.model.TranslationFacility;
 import core.model.enums.MatchType;
+import core.model.match.MatchKurzInfo;
 import core.util.HOLogger;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.io.File;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.*;
-
-import javax.swing.BorderFactory;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTable;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 import javax.swing.event.ChangeEvent;
@@ -48,6 +22,14 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.TableColumnModelEvent;
 import javax.swing.event.TableColumnModelListener;
 import javax.swing.table.TableColumn;
+import java.awt.*;
+import java.awt.event.*;
+import java.io.File;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.List;
+import java.util.*;
 
 
 /**
@@ -221,13 +203,13 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 
         //Füllen der HashTable m_HashTable_EventInfo mit den Sprachenabhängigen Wörtern
 
-        m_HashTable_EventInfo.put("L",hoV.getLanguageString("ls.match.matchtype.league"));
-        m_HashTable_EventInfo.put("F",hoV.getLanguageString("ls.match.matchtype.friendly_normal"));
-        m_HashTable_EventInfo.put("I",hoV.getLanguageString("ls.match.matchtype.internationalfriendly_normal"));
-        m_HashTable_EventInfo.put("P",hoV.getLanguageString("ls.match.matchtype.cup"));
-        m_HashTable_EventInfo.put("Q",hoV.getLanguageString("ls.match.matchtype.qualification"));
-        m_HashTable_EventInfo.put("DB",hoV.getLanguageString("ttCalDB"));
-        m_HashTable_EventInfo.put("FILE",hoV.getLanguageString("ttCalFile"));
+        m_HashTable_EventInfo.put("L",TranslationFacility.tr("ls.match.matchtype.league"));
+        m_HashTable_EventInfo.put("F",TranslationFacility.tr("ls.match.matchtype.friendly_normal"));
+        m_HashTable_EventInfo.put("I",TranslationFacility.tr("ls.match.matchtype.internationalfriendly_normal"));
+        m_HashTable_EventInfo.put("P",TranslationFacility.tr("ls.match.matchtype.cup"));
+        m_HashTable_EventInfo.put("Q",TranslationFacility.tr("ls.match.matchtype.qualification"));
+        m_HashTable_EventInfo.put("DB",TranslationFacility.tr("ttCalDB"));
+        m_HashTable_EventInfo.put("FILE",TranslationFacility.tr("ttCalFile"));
 
 		// Anzahl der HRF-Files in der DB ermitteln
 		doSelect("SELECT COUNT(*) FROM HRF");
@@ -295,7 +277,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 		Vector importHeader = new Vector();
 		Vector importValues = new Vector();
 
-		importHeader.add(hoV.getLanguageString("pfad"));
+		importHeader.add(TranslationFacility.tr("pfad"));
 
 		m_TableModel_Imports = new HrfTableModel(importHeader, importValues);
 		m_Table_Imports = new HrfTable(m_TableModel_Imports, "HRFImportieren");
@@ -308,15 +290,15 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
         Vector tmpV = new Vector();
 
         m_V_Filelist_Header.add("");
-        m_V_Filelist_Header.add(hoV.getLanguageString("datname"));
-        m_V_Filelist_Header.add(hoV.getLanguageString("Datum"));
-        m_V_Filelist_Header.add(hoV.getLanguageString("tag"));
-        m_V_Filelist_Header.add(hoV.getLanguageString("kw"));
-        m_V_Filelist_Header.add(hoV.getLanguageString("Season"));
-        m_V_Filelist_Header.add(hoV.getLanguageString("Liga"));
-        m_V_Filelist_Header.add(hoV.getLanguageString("Training"));
+        m_V_Filelist_Header.add(TranslationFacility.tr("datname"));
+        m_V_Filelist_Header.add(TranslationFacility.tr("Datum"));
+        m_V_Filelist_Header.add(TranslationFacility.tr("tag"));
+        m_V_Filelist_Header.add(TranslationFacility.tr("kw"));
+        m_V_Filelist_Header.add(TranslationFacility.tr("Season"));
+        m_V_Filelist_Header.add(TranslationFacility.tr("Liga"));
+        m_V_Filelist_Header.add(TranslationFacility.tr("Training"));
         m_V_Filelist_Header.add("%");
-        m_V_Filelist_Header.add(hoV.getLanguageString("indb"));
+        m_V_Filelist_Header.add(TranslationFacility.tr("indb"));
 
         m_TableModel_Filelist = new HrfTableModel(m_V_Filelist_Header, m_V_Filelist_Values);
         m_Table_Filelist = new HrfTable(m_TableModel_Filelist,m_intAr_col_width_Filelist, "filelist");
@@ -328,14 +310,14 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
         m_V_Calendar_Header = new Vector();
         m_V_Calendar_Values = new Vector();
 
-        m_V_Calendar_Header.add(hoV.getLanguageString("kw"));
-        m_V_Calendar_Header.add(hoV.getLanguageString("monkurz"));
-        m_V_Calendar_Header.add(hoV.getLanguageString("diekurz"));
-        m_V_Calendar_Header.add(hoV.getLanguageString("mitkurz"));
-        m_V_Calendar_Header.add(hoV.getLanguageString("donkurz"));
-        m_V_Calendar_Header.add(hoV.getLanguageString("frekurz"));
-        m_V_Calendar_Header.add(hoV.getLanguageString("samkurz"));
-        m_V_Calendar_Header.add(hoV.getLanguageString("sonkurz"));
+        m_V_Calendar_Header.add(TranslationFacility.tr("kw"));
+        m_V_Calendar_Header.add(TranslationFacility.tr("monkurz"));
+        m_V_Calendar_Header.add(TranslationFacility.tr("diekurz"));
+        m_V_Calendar_Header.add(TranslationFacility.tr("mitkurz"));
+        m_V_Calendar_Header.add(TranslationFacility.tr("donkurz"));
+        m_V_Calendar_Header.add(TranslationFacility.tr("frekurz"));
+        m_V_Calendar_Header.add(TranslationFacility.tr("samkurz"));
+        m_V_Calendar_Header.add(TranslationFacility.tr("sonkurz"));
 
         m_TableModel_Calendar = new HrfTableModel(m_V_Calendar_Header, m_V_Calendar_Values);
         m_Table_Calendar = new HrfTable(m_TableModel_Calendar,m_intAr_col_width_Calendar, "calendar");
@@ -348,18 +330,18 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
          */
         //Vorbereiten der fixen Labelbeschriftungen
         m_Ar_Detail_Label_fix = new String[12];
-        m_Ar_Detail_Label_fix[0] = hoV.getLanguageString("Liga");
-        m_Ar_Detail_Label_fix[1] = hoV.getLanguageString("Season") + " / " +hoV.getLanguageString("Spieltag");
-        m_Ar_Detail_Label_fix[2] = hoV.getLanguageString("Punkte") + " / " + hoV.getLanguageString("Tore");
-        m_Ar_Detail_Label_fix[3] =hoV.getLanguageString("Platzierung");
-        m_Ar_Detail_Label_fix[4] = hoV.getLanguageString("ls.team.trainingtype");
-        m_Ar_Detail_Label_fix[5] = hoV.getLanguageString("ls.team.trainingintensity");
-        m_Ar_Detail_Label_fix[6] = hoV.getLanguageString("ls.club.staff.assistantcoach");
-        m_Ar_Detail_Label_fix[7] = hoV.getLanguageString("ls.team.confidence");
-        m_Ar_Detail_Label_fix[8] = hoV.getLanguageString("AnzahlSpieler");
-        m_Ar_Detail_Label_fix[9] =hoV.getLanguageString("ls.team.teamspirit");
-		m_Ar_Detail_Label_fix[10] = hoV.getLanguageString("lasthrf");
-		m_Ar_Detail_Label_fix[11] = hoV.getLanguageString("nexthrf");
+        m_Ar_Detail_Label_fix[0] = TranslationFacility.tr("Liga");
+        m_Ar_Detail_Label_fix[1] = TranslationFacility.tr("Season") + " / " +TranslationFacility.tr("Spieltag");
+        m_Ar_Detail_Label_fix[2] = TranslationFacility.tr("Punkte") + " / " + TranslationFacility.tr("Tore");
+        m_Ar_Detail_Label_fix[3] =TranslationFacility.tr("Platzierung");
+        m_Ar_Detail_Label_fix[4] = TranslationFacility.tr("ls.team.trainingtype");
+        m_Ar_Detail_Label_fix[5] = TranslationFacility.tr("ls.team.trainingintensity");
+        m_Ar_Detail_Label_fix[6] = TranslationFacility.tr("ls.club.staff.assistantcoach");
+        m_Ar_Detail_Label_fix[7] = TranslationFacility.tr("ls.team.confidence");
+        m_Ar_Detail_Label_fix[8] = TranslationFacility.tr("AnzahlSpieler");
+        m_Ar_Detail_Label_fix[9] =TranslationFacility.tr("ls.team.teamspirit");
+		m_Ar_Detail_Label_fix[10] = TranslationFacility.tr("lasthrf");
+		m_Ar_Detail_Label_fix[11] = TranslationFacility.tr("nexthrf");
 
 		m_int_Hoehe_DetailPanels = m_Ar_Detail_Label_fix.length * m_int_Hoehe_Label;	// Festlege der Gesamthöhe des Detailpanels
 
@@ -409,36 +391,36 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 
 
     	Border kante = BorderFactory.createBevelBorder(BevelBorder.RAISED,hellblau,dunkelblau);
-		m_Button_load_file = new JButton(hoV.getLanguageString("btLoadFile"));
-        m_Button_load_file.setToolTipText(hoV.getLanguageString("ttLoadFile"));
+		m_Button_load_file = new JButton(TranslationFacility.tr("btLoadFile"));
+        m_Button_load_file.setToolTipText(TranslationFacility.tr("ttLoadFile"));
         m_Button_load_file.addActionListener(this);
 
-        m_Button_delete_db = new JButton(hoV.getLanguageString("btDeleteDB"));
-        m_Button_delete_db.setToolTipText(hoV.getLanguageString("ttDeleteDB"));
+        m_Button_delete_db = new JButton(TranslationFacility.tr("btDeleteDB"));
+        m_Button_delete_db.setToolTipText(TranslationFacility.tr("ttDeleteDB"));
         m_Button_delete_db.addActionListener(this);
 
-        m_Button_delete_file = new JButton(hoV.getLanguageString("btDeleteFile"));
-        m_Button_delete_file.setToolTipText(hoV.getLanguageString("ttDeleteFile"));
+        m_Button_delete_file = new JButton(TranslationFacility.tr("btDeleteFile"));
+        m_Button_delete_file.setToolTipText(TranslationFacility.tr("ttDeleteFile"));
         m_Button_delete_file.addActionListener(this);
 
-        m_Button_ImportList = new JButton(hoV.getLanguageString("btImport"));
-        m_Button_ImportList.setToolTipText(hoV.getLanguageString("ttImport"));
+        m_Button_ImportList = new JButton(TranslationFacility.tr("btImport"));
+        m_Button_ImportList.setToolTipText(TranslationFacility.tr("ttImport"));
         m_Button_ImportList.addActionListener(this);
 
-        m_Button_Select_All = new JButton(hoV.getLanguageString("btSelect"));
-        m_Button_Select_All.setToolTipText(hoV.getLanguageString("ttSelect"));
+        m_Button_Select_All = new JButton(TranslationFacility.tr("btSelect"));
+        m_Button_Select_All.setToolTipText(TranslationFacility.tr("ttSelect"));
         m_Button_Select_All.addActionListener(this);
 
-        m_Button_reset = new JButton(hoV.getLanguageString("ls.button.reset"));
-        m_Button_reset.setToolTipText(hoV.getLanguageString("ttReset"));
+        m_Button_reset = new JButton(TranslationFacility.tr("ls.button.reset"));
+        m_Button_reset.setToolTipText(TranslationFacility.tr("ttReset"));
         m_Button_reset.addActionListener(this);
 
-        m_Button_Delete_Row = new JButton(hoV.getLanguageString("btRemove"));
-        m_Button_Delete_Row.setToolTipText(hoV.getLanguageString("ttRemove"));
+        m_Button_Delete_Row = new JButton(TranslationFacility.tr("btRemove"));
+        m_Button_Delete_Row.setToolTipText(TranslationFacility.tr("ttRemove"));
         m_Button_Delete_Row.addActionListener(this);
 
-        m_Button_GoTo = new JButton(hoV.getLanguageString("ls.button.apply"));
-        m_Button_GoTo.setToolTipText(hoV.getLanguageString("ttok"));
+        m_Button_GoTo = new JButton(TranslationFacility.tr("ls.button.apply"));
+        m_Button_GoTo.setToolTipText(TranslationFacility.tr("ttok"));
         m_Button_GoTo.setBackground(hellblau);
         m_Button_GoTo.addActionListener(this);
 
@@ -450,8 +432,8 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
         m_Button_Month_Back.setIcon(ImageUtilities.getTransferInIcon());
         m_Button_Month_Back.addActionListener(this);
 
-        m_Button_ResetImports = new JButton(hoV.getLanguageString("btImports"));
-        m_Button_ResetImports.setToolTipText(hoV.getLanguageString("ttImports"));
+        m_Button_ResetImports = new JButton(TranslationFacility.tr("btImports"));
+        m_Button_ResetImports.setToolTipText(TranslationFacility.tr("ttImports"));
         m_Button_ResetImports.addActionListener(this);
 
 		m_Label_Monat = new JLabel("");
@@ -552,19 +534,18 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 	 ******************/
 	public void setMonate()
 	{
-		HOVerwaltung hoV = HOVerwaltung.instance();
-		m_V_months.add(hoV.getLanguageString("jan"));
-		m_V_months.add(hoV.getLanguageString("feb"));
-		m_V_months.add(hoV.getLanguageString("mar"));
-		m_V_months.add(hoV.getLanguageString("apr"));
-		m_V_months.add(hoV.getLanguageString("may"));
-		m_V_months.add(hoV.getLanguageString("jun"));
-		m_V_months.add(hoV.getLanguageString("jul"));
-		m_V_months.add(hoV.getLanguageString("aug"));
-		m_V_months.add(hoV.getLanguageString("sep"));
-		m_V_months.add(hoV.getLanguageString("oct"));
-		m_V_months.add(hoV.getLanguageString("nov"));
-		m_V_months.add(hoV.getLanguageString("dec"));
+		m_V_months.add(TranslationFacility.tr("jan"));
+		m_V_months.add(TranslationFacility.tr("feb"));
+		m_V_months.add(TranslationFacility.tr("mar"));
+		m_V_months.add(TranslationFacility.tr("apr"));
+		m_V_months.add(TranslationFacility.tr("may"));
+		m_V_months.add(TranslationFacility.tr("jun"));
+		m_V_months.add(TranslationFacility.tr("jul"));
+		m_V_months.add(TranslationFacility.tr("aug"));
+		m_V_months.add(TranslationFacility.tr("sep"));
+		m_V_months.add(TranslationFacility.tr("oct"));
+		m_V_months.add(TranslationFacility.tr("nov"));
+		m_V_months.add(TranslationFacility.tr("dec"));
 	}
 
 	/******************
@@ -582,14 +563,13 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 	 ******************/
 	public void setTage()
 	{
-		HOVerwaltung hoV = HOVerwaltung.instance();
-		m_Ar_days[0] = hoV.getLanguageString("mon");
-		m_Ar_days[1] = hoV.getLanguageString("die");
-		m_Ar_days[2] = hoV.getLanguageString("wed");
-		m_Ar_days[3] = hoV.getLanguageString("don");
-		m_Ar_days[4] = hoV.getLanguageString("fre");
-		m_Ar_days[5] = hoV.getLanguageString("sam");
-		m_Ar_days[6] = hoV.getLanguageString("son");
+		m_Ar_days[0] = TranslationFacility.tr("mon");
+		m_Ar_days[1] = TranslationFacility.tr("die");
+		m_Ar_days[2] = TranslationFacility.tr("wed");
+		m_Ar_days[3] = TranslationFacility.tr("don");
+		m_Ar_days[4] = TranslationFacility.tr("fre");
+		m_Ar_days[5] = TranslationFacility.tr("sam");
+		m_Ar_days[6] = TranslationFacility.tr("son");
 	}
 
 	/******************
@@ -874,7 +854,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 	    	// Entfernen-Panel und -Label erstellen
 	    	HrfPanel entfernen = new HrfPanel(m_int_Breite_Detail_Var,m_int_Hoehe_Label + 5,rot);
 	    	entfernen.setLayout(new GridLayout(1,1));
-	    	JLabel remove = createLabel(HOVerwaltung.instance().getLanguageString("ls.button.remove"),m_int_Breite_Detail_Var,m_int_Hoehe_Label,JLabel.CENTER,rot);
+	    	JLabel remove = createLabel(TranslationFacility.tr("ls.button.remove"),m_int_Breite_Detail_Var,m_int_Hoehe_Label,JLabel.CENTER,rot);
 	    	remove.getInsets();
 	    	entfernen.add(remove);
 
@@ -1145,7 +1125,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 
         			File tmp_File = new File(deletePath);
 
-        			int option = JOptionPane.showConfirmDialog(null,HOVerwaltung.instance().getLanguageString("deletefile") + "\n" + deletePath,HOVerwaltung.instance().getLanguageString("deletefile"),JOptionPane.YES_NO_OPTION);
+        			int option = JOptionPane.showConfirmDialog(null,TranslationFacility.tr("deletefile") + "\n" + deletePath,TranslationFacility.tr("deletefile"),JOptionPane.YES_NO_OPTION);
         			if(option == 0)
         			{
         				//Löschen der Datei von der Platte

@@ -3,6 +3,7 @@ package module.teamAnalyzer.report;
 
 import core.db.DBManager;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.prediction.engine.TeamData;
 import core.specialevents.SpecialEventsPredictionManager;
 import module.lineup.Lineup;
@@ -68,7 +69,7 @@ public class TeamReport {
             addMatch(m, squadInfo,  SystemManager.isShowUnavailable.isSet());
         }
         this.averageRatingslineup = new TeamLineupBuilder(this)
-                .setName(HOVerwaltung.instance().getLanguageString("Durchschnitt")).build();
+                .setName(TranslationFacility.tr("Durchschnitt")).build();
 
         if ( HOVerwaltung.instance().getModel().getBasics().isNationalTeam()){
             this.averageRatingslineup.setNtTeamDetails(DBManager.instance().loadNtTeamDetails(this.teamId, null));
@@ -148,7 +149,7 @@ public class TeamReport {
             adjustedRatingsLineup = new TeamLineupBuilder(new TeamReport(this.teamId, matchDetail, null))
                     .setTeamData(newRatings)
                     .setMatchType(matchDetail.getMatch().getMatchType())
-                    .setName(HOVerwaltung.instance().getLanguageString("ls.teamanalyzer.Adjusted"))
+                    .setName(TranslationFacility.tr("ls.teamanalyzer.Adjusted"))
                     .build();
         }
         selectLineup(1); // select the adjusted lineup

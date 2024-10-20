@@ -2,19 +2,13 @@
 package module.teamAnalyzer.ui.component;
 
 import core.db.DBManager;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import module.teamAnalyzer.vo.Team;
 
-import java.awt.BorderLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Iterator;
-
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 
 
 
@@ -35,10 +29,10 @@ public class DeletePanel extends JPanel {
     FavouriteMenu menu;
 
     /** The add button */
-    JButton addButton = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.add"));
+    JButton addButton = new JButton(TranslationFacility.tr("ls.button.add"));
 
     /** The delete button */
-    JButton deletebutton = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.delete"));
+    JButton deletebutton = new JButton(TranslationFacility.tr("ls.button.delete"));
 
     /** ComboBox with the list of favourite teams */
     JComboBox teams = new JComboBox();
@@ -95,7 +89,7 @@ public class DeletePanel extends JPanel {
                     Team team = (Team) teams.getSelectedItem();
 
                     if (team == null) {
-                        status.setText(HOVerwaltung.instance().getLanguageString("Favourite.SelectTeam"));
+                        status.setText(TranslationFacility.tr("Favourite.SelectTeam"));
 
                         return;
                     }

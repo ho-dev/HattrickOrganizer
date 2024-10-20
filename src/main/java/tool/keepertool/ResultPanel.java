@@ -4,14 +4,12 @@ import core.constants.player.PlayerSkill;
 import core.db.DBManager;
 import core.gui.comp.panel.ImagePanel;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.player.Player;
-import java.awt.BorderLayout;
-import java.awt.GridLayout;
+
+import javax.swing.*;
+import java.awt.*;
 import java.text.DecimalFormat;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
 
 /**
  * Panel where results are shown
@@ -52,8 +50,8 @@ class ResultPanel extends JPanel {
         id = 0;
         average = 0;
         set.setEnabled(false);
-        result.setText(core.model.HOVerwaltung.instance().getLanguageString("ls.player.skill"));
-        set.setText(core.model.HOVerwaltung.instance().getLanguageString("Disabled"));
+        result.setText(TranslationFacility.tr("ls.player.skill"));
+        set.setText(TranslationFacility.tr("Disabled"));
     }
 
     /**
@@ -73,15 +71,15 @@ class ResultPanel extends JPanel {
 
         final KeeperTool kt = new KeeperTool(form, tsi);
         id = playerId;
-        result.setText(core.model.HOVerwaltung.instance().getLanguageString("ls.player.skill") + ": " + df.format(kt.getMin()) + " - " + df.format(kt.getMax()));
+        result.setText(TranslationFacility.tr("ls.player.skill") + ": " + df.format(kt.getMin()) + " - " + df.format(kt.getMax()));
         average = kt.getAvg();
 
         if (playerId > 0) {
-            set.setText(core.model.HOVerwaltung.instance().getLanguageString("OffsetTitle") + " "
+            set.setText(TranslationFacility.tr("OffsetTitle") + " "
                         + name);
             set.setEnabled(true);
         } else {
-            set.setText(core.model.HOVerwaltung.instance().getLanguageString("Disabled"));
+            set.setText(TranslationFacility.tr("Disabled"));
             set.setEnabled(false);
         }
     }

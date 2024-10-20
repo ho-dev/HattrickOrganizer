@@ -34,25 +34,25 @@ public enum StaffType {
 		public String getName() {
 			 switch (this) {
 		         case ASSISTANTTRAINER:
-		             return core.model.HOVerwaltung.instance().getLanguageString("ls.club.staff.assistantcoach");
+		             return TranslationFacility.tr("ls.club.staff.assistantcoach");
 
 		         case MEDIC:
-		             return core.model.HOVerwaltung.instance().getLanguageString("ls.club.staff.medic");
+		             return TranslationFacility.tr("ls.club.staff.medic");
 
 		         case SPOKESPERSON:
-		             return core.model.HOVerwaltung.instance().getLanguageString("ls.club.staff.spokesperson");
+		             return TranslationFacility.tr("ls.club.staff.spokesperson");
 
 		         case SPORTPSYCHOLOGIST:
-		             return core.model.HOVerwaltung.instance().getLanguageString("ls.club.staff.sportspsychologist");
+		             return TranslationFacility.tr("ls.club.staff.sportspsychologist");
 
 		         case FORMCOACH:
-		             return core.model.HOVerwaltung.instance().getLanguageString("ls.club.staff.formcoach");
+		             return TranslationFacility.tr("ls.club.staff.formcoach");
 
 		         case FINANCIALDIRECTOR:
-		             return core.model.HOVerwaltung.instance().getLanguageString("ls.club.staff.financialdirector");
+		             return TranslationFacility.tr("ls.club.staff.financialdirector");
 		         
 		         case TACTICALASSISTANT:
-		           return core.model.HOVerwaltung.instance().getLanguageString("ls.club.staff.tacticalassistant");
+		           return TranslationFacility.tr("ls.club.staff.tacticalassistant");
 				 
 		           //Error?
 		         default:

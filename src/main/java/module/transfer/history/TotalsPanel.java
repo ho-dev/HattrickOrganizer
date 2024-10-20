@@ -3,17 +3,12 @@ package module.transfer.history;
 
 
 import core.gui.comp.panel.ImagePanel;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import module.transfer.ui.layout.TableLayout;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
+import javax.swing.*;
+import java.awt.*;
 import java.text.NumberFormat;
-
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 
 
 
@@ -76,23 +71,23 @@ class TotalsPanel extends JPanel {
         panel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.GRAY),
                                                          titel));
 
-        panel.add(new JLabel(HOVerwaltung.instance().getLanguageString("Total"), SwingConstants.CENTER), "3, 0"); //$NON-NLS-1$ //$NON-NLS-2$
-        panel.add(new JLabel(HOVerwaltung.instance().getLanguageString("Durchschnitt"),
+        panel.add(new JLabel(TranslationFacility.tr("Total"), SwingConstants.CENTER), "3, 0"); //$NON-NLS-1$ //$NON-NLS-2$
+        panel.add(new JLabel(TranslationFacility.tr("Durchschnitt"),
                              SwingConstants.CENTER), "5, 0"); //$NON-NLS-1$ 
 
-        panel.add(new JLabel(HOVerwaltung.instance().getLanguageString("Purchases"), SwingConstants.LEFT), "1, 1"); //$NON-NLS-1$ //$NON-NLS-2$
+        panel.add(new JLabel(TranslationFacility.tr("Purchases"), SwingConstants.LEFT), "1, 1"); //$NON-NLS-1$ //$NON-NLS-2$
         panel.add(new JLabel(currency, SwingConstants.RIGHT), "2, 1"); //$NON-NLS-1$
         panel.add(buyTotPrice, "3, 1"); //$NON-NLS-1$
         panel.add(new JLabel(currency, SwingConstants.RIGHT), "4, 1"); //$NON-NLS-1$
         panel.add(buyAvgPrice, "5, 1"); //$NON-NLS-1$
 
-        panel.add(new JLabel(HOVerwaltung.instance().getLanguageString("Sales"), SwingConstants.LEFT), "1, 2"); //$NON-NLS-1$ //$NON-NLS-2$
+        panel.add(new JLabel(TranslationFacility.tr("Sales"), SwingConstants.LEFT), "1, 2"); //$NON-NLS-1$ //$NON-NLS-2$
         panel.add(new JLabel(currency, SwingConstants.RIGHT), "2, 2"); //$NON-NLS-1$
         panel.add(sellTotPrice, "3, 2"); //$NON-NLS-1$
         panel.add(new JLabel(currency, SwingConstants.RIGHT), "4, 2"); //$NON-NLS-1$
         panel.add(sellAvgPrice, "5, 2"); //$NON-NLS-1$
 
-        panel.add(new JLabel(HOVerwaltung.instance().getLanguageString("Difference"), SwingConstants.LEFT), "1, 4"); //$NON-NLS-1$ //$NON-NLS-2$
+        panel.add(new JLabel(TranslationFacility.tr("Difference"), SwingConstants.LEFT), "1, 4"); //$NON-NLS-1$ //$NON-NLS-2$
         panel.add(new JLabel(currency, SwingConstants.RIGHT), "2, 4"); //$NON-NLS-1$
         panel.add(diffTotPrice, "3, 4"); //$NON-NLS-1$
 

@@ -3,20 +3,21 @@ package module.training.ui.model;
 
 import core.constants.player.PlayerSkill;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.player.Player;
 import core.training.FutureTrainingManager;
 import core.training.WeeklyTrainingType;
 import core.util.HODateTime;
 import core.util.Helper;
 import module.training.Skills;
-import module.training.ui.comp.TrainingPriorityCell;
 import module.training.ui.comp.PlayerNameCell;
+import module.training.ui.comp.TrainingPriorityCell;
 import module.training.ui.comp.VerticalIndicator;
-
-import java.util.*;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Table Model for the main table showing training results
@@ -80,18 +81,18 @@ public class OutputTableModel extends AbstractTableModel {
     @Override
     public String getColumnName(int columnIndex) {
         return switch (columnIndex) {
-            case COL_PLAYER_ID -> HOVerwaltung.instance().getLanguageString("ls.player.id");
-            case 0 -> HOVerwaltung.instance().getLanguageString("Spieler");
-            case 1 -> HOVerwaltung.instance().getLanguageString("ls.player.age");
-            case 2 -> HOVerwaltung.instance().getLanguageString("trainpre.priority");
-            case 3 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.keeper");
-            case 4 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.defending");
-            case 5 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.playmaking");
-            case 6 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.passing");
-            case 7 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.winger");
-            case 8 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.scoring");
-            case 9 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.setpieces");
-            case 10 -> HOVerwaltung.instance().getLanguageString("ls.player.skill.stamina");
+            case COL_PLAYER_ID -> TranslationFacility.tr("ls.player.id");
+            case 0 -> TranslationFacility.tr("Spieler");
+            case 1 -> TranslationFacility.tr("ls.player.age");
+            case 2 -> TranslationFacility.tr("trainpre.priority");
+            case 3 -> TranslationFacility.tr("ls.player.skill.keeper");
+            case 4 -> TranslationFacility.tr("ls.player.skill.defending");
+            case 5 -> TranslationFacility.tr("ls.player.skill.playmaking");
+            case 6 -> TranslationFacility.tr("ls.player.skill.passing");
+            case 7 -> TranslationFacility.tr("ls.player.skill.winger");
+            case 8 -> TranslationFacility.tr("ls.player.skill.scoring");
+            case 9 -> TranslationFacility.tr("ls.player.skill.setpieces");
+            case 10 -> TranslationFacility.tr("ls.player.skill.stamina");
             default -> "";
         };
     }

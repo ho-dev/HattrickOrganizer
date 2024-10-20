@@ -2,17 +2,12 @@ package tool.injury;
 
 import core.gui.comp.panel.ImagePanel;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.player.Player;
 import tool.keepertool.PlayerItem;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.GridLayout;
-import javax.swing.BorderFactory;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
+
+import javax.swing.*;
+import java.awt.*;
 
 
 /**
@@ -198,9 +193,9 @@ class InjuryDetailPanel extends JPanel {
      * Initialize the GUI components
      */
     private void init() {
-        injuryType.addItem(HOVerwaltung.instance().getLanguageString("ls.player.injurystatus.healthy"));
-        injuryType.addItem(HOVerwaltung.instance().getLanguageString("ls.player.injurystatus.bruised"));
-        injuryType.addItem(HOVerwaltung.instance().getLanguageString("ls.player.injurystatus.injured"));
+        injuryType.addItem(TranslationFacility.tr("ls.player.injurystatus.healthy"));
+        injuryType.addItem(TranslationFacility.tr("ls.player.injurystatus.bruised"));
+        injuryType.addItem(TranslationFacility.tr("ls.player.injurystatus.injured"));
 
         setOpaque(false);
         setLayout(new BorderLayout());
@@ -208,15 +203,15 @@ class InjuryDetailPanel extends JPanel {
         final JPanel config = new ImagePanel();
         config.setOpaque(false);
         config.setLayout(new GridLayout(4, 3));
-        config.add(createLabel(HOVerwaltung.instance().getLanguageString("Spieler")));
-        config.add(createLabel(HOVerwaltung.instance().getLanguageString("ls.player.age")));
-        config.add(createLabel(HOVerwaltung.instance().getLanguageString("ls.player.injurystatus.injured")));
+        config.add(createLabel(TranslationFacility.tr("Spieler")));
+        config.add(createLabel(TranslationFacility.tr("ls.player.age")));
+        config.add(createLabel(TranslationFacility.tr("ls.player.injurystatus.injured")));
         config.add(createPanel(players));
         config.add(createPanel(age));
         config.add(createPanel(injury));
-        config.add(createLabel(HOVerwaltung.instance().getLanguageString("ls.player.injurystatus")));
-        config.add(createLabel(HOVerwaltung.instance().getLanguageString("TSIPre")));
-        config.add(createLabel(HOVerwaltung.instance().getLanguageString("TSIPost")));
+        config.add(createLabel(TranslationFacility.tr("ls.player.injurystatus")));
+        config.add(createLabel(TranslationFacility.tr("TSIPre")));
+        config.add(createLabel(TranslationFacility.tr("TSIPost")));
         config.add(createPanel(injuryType));
         config.add(createPanel(tsiPre));
         config.add(createPanel(tsiPost));

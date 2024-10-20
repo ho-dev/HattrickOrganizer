@@ -3,7 +3,7 @@ package tool.updater;
 import com.install4j.api.launcher.Variables;
 import core.HO;
 import core.gui.HOMainFrame;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.net.MyConnector;
 import core.util.BrowserLauncher;
@@ -75,28 +75,28 @@ public final class UpdateController {
         String releaseNoteUrl;
         switch (versionType) {
             case "DEV" -> {
-                updateAvailable = HOVerwaltung.instance().getLanguageString("updateDEVavailable");
+                updateAvailable = TranslationFacility.tr("updateDEVavailable");
                 releaseNoteUrl = RELEASE_NOTES_DEV_URL;
             }
             case "BETA" -> {
-                updateAvailable = HOVerwaltung.instance().getLanguageString("updateBETAavailable");
+                updateAvailable = TranslationFacility.tr("updateBETAavailable");
                 releaseNoteUrl = RELEASE_NOTES_BETA_URL;
             }
             default -> {
-                updateAvailable = HOVerwaltung.instance().getLanguageString("updateStableavailable");
+                updateAvailable = TranslationFacility.tr("updateStableavailable");
                 releaseNoteUrl = RELEASE_NOTES_STABLE_URL;
             }
         }
 
         int update = JOptionPane.showConfirmDialog(HOMainFrame.instance(),
                 new UpdaterPanel("<html><body>" + updateAvailable + "<br/><br/>"
-                        + "<font color=gray>" + HOVerwaltung.instance().getLanguageString("ls.version") + ":</font>"
+                        + "<font color=gray>" + TranslationFacility.tr("ls.version") + ":</font>"
                         + updateVersion.getVersionString() + "<br/>"
-                        + "<font color=gray>" + HOVerwaltung.instance().getLanguageString("Released") + ":</font>"
+                        + "<font color=gray>" + TranslationFacility.tr("Released") + ":</font>"
                         + updateVersion.getReleaseDate() + "<br/><br/>"
-                        + HOVerwaltung.instance().getLanguageString("ls.button.update") + "?</body></html>",
+                        + TranslationFacility.tr("ls.button.update") + "?</body></html>",
                         releaseNoteUrl),
-                HOVerwaltung.instance().getLanguageString("confirmation.title"),
+                TranslationFacility.tr("confirmation.title"),
                 JOptionPane.YES_NO_OPTION);
 
         // Warning, if install via package, ask user to confirmation
@@ -104,8 +104,8 @@ public final class UpdateController {
                 System.getProperty("install.mode","").equalsIgnoreCase("pkg") &&
                 versionType.equals("RELEASE")) {
             update = JOptionPane.showConfirmDialog(HOMainFrame.instance(),
-                    HOVerwaltung.instance().getLanguageString("ls.button.update.linux.pkg.warning") + "?",
-                    HOVerwaltung.instance().getLanguageString("confirmation.title"),
+                    TranslationFacility.tr("ls.button.update.linux.pkg.warning") + "?",
+                    TranslationFacility.tr("confirmation.title"),
                     JOptionPane.YES_NO_OPTION,
                     JOptionPane.WARNING_MESSAGE);
         }
@@ -117,15 +117,15 @@ public final class UpdateController {
 
     private static void showNoUpdateAvailableDialog() {
         final int currRev = HO.getRevisionNumber();
-        JOptionPane.showMessageDialog(HOMainFrame.instance(), HOVerwaltung.instance()
-                .getLanguageString("updatenotavailable")
+        JOptionPane.showMessageDialog(HOMainFrame.instance(),
+                TranslationFacility.tr("updatenotavailable")
                 + "\n\n"
-                + HOVerwaltung.instance().getLanguageString("ls.version")
+                + TranslationFacility.tr("ls.version")
                 + ": "
                 + HO.VERSION
-                + (currRev > 1 ? " (Build " + currRev + ")" : ""), HOVerwaltung.instance()
-                .getLanguageString("ls.menu.file.update") + " - "+ HOVerwaltung.instance()
-                .getLanguageString("ls.menu.file.update.ho"), JOptionPane.INFORMATION_MESSAGE);
+                + (currRev > 1 ? " (Build " + currRev + ")" : ""),
+                TranslationFacility.tr("ls.menu.file.update") + " - "+
+                        TranslationFacility.tr("ls.menu.file.update.ho"), JOptionPane.INFORMATION_MESSAGE);
     }
 
     public static String getHOZipDownloadUrl(VersionInfo versionInfo, String versionType) {

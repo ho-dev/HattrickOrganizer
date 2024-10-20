@@ -1,6 +1,6 @@
 package core.model.player;
 
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 
 public enum PlayerCategory {
 
@@ -37,9 +37,8 @@ public enum PlayerCategory {
     }
 
     public static String StringValueOf(PlayerCategory value) {
-        var hov = HOVerwaltung.instance();
-        if (value == null || value == NoCategorySet) return hov.getLanguageString("ls.player.category.undefined");
-        return hov.getLanguageString("ls.player.category." + value._toString());
+        if (value == null || value == NoCategorySet) return TranslationFacility.tr("ls.player.category.undefined");
+        return TranslationFacility.tr("ls.player.category." + value._toString());
     }
 
     private String _toString() {

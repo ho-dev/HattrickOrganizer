@@ -4,6 +4,11 @@ package core.util;
  * Provides OS-specific utility functions.
  */
 public final class OSUtils {
+
+    private OSUtils() {
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
+    }
+
     public static final String OS_NAME = System.getProperty("os.name").toLowerCase();
     public enum OS {WINDOWS, LINUX, MAC}
     private static OS os = determineOS();

@@ -2,7 +2,8 @@ package core.gui.comp.table;
 
 import core.db.DBManager;
 import core.gui.model.UserColumnController;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
+
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumnModel;
@@ -75,7 +76,7 @@ public abstract class HOTableModel extends AbstractTableModel {
 	 */
 	@Override
 	public String toString() {
-		String tmp = HOVerwaltung.instance().getLanguageString(name);
+		String tmp = TranslationFacility.tr(name);
 		return (instance == 0) ? tmp : (tmp + instance);
 	}
 

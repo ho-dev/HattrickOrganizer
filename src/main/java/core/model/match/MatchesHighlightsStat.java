@@ -1,6 +1,6 @@
 package core.model.match;
 
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 
 import java.util.List;
 
@@ -12,7 +12,7 @@ public class MatchesHighlightsStat {
 	private final List<MatchEvent.MatchEventID> subtypes;
 	
 	public MatchesHighlightsStat(String key,List<MatchEvent.MatchEventID> subtypes){
-		description = HOVerwaltung.instance().getLanguageString(key);
+		description = TranslationFacility.tr(key);
 		this.subtypes = subtypes;
 		goals=-1;
 	}

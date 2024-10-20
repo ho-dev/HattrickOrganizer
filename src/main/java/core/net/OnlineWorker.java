@@ -12,6 +12,7 @@ import core.gui.theme.ThemeManager;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
 import core.model.Tournament.TournamentDetails;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.enums.MatchType;
 import core.model.enums.MatchTypeExtended;
@@ -28,22 +29,13 @@ import module.series.Spielplan;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.jetbrains.annotations.Nullable;
 
-import java.awt.Color;
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
+import javax.swing.*;
+import java.awt.*;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 import java.util.*;
-
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.JOptionPane;
 
 /**
  * @author thomas.werth
@@ -157,9 +149,9 @@ public class OnlineWorker {
 				}
 
 				try {
-					HOMainFrame.instance().setInformation(HOVerwaltung.instance().getLanguageString("ls.update_status.match_info"), 20);
+					HOMainFrame.instance().setInformation(TranslationFacility.tr("ls.update_status.match_info"), 20);
 					matchesString = MyConnector.instance().getMatchesArchive(teamId, firstDate,	lastDate);
-					HOMainFrame.instance().setInformation(HOVerwaltung.instance().getLanguageString("ls.update_status.match_info"), 20);
+					HOMainFrame.instance().setInformation(TranslationFacility.tr("ls.update_status.match_info"), 20);
 				} catch (Exception e) {
 					// Info
 					String msg = getLangString("Downloadfehler")
@@ -170,7 +162,7 @@ public class OnlineWorker {
 					return null;
 				}
 
-				HOMainFrame.instance().setInformation(HOVerwaltung.instance().getLanguageString("ls.update_status.match_info"), 20);
+				HOMainFrame.instance().setInformation(TranslationFacility.tr("ls.update_status.match_info"), 20);
 				List<MatchKurzInfo> matches = XMLMatchArchivParser
 						.parseMatchesFromString(matchesString);
 
@@ -184,7 +176,7 @@ public class OnlineWorker {
 			// Store in the db if store is true
 			if (store && (!allMatches.isEmpty())) {
 
-				HOMainFrame.instance().setInformation(HOVerwaltung.instance().getLanguageString("ls.update_status.match_info"), 20);
+				HOMainFrame.instance().setInformation(TranslationFacility.tr("ls.update_status.match_info"), 20);
 				DBManager.instance().storeMatchKurzInfos(allMatches);
 
 				// Store full info for all matches
@@ -805,8 +797,7 @@ public class OnlineWorker {
 			}
 			String arenaString = MyConnector.instance().downloadArena(details.getArenaID());
 			HOMainFrame.instance().setWaitInformation();
-			String regionIdAsString = XMLArenaParser.parseArenaFromString(arenaString).get("RegionID");
-			details.setRegionId(Integer.parseInt(regionIdAsString));
+			details.setRegionId(XMLArenaParser.parseArenaFromString(arenaString).getRight().getRegion().id());
 		} catch (Exception e) {
 			String msg = getLangString("Downloadfehler") + ": Error fetching Matchdetails XML.: ";
 			// Info
@@ -974,7 +965,7 @@ public class OnlineWorker {
 			int value = JOptionPane.OK_OPTION;
 			if (file.exists()) {
 				value = JOptionPane.showConfirmDialog(HOMainFrame.instance(),
-						getLangString("overwrite"), HOVerwaltung.instance().getLanguageString("confirmation.title"), JOptionPane.YES_NO_OPTION);
+						getLangString("overwrite"), TranslationFacility.tr("confirmation.title"), JOptionPane.YES_NO_OPTION);
 			}
 
 			// Save
@@ -983,7 +974,7 @@ public class OnlineWorker {
 					saveFile(file.getPath(), hrfData);
 				} catch (IOException e) {
 					Helper.showMessage(HOMainFrame.instance(),
-							HOVerwaltung.instance().getLanguageString("Show_SaveHRF_Failed") + " " + file.getParentFile() + ".\nError: " + e.getMessage(),
+							TranslationFacility.tr("Show_SaveHRF_Failed") + " " + file.getParentFile() + ".\nError: " + e.getMessage(),
 							getLangString("Fehler"), JOptionPane.ERROR_MESSAGE);
 				}
 			} else {
@@ -1038,7 +1029,7 @@ public class OnlineWorker {
 		fileChooser.setDialogTitle(getLangString("FileExport"));
 		ExampleFileFilter filter = new ExampleFileFilter();
 		filter.addExtension("hrf");
-		filter.setDescription(HOVerwaltung.instance().getLanguageString("filetypedescription.hrf"));
+		filter.setDescription(TranslationFacility.tr("filetypedescription.hrf"));
 		fileChooser.setFileFilter(filter);
 		File path = file.getParentFile();
 		if (path.exists() && path.isDirectory()) {
@@ -1082,14 +1073,14 @@ public class OnlineWorker {
 	}
 
 	/**
-	 * Convenience method for HOVerwaltung.instance().getLanguageString(key)
+	 * Convenience method for TranslationFacility.tr(key)
 	 *
 	 * @param key
 	 *            the key for the language string
 	 * @return the string for the current language
 	 */
 	private static String getLangString(String key) {
-		return HOVerwaltung.instance().getLanguageString(key);
+		return TranslationFacility.tr(key);
 	}
 
 	/**

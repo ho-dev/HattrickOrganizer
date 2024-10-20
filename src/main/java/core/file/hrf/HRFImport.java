@@ -7,6 +7,7 @@ import core.gui.InfoPanel;
 import core.gui.RefreshManager;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.util.HODateTime;
 import core.util.HOLogger;
@@ -108,7 +109,7 @@ public class HRFImport {
 
 		ExampleFileFilter filter = new ExampleFileFilter();
 		filter.addExtension("hrf");
-		filter.setDescription(HOVerwaltung.instance().getLanguageString("filetypedescription.hrf"));
+		filter.setDescription(TranslationFacility.tr("filetypedescription.hrf"));
 		fileChooser.setFileFilter(filter);
 
 		if (fileChooser.showOpenDialog(parent) == JFileChooser.APPROVE_OPTION) {
@@ -118,7 +119,7 @@ public class HRFImport {
 	}
 
 	private String getLangStr(String key) {
-		return HOVerwaltung.instance().getLanguageString(key);
+		return TranslationFacility.tr(key);
 	}
 
 	/**

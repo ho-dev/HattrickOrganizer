@@ -3,19 +3,12 @@ package tool.keepertool;
 
 
 import core.gui.comp.panel.ImagePanel;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 
-import java.awt.BorderLayout;
-import java.awt.CardLayout;
-import java.awt.Dimension;
-import java.awt.GridLayout;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.ButtonGroup;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 
 
 /**
@@ -46,7 +39,7 @@ public class KeeperToolDialog extends JDialog implements ActionListener {
      */
     public KeeperToolDialog(JFrame owner) {
         super(owner, false);
-        setTitle(HOVerwaltung.instance().getLanguageString("KeeperTool"));
+        setTitle(TranslationFacility.tr("KeeperTool"));
 
         resultPanel = new ResultPanel(this);
         initComponents();
@@ -103,16 +96,16 @@ public class KeeperToolDialog extends JDialog implements ActionListener {
         final JPanel main = new JPanel(new BorderLayout());
         main.setOpaque(false);
 
-        rosterButton = new JRadioButton(core.model.HOVerwaltung.instance().getLanguageString("Spieleruebersicht"));
+        rosterButton = new JRadioButton(TranslationFacility.tr("Spieleruebersicht"));
         rosterButton.setSelected(true);
         rosterButton.addActionListener(this);
         rosterButton.setOpaque(false);
 
-        scoutButton = new JRadioButton(core.model.HOVerwaltung.instance().getLanguageString("TransferScout"));
+        scoutButton = new JRadioButton(TranslationFacility.tr("TransferScout"));
         scoutButton.addActionListener(this);
         scoutButton.setOpaque(false);
 
-        final JRadioButton manualButton = new JRadioButton(core.model.HOVerwaltung.instance().getLanguageString("Manual"));
+        final JRadioButton manualButton = new JRadioButton(TranslationFacility.tr("Manual"));
         manualButton.addActionListener(this);
         manualButton.setOpaque(false);
 

@@ -1,7 +1,7 @@
 package module.ifa;
 
 import core.gui.comp.panel.LazyPanel;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.module.config.ModuleConfig;
 import module.ifa.config.Config;
 import module.ifa.model.Country;
@@ -10,27 +10,17 @@ import module.ifa.table.IfaTableCellRenderer;
 import module.ifa.table.IfaTableModel;
 import module.ifa.table.SummaryTableSorter;
 
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import javax.swing.*;
+import javax.swing.RowSorter.SortKey;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
+import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTable;
-import javax.swing.RowSorter.SortKey;
-import javax.swing.SortOrder;
-import javax.swing.SwingUtilities;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
 
 public class PluginIfaPanel extends LazyPanel {
 
@@ -118,10 +108,10 @@ public class PluginIfaPanel extends LazyPanel {
 
 		JLabel headerLabel = new JLabel();
 		if (away) {
-			headerLabel.setText(HOVerwaltung.instance().getLanguageString(
+			headerLabel.setText(TranslationFacility.tr(
 					"ifa.statisticsTable.header.away"));
 		} else {
-			headerLabel.setText(HOVerwaltung.instance().getLanguageString(
+			headerLabel.setText(TranslationFacility.tr(
 					"ifa.statisticsTable.header.home"));
 		}
 		Font boldFont = headerLabel.getFont().deriveFont(

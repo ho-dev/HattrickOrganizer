@@ -5,19 +5,17 @@ import core.gui.comp.entry.ProgressbarTableEntry;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.match.MatchKurzInfo;
 import core.model.misc.Economy;
 import core.util.HOLogger;
 import core.util.Helper;
 import core.util.StringUtils;
 
-import java.awt.Color;
-import java.text.DateFormat;
-import java.time.Duration;
-
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
+import java.awt.*;
+import java.time.Duration;
 
 public class ArenaStatistikTableModel extends AbstractTableModel {
     //~ Static fields/initializers -----------------------------------------------------------------
@@ -28,81 +26,81 @@ public class ArenaStatistikTableModel extends AbstractTableModel {
     //~ Instance fields ----------------------------------------------------------------------------
 
     public String[] m_sToolTipStrings = {
-			HOVerwaltung.instance().getLanguageString("Datum"),
+			TranslationFacility.tr("Datum"),
 			// Spielart
-			HOVerwaltung.instance().getLanguageString("Spielart"),
+			TranslationFacility.tr("Spielart"),
 			// Gast
-			HOVerwaltung.instance().getLanguageString("Gast"),
-			HOVerwaltung.instance().getLanguageString("ls.match.result"),
-			HOVerwaltung.instance().getLanguageString("ls.match.weather"),
-			HOVerwaltung.instance().getLanguageString("ls.match.id"),
-			HOVerwaltung.instance().getLanguageString("Aktuell"), // Stadiongroesse
-			HOVerwaltung.instance().getLanguageString("Zuschauer"), // Zuschauer
+			TranslationFacility.tr("Gast"),
+			TranslationFacility.tr("ls.match.result"),
+			TranslationFacility.tr("ls.match.weather"),
+			TranslationFacility.tr("ls.match.id"),
+			TranslationFacility.tr("Aktuell"), // Stadiongroesse
+			TranslationFacility.tr("Zuschauer"), // Zuschauer
 			"%", // Auslastung
-			HOVerwaltung.instance().getLanguageString("ls.club.arena.income.total"), // Income Total
+			TranslationFacility.tr("ls.club.arena.income.total"), // Income Total
 
-			HOVerwaltung.instance().getLanguageString("ls.club.arena.terraces"),
+			TranslationFacility.tr("ls.club.arena.terraces"),
 			"%", // Percentage of crowd on the terraces
-			HOVerwaltung.instance().getLanguageString("ls.club.arena.income.terraces"), // Income Terraces
+			TranslationFacility.tr("ls.club.arena.income.terraces"), // Income Terraces
 
-			HOVerwaltung.instance().getLanguageString("ls.club.arena.basicseating"),
+			TranslationFacility.tr("ls.club.arena.basicseating"),
 			"%", // Percentage of crowd in the basic seats
-			HOVerwaltung.instance().getLanguageString("ls.club.arena.income.basicseating"), // Income Basic
+			TranslationFacility.tr("ls.club.arena.income.basicseating"), // Income Basic
 
-			HOVerwaltung.instance().getLanguageString("ls.club.arena.seatsunderroof"),
+			TranslationFacility.tr("ls.club.arena.seatsunderroof"),
 			"%", // Percentage of crowd under the roof
-			HOVerwaltung.instance().getLanguageString("ls.club.arena.income.seatsunderroof"), // Income Seats Under Roof
+			TranslationFacility.tr("ls.club.arena.income.seatsunderroof"), // Income Seats Under Roof
 
-			HOVerwaltung.instance().getLanguageString("ls.club.arena.seatsinvipboxes"),
+			TranslationFacility.tr("ls.club.arena.seatsinvipboxes"),
 			"%", // Percentage of crowd in the VIP seats
-			HOVerwaltung.instance().getLanguageString("ls.club.arena.income.seatsinvipboxes"), // Income Seats In Vip Boxes
+			TranslationFacility.tr("ls.club.arena.income.seatsinvipboxes"), // Income Seats In Vip Boxes
 
-			HOVerwaltung.instance().getLanguageString("Fans"), // Fananzahl
-			HOVerwaltung.instance().getLanguageString("Fans") + " / "
-					+ HOVerwaltung.instance().getLanguageString("Wochen"),
-			HOVerwaltung.instance().getLanguageString("Zuschauer") + " / "
-					+ HOVerwaltung.instance().getLanguageString("Fans"),
-			HOVerwaltung.instance().getLanguageString("Fans"), // Stimmung
-			HOVerwaltung.instance().getLanguageString("Platzierung") // LigaPlatz
+			TranslationFacility.tr("Fans"), // Fananzahl
+			TranslationFacility.tr("Fans") + " / "
+					+ TranslationFacility.tr("Wochen"),
+			TranslationFacility.tr("Zuschauer") + " / "
+					+ TranslationFacility.tr("Fans"),
+			TranslationFacility.tr("Fans"), // Stimmung
+			TranslationFacility.tr("Platzierung") // LigaPlatz
     };
 
     protected Object[][] m_clData;
 
     protected String[] m_sColumnNames = {
-			HOVerwaltung.instance().getLanguageString("Datum"),
+			TranslationFacility.tr("Datum"),
 			"", // Spielart
-			HOVerwaltung.instance().getLanguageString("Gast"), // Gast
-			HOVerwaltung.instance().getLanguageString("ls.match.result"),
-			HOVerwaltung.instance().getLanguageString("ls.match.weather"),
-			HOVerwaltung.instance().getLanguageString("ls.match.id"),
-			HOVerwaltung.instance().getLanguageString("Aktuell"), // Stadiongroesse
-			HOVerwaltung.instance().getLanguageString("Zuschauer"), // Zuschauer
+			TranslationFacility.tr("Gast"), // Gast
+			TranslationFacility.tr("ls.match.result"),
+			TranslationFacility.tr("ls.match.weather"),
+			TranslationFacility.tr("ls.match.id"),
+			TranslationFacility.tr("Aktuell"), // Stadiongroesse
+			TranslationFacility.tr("Zuschauer"), // Zuschauer
 			"%", // Auslastung
-			HOVerwaltung.instance().getLanguageString("ls.club.arena.income.total"), // Income Total
+			TranslationFacility.tr("ls.club.arena.income.total"), // Income Total
 
-			HOVerwaltung.instance().getLanguageString("ls.club.arena.terraces"),
+			TranslationFacility.tr("ls.club.arena.terraces"),
 			"%", // Percentage of crowd on the terraces
-			HOVerwaltung.instance().getLanguageString("ls.club.arena.income.terraces"), // Income Terraces
+			TranslationFacility.tr("ls.club.arena.income.terraces"), // Income Terraces
 
-			HOVerwaltung.instance().getLanguageString("ls.club.arena.basicseating"),
+			TranslationFacility.tr("ls.club.arena.basicseating"),
 			"%", // Percentage of crowd in the basic seats
-			HOVerwaltung.instance().getLanguageString("ls.club.arena.income.basicseating"), // Income Basic
+			TranslationFacility.tr("ls.club.arena.income.basicseating"), // Income Basic
 
-			HOVerwaltung.instance().getLanguageString("ls.club.arena.seatsunderroof"),
+			TranslationFacility.tr("ls.club.arena.seatsunderroof"),
 			"%", // Percentage of crowd under the roof
-			HOVerwaltung.instance().getLanguageString("ls.club.arena.income.seatsunderroof"), // Income Seats Under Roof
+			TranslationFacility.tr("ls.club.arena.income.seatsunderroof"), // Income Seats Under Roof
 
-			HOVerwaltung.instance().getLanguageString("ls.club.arena.seatsinvipboxes"),
+			TranslationFacility.tr("ls.club.arena.seatsinvipboxes"),
 			"%", // Percentage of crowd in the VIP seats
-			HOVerwaltung.instance().getLanguageString("ls.club.arena.income.seatsinvipboxes"), // Income Seats In Vip Boxes
+			TranslationFacility.tr("ls.club.arena.income.seatsinvipboxes"), // Income Seats In Vip Boxes
 
-			HOVerwaltung.instance().getLanguageString("Fans"), // Fananzahl
-			HOVerwaltung.instance().getLanguageString("Fans") + " / "
-					+ HOVerwaltung.instance().getLanguageString("Wochen"),
-			HOVerwaltung.instance().getLanguageString("Zuschauer") + " / "
-					+ HOVerwaltung.instance().getLanguageString("Fans"),
-			HOVerwaltung.instance().getLanguageString("Fans"), // Stimmung
-			HOVerwaltung.instance().getLanguageString("Platzierung") // LigaPlatz
+			TranslationFacility.tr("Fans"), // Fananzahl
+			TranslationFacility.tr("Fans") + " / "
+					+ TranslationFacility.tr("Wochen"),
+			TranslationFacility.tr("Zuschauer") + " / "
+					+ TranslationFacility.tr("Fans"),
+			TranslationFacility.tr("Fans"), // Stimmung
+			TranslationFacility.tr("Platzierung") // LigaPlatz
     };
     private ArenaStatistikModel[] m_clMatches;
     private int m_iMaxArenaGroesse;

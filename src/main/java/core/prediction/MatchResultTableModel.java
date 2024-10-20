@@ -6,22 +6,18 @@
 package core.prediction;
 
 import core.gui.comp.entry.ColorLabelEntry;
-import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
-import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.prediction.engine.MatchResult;
 
-import java.awt.Color;
-
-import javax.swing.SwingConstants;
+import javax.swing.*;
 
 public class MatchResultTableModel extends AbstractMatchTableModel {
 	//~ Instance fields ----------------------------------------------------------------------------
 	private static final long serialVersionUID = 5568369952809628251L;
 	public static final String[] columnNames = {
-		HOVerwaltung.instance().getLanguageString("ls.match.result"),
-		HOVerwaltung.instance().getLanguageString("frequency"),
+		TranslationFacility.tr("ls.match.result"),
+		TranslationFacility.tr("frequency"),
 		"" };
 
 	//~ Constructors -------------------------------------------------------------------------------

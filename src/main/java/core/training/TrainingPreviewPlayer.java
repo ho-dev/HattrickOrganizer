@@ -1,10 +1,8 @@
 package core.training;
 
 
-import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
-import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 
 import javax.swing.*;
 
@@ -149,69 +147,69 @@ public class TrainingPreviewPlayer {
 	 */
 	public String getText() {
 		if (iFullTrain >= FULL_TRAIN_MIN) {
-			return HOVerwaltung.instance().getLanguageString("trainpre.fulltrain") + ": "
+			return TranslationFacility.tr("trainpre.fulltrain") + ": "
 					+ FULL_TRAIN_MIN + "'";
 		}
 		else if (iFullTrain > 0 && bFullEstimedTrain) {
-			return HOVerwaltung.instance().getLanguageString("trainpre.fulltrain") + ": "
+			return TranslationFacility.tr("trainpre.fulltrain") + ": "
 					+ iFullTrain + "'\n"
-					+ HOVerwaltung.instance().getLanguageString("trainpre.fulltrain.estimated") + ": "
+					+ TranslationFacility.tr("trainpre.fulltrain.estimated") + ": "
 					+ FULL_TRAIN_MIN + "'";
 		}
 		else if (bFullEstimedTrain) {
-			return HOVerwaltung.instance().getLanguageString("trainpre.fulltrain.estimated") + ": "
+			return TranslationFacility.tr("trainpre.fulltrain.estimated") + ": "
 					+ FULL_TRAIN_MIN+ "'";
 		}
 		else if (iFullTrain > 0 && ((iPartialTrain + iFullTrain) >= FULL_TRAIN_MIN)) {
-			return HOVerwaltung.instance().getLanguageString("trainpre.fulltrain") + ": "
+			return TranslationFacility.tr("trainpre.fulltrain") + ": "
 					+ iFullTrain + "'\n"
-					+ HOVerwaltung.instance().getLanguageString("trainpre.partialtrain") + ": "
+					+ TranslationFacility.tr("trainpre.partialtrain") + ": "
 					+ (FULL_TRAIN_MIN-iFullTrain) + "'";
 		}
 		else if (iFullTrain > 0 && bPartialEstimedTrain) {
-			return HOVerwaltung.instance().getLanguageString("trainpre.fulltrain") + ": "
+			return TranslationFacility.tr("trainpre.fulltrain") + ": "
 					+ iFullTrain + "'\n"
-					+ HOVerwaltung.instance().getLanguageString("trainpre.partialtrain.estimated") + ": "
+					+ TranslationFacility.tr("trainpre.partialtrain.estimated") + ": "
 					+ (FULL_TRAIN_MIN-iFullTrain)  + "'";
 		}
 		else if (iFullTrain > 0 && iPartialTrain > 0) {
-			return HOVerwaltung.instance().getLanguageString("trainpre.fulltrain") + ": "
+			return TranslationFacility.tr("trainpre.fulltrain") + ": "
 					+ iFullTrain + "'\n"
-					+ HOVerwaltung.instance().getLanguageString("trainpre.partialtrain") + ": "
+					+ TranslationFacility.tr("trainpre.partialtrain") + ": "
 					+ iPartialTrain + "'";
 		}
 		else if (iFullTrain > 0) {
-			return HOVerwaltung.instance().getLanguageString("trainpre.fulltrain") + ": "
+			return TranslationFacility.tr("trainpre.fulltrain") + ": "
 					+ iFullTrain + "'";
 		}
 		else if (iPartialTrain >= FULL_TRAIN_MIN) {
-			return HOVerwaltung.instance().getLanguageString("trainpre.partialtrain") + ": "
+			return TranslationFacility.tr("trainpre.partialtrain") + ": "
 					+ FULL_TRAIN_MIN + "'";
 		}
 		else if (iPartialTrain > 0 && bPartialEstimedTrain) {
-			return HOVerwaltung.instance().getLanguageString("trainpre.partialtrain") + ": "
+			return TranslationFacility.tr("trainpre.partialtrain") + ": "
 					+ iPartialTrain + "'\n"
-					+ HOVerwaltung.instance().getLanguageString("trainpre.partialtrain.estimated") + ": "
+					+ TranslationFacility.tr("trainpre.partialtrain.estimated") + ": "
 					+ (FULL_TRAIN_MIN-iPartialTrain)  + "'";
 		}
 		else if (bPartialEstimedTrain) {
-			return HOVerwaltung.instance().getLanguageString("trainpre.partialtrain.estimated")  + ": "
+			return TranslationFacility.tr("trainpre.partialtrain.estimated")  + ": "
 					+ FULL_TRAIN_MIN + "'";
 		}
 		else if (iPartialTrain > 0) {
-			return HOVerwaltung.instance().getLanguageString("trainpre.partialtrain") + ": "
+			return TranslationFacility.tr("trainpre.partialtrain") + ": "
 					+ iPartialTrain + "'";
 		}
 		else if (iStamina >= FULL_STAMINA_MIN) {
-			return HOVerwaltung.instance().getLanguageString("stamina.train") + ": "
+			return TranslationFacility.tr("stamina.train") + ": "
 					+ FULL_STAMINA_MIN + "'";
 		}
 		else if (bEstimedStamina) {
-			return HOVerwaltung.instance().getLanguageString("stamina.train.estimated") + ": "
+			return TranslationFacility.tr("stamina.train.estimated") + ": "
 					+ FULL_STAMINA_MIN+ "'";
 		}
 		else if (iStamina > 0) {
-			return HOVerwaltung.instance().getLanguageString("stamina.train") + ": "
+			return TranslationFacility.tr("stamina.train") + ": "
 					+ iStamina + "'";
 		}
 		return null;

@@ -2,6 +2,7 @@ package module.lineup.substitution;
 
 import core.datatype.CBItem;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.player.IMatchRoleID;
 import core.util.Helper;
 import module.lineup.Lineup;
@@ -350,10 +351,10 @@ public class SubstitutionEditView extends JPanel {
 
 		JLabel playerLabel = new JLabel();
 		switch (this.orderType) {
-			case SUBSTITUTION -> playerLabel.setText(HOVerwaltung.instance().getLanguageString("subs.Out"));
-			case POSITION_SWAP -> playerLabel.setText(HOVerwaltung.instance().getLanguageString("subs.Reposition"));
-			case NEW_BEHAVIOUR -> playerLabel.setText(HOVerwaltung.instance().getLanguageString("subs.Player"));
-			case MAN_MARKING -> playerLabel.setText(HOVerwaltung.instance().getLanguageString("subs.manMarkingPlayer"));
+			case SUBSTITUTION -> playerLabel.setText(TranslationFacility.tr("subs.Out"));
+			case POSITION_SWAP -> playerLabel.setText(TranslationFacility.tr("subs.Reposition"));
+			case NEW_BEHAVIOUR -> playerLabel.setText(TranslationFacility.tr("subs.Player"));
+			case MAN_MARKING -> playerLabel.setText(TranslationFacility.tr("subs.manMarkingPlayer"));
 		}
 
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -376,12 +377,12 @@ public class SubstitutionEditView extends JPanel {
 		if ( this.orderType !=  MatchOrderType.NEW_BEHAVIOUR) {
 			JLabel playerInLabel = new JLabel();
 			if (this.orderType == MatchOrderType.SUBSTITUTION) {
-				playerInLabel.setText(HOVerwaltung.instance().getLanguageString("subs.In"));
+				playerInLabel.setText(TranslationFacility.tr("subs.In"));
 			} else if (this.orderType == MatchOrderType.POSITION_SWAP){
-				playerInLabel.setText(HOVerwaltung.instance().getLanguageString("subs.RepositionWith"));
+				playerInLabel.setText(TranslationFacility.tr("subs.RepositionWith"));
 			}
 			else {
-				playerInLabel.setText(HOVerwaltung.instance().getLanguageString("subs.manMarkedOpponentPlayer"));
+				playerInLabel.setText(TranslationFacility.tr("subs.manMarkedOpponentPlayer"));
 			}
 			gbc.gridx = 0;
 			gbc.gridy++;
@@ -400,8 +401,7 @@ public class SubstitutionEditView extends JPanel {
 		if( this.orderType != MatchOrderType.MAN_MARKING) {
 			this.behaviourComboBox = new JComboBox();
 			if (this.orderType != MatchOrderType.POSITION_SWAP ) {
-				JLabel behaviourLabel = new JLabel(HOVerwaltung.instance()
-						.getLanguageString("subs.Behavior"));
+				JLabel behaviourLabel = new JLabel(TranslationFacility.tr("subs.Behavior"));
 				gbc.gridx = 0;
 				gbc.gridy++;
 				gbc.anchor = GridBagConstraints.WEST;
@@ -417,16 +417,15 @@ public class SubstitutionEditView extends JPanel {
 		}
 
 		if ( this.orderType != MatchOrderType.MAN_MARKING) {
-			JLabel whenLabel = new JLabel(HOVerwaltung.instance()
-					.getLanguageString("subs.When"));
+			JLabel whenLabel = new JLabel(TranslationFacility.tr("subs.When"));
 			gbc.gridx = 0;
 			gbc.gridy++;
 			gbc.insets = new Insets(4, 10, 4, 2);
 			add(whenLabel, gbc);
 
-			this.whenTextField = new WhenTextField(HOVerwaltung.instance()
-					.getLanguageString("subs.MinuteAnytime"), HOVerwaltung
-					.instance().getLanguageString("subs.MinuteAfterX"));
+			this.whenTextField = new WhenTextField(
+					TranslationFacility.tr("subs.MinuteAnytime"),
+					TranslationFacility.tr("subs.MinuteAfterX"));
 			Dimension textFieldSize = new Dimension(200,
 					this.whenTextField.getPreferredSize().height);
 			this.whenTextField.setMinimumSize(textFieldSize);
@@ -451,15 +450,14 @@ public class SubstitutionEditView extends JPanel {
 			gbc.insets = new Insets(8, 4, 8, 4);
 			gbc.fill = GridBagConstraints.HORIZONTAL;
 			gbc.weightx = 1.0;
-			add(new Divider(HOVerwaltung.instance().getLanguageString(
+			add(new Divider(TranslationFacility.tr(
 					"subs.AdvancedConditions")), gbc);
 
 			gbc.gridwidth = 1;
 			gbc.weightx = 0.0;
 
 			if (this.orderType != MatchOrderType.POSITION_SWAP) {
-				JLabel positionLabel = new JLabel(HOVerwaltung.instance()
-						.getLanguageString("subs.Position"));
+				JLabel positionLabel = new JLabel(TranslationFacility.tr("subs.Position"));
 				gbc.gridx = 0;
 				gbc.gridy++;
 				gbc.insets = new Insets(4, 10, 4, 2);
@@ -479,8 +477,7 @@ public class SubstitutionEditView extends JPanel {
 				add(this.positionChooser, gbc);
 			}
 
-			JLabel redCardsLabel = new JLabel(HOVerwaltung.instance()
-					.getLanguageString("subs.RedCard"));
+			JLabel redCardsLabel = new JLabel(TranslationFacility.tr("subs.RedCard"));
 			gbc.fill = GridBagConstraints.HORIZONTAL;
 			gbc.gridx = 0;
 			gbc.gridy++;
@@ -495,8 +492,7 @@ public class SubstitutionEditView extends JPanel {
 			gbc.insets = new Insets(4, 2, 4, 10);
 			add(this.redCardsComboBox, gbc);
 
-			JLabel standingLabel = new JLabel(HOVerwaltung.instance()
-					.getLanguageString("subs.Standing"));
+			JLabel standingLabel = new JLabel(TranslationFacility.tr("subs.Standing"));
 			gbc.gridx = 0;
 			gbc.gridy++;
 			gbc.insets = new Insets(4, 10, 4, 2);

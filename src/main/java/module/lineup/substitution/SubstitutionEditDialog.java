@@ -1,27 +1,17 @@
 package module.lineup.substitution;
 
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.util.GUIUtils;
 import module.lineup.Lineup;
 import module.lineup.substitution.model.MatchOrderType;
 import module.lineup.substitution.model.Substitution;
 
-import java.awt.BorderLayout;
-import java.awt.Dialog;
-import java.awt.Frame;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
 
 public class SubstitutionEditDialog extends JDialog {
 
@@ -68,21 +58,21 @@ public class SubstitutionEditDialog extends JDialog {
 			case POSITION_SWAP -> "subs.TypeSwap";
 			case MAN_MARKING -> "subs.TypeManMarking";
 		};
-		setTitle(HOVerwaltung.instance().getLanguageString(dlgTitleKey));
+		setTitle(TranslationFacility.tr(dlgTitleKey));
 	}
 
 	private void initComponents() {
 		getContentPane().setLayout(new BorderLayout());
 
 		JPanel buttonPanel = new JPanel(new GridBagLayout());
-		JButton okButton = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.ok"));
+		JButton okButton = new JButton(TranslationFacility.tr("ls.button.ok"));
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.anchor = GridBagConstraints.EAST;
 		gbc.weightx = 1.0;
 		gbc.insets = new Insets(12, 8, 8, 2);
 		buttonPanel.add(okButton, gbc);
 
-		JButton cancelButton = new JButton(HOVerwaltung.instance().getLanguageString("ls.button.cancel"));
+		JButton cancelButton = new JButton(TranslationFacility.tr("ls.button.cancel"));
 		gbc.gridx = 1;
 		gbc.weightx = 0.0;
 		gbc.insets = new Insets(12, 2, 8, 8);
@@ -112,7 +102,7 @@ public class SubstitutionEditDialog extends JDialog {
 			}
 
 		};
-		cancelAction.putValue(Action.NAME, HOVerwaltung.instance().getLanguageString("ls.button.cancel"));
+		cancelAction.putValue(Action.NAME, TranslationFacility.tr("ls.button.cancel"));
 		cancelButton.setAction(cancelAction);
 		GUIUtils.decorateWithActionOnESC(this, cancelAction);
 

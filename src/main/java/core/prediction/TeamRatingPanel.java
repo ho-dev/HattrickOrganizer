@@ -3,24 +3,20 @@ package core.prediction;
 
 import core.constants.player.PlayerAbility;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.match.IMatchDetails;
 import core.model.match.Matchdetails;
 import core.prediction.engine.TeamData;
 import core.prediction.engine.TeamRatings;
 import module.teamAnalyzer.ui.RatingUtil;
 
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 
 
@@ -55,15 +51,13 @@ class TeamRatingPanel extends JPanel implements ItemListener {
         setLayout(m_clLayout);
 
         final TeamRatings tr = team.getRatings();
-        final core.model.HOVerwaltung verwaltung = core.model.HOVerwaltung
-                                                                   .instance();
-        addLine(tr.getMidfield(), verwaltung.getLanguageString("ls.match.ratingsector.midfield"));
-        addLine(tr.getRightDef(), verwaltung.getLanguageString("ls.match.ratingsector.rightdefence"));
-        addLine(tr.getMiddleDef(), verwaltung.getLanguageString("ls.match.ratingsector.centraldefence"));
-        addLine(tr.getLeftDef(), verwaltung.getLanguageString("ls.match.ratingsector.leftdefence"));
-        addLine(tr.getRightAttack(), verwaltung.getLanguageString("ls.match.ratingsector.rightattack"));
-        addLine(tr.getMiddleAttack(), verwaltung.getLanguageString("ls.match.ratingsector.centralattack"));
-        addLine(tr.getLeftAttack(), verwaltung.getLanguageString("ls.match.ratingsector.leftattack"));
+        addLine(tr.getMidfield(), TranslationFacility.tr("ls.match.ratingsector.midfield"));
+        addLine(tr.getRightDef(), TranslationFacility.tr("ls.match.ratingsector.rightdefence"));
+        addLine(tr.getMiddleDef(), TranslationFacility.tr("ls.match.ratingsector.centraldefence"));
+        addLine(tr.getLeftDef(), TranslationFacility.tr("ls.match.ratingsector.leftdefence"));
+        addLine(tr.getRightAttack(), TranslationFacility.tr("ls.match.ratingsector.rightattack"));
+        addLine(tr.getMiddleAttack(), TranslationFacility.tr("ls.match.ratingsector.centralattack"));
+        addLine(tr.getLeftAttack(), TranslationFacility.tr("ls.match.ratingsector.leftattack"));
 
         m_clConstraints.gridx = 0;
         m_clConstraints.gridy = row;
@@ -213,10 +207,10 @@ class TeamRatingPanel extends JPanel implements ItemListener {
         subLevels = new ArrayList<>();
 
         final HOVerwaltung verwaltung = HOVerwaltung.instance();
-        subLevels.add(new RatingItem(verwaltung.getLanguageString("verylow"), 0));
-        subLevels.add(new RatingItem(verwaltung.getLanguageString("low"), 1));
-        subLevels.add(new RatingItem(verwaltung.getLanguageString("high"), 2));
-        subLevels.add(new RatingItem(verwaltung.getLanguageString("veryhigh"), 3));
+        subLevels.add(new RatingItem(TranslationFacility.tr("verylow"), 0));
+        subLevels.add(new RatingItem(TranslationFacility.tr("low"), 1));
+        subLevels.add(new RatingItem(TranslationFacility.tr("high"), 2));
+        subLevels.add(new RatingItem(TranslationFacility.tr("veryhigh"), 3));
     }
 
     private void initLevel(int n) {

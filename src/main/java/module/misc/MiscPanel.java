@@ -5,21 +5,16 @@ import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.misc.Economy;
 import core.model.misc.Verein;
 import core.model.player.Player;
 import core.util.Helper;
 
-import java.awt.Component;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import javax.swing.*;
+import java.awt.*;
 import java.text.DecimalFormat;
 import java.util.List;
-
-import javax.swing.BorderFactory;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
 
 import static core.util.Helper.getTranslation;
 
@@ -97,46 +92,46 @@ final class MiscPanel extends JPanel {
 
         setLayout(layout);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("Jugend"));
+        label = new JLabel(TranslationFacility.tr("Jugend"));
         add(label,m_jpJugend.getComponent(false),1);
  
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("Fans"));
+        label = new JLabel(TranslationFacility.tr("Fans"));
         add(label,m_jpFansAnzahl.getComponent(false),2);
  
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("Fans"));
+        label = new JLabel(TranslationFacility.tr("Fans"));
         add(label,m_jpFans.getComponent(false),3);
  
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("Sponsoren"));
+        label = new JLabel(TranslationFacility.tr("Sponsoren"));
         add(label,m_jpSponsoren.getComponent(false),4);
  
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("Ungeschlagen"));
+        label = new JLabel(TranslationFacility.tr("Ungeschlagen"));
         add(label,m_jpUngeschlagen.getComponent(false),5);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("SiegeInFolge"));
+        label = new JLabel(TranslationFacility.tr("SiegeInFolge"));
         add(label,m_jpSiegeInFolge.getComponent(false),6);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("AnzahlSpieler"));
+        label = new JLabel(TranslationFacility.tr("AnzahlSpieler"));
         add(label,m_jpAnzahlSpieler.getComponent(false),7);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("AverageTSI"));
+        label = new JLabel(TranslationFacility.tr("AverageTSI"));
         add(label,m_jpAvgTSI.getComponent(false),8);
  
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("TotalTSI"));
+        label = new JLabel(TranslationFacility.tr("TotalTSI"));
         add(label,m_jpSumTSI.getComponent(false),9);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("AverageEPV"));
+        label = new JLabel(TranslationFacility.tr("AverageEPV"));
         add(label,m_jpAvgEPV.getComponent(false),10);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("TotalEPV"));
+        label = new JLabel(TranslationFacility.tr("TotalEPV"));
         add(label,m_jpSumEPV.getComponent(false),11);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("DurchschnittForm"));
+        label = new JLabel(TranslationFacility.tr("DurchschnittForm"));
         add(label,m_jpDForm.getComponent(false),12);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("DurchschnittErfahrung"));
+        label = new JLabel(TranslationFacility.tr("DurchschnittErfahrung"));
         add(label,m_jpDErfahrung.getComponent(false),13);
 
-        label = new JLabel(HOVerwaltung.instance().getLanguageString("DurchschnittAlter"));
+        label = new JLabel(TranslationFacility.tr("DurchschnittAlter"));
         add(label,m_jpDAlter.getComponent(false),14);
     }
     

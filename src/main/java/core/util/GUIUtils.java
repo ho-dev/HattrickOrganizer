@@ -16,6 +16,7 @@ import javax.swing.KeyStroke;
 public class GUIUtils {
 
 	private GUIUtils() {
+		throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
 	}
 
 	/**

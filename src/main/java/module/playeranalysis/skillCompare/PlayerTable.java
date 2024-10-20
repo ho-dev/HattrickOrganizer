@@ -2,13 +2,12 @@ package module.playeranalysis.skillCompare;
 
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 
-import java.awt.Component;
-
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
+import java.awt.*;
 
 
 /**
@@ -83,56 +82,56 @@ class PlayerTable extends JTable{
 	    	{
 	    		col.setCellRenderer(new MyTableCellRenderer());
 	    	}
-	    	if(columnName.equals(HOVerwaltung.instance().getLanguageString("ls.player.position_short.keeper"))
-	    			|| columnName.equals(HOVerwaltung.instance().getLanguageString("ls.player.position_short.centraldefender"))
-					|| columnName.equals(HOVerwaltung.instance().getLanguageString("ls.player.position_short.centraldefendertowardswing"))
-					|| columnName.equals(HOVerwaltung.instance().getLanguageString("ls.player.position_short.centraldefenderoffensive"))
-					|| columnName.equals(HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingback"))
-					|| columnName.equals(HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingbacktowardsmiddle"))
-					|| columnName.equals(HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingbackoffensive"))
-					|| columnName.equals(HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingbackdefensive"))
-					|| columnName.equals(HOVerwaltung.instance().getLanguageString("ls.player.position_short.innermidfielder"))
-					|| columnName.equals(HOVerwaltung.instance().getLanguageString("ls.player.position_short.innermidfielderdefensive"))
-					|| columnName.equals(HOVerwaltung.instance().getLanguageString("ls.player.position_short.innermidfieldertowardswing"))
-					|| columnName.equals(HOVerwaltung.instance().getLanguageString("ls.player.position_short.innermidfielderoffensive"))
-					|| columnName.equals(HOVerwaltung.instance().getLanguageString("ls.player.position_short.winger"))
-					|| columnName.equals(HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingertowardsmiddle"))
-					|| columnName.equals(HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingeroffensive"))
-					|| columnName.equals(HOVerwaltung.instance().getLanguageString("ls.player.position_short.wingerdefensive"))
-					|| columnName.equals(HOVerwaltung.instance().getLanguageString("ls.player.position_short.forward"))
-					|| columnName.equals(HOVerwaltung.instance().getLanguageString("ls.player.position_short.forwarddefensive"))
-					|| columnName.equals(HOVerwaltung.instance().getLanguageString("ls.player.position_short.forwardtowardswing"))
-					|| columnName.equals(HOVerwaltung.instance().getLanguageString("Gruppe"))
+	    	if(columnName.equals(TranslationFacility.tr("ls.player.position_short.keeper"))
+	    			|| columnName.equals(TranslationFacility.tr("ls.player.position_short.centraldefender"))
+					|| columnName.equals(TranslationFacility.tr("ls.player.position_short.centraldefendertowardswing"))
+					|| columnName.equals(TranslationFacility.tr("ls.player.position_short.centraldefenderoffensive"))
+					|| columnName.equals(TranslationFacility.tr("ls.player.position_short.wingback"))
+					|| columnName.equals(TranslationFacility.tr("ls.player.position_short.wingbacktowardsmiddle"))
+					|| columnName.equals(TranslationFacility.tr("ls.player.position_short.wingbackoffensive"))
+					|| columnName.equals(TranslationFacility.tr("ls.player.position_short.wingbackdefensive"))
+					|| columnName.equals(TranslationFacility.tr("ls.player.position_short.innermidfielder"))
+					|| columnName.equals(TranslationFacility.tr("ls.player.position_short.innermidfielderdefensive"))
+					|| columnName.equals(TranslationFacility.tr("ls.player.position_short.innermidfieldertowardswing"))
+					|| columnName.equals(TranslationFacility.tr("ls.player.position_short.innermidfielderoffensive"))
+					|| columnName.equals(TranslationFacility.tr("ls.player.position_short.winger"))
+					|| columnName.equals(TranslationFacility.tr("ls.player.position_short.wingertowardsmiddle"))
+					|| columnName.equals(TranslationFacility.tr("ls.player.position_short.wingeroffensive"))
+					|| columnName.equals(TranslationFacility.tr("ls.player.position_short.wingerdefensive"))
+					|| columnName.equals(TranslationFacility.tr("ls.player.position_short.forward"))
+					|| columnName.equals(TranslationFacility.tr("ls.player.position_short.forwarddefensive"))
+					|| columnName.equals(TranslationFacility.tr("ls.player.position_short.forwardtowardswing"))
+					|| columnName.equals(TranslationFacility.tr("Gruppe"))
 	    	)
 	    	{
 	    		width = 60;
 	    	}
-	    	else if(columnName.equals(HOVerwaltung.instance().getLanguageString("ls.player.name"))
-	    			|| columnName.equals(HOVerwaltung.instance().getLanguageString("BestePosition"))
+	    	else if(columnName.equals(TranslationFacility.tr("ls.player.name"))
+	    			|| columnName.equals(TranslationFacility.tr("BestePosition"))
 	    			)
 	    	{
 	    		width = 175;
 	    	}
-	    	else if(columnName.equals(HOVerwaltung.instance().getLanguageString("ls.player.short_leadership"))
-	    			|| columnName.equals(HOVerwaltung.instance().getLanguageString("ls.player.short_experience"))
-					|| columnName.equals(HOVerwaltung.instance().getLanguageString("ls.player.short_form"))
-					|| columnName.equals(HOVerwaltung.instance().getLanguageString("ls.player.skill_short.stamina"))
-					|| columnName.equals(HOVerwaltung.instance().getLanguageString("ls.player.skill_short.keeper"))
-					|| columnName.equals(HOVerwaltung.instance().getLanguageString("ls.player.skill_short.defending"))
-					|| columnName.equals(HOVerwaltung.instance().getLanguageString("ls.player.skill_short.playmaking"))
-					|| columnName.equals(HOVerwaltung.instance().getLanguageString("ls.player.skill_short.passing"))
-					|| columnName.equals(HOVerwaltung.instance().getLanguageString("ls.player.skill_short.winger"))
-					|| columnName.equals(HOVerwaltung.instance().getLanguageString("ls.player.skill_short.scoring"))
-					|| columnName.equals(HOVerwaltung.instance().getLanguageString("ls.player.skill_short.setpieces"))
-					|| columnName.equals(HOVerwaltung.instance().getLanguageString("ls.player.short_loyalty"))
-					|| columnName.equals(HOVerwaltung.instance().getLanguageString("ls.player.short_motherclub"))
+	    	else if(columnName.equals(TranslationFacility.tr("ls.player.short_leadership"))
+	    			|| columnName.equals(TranslationFacility.tr("ls.player.short_experience"))
+					|| columnName.equals(TranslationFacility.tr("ls.player.short_form"))
+					|| columnName.equals(TranslationFacility.tr("ls.player.skill_short.stamina"))
+					|| columnName.equals(TranslationFacility.tr("ls.player.skill_short.keeper"))
+					|| columnName.equals(TranslationFacility.tr("ls.player.skill_short.defending"))
+					|| columnName.equals(TranslationFacility.tr("ls.player.skill_short.playmaking"))
+					|| columnName.equals(TranslationFacility.tr("ls.player.skill_short.passing"))
+					|| columnName.equals(TranslationFacility.tr("ls.player.skill_short.winger"))
+					|| columnName.equals(TranslationFacility.tr("ls.player.skill_short.scoring"))
+					|| columnName.equals(TranslationFacility.tr("ls.player.skill_short.setpieces"))
+					|| columnName.equals(TranslationFacility.tr("ls.player.short_loyalty"))
+					|| columnName.equals(TranslationFacility.tr("ls.player.short_motherclub"))
 					)
 	    	{
 	    		width = 40;
 	    	}
-	    	else if(columnName.equals(HOVerwaltung.instance().getLanguageString("ls.player.wage"))
-	    			|| columnName.equals(HOVerwaltung.instance().getLanguageString("ls.player.id"))
-					|| columnName.equals(HOVerwaltung.instance().getLanguageString("ls.player.tsi"))
+	    	else if(columnName.equals(TranslationFacility.tr("ls.player.wage"))
+	    			|| columnName.equals(TranslationFacility.tr("ls.player.id"))
+					|| columnName.equals(TranslationFacility.tr("ls.player.tsi"))
 					)
 	    	{
 	    		width = 80;
