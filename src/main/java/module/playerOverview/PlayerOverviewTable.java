@@ -14,6 +14,7 @@ import core.model.TranslationFacility;
 import core.model.match.MatchKurzInfo;
 import core.model.player.Player;
 import core.net.HattrickLink;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import java.awt.*;
@@ -81,7 +82,7 @@ public class PlayerOverviewTable extends FixedColumnsTable implements core.gui.R
 		});
 	}
 
-	public int columnAtPoint(Point point) {
+	public int columnAtPoint(@NotNull Point point) {
 		var ret = super.columnAtPoint(point);
 		if (ret > -1){
 			return ret + getFixedColumnsCount();

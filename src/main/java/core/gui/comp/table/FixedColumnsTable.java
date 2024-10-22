@@ -2,12 +2,10 @@ package core.gui.comp.table;
 
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.model.HOConfigurationIntParameter;
-
 import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
 import java.awt.*;
 
 public class FixedColumnsTable extends JTable {
@@ -21,20 +19,10 @@ public class FixedColumnsTable extends JTable {
     private final HOConfigurationIntParameter dividerLocation;
 
     /**
-     * Table sorter
-     */
-//    private final TableRowSorter<HOTableModel> tableRowSorter;
-
-    /**
      * Fixed table part (left hand side)
      */
     private final JTable fixed;
     private final JScrollPane scrollPane;
-
-    /**
-     * Scrollable table part (right hand side)
-     */
-//    private final JTable scroll;
 
 
     public FixedColumnsTable(HOTableModel tableModel) {

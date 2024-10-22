@@ -3,7 +3,6 @@ package core.gui.model;
 import core.db.DBManager;
 import core.gui.comp.table.HOTableModel;
 import core.gui.comp.table.UserColumn;
-import core.model.TranslationFacility;
 import core.model.enums.MatchType;
 import core.model.match.Matchdetails;
 import core.model.player.Player;

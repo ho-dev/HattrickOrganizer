@@ -48,7 +48,9 @@ public abstract class HOTableModel extends AbstractTableModel {
 //	protected int instance;
 
 	public TableRowSorter<HOTableModel> getRowSorter() {
-		if ( table != null) return (TableRowSorter<HOTableModel>) table.getRowSorter();
+		if ( table != null) {
+            return (TableRowSorter<HOTableModel>) table.getRowSorter();
+        }
 		return null;
 	}
 
