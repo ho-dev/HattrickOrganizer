@@ -348,8 +348,11 @@ public abstract class HOTableModel extends AbstractTableModel {
 
 	private boolean setUserColumnSettings(JTable table) {
 		if(table instanceof FixedColumnsTable fixedColumnstable) {
-            return setUserColumnSettings(fixedColumnstable.getFixedTable(), 0) ||
-					setUserColumnSettings(fixedColumnstable, fixedColumnstable.getColumnCount());
+            var changed =  setUserColumnSettings(fixedColumnstable.getFixedTable(), 0);
+			if (setUserColumnSettings(fixedColumnstable, fixedColumnstable.getFixedColumnsCount()) ){
+				changed = true;
+			}
+			return  changed;
 		}
 		return setUserColumnSettings(table,0);
 	}
@@ -416,7 +419,9 @@ public abstract class HOTableModel extends AbstractTableModel {
 
 		RowSorter<HOTableModel> sorter = (RowSorter<HOTableModel>) table.getRowSorter();
 		if (sorter != null){
-			changed = changed || setRowOrderSettings(sorter);
+			if ( setRowOrderSettings(sorter) ) {
+				changed = true;
+			}
 		}
 		if (changed){
 			DBManager.instance().saveHOColumnModel(this);
