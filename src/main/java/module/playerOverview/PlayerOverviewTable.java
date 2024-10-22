@@ -45,7 +45,7 @@ public class PlayerOverviewTable extends FixedColumnsTable implements core.gui.R
 
 	public PlayerOverviewTable() {
 		super(UserColumnController.instance().getPlayerOverviewModel());
-		tableModel = (PlayerOverviewTableModel)this.getScrollTable().getModel();
+		tableModel = (PlayerOverviewTableModel)this.getModel();
 		tableModel.setValues(HOVerwaltung.instance().getModel().getCurrentPlayers());
 		tableModel.initTable(this);
 		setOpaque(false);
@@ -81,8 +81,8 @@ public class PlayerOverviewTable extends FixedColumnsTable implements core.gui.R
 		});
 	}
 
-	private int columnAtPoint(Point point) {
-		var ret = this.getScrollTable().columnAtPoint(point);
+	public int columnAtPoint(Point point) {
+		var ret = super.columnAtPoint(point);
 		if (ret > -1){
 			return ret + getFixedColumnsCount();
 		}
@@ -92,7 +92,7 @@ public class PlayerOverviewTable extends FixedColumnsTable implements core.gui.R
 	public Player getSelectedPlayer(){
 		var rowIndex = getSelectedRow();
 		if (rowIndex >= 0) {
-			return tableModel.getPlayers().get(getScrollTable().convertRowIndexToModel(rowIndex));
+			return tableModel.getPlayers().get(convertRowIndexToModel(rowIndex));
 		}
 		return null;
 	}

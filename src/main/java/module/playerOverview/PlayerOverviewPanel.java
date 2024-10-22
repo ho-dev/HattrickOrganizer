@@ -195,7 +195,7 @@ public class PlayerOverviewPanel extends ImagePanel {
 //		splitPane.setOneTouchExpandable(true);
 //		splitPane.setDividerLocation(UserParameter.instance().playerTablePanel_horizontalSplitPane);
 
-		overviewPanel.add(playerOverviewTable, BorderLayout.CENTER);
+		overviewPanel.add(playerOverviewTable.getContainerComponent(), BorderLayout.CENTER);
 
 		TeamSummaryModel teamSummaryModel = new TeamSummaryModel();
 		teamSummaryModel.setPlayers(HOVerwaltung.instance().getModel().getCurrentPlayers());

@@ -1,12 +1,14 @@
 package module.teamAnalyzer.ui;
 
 import core.gui.comp.table.FixedColumnsTable;
+import core.gui.comp.table.HOTableModel;
 import core.gui.model.UserColumnController;
 import module.teamAnalyzer.report.TeamReport;
 import module.teamAnalyzer.ui.controller.RecapListSelectionListener;
 import java.awt.*;
 import java.io.Serial;
 import javax.swing.*;
+import javax.swing.table.TableRowSorter;
 
 
 public class RecapPanel extends JPanel {
@@ -37,10 +39,10 @@ public class RecapPanel extends JPanel {
         FixedColumnsTable table = new FixedColumnsTable(tableModel, 2);
         table.setDefaultRenderer(Object.class, new RecapTableRenderer());
         table.setDefaultRenderer(ImageIcon.class, new RecapTableRenderer());
-        recapListener = new RecapListSelectionListener(table.getTableRowSorter(), tableModel);
+        recapListener = new RecapListSelectionListener((TableRowSorter<HOTableModel>) table.getRowSorter(), tableModel);
         table.addListSelectionListener(recapListener);
         setLayout(new BorderLayout());
-        add(table);
+        add(table.getContainerComponent());
     }
 
     public String getSelectedTacticType() {

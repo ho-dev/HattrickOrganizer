@@ -137,7 +137,7 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 
 	private Component initSpielerTabelle() {
 		lineupPlayersTable = new LineupPlayersTable();
-		return lineupPlayersTable;
+		return lineupPlayersTable.getContainerComponent();
 	}
 
 //	private void addListeners() {

@@ -4,10 +4,8 @@ import core.db.DBManager;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.model.UserColumnController;
 import core.model.TranslationFacility;
-import core.util.Helper;
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
-import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableRowSorter;
 import java.io.Serial;
 import java.util.ArrayList;
@@ -47,16 +45,15 @@ public abstract class HOTableModel extends AbstractTableModel {
 	protected Object[][] m_clData;
 
 	/** instance of the same class **/
-	protected int instance;
+//	protected int instance;
 
 	public TableRowSorter<HOTableModel> getRowSorter() {
 		if ( table != null) return (TableRowSorter<HOTableModel>) table.getRowSorter();
-		if ( fixedColumnsTable != null) return fixedColumnsTable.getTableRowSorter();
 		return null;
 	}
 
 	private JTable table;
-	private FixedColumnsTable fixedColumnsTable;
+//	private FixedColumnsTable fixedColumnsTable;
 
 	/**
 	 * constructor
@@ -91,8 +88,8 @@ public abstract class HOTableModel extends AbstractTableModel {
 	 */
 	@Override
 	public String toString() {
-		String tmp = TranslationFacility.tr(name);
-		return (instance == 0) ? tmp : (tmp + instance);
+		return TranslationFacility.tr(name);
+//		return (instance == 0) ? tmp : (tmp + instance);
 	}
 
 	/**
@@ -232,20 +229,7 @@ public abstract class HOTableModel extends AbstractTableModel {
 		fireTableCellUpdated(row,column);
 	}
 
-	/**
-	 * Return the order of the column like old method getSpaltenreihenfolge
-	 */
-	private int[][] getColumnOrder() {
-		UserColumn[] tmp = getDisplayedColumns();
-		int[][] order = new int[tmp.length][2];
-		for (int i = 0; i < order.length; i++) {
-			order[i][0] = tmp[i].getId();
-			order[i][1] = tmp[i].getIndex();
-		}
-		return order;
-	}
-
-//	/**
+	//	/**
 //	 * Move the columns of the table to their correct places
 //	 * @param table JTable
 //	 */
@@ -303,10 +287,9 @@ public abstract class HOTableModel extends AbstractTableModel {
 
 	private void getUserColumnSettings(JTable table, int offset) {
 		// Restore column order and width settings
-		Arrays.stream(this.columns)
+		Arrays.stream(getDisplayedColumns())
 				.skip(offset)
 				.limit(table.getColumnCount())
-				.filter(UserColumn::isDisplay)
 				.sorted(Comparator.comparingInt(UserColumn::getIndex))
 				.forEach(i -> getColumnSettings(i, table, offset));
 	}
@@ -332,9 +315,9 @@ public abstract class HOTableModel extends AbstractTableModel {
 	 *
 	 * @param table table object
 	 */
-	private boolean setUserColumnSettings(JTable table) {
-		return  setUserColumnSettings(table, 0);
-	}
+//	private boolean setUserColumnSettings(JTable table) {
+//		return  setUserColumnSettings(table, 0);
+//	}
 
 	private boolean setUserColumnSettings(JTable table, int offset) {
 		boolean changed = false;
@@ -361,23 +344,29 @@ public abstract class HOTableModel extends AbstractTableModel {
 		return changed;
 	}
 
-	private boolean setUserColumnSettings(FixedColumnsTable table) {
-		var changed = setUserColumnSettings(table.getFixedTable(), 0);
-		changed = changed || setUserColumnSettings(table.getScrollTable(), table.getFixedColumnsCount());
-		return changed;
+	private boolean setUserColumnSettings(JTable table) {
+		if(table instanceof FixedColumnsTable fixedColumnstable) {
+            return setUserColumnSettings(fixedColumnstable.getFixedTable(), 0) ||
+					setUserColumnSettings(fixedColumnstable, fixedColumnstable.getColumnCount());
+		}
+		return setUserColumnSettings(table,0);
 	}
 
 	public boolean userCanDisableColumns() {
 		return false;
 	}
 
-	public void initTable(FixedColumnsTable table){
-		this.fixedColumnsTable = table;
-		getUserColumnSettings(table.getFixedTable(),0);
-		getUserColumnSettings(table.getScrollTable(), table.getFixedColumnsCount());
-		getRowOrderSettings(table.getTableRowSorter());
-	}
-
+//	public void initTable(JTable table){
+//		this.table = table;
+//		if( !(table instanceof FixedColumnsTable fixedColumnsTable)) {
+//
+//        }
+//		this.fixedColumnsTable = table;
+//		getUserColumnSettings(table.getFixedTable(),0);
+//		getUserColumnSettings(table.getScrollTable(), table.getFixedColumnsCount());
+//		getRowOrderSettings(table.getTableRowSorter());
+//	}
+//
 	public void initTable(JTable table) {
 		this.table = table;
 		var columnModel = table.getColumnModel();
@@ -387,31 +376,43 @@ public abstract class HOTableModel extends AbstractTableModel {
 		table.setTableHeader(header);
 		table.setModel(this);
 
-		for (int i=0; i<columnModel.getColumnCount(); i++){
-			var tm = this.columns[i];
-			var cm = table.getColumnModel().getColumn(i);
-			cm.setIdentifier(tm.getId());
+		var displayedColumns = getDisplayedColumns();
+		if (table instanceof FixedColumnsTable fixedColumnstable) {
+			for ( int i=0; i<fixedColumnstable.getFixedColumnsCount(); i++){
+				var tm = displayedColumns[i];
+				var cm = fixedColumnstable.getFixedTable().getColumnModel().getColumn(i);
+				cm.setIdentifier(tm.getId());
+				cm.setMinWidth(tm.minWidth);
+			}
+			for ( int i=fixedColumnstable.getFixedColumnsCount(); i < displayedColumnsCount;  i++){
+				var tm = displayedColumns[i];
+				var cm = fixedColumnstable.getColumnModel().getColumn(i-fixedColumnstable.getFixedColumnsCount());
+				cm.setIdentifier(tm.getId());
+				cm.setMinWidth(tm.minWidth);
+			}
+			getUserColumnSettings(fixedColumnstable.getFixedTable(), 0);
+			getUserColumnSettings(table, fixedColumnstable.getFixedColumnsCount());
 		}
-
-		getUserColumnSettings(table,0);
+		else {
+			for (int i=0; i<displayedColumnsCount; i++){
+				var tm = displayedColumns[i];
+				var cm = columnModel.getColumn(i);
+				cm.setIdentifier(tm.getId());
+				cm.setMinWidth(tm.minWidth);
+			}
+			getUserColumnSettings(table,0);
+		}
 		var rowSorter = new TableRowSorter<>(this);
 		getRowOrderSettings(rowSorter);
 		table.setRowSorter(rowSorter);
-
 		table.setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
 	}
 
 	public void storeUserSettings(){
-		boolean changed = false;
-		RowSorter<HOTableModel> sorter = null;
-		if (table != null){
-			changed = setUserColumnSettings(table);
-			sorter = (TableRowSorter<HOTableModel>) table.getRowSorter();
-		}
-		else if ( fixedColumnsTable != null){
-			changed = setUserColumnSettings(fixedColumnsTable);
-			sorter = fixedColumnsTable.getTableRowSorter();
-		}
+		if (table == null) return;
+		var changed = setUserColumnSettings(table);
+
+		RowSorter<HOTableModel> sorter = (RowSorter<HOTableModel>) table.getRowSorter();
 		if (sorter != null){
 			changed = changed || setRowOrderSettings(sorter);
 		}

@@ -28,7 +28,7 @@ public final class LineupPlayersTable extends FixedColumnsTable implements core.
 
 	LineupPlayersTable() {
 		super(UserColumnController.instance().getLineupModel());
-		tableModel = (LineupTableModel) this.getScrollTable().getModel();
+		tableModel = (LineupTableModel) this.getModel();
 		tableModel.setValues(HOVerwaltung.instance().getModel().getCurrentPlayers());
 		tableModel.initTable(this);
 		setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
@@ -104,14 +104,11 @@ public final class LineupPlayersTable extends FixedColumnsTable implements core.
 				int rowindex = getSelectedRow();
 				if (rowindex >= 0) {
 					// Last match column
-//					int viewColumn = columnAtPoint(e.getPoint());
-//					int column = columnModel.getColumn(viewColumn).getModelIndex();
 					Player selectedPlayer = tableModel.getPlayerAtRow(rowindex);
 					if (selectedPlayer != null) {
-						var scrollTable = getScrollTable();
-						var viewColumn = scrollTable.columnAtPoint(e.getPoint());
+						var viewColumn = columnAtPoint(e.getPoint());
 						if (viewColumn > -1) {
-							var column = scrollTable.getColumn(viewColumn).getModelIndex();
+							var column = getColumn(viewColumn).getModelIndex();
 							if (column + getFixedColumnsCount() == tableModel.getPositionInArray(UserColumnFactory.LAST_MATCH_RATING)) {
 								if (e.isShiftDown()) {
 									int matchId = selectedPlayer.getLastMatchId();
