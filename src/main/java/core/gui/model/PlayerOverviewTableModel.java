@@ -96,13 +96,13 @@ public class PlayerOverviewTableModel extends HOTableModel {
 	public int getRowIndexOfPlayer(int playerId){
 		var modelIndex = getPlayerIndex(playerId);
 		if (modelIndex > -1){
-			this.getRowSorter().convertRowIndexToView(modelIndex);
+			return convertModelIndexToRow(modelIndex);
 		}
 		return -1;
 	}
 
 	public Player getPlayerAtRow(int tableRow) {
-		if (tableRow > -1 ) return m_vPlayers.get(this.getRowSorter().convertRowIndexToModel(tableRow));
+		if (tableRow > -1 ) return m_vPlayers.get(convertRowToModelIndex(tableRow));
 		return null;
 	}
 

@@ -48,18 +48,18 @@ public class ArenaStatistikTable extends JTable {
         return m_clTableSorter;
     }
 
-    /**
-     * Markiert ein Match, wenn es in der Tabelle vorhanden ist, sonst wird die Selektion gelöscht
-     */
-    public final void markiereMatch(int matchid) {
-        final int row = m_clTableSorter.getRow4Match(matchid);
-
-        if (row > -1) {
-            setRowSelectionInterval(row, row);
-        } else {
-            clearSelection();
-        }
-    }
+//    /**
+//     * Markiert ein Match, wenn es in der Tabelle vorhanden ist, sonst wird die Selektion gelöscht
+//     */
+//    public final void markiereMatch(int matchid) {
+//        final int row = m_clTableSorter.getRow4Match(matchid);
+//
+//        if (row > -1) {
+//            setRowSelectionInterval(row, row);
+//        } else {
+//            clearSelection();
+//        }
+//    }
 
     //----------------Refresh-------------------------------------------
 

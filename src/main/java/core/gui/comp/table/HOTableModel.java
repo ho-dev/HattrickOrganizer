@@ -32,36 +32,26 @@ public abstract class HOTableModel extends AbstractTableModel {
 	/** Name of the column model, shows in OptionsPanel **/
 	private final String name;
 
-	/** count of displayed column **/
+	/** Count of displayed column **/
 	private int displayedColumnsCount;
 
-	/** all columns from this model **/
+	/** All columns of this model **/
 	protected UserColumn[] columns;
 
-	/** only displayed columns **/
+	/** Only displayed columns **/
 	protected UserColumn[] displayedColumns;
 
-	/** data of table **/
+	/** Data of table **/
 	protected Object[][] m_clData;
 
-	/** instance of the same class **/
-//	protected int instance;
-
-	public TableRowSorter<HOTableModel> getRowSorter() {
-		if ( table != null) {
-            return (TableRowSorter<HOTableModel>) table.getRowSorter();
-        }
-		return null;
-	}
-
+	/** Table component **/
 	private JTable table;
-//	private FixedColumnsTable fixedColumnsTable;
 
 	/**
-	 * constructor
+	 * Constructor
 	 * 
-	 * @param id model id
-	 * @param name model name
+	 * @param id Model id
+	 * @param name Model name
 	 */
 	protected HOTableModel(UserColumnController.ColumnModelId id, String name) {
 		this.id = id.getValue();
@@ -69,7 +59,7 @@ public abstract class HOTableModel extends AbstractTableModel {
 	}
 
 	/**
-	 * return all columns of the model
+	 * Return all columns of the model
 	 * 
 	 * @return UserColumn[]
 	 */
@@ -78,7 +68,7 @@ public abstract class HOTableModel extends AbstractTableModel {
 	}
 
 	/**
-	 * 
+	 * Return model's id
 	 * @return id
 	 */
 	public final int getId() {
@@ -86,16 +76,15 @@ public abstract class HOTableModel extends AbstractTableModel {
 	}
 
 	/**
-	 * return the language dependent name of this model
+	 * Return the language dependent name of this model
 	 */
 	@Override
 	public String toString() {
 		return TranslationFacility.tr(name);
-//		return (instance == 0) ? tmp : (tmp + instance);
 	}
 
 	/**
-	 * return all columnNames of displayed columns
+	 * Return all column names of displayed columns
 	 * 
 	 * @return String[]
 	 */
@@ -108,7 +97,7 @@ public abstract class HOTableModel extends AbstractTableModel {
 	}
 
 	/**
-	 * return all tooltips of displayed columns
+	 * Return all tooltips of displayed columns
 	 * 
 	 * @return String[]
 	 */
@@ -120,7 +109,7 @@ public abstract class HOTableModel extends AbstractTableModel {
 	}
 
 	/**
-	 * return all displayed columns
+	 * Return all displayed columns
 	 * 
 	 * @return UserColumn[]
 	 */
@@ -146,7 +135,7 @@ public abstract class HOTableModel extends AbstractTableModel {
 	}
 
 	/**
-	 * return count of displayed columns
+	 * Return count of displayed columns
 	 * 
 	 * @return int
 	 */
@@ -170,7 +159,7 @@ public abstract class HOTableModel extends AbstractTableModel {
 	}
 
 	/**
-	 * return value
+	 * Return value of one table cell
 	 * 
 	 * @param row Row number
 	 * @param column Column number
@@ -186,11 +175,20 @@ public abstract class HOTableModel extends AbstractTableModel {
 		return null;
 	}
 
+	/**
+	 * Return row count
+	 * @return int
+	 */
 	@Override
 	public final int getRowCount() {
 		return (m_clData != null) ? m_clData.length : 0;
 	}
 
+	/**
+	 * Return class of a table column
+	 * @param columnIndex  the column being queried
+	 * @return Class</?>
+	 */
     @Override
 	public final Class<?> getColumnClass(int columnIndex) {
 		final Object obj = getValueAt(0, columnIndex);
@@ -202,6 +200,11 @@ public abstract class HOTableModel extends AbstractTableModel {
 		return "".getClass();
 	}
 
+	/**
+	 * Return the name of a table column
+	 * @param columnIndex  the column being queried
+	 * @return String
+	 */
 	@Override
 	public final String getColumnName(int columnIndex) {
 		if (getDisplayedColumnCount() > columnIndex) {
@@ -211,20 +214,12 @@ public abstract class HOTableModel extends AbstractTableModel {
 		return null;
 	}
 
-	public final Object getValue(int row, String columnName) {
-		if (m_clData != null) {
-			int i = 0;
-
-			while ((i < getColumnNames().length) && !getColumnNames()[i].equals(columnName)) {
-				i++;
-			}
-
-			return m_clData[row][i];
-		}
-
-		return null;
-	}
-
+	/**
+	 * Set the value of a table cell
+	 * @param value   value to assign to cell
+	 * @param row   row of cell
+	 * @param column  column of cell
+	 */
 	@Override
 	public void setValueAt(Object value, int row, int column) {
 		m_clData[row][column] = value;
@@ -261,6 +256,9 @@ public abstract class HOTableModel extends AbstractTableModel {
 //        }
 //	}
 
+	/**
+	 * Abstract init data method has to be provided by subclass
+	 */
 	protected abstract void initData();
 
 	/**
@@ -287,6 +285,11 @@ public abstract class HOTableModel extends AbstractTableModel {
 //		}
 //	}
 
+	/**
+	 * Get the table column width and index from user column settings stored in the database
+	 * @param table Table
+	 * @param offset Column's offset in model (in case of FixedColumnTable)
+	 */
 	private void getUserColumnSettings(JTable table, int offset) {
 		// Restore column order and width settings
 		Arrays.stream(getDisplayedColumns())
@@ -297,10 +300,11 @@ public abstract class HOTableModel extends AbstractTableModel {
 	}
 
 	/**
-	 * Set column order and width
+	 * Get column order and width from user column
 	 *
-	 * @param userColumn user column holding user's settings
-	 * @param table      the table object
+	 * @param userColumn User column holding user's settings
+	 * @param table      Table object
+	 * @param offset 	 Column's offset in model (in case of FixedColumnTable)
 	 */
 	private void getColumnSettings(UserColumn userColumn, JTable table, int offset) {
 		var column = table.getColumn(userColumn.getId());
@@ -315,12 +319,9 @@ public abstract class HOTableModel extends AbstractTableModel {
 	 * Save the user settings of the table. User selected width and column indexes are saved in user column model
 	 * which is stored in database table UserColumnTable
 	 *
-	 * @param table table object
+	 * @param table Table object
+	 * @param offset 	 Column's offset in model (in case of FixedColumnTable)
 	 */
-//	private boolean setUserColumnSettings(JTable table) {
-//		return  setUserColumnSettings(table, 0);
-//	}
-
 	private boolean setUserColumnSettings(JTable table, int offset) {
 		boolean changed = false;
 		// column order and width
@@ -346,6 +347,12 @@ public abstract class HOTableModel extends AbstractTableModel {
 		return changed;
 	}
 
+	/**
+	 * Set user column settings from the table instance
+	 * @param table Table object
+	 * @return True if one user setting is changed
+	 * 		   False, if no user settings are changed
+	 */
 	private boolean setUserColumnSettings(JTable table) {
 		if(table instanceof FixedColumnsTable fixedColumnstable) {
             var changed =  setUserColumnSettings(fixedColumnstable.getFixedTable(), 0);
@@ -371,7 +378,11 @@ public abstract class HOTableModel extends AbstractTableModel {
 //		getUserColumnSettings(table.getScrollTable(), table.getFixedColumnsCount());
 //		getRowOrderSettings(table.getTableRowSorter());
 //	}
-//
+
+	/**
+	 * Initialize the table object with data from the model
+	 * @param table Table object
+	 */
 	public void initTable(JTable table) {
 		this.table = table;
 		var columnModel = table.getColumnModel();
@@ -413,6 +424,9 @@ public abstract class HOTableModel extends AbstractTableModel {
 		table.setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
 	}
 
+	/**
+	 * Store user table settings in the database when they were changed by the user
+	 */
 	public void storeUserSettings(){
 		if (table == null) return;
 		var changed = setUserColumnSettings(table);
@@ -428,6 +442,11 @@ public abstract class HOTableModel extends AbstractTableModel {
 		}
 	}
 
+	/**
+	 * Get row order from user columns and restore it to the given row sorter
+	 *
+	 * @param rowSorter Row sorter
+	 */
 	private void getRowOrderSettings(RowSorter<HOTableModel> rowSorter) {
 		// Restore row order setting
 		var sortKeys = new ArrayList<RowSorter.SortKey>();
@@ -443,6 +462,12 @@ public abstract class HOTableModel extends AbstractTableModel {
 		rowSorter.setSortKeys(sortKeys);
 	}
 
+	/**
+	 * Set user columns sort priority and order from given row sorter
+	 * @param sorter Row sorter
+	 * @return True if one user setting is changed
+	 * 		   False, if no user settings are changed
+	 */
 	private boolean setRowOrderSettings(RowSorter<HOTableModel> sorter) {
 		var changed = false;
 		var rowSortKeys = sorter.getSortKeys();
@@ -466,5 +491,37 @@ public abstract class HOTableModel extends AbstractTableModel {
 			}
 		}
 		return changed;
+	}
+
+	/**
+	 * Convert model index to row number
+	 * @param modelIndex Model index
+	 * @return int, Row number index (-1, if model index is invalid)
+	 */
+	public int convertModelIndexToRow(int modelIndex) {
+		if (modelIndex>=0 && modelIndex < this.getRowCount()){
+			var rowSorter = (RowSorter<HOTableModel>)table.getRowSorter();
+			if ( rowSorter != null ) {
+				return rowSorter.convertRowIndexToView(modelIndex);
+			}
+			return modelIndex;
+		}
+		return -1;
+	}
+
+	/**
+	 * Convert row number to model index
+	 * @param rowIndex Table row number
+	 * @return int, model index (-1, if row index is invalid)
+	 */
+	public int convertRowToModelIndex(int rowIndex) {
+		if (rowIndex>=0 && rowIndex < this.getRowCount()){
+			var rowSorter = (RowSorter<HOTableModel>)table.getRowSorter();
+			if ( rowSorter != null ) {
+				return rowSorter.convertRowIndexToModel(rowIndex);
+			}
+			return rowIndex;
+		}
+		return -1;
 	}
 }
