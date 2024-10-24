@@ -226,36 +226,6 @@ public abstract class HOTableModel extends AbstractTableModel {
 		fireTableCellUpdated(row,column);
 	}
 
-	//	/**
-//	 * Move the columns of the table to their correct places
-//	 * @param table JTable
-//	 */
-//	public void initColumnOrder(JTable table)
-//	{
-//		var order = getColumnOrder();
-//		// Sort according to [x][1]
-//		order = Helper.sortintArray(order, 1);
-//
-//		if (order != null) {
-//			for (int[] ints : order) {
-//				table.moveColumn(table.getColumnModel().getColumnIndex(ints[0]), ints[1]);
-//			}
-//		}
-//	}
-
-//	/**
-//	 * sets size in JTable
-//	 *
-//	 * @param tableColumnModel
-//	 */
-//	public void setColumnsSize(TableColumnModel tableColumnModel) {
-//		final UserColumn[] tmpColumns = getDisplayedColumns();
-//        for (UserColumn tmpColumn : tmpColumns) {
-//            var id = tmpColumn.getId();
-//            tmpColumn.setSize(tableColumnModel.getColumn(tableColumnModel.getColumnIndex(id)));
-//        }
-//	}
-
 	/**
 	 * Abstract init data method has to be provided by subclass
 	 */
@@ -272,18 +242,6 @@ public abstract class HOTableModel extends AbstractTableModel {
 		}
 		return -1;
 	}
-
-//	public void setCurrentValueToColumns(UserColumn[] tmpColumns) {
-//		for (UserColumn tmpColumn : tmpColumns) {
-//			for (UserColumn column : columns) {
-//				if (column.getId() == tmpColumn.getId()) {
-//					column.setIndex(tmpColumn.getIndex());
-//					column.setPreferredWidth(tmpColumn.getPreferredWidth());
-//					break;
-//				}
-//			}
-//		}
-//	}
 
 	/**
 	 * Get the table column width and index from user column settings stored in the database
@@ -368,17 +326,6 @@ public abstract class HOTableModel extends AbstractTableModel {
 		return false;
 	}
 
-//	public void initTable(JTable table){
-//		this.table = table;
-//		if( !(table instanceof FixedColumnsTable fixedColumnsTable)) {
-//
-//        }
-//		this.fixedColumnsTable = table;
-//		getUserColumnSettings(table.getFixedTable(),0);
-//		getUserColumnSettings(table.getScrollTable(), table.getFixedColumnsCount());
-//		getRowOrderSettings(table.getTableRowSorter());
-//	}
-
 	/**
 	 * Initialize the table object with data from the model
 	 * @param table Table object
@@ -425,7 +372,7 @@ public abstract class HOTableModel extends AbstractTableModel {
 	}
 
 	/**
-	 * Store user table settings in the database when they were changed by the user
+	 * Store user table settings in the database if they were changed by the user
 	 */
 	public void storeUserSettings(){
 		if (table == null) return;
