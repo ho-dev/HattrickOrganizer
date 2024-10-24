@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 
+import static java.lang.Math.max;
+
 /**
  * Basic ColumnModel for all UserColumnModels
  * 
@@ -269,7 +271,7 @@ public abstract class HOTableModel extends AbstractTableModel {
 		column.setPreferredWidth(userColumn.getPreferredWidth());
 		var index = table.getColumnModel().getColumnIndex(userColumn.getId());
 		if ( index != userColumn.getIndex()-offset) {
-			table.moveColumn(index, userColumn.getIndex()-offset);
+			table.moveColumn(index, max(0, userColumn.getIndex()-offset));
 		}
 	}
 
