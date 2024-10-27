@@ -7,6 +7,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableModel;
 import java.awt.*;
+import java.awt.event.AdjustmentListener;
 
 /**
  * Table with fixed columns on the right hand side
@@ -69,7 +70,7 @@ public class FixedColumnsTable extends JTable {
         for (; i < fixedColumns; i++) {
             var _columnModel = getColumnModel();
             var column = _columnModel.getColumn(0);
-            width += column.getMinWidth();
+            width += column.getPreferredWidth();
             _columnModel.removeColumn(column);
         }
 
@@ -82,7 +83,32 @@ public class FixedColumnsTable extends JTable {
             _columnModel.removeColumn(_columnModel.getColumn(fixedColumns));
         }
 
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, new JScrollPane(fixed), new JScrollPane(this));
+        // Sync scroll bars of both tables
+        var fixedScrollPane = new JScrollPane(fixed);
+        var rightScrollPane = new JScrollPane(this);
+        final JScrollBar fixedScrollBar = fixedScrollPane.getVerticalScrollBar();
+        final JScrollBar rightScrollBar = rightScrollPane.getVerticalScrollBar();
+
+        // setVisible(false) does not have an effect, so we set the size to
+        // false. We can't disable the scrollbar with VERTICAL_SCROLLBAR_NEVER
+        // because this will disable mouse wheel scrolling.
+        fixedScrollBar.setPreferredSize(new Dimension(0, 0));
+
+        // Synchronize vertical scrolling
+        AdjustmentListener adjustmentListener = e -> {
+            if (e.getSource() == rightScrollBar) {
+                fixedScrollBar.setValue(e.getValue());
+            } else {
+                rightScrollBar.setValue(e.getValue());
+            }
+        };
+        fixedScrollBar.addAdjustmentListener(adjustmentListener);
+        rightScrollBar.addAdjustmentListener(adjustmentListener);
+
+
+        rightScrollPane.getVerticalScrollBar().setModel(fixedScrollPane.getVerticalScrollBar().getModel());
+
+        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, fixedScrollPane, rightScrollPane);
         if ( width == 0) width = 60;
         this.dividerLocation = new HOConfigurationIntParameter("TableDividerLocation_" + tableModel.getId(), width);
         splitPane.setDividerLocation(this.dividerLocation.getIntValue());

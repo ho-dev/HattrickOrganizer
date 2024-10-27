@@ -99,9 +99,12 @@ final class DBUpdater {
 		arenaTable.tryAddColumn("REBUILT_DATE", "TIMESTAMP");
 		arenaTable.tryAddColumn("EXPANSION_DATE", "TIMESTAMP");
 
-		var userColumnTable = dbManager.getTable(UserColumnsTable.TABLENAME);
+		var userColumnTable = (UserColumnsTable)dbManager.getTable(UserColumnsTable.TABLENAME);
 		userColumnTable.tryAddColumn("SORT_ORDER", "VARCHAR(32)");
 		userColumnTable.tryAddColumn("SORT_PRIORITY", "INTEGER");
+
+		String sql = "UPDATE " + UserColumnsTable.TABLENAME + " SET COLUMN_WIDTH=80 WHERE COLUMN_ID IN (2001,3001) AND COLUMN_WIDTH=0";
+		connectionManager.executeUpdate(sql);
 
 		updateDBVersion(dbVersion, 900);
 	}

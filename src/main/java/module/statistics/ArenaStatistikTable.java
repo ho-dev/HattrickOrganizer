@@ -10,7 +10,7 @@ import core.util.Helper;
 
 import javax.swing.JTable;
 import javax.swing.table.TableColumnModel;
-
+import java.io.Serial;
 
 
 /**
@@ -18,7 +18,8 @@ import javax.swing.table.TableColumnModel;
  */
 public class ArenaStatistikTable extends JTable {
 
-	private static final long serialVersionUID = -6319111452810917050L;
+	@Serial
+    private static final long serialVersionUID = -6319111452810917050L;
 
     //~ Instance fields ----------------------------------------------------------------------------
 
