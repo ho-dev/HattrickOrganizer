@@ -86,6 +86,8 @@ public class FixedColumnsTable extends JTable {
         // Sync scroll bars of both tables
         var fixedScrollPane = new JScrollPane(fixed);
         var rightScrollPane = new JScrollPane(this);
+        fixedScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+        rightScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         final JScrollBar fixedScrollBar = fixedScrollPane.getVerticalScrollBar();
         final JScrollBar rightScrollBar = rightScrollPane.getVerticalScrollBar();
 
