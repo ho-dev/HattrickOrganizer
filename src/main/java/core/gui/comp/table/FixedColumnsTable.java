@@ -5,6 +5,7 @@ import core.model.HOConfigurationIntParameter;
 import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.AdjustmentListener;
@@ -133,6 +134,10 @@ public class FixedColumnsTable extends JTable {
      */
     public JTable getFixedTable() {
         return fixed;
+    }
+
+    public TableColumnModel getTableColumnModel() {
+        return this.getColumnModel();
     }
 
     /**

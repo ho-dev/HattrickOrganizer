@@ -47,7 +47,7 @@ public abstract class HOTableModel extends AbstractTableModel {
 	protected Object[][] m_clData;
 
 	/** Table component **/
-	private JTable table;
+	protected JTable table;
 
 	/**
 	 * Constructor
@@ -440,37 +440,5 @@ public abstract class HOTableModel extends AbstractTableModel {
 			}
 		}
 		return changed;
-	}
-
-	/**
-	 * Convert model index to row number
-	 * @param modelIndex Model index
-	 * @return int, Row number index (-1, if model index is invalid)
-	 */
-	public int convertModelIndexToRow(int modelIndex) {
-		if (modelIndex>=0 && modelIndex < this.getRowCount()){
-			var rowSorter = (RowSorter<HOTableModel>)table.getRowSorter();
-			if ( rowSorter != null ) {
-				return rowSorter.convertRowIndexToView(modelIndex);
-			}
-			return modelIndex;
-		}
-		return -1;
-	}
-
-	/**
-	 * Convert row number to model index
-	 * @param rowIndex Table row number
-	 * @return int, model index (-1, if row index is invalid)
-	 */
-	public int convertRowToModelIndex(int rowIndex) {
-		if (rowIndex>=0 && rowIndex < this.getRowCount()){
-			var rowSorter = (RowSorter<HOTableModel>)table.getRowSorter();
-			if ( rowSorter != null ) {
-				return rowSorter.convertRowIndexToModel(rowIndex);
-			}
-			return rowIndex;
-		}
-		return -1;
 	}
 }
