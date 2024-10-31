@@ -73,7 +73,7 @@ public class FlagLabel extends JLabel {
 		super.paintComponent(g);
 	}
 
-	private class TransparentFilter extends RGBImageFilter {
+	private static class TransparentFilter extends RGBImageFilter {
 		private int percent;
 
 		public TransparentFilter(int percent) {

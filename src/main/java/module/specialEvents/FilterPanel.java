@@ -527,7 +527,7 @@ public class FilterPanel extends JPanel {
 		}
 	}
 
-	private class PlayerCBItem extends CBItem {
+	private static class PlayerCBItem extends CBItem {
 
 		private int speciality = -1;
 

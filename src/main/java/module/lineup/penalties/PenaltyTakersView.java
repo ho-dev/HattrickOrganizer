@@ -656,7 +656,7 @@ public class PenaltyTakersView extends JPanel {
 		}
 	}
 
-	private class SkillRenderer extends DoubleRenderer {
+	private static class SkillRenderer extends DoubleRenderer {
 
 		@Serial
 		private static final long serialVersionUID = 3943598594307257068L;

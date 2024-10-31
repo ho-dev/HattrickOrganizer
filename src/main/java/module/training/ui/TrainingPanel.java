@@ -292,7 +292,7 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 	/**
 	 * JTable class for past and future trainings table
 	 */
-	private class TrainingTable extends JTable {
+	private static class TrainingTable extends JTable {
 
 		public TrainingTable(TableModel arg0) {
 			super(arg0);

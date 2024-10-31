@@ -74,7 +74,7 @@ public class SummaryTableSorter<M extends TableModel> extends TableRowSorter<M> 
 		}
 	}
 
-	class TableCellValue {
+	static class TableCellValue {
 		public int row;
 		public int column;
 		public Object value;

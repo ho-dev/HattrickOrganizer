@@ -103,7 +103,7 @@ public class WhenTextField extends JFormattedTextField {
 
 	}
 
-	private class EditFormatter extends JFormattedTextField.AbstractFormatter {
+	private static class EditFormatter extends JFormattedTextField.AbstractFormatter {
 
 		private static final long serialVersionUID = 4814824765566252119L;
 		private DocumentFilter filter = new Filter();
@@ -123,7 +123,7 @@ public class WhenTextField extends JFormattedTextField {
 			return this.filter;
 		}
 
-		private class Filter extends DocumentFilter {
+		private static class Filter extends DocumentFilter {
 
 			@Override
 			public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs)
