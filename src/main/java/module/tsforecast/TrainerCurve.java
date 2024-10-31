@@ -9,7 +9,7 @@ import core.util.HOLogger;
 import java.sql.ResultSet;
 import java.time.temporal.ChronoUnit;
 
-class TrainerCurve extends Curve {
+public class TrainerCurve extends Curve {
 
 	TrainerCurve(DBManager dbManager) {
 		super(dbManager);

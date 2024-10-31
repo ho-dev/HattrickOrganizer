@@ -15,7 +15,7 @@ import java.awt.*;
  *
  * @author draghetto
  */
-class InjuryDetailPanel extends JPanel {
+public class InjuryDetailPanel extends JPanel {
 
 	private static final long serialVersionUID = -4123995368822577858L;
 

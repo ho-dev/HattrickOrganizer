@@ -12,25 +12,25 @@ public class FormationPanel extends JPanel {
 
 
 	/** Left Attack RatingBox */
-    protected RatingBox leftAtt = new RatingBox();
+    RatingBox leftAtt = new RatingBox();
 
     /** Left Defence RatingBox */
-    protected RatingBox leftDef = new RatingBox();
+    RatingBox leftDef = new RatingBox();
 
     /** Central Attack RatingBox */
-    protected RatingBox midAtt = new RatingBox();
+    RatingBox midAtt = new RatingBox();
 
     /** Central Defence RatingBox */
-    protected RatingBox midDef = new RatingBox();
+    RatingBox midDef = new RatingBox();
 
     /** Midfield RatingBox */
-    protected RatingBox midfield = new RatingBox();
+    RatingBox midfield = new RatingBox();
 
     /** Right Attack RatingBox */
-    protected RatingBox rightAtt = new RatingBox();
+    RatingBox rightAtt = new RatingBox();
 
     /** Right Defence RatingBox */
-    protected RatingBox rightDef = new RatingBox();
+    RatingBox rightDef = new RatingBox();
 
     /** User Team Lineup Data */
     protected TeamLineupData myTeam = new TeamLineupData();

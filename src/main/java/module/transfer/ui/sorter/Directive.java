@@ -1,6 +1,6 @@
 package module.transfer.ui.sorter;
 
-class Directive {
+public class Directive {
     private int column;
     private int direction;
 
