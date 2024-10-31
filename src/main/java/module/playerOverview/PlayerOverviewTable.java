@@ -50,7 +50,7 @@ public class PlayerOverviewTable extends FixedColumnsTable implements core.gui.R
 		tableModel.setValues(HOVerwaltung.instance().getModel().getCurrentPlayers());
 		tableModel.initTable(this);
 		setOpaque(false);
-		setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
+//		setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
 		RefreshManager.instance().registerRefreshable(this);
 
 		// Add a mouse listener that, when clicking on the “Last match” column
@@ -82,13 +82,13 @@ public class PlayerOverviewTable extends FixedColumnsTable implements core.gui.R
 		});
 	}
 
-	public int columnAtPoint(@NotNull Point point) {
-		var ret = super.columnAtPoint(point);
-		if (ret > -1){
-			return ret + getFixedColumnsCount();
-		}
-		return this.getFixedTable().columnAtPoint(point);
-	}
+//	public int columnAtPoint(@NotNull Point point) {
+//		var ret = super.columnAtPoint(point);
+//		if (ret > -1){
+//			return ret + getFixedColumnsCount();
+//		}
+//		return this.getFixedTable().columnAtPoint(point);
+//	}
 
 	public Player getSelectedPlayer(){
 		var rowIndex = getSelectedRow();

@@ -6,6 +6,7 @@ import core.gui.model.UserColumnController;
 import core.model.TranslationFacility;
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 import java.io.Serial;
 import java.util.ArrayList;
@@ -247,16 +248,15 @@ public abstract class HOTableModel extends AbstractTableModel {
 
 	/**
 	 * Get the table column width and index from user column settings stored in the database
+	 *
 	 * @param table Table
-	 * @param offset Column's offset in model (in case of FixedColumnTable)
 	 */
-	private void getUserColumnSettings(JTable table, int offset) {
+	private void getUserColumnSettings(JTable table) {
 		// Restore column order and width settings
 		Arrays.stream(getDisplayedColumns())
-				.skip(offset)
 				.limit(table.getColumnCount())
 				.sorted(Comparator.comparingInt(UserColumn::getIndex))
-				.forEach(i -> getColumnSettings(i, table, offset));
+				.forEach(i -> getColumnSettings(i, table));
 	}
 
 	/**
@@ -264,14 +264,27 @@ public abstract class HOTableModel extends AbstractTableModel {
 	 *
 	 * @param userColumn User column holding user's settings
 	 * @param table      Table object
-	 * @param offset 	 Column's offset in model (in case of FixedColumnTable)
 	 */
-	private void getColumnSettings(UserColumn userColumn, JTable table, int offset) {
-		var column = table.getColumn(userColumn.getId());
-		column.setPreferredWidth(userColumn.getPreferredWidth());
-		var index = table.getColumnModel().getColumnIndex(userColumn.getId());
-		if ( index != userColumn.getIndex()-offset) {
-			table.moveColumn(index, max(0, userColumn.getIndex()-offset));
+	private void getColumnSettings(UserColumn userColumn, JTable table) {
+		var viewColumn = table.getColumn(userColumn.getId());
+		viewColumn.setPreferredWidth(userColumn.getPreferredWidth());
+		moveColumn(table, userColumn);
+	}
+
+	private void moveColumn(JTable table, UserColumn userColumn) {
+		if ( table instanceof FixedColumnsTable fixedColumnsTable){
+			if (userColumn.getIndex() >= fixedColumnsTable.getFixedColumnsCount()){
+				var index = fixedColumnsTable.getColumnModel().getColumnIndex(userColumn.getId());
+				if (index + fixedColumnsTable.getFixedColumnsCount() != userColumn.getIndex()){
+					table.moveColumn(index, max(0, userColumn.getIndex()-fixedColumnsTable.getFixedColumnsCount()));
+				}
+			}
+		}
+		else {
+			var index = table.getColumnModel().getColumnIndex(userColumn.getId());
+			if ( index != userColumn.getIndex()){
+				table.moveColumn(index, max(0, userColumn.getIndex()));
+			}
 		}
 	}
 
@@ -294,13 +307,14 @@ public abstract class HOTableModel extends AbstractTableModel {
 			var column = this.getColumns()[i];
 			var index = table.convertColumnIndexToView(i);
 			if (column.isDisplay()) {
-				if (column.getIndex() != index + offset) {
+				if (column.getIndex() != index) {
 					changed = true;
-					column.setIndex(index + offset);
+					column.setIndex(index);
 				}
-				if (column.getPreferredWidth() != tableColumnModel.getColumn(index).getWidth()) {
+				var tableColumnWidth = tableColumnModel.getColumn(index-offset).getWidth();
+				if (column.getPreferredWidth() != tableColumnWidth) {
 					changed = true;
-					column.setPreferredWidth(tableColumnModel.getColumn(index).getWidth());
+					column.setPreferredWidth(tableColumnWidth);
 				}
 			}
 		}
@@ -334,43 +348,32 @@ public abstract class HOTableModel extends AbstractTableModel {
 	 */
 	public void initTable(JTable table) {
 		this.table = table;
-		var columnModel = table.getColumnModel();
-		ToolTipHeader header = new ToolTipHeader(columnModel);
-		header.setToolTipStrings(getTooltips());
-		header.setToolTipText("");
-		table.setTableHeader(header);
-		table.setModel(this);
+		if ( !(table instanceof FixedColumnsTable)) {
+			var columnModel = table.getColumnModel();
+			ToolTipHeader header = new ToolTipHeader(columnModel);
+			header.setToolTipStrings(getTooltips());
+			header.setToolTipText("");
+			table.setTableHeader(header);
+			table.setModel(this);
+		}
 
+		// Copy user columns' identifiers to table's columns
 		var displayedColumns = getDisplayedColumns();
-		if (table instanceof FixedColumnsTable fixedColumnstable) {
-			for ( int i=0; i<fixedColumnstable.getFixedColumnsCount(); i++){
-				var tm = displayedColumns[i];
-				var cm = fixedColumnstable.getFixedTable().getColumnModel().getColumn(i);
-				cm.setIdentifier(tm.getId());
-				cm.setMinWidth(tm.minWidth);
-			}
-			for ( int i=fixedColumnstable.getFixedColumnsCount(); i < displayedColumnsCount;  i++){
-				var tm = displayedColumns[i];
-				var cm = fixedColumnstable.getColumnModel().getColumn(i-fixedColumnstable.getFixedColumnsCount());
-				cm.setIdentifier(tm.getId());
-				cm.setMinWidth(tm.minWidth);
-			}
-			getUserColumnSettings(fixedColumnstable.getFixedTable(), 0);
-			getUserColumnSettings(table, fixedColumnstable.getFixedColumnsCount());
+		for (int i=0; i<displayedColumnsCount; i++){
+			var userColumn = displayedColumns[i];
+			var tableColumn = getTableColumn(table, i);
+			tableColumn.setIdentifier(userColumn.getId());
 		}
-		else {
-			for (int i=0; i<displayedColumnsCount; i++){
-				var tm = displayedColumns[i];
-				var cm = columnModel.getColumn(i);
-				cm.setIdentifier(tm.getId());
-				cm.setMinWidth(tm.minWidth);
-			}
-			getUserColumnSettings(table,0);
-		}
+		getUserColumnSettings(table);
 		var rowSorter = new TableRowSorter<>(this);
 		getRowOrderSettings(rowSorter);
 		table.setRowSorter(rowSorter);
 		table.setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
+	}
+
+	private TableColumn getTableColumn(JTable table, int i) {
+		if ( table instanceof FixedColumnsTable fixedColumnstable) { return fixedColumnstable.getTableColumn(i); }
+		return table.getColumnModel().getColumn(i);
 	}
 
 	/**

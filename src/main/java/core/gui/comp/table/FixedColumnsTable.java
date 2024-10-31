@@ -5,6 +5,7 @@ import core.model.HOConfigurationIntParameter;
 import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import java.awt.*;
@@ -24,7 +25,7 @@ public class FixedColumnsTable extends JTable {
     /**
      * Position of the divider between fixed and scrollable tables
      */
-    private final HOConfigurationIntParameter dividerLocation;
+    private HOConfigurationIntParameter dividerLocation = null;
 
     /**
      * Fixed table part (left hand side)
@@ -57,74 +58,85 @@ public class FixedColumnsTable extends JTable {
     public FixedColumnsTable(HOTableModel tableModel, int fixedColumns) {
         super(tableModel);
         this.fixedColumns = fixedColumns;
+
+        final TableCellRenderer header = this.getTableHeader().getDefaultRenderer();
+        this.getTableHeader().setDefaultRenderer((table, value, isSelected, hasFocus, row, column) -> {
+            Component tableCellRendererComponent = header.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            var tableColumn = table.getColumnModel().getColumn(column);
+            var model = (HOTableModel) table.getModel();
+            // Set header tool tip
+            var tooltipString = model.getDisplayedColumns()[tableColumn.getModelIndex()].getTooltip();
+            ((JComponent) tableCellRendererComponent).setToolTipText(tooltipString);
+            return tableCellRendererComponent;
+        });
+
         setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         setSelectionBackground(HODefaultTableCellRenderer.SELECTION_BG);
-        fixed = new JTable(getModel());
-        fixed.setFocusable(false);
-        fixed.setSelectionModel(getSelectionModel());
-        fixed.getTableHeader().setReorderingAllowed(false);
+//        getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        //  Remove the fixed columns from the main table
-        int width = 0;
-        int i=0;
-        for (; i < fixedColumns; i++) {
-            var _columnModel = getColumnModel();
-            var column = _columnModel.getColumn(0);
-            width += column.getPreferredWidth();
-            _columnModel.removeColumn(column);
-        }
-
-        getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        fixed.setSelectionModel(getSelectionModel());
-
-        //  Remove the non-fixed columns from the fixed table
-        while (fixed.getColumnCount() > fixedColumns) {
-            var _columnModel = fixed.getColumnModel();
-            _columnModel.removeColumn(_columnModel.getColumn(fixedColumns));
-        }
-
-        // Sync scroll bars of both tables
-        var fixedScrollPane = new JScrollPane(fixed);
-        var rightScrollPane = new JScrollPane(this);
-        fixedScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-        rightScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-        final JScrollBar fixedScrollBar = fixedScrollPane.getVerticalScrollBar();
-        final JScrollBar rightScrollBar = rightScrollPane.getVerticalScrollBar();
-
-        // setVisible(false) does not have an effect, so we set the size to
-        // false. We can't disable the scrollbar with VERTICAL_SCROLLBAR_NEVER
-        // because this will disable mouse wheel scrolling.
-        fixedScrollBar.setPreferredSize(new Dimension(0, 0));
-
-        // Synchronize vertical scrolling
-        AdjustmentListener adjustmentListener = e -> {
-            if (e.getSource() == rightScrollBar) {
-                fixedScrollBar.setValue(e.getValue());
-            } else {
-                rightScrollBar.setValue(e.getValue());
+        if (fixedColumns > 0) {
+            fixed = new JTable(getModel());
+            fixed.setFocusable(false);
+            fixed.setSelectionModel(getSelectionModel());
+            fixed.getTableHeader().setReorderingAllowed(false);
+            fixed.setSelectionModel(getSelectionModel());
+            //  Remove the non-fixed columns from the fixed table
+            while (fixed.getColumnCount() > fixedColumns) {
+                var _columnModel = fixed.getColumnModel();
+                _columnModel.removeColumn(_columnModel.getColumn(fixedColumns));
             }
-        };
-        fixedScrollBar.addAdjustmentListener(adjustmentListener);
-        rightScrollBar.addAdjustmentListener(adjustmentListener);
-
-
-        rightScrollPane.getVerticalScrollBar().setModel(fixedScrollPane.getVerticalScrollBar().getModel());
-
-        JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, fixedScrollPane, rightScrollPane);
-        if ( width == 0) width = 60;
-        this.dividerLocation = new HOConfigurationIntParameter("TableDividerLocation_" + tableModel.getId(), width);
-        splitPane.setDividerLocation(this.dividerLocation.getIntValue());
-        splitPane.addPropertyChangeListener(evt -> {
-            var propertyName = evt.getPropertyName();
-            if (propertyName.equals("dividerLocation")) {
-                var pane = (JSplitPane)evt.getSource();
-                dividerLocation.setIntValue(pane.getDividerLocation());
+            //  Remove the fixed columns from the main table
+            int width = 0;
+            int i = 0;
+            for (; i < fixedColumns; i++) {
+                var _columnModel = getColumnModel();
+                var column = _columnModel.getColumn(0);
+                width += column.getPreferredWidth();
+                _columnModel.removeColumn(column);
             }
-        });
 
-        scrollPane = new JScrollPane();
-        scrollPane.setViewportView(splitPane);
+            // Sync scroll bars of both tables
+            var fixedScrollPane = new JScrollPane(fixed);
+            var rightScrollPane = new JScrollPane(this);
+            fixedScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+            rightScrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
+            final JScrollBar fixedScrollBar = fixedScrollPane.getVerticalScrollBar();
+            final JScrollBar rightScrollBar = rightScrollPane.getVerticalScrollBar();
+
+            // setVisible(false) does not have an effect, so we set the size to
+            // false. We can't disable the scrollbar with VERTICAL_SCROLLBAR_NEVER
+            // because this will disable mouse wheel scrolling.
+            fixedScrollBar.setPreferredSize(new Dimension(0, 0));
+
+            // Synchronize vertical scrolling
+            AdjustmentListener adjustmentListener = e -> {
+                if (e.getSource() == rightScrollBar) {
+                    fixedScrollBar.setValue(e.getValue());
+                } else {
+                    rightScrollBar.setValue(e.getValue());
+                }
+            };
+            fixedScrollBar.addAdjustmentListener(adjustmentListener);
+            rightScrollBar.addAdjustmentListener(adjustmentListener);
+            rightScrollPane.getVerticalScrollBar().setModel(fixedScrollPane.getVerticalScrollBar().getModel());
+            JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, fixedScrollPane, rightScrollPane);
+            if (width == 0) width = 60;
+            this.dividerLocation = new HOConfigurationIntParameter("TableDividerLocation_" + tableModel.getId(), width);
+            splitPane.setDividerLocation(this.dividerLocation.getIntValue());
+            splitPane.addPropertyChangeListener(evt -> {
+                var propertyName = evt.getPropertyName();
+                if (propertyName.equals("dividerLocation")) {
+                    var pane = (JSplitPane) evt.getSource();
+                    dividerLocation.setIntValue(pane.getDividerLocation());
+                }
+            });
+            scrollPane = new JScrollPane();
+            scrollPane.setViewportView(splitPane);
+        } else {
+            fixed = null;
+            scrollPane = new JScrollPane(this);
+        }
     }
 
     /**
@@ -145,6 +157,7 @@ public class FixedColumnsTable extends JTable {
      * @param rowIndex0 one end of the interval
      * @param rowIndex1 the other end of the interval
      */
+    @Override
     public void setRowSelectionInterval(int rowIndex0, int rowIndex1){
         super.setRowSelectionInterval(rowIndex0, rowIndex1);
         if ( fixed != null ) fixed.setRowSelectionInterval(rowIndex0, rowIndex1);
@@ -155,6 +168,7 @@ public class FixedColumnsTable extends JTable {
      * @param columnClass  set the default cell renderer for this columnClass
      * @param renderer default cell renderer to be used for this columnClass
      */
+    @Override
     public void setDefaultRenderer(Class<?> columnClass, TableCellRenderer renderer) {
         super.setDefaultRenderer(columnClass, renderer);
         if ( fixed != null ) fixed.setDefaultRenderer(columnClass, renderer);
@@ -173,6 +187,7 @@ public class FixedColumnsTable extends JTable {
      * Set the row sorter to both internal tables
      * @param sorter Sorter
      */
+    @Override
     public void setRowSorter(RowSorter<? extends TableModel> sorter) {
         super.setRowSorter(sorter);
         if ( fixed != null ) fixed.setRowSorter(sorter);
@@ -187,10 +202,83 @@ public class FixedColumnsTable extends JTable {
     }
 
     /**
-     * Returns the outer container component of the ficed column table
+     * Returns the outer container component of the fixed column table
      * @return Component
      */
     public Component getContainerComponent() {
         return this.scrollPane;
+    }
+
+//    @Override
+//    public int convertColumnIndexToModel(int viewColumnIndex) {
+//        if (viewColumnIndex<fixedColumns) {
+//            return fixed.convertColumnIndexToModel(viewColumnIndex);
+//        }
+//        return super.convertColumnIndexToModel(viewColumnIndex-fixedColumns)+fixedColumns;
+//    }
+//
+//    @Override
+//    public int convertColumnIndexToView(int modelColumnIndex) {
+//        if (modelColumnIndex<fixedColumns) {
+//            return fixed.convertColumnIndexToView(modelColumnIndex);
+//        }
+//        return super.convertColumnIndexToView(modelColumnIndex-fixedColumns)+fixedColumns;
+//    }
+//
+//    @Override
+//    public int getColumnCount() {
+//        return super.getColumnCount()+fixedColumns;
+//    }
+//
+//    @Override
+//    public String getColumnName(int viewColumnIndex) {
+//        if (viewColumnIndex<fixedColumns) {return fixed.getColumnName(viewColumnIndex);}
+//        return super.getColumnName(viewColumnIndex-fixedColumns);
+//    }
+
+    @Override
+    public TableColumn getColumn(Object identifier) {
+        try {
+            return super.getColumn(identifier);
+        }
+        catch( IllegalArgumentException e ) {
+            return fixed.getColumn(identifier);
+        }
+    }
+
+//    @Override
+//    public int columnAtPoint(Point point) {
+//        var ret = super.columnAtPoint(point);
+//        if ( ret < 0) ret = fixed.columnAtPoint(point);
+//        return ret;
+//    }
+
+//    @Override
+//    public Class<?> getColumnClass(int viewColumnIndex) {
+//        if (viewColumnIndex<fixedColumns) {return fixed.getColumnClass(viewColumnIndex);}
+//        return super.getColumnClass(viewColumnIndex-fixedColumns);
+//    }
+
+//    @Override
+//    public Object getValueAt(int row, int column) {
+//        if (column<fixedColumns) {return fixed.getValueAt(row, column);}
+//        return super.getValueAt(row,column-fixedColumns);
+//    }
+//
+//    @Override
+//    public void setValueAt(Object aValue, int row, int column) {
+//        if (column<fixedColumns) {fixed.setValueAt(aValue, row, column);}
+//        super.setValueAt(aValue, row, column-fixedColumns);
+//    }
+
+//    @Override
+//    public boolean isCellEditable(int row, int column) {
+//        if (column<fixedColumns) {return fixed.isCellEditable(row, column);}
+//        return super.isCellEditable(row, column-fixedColumns);
+//    }
+
+    public TableColumn getTableColumn(int i) {
+        if (i<fixedColumns) {return fixed.getColumnModel().getColumn(i);}
+        return super.getColumnModel().getColumn(i-fixedColumns);
     }
 }
