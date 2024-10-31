@@ -2,12 +2,15 @@ package core.gui;
 
 import core.db.frontend.SQLDialog;
 import core.net.MyConnector;
+
+import javax.swing.*;
 import java.awt.event.ItemEvent;
-import javax.swing.JCheckBoxMenuItem;
-import javax.swing.JMenu;
-import javax.swing.JMenuItem;
 
 public class DebugMode {
+
+	private DebugMode() {
+		throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
+	}
 
 	public static JMenu getDeveloperMenu() {
 		JMenu menu = new JMenu("Debug");
