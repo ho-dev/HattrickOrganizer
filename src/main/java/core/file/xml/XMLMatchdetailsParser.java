@@ -221,11 +221,11 @@ public class XMLMatchdetailsParser {
             	myHighlight.setMatchEventID(iMatchEventID);
             	myHighlight.setMinute(iMinute);
             	myHighlight.setPlayerId(iSubjectPlayerID);
-            	myHighlight.setPlayerName(subjectPlayer!=null?subjectPlayer.getSpielerName():"");
+            	myHighlight.setPlayerName(subjectPlayer!=null?subjectPlayer.getLastName():"");
             	myHighlight.setSpielerHeim(subHome);
             	myHighlight.setTeamID(iSubjectTeamID);
             	myHighlight.setAssistingPlayerId(iObjectPlayerID);
-            	myHighlight.setAssistingPlayerName(objectPlayer!=null?objectPlayer.getSpielerName():"");
+            	myHighlight.setAssistingPlayerName(objectPlayer!=null?objectPlayer.getLastName():"");
             	myHighlight.setGehilfeHeim(objHome);
             	myHighlight.setEventText(eventtext);
             	myHighlight.setMatchPartId(MatchEvent.MatchPartId.fromMatchPartId(iMatchPart));

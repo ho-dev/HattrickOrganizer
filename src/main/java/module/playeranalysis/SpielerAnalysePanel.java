@@ -22,14 +22,15 @@ import java.awt.event.ItemEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Stream;
 
 /**
  * Bietet Übersicht über alle Player
  */
 public class SpielerAnalysePanel extends LazyImagePanel {
-	private JComboBox playerComboBox;
+	private JComboBox<PlayerCBItem> playerComboBox;
 	private SpielerMatchesTable m_jtSpielerMatchesTable;
 	private SpielerPositionTable m_jtSpielerPositionTable;
 	private final int columnModelInstance;
@@ -93,36 +94,39 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 	}
 
 	private void fillSpielerCB() {
-		List<Player> players = HOVerwaltung.instance().getModel().getCurrentPlayers();
-		List<PlayerCBItem> playerCBItems = new ArrayList<>(players.size());
+		// Current Players
+		final List<Player> players = HOVerwaltung.instance().getModel().getCurrentPlayers();
 
-		for (Player player : players) {
-			playerCBItems.add(new PlayerCBItem(player.getFullName(), 0f, player));
-		}
-		Collections.sort(playerCBItems);
+		// Former Players
+		final List<Player> oldPlayers = HOVerwaltung.instance().getModel().getFormerPlayers();
+		final var duplicateLastNames = Player.getDuplicateLastNames(Stream.concat(players.stream(), oldPlayers.stream()).toList());
 
-		// Alte Player
-		List<Player> oldPlayers = HOVerwaltung.instance().getModel().getFormerPlayers();
-		List<PlayerCBItem> spielerOldCBItems = new ArrayList<>(oldPlayers.size());
+		final List<PlayerCBItem> playerCBItems = players.stream()
+				.map(player -> createPlayerCBItem(player, duplicateLastNames))
+				.sorted()
+				.toList();
 
-		for (Player player : oldPlayers) {
-			spielerOldCBItems.add(new PlayerCBItem(player.getFullName(), 0f, player));
-		}
-		Collections.sort(spielerOldCBItems);
+		final List<PlayerCBItem> spielerOldCBItems = oldPlayers.stream()
+				.map(player -> createPlayerCBItem(player, duplicateLastNames))
+				.sorted()
+				.toList();
 
-		// Zusammenfügen
-		List<PlayerCBItem> cbItems = new ArrayList<>(playerCBItems.size()
-                + spielerOldCBItems.size() + 1);
-
+		// Create a common list
+		List<PlayerCBItem> cbItems = new ArrayList<>(playerCBItems.size() + spielerOldCBItems.size() + 1);
 		cbItems.addAll(playerCBItems);
-		// Fur die Leerzeile;
-		cbItems.add(null);
+		cbItems.add(null); // for a blank line
 		cbItems.addAll(spielerOldCBItems);
-		DefaultComboBoxModel cbModel = new DefaultComboBoxModel(cbItems.toArray());
+
+		DefaultComboBoxModel<PlayerCBItem> cbModel = new DefaultComboBoxModel<>(cbItems.toArray(new PlayerCBItem[0]));
 		playerComboBox.setModel(cbModel);
 
-		// Kein Player selektiert
+		// no player selected
 		playerComboBox.setSelectedItem(null);
+	}
+
+	private static PlayerCBItem createPlayerCBItem(Player player, Set<String> duplicateLastNames) {
+		final boolean lastNameUnique = !duplicateLastNames.contains(player.getLastName());
+		return new PlayerCBItem(player.getFullNameSmart(lastNameUnique), 0f, player);
 	}
 
 	private void initComponents() {
@@ -144,7 +148,7 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 	private Component initSpielerCB() {
 		final ImagePanel panel = new ImagePanel(null);
 		var fontSize = UserParameter.instance().fontSize;
-		playerComboBox = new JComboBox();
+		playerComboBox = new JComboBox<>();
 		playerComboBox.setRenderer(new PlayerCBItemRenderer());
 		playerComboBox.setMaximumRowCount(25);
 		playerComboBox.setMaximumSize(new Dimension(20*fontSize, 2* fontSize));

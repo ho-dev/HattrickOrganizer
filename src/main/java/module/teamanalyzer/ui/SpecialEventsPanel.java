@@ -6,12 +6,14 @@ import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import core.specialevents.SpecialEventsPrediction;
 import core.specialevents.SpecialEventsPredictionManager;
+import core.util.HOLogger;
 import module.teamanalyzer.vo.TeamLineup;
 import javax.swing.*;
 import java.awt.*;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 public class SpecialEventsPanel extends JPanel {
@@ -128,20 +130,16 @@ public class SpecialEventsPanel extends JPanel {
 
     private Vector<Object> getRow(String kind, Player player, Player opponentPlayer, ArrayList<Player> involved,
                                   double probability, Double scores, Double scoresOpponent) {
+        final String playerName = getOptionalPlayerName(player);
+        final String opponentPlayerName = getOptionalPlayerName(opponentPlayer);
+        final String involvedPlayerNamesStr = createPlayerNamesListString(involved);
 
-        ArrayList<String> involvedPlayerNames = new ArrayList<>();
-        for (Player p : involved) {
-            if (p == null) {
-                continue;
-            }
-            involvedPlayerNames.add(p.getFullName());
-        }
         Vector<Object> rowData = new Vector<>();
-
         rowData.add(kind);
-        rowData.add(player!=null?player.getFullName():"");
-        rowData.add(opponentPlayer!=null?opponentPlayer.getFullName():"");
-        rowData.add(involvedPlayerNames);
+        rowData.add(playerName);
+        rowData.add(opponentPlayerName);
+        HOLogger.instance().info(SpecialEventsPanel.class, "opponentPlayer: %s".formatted(Optional.ofNullable(opponentPlayer).map(Player::getFullName).orElse("")));
+        rowData.add(involvedPlayerNamesStr);
 
         DecimalFormat df = new DecimalFormat("#.00");
         rowData.add(df.format(probability));
@@ -151,4 +149,18 @@ public class SpecialEventsPanel extends JPanel {
         return rowData;
     }
 
+    private static String createPlayerNamesListString(List<Player> players) {
+        return players.stream()
+            .filter(Objects::nonNull)
+            .map(SpecialEventsPanel::getPlayerName)
+            .collect(Collectors.joining("; "));
+    }
+
+    private static String getOptionalPlayerName(Player player) {
+        return Optional.ofNullable(player).map(SpecialEventsPanel::getPlayerName).orElse(null);
+    }
+
+    private static String getPlayerName(Player player) {
+        return player.getFullName();
+    }
 }
