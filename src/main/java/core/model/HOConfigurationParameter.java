@@ -25,7 +25,7 @@ public class HOConfigurationParameter extends AbstractTable.Storable {
     /**
      * Parameter key
      */
-    private String key;
+    private final String key;
 
     /**
      * Parameter value

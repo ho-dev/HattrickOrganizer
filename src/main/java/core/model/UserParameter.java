@@ -284,7 +284,6 @@ public final class UserParameter extends Configuration {
     public int spielerUebersichtsPanel_horizontalRightSplitPane = GUIUtils.getLocationFromRight(300, 750);
 
     public int spielerUebersichtsPanel_verticalSplitPane = 400;
-    public int playerTablePanel_horizontalSplitPane = 200;
 
     //Standardsortierung
     public int standardsortierung = SORT_BESTPOS;

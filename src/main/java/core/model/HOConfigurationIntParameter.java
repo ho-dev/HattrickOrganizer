@@ -30,7 +30,7 @@ public class HOConfigurationIntParameter extends HOConfigurationParameter {
     /**
      * Set the new parameter integer value
      * ParameterChanged is set true if new value is different to previous parameter value
-     * @param newValue
+     * @param newValue New integer value
      */
     public void setIntValue(int newValue) {
         if (this.intValue != newValue) {

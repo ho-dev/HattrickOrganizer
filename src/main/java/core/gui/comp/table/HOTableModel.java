@@ -315,7 +315,7 @@ public abstract class HOTableModel extends AbstractTableModel {
 
 	/**
 	 * User can disable columns
-	 * @return
+	 * @return boolean
 	 */
 	public boolean userCanDisableColumns() {
 		return true;
