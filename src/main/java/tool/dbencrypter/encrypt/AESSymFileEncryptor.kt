@@ -1,6 +1,7 @@
 package tool.dbencrypter.encrypt
 
 import core.db.backup.HOZip
+import core.util.HOLogger
 import java.io.File
 import java.nio.file.Path
 import java.security.SecureRandom
@@ -29,6 +30,8 @@ class AESSymFileEncryptor : SymFileEncryptor {
 		val secretKeySpec = createSecretKeySpec(secret)
 		val cipherText = doEncrypt(secretKeySpec, ivspec, path)
 		val encryptedData = prependIv(iv, cipherText)
+
+		// TODO move out code to write to file, this should be called by DbEncrypterManager
 		val encryptedFile = writeToFile(encryptedData)
 
 		return encryptedFile.toFile().path
@@ -43,7 +46,7 @@ class AESSymFileEncryptor : SymFileEncryptor {
 
 	private fun writeToFile(encryptedData: ByteArray): Path {
 		val encryptedFile = kotlin.io.path.createTempFile(HOZip.createZipName("enc-db-"))
-		println("Encrypted DB: ${encryptedFile.pathString}")
+		HOLogger.instance().debug(javaClass, "Encrypted DB: ${encryptedFile.pathString}")
 		encryptedFile.writeBytes(encryptedData)
 		return encryptedFile
 	}
