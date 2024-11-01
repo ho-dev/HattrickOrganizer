@@ -205,38 +205,28 @@ public class PlayerOverviewPanel extends ImagePanel {
 		return overviewPanel;
 	}
 
+
+	private boolean areSelecting = false;
 	/**
 	 * Adds ListSelectionListener which keep the row selection of the table with
 	 * the players name and the table with the players details in sync.
 	 */
 	private void addTableSelectionListeners() {
-//		playerOverviewTable.getSelectionModel().addListSelectionListener(
-//				e -> selectRow(playerOverviewTableName, playerOverviewTable.getSelectedRow()));
-
-//		playerOverviewTableName.getSelectionModel().addListSelectionListener(
-//				e -> {
-//					int row = playerOverviewTableName.getSelectedRow();
-//					if (row == -1) {
-//						var player = HOMainFrame.instance().getSelectedPlayer();
-//						if ( player != null){
-////							row = playerOverviewTable..getRow4Spieler(player.getPlayerId());
-////							selectRow(playerOverviewTableName,row);
-//
-//							playerOverviewTable.selectPlayer(player.getPlayerId());
-//							return;
-//						}
-//					}
-//
-//					if ( row > -1) {
-//						var player = playerOverviewTable.getSelectedPlayer();
-////						selectRow(playerOverviewTable, row);
-////
-////						// Set player on HOMainFrame to notify other tabs.
-////						Player player = playerOverviewTable.getSorter().getPlayerAtRow(row);
-//						if (player != null) HOMainFrame.instance().selectPlayer(player);
-//					}
-//				}
-//		);
+		playerOverviewTable.getSelectionModel().addListSelectionListener(
+				e -> {
+					if (!areSelecting) {
+						areSelecting = true;
+						var player = playerOverviewTable.getSelectedPlayer();
+						if (player == null) {
+							player = HOMainFrame.instance().getSelectedPlayer();
+							playerOverviewTable.selectPlayer(player.getPlayerId());
+						} else {
+							HOMainFrame.instance().selectPlayer(player);
+						}
+						areSelecting = false;
+					}
+				}
+		);
 	}
 
     public void storeUserSettings() {

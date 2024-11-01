@@ -3,7 +3,6 @@ package module.playerOverview;
 import core.db.DBManager;
 import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
-import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.comp.table.FixedColumnsTable;
 import core.gui.comp.table.TableSorter;
 import core.gui.model.PlayerOverviewTableModel;
@@ -14,10 +13,7 @@ import core.model.TranslationFacility;
 import core.model.match.MatchKurzInfo;
 import core.model.player.Player;
 import core.net.HattrickLink;
-import org.jetbrains.annotations.NotNull;
-
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.Serial;
@@ -101,6 +97,7 @@ public class PlayerOverviewTable extends FixedColumnsTable implements core.gui.R
 	public final void selectPlayer(int playerId) {
 		var index = tableModel.getPlayerIndex(playerId);
 		if (index >= 0) {
+			index = convertRowIndexToView(index);
 			this.setRowSelectionInterval(index, index);
 		}
 	}

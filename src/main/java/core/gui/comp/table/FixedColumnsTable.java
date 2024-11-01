@@ -2,6 +2,8 @@ package core.gui.comp.table;
 
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.model.HOConfigurationIntParameter;
+import org.jetbrains.annotations.NotNull;
+
 import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableCellRenderer;
@@ -237,7 +239,7 @@ public class FixedColumnsTable extends JTable {
 //    }
 
     @Override
-    public TableColumn getColumn(Object identifier) {
+    public TableColumn getColumn(@NotNull Object identifier) {
         try {
             return super.getColumn(identifier);
         }
