@@ -14,13 +14,13 @@ import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.util.Helper;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Set;
 
 /**
  * Zeigt den Player an der Position an und dessen Sterne
@@ -173,7 +173,7 @@ final class SpielerSternePanel extends ImagePanel implements ActionListener {
 		}
 	}
 
-	public void refresh(MatchLineup lineup, MatchLineupPosition matchLineupPosition) {
+	public void refresh(MatchLineup lineup, MatchLineupPosition matchLineupPosition, Set<String> duplicateLastNames) {
 		m_clMatchLineup = lineup;
 		m_clMatchPlayer = matchLineupPosition;
 
@@ -183,12 +183,11 @@ final class SpielerSternePanel extends ImagePanel implements ActionListener {
 				addPanel();
 			}
 
-			String displayName = "";
-			if (!StringUtils.isEmpty(matchLineupPosition.getSpielerName())) {
-				displayName = matchLineupPosition.getSpielerName().charAt(0)
-						+ "."
-						+ matchLineupPosition.getSpielerName().substring(matchLineupPosition.getSpielerName().indexOf(" ") + 1);
-			}
+			final boolean unique = !duplicateLastNames.contains(matchLineupPosition.getLastName());
+            final String displayName = Player.getFullNameSmart(matchLineupPosition.getFirstName(),
+                matchLineupPosition.getLastName(),
+                matchLineupPosition.getNickName(),
+                unique);
 			name.setText(displayName);
 
 			int trickotnummer = 0;

@@ -29,9 +29,10 @@ import java.awt.event.FocusEvent;
 import java.awt.event.ItemEvent;
 import java.text.NumberFormat;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Panel Player in Module Statistics
@@ -427,12 +428,8 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 	}
 
 	private void initSpielerCB() {
-		List<Player> players = HOVerwaltung.instance().getModel().getCurrentPlayers();
-		List<PlayerCBItem> playerCBItems = new ArrayList<>(players.size());
-		for (Player player : players) {
-			playerCBItems.add(new PlayerCBItem(player.getFullName(), 0f, player));
-		}
-		Collections.sort(playerCBItems);
+		// Current Players
+		final List<Player> players = HOVerwaltung.instance().getModel().getCurrentPlayers();
 
 		// date from
 		var nWeeks = UserParameter.instance().statistikAnzahlHRF;
@@ -440,24 +437,33 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		var fromDate = latestHRFDate.minus(7*nWeeks, ChronoUnit.DAYS);
 
 		// former players
-		List<Player> oldPlayers = HOVerwaltung.instance().getModel().getFormerPlayers().stream().filter(i->!i.getHrfDate().isBefore(fromDate)).toList();
-		List<PlayerCBItem> spielerOldCBItems = new ArrayList<>(players.size());
-		for (Player player : oldPlayers) {
-			spielerOldCBItems.add(new PlayerCBItem(player.getFullName(), 0f, player));
-		}
-		Collections.sort(spielerOldCBItems);
+		final List<Player> oldPlayers = HOVerwaltung.instance().getModel().getFormerPlayers().stream().filter(i->!i.getHrfDate().isBefore(fromDate)).toList();
 
-		// Zusammenfügen
-		List<PlayerCBItem> cbItems = new ArrayList<>(playerCBItems.size()
-				+ spielerOldCBItems.size() + 1);
+		final var duplicateLastNames = Player.getDuplicateLastNames(Stream.concat(players.stream(), oldPlayers.stream()).toList());
+
+		final List<PlayerCBItem> playerCBItems = players.stream()
+				.map(player -> createPlayerCBItem(player, duplicateLastNames))
+				.sorted()
+				.toList();
+		final List<PlayerCBItem> spielerOldCBItems = oldPlayers.stream()
+				.map(player -> createPlayerCBItem(player, duplicateLastNames))
+				.sorted()
+				.toList();
+
+		// Create a common list
+		List<PlayerCBItem> cbItems = new ArrayList<>(playerCBItems.size() + spielerOldCBItems.size() + 1);
 		cbItems.addAll(playerCBItems);
-		// Fur die Leerzeile;
-		cbItems.add(null);
+		cbItems.add(null); // for a blank line
 		cbItems.addAll(spielerOldCBItems);
 
 		jcbPlayer.setModel(new DefaultComboBoxModel(cbItems.toArray()));
 		// Kein Player selektiert
 		jcbPlayer.setSelectedItem(null);
+	}
+
+	private static PlayerCBItem createPlayerCBItem(Player player, Set<String> duplicateLastNames) {
+		final boolean lastNameUnique = !duplicateLastNames.contains(player.getLastName());
+		return new PlayerCBItem(player.getFullNameSmart(lastNameUnique), 0f, player);
 	}
 
 	private void initStatistic() {

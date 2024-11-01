@@ -101,21 +101,21 @@ public class PlayerCBItem implements Comparable<PlayerCBItem>, ComboItem {
 
     @Override
     public final int compareTo(PlayerCBItem obj) {
-
         if ((obj.getPlayer() != null) && (getPlayer() != null)) {
             if (getPositionsEvaluation() > obj.getPositionsEvaluation()) {
                 return -1;
             } else if (getPositionsEvaluation() < obj.getPositionsEvaluation()) {
                 return 1;
             } else {
-                return getPlayer().getLastName().compareTo(obj.getPlayer().getLastName());
+                //return getPlayer().getFirstName().compareTo(obj.getPlayer().getFirstName());
+                //return getPlayer().getLastName().compareTo(obj.getPlayer().getLastName());
+                return getText().compareTo(obj.getText());
             }
         } else if (obj.getPlayer() == null) {
             return -1;
         } else {
             return 1;
         }
-
     }
 
     @Override

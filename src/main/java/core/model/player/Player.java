@@ -1,5 +1,7 @@
 package core.model.player;
 
+import lombok.Getter;
+import org.apache.commons.lang3.StringUtils;
 import core.constants.TrainingType;
 import core.constants.player.PlayerSkill;
 import core.constants.player.Specialty;
@@ -21,6 +23,8 @@ import lombok.Setter;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import static core.constants.player.PlayerSkill.*;
 import static core.model.player.IMatchRoleID.aPositionBehaviours;
@@ -1094,16 +1098,69 @@ public class Player extends AbstractTable.Storable {
 
     }
 
-    public String getFullName() {
-        if (getNickName().isEmpty()) {
-            if (!getFirstName().isEmpty()) {
-                return getFirstName() + " " + getLastName();
-            }
+    public String getShortNameWithLastNameFirst() {
+        if (getFirstName().isEmpty()) {
             return getLastName();
         }
-
-        return getFirstName() + " '" + getNickName() + "' " + getLastName();
+        return String.format("%s, %s.", getLastName(), getFirstName().charAt(0));
     }
+
+    public static String getFullName(String firstName, String lastName, String nickName) {
+        if (StringUtils.isEmpty(nickName)) {
+            if (StringUtils.isNotEmpty(firstName)) {
+                return "%s %s".formatted(firstName, lastName);
+            }
+            return lastName;
+        }
+
+        return "%s '%s' %s".formatted(firstName, nickName, lastName);
+    }
+
+    public static String getFullNameWithLastNameFirst(String firstName, String lastName, String nickName) {
+        if (StringUtils.isEmpty(nickName)) {
+            if (StringUtils.isNotEmpty(firstName)) {
+                return "%s, %s".formatted(lastName, firstName);
+            }
+            return lastName;
+        }
+
+        return "%s, %s '%s'".formatted(lastName, firstName, nickName);
+    }
+
+    public static String getFullNameSmart(String firstName, String lastName, String nickName, boolean lastNameUnique) {
+        if (StringUtils.isEmpty(nickName)) {
+            if (StringUtils.isEmpty(firstName) || lastNameUnique) {
+                return lastName;
+            } else {
+                return "%s, %s.".formatted(lastName, firstName.charAt(0));
+            }
+        } else {
+            return "'%s'".formatted(nickName);
+        }
+    }
+
+    public String getFullName() {
+        return switch (fullNameDisplayType) {
+            case FULL_NAME_NORMAL -> getFullName(getFirstName(), getLastName(), getNickName());
+            case FULL_NAME_WITH_LAST_NAME_FIRST -> getFullNameWithLastNameFirst(getFirstName(), getLastName(), getNickName());
+        };
+    }
+
+    public String getFullNameWithLastNameFirst() {
+        return getFullNameWithLastNameFirst(getFirstName(), getLastName(), getNickName());
+    }
+
+    public String getFullNameSmart(boolean lastNameUnique) {
+        return getFullNameSmart(getFirstName(), getLastName(), getNickName(), lastNameUnique);
+    }
+
+    enum FullNameDisplayType {
+        FULL_NAME_NORMAL,
+        FULL_NAME_WITH_LAST_NAME_FIRST
+    }
+
+    @Getter
+    private static final FullNameDisplayType fullNameDisplayType = FullNameDisplayType.FULL_NAME_WITH_LAST_NAME_FIRST;
 
     public void setCountryId(int m_iNationalitaet) {
         this.countryId = m_iNationalitaet;
@@ -2574,4 +2631,19 @@ public class Player extends AbstractTable.Storable {
         return null;
     }
 
+    public static Set<String> getDuplicateLastNames(List<Player> players) {
+        final var playerNames = players.stream().map(Player::getLastName).toList();
+        return getDuplicateNames(playerNames);
+    }
+
+    public static Set<String> getDuplicateNames(List<String> playerNames) {
+        return playerNames
+            .stream()
+            .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+            .entrySet()
+            .stream()
+            .filter(entry -> entry.getValue() > 1L)
+            .map(Map.Entry::getKey)
+            .collect(Collectors.toSet());
+    }
 }

@@ -7,6 +7,7 @@ import core.gui.theme.*;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.training.TrainingPreviewPlayers;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.awt.*;
@@ -127,7 +128,7 @@ public final class PlayerLabelEntry implements IHOTableCellEntry {
 
     public int compareTo(@NotNull IHOTableCellEntry obj) {
         if (obj instanceof PlayerLabelEntry entry) {
-            return Objects.requireNonNull(m_clPlayer).getFullName().compareTo(Objects.requireNonNull(entry.getSpieler()).getFullName());
+            return Objects.requireNonNull(m_clPlayer).getFullNameWithLastNameFirst().compareTo(Objects.requireNonNull(entry.getSpieler()).getFullNameWithLastNameFirst());
         }
 
         return 0;
@@ -262,7 +263,7 @@ public final class PlayerLabelEntry implements IHOTableCellEntry {
 
         if (m_clPlayer != null) {
             //Name
-            m_jlName.setText(m_clPlayer.getFullName());
+            m_jlName.setText(m_clPlayer.getFullNameWithLastNameFirst());
             m_jlName.setOpaque(false);
             showJersey();
             updateDisplay(m_clPlayer);
@@ -316,6 +317,7 @@ public final class PlayerLabelEntry implements IHOTableCellEntry {
         m_clPlayerMatchRoleID = positionAktuell;
         m_rating = rating;
         m_IsOneOfBestPositions = alternativePosition;
+        m_bCustomName = StringUtils.isNotBlank(nameText);
         m_sCustomNameString = nameText;
 
         if (m_clPlayer != null) {

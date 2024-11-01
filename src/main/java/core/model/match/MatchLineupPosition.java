@@ -9,8 +9,8 @@ public class MatchLineupPosition  extends MatchRoleID {
     //~ Instance fields ----------------------------------------------------------------------------
 
     private String m_sNickName = "";
-    private String m_sSpielerName;
-    private String m_sSpielerVName = "";
+    private String m_lastName;
+    private String m_firstName = "";
     private double m_dRating;
     private double m_dRatingStarsEndOfMatch;
 
@@ -45,40 +45,46 @@ public class MatchLineupPosition  extends MatchRoleID {
         this.player = player;
     }
 
-    public MatchLineupPosition(int roleID, int spielerID, int behavior, double rating, String name, int status) {
-        super(roleID, spielerID, (byte) behavior);
-        m_sSpielerName = name;
-        m_dRating = rating;
-        m_iStatus = status;
-    }
-
-    /**
-     * Creates a new instance of MatchLineupPosition
-     */
-    public MatchLineupPosition(int roleID,
-                               int spielerID,
-                               int behavior,
-                               double rating,
-                               String vname,
+    public MatchLineupPosition(int roleID, int spielerID, int behavior, double rating,
+                               String firstName,
+                               String lastName,
                                String nickName,
-                               String name,
-                               int status,
-                               double ratingStarsEndOfMatch,
-                               int startPos,
-                               int startBeh,
-                               boolean startSetPieces) {
+                               int status) {
         super(roleID, spielerID, (byte) behavior);
-
-        m_sSpielerName = name;
+        m_firstName = firstName;
+        m_lastName = lastName;
         m_sNickName = nickName;
-        m_sSpielerVName = vname;
         m_dRating = rating;
         m_iStatus = status;
-        m_dRatingStarsEndOfMatch = ratingStarsEndOfMatch;
-        m_iStartBehavior = startBeh;
-        m_iStartPosition = startPos;
-        setStartSetPiecesTaker(startSetPieces);
     }
+
+//    /**
+//     * Creates a new instance of MatchLineupPosition
+//     */
+//    public MatchLineupPosition(int roleID,
+//                               int spielerID,
+//                               int behavior,
+//                               double rating,
+//                               String firstName,
+//                               String nickName,
+//                               String lastName,
+//                               int status,
+//                               double ratingStarsEndOfMatch,
+//                               int startPos,
+//                               int startBeh,
+//                               boolean startSetPieces) {
+//        super(roleID, spielerID, (byte) behavior);
+//
+//        m_sSpielerName = lastName;
+//        m_sNickName = nickName;
+//        m_sSpielerVName = firstName;
+//        m_dRating = rating;
+//        m_iStatus = status;
+//        m_dRatingStarsEndOfMatch = ratingStarsEndOfMatch;
+//        m_iStartBehavior = startBeh;
+//        m_iStartPosition = startPos;
+//        setStartSetPiecesTaker(startSetPieces);
+//    }
 
     public final int getRoleId() {
         return this.getId();
@@ -107,7 +113,9 @@ public class MatchLineupPosition  extends MatchRoleID {
      * @return Value of property m_sNickName.
      */
     public final String getNickName() {
-        if ( m_sNickName != null ) return m_sNickName;
+        if (m_sNickName != null) {
+            return m_sNickName;
+        }
         return "";
     }
 
@@ -119,7 +127,7 @@ public class MatchLineupPosition  extends MatchRoleID {
     public final void setRating(double m_dRating) {
         this.m_dRating = m_dRating;
     }
-    
+
     /**
      * Setter for property m_dRatingStarsEndOfMatch.
      *
@@ -128,11 +136,11 @@ public class MatchLineupPosition  extends MatchRoleID {
     public final void setRatingStarsEndOfMatch(double m_dRatingStarsEndOfMatch) {
         this.m_dRatingStarsEndOfMatch = m_dRatingStarsEndOfMatch;
     }
-    
+
 
     /////////////////////////////////////////////////////////////////////////////////
     //ACCESSOR
-    //////////////////////////////////////////////////////////////////////////////////    
+    //////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Getter for property RatingStarsEndOfMatch.
@@ -142,7 +150,7 @@ public class MatchLineupPosition  extends MatchRoleID {
     public final double getRatingStarsEndOfMatch() {
         return m_dRatingStarsEndOfMatch;
     }
-    
+
     /**
      * Getter for property m_dRating.
      *
@@ -155,10 +163,10 @@ public class MatchLineupPosition  extends MatchRoleID {
     /**
      * Setter for property m_sSpielerName.
      *
-     * @param m_sSpielerName New value of property m_sSpielerName.
+     * @param lastName New value of property m_sSpielerName.
      */
-    public final void setSpielerName(String m_sSpielerName) {
-        this.m_sSpielerName = m_sSpielerName;
+    public final void setLastName(String lastName) {
+        this.m_lastName = lastName;
     }
 
     /**
@@ -166,8 +174,10 @@ public class MatchLineupPosition  extends MatchRoleID {
      *
      * @return Value of property m_sSpielerName.
      */
-    public final String getSpielerName() {
-        if ( m_sSpielerName != null ) return m_sSpielerName;
+    public final String getLastName() {
+        if (m_lastName != null) {
+            return m_lastName;
+        }
         return "";
     }
 
@@ -176,8 +186,8 @@ public class MatchLineupPosition  extends MatchRoleID {
      *
      * @param m_sSpielerVName New value of property m_sSpielerVName.
      */
-    public final void setSpielerVName(String m_sSpielerVName) {
-        this.m_sSpielerVName = m_sSpielerVName;
+    public final void setFirstName(String m_sSpielerVName) {
+        this.m_firstName = m_sSpielerVName;
     }
 
     /**
@@ -185,8 +195,10 @@ public class MatchLineupPosition  extends MatchRoleID {
      *
      * @return Value of property m_sSpielerVName.
      */
-    public final String getSpielerVName() {
-        if ( m_sSpielerVName != null )return m_sSpielerVName;
+    public final String getFirstName() {
+        if (m_firstName != null) {
+            return m_firstName;
+        }
         return "";
     }
 
@@ -214,43 +226,43 @@ public class MatchLineupPosition  extends MatchRoleID {
     public int getStartPosition() {
     	return m_iStartPosition;
     }
-    
+
     /**
      * @param startPosition the startPosition to set
      */
     public void setStartPosition(int startPosition) {
     	this.m_iStartPosition = startPosition;
     }
-    
+
     /**
      * @return the startBehavior
      */
     public int getStartBehavior() {
     	return m_iStartBehavior;
     }
-    
+
     /**
      * @param startBehavior the startBehavior to set
      */
     public void setStartBehavior(int startBehavior) {
     	this.m_iStartBehavior = startBehavior;
     }
-    
+
     ////////////////////////////////////////////////////////////////////////////////
     //Helper
     ////////////////////////////////////////////////////////////////////////////////
 
-    /**
-     * bricht den Namen auf
-     */
-    protected final void setName(String name) {
-        final int index = name.indexOf("  ");
-
-        if (index > -1) {
-            m_sSpielerVName = name.substring(0, index);
-            m_sSpielerName = name.substring(index + 2);
-        }
-    }
+//    /**
+//     * bricht den Namen auf
+//     */
+//    protected final void setName(String name) {
+//        final int index = name.indexOf("  ");
+//
+//        if (index > -1) {
+//            m_sSpielerVName = name.substring(0, index);
+//            m_sSpielerName = name.substring(index + 2);
+//        }
+//    }
 
     public boolean isStartSetPiecesTaker(){
         return this.startSetPiecesTaker;

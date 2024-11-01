@@ -29,10 +29,8 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
-import java.util.Objects;
 
 import static core.model.UserParameter.GOALKEEPER_AT_TOP;
 import static core.model.UserParameter.POSITIONNAMES_SHORT;
@@ -242,6 +240,8 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
      */
     public void refresh(List<Player> inCandidates, List<Player> plStartingLineup, List<Player> plSubstitutes, Weather weather, Boolean useWeatherImpact, int matchMinute) {
         var plCandidates = new ArrayList<>(inCandidates);
+        final var duplicateLastNames = Player.getDuplicateLastNames(plCandidates);
+
         Player selectedPlayer = null;
         HOModel model = HOVerwaltung.instance().getModel();
         Lineup lineup = model.getCurrentLineup();
@@ -287,7 +287,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
             }
         }
 
-        setPlayersList(plCandidates, selectedPlayer);
+        setPlayersList(plCandidates, selectedPlayer, duplicateLastNames);
 
         // for all players in the combobox set correct values for isSelect (starting 11) and isAssis (it is a subsitute)
         for (int i = 0; i < m_jcbPlayer.getModel().getSize(); i++) {
@@ -348,7 +348,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         repaint();
     }
 
-    protected void setPlayersList(List<Player> oCandidates, @Nullable Player oSelectedPlayer) {
+    protected void setPlayersList(List<Player> oCandidates, @Nullable Player oSelectedPlayer, Set<String> duplicateLastNames) {
 
         m_jcbPlayer.removeItemListener(this);
 
@@ -386,7 +386,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
             int iSelectedPlayerID = oSelectedPlayer.getPlayerId();
             for (Player p : oCandidates) {
                 if (p.getPlayerId() == iSelectedPlayerID) {
-                    cbModel.addElement(createPlayerCBItem(m_clSelectedPlayer, oSelectedPlayer));
+                    cbModel.addElement(createPlayerCBItem(m_clSelectedPlayer, oSelectedPlayer, duplicateLastNames));
                     this.iSelectedPlayerId = iSelectedPlayerID;
                     break;
                 }
@@ -409,7 +409,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         PlayerCBItem[] cbItems = new PlayerCBItem[oCandidates.size()];
 
         for (int i = 0; i < oCandidates.size(); i++) {
-            cbItems[i] = createPlayerCBItem(m_clCBItems[i], oCandidates.get(i));
+            cbItems[i] = createPlayerCBItem(m_clCBItems[i], oCandidates.get(i), duplicateLastNames);
         }
 
         Arrays.sort(cbItems);
@@ -427,6 +427,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
     }
 
     protected void setPlayersList2(List<Player> allPlayers, @Nullable Player selectedPlayer, int playerIDcorrespondingSub) {
+        final var duplicateLastNames = Player.getDuplicateLastNames(allPlayers);
 
         m_jcbPlayer.removeItemListener(this);
 
@@ -469,7 +470,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         if (selectedPlayer != null) {
             for (Player p : lSubs) {
                 if (p.getPlayerId() == selectedPlayer.getPlayerId())
-                    cbModel.addElement(createPlayerCBItem(m_clSelectedPlayer, selectedPlayer));
+                    cbModel.addElement(createPlayerCBItem(m_clSelectedPlayer, selectedPlayer, duplicateLastNames));
             }
         }
 
@@ -483,7 +484,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         for (int i = 0; i < lSubs.size(); i++) {
             pp = lSubs.get(i);
             if (pp.getPlayerId() != playerIDcorrespondingSub) {
-                cbItems[i] = createPlayerCBItem(m_clCBItems[i], pp);
+                cbItems[i] = createPlayerCBItem(m_clCBItems[i], pp, duplicateLastNames);
             }
         }
 
@@ -638,9 +639,9 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
     }
     //-------------private-------------------------------------------------
 
-    private PlayerCBItem createPlayerCBItem(PlayerCBItem item, @Nullable Player player) {
+    private PlayerCBItem createPlayerCBItem(PlayerCBItem item, @Nullable Player player, Set<String> duplicateLastNames) {
         if (player != null) {
-            String playerName = player.getShortName();
+            String playerName = player.getFullNameSmart(!duplicateLastNames.contains(player.getLastName()));
 
             if (m_iPositionID == IMatchRoleID.setPieces) {
                 var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
@@ -807,5 +808,4 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
     private String getLangStr(String key) {
         return TranslationFacility.tr(key);
     }
-
 }

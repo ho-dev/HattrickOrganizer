@@ -46,7 +46,7 @@ class TransferredPlayer {
         playerId = player.getPlayerId();
         experience = player.getExperience();
         leadership = player.getLeadership();
-        playerName = player.getFullName();
+        playerName = player.getFullNameWithLastNameFirst();
         skillups += player.getAllLevelUp(PlayerSkill.KEEPER).size();
         skillups += player.getAllLevelUp(PlayerSkill.PLAYMAKING).size();
         skillups += player.getAllLevelUp(PlayerSkill.PASSING).size();
