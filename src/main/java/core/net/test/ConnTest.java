@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 
 import javax.swing.JTextArea;
@@ -79,7 +80,7 @@ public class ConnTest {
 			httpurlconnection.setRequestMethod("GET");
 			httpurlconnection.connect();
 			InputStream is = httpurlconnection.getInputStream();
-			final BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+			final BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
 			StringBuilder sb = new StringBuilder();
 			String line = null;
 			boolean found = false;
@@ -119,7 +120,7 @@ public class ConnTest {
 			httpurlconnection.setRequestMethod("GET");
 			httpurlconnection.connect();
 			InputStream is = httpurlconnection.getInputStream();
-			final BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+			final BufferedReader br = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8));
 			String line = null;
 			boolean found = false;
 			while ((line = br.readLine()) != null) {
