@@ -61,7 +61,7 @@ public class PlayerPerformance {
     }
 
     public String getPlayerName() {
-        return matchLineupPosition.getSpielerName();
+        return matchLineupPosition.getLastName();
     }
 
     public Player getPlayer() {

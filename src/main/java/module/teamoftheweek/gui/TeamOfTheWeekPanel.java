@@ -120,7 +120,7 @@ public class TeamOfTheWeekPanel extends LazyPanel implements ChangeListener, Act
 
 		panel.removeAll();
 
-		JLabel spielername = createLabel(mlp.getSpielerName(), Color.black, 1);
+		JLabel spielername = createLabel(mlp.getLastName(), Color.black, 1);
 		JLabel teamname = createLabel(getTeamName(mlp.getTeamId()), Color.black, 1);
 		JLabel position = createLabel(posi, Color.black, 0);
 		position.setOpaque(false);
