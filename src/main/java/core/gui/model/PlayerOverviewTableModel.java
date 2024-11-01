@@ -39,11 +39,6 @@ public class PlayerOverviewTableModel extends HOTableModel {
 		initialize();
 	}
 
-	@Override
-	public boolean userCanDisableColumns() {
-		return !DBManager.instance().isFirstStart();
-	}
-
 	/**
 	 * initialize all columns.
 	 */
@@ -91,6 +86,11 @@ public class PlayerOverviewTableModel extends HOTableModel {
 		columns[61] = additionalArray[23]; // schum-rank
 		columns[62] = additionalArray[24]; // schum-rank benchmark
 		columns[63] = new BooleanColumn(UserColumnFactory.AUTO_LINEUP, " ", "AutoAufstellung", 28);
+	}
+
+	@Override
+	public final boolean isCellEditable(int row, int col) {
+		return getValueAt(row, col) instanceof Boolean;
 	}
 
 	public int getRowIndexOfPlayer(int playerId){
@@ -208,7 +208,7 @@ public class PlayerOverviewTableModel extends HOTableModel {
 	}
 
     /**
-     * Passt nur die Aufstellung an
+     * Initializes the lineup only
      */
     public void reInitData() {
     	UserColumn [] tmpDisplayedColumns = getDisplayedColumns();

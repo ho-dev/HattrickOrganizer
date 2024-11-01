@@ -15,8 +15,6 @@ import core.model.player.Player;
 import core.net.HattrickLink;
 import module.playerOverview.PlayerTable;
 import org.jetbrains.annotations.Nullable;
-
-import javax.swing.event.TableModelListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -77,7 +75,7 @@ public final class LineupPlayersTable extends FixedColumnsTable implements core.
 	}
 
 	private void initListeners() {
-		this.tableModel.addTableModelListener(e -> {
+		this.getTableModel().addTableModelListener(e -> {
 			var r = e.getFirstRow();
 			var c = e.getColumn();
 			var player = tableModel.getPlayerAtRow(r);

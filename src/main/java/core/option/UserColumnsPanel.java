@@ -47,7 +47,7 @@ public class UserColumnsPanel extends JPanel implements ActionListener {
 	}
 
 	/**
-	 * @return
+	 * @return JPanel
 	 */
 	private JPanel getTopPanel() {
 		JPanel panel = new ImagePanel();

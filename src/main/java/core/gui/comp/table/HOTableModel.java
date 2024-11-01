@@ -222,7 +222,7 @@ public abstract class HOTableModel extends AbstractTableModel {
 	@Override
 	public void setValueAt(Object value, int row, int column) {
 		m_clData[row][column] = value;
-		fireTableCellUpdated(row,column);
+		fireTableCellUpdated(table.convertRowIndexToView(row),table.convertColumnIndexToView(column));
 	}
 
 	/**
@@ -313,8 +313,12 @@ public abstract class HOTableModel extends AbstractTableModel {
 		return changed;
 	}
 
+	/**
+	 * User can disable columns
+	 * @return
+	 */
 	public boolean userCanDisableColumns() {
-		return false;
+		return true;
 	}
 
 	/**

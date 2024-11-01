@@ -9,7 +9,6 @@ import core.gui.model.MatchesColumnModel;
 import core.gui.model.UserColumnController;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
-import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
 import core.model.enums.MatchType;
 import core.model.match.Matchdetails;
@@ -327,10 +326,5 @@ public class RecapPanelTableModel extends HOTableModel {
             str.append(RecapPanel.VALUE_NA);
         }
         return str.toString();
-    }
-
-    @Override
-    public boolean userCanDisableColumns() {
-        return true;
     }
 }

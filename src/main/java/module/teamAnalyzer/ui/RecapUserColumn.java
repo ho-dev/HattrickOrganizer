@@ -22,9 +22,9 @@ class RecapUserColumn extends UserColumn {
         return new ColorLabelEntry(lineup.getName(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
     }
 
-    @Override
-    public boolean canBeDisabled() {
-        return true;
-    }
+//    @Override
+//    public boolean canBeDisabled() {
+//        return true;
+//    }
 
 }
