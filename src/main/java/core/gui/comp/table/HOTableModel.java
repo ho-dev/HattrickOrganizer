@@ -254,7 +254,6 @@ public abstract class HOTableModel extends AbstractTableModel {
 	private void getUserColumnSettings(JTable table) {
 		// Restore column order and width settings
 		Arrays.stream(getDisplayedColumns())
-				.limit(table.getColumnCount())
 				.sorted(Comparator.comparingInt(UserColumn::getIndex))
 				.forEach(i -> getColumnSettings(i, table));
 	}
@@ -272,17 +271,17 @@ public abstract class HOTableModel extends AbstractTableModel {
 	}
 
 	private void moveColumn(JTable table, UserColumn userColumn) {
-		if ( table instanceof FixedColumnsTable fixedColumnsTable){
-			if (userColumn.getIndex() >= fixedColumnsTable.getFixedColumnsCount()){
+		if (table instanceof FixedColumnsTable fixedColumnsTable) {
+			var targetIndex = userColumn.getIndex() - fixedColumnsTable.getFixedColumnsCount();
+			if (targetIndex > 0) {
 				var index = fixedColumnsTable.getColumnModel().getColumnIndex(userColumn.getId());
-				if (index + fixedColumnsTable.getFixedColumnsCount() != userColumn.getIndex()){
-					table.moveColumn(index, max(0, userColumn.getIndex()-fixedColumnsTable.getFixedColumnsCount()));
+				if (index != targetIndex) {
+					table.moveColumn(index, targetIndex);
 				}
 			}
-		}
-		else {
+		} else {
 			var index = table.getColumnModel().getColumnIndex(userColumn.getId());
-			if ( index != userColumn.getIndex()){
+			if (index != userColumn.getIndex()) {
 				table.moveColumn(index, max(0, userColumn.getIndex()));
 			}
 		}

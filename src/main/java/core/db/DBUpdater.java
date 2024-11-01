@@ -105,6 +105,8 @@ final class DBUpdater {
 
 		String sql = "UPDATE " + UserColumnsTable.TABLENAME + " SET COLUMN_WIDTH=80 WHERE COLUMN_ID IN (2001,3001) AND COLUMN_WIDTH=0";
 		connectionManager.executeUpdate(sql);
+		sql = "UPDATE " + UserColumnsTable.TABLENAME + " SET MODELL_INDEX=63 WHERE COLUMN_ID=3510";
+		connectionManager.executeUpdate(sql);
 
 		updateDBVersion(dbVersion, 900);
 	}
