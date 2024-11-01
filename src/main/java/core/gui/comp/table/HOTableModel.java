@@ -288,53 +288,33 @@ public abstract class HOTableModel extends AbstractTableModel {
 	}
 
 	/**
-	 * Save the user settings of the table. User selected width and column indexes are saved in user column model
-	 * which is stored in database table UserColumnTable
-	 *
-	 * @param table Table object
-	 * @param offset 	 Column's offset in model (in case of FixedColumnTable)
-	 */
-	private boolean setUserColumnSettings(JTable table, int offset) {
-		boolean changed = false;
-		// column order and width
-		var tableColumnModel = table.getColumnModel();
-		var modelColumnCount = this.getColumnCount();
-		for (int i = 0; i < modelColumnCount; i++) {
-			if (i < offset) continue;                                // skip fixed columns in case of scroll table
-			if (offset == 0 && i >= table.getColumnCount()) break;   // fixed columns exceeded
-
-			var column = this.getColumns()[i];
-			var index = table.convertColumnIndexToView(i);
-			if (column.isDisplay()) {
-				if (column.getIndex() != index) {
-					changed = true;
-					column.setIndex(index);
-				}
-				var tableColumnWidth = tableColumnModel.getColumn(index-offset).getWidth();
-				if (column.getPreferredWidth() != tableColumnWidth) {
-					changed = true;
-					column.setPreferredWidth(tableColumnWidth);
-				}
-			}
-		}
-		return changed;
-	}
-
-	/**
 	 * Set user column settings from the table instance
 	 * @param table Table object
 	 * @return True if one user setting is changed
 	 * 		   False, if no user settings are changed
 	 */
 	private boolean setUserColumnSettings(JTable table) {
-		if(table instanceof FixedColumnsTable fixedColumnstable) {
-            var changed =  setUserColumnSettings(fixedColumnstable.getFixedTable(), 0);
-			if (setUserColumnSettings(fixedColumnstable, fixedColumnstable.getFixedColumnsCount()) ){
+		boolean changed = false;
+		for (int index = 0; index < table.getColumnCount(); index++) {
+			var tableColumn = getTableColumn(table, index);
+			var modelColumn = this.columns[tableColumn.getModelIndex()];
+
+			if (!modelColumn.isDisplay()) {
+				modelColumn.setDisplay(true);
 				changed = true;
 			}
-			return  changed;
+			if (modelColumn.getIndex() != index) {
+				changed = true;
+				modelColumn.setIndex(index);
+			}
+
+			var tableColumnWidth = tableColumn.getWidth();
+			if (modelColumn.getPreferredWidth() != tableColumnWidth) {
+				changed = true;
+				modelColumn.setPreferredWidth(tableColumnWidth);
+			}
 		}
-		return setUserColumnSettings(table,0);
+		return changed;
 	}
 
 	public boolean userCanDisableColumns() {

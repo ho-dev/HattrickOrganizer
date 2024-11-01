@@ -75,7 +75,6 @@ public class FixedColumnsTable extends JTable {
         setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         setSelectionBackground(HODefaultTableCellRenderer.SELECTION_BG);
-//        getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         if (fixedColumns > 0) {
             fixed = new JTable(getModel());
@@ -211,33 +210,6 @@ public class FixedColumnsTable extends JTable {
         return this.scrollPane;
     }
 
-//    @Override
-//    public int convertColumnIndexToModel(int viewColumnIndex) {
-//        if (viewColumnIndex<fixedColumns) {
-//            return fixed.convertColumnIndexToModel(viewColumnIndex);
-//        }
-//        return super.convertColumnIndexToModel(viewColumnIndex-fixedColumns)+fixedColumns;
-//    }
-//
-//    @Override
-//    public int convertColumnIndexToView(int modelColumnIndex) {
-//        if (modelColumnIndex<fixedColumns) {
-//            return fixed.convertColumnIndexToView(modelColumnIndex);
-//        }
-//        return super.convertColumnIndexToView(modelColumnIndex-fixedColumns)+fixedColumns;
-//    }
-//
-//    @Override
-//    public int getColumnCount() {
-//        return super.getColumnCount()+fixedColumns;
-//    }
-//
-//    @Override
-//    public String getColumnName(int viewColumnIndex) {
-//        if (viewColumnIndex<fixedColumns) {return fixed.getColumnName(viewColumnIndex);}
-//        return super.getColumnName(viewColumnIndex-fixedColumns);
-//    }
-
     @Override
     public TableColumn getColumn(@NotNull Object identifier) {
         try {
@@ -247,38 +219,6 @@ public class FixedColumnsTable extends JTable {
             return fixed.getColumn(identifier);
         }
     }
-
-//    @Override
-//    public int columnAtPoint(Point point) {
-//        var ret = super.columnAtPoint(point);
-//        if ( ret < 0) ret = fixed.columnAtPoint(point);
-//        return ret;
-//    }
-
-//    @Override
-//    public Class<?> getColumnClass(int viewColumnIndex) {
-//        if (viewColumnIndex<fixedColumns) {return fixed.getColumnClass(viewColumnIndex);}
-//        return super.getColumnClass(viewColumnIndex-fixedColumns);
-//    }
-
-//    @Override
-//    public Object getValueAt(int row, int column) {
-//        if (column<fixedColumns) {return fixed.getValueAt(row, column);}
-//        return super.getValueAt(row,column-fixedColumns);
-//    }
-//
-//    @Override
-//    public void setValueAt(Object aValue, int row, int column) {
-//        if (column<fixedColumns) {fixed.setValueAt(aValue, row, column);}
-//        super.setValueAt(aValue, row, column-fixedColumns);
-//    }
-
-//    @Override
-//    public boolean isCellEditable(int row, int column) {
-//        if (column<fixedColumns) {return fixed.isCellEditable(row, column);}
-//        return super.isCellEditable(row, column-fixedColumns);
-//    }
-
     public TableColumn getTableColumn(int i) {
         if (i<fixedColumns) {return fixed.getColumnModel().getColumn(i);}
         return super.getColumnModel().getColumn(i-fixedColumns);
