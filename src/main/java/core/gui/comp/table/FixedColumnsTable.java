@@ -210,6 +210,7 @@ public class FixedColumnsTable extends JTable {
             return fixed.getColumn(identifier);
         }
     }
+
     public TableColumn getTableColumn(int i) {
         if (i<fixedColumns) {return fixed.getColumnModel().getColumn(i);}
         return super.getColumnModel().getColumn(i-fixedColumns);

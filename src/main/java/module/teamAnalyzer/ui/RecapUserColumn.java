@@ -23,7 +23,7 @@ class RecapUserColumn extends UserColumn {
     }
 
     @Override
-    public boolean isEditable() {
+    public boolean canBeDisabled() {
         return true;
     }
 

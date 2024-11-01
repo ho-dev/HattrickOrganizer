@@ -10,11 +10,13 @@ import core.gui.model.UserColumnController;
 import core.gui.model.UserColumnFactory;
 import core.model.HOVerwaltung;
 import core.model.match.MatchKurzInfo;
+import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import core.net.HattrickLink;
 import module.playerOverview.PlayerTable;
 import org.jetbrains.annotations.Nullable;
 
+import javax.swing.event.TableModelListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -75,28 +77,27 @@ public final class LineupPlayersTable extends FixedColumnsTable implements core.
 	}
 
 	private void initListeners() {
-
-//		this.tableSorter.addTableModelListener(e -> {
-//			var r = e.getFirstRow();
-//			var c = e.getColumn();
-//			var player = tableSorter.getPlayerAtRow(r);
-//			if (player != null) {
-//				if (c == tableModel.getPositionInArray(UserColumnFactory.AUTO_LINEUP)) {
-//					var autoLineup = tableSorter.getValueAt(r,c);
-//					if (autoLineup != null){
-//						player.setCanBeSelectedByAssistant((boolean) autoLineup);
-//						if( player.getCanBeSelectedByAssistant()){
-//							// this player has been made selectable from the Lineup tab, for consistency we set its position to undefined
-//							player.setUserPosFlag(IMatchRoleID.UNKNOWN);
-//						}
-//						else {
-//							player.setUserPosFlag(IMatchRoleID.UNSELECTABLE);
-//						}
-//						HOMainFrame.instance().getSpielerUebersichtPanel().update();
-//					}
-//				}
-//			}
-//        });
+		this.tableModel.addTableModelListener(e -> {
+			var r = e.getFirstRow();
+			var c = e.getColumn();
+			var player = tableModel.getPlayerAtRow(r);
+			if (player != null) {
+				if (c == tableModel.getPositionInArray(UserColumnFactory.AUTO_LINEUP)) {
+					var autoLineup = tableModel.getValueAt(r,c);
+					if (autoLineup != null){
+						player.setCanBeSelectedByAssistant((boolean) autoLineup);
+						if( player.getCanBeSelectedByAssistant()){
+							// this player has been made selectable from the Lineup tab, for consistency we set its position to undefined
+							player.setUserPosFlag(IMatchRoleID.UNKNOWN);
+						}
+						else {
+							player.setUserPosFlag(IMatchRoleID.UNSELECTABLE);
+						}
+						HOMainFrame.instance().getSpielerUebersichtPanel().update();
+					}
+				}
+			}
+        });
 
 		addMouseListener(new MouseAdapter() {
 			@Override
@@ -108,8 +109,8 @@ public final class LineupPlayersTable extends FixedColumnsTable implements core.
 					if (selectedPlayer != null) {
 						var viewColumn = columnAtPoint(e.getPoint());
 						if (viewColumn > -1) {
-							var column = getColumn(viewColumn).getModelIndex();
-							if (column + getFixedColumnsCount() == tableModel.getPositionInArray(UserColumnFactory.LAST_MATCH_RATING)) {
+							var column = getColumnModel().getColumn(viewColumn);
+							if ((Integer)column.getIdentifier() == UserColumnFactory.LAST_MATCH_RATING) {
 								if (e.isShiftDown()) {
 									int matchId = selectedPlayer.getLastMatchId();
 									// TODO get the match type of last match from player. For the moment we hope, that going with no type will work

@@ -251,7 +251,7 @@ final public class UserColumnFactory {
             }
 
             @Override
-            public boolean isEditable() {
+            public boolean canBeDisabled() {
                 return false;
             }
         };
@@ -266,7 +266,7 @@ final public class UserColumnFactory {
             }
 
             @Override
-            public boolean isEditable() {
+            public boolean canBeDisabled() {
                 return false;
             }
 
@@ -597,7 +597,7 @@ final public class UserColumnFactory {
             }
 
             @Override
-            public boolean isEditable() {
+            public boolean canBeDisabled() {
                 return false;
             }
 

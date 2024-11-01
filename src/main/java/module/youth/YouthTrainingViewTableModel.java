@@ -53,7 +53,7 @@ public class YouthTrainingViewTableModel extends HOTableModel {
                         return new YouthTrainingTableEntry(youthTraining.getTraining(YouthTraining.Priority.Primary));
                     }
                     @Override
-                    public boolean isEditable(){return true;}
+                    public boolean canBeDisabled(){return true;}
                 },
                 new YouthTrainingColumn(4, "ls.youth.training.secondary", 200){
                     @Override
@@ -61,7 +61,7 @@ public class YouthTrainingViewTableModel extends HOTableModel {
                         return new YouthTrainingTableEntry(youthTraining.getTraining(YouthTraining.Priority.Secondary));
                     }
                     @Override
-                    public boolean isEditable(){return true;}
+                    public boolean canBeDisabled(){return true;}
                 },
 
                 new YouthTrainingColumn(99, "ls.training.id", 0) {
@@ -79,7 +79,7 @@ public class YouthTrainingViewTableModel extends HOTableModel {
 
     @Override
     public boolean isCellEditable(int row, int column) {
-        return columns[column].isEditable();
+        return columns[column].canBeDisabled();
     }
 
     @Override

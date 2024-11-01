@@ -123,11 +123,11 @@ public abstract class UserColumn {
 		return getTooltip();
 	}
 
-	/*
+	/**
 	 * Some columns must be displayed, so some columns are not editable
 	 * @return boolean
 	 */
-	public boolean isEditable(){
+	public boolean canBeDisabled(){
 		return true;
 	}
 

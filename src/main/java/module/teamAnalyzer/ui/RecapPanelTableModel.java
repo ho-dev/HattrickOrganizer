@@ -37,7 +37,7 @@ public class RecapPanelTableModel extends HOTableModel {
                         return new ColorLabelEntry(lineup.getName(), ColorLabelEntry.FG_STANDARD, MatchesColumnModel.getColor4Matchtyp(lineup.getMatchType()), SwingConstants.LEFT);
                     }
                     @Override
-                    public boolean isEditable() {
+                    public boolean canBeDisabled() {
                         return false;
                     }
                 },
@@ -47,7 +47,7 @@ public class RecapPanelTableModel extends HOTableModel {
                         return getMatchTypeColumnEntry(lineup);
                     }
                     @Override
-                    public boolean isEditable() {
+                    public boolean canBeDisabled() {
                         return false;
                     }
                 },

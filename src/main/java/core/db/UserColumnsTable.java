@@ -81,7 +81,7 @@ class UserColumnsTable extends AbstractTable {
 			var modelColumns = model.getColumns();
 			if (model.userCanDisableColumns() && !DBManager.instance().isFirstStart()) {
 				for (var modelColumn : modelColumns) {
-					modelColumn.setDisplay(!modelColumn.isEditable());
+					modelColumn.setDisplay(!modelColumn.canBeDisabled());
 				}
 			}
 			for (var userColumn : userColumns) {

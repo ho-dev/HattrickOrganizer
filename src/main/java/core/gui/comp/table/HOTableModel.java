@@ -93,9 +93,7 @@ public abstract class HOTableModel extends AbstractTableModel {
 	 */
 	public String[] getColumnNames() {
 		final String[] columnNames = new String[getDisplayedColumnCount()];
-		for (int i = 0; i < getDisplayedColumns().length; i++)
-			columnNames[i] = getDisplayedColumns()[i].getColumnName();
-
+		for (int i = 0; i < getDisplayedColumns().length; i++) columnNames[i] = getDisplayedColumns()[i].getColumnName();
 		return columnNames;
 	}
 
@@ -133,7 +131,6 @@ public abstract class HOTableModel extends AbstractTableModel {
 				} // column is displayed
 			} // for
 		}
-
 		return displayedColumns;
 	}
 
@@ -174,7 +171,6 @@ public abstract class HOTableModel extends AbstractTableModel {
 		if (m_clData != null && m_clData.length>row) {
 			return m_clData[row][column];
 		}
-
 		return null;
 	}
 

@@ -110,7 +110,7 @@ public class UserColumnsPanel extends JPanel implements ActionListener {
 		tmp.setOpaque(false);
 		tmp.setSelected(column.isDisplay());
 		tmp.setHorizontalAlignment(SwingConstants.CENTER);
-		if (column.isEditable())
+		if (column.canBeDisabled())
 			tmp.addActionListener(this);
 		else {
 			tmp.setIcon(lockedImage);
