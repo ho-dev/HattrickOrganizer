@@ -140,15 +140,6 @@ public class FixedColumnsTable extends JTable {
         }
     }
 
-    /**
-     * Returns the Locked left hand side table part
-     *
-     * @return JTable
-     */
-    public JTable getFixedTable() {
-        return fixed;
-    }
-
     public TableColumnModel getTableColumnModel() {
         return this.getColumnModel();
     }
