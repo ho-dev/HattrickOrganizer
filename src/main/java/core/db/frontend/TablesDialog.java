@@ -2,19 +2,12 @@ package core.db.frontend;
 
 import core.db.DBManager;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.GraphicsEnvironment;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.Serial;
 import java.sql.ResultSet;
-
-import javax.swing.JDialog;
-import javax.swing.JList;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextPane;
 
 final class TablesDialog extends JDialog implements MouseListener {
 	@Serial
@@ -26,6 +19,7 @@ final class TablesDialog extends JDialog implements MouseListener {
         super(owner, "Tables");
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
         initialize();
+        setLocationByPlatform(true);
     }
 
     private void initialize() {

@@ -6,31 +6,14 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.util.BrowserLauncher;
 import core.util.HOLogger;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.GraphicsEnvironment;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTable;
-import javax.swing.JTextPane;
-import javax.swing.JToolBar;
-import javax.swing.JTree;
 
 
 public class SQLDialog extends JDialog implements ActionListener {
@@ -63,6 +46,7 @@ public class SQLDialog extends JDialog implements ActionListener {
         buthelp = new JButton("HSQL Website");
         buttables = new JButton(ThemeManager.getIcon(HOIconName.INFO));
         initialize();
+        setLocationByPlatform(true);
     }
 
     private void initialize() {
@@ -94,11 +78,11 @@ public class SQLDialog extends JDialog implements ActionListener {
     }
 
     private void addButtons(JToolBar toolbar) {
-        initializeButton(toolbar, buttables, "F1 - shows all tables");
-        initializeButton(toolbar, butprevious, "F2 - previous statement");
-        initializeButton(toolbar, butBook, "F3 - show all statements");
-        initializeButton(toolbar, butnext, "F4 - next statement");
-        initializeButton(toolbar, butExecute, "F5 - execute the statement");
+        initializeButton(toolbar, buttables, "F1 - Shows all Tables");
+        initializeButton(toolbar, butprevious, "F2 - Previous Statement");
+        initializeButton(toolbar, butBook, "F3 - Show all Statements");
+        initializeButton(toolbar, butnext, "F4 - Next Statement");
+        initializeButton(toolbar, butExecute, "F5 - Execute the Statement");
         initializeButton(toolbar, buthelp, "HSQL Doc");
     }
 
