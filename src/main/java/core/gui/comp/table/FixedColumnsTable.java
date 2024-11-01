@@ -14,7 +14,7 @@ import java.awt.*;
 import java.awt.event.AdjustmentListener;
 
 /**
- * Table with fixed columns on the right hand side
+ * Table with fixed columns on the left hand side
  * The other columns can be sorted or disabled by the user
  */
 public class FixedColumnsTable extends JTable {
@@ -50,7 +50,7 @@ public class FixedColumnsTable extends JTable {
 
     /**
      * Create a fixed columns table
-     * Columns and Header tooltips are taken from table model.
+     * Columns and header tooltips are taken from table model.
      * Column settings are restored from database.
      * Internally two tables are created, "fixed" for the left hand side, "scroll" for the right hand side
      *
@@ -61,6 +61,7 @@ public class FixedColumnsTable extends JTable {
         super(tableModel);
         this.fixedColumns = fixedColumns;
 
+        // Handle tool tips
         final TableCellRenderer header = this.getTableHeader().getDefaultRenderer();
         this.getTableHeader().setDefaultRenderer((table, value, isSelected, hasFocus, row, column) -> {
             Component tableCellRendererComponent = header.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
@@ -135,6 +136,7 @@ public class FixedColumnsTable extends JTable {
             scrollPane = new JScrollPane();
             scrollPane.setViewportView(splitPane);
         } else {
+            // No fixed columns
             fixed = null;
             scrollPane = new JScrollPane(this);
         }
@@ -211,6 +213,11 @@ public class FixedColumnsTable extends JTable {
         }
     }
 
+    /**
+     * Return th table column of the fixed or right hand side table
+     * @param i Column index
+     * @return TableColumn
+     */
     public TableColumn getTableColumn(int i) {
         if (i<fixedColumns) {return fixed.getColumnModel().getColumn(i);}
         return super.getColumnModel().getColumn(i-fixedColumns);

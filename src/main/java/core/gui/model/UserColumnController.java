@@ -2,7 +2,6 @@ package core.gui.model;
 
 import core.db.DBManager;
 import core.gui.comp.table.HOTableModel;
-import module.lineup.LineupTableModel;
 import module.matches.statistics.MatchesOverviewColumnModel;
 import module.specialEvents.SpecialEventsTableModel;
 import module.teamAnalyzer.ui.RecapPanelTableModel;
@@ -56,7 +55,7 @@ public final class UserColumnController {
 	private PlayerOverviewTableModel playerOverviewColumnModel	= null;
 	
 	/** model for lineup table **/
-	private  LineupTableModel lineupColumnModel			= null;
+	private PlayerOverviewTableModel lineupColumnModel			= null;
 	
 	/** model for player analysis **/
 	private final PlayerAnalysisModel[] playerAnalysisModels 		= new PlayerAnalysisModel[2];
@@ -163,13 +162,12 @@ public final class UserColumnController {
 	 * 
 	 * @return LineupColumnModel
 	 */
-	public LineupTableModel getLineupModel(){
+	public PlayerOverviewTableModel getLineupModel(){
 		if(lineupColumnModel == null){
-			lineupColumnModel = new LineupTableModel(ColumnModelId.LINEUP);
+			lineupColumnModel = new PlayerOverviewTableModel(ColumnModelId.LINEUP, "Aufstellung");
 		}
 		return lineupColumnModel;
 	}
-	
 
 	/**
 	 * return all model as Vector

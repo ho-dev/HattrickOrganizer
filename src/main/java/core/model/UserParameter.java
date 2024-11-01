@@ -12,6 +12,7 @@ import java.util.Map;
 
 /**
  * User configuration. Loaded when HO starts and saved when HO! exits.
+ * Obsolete: Use  HOConfigurationParameter
  */
 public final class UserParameter extends Configuration {
     //~ Static fields/initializers -----------------------------------------------------------------

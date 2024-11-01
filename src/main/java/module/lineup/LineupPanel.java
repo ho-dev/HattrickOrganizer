@@ -31,7 +31,6 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 
 	public LineupPanel() {
 		initComponents();
-//		addListeners();
 	}
 
 	public void storeUserSettings(){
@@ -139,48 +138,6 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 		lineupPlayersTable = new LineupPlayersTable();
 		return lineupPlayersTable.getContainerComponent();
 	}
-
-//	private void addListeners() {
-//
-//		ListSelectionListener lsl = new ListSelectionListener() {
-//
-//			@Override
-//			public void valueChanged(ListSelectionEvent e) {
-//				if (e.getSource() == lineupPlayersTable.getSelectionModel()) {
-//					synchronizeSelection(lineupPlayersTable);
-//				} else if (e.getSource() == lineupPlayersTableNameColumn.getSelectionModel()) {
-//					synchronizeSelection(lineupPlayersTableNameColumn);
-//				}
-//			}
-//
-//			private void synchronizeSelection(JTable sourceTable) {
-//				JTable targetTable;
-//				if (sourceTable == lineupPlayersTable) {
-//					targetTable = lineupPlayersTableNameColumn;
-//				} else {
-//					targetTable = lineupPlayersTable;
-//				}
-//
-//				int row = sourceTable.getSelectedRow();
-//				if (row == -1) {
-//					targetTable.clearSelection();
-//				} else {
-//					if (targetTable.getSelectedRow() != row) {
-//						targetTable.setRowSelectionInterval(row, row);
-//					}
-//					var tableModel = (PlayerOverviewTableModel)sourceTable.getModel();
-//					var player = tableModel.getPlayerAtRow(row);
-////					Player player = ((PlayerTable) sourceTable).getPlayer(row);
-//					if (player != null) {
-//						HOMainFrame.instance().selectPlayer(player);
-//					}
-//				}
-//			}
-//		};
-
-//		this.lineupPlayersTable.getSelectionModel().addListSelectionListener(lsl);
-//		this.lineupPlayersTableNameColumn.getSelectionModel().addListSelectionListener(lsl);
-//	}
 
 	public Weather getWeather() {
 		return getLineupSettingsPanel().getWeather();

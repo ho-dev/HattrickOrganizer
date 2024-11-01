@@ -85,59 +85,6 @@ public class TableSorter extends TableMap {
         reallocateIndexes();
     }
 
-//    /**
-//     * Maps a match id to the row that contains it.
-//     *
-//     * @param matchid ID of the match to find.
-//     * @return int – Row in the table containing the match's details.
-//     *               Returns -1 if the match <code>matchid</code> cannot be found.
-//     */
-//    public final int getRow4Match(int matchid) {
-//        if (matchid > 0) {
-//            for (int i = 0; i < getRowCount(); i++) {
-//                try {
-//                    var entry = (ColorLabelEntry) getValueAt(i, idColumn);
-//                    if ( entry != null) {
-//                        if (matchid == (int) entry.getNumber()) {
-//                            return indexes[i];
-//                        }
-//                    }
-//                } catch (Exception e) {
-//                    HOLogger.instance().log(getClass(),"TableSorter.getRow4Match: " + e);
-//                }
-//            }
-//        }
-//
-//        return -1;
-//    }
-
-//    /**
-//     * Maps a player id to the row that contains his entry.
-//     *
-//     * @param spielerid ID of the player to find.
-//     * @return int – Row in the table containing the player's details.
-//     *               Returns -1 if the player with id <code>spielerid</code> cannot be found.
-//     */
-//    public final int getRow4Spieler(int spielerid) {
-//        // Can be negative if the player is a temporary player (for ex. in transfer scout).
-//        if (spielerid != 0) {
-//            for (int i = 0; i < getRowCount(); i++) {
-//                try {
-//                    var entry = (ColorLabelEntry) getValueAt(i, idColumn);
-//                    if ( entry != null) {
-//                        if (spielerid == Integer.parseInt(entry.getText())) {
-//                            return i;
-//                        }
-//                    }
-//                } catch (Exception e) {
-//                    HOLogger.instance().log(getClass(),"TableSorter.getRow4Spieler: " + e);
-//                }
-//            }
-//        }
-//
-//        return -1;
-//    }
-
     public final module.transfer.scout.ScoutEintrag getScoutEintrag(int row) {
         if (row > -1) {
             try {
@@ -154,31 +101,6 @@ public class TableSorter extends TableMap {
 
         return null;
     }
-
-//    public final Player getPlayerAtRow(int row) {
-//        if (row > -1) {
-//            try {
-//                var entry = (ColorLabelEntry) getValueAt(row, idColumn);
-//                if ( entry != null ) {
-//                    var text = entry.getText();
-//                    if (text != null && !text.isEmpty()) {
-//                        final int id = Integer.parseInt(text);
-//                        if (getModel() instanceof PlayerOverviewTableModel) {
-//                            return ((PlayerOverviewTableModel) getModel()).getPlayer(id);
-//                        } else if (getModel() instanceof LineupTableModel) {
-//                            return ((LineupTableModel) getModel()).getPlayer(id);
-//                        } else {
-//                            throw new Exception("Tablemodel unbekannt!");
-//                        }
-//                    }
-//                }
-//            } catch (Exception e) {
-//                HOLogger.instance().log(getClass(),e);
-//                return null;
-//            }
-//        }
-//        return null;
-//    }
 
     @Override
 	public final void setValueAt(Object obj, int i, int j) {
