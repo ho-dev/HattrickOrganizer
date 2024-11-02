@@ -149,7 +149,7 @@ public class RecapPanelTableModel extends HOTableModel {
                 new RecapUserColumn("ls.team.tacticalskill", 50) {
                     @Override
                     public IHOTableEntry getTableEntry(TeamLineup lineup) {
-                        return new ColorLabelEntry(lineup.getTacticCode() > 0 ? PlayerAbility.getNameForSkill(lineup.getTacticLevel(), false) : RecapPanel.VALUE_NA, ColorLabelEntry.FG_STANDARD, MatchesColumnModel.getColor4Matchtyp(lineup.getMatchType()), SwingConstants.LEFT);
+                        return new ColorLabelEntry(formatTacticSkill(lineup), ColorLabelEntry.FG_STANDARD, MatchesColumnModel.getColor4Matchtyp(lineup.getMatchType()), SwingConstants.LEFT);
                     }
                 },
                 new RecapUserColumn("ls.team.formation", 50) {
@@ -326,5 +326,29 @@ public class RecapPanelTableModel extends HOTableModel {
             str.append(RecapPanel.VALUE_NA);
         }
         return str.toString();
+    }
+
+    private String formatTacticSkill(TeamLineup lineup) {
+        return lineup.getTacticCode() > 0 ? PlayerAbility.getNameForSkill(lineup.getTacticLevel(), false) : RecapPanel.VALUE_NA;
+    }
+
+    public TeamLineup getTeamMatchReport(int minSelectionIndex) {
+        if ( teamReport != null){
+            var modelIndex = table.convertRowIndexToModel(minSelectionIndex);
+            return teamReport.getTeamMatchReport(modelIndex);
+        }
+        return null;
+    }
+
+    public String getTacticType(int minSelectionIndex) {
+        var teamLineup = getTeamMatchReport(minSelectionIndex);
+        if (teamLineup != null) {return formatTacticColumn(teamLineup);}
+        return "";
+    }
+
+    public String getTacticSkill(int minSelectionIndex) {
+        var teamLineup = getTeamMatchReport(minSelectionIndex);
+        if (teamLineup != null) {return formatTacticSkill(teamLineup);}
+        return "";
     }
 }

@@ -1,14 +1,15 @@
 package module.teamAnalyzer.ui;
 
 import core.gui.comp.table.FixedColumnsTable;
-import core.gui.comp.table.HOTableModel;
 import core.gui.model.UserColumnController;
+import core.util.HODateTime;
+import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.report.TeamReport;
-import module.teamAnalyzer.ui.controller.RecapListSelectionListener;
+import module.teamAnalyzer.vo.TeamLineup;
+
 import java.awt.*;
 import java.io.Serial;
 import javax.swing.*;
-import javax.swing.table.TableRowSorter;
 
 
 public class RecapPanel extends JPanel {
@@ -16,15 +17,50 @@ public class RecapPanel extends JPanel {
 	@Serial
     private static final long serialVersionUID = 486150690031160261L;
     public static final String VALUE_NA = "---"; //$NON-NLS-1$
+    private String selectedTacticSkill;
+    private String selectedTacticType;
 
-    private RecapListSelectionListener recapListener = null;
+    private final RecapPanelTableModel tableModel;
 
-    private RecapPanelTableModel tableModel;
     /**
      * Creates a new RecapPanel object.
      */
     public RecapPanel() {
-        jbInit();
+        tableModel = UserColumnController.instance().getTeamAnalyzerRecapModel();
+        tableModel.showTeamReport(null);
+        //~ Instance fields ----------------------------------------------------------------------------
+        FixedColumnsTable table = new FixedColumnsTable(tableModel, 2);
+        tableModel.initTable(table);
+        table.setDefaultRenderer(Object.class, new RecapTableRenderer());
+        table.setDefaultRenderer(ImageIcon.class, new RecapTableRenderer());
+        table.addListSelectionListener(e->{
+            if (e.getValueIsAdjusting()) {
+                return;
+            }
+            ListSelectionModel lsm = (ListSelectionModel) e.getSource();
+            if (!lsm.isSelectionEmpty()) {
+                selectedTacticType = tableModel.getTacticType(lsm.getMinSelectionIndex());
+                selectedTacticSkill = tableModel.getTacticSkill(lsm.getMinSelectionIndex());
+
+                var lineup = tableModel.getTeamMatchReport(lsm.getMinSelectionIndex());
+                int week = 0;
+                int season = 0;
+                if (lineup != null) {
+                    week = lineup.getWeek();
+                    season = lineup.getSeason();
+                    if (week < 0) {
+                        var htdatetime = HODateTime.now().toLocaleHTWeek();
+                        week = htdatetime.week;
+                        season = htdatetime.season;
+                    }
+                }
+                SystemManager.getPlugin().getMainPanel().reload(lineup, week, season);
+                SystemManager.getPlugin().getRatingPanel().reload(lineup);
+                SystemManager.getPlugin().getSpecialEventsPanel().reload(lineup);
+            }
+        });
+        setLayout(new BorderLayout());
+        add(table.getContainerComponent());
     }
 
     //~ Methods ------------------------------------------------------------------------------------
@@ -32,25 +68,12 @@ public class RecapPanel extends JPanel {
         this.tableModel.showTeamReport(teamReport);
     }
 
-    private void jbInit() {
-        tableModel = UserColumnController.instance().getTeamAnalyzerRecapModel();
-        tableModel.showTeamReport(null);
-        //~ Instance fields ----------------------------------------------------------------------------
-        FixedColumnsTable table = new FixedColumnsTable(tableModel, 2);
-        table.setDefaultRenderer(Object.class, new RecapTableRenderer());
-        table.setDefaultRenderer(ImageIcon.class, new RecapTableRenderer());
-        recapListener = new RecapListSelectionListener((TableRowSorter<HOTableModel>) table.getRowSorter(), tableModel);
-        table.addListSelectionListener(recapListener);
-        setLayout(new BorderLayout());
-        add(table.getContainerComponent());
-    }
-
     public String getSelectedTacticType() {
-    	return recapListener.getSelectedTacticType();
+    	return selectedTacticType;
     }
 
     public String getSelectedTacticSkill() {
-    	return recapListener.getSelectedTacticSkill();
+    	return selectedTacticSkill;
     }
 
     public void storeUserSettings() {
