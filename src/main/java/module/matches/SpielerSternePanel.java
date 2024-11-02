@@ -98,7 +98,7 @@ final class SpielerSternePanel extends ImagePanel implements ActionListener {
 	/**
 	 * Erzeugt die Komponenten
 	 */
-	private final void initComponents() {
+	private void initComponents() {
 		final GridBagLayout layout = new GridBagLayout();
 		final GridBagConstraints constraints = new GridBagConstraints();
 		constraints.fill = GridBagConstraints.BOTH;
