@@ -53,7 +53,7 @@ public class HODateTime implements Comparable<HODateTime> {
     }
 
     public LocalDateTime getLocalDateTime() {
-        return LocalDateTime.ofInstant(instant, DEFAULT_TIMEZONE);
+        return LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
     }
 
     /**
@@ -411,7 +411,7 @@ public class HODateTime implements Comparable<HODateTime> {
     public HODateTime nextLocalDay() {
         final var localDate = getLocalDateTime().toLocalDate();
         final var nextDay = localDate.plusDays(1);
-        final var newInstant = Instant.from(nextDay.atStartOfDay(DEFAULT_TIMEZONE));
+        final var newInstant = Instant.from(nextDay.atStartOfDay(ZoneId.systemDefault()));
         return new HODateTime(newInstant);
     }
 
