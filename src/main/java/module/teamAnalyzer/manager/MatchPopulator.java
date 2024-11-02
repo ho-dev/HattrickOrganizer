@@ -144,7 +144,6 @@ public class MatchPopulator {
         matchDetail.setTacticLevel(getTacticLevel(tmpMatch));
 
         matchDetail.setFormation(tmpMatch.getFormation(isHome(tmpMatch)));
-        NameManager.addNames(tmpMatch.getLineup(isHome(tmpMatch)));
 
         matchDetail.setIsMarking(tmpMatch.isTeamManMarking(SystemManager.getActiveTeamId()));
 

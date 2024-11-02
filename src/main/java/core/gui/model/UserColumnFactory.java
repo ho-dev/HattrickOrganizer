@@ -242,7 +242,7 @@ final public class UserColumnFactory {
      */
     public static PlayerColumn[] createPlayerBasicArray() {
         final PlayerColumn[] playerBasicArray = new PlayerColumn[2];
-        playerBasicArray[0] = new PlayerColumn(NAME, "ls.player.name", 0) {
+        playerBasicArray[0] = new PlayerColumn(NAME, "ls.player.name", 160) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
                 var team = HOVerwaltung.instance().getModel().getCurrentLineup();
@@ -251,7 +251,7 @@ final public class UserColumnFactory {
             }
 
             @Override
-            public boolean isEditable() {
+            public boolean canBeDisabled() {
                 return false;
             }
         };
@@ -266,7 +266,7 @@ final public class UserColumnFactory {
             }
 
             @Override
-            public boolean isEditable() {
+            public boolean canBeDisabled() {
                 return false;
             }
 
@@ -597,7 +597,7 @@ final public class UserColumnFactory {
             }
 
             @Override
-            public boolean isEditable() {
+            public boolean canBeDisabled() {
                 return false;
             }
 

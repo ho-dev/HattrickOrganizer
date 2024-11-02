@@ -4,6 +4,7 @@ import core.gui.comp.table.HOTableModel;
 import core.gui.comp.table.UserColumn;
 import core.gui.model.UserColumnFactory;
 
+import javax.swing.*;
 import java.sql.Types;
 
 class UserColumnsTable extends AbstractTable {
@@ -19,7 +20,9 @@ class UserColumnsTable extends AbstractTable {
 				ColumnDescriptor.Builder.newInstance().setColumnName("COLUMN_ID").setGetter((p) -> ((_UserColumn) p).getId()).setSetter((p, v) -> ((_UserColumn) p).setId((int) v)).setType(Types.INTEGER).isPrimaryKey(true).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("MODELL_INDEX").setGetter((p) -> ((_UserColumn) p).getModelIndex()).setSetter((p, v) -> ((_UserColumn) p).setModelIndex((int) v)).setType(Types.INTEGER).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("TABLE_INDEX").setGetter((p) -> ((_UserColumn) p).getIndex()).setSetter((p, v) -> ((_UserColumn) p).setIndex((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("COLUMN_WIDTH").setGetter((p) -> ((_UserColumn) p).getPreferredWidth()).setSetter((p, v) -> ((_UserColumn) p).setPreferredWidth((Integer) v)).setType(Types.INTEGER).isNullable(true).build()
+				ColumnDescriptor.Builder.newInstance().setColumnName("COLUMN_WIDTH").setGetter((p) -> ((_UserColumn) p).getPreferredWidth()).setSetter((p, v) -> ((_UserColumn) p).setPreferredWidth((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("SORT_PRIORITY").setGetter((p) -> ((_UserColumn) p).getSortPriority()).setSetter((p, v) -> ((_UserColumn) p).setSortPriority((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("SORT_ORDER").setGetter((p) -> ((_UserColumn) p).getSortOrderAsString()).setSetter((p, v) -> ((_UserColumn) p).setSortOrder((String) v)).setType(Types.VARCHAR).setLength(32).isNullable(true).build()
 		};
 	}
 
@@ -52,6 +55,8 @@ class UserColumnsTable extends AbstractTable {
 				_userColumn.setId(model.getId() * 1000 + dbcolumns[i].getId());
 				_userColumn.setPreferredWidth(dbcolumns[i].getPreferredWidth());
 				_userColumn.setIndex(dbcolumns[i].getIndex());
+				_userColumn.setSortPriority(dbcolumns[i].getSortPriority());
+				_userColumn.setSortOrder(dbcolumns[i].getSortOrder());
 				store(_userColumn);
 			}
 		}
@@ -76,7 +81,7 @@ class UserColumnsTable extends AbstractTable {
 			var modelColumns = model.getColumns();
 			if (model.userCanDisableColumns() && !DBManager.instance().isFirstStart()) {
 				for (var modelColumn : modelColumns) {
-					modelColumn.setDisplay(!modelColumn.isEditable());
+					modelColumn.setDisplay(!modelColumn.canBeDisabled());
 				}
 			}
 			for (var userColumn : userColumns) {
@@ -86,6 +91,8 @@ class UserColumnsTable extends AbstractTable {
 					modelColumn.setPreferredWidth(userColumn.getPreferredWidth());
 					modelColumn.setDisplay(true);
 					modelColumn.setIndex(userColumn.getIndex());
+					modelColumn.setSortPriority(userColumn.getSortPriority());
+					modelColumn.setSortOrder(userColumn.getSortOrder());
 					count++;
 				}
 			}
@@ -104,6 +111,8 @@ class UserColumnsTable extends AbstractTable {
 		private int modelIndex;
 		private int index;
 		private Integer preferredWidth;
+		private Integer sortPriority;
+		private String sortOrder;
 
 		public _UserColumn(){}
 		/**
@@ -149,6 +158,38 @@ class UserColumnsTable extends AbstractTable {
 
 		public void setPreferredWidth(Integer preferredWidth) {
 			this.preferredWidth = preferredWidth;
+		}
+
+		public void setSortPriority(Integer sortPriority) {
+			this.sortPriority = sortPriority;
+		}
+
+		public void setSortOrder(SortOrder sortOrder) {
+			if (sortOrder != null) {
+				this.sortOrder = sortOrder.toString();
+			}
+			else {
+				this.sortOrder = null;
+			}
+		}
+
+		public void setSortOrder(String sortOrder) {
+			this.sortOrder = sortOrder;
+		}
+
+		public String getSortOrderAsString(){
+			return sortOrder;
+		}
+
+		public SortOrder getSortOrder() {
+			if ( sortOrder != null && !sortOrder.isEmpty() ) {
+				return SortOrder.valueOf(sortOrder);
+			}
+			return null;
+		}
+
+		public Integer getSortPriority() {
+			return sortPriority;
 		}
 	}
 }

@@ -10,7 +10,7 @@ import core.util.Helper;
 
 import javax.swing.JTable;
 import javax.swing.table.TableColumnModel;
-
+import java.io.Serial;
 
 
 /**
@@ -18,7 +18,8 @@ import javax.swing.table.TableColumnModel;
  */
 public class ArenaStatistikTable extends JTable {
 
-	private static final long serialVersionUID = -6319111452810917050L;
+	@Serial
+    private static final long serialVersionUID = -6319111452810917050L;
 
     //~ Instance fields ----------------------------------------------------------------------------
 
@@ -47,21 +48,6 @@ public class ArenaStatistikTable extends JTable {
     public final TableSorter getSorter() {
         return m_clTableSorter;
     }
-
-    /**
-     * Markiert ein Match, wenn es in der Tabelle vorhanden ist, sonst wird die Selektion gelöscht
-     */
-    public final void markiereMatch(int matchid) {
-        final int row = m_clTableSorter.getRow4Match(matchid);
-
-        if (row > -1) {
-            setRowSelectionInterval(row, row);
-        } else {
-            clearSelection();
-        }
-    }
-
-    //----------------Refresh-------------------------------------------
 
     /**
      * Refresh all data.

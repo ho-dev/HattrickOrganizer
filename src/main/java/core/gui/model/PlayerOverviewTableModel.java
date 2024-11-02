@@ -1,6 +1,7 @@
 package core.gui.model;
 
 import core.db.DBManager;
+import core.gui.comp.table.BooleanColumn;
 import core.gui.comp.table.HOTableModel;
 import core.gui.comp.table.UserColumn;
 import core.model.player.Player;
@@ -17,7 +18,7 @@ import java.util.List;
  * @author Thorsten Dietz
  * @since 1.36
  */
-public final class PlayerOverviewModel extends HOTableModel {
+public class PlayerOverviewTableModel extends HOTableModel {
 
 	@Serial
 	private static final long serialVersionUID = 5149408240369536138L;
@@ -29,14 +30,13 @@ public final class PlayerOverviewModel extends HOTableModel {
 	 * constructor
 	 *
 	 */
-	PlayerOverviewModel(UserColumnController.ColumnModelId id){
-		super(id,"Spieleruebersicht");
-		initialize();
+	PlayerOverviewTableModel(UserColumnController.ColumnModelId id){
+		this(id,"Spieleruebersicht");
 	}
 
-	@Override
-	public boolean userCanDisableColumns() {
-		return !DBManager.instance().isFirstStart();
+	protected PlayerOverviewTableModel(UserColumnController.ColumnModelId id, String name){
+		super(id, name);
+		initialize();
 	}
 
 	/**
@@ -44,7 +44,7 @@ public final class PlayerOverviewModel extends HOTableModel {
 	 */
 	private void initialize() {
 		UserColumn[] basic = UserColumnFactory.createPlayerBasicArray();
-		columns = new UserColumn[63];
+		columns = new UserColumn[64];
 		columns[0] = basic[0];
 		columns[48] = basic[1];
 
@@ -85,13 +85,32 @@ public final class PlayerOverviewModel extends HOTableModel {
 		columns[60] = additionalArray[22];
 		columns[61] = additionalArray[23]; // schum-rank
 		columns[62] = additionalArray[24]; // schum-rank benchmark
+		columns[63] = new BooleanColumn(UserColumnFactory.AUTO_LINEUP, " ", "AutoAufstellung", 28);
 	}
 
-    public Player getPlayer(int id) {
+	@Override
+	public final boolean isCellEditable(int row, int col) {
+		return getValueAt(row, col) instanceof Boolean;
+	}
+
+	public int getRowIndexOfPlayer(int playerId){
+		var modelIndex = getPlayerIndex(playerId);
+		if (modelIndex > -1){
+			return this.table.convertRowIndexToView(modelIndex);
+		}
+		return -1;
+	}
+
+	public Player getPlayerAtRow(int tableRow) {
+		if (tableRow > -1 ) return m_vPlayers.get(this.table.convertRowIndexToModel(tableRow));
+		return null;
+	}
+
+    public Player getPlayer(int playerId) {
         // Can be negative for temp player
-        if (id != 0) {
+        if (playerId != 0) {
 			for (Player m_vPlayer : m_vPlayers) {
-				if (m_vPlayer.getPlayerId() == id) {
+				if (m_vPlayer.getPlayerId() == playerId) {
 					return m_vPlayer;
 				}
 			}
@@ -99,6 +118,21 @@ public final class PlayerOverviewModel extends HOTableModel {
 
         return null;
     }
+
+	public int getPlayerIndex(int playerId){
+		int i = 0;
+		for (Player m_vPlayer : m_vPlayers) {
+			if (m_vPlayer.getPlayerId() == playerId) {
+				return i;
+			}
+			i++;
+		}
+		return -1;
+	}
+
+	public List<Player> getPlayers() {
+		return m_vPlayers;
+	}
 
     /**
      * Sets the new list of players.
@@ -157,34 +191,40 @@ public final class PlayerOverviewModel extends HOTableModel {
      */
     @Override
 	protected void initData() {
-    	UserColumn [] tmpDisplayedColumns = getDisplayedColumns();
-    	m_clData = new Object[m_vPlayers.size()][tmpDisplayedColumns.length];
+		UserColumn[] tmpDisplayedColumns = getDisplayedColumns();
+		m_clData = new Object[m_vPlayers.size()][tmpDisplayedColumns.length];
 
-    	for (int i = 0; i < m_vPlayers.size(); i++) {
-    		final Player currentPlayer = m_vPlayers.get(i);
-    		final Player comparisonPlayer = getPreviousPlayerDevelopmentStage(currentPlayer);
-
-    		for (int j = 0; j < tmpDisplayedColumns.length; j++) {
-    			m_clData[i][j] = ((PlayerColumn)tmpDisplayedColumns[j]).getTableEntry(currentPlayer, comparisonPlayer);
+		for (int i = 0; i < m_vPlayers.size(); i++) {
+			final Player currentPlayer = m_vPlayers.get(i);
+			final Player comparisonPlayer = getPreviousPlayerDevelopmentStage(currentPlayer);
+			for (int j = 0; j < tmpDisplayedColumns.length; j++) {
+				if (tmpDisplayedColumns[j] instanceof PlayerColumn) {
+					m_clData[i][j] = ((PlayerColumn) tmpDisplayedColumns[j]).getTableEntry(currentPlayer, comparisonPlayer);
+				} else if (tmpDisplayedColumns[j] instanceof BooleanColumn) {
+					m_clData[i][j] = ((BooleanColumn) tmpDisplayedColumns[j]).getValue(currentPlayer);
+				}
 			}
-    	}
-    }
+		}
+	}
 
     /**
-     * Passt nur die Aufstellung an
+     * Initializes the lineup only
      */
     public void reInitData() {
     	UserColumn [] tmpDisplayedColumns = getDisplayedColumns();
         for (int i = 0; i < m_vPlayers.size(); i++) {
-            final Player aktuellerPlayer = m_vPlayers.get(i);
+            final Player currentPlayer = m_vPlayers.get(i);
 
             for (int j = 0; j < tmpDisplayedColumns.length; j++) {
 				if(tmpDisplayedColumns[j].getId() == UserColumnFactory.NAME
 						|| tmpDisplayedColumns[j].getId() == UserColumnFactory.LINEUP
 						|| tmpDisplayedColumns[j].getId() == UserColumnFactory.BEST_POSITION
 						|| tmpDisplayedColumns[j].getId() == UserColumnFactory.SCHUM_RANK_BENCHMARK
-						|| tmpDisplayedColumns[j].getId() == UserColumnFactory.GROUP)
-					m_clData[i][j] = ((PlayerColumn)tmpDisplayedColumns[j]).getTableEntry(aktuellerPlayer,null);
+						|| tmpDisplayedColumns[j].getId() == UserColumnFactory.GROUP){
+					m_clData[i][j] = ((PlayerColumn)tmpDisplayedColumns[j]).getTableEntry(currentPlayer,null);
+				} else if (tmpDisplayedColumns[j].getId() == UserColumnFactory.AUTO_LINEUP) {
+					m_clData[i][j] = ((BooleanColumn) tmpDisplayedColumns[j]).getValue(currentPlayer);
+				}
 			}
         }
     }

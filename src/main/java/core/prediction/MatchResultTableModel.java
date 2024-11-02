@@ -10,10 +10,13 @@ import core.gui.theme.ImageUtilities;
 import core.model.TranslationFacility;
 import core.prediction.engine.MatchResult;
 
+import javax.swing.SwingConstants;
+import java.io.Serial;
 import javax.swing.*;
 
 public class MatchResultTableModel extends AbstractMatchTableModel {
 	//~ Instance fields ----------------------------------------------------------------------------
+	@Serial
 	private static final long serialVersionUID = 5568369952809628251L;
 	public static final String[] columnNames = {
 		TranslationFacility.tr("ls.match.result"),
@@ -48,10 +51,10 @@ public class MatchResultTableModel extends AbstractMatchTableModel {
 				final int res = matchResult.getResultDetail()[(home * 5) + away];
 
 				// result
-				m_clData[(home * 5) + away][0] = new ColorLabelEntry("" + home + " - " + away, ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+				m_clData[(home * 5) + away][0] = new ColorLabelEntry(home + " - " + away, ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
 
 				//Ergebnis
-				m_clData[(home * 5) + away][1] = getProgressBar(res / number * 1.0d);
+				m_clData[(home * 5) + away][1] = getProgressBar(res / number);
 
 				m_clData[(home * 5) + away][2] = new ColorLabelEntry(1, "", ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
 

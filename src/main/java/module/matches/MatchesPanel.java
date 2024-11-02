@@ -5,10 +5,8 @@ import core.db.DBManager;
 import core.gui.CursorToolkit;
 import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
-import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
-import core.gui.model.MatchesColumnModel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
@@ -129,8 +127,8 @@ public final class MatchesPanel extends LazyImagePanel {
 	}
 
 	private void saveSettings() {
-		matchesTable.saveColumnOrder();
-		matchesOverviewTable.saveColumnOrder();
+		matchesTable.storeUserSettings();
+		matchesOverviewTable.storeUserSettings();
 		UserParameter parameter = UserParameter.instance();
 		parameter.spielePanel_horizontalLeftSplitPane = horizontalLeftSplitPane
 				.getDividerLocation();
@@ -172,7 +170,7 @@ public final class MatchesPanel extends LazyImagePanel {
 		int i=0;
 		int n = matchesTable.getSelectedRows().length;
 		for ( var selectedRowNumber : matchesTable.getSelectedRows()){
-			var matchKurzInfo = getMatchKurzInfoOfRow(selectedRowNumber);
+			var matchKurzInfo = matchesTable.getMatchAtRow(selectedRowNumber);
 			OnlineWorker.downloadMatchData( matchKurzInfo.getMatchID(), matchKurzInfo.getMatchType(), true);
 			HOMainFrame.instance().updateProgress((int)(++i * 100.0 / n));
 		}
@@ -181,17 +179,12 @@ public final class MatchesPanel extends LazyImagePanel {
 		HOMainFrame.instance().setInformationCompleted();
 	}
 
-	private MatchKurzInfo getMatchKurzInfoOfRow(int selectedRowNumber) {
-		return  ((MatchesColumnModel) matchesTable.getSorter().getModel())
-				.getMatch((int) ((ColorLabelEntry) matchesTable.getSorter().getValueAt(selectedRowNumber, 7)).getNumber());
-	}
-
 	private void deleteSelectedMatches() {
 		int[] rows = matchesTable.getSelectedRows();
 		MatchKurzInfo[] infos = new MatchKurzInfo[rows.length];
 
 		for (int i = 0; i < rows.length; i++) {
-			infos[i] = getMatchKurzInfoOfRow(rows[i]);
+			infos[i] = matchesTable.getMatchAtRow(rows[i]);
 		}
 
 		StringBuilder text = new StringBuilder(100);
@@ -540,9 +533,7 @@ public final class MatchesPanel extends LazyImagePanel {
 
 		if (row > -1) {
 			// Selektiertes Spiel des Models holen und alle 3 Panel informieren
-			MatchKurzInfo info = ((MatchesColumnModel) matchesTable.getSorter().getModel())
-					.getMatch((int) ((ColorLabelEntry) matchesTable.getSorter().getValueAt(row, 7))
-							.getNumber());
+			MatchKurzInfo info = matchesTable.getMatchAtRow (row);
 			this.matchesModel.setMatch(info);
 
 			updateButtons();

@@ -5,12 +5,11 @@ import module.teamAnalyzer.vo.Filter;
 import module.teamAnalyzer.vo.Match;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class MatchList {
     //~ Instance fields ----------------------------------------------------------------------------
-    private List<Match> matchList;
+    private final List<Match> matchList;
 
     //~ Constructors -------------------------------------------------------------------------------
     /**
@@ -55,30 +54,5 @@ public class MatchList {
         }
 
         return list;
-    }
-    
-    /**
-     * Returns the result type, as 0 for draw, 1 for wins and -1 for defeat
-     *
-     * @param match Match to be analyzed
-     *
-     * @return result code
-     */
-    private int result(Match match) {
-        boolean isHome = match.isHome();
-
-        if (match.getHomeGoals() == match.getAwayGoals()) {
-            return 0;
-        }
-
-        if ((match.getHomeGoals() > match.getAwayGoals()) && isHome) {
-            return 1;
-        }
-
-        if ((match.getHomeGoals() < match.getAwayGoals()) && !isHome) {
-            return 1;
-        }
-
-        return -1;
     }
 }

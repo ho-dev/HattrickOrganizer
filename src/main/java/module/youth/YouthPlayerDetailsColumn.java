@@ -28,7 +28,7 @@ public class YouthPlayerDetailsColumn extends UserColumn {
     }
 
     @Override
-    public boolean isEditable() {
+    public boolean canBeDisabled() {
         return false;
     }
 

@@ -15,7 +15,6 @@ import core.model.match.MatchKurzInfo;
 import core.model.player.Player;
 import core.net.HattrickLink;
 import core.util.Helper;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
@@ -48,8 +47,9 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 		Helper.setComboBoxFromID(playerComboBox, spielerid);
 	}
 
-	public void saveColumnOrder() {
-		m_jtSpielerMatchesTable.saveColumnOrder();
+	public void storeUserSettings() {
+		m_jtSpielerMatchesTable.storeUserSettings();
+		m_jtSpielerPositionTable.storeUserSettings();
 	}
 
 	@Override

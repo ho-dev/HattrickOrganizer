@@ -7,6 +7,7 @@ import core.gui.comp.table.ToolTipHeader;
 import core.gui.model.SpielerPositionTableModel;
 import core.util.Helper;
 
+import java.io.Serial;
 import java.util.Vector;
 
 import javax.swing.JTable;
@@ -14,10 +15,11 @@ import javax.swing.table.TableColumnModel;
 
 final class SpielerPositionTable extends JTable {
 
+	@Serial
 	private static final long serialVersionUID = 6625601251606134493L;
 	private SpielerPositionTableModel m_clTableModel;
 	private TableSorter m_clTableSorter;
-	private int m_iSpielerId = -1;
+	private int m_iSpielerId;
 
 	/**
 	 * Creates a new SpielerPositionTable object.
@@ -97,4 +99,8 @@ final class SpielerPositionTable extends JTable {
 
 		m_clTableSorter.initsort();
 	}
+
+    public void storeUserSettings() {
+		// Todo: extend HOTableMOdel
+    }
 }

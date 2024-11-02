@@ -46,34 +46,24 @@ public class PlayerAnalyseMainPanel extends LazyImagePanel {
 	}
 
 	private void addListeners() {
-		HOMainFrame.instance().addApplicationClosingListener(new ApplicationClosingListener() {
+		HOMainFrame.instance().addApplicationClosingListener(this::saveSettings);
 
-			@Override
-			public void applicationClosing() {
-				saveSettings();
-			}
-		});
+		arrangeButton.addActionListener(e -> {
+            if (splitPane.getOrientation() == JSplitPane.VERTICAL_SPLIT) {
+                splitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
+            } else {
+                splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
+            }
 
-		arrangeButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				if (splitPane.getOrientation() == JSplitPane.VERTICAL_SPLIT) {
-					splitPane.setOrientation(JSplitPane.HORIZONTAL_SPLIT);
-				} else {
-					splitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
-				}
-
-				UserParameter.instance().spieleranalyseVertikal = !UserParameter.instance().spieleranalyseVertikal;
-			}
-		});
+            UserParameter.instance().spieleranalyseVertikal = !UserParameter.instance().spieleranalyseVertikal;
+        });
 	}
 
 	private void saveSettings() {
 		UserParameter parameter = UserParameter.instance();
 		parameter.spielerAnalysePanel_horizontalSplitPane = splitPane.getDividerLocation();
-		playersPanel1.saveColumnOrder();
-		playersPanel2.saveColumnOrder();
+		playersPanel1.storeUserSettings();
+		playersPanel2.storeUserSettings();
 	}
 
 	private void initComponents() {

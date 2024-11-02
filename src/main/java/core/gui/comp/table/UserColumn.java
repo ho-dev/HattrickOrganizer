@@ -2,8 +2,12 @@ package core.gui.comp.table;
 
 import core.model.TranslationFacility;
 
+import javax.swing.*;
 import javax.swing.table.TableColumn;
 
+/**
+ * User configuration of table columns
+ */
 public abstract class UserColumn {
 
     //~ Instance fields ----------------------------------------------------------------------------
@@ -13,27 +17,49 @@ public abstract class UserColumn {
 	/** columnName properties representation, not display!! **/
 	protected String columnName;
 	
-	/** tooltip properties representation, not display!! **/
+	/** tooltip properties representation **/
 	protected String tooltip;
 	
-	/** mininmum width of the column **/
+	/** minimum width of the column **/
 	protected int minWidth;
 	
 	/** preferred width of the column **/
 	protected int preferredWidth;
 	
-	/** index of the column in the JTable. position**/
+	/** index of the column in the table **/
 	protected int index = 0;
 	
-	/** if a column is shown in the jtable. Only displayed columns are saved in db. **/
+	/** if a column is shown in the table. Only displayed columns are saved in db. **/
 	protected boolean display = false;
 
+	/**
+	 * Sort order of the column
+	 */
+	SortOrder sortOrder;
+
+	/**
+	 * Sort priority
+	 * Defines the order of the sort keys if more than one column are sorted
+	 */
+	Integer sortPriority;
+
+	/**
+	 * Constructor of an user column
+	 * @param id  column identifier has to be unique in one table
+	 * @param name Column name is displayed in the column header
+	 * @param tooltip Column header tool tip
+	 */
 	protected UserColumn(int id,String name, String tooltip){
 		this.id = id;
 		columnName = name;
 		this.tooltip = tooltip;
 	}
 
+	/**
+	 * Constructor of an user column
+	 * @param id  column identifier has to be unique in one table
+	 * @param name Column name and tool tip
+	 */
 	protected UserColumn(int id,String name){
 		this(id,name,name);
 	}
@@ -52,16 +78,16 @@ public abstract class UserColumn {
 	}
 	
 	/**
-	 * return  id
+	 * Return  id
 	 * @return int
 	 */
 	public final int getId() {
 		return id;
 	}
 
-	public void setId(int v){
-		this.id = v;
-	}
+//	public void setId(int v){
+//		this.id = v;
+//	}
 	
 	/**
 	 * returns the language dependency tooltip of the column
@@ -87,6 +113,8 @@ public abstract class UserColumn {
 		this.display = display;
 		if (!display) {
 			index = 0;
+			sortPriority = null;
+			sortOrder = null;
 		}
 	}
 
@@ -117,11 +145,11 @@ public abstract class UserColumn {
 		return getTooltip();
 	}
 
-	/*
+	/**
 	 * Some columns must be displayed, so some columns are not editable
 	 * @return boolean
 	 */
-	public boolean isEditable(){
+	public boolean canBeDisabled(){
 		return true;
 	}
 
@@ -146,4 +174,19 @@ public abstract class UserColumn {
 		return preferredWidth;
 	}
 
+	public Integer getSortPriority() {
+		return sortPriority;
+	}
+
+	public SortOrder getSortOrder() {
+		return sortOrder;
+	}
+
+	public void setSortPriority(Integer sortPriority) {
+		this.sortPriority = sortPriority;
+	}
+
+	public void setSortOrder(SortOrder sortOrder) {
+		this.sortOrder = sortOrder;
+	}
 }

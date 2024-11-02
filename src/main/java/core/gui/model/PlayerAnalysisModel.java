@@ -25,8 +25,8 @@ public class PlayerAnalysisModel extends HOTableModel {
 	 */
 	@Serial
 	private static final long serialVersionUID = -2953738895366809237L;
+	private final int instance;
 	private Vector<PlayerMatchCBItem> m_vSpielerMatchCBItem;
-
 
 	/**
 	 * constructor
@@ -34,12 +34,8 @@ public class PlayerAnalysisModel extends HOTableModel {
 	 */
 	public PlayerAnalysisModel(UserColumnController.ColumnModelId id, int instance){
 		super(id,"SpielerAnalyse");
-		super.instance = instance;
+		this.instance = instance;
 		initialize();
-	}
-	@Override
-	public boolean userCanDisableColumns(){
-		return !DBManager.instance().isFirstStart();
 	}
 
 	private void initialize() {
@@ -184,5 +180,11 @@ public class PlayerAnalysisModel extends HOTableModel {
         m_vSpielerMatchCBItem = spielermatchCBItem;
         initData();
     }
+
+	@Override
+	public String toString() {
+		var  s = super.toString();
+		return (instance == 0) ? s : (s + instance);
+	}
 
 }

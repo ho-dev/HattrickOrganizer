@@ -1,8 +1,6 @@
 // %3040931838:de.hattrickorganizer.logik.matchengine%
 package core.prediction.engine;
 
-import java.util.Map;
-
 public class TeamRatings {
     //~ Instance fields ----------------------------------------------------------------------------
 
@@ -91,16 +89,15 @@ public class TeamRatings {
 
     @Override
 	public final String toString() {
-        final StringBuilder buffer = new StringBuilder();
-        buffer.append("TeamRatings[");
-        buffer.append("leftDef = " + leftDef);
-        buffer.append(", middleDef = " + middleDef);
-        buffer.append(", rightDef = " + rightDef);
-        buffer.append(", leftAttack = " + leftAttack);
-        buffer.append(", middleAttack = " + middleAttack);
-        buffer.append(", rightAttack = " + rightAttack);
-        buffer.append(", midfield = " + midfield);
-        buffer.append("]");
-        return buffer.toString();
+        String buffer = "TeamRatings[" +
+                "leftDef = " + leftDef +
+                ", middleDef = " + middleDef +
+                ", rightDef = " + rightDef +
+                ", leftAttack = " + leftAttack +
+                ", middleAttack = " + middleAttack +
+                ", rightAttack = " + rightAttack +
+                ", midfield = " + midfield +
+                "]";
+        return buffer;
     }
 }

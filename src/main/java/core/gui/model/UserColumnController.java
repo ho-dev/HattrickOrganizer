@@ -2,7 +2,6 @@ package core.gui.model;
 
 import core.db.DBManager;
 import core.gui.comp.table.HOTableModel;
-import module.lineup.LineupTableModel;
 import module.matches.statistics.MatchesOverviewColumnModel;
 import module.specialEvents.SpecialEventsTableModel;
 import module.teamAnalyzer.ui.RecapPanelTableModel;
@@ -53,16 +52,16 @@ public final class UserColumnController {
 	private  MatchesOverviewColumnModel matchesOverview1ColumnModel		= null;
 	
 	/** model for player overview **/
-	private  PlayerOverviewModel playerOverviewColumnModel	= null;
+	private PlayerOverviewTableModel playerOverviewColumnModel	= null;
 	
 	/** model for lineup table **/
-	private  LineupTableModel lineupColumnModel			= null;
+	private PlayerOverviewTableModel lineupColumnModel			= null;
 	
 	/** model for player analysis **/
-	private PlayerAnalysisModel playerAnalysis1Model 		= null;
+	private final PlayerAnalysisModel[] playerAnalysisModels 		= new PlayerAnalysisModel[2];
 	
 	/** model for player analysis **/
-	private PlayerAnalysisModel playerAnalysis2Model 		= null;
+//	private PlayerAnalysisModel playerAnalysis2Model 		= null;
 
 	// Youth module
 	private YouthPlayerOverviewTableModel youthPlayerOverviewColumnModel;
@@ -100,8 +99,8 @@ public final class UserColumnController {
 		dbManager.loadHOColumModel(getMatchesModel());
 		dbManager.loadHOColumModel(getPlayerOverviewModel());
 		dbManager.loadHOColumModel(getLineupModel());
-		dbManager.loadHOColumModel(getAnalysis1Model());
-		dbManager.loadHOColumModel(getAnalysis2Model());
+		dbManager.loadHOColumModel(getAnalysisModel(1));
+		dbManager.loadHOColumModel(getAnalysisModel(2));
 		dbManager.loadHOColumModel(getMatchesOverview1ColumnModel());
 
 		dbManager.loadHOColumModel(getYouthTrainingViewColumnModel());
@@ -124,23 +123,13 @@ public final class UserColumnController {
 	 * 
 	 * @return PlayerAnalysisModel
 	 */
-	public PlayerAnalysisModel getAnalysis1Model(){
-		if(playerAnalysis1Model == null)
-			playerAnalysis1Model = new PlayerAnalysisModel(ColumnModelId.PLAYERANALYSIS1, 1);
+	public PlayerAnalysisModel getAnalysisModel(int instance){
+		if(playerAnalysisModels[instance-1] == null)
+			playerAnalysisModels[instance-1] = new PlayerAnalysisModel(ColumnModelId.PLAYERANALYSIS1, instance);
 		
-		return playerAnalysis1Model;
+		return playerAnalysisModels[instance-1];
 	}
 	
-	/**
-	 * 
-	 * @return PlayerAnalysisModel
-	 */
-	public PlayerAnalysisModel getAnalysis2Model(){
-		if(playerAnalysis2Model == null)
-			playerAnalysis2Model = new PlayerAnalysisModel(ColumnModelId.PLAYERANALYSIS2, 2);
-		
-		return playerAnalysis2Model;
-	}
 	/**
 	 * 
 	 * @return MatchesColumnModel
@@ -162,9 +151,9 @@ public final class UserColumnController {
 	 * 
 	 * @return PlayerOverviewModel
 	 */
-	public PlayerOverviewModel getPlayerOverviewModel(){
+	public PlayerOverviewTableModel getPlayerOverviewModel(){
 		if(playerOverviewColumnModel == null){
-			playerOverviewColumnModel = new PlayerOverviewModel(ColumnModelId.PLAYEROVERVIEW);
+			playerOverviewColumnModel = new PlayerOverviewTableModel(ColumnModelId.PLAYEROVERVIEW);
 		}
 		return playerOverviewColumnModel;
 	}
@@ -173,13 +162,12 @@ public final class UserColumnController {
 	 * 
 	 * @return LineupColumnModel
 	 */
-	public LineupTableModel getLineupModel(){
+	public PlayerOverviewTableModel getLineupModel(){
 		if(lineupColumnModel == null){
-			lineupColumnModel = new LineupTableModel(ColumnModelId.LINEUP);
+			lineupColumnModel = new PlayerOverviewTableModel(ColumnModelId.LINEUP, "Aufstellung");
 		}
 		return lineupColumnModel;
 	}
-	
 
 	/**
 	 * return all model as Vector
@@ -189,8 +177,8 @@ public final class UserColumnController {
 		Vector<HOTableModel> v = new Vector<>();
 		v.add(getPlayerOverviewModel());
 		v.add(getLineupModel());
-		v.add(getAnalysis1Model());
-		v.add(getAnalysis2Model());
+		v.add(getAnalysisModel(1));
+		v.add(getAnalysisModel(2));
 		v.add(getTeamAnalyzerRecapModel());
 		// MatchesOverView1Model should not add in this vector, because columns should not be edit
 		return v;

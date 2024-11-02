@@ -2,14 +2,14 @@ package core.model;
 
 public enum StaffType {
 
-	NONE((int) 0),
-	ASSISTANTTRAINER((int) 1),
-	MEDIC((int) 2),
-	SPOKESPERSON((int) 3),
-	SPORTPSYCHOLOGIST((int) 4),
-	FORMCOACH((int) 5),
-	FINANCIALDIRECTOR((int) 6),
-	TACTICALASSISTANT((int) 7);
+	NONE(0),
+	ASSISTANTTRAINER(1),
+	MEDIC(2),
+	SPOKESPERSON(3),
+	SPORTPSYCHOLOGIST(4),
+	FORMCOACH(5),
+	FINANCIALDIRECTOR(6),
+	TACTICALASSISTANT(7);
 		
 	private final int id;
 
@@ -50,7 +50,7 @@ public enum StaffType {
 
 		         case FINANCIALDIRECTOR:
 		             return TranslationFacility.tr("ls.club.staff.financialdirector");
-		         
+
 		         case TACTICALASSISTANT:
 		           return TranslationFacility.tr("ls.club.staff.tacticalassistant");
 				 

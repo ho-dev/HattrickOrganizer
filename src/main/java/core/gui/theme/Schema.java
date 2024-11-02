@@ -1,16 +1,7 @@
 package core.gui.theme;
 
-
-import java.awt.Color;
-import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Properties;
-import java.util.regex.Pattern;
-
 import javax.swing.ImageIcon;
-
-
-
 
 public abstract class Schema  {
 

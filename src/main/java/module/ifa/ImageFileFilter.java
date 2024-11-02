@@ -5,7 +5,7 @@ import java.io.File;
 import javax.swing.filechooser.FileFilter;
 
 class ImageFileFilter extends FileFilter {
-	String[] ext = new String[0];
+	String[] ext;
 
 	public ImageFileFilter(String[] ext) {
 		this.ext = ext;
@@ -23,14 +23,12 @@ class ImageFileFilter extends FileFilter {
 		if ((i > 0) && (i < s.length() - 1)) {
 			extension = s.substring(i + 1).toLowerCase();
 		}
-		if (extension != null) {
-            for (String string : this.ext) {
-                if (extension.equals(string)) {
-                    return true;
-                }
+        for (String string : this.ext) {
+            if (extension.equals(string)) {
+                return true;
             }
-		}
-		return false;
+        }
+        return false;
 	}
 
 	@Override

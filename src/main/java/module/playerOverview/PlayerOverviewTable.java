@@ -3,23 +3,17 @@ package module.playerOverview;
 import core.db.DBManager;
 import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
-import core.gui.comp.renderer.HODefaultTableCellRenderer;
+import core.gui.comp.table.FixedColumnsTable;
 import core.gui.comp.table.TableSorter;
-import core.gui.comp.table.ToolTipHeader;
-import core.gui.comp.table.UserColumn;
-import core.gui.model.PlayerOverviewModel;
+import core.gui.model.PlayerOverviewTableModel;
 import core.gui.model.UserColumnController;
 import core.gui.model.UserColumnFactory;
 import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
-import core.model.UserParameter;
 import core.model.match.MatchKurzInfo;
 import core.model.player.Player;
 import core.net.HattrickLink;
-import core.util.Helper;
-
 import javax.swing.*;
-import javax.swing.table.TableColumnModel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.Serial;
@@ -28,7 +22,7 @@ import java.io.Serial;
 /**
  * The Squad table, listing all the players on the team.
  *
- * <p>The actual model for that table is defined in {@link PlayerOverviewModel}, which defines
+ * <p>The actual model for that table is defined in {@link PlayerOverviewTableModel}, which defines
  * all the columns to be displayed; the columns are initiated by a factory, {@link UserColumnFactory},
  * which in particular sets their preferred width.</p>
  *
@@ -40,18 +34,18 @@ import java.io.Serial;
  * 
  * @author Thorsten Dietz
  */
-public class PlayerOverviewTable extends JTable implements core.gui.Refreshable {
+public class PlayerOverviewTable extends FixedColumnsTable implements core.gui.Refreshable {
 
 	@Serial
 	private static final long serialVersionUID = -6074136156090331418L;
-	private PlayerOverviewModel tableModel;
-	private TableSorter tableSorter;
+	private final PlayerOverviewTableModel tableModel;
 
 	public PlayerOverviewTable() {
-		super();
-		initModel();
-		setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
-		setSelectionBackground(HODefaultTableCellRenderer.SELECTION_BG);
+		super(UserColumnController.instance().getPlayerOverviewModel());
+		tableModel = (PlayerOverviewTableModel)this.getModel();
+		tableModel.setValues(HOVerwaltung.instance().getModel().getCurrentPlayers());
+		tableModel.initTable(this);
+		setOpaque(false);
 		RefreshManager.instance().registerRefreshable(this);
 
 		// Add a mouse listener that, when clicking on the “Last match” column
@@ -60,26 +54,22 @@ public class PlayerOverviewTable extends JTable implements core.gui.Refreshable 
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				int rowIndex = getSelectedRow();
-				if (rowIndex >= 0) {
+				var player = getSelectedPlayer();
+				if (player!=null) {
 					// Last match column
 					int columnAtPoint = columnAtPoint(e.getPoint());
 					// Get name of the actual column at columnAtPoint, i.e. post-ordering of the columns
 					// based on preferences.
-					String columnName = PlayerOverviewTable.this.getColumnName(columnAtPoint);
-					String lastMatchRating = (TranslationFacility.tr("LastMatchRating"));
-
-					Player player = tableSorter.getPlayerAtRow(rowIndex);
-					if (player != null) {
-						if (columnName.equalsIgnoreCase(lastMatchRating)) {
-							if (e.isShiftDown()) {
-								int matchId = player.getLastMatchId();
-								// TODO: get match type ?
-								MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(matchId, null);
-								HattrickLink.showMatch(String.valueOf(matchId), info.getMatchType().isOfficial());
-							} else if (e.getClickCount() == 2) {
-								HOMainFrame.instance().showMatch(player.getLastMatchId());
-							}
+					var columnName = tableModel.getColumnName(columnAtPoint);
+					String lastMatchRating = TranslationFacility.tr("LastMatchRating");
+					if (columnName != null && columnName.equalsIgnoreCase(lastMatchRating)) {
+						if (e.isShiftDown()) {
+							int matchId = player.getLastMatchId();
+							var matchType = player.getLastMatchType();
+							MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(matchId, matchType);
+							HattrickLink.showMatch(String.valueOf(matchId), info.getMatchType().isOfficial());
+						} else if (e.getClickCount() == 2) {
+							HOMainFrame.instance().showMatch(player.getLastMatchId());
 						}
 					}
 				}
@@ -87,41 +77,34 @@ public class PlayerOverviewTable extends JTable implements core.gui.Refreshable 
 		});
 	}
 
-	public final TableSorter getSorter() {
-		return tableSorter;
-	}
-
-	public final void saveColumnOrder() {
-		UserColumn[] columns = tableModel.getDisplayedColumns();
-		TableColumnModel tableColumnModel = getColumnModel();
-		for (int i = 0; i < columns.length; i++) {
-			columns[i].setIndex(convertColumnIndexToView(i));
-			columns[i].setPreferredWidth(tableColumnModel.getColumn(convertColumnIndexToView(i)).getWidth());
+	public Player getSelectedPlayer(){
+		var rowIndex = getSelectedRow();
+		if (rowIndex >= 0) {
+			return tableModel.getPlayers().get(convertRowIndexToModel(rowIndex));
 		}
-		tableModel.setCurrentValueToColumns(columns);
-		DBManager.instance().saveHOColumnModel(tableModel);
+		return null;
 	}
 
-	public final void setSpieler(int playerId) {
-		final int index = tableSorter.getRow4Spieler(playerId);
-
+	public final void selectPlayer(int playerId) {
+		var index = tableModel.getPlayerIndex(playerId);
 		if (index >= 0) {
+			index = convertRowIndexToView(index);
 			this.setRowSelectionInterval(index, index);
 		}
 	}
 
 	@Override
 	public final void reInit() {
-		initModel();
+		resetPlayers();
 		repaint();
 	}
 
 	public final void reInitModel() {
-		((PlayerOverviewModel) getSorter().getModel()).reInitData();
+		tableModel.reInitData();
 	}
 
 	public final void reInitModelHRFComparison() {
-		((PlayerOverviewModel) getSorter().getModel()).reInitDataHRFComparison();
+		tableModel.reInitDataHRFComparison();
 	}
 
 	@Override
@@ -135,68 +118,11 @@ public class PlayerOverviewTable extends JTable implements core.gui.Refreshable 
 		repaint();
 	}
 
-	/**
-	 * Returns the sorting column.
-	 */
-	private int getSortSpalte() {
-		return switch (UserParameter.instance().standardsortierung) {
-			case UserParameter.SORT_NAME -> tableModel.getPositionInArray(UserColumnFactory.NAME);
-			case UserParameter.SORT_AUFGESTELLT -> tableModel.getPositionInArray(UserColumnFactory.LINEUP);
-			case UserParameter.SORT_GRUPPE -> tableModel.getPositionInArray(UserColumnFactory.GROUP);
-			case UserParameter.SORT_BEWERTUNG -> tableModel.getPositionInArray(UserColumnFactory.RATING);
-			default -> tableModel.getPositionInArray(UserColumnFactory.BEST_POSITION);
-		};
+	private void resetPlayers() {
+		tableModel.setValues(HOVerwaltung.instance().getModel().getCurrentPlayers());
 	}
 
-	/**
-	 * Initialises the model.
-	 */
-	private void initModel() {
-		setOpaque(false);
-
-		if (tableModel == null) {
-			tableModel = UserColumnController.instance().getPlayerOverviewModel();
-			tableModel.setValues(HOVerwaltung.instance().getModel().getCurrentPlayers());
-			tableSorter = new TableSorter(tableModel,
-					tableModel.getPositionInArray(UserColumnFactory.ID),
-					getSortSpalte(),
-					tableModel.getPositionInArray(UserColumnFactory.NAME)
-			);
-
-			ToolTipHeader header = new ToolTipHeader(getColumnModel());
-			header.setToolTipStrings(tableModel.getTooltips());
-			header.setToolTipText("");
-			setTableHeader(header);
-
-			setModel(tableSorter);
-
-			TableColumnModel tableColumnModel = getColumnModel();
-			for (int i = 0; i < tableModel.getColumnCount(); i++) {
-				tableColumnModel.getColumn(i).setIdentifier(i);
-			}
-
-			int[][] targetColumn = tableModel.getColumnOrder();
-
-			// Sort according to [x][1]
-			targetColumn = Helper.sortintArray(targetColumn, 1);
-
-			if (targetColumn != null) {
-				for (int[] ints : targetColumn) {
-					this.moveColumn(getColumnModel().getColumnIndex(ints[0]), ints[1]);
-				}
-			}
-
-			tableSorter.addMouseListenerToHeaderInTable(this);
-			tableModel.setColumnsSize(getColumnModel());
-		} else {
-			// Set new value.
-			tableModel.setValues(HOVerwaltung.instance().getModel().getCurrentPlayers());
-			tableSorter.reallocateIndexes();
-		}
-
-		setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-		setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		setRowSelectionAllowed(true);
-		tableSorter.initsort();
+	public PlayerOverviewTableModel getPlayerTableModel(){
+		return tableModel;
 	}
 }

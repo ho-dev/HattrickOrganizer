@@ -20,6 +20,8 @@ import module.transfer.ui.sorter.DefaultTableSorter;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.Serial;
@@ -52,8 +54,7 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
     private final JLabel lengthOfStayInTeam = new JLabel("", SwingConstants.LEFT); //$NON-NLS-1$
     private final JLabel totalCostOfOwnership = new JLabel("", SwingConstants.LEFT); //$NON-NLS-1$
     private final JLabel sumOfWage = new JLabel("", SwingConstants.LEFT);
-    private final JLabel currTSI = new JLabel(TranslationFacility.tr("PlayerDetail.NotAvail"),
-            SwingConstants.LEFT);
+    private final JLabel currTSI = new JLabel(TranslationFacility.tr("PlayerDetail.NotAvail"), SwingConstants.LEFT);
     private final JLabel income = new JLabel("", SwingConstants.LEFT); //$NON-NLS-1$
     private final JLabel name = new JLabel("", SwingConstants.LEFT); //$NON-NLS-1$
     private final JLabel fired = new JLabel(TranslationFacility.tr("FiredPlayer"), SwingConstants.LEFT);
@@ -90,13 +91,10 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
         super(new BorderLayout());
 
         var model = getTableModel();
-        var sorter = new DefaultTableSorter(model);
-        playerTable = new JTable(sorter);
+        playerTable = new JTable(model);
         playerTable.setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
         playerTable.setOpaque(true);
-        sorter.setTableHeader(playerTable.getTableHeader());
-
-        model.restoreUserSettings(playerTable);
+        model.initTable(playerTable);
 
         final JScrollPane playerPane = new JScrollPane(playerTable);
         playerPane.setOpaque(false);
@@ -370,6 +368,6 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
 
     public void storeUserSettings() {
         var model = getTableModel();
-        model.storeUserSettings(this.playerTable);
+        model.storeUserSettings();
     }
 }
