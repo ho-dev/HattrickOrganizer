@@ -6,44 +6,56 @@ import javax.swing.KeyStroke;
 
 public interface IModule {
 
-	public static final int STATUS_DEACTIVATED 	=	0;
-	public static final int STATUS_ACTIVATED 	=	1;
-	public static final int STATUS_STARTUP 		=	2;
-	
-	public static final int PLAYEROVERVIEW 	= 1; 
-	public static final int LINEUP 			= 2;
-	public static final int SERIES 			= 3;
-	public static final int MATCHES 		= 4;
-	public static final int PLAYERANALYSIS 	= 5;
-	public static final int STATISTICS 		= 6;
-	public static final int TRANSFERS 		= 7;
-	public static final int TRAINING 		= 8;
-	public static final int MISC 			= 9;
-	public static final int TEAMANALYZER 	= 10;
-	public static final int TSFORECAST 		= 11;
-	public static final int SPECIALEVENTS	= 12;
-	public static final int TEAM_OF_THE_WEEK= 13;
-	public static final int NTHRF			= 14;
-	public static final int EVIL_CARD		= 15;
-	public static final int IFA				= 16;
-	public static final int FLAGSCOLLECTOR	= 17;
-	//public static final int MATCHESANALYZER	= 18;
-	//int OPPONENTSPY = 19;
-	public static final int YOUTH = 20;
+    int STATUS_DEACTIVATED = 0;
+    int STATUS_ACTIVATED = 1;
+    int STATUS_STARTUP = 2;
 
-	public int getModuleId();
-	public String getDescription();
-	public boolean hasMainTab();
-	public JPanel createTabPanel();
-	public boolean hasConfigPanel();
-	public JPanel createConfigPanel();
-	public boolean isStartup();
-	public boolean isActive();
-	public KeyStroke getKeyStroke();
-	public boolean hasMenu();
-	public JMenu getMenu();
-	public int getStatus();
-	public void setStatus(int statusId);
+    int PLAYEROVERVIEW = 1;
+    int LINEUP = 2;
+    int SERIES = 3;
+    int MATCHES = 4;
+    int PLAYERANALYSIS = 5;
+    int STATISTICS = 6;
+    int TRANSFERS = 7;
+    int TRAINING = 8;
+    int MISC = 9;
+    int TEAMANALYZER = 10;
+    int TSFORECAST = 11;
+    int SPECIALEVENTS = 12;
+    int TEAM_OF_THE_WEEK = 13;
+    int NTHRF = 14;
+    int EVIL_CARD = 15;
+    int IFA = 16;
+    int FLAGSCOLLECTOR = 17;
+    //public static final int MATCHESANALYZER	= 18;
+    //int OPPONENTSPY = 19;
+    int YOUTH = 20;
 
-	public void storeUserSettings();
+    int getModuleId();
+
+    String getDescription();
+
+    boolean hasMainTab();
+
+    JPanel createTabPanel();
+
+    boolean hasConfigPanel();
+
+    JPanel createConfigPanel();
+
+    boolean isStartup();
+
+    boolean isActive();
+
+    KeyStroke getKeyStroke();
+
+    boolean hasMenu();
+
+    JMenu getMenu();
+
+    int getStatus();
+
+    void setStatus(int statusId);
+
+    void storeUserSettings();
 }
