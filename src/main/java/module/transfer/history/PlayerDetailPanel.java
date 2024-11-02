@@ -54,8 +54,7 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
     private final JLabel lengthOfStayInTeam = new JLabel("", SwingConstants.LEFT); //$NON-NLS-1$
     private final JLabel totalCostOfOwnership = new JLabel("", SwingConstants.LEFT); //$NON-NLS-1$
     private final JLabel sumOfWage = new JLabel("", SwingConstants.LEFT);
-    private final JLabel currTSI = new JLabel(TranslationFacility.tr("PlayerDetail.NotAvail"),
-            SwingConstants.LEFT);
+    private final JLabel currTSI = new JLabel(TranslationFacility.tr("PlayerDetail.NotAvail"), SwingConstants.LEFT);
     private final JLabel income = new JLabel("", SwingConstants.LEFT); //$NON-NLS-1$
     private final JLabel name = new JLabel("", SwingConstants.LEFT); //$NON-NLS-1$
     private final JLabel fired = new JLabel(TranslationFacility.tr("FiredPlayer"), SwingConstants.LEFT);
@@ -92,12 +91,9 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
         super(new BorderLayout());
 
         var model = getTableModel();
-//        var sorter = new DefaultTableSorter(model);
         playerTable = new JTable(model);
         playerTable.setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
         playerTable.setOpaque(true);
-//        sorter.setTableHeader(playerTable.getTableHeader());
-
         model.initTable(playerTable);
 
         final JScrollPane playerPane = new JScrollPane(playerTable);
