@@ -38,7 +38,6 @@ public class PlayerOverviewPanel extends ImagePanel {
 	 *            the id of the player to select.
 	 */
 	public void setPlayer(Player player) {
-//		playerOverviewTableName.setPlayer(player.getPlayerId());
 		playerOverviewTable.selectPlayer(player.getPlayerId());
 		playerDetailsPanel.setPlayer(player);
 		spielerTrainingsSimulatorPanel.setSpieler(player);
@@ -54,12 +53,6 @@ public class PlayerOverviewPanel extends ImagePanel {
 		locations[2] = verticalSplitPane.getDividerLocation();
 		return locations;
 	}
-
-//	public final void saveColumnOrder() {
-//		playerOverviewTable.saveColumnOrder();
-//	}
-
-	// ----------------------Refresh--
 
 	/**
 	 * Refresh, if a player is changed in the lineup
@@ -158,50 +151,11 @@ public class PlayerOverviewPanel extends ImagePanel {
 
 		// table with the player's details
 		playerOverviewTable = new PlayerOverviewTable();
-
-//		// table with the player's name
-//		playerOverviewTableName = new LineupPlayersTableNameColumn(playerOverviewTable.getPlayerTableModel());
-//
-//		JScrollPane scrollpane = new JScrollPane(playerOverviewTableName);
-//		scrollpane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-//		scrollpane.setPreferredSize(new Dimension(170, 100));
-//
-//		JScrollPane scrollpane2 = new JScrollPane(playerOverviewTable);
-//		scrollpane2.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
-//		scrollpane2.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
-//
-//		final JScrollBar bar = scrollpane.getVerticalScrollBar();
-//		final JScrollBar bar2 = scrollpane2.getVerticalScrollBar();
-//
-//		// setVisible(false) does not have an effect, so we set the size to
-//		// false. We can't disable the scrollbar with VERTICAL_SCROLLBAR_NEVER
-//		// because this will disable mouse wheel scrolling.
-//		bar.setPreferredSize(new Dimension(0, 0));
-//
-//		// Synchronize vertical scrolling
-//		AdjustmentListener adjustmentListener = e -> {
-//			if (e.getSource() == bar2) {
-//				bar.setValue(e.getValue());
-//			} else {
-//				bar2.setValue(e.getValue());
-//			}
-//		};
-//		bar.addAdjustmentListener(adjustmentListener);
-//		bar2.addAdjustmentListener(adjustmentListener);
-//
-//		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, false);
-//		splitPane.setLeftComponent(scrollpane);
-//		splitPane.setRightComponent(scrollpane2);
-//		splitPane.setOneTouchExpandable(true);
-//		splitPane.setDividerLocation(UserParameter.instance().playerTablePanel_horizontalSplitPane);
-
 		overviewPanel.add(playerOverviewTable.getContainerComponent(), BorderLayout.CENTER);
-
 		TeamSummaryModel teamSummaryModel = new TeamSummaryModel();
 		teamSummaryModel.setPlayers(HOVerwaltung.instance().getModel().getCurrentPlayers());
 		teamSummaryPanel = new TeamSummaryPanel(teamSummaryModel);
 		overviewPanel.add(teamSummaryPanel, BorderLayout.SOUTH);
-
 		return overviewPanel;
 	}
 

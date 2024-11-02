@@ -21,24 +21,11 @@ final class MatchesTable extends JTable {
 		var matches = DBManager.instance().getMatchesKurzInfo(HOVerwaltung.instance().getModel().getBasics().getTeamId(), matchtyp, UserParameter.instance().matchLocation).toArray(new MatchKurzInfo[0]);
 		m_clTableModel.setValues(matches);
 		m_clTableModel.initTable(this);
-//		initModel(matchtyp, UserParameter.instance().matchLocation);
-//		getTableHeader().setDefaultRenderer(new TableHeaderRenderer1(this));
-//		getTableHeader().setFont(getTableHeader().getFont().deriveFont(Font.BOLD));
-//		setSelectionBackground(HODefaultTableCellRenderer.SELECTION_BG);
 		setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 	}
 
 	public void storeUserSettings() {
 		m_clTableModel.storeUserSettings();
-//		final UserColumn[] columns = m_clTableModel.getDisplayedColumns();
-//		final TableColumnModel tableColumnModel = getColumnModel();
-//		for (int i = 0; i < columns.length; i++) {
-//			columns[i].setIndex(convertColumnIndexToView(i));
-//			columns[i].setPreferredWidth(tableColumnModel.getColumn(convertColumnIndexToView(i))
-//					.getWidth());
-//		}
-//		m_clTableModel.setCurrentValueToColumns(columns);
-//		DBManager.instance().saveHOColumnModel(m_clTableModel);
 	}
 
 	public void refresh(int iMatchType, MatchLocation matchLocation) {
@@ -46,10 +33,6 @@ final class MatchesTable extends JTable {
 				HOVerwaltung.instance().getModel().getBasics().getTeamId(), iMatchType, matchLocation).toArray(new MatchKurzInfo[0]));
 		m_clTableModel.fireTableDataChanged();
 	}
-
-//	protected TableSorter getSorter() {
-//		return m_clTableSorter;
-//	}
 
 	void markiereMatch(int matchid) {
 		final int row = m_clTableModel.getRowIndexOfMatch(matchid);
@@ -63,43 +46,4 @@ final class MatchesTable extends JTable {
 	public MatchKurzInfo getMatchAtRow(int selectedRowNumber) {
 		return  m_clTableModel.getMatchAtRow(selectedRowNumber);
 	}
-
-//	private void initModel(int iMatchType, MatchLocation matchLocation) {
-//		setOpaque(false);
-//
-//		if (m_clTableModel == null) {
-//			m_clTableModel = UserColumnController.instance().getMatchesModel();
-//			var matches = DBManager.instance().getMatchesKurzInfo(HOVerwaltung.instance().getModel().getBasics().getTeamId(), iMatchType, matchLocation).toArray(new MatchKurzInfo[0]);
-//			m_clTableModel.setValues(matches);
-//			m_clTableSorter = new TableSorter(m_clTableModel,m_clTableModel.getDisplayedColumns().length - 1, -1);
-//
-//			final ToolTipHeader header = new ToolTipHeader(getColumnModel());
-//			header.setToolTipStrings(m_clTableModel.getTooltips());
-//			header.setToolTipText("");
-//			setTableHeader(header);
-//
-//			setModel(m_clTableSorter);
-//
-////			final TableColumnModel tableColumnModel = getColumnModel();
-////
-////			for (int i = 0; i < m_clTableModel.getColumnCount(); i++) {
-////				tableColumnModel.getColumn(i).setIdentifier(i);
-////			}
-//
-//			m_clTableModel.initColumnOrder(this);
-//			m_clTableSorter.addMouseListenerToHeaderInTable(this);
-//			m_clTableModel.setColumnsSize(getColumnModel());
-//		} else {
-//			// Reset Values of the matches table in matches module after selection change
-//			m_clTableModel.setValues(DBManager.instance().getMatchesKurzInfo(
-//					HOVerwaltung.instance().getModel().getBasics().getTeamId(), iMatchType, matchLocation).toArray(new MatchKurzInfo[0]));
-//			m_clTableSorter.reallocateIndexes();
-//		}
-//
-//		setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-//		setSelectionMode(javax.swing.ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-//		setRowSelectionAllowed(true);
-//
-//		m_clTableSorter.initsort();
-//	}
 }
