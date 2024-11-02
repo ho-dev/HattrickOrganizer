@@ -26,7 +26,7 @@ public class YouthTableSorter extends AbstractTableModel {
     protected HOTableModel tableModel;
     protected JTable table;
 
-    enum Order {
+    public enum Order {
         descending(-1),
         none(0),
         ascending(1);

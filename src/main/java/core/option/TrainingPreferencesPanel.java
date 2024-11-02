@@ -18,7 +18,7 @@ import static module.lineup.LineupPanel.TITLE_FG;
 /**
  * Training options panel
  */
-final class TrainingPreferencesPanel extends ImagePanel implements ChangeListener, ActionListener {
+public final class TrainingPreferencesPanel extends ImagePanel implements ChangeListener, ActionListener {
 
 //	private TrainingAdjustmentPanel m_tapAgeFactor;
 //    private TrainingAdjustmentPanel m_jtapAssisstantFactor;

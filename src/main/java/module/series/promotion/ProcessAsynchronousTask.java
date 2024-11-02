@@ -28,7 +28,7 @@ public class ProcessAsynchronousTask<T> {
      * @param <T>
      */
     @FunctionalInterface
-    interface ProcessTask<T> {
+    public interface ProcessTask<T> {
         void execute(T val);
     }
 
