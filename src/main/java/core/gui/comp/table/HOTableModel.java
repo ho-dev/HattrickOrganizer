@@ -323,6 +323,7 @@ public abstract class HOTableModel extends AbstractTableModel {
 
 	/**
 	 * Initialize the table object with data from the model
+	 * Todo: Think about making HOTableModel supporting only FixedColumnsTable (JTable==FixedColumnsTable(0 fixed columns))
 	 * @param table Table object
 	 */
 	public void initTable(JTable table) {
