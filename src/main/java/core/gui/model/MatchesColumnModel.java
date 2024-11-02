@@ -46,7 +46,7 @@ public final class MatchesColumnModel extends HOTableModel {
 	}
 
 	public MatchKurzInfo getMatchAtRow(int tableRow) {
-		if (tableRow > -1 ) return m_clMatches[this.table.convertColumnIndexToModel(tableRow)];
+		if (tableRow > -1 ) return m_clMatches[this.table.convertRowIndexToModel(tableRow)];
 		return null;
 	}
 
@@ -120,5 +120,4 @@ public final class MatchesColumnModel extends HOTableModel {
 		}
 
 	}
-
 }
