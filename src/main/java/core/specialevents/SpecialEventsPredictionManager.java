@@ -27,7 +27,7 @@ public class SpecialEventsPredictionManager {
     private final HashMap<Integer, Player> playerInLineup = new HashMap<>();
     private final HashMap<Integer, Player> opponentPlayerInLineup = new HashMap<>();
 
-    public class Analyse {
+    public static class Analyse {
         private List<SpecialEventsPrediction> specialEventsPredictions;
         private Lineup lineup;
         private Lineup opponentLineup;

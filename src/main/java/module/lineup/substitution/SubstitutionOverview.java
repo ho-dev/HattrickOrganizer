@@ -510,7 +510,7 @@ public class SubstitutionOverview extends JPanel {
 	/*
 	 * This class is a simple container for row data.
 	 */
-	private class TableRow {
+	private static class TableRow {
 
 		private Substitution sub;
 		private Problem problem;

@@ -191,13 +191,13 @@ public class IfaOverviewDialog extends JDialog {
 		}
 	}
 
-	private class Entry {
+	private static class Entry {
 		Country country;
 		WorldDetailLeague league;
 		double coolness;
 	}
 
-	private class CountryTableCellRenderer extends DefaultTableCellRenderer {
+	private static class CountryTableCellRenderer extends DefaultTableCellRenderer {
 
 		private static final long serialVersionUID = -5212837673330509051L;
 
@@ -213,7 +213,7 @@ public class IfaOverviewDialog extends JDialog {
 		}
 	}
 
-	private class BooleanTableCellRenderer extends DefaultTableCellRenderer {
+	private static class BooleanTableCellRenderer extends DefaultTableCellRenderer {
 
 		private static final long serialVersionUID = -5648974651813645856L;
 
