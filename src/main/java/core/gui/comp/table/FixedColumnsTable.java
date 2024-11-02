@@ -143,10 +143,6 @@ public class FixedColumnsTable extends JTable {
         }
     }
 
-    public TableColumnModel getTableColumnModel() {
-        return this.getColumnModel();
-    }
-
     /**
      * Set row selection interval of both tables synchronously
      * @param rowIndex0 one end of the interval

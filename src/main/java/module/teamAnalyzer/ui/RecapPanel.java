@@ -5,8 +5,6 @@ import core.gui.model.UserColumnController;
 import core.util.HODateTime;
 import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.report.TeamReport;
-import module.teamAnalyzer.vo.TeamLineup;
-
 import java.awt.*;
 import java.io.Serial;
 import javax.swing.*;
