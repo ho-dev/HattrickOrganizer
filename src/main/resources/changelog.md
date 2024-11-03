@@ -861,7 +861,7 @@ The translation status varies a lot from one language to another. If you can hel
 |-------------------|--------------|------------|
 | Kimmo             | 843          | 48.03      |
 | Andreas           | 745          | 42.45      |
-| \_KOHb\_            | 436          | 24.84      |
+| \_KOHb\_          | 436          | 24.84      |
 | Moorhuhninho      | 409          | 23.3       |
 | TeamBMW           | 349          | 19.89      |
 | Csaba             | 230          | 13.11      |
@@ -1002,13 +1002,13 @@ The translation status varies a lot from one language to another. If you can hel
 
 | username       | nb translated terms |
 |----------------|:-------------------:|
-| Lidegand       | 378                 |
-| Saleh          | 65                  |
-| Mauro Aranda   | 62                  |
-| sich           | 58                  |
-| mondstern      | 40                  |
-| h3t3r0         | 9                   |
-| murko          | 6                   |
+| Lidegand       |         378         |
+| Saleh          |         65          |
+| Mauro Aranda   |         62          |
+| sich           |         58          |
+| mondstern      |         40          |
+| h3t3r0         |          9          |
+| murko          |          6          |
 
 
 # Changelist HO! 2.1
@@ -1088,25 +1088,25 @@ The translation status varies a lot from one language to another. If you can hel
 
 | username       | nb translated terms |
 |----------------|:-------------------:|
-| sich           | 524                 |
-| Moorhuhninho   | 332                 |
-| Boy            | 193                 |
-| Saleh          | 185                 |
-| Motavali       | 181                 |
-| Sergejs        | 114                 |
-| TeamBMW        | 81                  |
-| Juan           | 67                  |
-| Lidegand       | 56                  |
-| Globe96        | 46                  |
-| Zigmas         | 45                  |
-| dzsoo          | 44                  |
-| murko          | 38                  |
-| Baler0         | 28                  |
-| taimikko       | 21                  |
-| Ricardo        | 18                  |
-| DavidatorusF   | 17                  |
-| brokenelevator | 3                   |
-| Massimo        | 3                   |
+| sich           |         524         |
+| Moorhuhninho   |         332         |
+| Boy            |         193         |
+| Saleh          |         185         |
+| Motavali       |         181         |
+| Sergejs        |         114         |
+| TeamBMW        |         81          |
+| Juan           |         67          |
+| Lidegand       |         56          |
+| Globe96        |         46          |
+| Zigmas         |         45          |
+| dzsoo          |         44          |
+| murko          |         38          |
+| Baler0         |         28          |
+| taimikko       |         21          |
+| Ricardo        |         18          |
+| DavidatorusF   |         17          |
+| brokenelevator |          3          |
+| Massimo        |          3          |
 
 
 # Changelist HO! 2.0
