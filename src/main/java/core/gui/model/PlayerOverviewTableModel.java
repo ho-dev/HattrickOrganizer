@@ -205,6 +205,7 @@ public class PlayerOverviewTableModel extends HOTableModel {
 				}
 			}
 		}
+		fireTableDataChanged();
 	}
 
     /**

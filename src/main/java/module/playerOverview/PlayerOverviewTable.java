@@ -95,8 +95,10 @@ public class PlayerOverviewTable extends FixedColumnsTable implements core.gui.R
 
 	@Override
 	public final void reInit() {
+		var player = getSelectedPlayer();
 		resetPlayers();
 		repaint();
+		if ( player != null ) {selectPlayer(player.getPlayerId());}
 	}
 
 	public final void reInitModel() {
