@@ -7,6 +7,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.nio.charset.StandardCharsets;
 
 /**
  * Simple converter to convert an language file for the use in HO. Input must be
@@ -31,7 +32,7 @@ public class UnicodeConverter {
 				System.out.println("Can't access input file '" + input + "'!");
 				return;
 			}
-			r = new BufferedReader(new InputStreamReader(new FileInputStream(input), "UTF-16"));
+			r = new BufferedReader(new InputStreamReader(new FileInputStream(input), StandardCharsets.UTF_16));
 			String line;
 			int linecount = 0;
 			while ((line = r.readLine()) != null) {

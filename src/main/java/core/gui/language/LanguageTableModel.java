@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
@@ -164,7 +165,7 @@ public class LanguageTableModel extends AbstractTableModel implements TableModel
 		BufferedWriter bw = null;
 
 		try {
-			bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(destinationPath.getPath()), "UTF-8"));
+			bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(destinationPath.getPath()), StandardCharsets.UTF_8));
 
 			// Loop over table and put into properties
             for (String key : this.keys) {
