@@ -674,7 +674,7 @@ public class Quantize {
             /**
              * Figure out the distance between this node and som color.
              */
-            static final int distance(int color, int r, int g, int b) {
+            static int distance(int color, int r, int g, int b) {
                 return (SQUARES[((color >> 16) & 0xFF) - r + MAX_RGB] +
                         SQUARES[((color >>  8) & 0xFF) - g + MAX_RGB] +
                         SQUARES[((color >>  0) & 0xFF) - b + MAX_RGB]);
