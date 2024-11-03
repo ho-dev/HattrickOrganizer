@@ -1,6 +1,9 @@
 package tool.dbencrypter.github
 
+import com.google.gson.Gson
+import com.google.gson.JsonObject
 import core.model.HOVerwaltung
+import core.util.HOLogger
 import okhttp3.*
 import java.net.URLEncoder
 import java.nio.charset.StandardCharsets
@@ -55,7 +58,7 @@ class GithubApp {
   parse_response(response)
 		 */
 
-		val parameters = URLEncoder.encode("Iv23lif3sEVL0KxRh6Mw", StandardCharsets.UTF_8.toString())
+		val parameters = URLEncoder.encode("Iv23lif3sEVL0KxRh6Mw", StandardCharsets.UTF_8)
 		val formBody: RequestBody = FormBody.Builder()
 			.add("client_id", parameters)
 			.build()
@@ -66,8 +69,49 @@ class GithubApp {
 			.build()
 
 		val response = httpClient.newCall(request).execute()
-		println(response.code)
-		println(response.body?.string())
+		if (response.isSuccessful) {
+			val bodyAsString = response.body?.string()
+			val gson = Gson()
+			val responseAsJson = gson.fromJson(bodyAsString, JsonObject::class.java)
+			println(responseAsJson.asMap())
+
+			// Get device code
+			val deviceCode: String = responseAsJson.getAsJsonPrimitive("device_code").asString
+
+			val accessTokenBody: RequestBody = FormBody.Builder()
+				.add("client_id", parameters)
+				.add("device_code", URLEncoder.encode(deviceCode, StandardCharsets.UTF_8))
+				.add("grant_type", "urn:ietf:params:oauth:grant-type:device_code")
+				.build()
+			val requestAccessToken = Request.Builder()
+				.url("https://github.com/login/oauth/access_token")
+				.addHeader("Accept", "application/json")
+				.post(accessTokenBody)
+				.build()
+
+			var accessToken = ""
+			while (true) {
+				val accessTokenResponse = httpClient.newCall(requestAccessToken).execute()
+				val tokenResponse = gson.fromJson(accessTokenResponse.body?.string(), JsonObject::class.java)
+				if (tokenResponse.has("access_token")) {
+					accessToken = tokenResponse.getAsJsonPrimitive("access_token").asString
+					break
+				} else if (tokenResponse.has("error")) {
+					//
+					val errorVal = tokenResponse.getAsJsonPrimitive("error").asString
+					println(tokenResponse.asMap())
+					if (errorVal == "authorization_pending") {
+						Thread.sleep(5_000)
+					} else if (errorVal == "slow_down") {
+						Thread.sleep(10_000)
+					} else {
+						HOLogger.instance().error(javaClass, "Unrecoverable error: ${errorVal}")
+						break
+					}
+				}
+			}
+			println("Access Code: $accessToken")
+		}
 	}
 }
 
