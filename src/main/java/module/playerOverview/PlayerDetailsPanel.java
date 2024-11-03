@@ -289,7 +289,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         m_jlSeasonSeriesGoals.setText(String.valueOf(m_clPlayer.getLeagueGoals()));
         m_jlSeasonCupGoals.setText(String.valueOf(m_clPlayer.getCupGameGoals()));
 
-        var bestPosition = m_clPlayer.getIdealPosition();
+        var bestPosition = m_clPlayer.getCalculatedBestPosition();
         m_jlBestPosition.setText(MatchRoleID.getNameForPosition(bestPosition)
                 + " ("
                 + Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals).format(
