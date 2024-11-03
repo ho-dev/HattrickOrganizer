@@ -19,6 +19,7 @@ public class LookAndFeelDialog extends JDialog {
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		initComponents();
 		pack();
+		setLocationByPlatform(true);
 	}
 
 	private void initComponents() {
