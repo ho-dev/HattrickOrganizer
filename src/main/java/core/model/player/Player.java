@@ -22,6 +22,7 @@ import java.time.Duration;
 import java.util.*;
 
 import static core.constants.player.PlayerSkill.*;
+import static core.model.player.IMatchRoleID.aPositionBehaviours;
 import static core.model.player.MatchRoleID.getPosition;
 import static core.model.player.MatchRoleID.isFieldMatchRoleId;
 import static java.lang.Integer.MAX_VALUE;
@@ -33,7 +34,7 @@ import static java.lang.Math.sqrt;
 
 public class Player extends AbstractTable.Storable {
 
-    private byte idealPos = IMatchRoleID.UNKNOWN;
+    private byte calculatedBestPosition = IMatchRoleID.UNKNOWN;
 
     private static final PlayerSkill[] trainingSkills = {STAMINA, KEEPER, SETPIECES, DEFENDING, SCORING, WINGER, PASSING, PLAYMAKING};
     private static final String BREAK = "[br]";
@@ -845,21 +846,26 @@ public class Player extends AbstractTable.Storable {
     public byte getIdealPosition() {
         //in case player best position is forced by user
         final int flag = getUserPosFlag();
-
         if (flag == IMatchRoleID.UNKNOWN) {
-            if (idealPos == IMatchRoleID.UNKNOWN) {
-                var matchLineupPosition = getIdealMatchLineupPosition();
-                idealPos = getPosition(matchLineupPosition.getRoleId(), matchLineupPosition.getBehaviour());
-            }
-            return idealPos;
+            return getCalculatedBestPosition();
         }
-
         return (byte) flag;
     }
 
+    public byte getCalculatedBestPosition() {
+        if (calculatedBestPosition == IMatchRoleID.UNKNOWN) {
+            var matchLineupPosition = getIdealMatchLineupPosition();
+            calculatedBestPosition = getPosition(matchLineupPosition.getRoleId(), matchLineupPosition.getBehaviour());
+        }
+        return calculatedBestPosition;
+    }
+
     public double getPositionRating(byte position) {
-        var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
-        return ratingPredictionModel.getPlayerMatchAverageRating(this, position);
+        if ( aPositionBehaviours.contains((int)position)) {
+            var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+            return ratingPredictionModel.getPlayerMatchAverageRating(this, position);
+        }
+        return 0;
     }
 
     private Map<Integer, Integer> wagesHistory = null; // age->wage

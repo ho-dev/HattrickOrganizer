@@ -581,14 +581,14 @@ final public class UserColumnFactory {
                 byte idealPosition = player.getIdealPosition();
                 String posValue = String.format("%s (%.2f)",
                         MatchRoleID.getNameForPosition(idealPosition),
-                        player.getIdealPositionRating());
+                        player.getPositionRating(idealPosition));
                 if ( player.isAnAlternativeBestPosition(idealPosition) ) {
                     posValue += " *";
                 }
 
                 ColorLabelEntry tmp = new ColorLabelEntry(
                         -MatchRoleID.getSortId(idealPosition, false)
-                                + (player.getIdealPositionRating() / 100.0f),
+                                + (player.getPositionRating(idealPosition) / 100.0f),
                         posValue,
                         ColorLabelEntry.FG_STANDARD,
                         ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
