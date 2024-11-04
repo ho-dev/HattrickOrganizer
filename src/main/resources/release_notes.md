@@ -8,8 +8,7 @@
 ### Database
 
 * Increase match report column size (#2065)
-* Table `STADION`: Added column `REBUILT_DATE` and
-  `EXPANSION_DATE` ([#2140](https://github.com/ho-dev/HattrickOrganizer/issues/2140))
+* Table `STADION`: Added column `REBUILT_DATE` and `EXPANSION_DATE` (#2140)
 
 ### Squad
 
@@ -18,7 +17,7 @@
 
 ### Team Analyzer
 * Fix illegal argument exception in team rating panel (#2155)
-* 
+
 ### Player Analysis
 * Fix error in rating compare table (#2153)
 
@@ -46,10 +45,9 @@
 
 ### Misc
 
-* Arena sizer: Added the Arena Info Panel (feature [#2140](https://github.com/ho-dev/HattrickOrganizer/issues/2140)) in
-  the tab with name of the stadium.
-* Fix #2137: Resolved an issue where the Download Dialog would not reappear after being closed with the 'X' button. The
-  dialog will now correctly reappear when triggered again.
+* Arena sizer: Added the Arena Info Panel in the tab with name of the stadium. (#2140)
+* Resolved an issue where the Download Dialog would not reappear after being closed with the 'X' button. The
+  dialog will now correctly reappear when triggered again. (#2137)
 
 ## Translations
 

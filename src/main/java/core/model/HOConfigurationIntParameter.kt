@@ -1,30 +1,30 @@
-package core.model;
+package core.model
 
 /**
  * Configuration parameter of integer type
  */
-public class HOConfigurationIntParameter extends HOConfigurationParameter {
+class HOConfigurationIntParameter(key: String, defaultValue: Int) :
+    HOConfigurationParameter(key, defaultValue.toString()) {
     /**
      * Parameter value as integer
      */
-    private int intValue;
+    private var intValue: Int
 
     /**
      * Constructor calls string constructor
      * @param key Parameter key
      * @param defaultValue Default integer value
      */
-    public HOConfigurationIntParameter(String key, int defaultValue) {
-        super(key, String.valueOf(defaultValue));
-        this.intValue = parameters.getInt(key, defaultValue);
+    init {
+        this.intValue = parameters.getInt(key, defaultValue)
     }
 
     /**
      * Return the parameter integer value
      * @return int
      */
-    public int getIntValue() {
-        return this.intValue;
+    fun getIntValue(): Int {
+        return this.intValue
     }
 
     /**
@@ -32,10 +32,10 @@ public class HOConfigurationIntParameter extends HOConfigurationParameter {
      * ParameterChanged is set true if new value is different to previous parameter value
      * @param newValue New integer value
      */
-    public void setIntValue(int newValue) {
+    fun setIntValue(newValue: Int) {
         if (this.intValue != newValue) {
-            this.intValue = newValue;
-            setValue(String.valueOf(newValue));
+            this.intValue = newValue
+            setValue(newValue.toString())
         }
     }
 }

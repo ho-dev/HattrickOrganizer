@@ -1,16 +1,14 @@
-package core.gui.model;
+package core.gui.model
 
-import core.db.DBManager;
-import core.gui.comp.table.BooleanColumn;
-import core.gui.comp.table.HOTableModel;
-import core.gui.comp.table.UserColumn;
-import core.model.player.Player;
-import core.util.HODateTime;
-import module.playerOverview.SpielerTrainingsVergleichsPanel;
-
-import java.io.Serial;
-import java.util.List;
-
+import core.db.DBManager
+import core.gui.comp.table.BooleanColumn
+import core.gui.comp.table.HOTableModel
+import core.gui.comp.table.UserColumn
+import core.gui.model.UserColumnController.ColumnModelId
+import core.model.player.Player
+import core.util.HODateTime
+import module.playerOverview.SpielerTrainingsVergleichsPanel
+import java.io.Serial
 
 /**
  * Model used to display players in the Squad table.
@@ -18,215 +16,208 @@ import java.util.List;
  * @author Thorsten Dietz
  * @since 1.36
  */
-public class PlayerOverviewTableModel extends HOTableModel {
+class PlayerOverviewTableModel(id: ColumnModelId, name: String) : HOTableModel(id, name) {
+    /** all players  */
+    var players: List<Player>? = null
+        private set
 
-	@Serial
-	private static final long serialVersionUID = 5149408240369536138L;
+    /**
+     * constructor
+     *
+     */
+    internal constructor(id: ColumnModelId) : this(id, "Spieleruebersicht")
 
-	/** all players **/
-	private List<Player> m_vPlayers;
+    init {
+        val basic: Array<out PlayerColumn>? = UserColumnFactory.createPlayerBasicArray()
+        val columns : Array<UserColumn?> = arrayOfNulls(64)
+        columns[0] = basic?.get(0)
+        columns[48] = basic?.get(1)
 
-	/**
-	 * constructor
-	 *
-	 */
-	PlayerOverviewTableModel(UserColumnController.ColumnModelId id){
-		this(id,"Spieleruebersicht");
-	}
-
-	protected PlayerOverviewTableModel(UserColumnController.ColumnModelId id, String name){
-		super(id, name);
-		initialize();
-	}
-
-	/**
-	 * initialize all columns.
-	 */
-	private void initialize() {
-		UserColumn[] basic = UserColumnFactory.createPlayerBasicArray();
-		columns = new UserColumn[64];
-		columns[0] = basic[0];
-		columns[48] = basic[1];
-
-		UserColumn[] skills =  UserColumnFactory.createPlayerSkillArray();
-		int skillIndex = 9; // - 20
-		System.arraycopy(skills, 0, columns, skillIndex, skills.length);
-
-		UserColumn[] positions =  UserColumnFactory.createPlayerPositionArray();
-		int positionIndex = 23;//- 41
-		System.arraycopy(positions, 0, columns, positionIndex, positions.length);
-
-		UserColumn[] goals =  UserColumnFactory.createGoalsColumnsArray();
-		int goalsIndex = 42;//-46
-		System.arraycopy(goals, 0, columns, goalsIndex, goals.length);
-		UserColumn[] additionalArray = UserColumnFactory.createPlayerAdditionalArray();
-		columns[1] = additionalArray[0];
-		columns[2] = additionalArray[1];
-		columns[4] = additionalArray[2];
-		columns[21] = additionalArray[3]; // best position
-		columns[5] = additionalArray[4];
-		columns[6] = additionalArray[5];
-		columns[7] = additionalArray[6];
-		columns[58] = additionalArray[7];
-		columns[8] = additionalArray[8];// tsi
-		columns[22] = additionalArray[9]; // lastmatch
-		columns[47] = additionalArray[11];
-		columns[3] = additionalArray[12];// Motherclub
-		columns[49] = additionalArray[10];
-		columns[50] = additionalArray[16];
-		columns[51] = additionalArray[17];
-		columns[52] = additionalArray[18];
-		columns[53] = additionalArray[13];
-		columns[54] = additionalArray[14];
-		columns[55] = additionalArray[15];
-		columns[56] = additionalArray[19];
-		columns[57] = additionalArray[20];
-		columns[59] = additionalArray[21];
-		columns[60] = additionalArray[22];
-		columns[61] = additionalArray[23]; // schum-rank
-		columns[62] = additionalArray[24]; // schum-rank benchmark
-		columns[63] = new BooleanColumn(UserColumnFactory.AUTO_LINEUP, " ", "AutoAufstellung", 28);
-	}
-
-	@Override
-	public final boolean isCellEditable(int row, int col) {
-		return getValueAt(row, col) instanceof Boolean;
-	}
-
-	public int getRowIndexOfPlayer(int playerId){
-		var modelIndex = getPlayerIndex(playerId);
-		if (modelIndex > -1){
-			return this.table.convertRowIndexToView(modelIndex);
-		}
-		return -1;
-	}
-
-	public Player getPlayerAtRow(int tableRow) {
-		if (tableRow > -1 ) return m_vPlayers.get(this.table.convertRowIndexToModel(tableRow));
-		return null;
-	}
-
-    public Player getPlayer(int playerId) {
-        // Can be negative for temp player
-        if (playerId != 0) {
-			for (Player m_vPlayer : m_vPlayers) {
-				if (m_vPlayer.getPlayerId() == playerId) {
-					return m_vPlayer;
-				}
-			}
+        val skills: Array<out PlayerSkillColumn>? = UserColumnFactory.createPlayerSkillArray()
+        val skillIndex = 9 // - 20
+        if (skills != null) {
+            System.arraycopy(skills, 0, columns, skillIndex, skills.size)
         }
 
-        return null;
+        val positions: Array<out PlayerPositionColumn>? = UserColumnFactory.createPlayerPositionArray()
+        val positionIndex = 23 //- 41
+        if (positions != null) {
+            System.arraycopy(positions, 0, columns, positionIndex, positions.size)
+        }
+
+        val goals: Array<out PlayerColumn>? = UserColumnFactory.createGoalsColumnsArray()
+        val goalsIndex = 42 //-46
+        if (goals != null) {
+            System.arraycopy(goals, 0, columns, goalsIndex, goals.size)
+        }
+        val additionalArray: Array<out PlayerColumn>? = UserColumnFactory.createPlayerAdditionalArray()
+        columns[1] = additionalArray?.get(0)
+        columns[2] = additionalArray?.get(1)
+        columns[4] = additionalArray?.get(2)
+        columns[21] = additionalArray?.get(3) // best position
+        columns[5] = additionalArray?.get(4)
+        columns[6] = additionalArray?.get(5)
+        columns[7] = additionalArray?.get(6)
+        columns[58] = additionalArray?.get(7)
+        columns[8] = additionalArray?.get(8) // tsi
+        columns[22] = additionalArray?.get(9) // lastmatch
+        columns[47] = additionalArray?.get(11)
+        columns[3] = additionalArray?.get(12) // Motherclub
+        columns[49] = additionalArray?.get(10)
+        columns[50] = additionalArray?.get(16)
+        columns[51] = additionalArray?.get(17)
+        columns[52] = additionalArray?.get(18)
+        columns[53] = additionalArray?.get(13)
+        columns[54] = additionalArray?.get(14)
+        columns[55] = additionalArray?.get(15)
+        columns[56] = additionalArray?.get(19)
+        columns[57] = additionalArray?.get(20)
+        columns[59] = additionalArray?.get(21)
+        columns[60] = additionalArray?.get(22)
+        columns[61] = additionalArray?.get(23) // schum-rank
+        columns[62] = additionalArray?.get(24) // schum-rank benchmark
+        columns[63] = BooleanColumn(UserColumnFactory.AUTO_LINEUP, " ", "AutoAufstellung", 28)
+
+        this.columns = columns.filterNotNull().toTypedArray()
+        assert(this.columns.size == columns.size)
     }
 
-	public int getPlayerIndex(int playerId){
-		int i = 0;
-		for (Player m_vPlayer : m_vPlayers) {
-			if (m_vPlayer.getPlayerId() == playerId) {
-				return i;
-			}
-			i++;
-		}
-		return -1;
-	}
+    override fun isCellEditable(row: Int, col: Int): Boolean {
+        return getValueAt(row, col) is Boolean
+    }
 
-	public List<Player> getPlayers() {
-		return m_vPlayers;
-	}
+    fun getRowIndexOfPlayer(playerId: Int): Int {
+        val modelIndex = getPlayerIndex(playerId)
+        if (modelIndex > -1) {
+            return table!!.convertRowIndexToView(modelIndex)
+        }
+        return -1
+    }
+
+    fun getPlayerAtRow(tableRow: Int): Player? {
+        if (tableRow > -1) return players!![table!!.convertRowIndexToModel(tableRow)]
+        return null
+    }
+
+    fun getPlayer(playerId: Int): Player? {
+        // Can be negative for temp player
+        if (playerId != 0) {
+            for (m_vPlayer in players!!) {
+                if (m_vPlayer.playerId == playerId) {
+                    return m_vPlayer
+                }
+            }
+        }
+
+        return null
+    }
+
+    fun getPlayerIndex(playerId: Int): Int {
+        var i = 0
+        for (m_vPlayer in players!!) {
+            if (m_vPlayer.playerId == playerId) {
+                return i
+            }
+            i++
+        }
+        return -1
+    }
 
     /**
      * Sets the new list of players.
      */
-    public void setValues(List<Player> player) {
-    	m_vPlayers = player;
-        initData();
+    fun setValues(player: List<Player>?) {
+        players = player
+        initData()
     }
 
     /**
      * Resets the data for an HRF comparison.
      */
-    public void reInitDataHRFComparison() {
-        initData();
+    fun reInitDataHRFComparison() {
+        initData()
     }
 
 
     /**
-     * Returns the {@link Player} with the same ID as the instance passed, or <code>null</code>.
+     * Returns the [Player] with the same ID as the instance passed, or `null`.
      */
-    private Player getPreviousPlayerDevelopmentStage(Player currentDevelopmentStage) {
-        final int id = currentDevelopmentStage.getPlayerId();
+    private fun getPreviousPlayerDevelopmentStage(currentDevelopmentStage: Player): Player? {
+        val id = currentDevelopmentStage.playerId
 
-		List<Player> selectedPlayerDevelopmentStage = SpielerTrainingsVergleichsPanel.getSelectedPlayerDevelopmentStage();
-		for (int i = 0; (selectedPlayerDevelopmentStage != null)  && (i < selectedPlayerDevelopmentStage.size()); i++) {
-            final Player selectedDevelopmentStage = selectedPlayerDevelopmentStage.get(i);
+        val selectedPlayerDevelopmentStage = SpielerTrainingsVergleichsPanel.getSelectedPlayerDevelopmentStage()
+        var i = 0
+        while ((selectedPlayerDevelopmentStage != null) && (i < selectedPlayerDevelopmentStage.size)) {
+            val selectedDevelopmentStage = selectedPlayerDevelopmentStage[i]
 
-            if (selectedDevelopmentStage.getPlayerId() == id) {
-                return selectedDevelopmentStage;
+            if (selectedDevelopmentStage.playerId == id) {
+                return selectedDevelopmentStage
+            }
+            i++
+        }
+
+        if (SpielerTrainingsVergleichsPanel.isDevelopmentStageSelected()) {
+            val hrf = SpielerTrainingsVergleichsPanel.getSelectedHrfId()
+            return getFirstPlayerDevelopmentStageAfterSelected(currentDevelopmentStage, hrf)
+        }
+        return null
+    }
+
+    /**
+     * Returns the [Player] from the first HRF in which he appears.
+     */
+    private fun getFirstPlayerDevelopmentStageAfterSelected(vorlage: Player, hrfId: Int?): Player {
+        var after: HODateTime? = null
+        if (hrfId != null) {
+            val hrf = DBManager.instance().loadHRF(hrfId)
+            if (hrf != null) {
+                after = hrf.datum
             }
         }
-
-		if (SpielerTrainingsVergleichsPanel.isDevelopmentStageSelected()) {
-			var hrf = SpielerTrainingsVergleichsPanel.getSelectedHrfId();
-            return getFirstPlayerDevelopmentStageAfterSelected(currentDevelopmentStage, hrf);
-        }
-        return null;
+        return DBManager.instance().loadPlayerFirstHRF(vorlage.playerId, after)
     }
-
-    /**
-     * Returns the {@link Player} from the first HRF in which he appears.
-     */
-    private Player getFirstPlayerDevelopmentStageAfterSelected(Player vorlage, Integer hrfId) {
-		HODateTime after = null;
-		if (hrfId != null) {
-			var hrf = DBManager.instance().loadHRF(hrfId);
-			if (hrf != null) {
-				after = hrf.getDatum();
-			}
-		}
-		return core.db.DBManager.instance().loadPlayerFirstHRF(vorlage.getPlayerId(), after);
-	}
 
     /**
      * create a data[][] from player-Vector
      */
-    @Override
-	protected void initData() {
-		UserColumn[] tmpDisplayedColumns = getDisplayedColumns();
-		m_clData = new Object[m_vPlayers.size()][tmpDisplayedColumns.length];
+    override fun initData() {
+        val tmpDisplayedColumns = getDisplayedColumns()
+        m_clData = Array(players!!.size) { arrayOfNulls(tmpDisplayedColumns.size) }
 
-		for (int i = 0; i < m_vPlayers.size(); i++) {
-			final Player currentPlayer = m_vPlayers.get(i);
-			final Player comparisonPlayer = getPreviousPlayerDevelopmentStage(currentPlayer);
-			for (int j = 0; j < tmpDisplayedColumns.length; j++) {
-				if (tmpDisplayedColumns[j] instanceof PlayerColumn) {
-					m_clData[i][j] = ((PlayerColumn) tmpDisplayedColumns[j]).getTableEntry(currentPlayer, comparisonPlayer);
-				} else if (tmpDisplayedColumns[j] instanceof BooleanColumn) {
-					m_clData[i][j] = ((BooleanColumn) tmpDisplayedColumns[j]).getValue(currentPlayer);
-				}
-			}
-		}
-		fireTableDataChanged();
-	}
+        for (i in players!!.indices) {
+            val currentPlayer = players!![i]
+            val comparisonPlayer = getPreviousPlayerDevelopmentStage(currentPlayer)
+            for (j in tmpDisplayedColumns.indices) {
+                if (tmpDisplayedColumns[j] is PlayerColumn) {
+                    m_clData!!.get(i)[j] = (tmpDisplayedColumns[j] as PlayerColumn).getTableEntry(currentPlayer, comparisonPlayer)
+                } else if (tmpDisplayedColumns[j] is BooleanColumn) {
+                    m_clData!!.get(i)[j] = (tmpDisplayedColumns[j] as BooleanColumn).getValue(currentPlayer)
+                }
+            }
+        }
+
+        fireTableDataChanged()
+    }
 
     /**
      * Initializes the lineup only
      */
-    public void reInitData() {
-    	UserColumn [] tmpDisplayedColumns = getDisplayedColumns();
-        for (int i = 0; i < m_vPlayers.size(); i++) {
-            final Player currentPlayer = m_vPlayers.get(i);
-
-            for (int j = 0; j < tmpDisplayedColumns.length; j++) {
-				if(tmpDisplayedColumns[j].getId() == UserColumnFactory.NAME
-						|| tmpDisplayedColumns[j].getId() == UserColumnFactory.LINEUP
-						|| tmpDisplayedColumns[j].getId() == UserColumnFactory.BEST_POSITION
-						|| tmpDisplayedColumns[j].getId() == UserColumnFactory.SCHUM_RANK_BENCHMARK
-						|| tmpDisplayedColumns[j].getId() == UserColumnFactory.GROUP){
-					m_clData[i][j] = ((PlayerColumn)tmpDisplayedColumns[j]).getTableEntry(currentPlayer,null);
-				} else if (tmpDisplayedColumns[j].getId() == UserColumnFactory.AUTO_LINEUP) {
-					m_clData[i][j] = ((BooleanColumn) tmpDisplayedColumns[j]).getValue(currentPlayer);
-				}
-			}
+    fun reInitData() {
+        val tmpDisplayedColumns = getDisplayedColumns()
+        for (i in players!!.indices) {
+            val currentPlayer = players!![i]
+            for (j in tmpDisplayedColumns.indices) {
+                if (tmpDisplayedColumns[j].id == UserColumnFactory.NAME || tmpDisplayedColumns[j].id == UserColumnFactory.LINEUP || tmpDisplayedColumns[j].id == UserColumnFactory.BEST_POSITION || tmpDisplayedColumns[j].id == UserColumnFactory.SCHUM_RANK_BENCHMARK || tmpDisplayedColumns[j].id == UserColumnFactory.GROUP) {
+                    m_clData!![i][j] = (tmpDisplayedColumns[j] as PlayerColumn).getTableEntry(currentPlayer, null)
+                } else if (tmpDisplayedColumns[j].id == UserColumnFactory.AUTO_LINEUP) {
+                    m_clData!![i][j] = (tmpDisplayedColumns[j] as BooleanColumn).getValue(currentPlayer)
+                }
+            }
         }
+    }
+
+    companion object {
+        @Serial
+        private const val serialVersionUID = 5149408240369536138L
     }
 }

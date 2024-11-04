@@ -41,18 +41,18 @@ class UserColumnsTable extends AbstractTable {
 	}
 
 	void saveModel(HOTableModel model) {
-		deleteModel(model.getId());
+		deleteModel(model.id);
 		UserColumn[] dbcolumns = model.getColumns();
 		for (int i = 0; i < dbcolumns.length; i++) {
 
-			if (model.getId() == 2 && dbcolumns[i].getId() == UserColumnFactory.ID) {
+			if (model.id == 2 && dbcolumns[i].getId() == UserColumnFactory.ID) {
 				dbcolumns[i].setDisplay(true); // force ID column
 			}
 
 			if (dbcolumns[i].isDisplay()) {
 				var _userColumn = new _UserColumn();
 				_userColumn.setModelIndex(i);
-				_userColumn.setId(model.getId() * 1000 + dbcolumns[i].getId());
+				_userColumn.setId(model.id * 1000 + dbcolumns[i].getId());
 				_userColumn.setPreferredWidth(dbcolumns[i].getPreferredWidth());
 				_userColumn.setIndex(dbcolumns[i].getIndex());
 				_userColumn.setSortPriority(dbcolumns[i].getSortPriority());
@@ -76,7 +76,7 @@ class UserColumnsTable extends AbstractTable {
 
 	void loadModel(HOTableModel model) {
 		int count = 0;
-		var userColumns = load(_UserColumn.class, model.getId() * 1000, model.getId() * 1000 + 999);
+		var userColumns = load(_UserColumn.class, model.id * 1000, model.id * 1000 + 999);
 		if (!userColumns.isEmpty()) { // user may not delete all columns
 			var modelColumns = model.getColumns();
 			if (model.userCanDisableColumns() && !DBManager.instance().isFirstStart()) {

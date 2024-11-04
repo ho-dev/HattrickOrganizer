@@ -1,130 +1,124 @@
-package module.playerOverview;
+package module.playerOverview
 
-import core.db.DBManager;
-import core.gui.HOMainFrame;
-import core.gui.RefreshManager;
-import core.gui.comp.table.FixedColumnsTable;
-import core.gui.comp.table.TableSorter;
-import core.gui.model.PlayerOverviewTableModel;
-import core.gui.model.UserColumnController;
-import core.gui.model.UserColumnFactory;
-import core.model.HOVerwaltung;
-import core.model.TranslationFacility;
-import core.model.match.MatchKurzInfo;
-import core.model.player.Player;
-import core.net.HattrickLink;
-import javax.swing.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.io.Serial;
-
+import core.db.DBManager
+import core.gui.HOMainFrame
+import core.gui.RefreshManager
+import core.gui.Refreshable
+import core.gui.comp.table.FixedColumnsTable
+import core.gui.model.PlayerOverviewTableModel
+import core.gui.model.UserColumnController
+import core.model.HOVerwaltung
+import core.model.TranslationFacility
+import core.model.player.Player
+import core.net.HattrickLink
+import java.awt.event.MouseAdapter
+import java.awt.event.MouseEvent
+import java.io.Serial
 
 /**
  * The Squad table, listing all the players on the team.
  *
- * <p>The actual model for that table is defined in {@link PlayerOverviewTableModel}, which defines
- * all the columns to be displayed; the columns are initiated by a factory, {@link UserColumnFactory},
- * which in particular sets their preferred width.</p>
  *
- * <p>Sorting in the table is handled by {@link TableSorter} which decorates the model, and is set
- * as the {@link javax.swing.table.TableModel} for this table.  Triggering sorting by a click sorts
+ * The actual model for that table is defined in [PlayerOverviewTableModel], which defines
+ * all the columns to be displayed; the columns are initiated by a factory, [UserColumnFactory],
+ * which in particular sets their preferred width.
+ *
+ *
+ * Sorting in the table is handled by [TableSorter] which decorates the model, and is set
+ * as the [javax.swing.table.TableModel] for this table.  Triggering sorting by a click sorts
  * the entries in the table model itself.  The new sorting order is then used by re-displaying the
  * table.  This approach differs from the “normal” Swing approach of using
- * {@link JTable#setRowSorter(RowSorter)}.</p>
- * 
+ * [JTable.setRowSorter].
+ *
  * @author Thorsten Dietz
  */
-public class PlayerOverviewTable extends FixedColumnsTable implements core.gui.Refreshable {
+class PlayerOverviewTable : FixedColumnsTable(UserColumnController.instance().playerOverviewModel), Refreshable {
+    val playerTableModel: PlayerOverviewTableModel = this.model as PlayerOverviewTableModel
 
-	@Serial
-	private static final long serialVersionUID = -6074136156090331418L;
-	private final PlayerOverviewTableModel tableModel;
+    init {
+        playerTableModel.setValues(HOVerwaltung.instance().model.currentPlayers)
+        playerTableModel.initTable(this)
+        isOpaque = false
+        RefreshManager.instance().registerRefreshable(this)
 
-	public PlayerOverviewTable() {
-		super(UserColumnController.instance().getPlayerOverviewModel());
-		tableModel = (PlayerOverviewTableModel)this.getModel();
-		tableModel.setValues(HOVerwaltung.instance().getModel().getCurrentPlayers());
-		tableModel.initTable(this);
-		setOpaque(false);
-		RefreshManager.instance().registerRefreshable(this);
+        // Add a mouse listener that, when clicking on the “Last match” column
+        // - opens the Hattrick page for the player if you shift-click,
+        // - or opens the match in HO if you double-click.
+        addMouseListener(object : MouseAdapter() {
+            override fun mouseReleased(e: MouseEvent) {
+                val player: Player? = selectedPlayer
+                if (player != null) {
+                    // Last match column
+                    val columnAtPoint = columnAtPoint(e.point)
+                    // Get name of the actual column at columnAtPoint, i.e. post-ordering of the columns
+                    // based on preferences.
+                    val columnName = playerTableModel.getColumnName(columnAtPoint)
+                    val lastMatchRating = TranslationFacility.tr("LastMatchRating")
+                    if (columnName != null && columnName.equals(lastMatchRating, ignoreCase = true)) {
+                        if (e.isShiftDown) {
+                            val matchId = player.lastMatchId
+                            val matchType = player.lastMatchType
+                            val info = DBManager.instance().getMatchesKurzInfoByMatchID(matchId, matchType)
+                            HattrickLink.showMatch(matchId.toString(), info.matchType.isOfficial)
+                        } else if (e.clickCount == 2) {
+                            HOMainFrame.instance().showMatch(player.lastMatchId)
+                        }
+                    }
+                }
+            }
+        })
+    }
 
-		// Add a mouse listener that, when clicking on the “Last match” column
-		// - opens the Hattrick page for the player if you shift-click,
-		// - or opens the match in HO if you double-click.
-		addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseReleased(MouseEvent e) {
-				var player = getSelectedPlayer();
-				if (player!=null) {
-					// Last match column
-					int columnAtPoint = columnAtPoint(e.getPoint());
-					// Get name of the actual column at columnAtPoint, i.e. post-ordering of the columns
-					// based on preferences.
-					var columnName = tableModel.getColumnName(columnAtPoint);
-					String lastMatchRating = TranslationFacility.tr("LastMatchRating");
-					if (columnName != null && columnName.equalsIgnoreCase(lastMatchRating)) {
-						if (e.isShiftDown()) {
-							int matchId = player.getLastMatchId();
-							var matchType = player.getLastMatchType();
-							MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(matchId, matchType);
-							HattrickLink.showMatch(String.valueOf(matchId), info.getMatchType().isOfficial());
-						} else if (e.getClickCount() == 2) {
-							HOMainFrame.instance().showMatch(player.getLastMatchId());
-						}
-					}
-				}
-			}
-		});
-	}
+    val selectedPlayer: Player?
+        get() {
+            val rowIndex = selectedRow
+            if (rowIndex >= 0) {
+                return playerTableModel.players!![convertRowIndexToModel(rowIndex)]
+            }
+            return null
+        }
 
-	public Player getSelectedPlayer(){
-		var rowIndex = getSelectedRow();
-		if (rowIndex >= 0) {
-			return tableModel.getPlayers().get(convertRowIndexToModel(rowIndex));
-		}
-		return null;
-	}
+    fun selectPlayer(playerId: Int) {
+        var index = playerTableModel.getPlayerIndex(playerId)
+        if (index >= 0) {
+            index = convertRowIndexToView(index)
+            this.setRowSelectionInterval(index, index)
+        }
+    }
 
-	public final void selectPlayer(int playerId) {
-		var index = tableModel.getPlayerIndex(playerId);
-		if (index >= 0) {
-			index = convertRowIndexToView(index);
-			this.setRowSelectionInterval(index, index);
-		}
-	}
+    override fun reInit() {
+        val player = selectedPlayer
+        resetPlayers()
+        repaint()
+        if (player != null) {
+            selectPlayer(player.playerId)
+        }
+    }
 
-	@Override
-	public final void reInit() {
-		var player = getSelectedPlayer();
-		resetPlayers();
-		repaint();
-		if ( player != null ) {selectPlayer(player.getPlayerId());}
-	}
+    fun reInitModel() {
+        playerTableModel.reInitData()
+    }
 
-	public final void reInitModel() {
-		tableModel.reInitData();
-	}
+    fun reInitModelHRFComparison() {
+        playerTableModel.reInitDataHRFComparison()
+    }
 
-	public final void reInitModelHRFComparison() {
-		tableModel.reInitDataHRFComparison();
-	}
+    override fun refresh() {
+        reInitModel()
+        repaint()
+    }
 
-	@Override
-	public final void refresh() {
-		reInitModel();
-		repaint();
-	}
+    fun refreshHRFComparison() {
+        reInitModelHRFComparison()
+        repaint()
+    }
 
-	public final void refreshHRFComparison() {
-		reInitModelHRFComparison();
-		repaint();
-	}
+    private fun resetPlayers() {
+        playerTableModel.setValues(HOVerwaltung.instance().model.currentPlayers)
+    }
 
-	private void resetPlayers() {
-		tableModel.setValues(HOVerwaltung.instance().getModel().getCurrentPlayers());
-	}
-
-	public PlayerOverviewTableModel getPlayerTableModel(){
-		return tableModel;
-	}
+    companion object {
+        @Serial
+        private val serialVersionUID = -6074136156090331418L
+    }
 }
