@@ -12,8 +12,6 @@ class HOConfigurationIntParameter(key: String, defaultValue: Int) :
 
     /**
      * Constructor calls string constructor
-     * @param key Parameter key
-     * @param defaultValue Default integer value
      */
     init {
         this.intValue = parameters.getInt(key, defaultValue)

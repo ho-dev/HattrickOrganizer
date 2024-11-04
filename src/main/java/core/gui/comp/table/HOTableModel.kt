@@ -75,7 +75,7 @@ abstract class HOTableModel protected constructor(
         get() {
             val columnNames =
                 arrayOfNulls<String>(displayedColumnCount)
-            for (i in getDisplayedColumns().indices) columnNames[i] = getDisplayedColumns()[i]!!.getColumnName()
+            for (i in getDisplayedColumns().indices) columnNames[i] = getDisplayedColumns()[i].getColumnName()
             return columnNames
         }
 
@@ -87,7 +87,7 @@ abstract class HOTableModel protected constructor(
          */
         get() {
             val tooltips = arrayOfNulls<String>(displayedColumnCount)
-            for (i in getDisplayedColumns().indices) tooltips[i] = getDisplayedColumns()[i]!!.getTooltip()
+            for (i in getDisplayedColumns().indices) tooltips[i] = getDisplayedColumns()[i].getTooltip()
             return tooltips
         }
 
@@ -177,7 +177,7 @@ abstract class HOTableModel protected constructor(
      */
     override fun getColumnName(columnIndex: Int): String? {
         if (displayedColumnCount > columnIndex) {
-            return getDisplayedColumns()[columnIndex]!!.getColumnName()
+            return getDisplayedColumns()[columnIndex].getColumnName()
         }
 
         return null
@@ -205,7 +205,7 @@ abstract class HOTableModel protected constructor(
     fun getPositionInArray(searchid: Int): Int {
         val tmpColumns = getDisplayedColumns()
         for (i in tmpColumns.indices) {
-            if (tmpColumns[i]!!.getId() == searchid) return i
+            if (tmpColumns[i].getId() == searchid) return i
         }
         return -1
     }
@@ -310,7 +310,7 @@ abstract class HOTableModel protected constructor(
         for (i in 0 until displayedColumnsCount) {
             val userColumn = displayedColumns[i]
             val tableColumn = getTableColumn(table, i)
-            tableColumn.identifier = userColumn!!.getId()
+            tableColumn.identifier = userColumn.getId()
         }
         getUserColumnSettings(table)
         val rowSorter = TableRowSorter(this)
