@@ -19,6 +19,8 @@ import org.jetbrains.annotations.Nullable;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+// TODO Shirt column is missing
+// TODO Squad selection does not select player in table
 /**
  * Table displaying the players' details in Lineup tab.
  * which is the same table class used in the Squad tab

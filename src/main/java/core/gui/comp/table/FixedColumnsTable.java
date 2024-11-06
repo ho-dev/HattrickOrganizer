@@ -165,6 +165,19 @@ public class FixedColumnsTable extends JTable {
         if ( fixed != null ) fixed.setDefaultRenderer(columnClass, renderer);
     }
 
+    public int getSelectedModelIndex(){
+        var viewRowIndex = getSelectedRow();
+        if (viewRowIndex > -1){
+            return convertRowIndexToModel(viewRowIndex);
+        }
+        return -1;
+    }
+
+    public void selectModelIndex(int modelIndex){
+        var viewRowIndex =  convertRowIndexToView(modelIndex);
+        setRowSelectionInterval(viewRowIndex, viewRowIndex);
+    }
+
     /**
      * Add a list selection listener
      * @param listener ListSelectionListener
