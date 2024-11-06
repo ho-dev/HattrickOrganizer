@@ -174,8 +174,10 @@ public class FixedColumnsTable extends JTable {
     }
 
     public void selectModelIndex(int modelIndex){
-        var viewRowIndex =  convertRowIndexToView(modelIndex);
-        setRowSelectionInterval(viewRowIndex, viewRowIndex);
+        if ( modelIndex > -1 ) {
+            var viewRowIndex = convertRowIndexToView(modelIndex);
+            setRowSelectionInterval(viewRowIndex, viewRowIndex);
+        }
     }
 
     /**

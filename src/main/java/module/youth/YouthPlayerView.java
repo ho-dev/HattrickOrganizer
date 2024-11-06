@@ -38,19 +38,24 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
     private final JLabel playerNameLabel;
     private final YouthSkillInfoEditor[] playerSkillInfoEditors;
     private final JEditorPane playerScoutCommentField;
-    private final JTable playerDetailsTable;
+    private final FixedColumnsTable playerDetailsTable;
     private YouthPlayerDetailsTableModel playerDetailsTableModel;
 
     public YouthPlayerView() {
         super();
 
-        initModel();
-
+        setLayout(new BorderLayout());
+        this.playerOverviewTableModel =  UserColumnController.instance().getYouthPlayerOverviewColumnModel();
         playerOverviewTable = new FixedColumnsTable(this.playerOverviewTableModel);
+        this.playerOverviewTableModel.initTable(playerOverviewTable);
         var selectionModel = playerOverviewTable.getSelectionModel();
         selectionModel.addListSelectionListener(this);
 
-        playerDetailsTable = new JTable();
+        this.playerDetailsTableModel = UserColumnController.instance().getYouthPlayerDetailsColumnModel();
+        playerDetailsTable = new FixedColumnsTable(this.playerDetailsTableModel);
+        this.playerDetailsTableModel.initTable(playerDetailsTable);
+
+
         playerNameLabel = new JLabel();
 
         playerScoutCommentField = new JEditorPane();
@@ -70,7 +75,7 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
         setDividerLocation(split3, HORIZONTALSPLIT_POSITION, 800);
 
         // First section
-        split1.setLeftComponent(new JScrollPane(playerOverviewTable));
+        split1.setLeftComponent(new JScrollPane(playerOverviewTable.getContainerComponent()));
 
         // Second section
         var developmentPanel = new JPanel(new BorderLayout());
@@ -78,7 +83,7 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
         topLinePanel.add(playerNameLabel, BorderLayout.NORTH);
         topLinePanel.add(new JLabel(TranslationFacility.tr("ls.youth.player.trainingdevelopment")));
         developmentPanel.add(topLinePanel, BorderLayout.NORTH);
-        developmentPanel.add(new JScrollPane(playerDetailsTable));
+        developmentPanel.add(new JScrollPane(playerDetailsTable.getContainerComponent()));
         split1.setRightComponent(developmentPanel);
 
         // Third section
@@ -150,24 +155,24 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
         refresh();
     }
 
-    private void initModel() {
-        setLayout(new BorderLayout());
-        initPlayerOverview();
-        initPlayerDetails();
-    }
-
-    private void initPlayerOverview() {
-//        playerOverviewTable.setOpaque(false);
-        if (playerOverviewTableModel == null) {
-            playerOverviewTableModel = UserColumnController.instance().getYouthPlayerOverviewColumnModel();
-//            playerOverviewTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-//            playerOverviewTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-//            playerOverviewTable.setRowSelectionAllowed(true);
-//            playerOverviewTableSorter = new YouthTableSorter(playerOverviewTableModel, playerOverviewTable);
-//            playerOverviewTable.setModel(playerOverviewTableSorter);
-//            playerOverviewTableModel.initTable(playerOverviewTable);
-        }
-    }
+//    private void initModel() {
+//        setLayout(new BorderLayout());
+//        initPlayerOverview();
+//        initPlayerDetails();
+//    }
+//
+//    private void initPlayerOverview() {
+////        playerOverviewTable.setOpaque(false);
+//        if (playerOverviewTableModel == null) {
+//            playerOverviewTableModel = UserColumnController.instance().getYouthPlayerOverviewColumnModel();
+////            playerOverviewTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+////            playerOverviewTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+////            playerOverviewTable.setRowSelectionAllowed(true);
+////            playerOverviewTableSorter = new YouthTableSorter(playerOverviewTableModel, playerOverviewTable);
+////            playerOverviewTable.setModel(playerOverviewTableSorter);
+////            playerOverviewTableModel.initTable(playerOverviewTable);
+//        }
+//    }
 
     private boolean isRefreshingPlayerOverview=false;
     private void refreshPlayerOverview() {
