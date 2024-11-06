@@ -5,8 +5,6 @@ import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.model.UserColumnController;
 import core.model.TranslationFacility;
 import javax.swing.*;
-import javax.swing.event.RowSorterEvent;
-import javax.swing.event.RowSorterListener;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;

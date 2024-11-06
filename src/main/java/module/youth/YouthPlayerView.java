@@ -32,13 +32,12 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
     private final HOLinesChart youthSkillChart;
 
     private final FixedColumnsTable playerOverviewTable;
-    private YouthPlayerOverviewTableModel playerOverviewTableModel;
+    private final YouthPlayerOverviewTableModel playerOverviewTableModel;
 //    private YouthTableSorter playerOverviewTableSorter;
 
     private final JLabel playerNameLabel;
     private final YouthSkillInfoEditor[] playerSkillInfoEditors;
     private final JEditorPane playerScoutCommentField;
-    private final FixedColumnsTable playerDetailsTable;
     private YouthPlayerDetailsTableModel playerDetailsTableModel;
 
     public YouthPlayerView() {
@@ -52,7 +51,7 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
         selectionModel.addListSelectionListener(this);
 
         this.playerDetailsTableModel = UserColumnController.instance().getYouthPlayerDetailsColumnModel();
-        playerDetailsTable = new FixedColumnsTable(this.playerDetailsTableModel);
+        FixedColumnsTable playerDetailsTable = new FixedColumnsTable(this.playerDetailsTableModel);
         this.playerDetailsTableModel.initTable(playerDetailsTable);
 
 
@@ -188,18 +187,18 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
         }
     }
 
-    private void initPlayerDetails() {
-        if (playerDetailsTableModel == null) {
-            playerDetailsTableModel = UserColumnController.instance().getYouthPlayerDetailsColumnModel();
-//            playerDetailsTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-//            playerDetailsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-//            playerDetailsTable.setRowSelectionAllowed(true);
-//
-//            YouthTableSorter playerDetailsTableSorter = new YouthTableSorter(playerDetailsTableModel, playerDetailsTable);
-//            playerDetailsTable.setModel(playerDetailsTableSorter);
-//            playerDetailsTableModel.initTable(playerDetailsTable);
-        }
-    }
+//    private void initPlayerDetails() {
+//        if (playerDetailsTableModel == null) {
+//            playerDetailsTableModel = UserColumnController.instance().getYouthPlayerDetailsColumnModel();
+////            playerDetailsTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+////            playerDetailsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+////            playerDetailsTable.setRowSelectionAllowed(true);
+////
+////            YouthTableSorter playerDetailsTableSorter = new YouthTableSorter(playerDetailsTableModel, playerDetailsTable);
+////            playerDetailsTable.setModel(playerDetailsTableSorter);
+////            playerDetailsTableModel.initTable(playerDetailsTable);
+//        }
+//    }
 
     private class CurrentValueChangeListener  implements ChangeListener {
 
