@@ -33,7 +33,6 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
 
     private final FixedColumnsTable playerOverviewTable;
     private final YouthPlayerOverviewTableModel playerOverviewTableModel;
-//    private YouthTableSorter playerOverviewTableSorter;
 
     private final JLabel playerNameLabel;
     private final YouthSkillInfoEditor[] playerSkillInfoEditors;
@@ -151,25 +150,6 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
         refresh();
     }
 
-//    private void initModel() {
-//        setLayout(new BorderLayout());
-//        initPlayerOverview();
-//        initPlayerDetails();
-//    }
-//
-//    private void initPlayerOverview() {
-////        playerOverviewTable.setOpaque(false);
-//        if (playerOverviewTableModel == null) {
-//            playerOverviewTableModel = UserColumnController.instance().getYouthPlayerOverviewColumnModel();
-////            playerOverviewTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-////            playerOverviewTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-////            playerOverviewTable.setRowSelectionAllowed(true);
-////            playerOverviewTableSorter = new YouthTableSorter(playerOverviewTableModel, playerOverviewTable);
-////            playerOverviewTable.setModel(playerOverviewTableSorter);
-////            playerOverviewTableModel.initTable(playerOverviewTable);
-//        }
-//    }
-
     private boolean isRefreshingPlayerOverview=false;
     private void refreshPlayerOverview() {
         if ( isRefreshingPlayerOverview) return;
@@ -183,19 +163,6 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
             isRefreshingPlayerOverview=false;
         }
     }
-
-//    private void initPlayerDetails() {
-//        if (playerDetailsTableModel == null) {
-//            playerDetailsTableModel = UserColumnController.instance().getYouthPlayerDetailsColumnModel();
-////            playerDetailsTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-////            playerDetailsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-////            playerDetailsTable.setRowSelectionAllowed(true);
-////
-////            YouthTableSorter playerDetailsTableSorter = new YouthTableSorter(playerDetailsTableModel, playerDetailsTable);
-////            playerDetailsTable.setModel(playerDetailsTableSorter);
-////            playerDetailsTableModel.initTable(playerDetailsTable);
-//        }
-//    }
 
     private class CurrentValueChangeListener  implements ChangeListener {
 
