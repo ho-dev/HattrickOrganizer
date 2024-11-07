@@ -50,6 +50,7 @@ public abstract class HOTableModel extends AbstractTableModel {
 	/** Table component **/
 	protected JTable table;
 
+	int selectedRow = -1;
 	/**
 	 * Constructor
 	 * 
@@ -345,7 +346,23 @@ public abstract class HOTableModel extends AbstractTableModel {
 			tableColumn.setIdentifier(userColumn.getId());
 		}
 		getUserColumnSettings(table);
+
 		var rowSorter = new TableRowSorter<>(this);
+		rowSorter.addRowSorterListener(e -> {
+            // Sorting changed
+			switch (e.getType()){
+				case SORT_ORDER_CHANGED ->  selectedRow = table.getSelectedRow();
+                case SORTED -> {
+                    if ( selectedRow > -1)  {
+						var modelIndex = e.convertPreviousRowIndexToModel(selectedRow);
+						if ( modelIndex > -1) {
+							var newSelectedRow = table.convertRowIndexToView(modelIndex);
+							table.setRowSelectionInterval(newSelectedRow, newSelectedRow);
+						}
+					}
+                }
+            }
+        });
 		getRowOrderSettings(rowSorter);
 		table.setRowSorter(rowSorter);
 		table.setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());

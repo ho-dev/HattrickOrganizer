@@ -5,6 +5,7 @@ import core.gui.RefreshManager;
 import core.gui.Refreshable;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
+import core.gui.comp.table.FixedColumnsTable;
 import core.gui.model.UserColumnController;
 import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
@@ -30,20 +31,26 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
     public static final String HORIZONTALSPLIT_POSITION = "YouthPlayerView.HorizontalSplitPosition";
     private final HOLinesChart youthSkillChart;
 
-    private final JTable playerOverviewTable;
-    private YouthPlayerOverviewTableModel playerOverviewTableModel;
-    private YouthTableSorter playerOverviewTableSorter;
+    private final FixedColumnsTable playerOverviewTable;
+    private final YouthPlayerOverviewTableModel playerOverviewTableModel;
 
     private final JLabel playerNameLabel;
     private final YouthSkillInfoEditor[] playerSkillInfoEditors;
     private final JEditorPane playerScoutCommentField;
-    private final JTable playerDetailsTable;
-    private YouthPlayerDetailsTableModel playerDetailsTableModel;
+    private final YouthPlayerDetailsTableModel playerDetailsTableModel;
 
     public YouthPlayerView() {
         super();
-        playerOverviewTable = new JTable();
-        playerDetailsTable = new JTable();
+
+        setLayout(new BorderLayout());
+        this.playerOverviewTableModel =  UserColumnController.instance().getYouthPlayerOverviewColumnModel();
+        playerOverviewTable = new FixedColumnsTable(this.playerOverviewTableModel);
+        var selectionModel = playerOverviewTable.getSelectionModel();
+        selectionModel.addListSelectionListener(this);
+
+        this.playerDetailsTableModel = UserColumnController.instance().getYouthPlayerDetailsColumnModel();
+        FixedColumnsTable playerDetailsTable = new FixedColumnsTable(this.playerDetailsTableModel);
+
         playerNameLabel = new JLabel();
 
         playerScoutCommentField = new JEditorPane();
@@ -63,7 +70,7 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
         setDividerLocation(split3, HORIZONTALSPLIT_POSITION, 800);
 
         // First section
-        split1.setLeftComponent(new JScrollPane(playerOverviewTable));
+        split1.setLeftComponent(new JScrollPane(playerOverviewTable.getContainerComponent()));
 
         // Second section
         var developmentPanel = new JPanel(new BorderLayout());
@@ -71,7 +78,7 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
         topLinePanel.add(playerNameLabel, BorderLayout.NORTH);
         topLinePanel.add(new JLabel(TranslationFacility.tr("ls.youth.player.trainingdevelopment")));
         developmentPanel.add(topLinePanel, BorderLayout.NORTH);
-        developmentPanel.add(new JScrollPane(playerDetailsTable));
+        developmentPanel.add(new JScrollPane(playerDetailsTable.getContainerComponent()));
         split1.setRightComponent(developmentPanel);
 
         // Third section
@@ -126,7 +133,6 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
         split3.setLeftComponent(new JScrollPane(scoutAndChartPanel));
         split3.setRightComponent(new JScrollPane(skillEditorPanel));
 
-        initModel();
         RefreshManager.instance().registerRefreshable(this);
         playerOverviewTable.setDefaultRenderer(Object.class, new YouthPlayerOverviewTableCellRenderer());
         playerDetailsTable.setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
@@ -144,51 +150,17 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
         refresh();
     }
 
-    private void initModel() {
-        setLayout(new BorderLayout());
-        initPlayerOverview();
-        initPlayerDetails();
-    }
-
-    private void initPlayerOverview() {
-        playerOverviewTable.setOpaque(false);
-        if (playerOverviewTableModel == null) {
-            playerOverviewTableModel = UserColumnController.instance().getYouthPlayerOverviewColumnModel();
-            playerOverviewTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-            playerOverviewTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-            playerOverviewTable.setRowSelectionAllowed(true);
-            var selectionModel = playerOverviewTable.getSelectionModel();
-            selectionModel.addListSelectionListener(this);
-            playerOverviewTableSorter = new YouthTableSorter(playerOverviewTableModel, playerOverviewTable);
-            playerOverviewTable.setModel(playerOverviewTableSorter);
-            playerOverviewTableModel.initTable(playerOverviewTable);
-        }
-    }
-
     private boolean isRefreshingPlayerOverview=false;
     private void refreshPlayerOverview() {
         if ( isRefreshingPlayerOverview) return;
         try {
             isRefreshingPlayerOverview = true;
-            var selection = this.playerOverviewTableSorter.getSelectedModelIndex();
+            var selection = this.playerOverviewTable.getSelectedModelIndex();
             playerOverviewTableModel.initData();
-            this.playerOverviewTableSorter.setSelectedModelIndex(selection);
+            this.playerOverviewTable.selectModelIndex(selection);
         }
         finally {
             isRefreshingPlayerOverview=false;
-        }
-    }
-
-    private void initPlayerDetails() {
-        if (playerDetailsTableModel == null) {
-            playerDetailsTableModel = UserColumnController.instance().getYouthPlayerDetailsColumnModel();
-            playerDetailsTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-            playerDetailsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-            playerDetailsTable.setRowSelectionAllowed(true);
-
-            YouthTableSorter playerDetailsTableSorter = new YouthTableSorter(playerDetailsTableModel, playerDetailsTable);
-            playerDetailsTable.setModel(playerDetailsTableSorter);
-            playerDetailsTableModel.initTable(playerDetailsTable);
         }
     }
 
@@ -312,7 +284,7 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
             initSelection(row);
         }
         if ( row > -1) {
-            var index = playerOverviewTableSorter.modelIndex(row);
+            var index = playerOverviewTable.getSelectedModelIndex();
             var currentPlayers = HOVerwaltung.instance().getModel().getCurrentYouthPlayers();
             if (currentPlayers != null && currentPlayers.size() > index) {
                 return currentPlayers.get(index);
@@ -324,7 +296,7 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
     private void setSelectedPlayer(YouthPlayer selectedPlayer) {
         var currentPlayers = HOVerwaltung.instance().getModel().getCurrentYouthPlayers();
         for (int row=0; row<currentPlayers.size(); row++){
-            var index = playerOverviewTableSorter.modelIndex(row);
+            var index = playerOverviewTable.getSelectedModelIndex();
             var player = currentPlayers.get(index);
             if ( player != null && player.getId() == selectedPlayer.getId()){
                 this.playerOverviewTable.setRowSelectionInterval(row,row);

@@ -8,7 +8,6 @@ import javax.swing.*;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import java.awt.*;
 import java.awt.event.AdjustmentListener;
@@ -136,6 +135,9 @@ public class FixedColumnsTable extends JTable {
             });
             scrollPane = new JScrollPane();
             scrollPane.setViewportView(splitPane);
+
+            tableModel.initTable(this);
+
         } else {
             // No fixed columns
             fixed = null;
@@ -163,6 +165,21 @@ public class FixedColumnsTable extends JTable {
     public void setDefaultRenderer(Class<?> columnClass, TableCellRenderer renderer) {
         super.setDefaultRenderer(columnClass, renderer);
         if ( fixed != null ) fixed.setDefaultRenderer(columnClass, renderer);
+    }
+
+    public int getSelectedModelIndex(){
+        var viewRowIndex = getSelectedRow();
+        if (viewRowIndex > -1){
+            return convertRowIndexToModel(viewRowIndex);
+        }
+        return -1;
+    }
+
+    public void selectModelIndex(int modelIndex){
+        if ( modelIndex > -1 ) {
+            var viewRowIndex = convertRowIndexToView(modelIndex);
+            setRowSelectionInterval(viewRowIndex, viewRowIndex);
+        }
     }
 
     /**
