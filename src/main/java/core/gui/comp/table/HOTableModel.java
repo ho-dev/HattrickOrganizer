@@ -355,9 +355,10 @@ public abstract class HOTableModel extends AbstractTableModel {
                 case SORTED -> {
                     if ( selectedRow > -1)  {
 						var modelIndex = e.convertPreviousRowIndexToModel(selectedRow);
-						var newSelectedRow  = table.convertRowIndexToView(modelIndex);
-						table.setRowSelectionInterval(newSelectedRow, newSelectedRow);
-
+						if ( modelIndex > -1) {
+							var newSelectedRow = table.convertRowIndexToView(modelIndex);
+							table.setRowSelectionInterval(newSelectedRow, newSelectedRow);
+						}
 					}
                 }
             }

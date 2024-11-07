@@ -135,6 +135,9 @@ public class FixedColumnsTable extends JTable {
             });
             scrollPane = new JScrollPane();
             scrollPane.setViewportView(splitPane);
+
+            tableModel.initTable(this);
+
         } else {
             // No fixed columns
             fixed = null;

@@ -33,7 +33,6 @@ public final class LineupPlayersTable extends FixedColumnsTable implements core.
 		super(UserColumnController.instance().getLineupModel());
 		tableModel = (PlayerOverviewTableModel) this.getModel();
 		tableModel.setValues(HOVerwaltung.instance().getModel().getCurrentPlayers());
-		tableModel.initTable(this);
 		setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
 		setDefaultRenderer(Boolean.class, new BooleanTableCellRenderer());
 		RefreshManager.instance().registerRefreshable(this);

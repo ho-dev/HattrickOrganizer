@@ -38,7 +38,7 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
     private final JLabel playerNameLabel;
     private final YouthSkillInfoEditor[] playerSkillInfoEditors;
     private final JEditorPane playerScoutCommentField;
-    private YouthPlayerDetailsTableModel playerDetailsTableModel;
+    private final YouthPlayerDetailsTableModel playerDetailsTableModel;
 
     public YouthPlayerView() {
         super();
@@ -46,14 +46,11 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
         setLayout(new BorderLayout());
         this.playerOverviewTableModel =  UserColumnController.instance().getYouthPlayerOverviewColumnModel();
         playerOverviewTable = new FixedColumnsTable(this.playerOverviewTableModel);
-        this.playerOverviewTableModel.initTable(playerOverviewTable);
         var selectionModel = playerOverviewTable.getSelectionModel();
         selectionModel.addListSelectionListener(this);
 
         this.playerDetailsTableModel = UserColumnController.instance().getYouthPlayerDetailsColumnModel();
         FixedColumnsTable playerDetailsTable = new FixedColumnsTable(this.playerDetailsTableModel);
-        this.playerDetailsTableModel.initTable(playerDetailsTable);
-
 
         playerNameLabel = new JLabel();
 
