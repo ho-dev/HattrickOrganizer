@@ -4,6 +4,8 @@ import core.db.DBManager;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.model.UserColumnController;
 import core.model.TranslationFacility;
+import core.util.HOLogger;
+
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableColumn;
@@ -271,9 +273,14 @@ public abstract class HOTableModel extends AbstractTableModel {
 		if (table instanceof FixedColumnsTable fixedColumnsTable) {
 			var targetIndex = userColumn.getIndex() - fixedColumnsTable.getFixedColumnsCount();
 			if (targetIndex > 0) {
-				var index = fixedColumnsTable.getColumnModel().getColumnIndex(userColumn.getId());
-				if (index != targetIndex) {
-					table.moveColumn(index, targetIndex);
+				try {
+					var index = fixedColumnsTable.getColumnModel().getColumnIndex(userColumn.getId());
+					if (index != targetIndex) {
+						table.moveColumn(index, targetIndex);
+					}
+				}
+				catch (IllegalArgumentException e) {
+					HOLogger.instance().info(this.getClass(), "Cannot move column to stored index " + userColumn.id + " " + userColumn.getColumnName() +  " index=" + userColumn.getIndex() + ": " + e.getMessage());
 				}
 			}
 		} else {
