@@ -32,5 +32,5 @@ public class YouthTrainingColumn extends UserColumn {
         return false;
     }
 
-
+    public boolean isEditable() {return false;}
 }
