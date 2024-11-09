@@ -101,6 +101,22 @@ public class PlayerOverviewTableModel extends HOTableModel {
 		return -1;
 	}
 
+	public Player getSelectedPlayer(){
+		var rowIndex = this.table.getSelectedRow();
+		if (rowIndex >= 0) {
+			return getPlayers().get(this.table.convertRowIndexToModel(rowIndex));
+		}
+		return null;
+
+	}
+
+	public void selectPlayer(int playerId){
+		var row = getRowIndexOfPlayer(playerId);
+		if ( row > -1 ) {
+			this.table.setRowSelectionInterval(row, row);
+		}
+	}
+
 	public Player getPlayerAtRow(int tableRow) {
 		if (tableRow > -1 ) return m_vPlayers.get(this.table.convertRowIndexToModel(tableRow));
 		return null;

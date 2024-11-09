@@ -39,10 +39,7 @@ public final class LineupPlayersTable extends FixedColumnsTable implements core.
 
 	@Override
 	public void setPlayer(int iPlayerID) {
-		var rowIndex = tableModel.getRowIndexOfPlayer(iPlayerID);
-		if (rowIndex >= 0) {
-			this.setRowSelectionInterval(rowIndex, rowIndex);
-		}
+		tableModel.selectPlayer(iPlayerID);
 	}
 
 	@Override
@@ -52,14 +49,15 @@ public final class LineupPlayersTable extends FixedColumnsTable implements core.
 
 	@Override
 	public void reInit() {
+		var selectedPlayer = tableModel.getSelectedPlayer();
 		resetPlayers();
 		repaint();
+		if ( selectedPlayer != null ) {tableModel.selectPlayer(selectedPlayer.getPlayerId());}
 	}
 
 	@Override
 	public void refresh() {
-		resetPlayers();
-		repaint();
+		reInit();
 	}
 
 	public PlayerOverviewTableModel getTableModel() {
