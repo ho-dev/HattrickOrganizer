@@ -33,6 +33,8 @@ public class YouthPlayerDetailsTableModel extends HOTableModel {
                     public IHOTableEntry getTableEntry(YouthTrainingDevelopmentEntry entry) {
                         return new ColorLabelEntry(HODateTime.toEpochSecond(entry.getMatchDate()), HODateTime.toLocaleDateTime(entry.getMatchDate()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
+                    @Override
+                    public boolean canBeDisabled() {return false;}
                 },
                 new YouthPlayerDetailsColumn("ls.youth.player.training.match") {
                     @Override

@@ -34,11 +34,6 @@ public class YouthPlayerColumn extends UserColumn {
     }
 
     @Override
-    public boolean canBeDisabled() {
-        return false;
-    }
-
-    @Override
     public void setSize(TableColumn column) {
         column.setMinWidth(50);
         column.setPreferredWidth(100);

@@ -31,6 +31,10 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
                     public IHOTableEntry getTableEntry(YouthPlayer player) {
                         return new ColorLabelEntry(player.getFullName(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
+                    @Override
+                    public boolean canBeDisabled() {
+                        return false;
+                    }
                 },
                 new YouthPlayerColumn("ls.player.age") {
                     @Override

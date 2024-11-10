@@ -26,11 +26,4 @@ public class YouthPlayerDetailsColumn extends UserColumn {
     public int getValue(YouthTrainingDevelopmentEntry youthTraining){
         return youthTraining.getMatchId();
     }
-
-    @Override
-    public boolean canBeDisabled() {
-        return false;
-    }
-
-
 }

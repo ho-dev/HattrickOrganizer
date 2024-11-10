@@ -180,6 +180,8 @@ public final class UserColumnController {
 		v.add(getAnalysisModel(1));
 		v.add(getAnalysisModel(2));
 		v.add(getTeamAnalyzerRecapModel());
+		v.add(getYouthPlayerOverviewColumnModel());
+		v.add(getYouthPlayerDetailsColumnModel());
 		// MatchesOverView1Model should not add in this vector, because columns should not be edit
 		return v;
 	}

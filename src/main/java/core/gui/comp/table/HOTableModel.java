@@ -308,10 +308,6 @@ public abstract class HOTableModel extends AbstractTableModel {
 			var tableColumn = getTableColumn(table, index);
 			var modelColumn = this.columns[tableColumn.getModelIndex()];
 
-			if (!modelColumn.isDisplay()) {
-				modelColumn.setDisplay(true);
-				changed = true;
-			}
 			if (modelColumn.getIndex() != index) {
 				changed = true;
 				modelColumn.setIndex(index);
