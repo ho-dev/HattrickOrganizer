@@ -1,6 +1,7 @@
 package core.db;
 
 import core.constants.player.PlayerSkill;
+import core.model.player.PlayerCategory;
 import core.model.player.Specialty;
 import core.util.HODateTime;
 import module.youth.YouthPlayer;
@@ -39,7 +40,7 @@ public class YouthPlayerTable  extends AbstractTable {
                 ColumnDescriptor.Builder.newInstance().setColumnName("PlayerNumber").setGetter((p) -> ((YouthPlayer) p).getPlayerNumber()).setSetter((p, v) -> ((YouthPlayer) p).setPlayerNumber((String) v)).setType(Types.VARCHAR).setLength(10).isNullable(true).build(),
                 ColumnDescriptor.Builder.newInstance().setColumnName("Statement").setGetter((p) -> ((YouthPlayer) p).getStatement()).setSetter((p, v) -> ((YouthPlayer) p).setStatement((String) v)).setType(Types.VARCHAR).setLength(255).isNullable(true).build(),
                 ColumnDescriptor.Builder.newInstance().setColumnName("OwnerNotes").setGetter((p) -> ((YouthPlayer) p).getOwnerNotes()).setSetter((p, v) -> ((YouthPlayer) p).setOwnerNotes((String) v)).setType(Types.VARCHAR).setLength(255).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("PlayerCategoryID").setGetter((p) -> ((YouthPlayer) p).getPlayerCategoryID()).setSetter((p, v) -> ((YouthPlayer) p).setPlayerCategoryID((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("PlayerCategoryID").setGetter((p) -> (PlayerCategory.idOf(((YouthPlayer) p).getPlayerCategory()))).setSetter((p, v) -> ((YouthPlayer) p).setPlayerCategory(PlayerCategory.valueOf((Integer) v))).setType(Types.INTEGER).isNullable(true).build(),
                 ColumnDescriptor.Builder.newInstance().setColumnName("Cards").setGetter((p) -> ((YouthPlayer) p).getCards()).setSetter((p, v) -> ((YouthPlayer) p).setCards((int) v)).setType(Types.INTEGER).isNullable(false).build(),
                 ColumnDescriptor.Builder.newInstance().setColumnName("InjuryLevel").setGetter((p) -> ((YouthPlayer) p).getInjuryLevel()).setSetter((p, v) -> ((YouthPlayer) p).setInjuryLevel((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
                 ColumnDescriptor.Builder.newInstance().setColumnName("Specialty").setGetter((p) -> Specialty.getValue(((YouthPlayer) p).getSpecialty())).setSetter((p, v) -> ((YouthPlayer) p).setSpecialty(Specialty.getSpecialty((Integer) v))).setType(Types.INTEGER).isNullable(true).build(),

@@ -37,7 +37,7 @@ public enum PlayerCategory {
     }
 
     public static String StringValueOf(PlayerCategory value) {
-        if (value == null || value == NoCategorySet) return TranslationFacility.tr("ls.player.category.undefined");
+        if (value == null || value == NoCategorySet) return "";
         return TranslationFacility.tr("ls.player.category." + value._toString());
     }
 

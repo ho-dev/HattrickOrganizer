@@ -6,6 +6,7 @@ import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
 import core.model.player.CommentType;
+import core.model.player.PlayerCategory;
 import core.model.player.Specialty;
 import core.util.HODateTime;
 import core.util.HOLogger;
@@ -33,7 +34,7 @@ public class YouthPlayer extends AbstractTable.Storable {
     private String playerNumber;
     private String statement;
     private String ownerNotes;
-    private int playerCategoryID;
+    private PlayerCategory playerCategory;
     private int cards;
     private int injuryLevel;
     private Specialty specialty;
@@ -244,12 +245,12 @@ public class YouthPlayer extends AbstractTable.Storable {
         this.ownerNotes = ownerNotes;
     }
 
-    public int getPlayerCategoryID() {
-        return playerCategoryID;
+    public PlayerCategory getPlayerCategory() {
+        return playerCategory;
     }
 
-    public void setPlayerCategoryID(int playerCategoryID) {
-        this.playerCategoryID = playerCategoryID;
+    public void setPlayerCategory(PlayerCategory playerCategory) {
+        this.playerCategory = playerCategory;
     }
 
     public int getCards() {
@@ -922,7 +923,7 @@ public class YouthPlayer extends AbstractTable.Storable {
         playerNumber = properties.getProperty("playernumber", "");
         statement = properties.getProperty("statement", "");
         ownerNotes = properties.getProperty("ownernotes", "");
-        playerCategoryID = getInt(properties, "playercategoryid", 0);
+        playerCategory = PlayerCategory.valueOf(getInt(properties, "playercategoryid", 0));
         cards = getInt(properties, "cards", 0);
         injuryLevel = getInt(properties, "injurylevel", 0);
         specialty = Specialty.getSpecialty(getInt(properties, "specialty", 0));
