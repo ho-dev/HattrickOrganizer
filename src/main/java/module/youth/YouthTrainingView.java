@@ -2,11 +2,9 @@ package module.youth;
 
 import core.gui.RefreshManager;
 import core.gui.Refreshable;
-import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.comp.table.FixedColumnsTable;
 import core.gui.model.UserColumnController;
 import javax.swing.*;
-import javax.swing.table.TableColumnModel;
 
 public class YouthTrainingView extends FixedColumnsTable implements Refreshable {
 

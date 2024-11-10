@@ -7,8 +7,8 @@ import java.awt.*;
 
 public class YouthPanel extends JPanel {
 
-    private YouthPlayerView youthPlayerView;
-    private YouthTrainingView youthTrainingView;
+    private final YouthPlayerView youthPlayerView;
+    private final YouthTrainingView youthTrainingView;
 
     public YouthPanel() {
         setLayout(new BorderLayout());
