@@ -85,11 +85,7 @@ public class PlayerOverviewTable extends FixedColumnsTable implements core.gui.R
 	}
 
 	public final void selectPlayer(int playerId) {
-		var index = tableModel.getPlayerIndex(playerId);
-		if (index >= 0) {
-			index = convertRowIndexToView(index);
-			this.setRowSelectionInterval(index, index);
-		}
+		tableModel.selectPlayer(playerId);
 	}
 
 	@Override

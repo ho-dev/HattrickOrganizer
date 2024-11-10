@@ -7,8 +7,8 @@ import java.awt.*;
 
 public class YouthPanel extends JPanel {
 
-    private YouthPlayerView youthPlayerView;
-    private YouthTrainingView youthTrainingView;
+    private final YouthPlayerView youthPlayerView;
+    private final YouthTrainingView youthTrainingView;
 
     public YouthPanel() {
         setLayout(new BorderLayout());
@@ -16,7 +16,7 @@ public class YouthPanel extends JPanel {
         var tabbedPane = new JTabbedPane();
         tabbedPane.addTab(TranslationFacility.tr("ls.youth.player"), this.youthPlayerView);
         youthTrainingView = new YouthTrainingView();
-        tabbedPane.addTab(TranslationFacility.tr("ls.youth.training"), this.youthTrainingView);
+        tabbedPane.addTab(TranslationFacility.tr("ls.youth.training"), this.youthTrainingView.getContainerComponent());
         add(tabbedPane, BorderLayout.CENTER);
     }
 

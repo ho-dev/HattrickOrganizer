@@ -53,8 +53,9 @@
 
 ## Translations
 
-Reports by Contributors - June 23, 2024 - November 02, 2024
+Reports by Contributors - June 23, 2024 - November 09, 2024
 
+* Kristaps 265
 * Tavaro 175
 * wsbrenk 58
 * Lidegang 29
@@ -62,4 +63,4 @@ Reports by Contributors - June 23, 2024 - November 02, 2024
 * Achilles 10
 * Billy Dikkanen 10
 
-Total 294
+Total 559

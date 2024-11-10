@@ -32,5 +32,4 @@ public class YouthTrainingColumn extends UserColumn {
         return false;
     }
 
-
 }

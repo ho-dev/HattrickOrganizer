@@ -177,6 +177,11 @@ public abstract class HOTableModel extends AbstractTableModel {
 		return null;
 	}
 
+	@Override
+	public boolean isCellEditable(int row, int column) {
+		return columns[column].isEditable();
+	}
+
 	/**
 	 * Return row count
 	 * @return int
@@ -356,6 +361,7 @@ public abstract class HOTableModel extends AbstractTableModel {
 
 		var rowSorter = new TableRowSorter<>(this);
 		rowSorter.addRowSorterListener(e -> {
+			// Restore the previous selection when table rows were sorted
             // Sorting changed
 			switch (e.getType()){
 				case SORT_ORDER_CHANGED ->  selectedRow = table.getSelectedRow();
