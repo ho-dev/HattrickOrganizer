@@ -60,7 +60,6 @@ public class YouthTrainingViewTableModel extends HOTableModel {
                     public IHOTableEntry getTableEntry(YouthTraining youthTraining){
                         return new YouthTrainingTableEntry(youthTraining.getTraining(YouthTraining.Priority.Secondary));
                     }
-                    @Override
                     public boolean isEditable() {return true;}
                 },
 
@@ -75,11 +74,6 @@ public class YouthTrainingViewTableModel extends HOTableModel {
                     }
                 }
         };
-    }
-
-    @Override
-    public boolean isCellEditable(int row, int column) {
-        return columns[column].canBeDisabled();
     }
 
     @Override

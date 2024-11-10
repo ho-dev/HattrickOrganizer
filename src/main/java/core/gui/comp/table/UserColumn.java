@@ -189,4 +189,6 @@ public abstract class UserColumn {
 	public void setSortOrder(SortOrder sortOrder) {
 		this.sortOrder = sortOrder;
 	}
+
+    public boolean isEditable() {return false;}
 }
