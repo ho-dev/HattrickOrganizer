@@ -3,7 +3,6 @@ package module.transfer.history;
 import core.constants.player.PlayerSkill;
 import core.db.DBManager;
 import core.gui.comp.panel.ImagePanel;
-import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.comp.table.FixedColumnsTable;
 import core.gui.model.UserColumnController;
 import core.gui.theme.ImageUtilities;
@@ -17,10 +16,7 @@ import module.transfer.PlayerTransfer;
 import module.transfer.XMLParser;
 import module.transfer.ui.layout.TableLayout;
 import module.transfer.ui.layout.TableLayoutConstants;
-import module.transfer.ui.sorter.DefaultTableSorter;
-
 import javax.swing.*;
-import java.awt.*;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -93,12 +89,8 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
 
         var model = UserColumnController.instance().getPlayerTransferTableModel();
         playerTable = new FixedColumnsTable(model);
-//        playerTable.setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
-//        playerTable.setOpaque(true);
-        model.initTable(playerTable);
+        playerTable.setOpaque(false);
 
-        //final JScrollPane playerPane = new JScrollPane(playerTable);
-        //playerPane.setOpaque(false);
         add(playerTable.getContainerComponent(), BorderLayout.CENTER);
 
         final double[][] sizes = {

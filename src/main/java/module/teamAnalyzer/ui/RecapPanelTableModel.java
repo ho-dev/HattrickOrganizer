@@ -334,6 +334,7 @@ public class RecapPanelTableModel extends HOTableModel {
 
     public TeamLineup getTeamMatchReport(int minSelectionIndex) {
         if ( teamReport != null){
+            var table = getTable();
             var modelIndex = table.convertRowIndexToModel(minSelectionIndex);
             return teamReport.getTeamMatchReport(modelIndex);
         }

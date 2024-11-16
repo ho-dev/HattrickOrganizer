@@ -1,4 +1,3 @@
-// %1126721330463:hoplugins.transfers.ui.model%
 package module.transfer.history;
 
 import core.gui.comp.entry.ColorLabelEntry;
@@ -12,12 +11,10 @@ import core.model.player.Player;
 import core.util.CurrencyUtils;
 import core.util.HODateTime;
 import module.transfer.PlayerTransfer;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * TableModel representing the transfers for your own team.
@@ -251,10 +248,6 @@ public class TransferTableModel extends HOTableModel {
         if ( value >= 0 ) text =  String.valueOf(value);
         else text = "--";
         return new ColorLabelEntry(value, text, ColorLabelEntry.FG_STANDARD, backgroundColor, SwingConstants.RIGHT);
-    }
-
-    private ColorLabelEntry createPlayerInfoLabelEntry(int value) {
-        return createPlayerInfoLabelEntry(value, ColorLabelEntry.BG_STANDARD);
     }
 
     public void setValues(List<PlayerTransfer> values){

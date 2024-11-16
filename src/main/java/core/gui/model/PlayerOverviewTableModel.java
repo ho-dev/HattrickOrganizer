@@ -96,15 +96,15 @@ public class PlayerOverviewTableModel extends HOTableModel {
 	public int getRowIndexOfPlayer(int playerId){
 		var modelIndex = getPlayerIndex(playerId);
 		if (modelIndex > -1){
-			return this.table.convertRowIndexToView(modelIndex);
+			return getTable().convertRowIndexToView(modelIndex);
 		}
 		return -1;
 	}
 
 	public Player getSelectedPlayer(){
-		var rowIndex = this.table.getSelectedRow();
+		var rowIndex = getTable().getSelectedRow();
 		if (rowIndex >= 0) {
-			return getPlayers().get(this.table.convertRowIndexToModel(rowIndex));
+			return getPlayers().get(getTable().convertRowIndexToModel(rowIndex));
 		}
 		return null;
 
@@ -113,12 +113,12 @@ public class PlayerOverviewTableModel extends HOTableModel {
 	public void selectPlayer(int playerId){
 		var row = getRowIndexOfPlayer(playerId);
 		if ( row > -1 ) {
-			this.table.setRowSelectionInterval(row, row);
+			getTable().setRowSelectionInterval(row, row);
 		}
 	}
 
 	public Player getPlayerAtRow(int tableRow) {
-		if (tableRow > -1 ) return m_vPlayers.get(this.table.convertRowIndexToModel(tableRow));
+		if (tableRow > -1 ) return m_vPlayers.get(getTable().convertRowIndexToModel(tableRow));
 		return null;
 	}
 

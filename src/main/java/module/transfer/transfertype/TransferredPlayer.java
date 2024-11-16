@@ -25,11 +25,12 @@ class TransferredPlayer {
     private int endWeek = 0;
     private int experience = 0;
     private int experienceSkillups = 0;
-    private final int id;
+    private final int playerId;
     private int income;
     private int leadership = 0;
     private int skillups = 0;
     private int startWeek;
+    private final int transferId;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -38,9 +39,10 @@ class TransferredPlayer {
      *
      * @param player PlayerId of the Transferred Player
      */
-    TransferredPlayer(Player player) {
+    TransferredPlayer(int transferId, Player player) {
+        this.transferId = transferId;
         age = player.getAge();
-        id = player.getPlayerId();
+        playerId = player.getPlayerId();
         experience = player.getExperience();
         leadership = player.getLeadership();
         playerName = player.getFullName();
@@ -51,12 +53,8 @@ class TransferredPlayer {
         skillups += player.getAllLevelUp(PlayerSkill.DEFENDING).size();
         skillups += player.getAllLevelUp(PlayerSkill.SCORING).size();
         skillups += player.getAllLevelUp(PlayerSkill.SETPIECES).size();
-
-        //player.getAllLevelUp(ISpieler.SKILL_KONDITION).size();
         experienceSkillups = player.getAllLevelUp(PlayerSkill.EXPERIENCE).size();
         officialMatch = DBManager.instance().getCountOfPlayedMatches(player.getPlayerId(), true);
-
-        //testMatch = PlayerMatchesDAO.getAppearance(player.getSpielerID(), false);
         endWeek = HOVerwaltung.instance().getModel().getBasics().getSpieltag()
                   + (HOVerwaltung.instance().getModel().getBasics().getSeason() * 16);
     }
@@ -67,7 +65,8 @@ class TransferredPlayer {
      * @param pt Player Transfer to Analyze
      */
     TransferredPlayer(PlayerTransfer pt) {
-        id = pt.getPlayerId();
+        this.transferId=pt.getTransferId();
+        playerId = pt.getPlayerId();
         playerName = pt.getPlayerName();
         age = 17;
     }
@@ -89,7 +88,7 @@ class TransferredPlayer {
      * @return id
      */
     final int getPlayerId() {
-        return this.id;
+        return this.playerId;
     }
 
     /**
@@ -107,7 +106,7 @@ class TransferredPlayer {
      * @return transfer type code
      */
     final int getTransferType() {
-        var transferType = DBManager.instance().getTransferType(id);
+        var transferType = DBManager.instance().getTransferType(playerId);
         if (transferType != null) {
             if ( transferType.getTransferType() != null ) {
                 return transferType.getTransferType();
@@ -134,7 +133,7 @@ class TransferredPlayer {
      * @param transfer The Transfer Detail
      */
     final void addTransfer(PlayerTransfer transfer) {
-        if (transfer.getPlayerId() != id) {
+        if (transfer.getPlayerId() != playerId) {
             return;
         }
 
@@ -236,5 +235,9 @@ class TransferredPlayer {
      */
     private int getWeekOnRoster() {
         return endWeek - startWeek;
+    }
+
+    public int getTransferId() {
+        return this.transferId;
     }
 }

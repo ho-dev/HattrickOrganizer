@@ -58,7 +58,6 @@ public class FixedColumnsTable extends JTable {
      */
     public FixedColumnsTable(HOTableModel tableModel, int fixedColumns) {
         super(tableModel);
-        tableModel.table = this;
         this.fixedColumns = fixedColumns;
 
         // Handle tool tips

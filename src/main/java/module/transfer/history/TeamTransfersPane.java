@@ -1,20 +1,15 @@
 package module.transfer.history;
 
 import core.gui.comp.panel.ImagePanel;
-import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.comp.table.FixedColumnsTable;
-import core.gui.comp.table.HOTableModel;
 import core.gui.model.UserColumnController;
 import module.transfer.PlayerTransfer;
-import module.transfer.ui.sorter.DefaultTableSorter;
-import java.awt.BorderLayout;
+import module.transfer.TransfersPanel;
+
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -24,16 +19,20 @@ import javax.swing.event.ListSelectionListener;
  */
 class TeamTransfersPane extends JPanel implements ListSelectionListener {
 
-	private final FixedColumnsTable transferTable;
+    private final TransfersPanel transferPanel;
     private List<PlayerTransfer> transfers = new ArrayList<>();
-    private PlayerDetailPanel playerDetailPanel;
+	private final FixedColumnsTable transferTable;
+    private final PlayerDetailPanel playerDetailPanel;
 
     /**
      * Creates a new TeamTransfersPane object.
      */
-    TeamTransfersPane() {
+    TeamTransfersPane(TransfersPanel transfersPanel) {
         super(new BorderLayout());
 
+        this.transferPanel = transfersPanel;
+
+        this.playerDetailPanel = new PlayerDetailPanel();
         final JPanel mainPanel = new ImagePanel();
         mainPanel.setLayout(new BorderLayout());
         setOpaque(false);
@@ -41,22 +40,12 @@ class TeamTransfersPane extends JPanel implements ListSelectionListener {
 
         var model = UserColumnController.instance().getTransferTableModel();
         transferTable = new FixedColumnsTable(model);
-        model.initTable(transferTable);
+        transferTable.getSelectionModel().addListSelectionListener(this);
         mainPanel.add(transferTable.getContainerComponent(), BorderLayout.CENTER);
-//        refresh(new Vector<>());
     }
 
     public TransferTableModel getTransferTableModel(){
         return (TransferTableModel) transferTable.getModel();
-    }
-
-    /**
-     * Creates a new TeamTransfersPane object.
-     */
-    public TeamTransfersPane(PlayerDetailPanel playerDetailPanel) {
-        this();
-        this.playerDetailPanel = playerDetailPanel;
-        transferTable.getSelectionModel().addListSelectionListener(this);
     }
 
     //~ Methods ------------------------------------------------------------------------------------
@@ -79,6 +68,7 @@ class TeamTransfersPane extends JPanel implements ListSelectionListener {
                 var index = transferTable.getSelectedModelIndex();
                 final PlayerTransfer transfer = this.transfers.get(index);
                 this.playerDetailPanel.setPlayer(transfer);
+                this.transferPanel.selectTransfer(transfer.getTransferId());
             } else {
                 this.playerDetailPanel.clearPanel();
             }
@@ -89,6 +79,32 @@ class TeamTransfersPane extends JPanel implements ListSelectionListener {
         var model = getTransferTableModel();
         model.storeUserSettings();
         playerDetailPanel.storeUserSettings();
+    }
+
+    public PlayerDetailPanel getPlayerDetailPanel() {
+        return this.playerDetailPanel;
+    }
+
+    private PlayerTransfer getSelectedTransfer() {
+        var viewIndex = transferTable.getSelectedRow();
+        if (viewIndex > -1 && viewIndex < transfers.size()) {
+            return transfers.get(transferTable.convertRowIndexToModel(viewIndex));
+        }
+        return null;
+    }
+
+    public void selectTransfer(int transferId) {
+        var selectedTransfer = getSelectedTransfer();
+        if (selectedTransfer != null && selectedTransfer.getTransferId() != transferId) {
+            var modelIndex = 0;
+            for (var t : transfers) {
+                if (t.getTransferId() == transferId) {
+                    var newViewIndex = transferTable.convertRowIndexToView(modelIndex);
+                    transferTable.setRowSelectionInterval(newViewIndex, newViewIndex);
+                }
+                modelIndex++;
+            }
+        }
     }
 
 }

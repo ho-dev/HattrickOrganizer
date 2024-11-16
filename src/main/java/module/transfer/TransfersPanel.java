@@ -20,34 +20,28 @@ public class TransfersPanel extends JPanel implements IRefreshable {
 
 	@Serial
 	private static final long serialVersionUID = -5312017309355429020L;
-	private HistoryPane historyPane;
+	private final HistoryPane historyPane;
 	private List<Player> oldplayers;
 	private List<Player> players;
-	private TransferTypePane transferTypePane;
-	private TransferScoutPanel scoutPanel;
+	private final TransferTypePane transferTypePane;
+	private final TransferScoutPanel scoutPanel;
 
 	public TransfersPanel() {
-		initialize();
-	}
 
-	private void initialize() {
 		this.players = HOVerwaltung.instance().getModel().getCurrentPlayers();
 		this.oldplayers = HOVerwaltung.instance().getModel().getFormerPlayers();
 
 		// Create the top panel
 		final JTabbedPane tabPane = new JTabbedPane();
 
-		historyPane = new HistoryPane();
+		historyPane = new HistoryPane(this);
 		tabPane.add(TranslationFacility.tr("History"), historyPane); //$NON-NLS-1$
 
-		transferTypePane = new TransferTypePane();
+		transferTypePane = new TransferTypePane(this);
 		tabPane.add(TranslationFacility.tr("TransferTypes"), transferTypePane);
 
 		scoutPanel = new TransferScoutPanel();
 		tabPane.add(TranslationFacility.tr("TransferScout"), scoutPanel);
-
-		// this.overviewPanel = new OverviewPanel();
-		// tabPane.add("Financial", this.overviewPanel);
 
 		setLayout(new BorderLayout());
 		add(tabPane, BorderLayout.CENTER);
@@ -105,5 +99,10 @@ public class TransfersPanel extends JPanel implements IRefreshable {
 
 	public void storeUserSettings() {
 		historyPane.storeUserSettings();
+	}
+
+	public void selectTransfer(int transferId) {
+		this.historyPane.selectTransfer(transferId);
+		this.transferTypePane.selectTransfer(transferId);
 	}
 }
