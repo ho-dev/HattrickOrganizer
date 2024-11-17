@@ -146,6 +146,24 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
                 return ret;
             }
         });
+        tmp.add(new YouthPlayerColumn("ls.player.career_goals") {
+            @Override
+            public IHOTableEntry getTableEntry(YouthPlayer player) {
+                return new ColorLabelEntry(player.getCareerGoals(), String.valueOf(player.getCareerGoals()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
+            }
+        });
+        tmp.add(new YouthPlayerColumn("ls.player.season_series_goals") {
+            @Override
+            public IHOTableEntry getTableEntry(YouthPlayer player) {
+                return new ColorLabelEntry(player.getLeagueGoals(), String.valueOf(player.getLeagueGoals()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
+            }
+        });
+        tmp.add(new YouthPlayerColumn("ls.player.hattricks") {
+            @Override
+            public IHOTableEntry getTableEntry(YouthPlayer player) {
+                return new ColorLabelEntry(player.getCareerHattricks(), String.valueOf(player.getCareerHattricks()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
+            }
+        });
 
         return tmp.toArray(new YouthPlayerColumn[0]);
     }

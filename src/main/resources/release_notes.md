@@ -39,6 +39,7 @@
 * Fix database error on match reload (#2063)
 
 ### Youth
+* Add columns number, category, statement, owner notes, injury status, career goals, season goals, hattricks to the youth player overview table (#2061)
 
 ### Option setting
 
@@ -53,9 +54,9 @@
 
 ## Translations
 
-Reports by Contributors - June 23, 2024 - November 09, 2024
+Reports by Contributors - June 23, 2024 - November 17, 2024
 
-* Kristaps 265
+* Kristaps 276
 * Tavaro 175
 * wsbrenk 58
 * Lidegang 29
@@ -63,4 +64,4 @@ Reports by Contributors - June 23, 2024 - November 09, 2024
 * Achilles 10
 * Billy Dikkanen 10
 
-Total 559
+Total 570
