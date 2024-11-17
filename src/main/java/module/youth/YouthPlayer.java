@@ -602,9 +602,9 @@ public class YouthPlayer extends AbstractTable.Storable {
      * @param date timestamp
      * @return injury level
      */
-    private int getInjuryLevelAt(HODateTime date){
+    private int getInjuryLevelAt(HODateTime date) {
         var oldPlayerInfo = getOldPlayerInfo(date);
-        if ( oldPlayerInfo != null) return oldPlayerInfo.getInjuryLevel();
+        if (oldPlayerInfo != null) return oldPlayerInfo.getInjuryLevel();
         return this.injuryLevel;
     }
 

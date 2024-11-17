@@ -45,9 +45,7 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
         setLayout(new BorderLayout());
         this.playerOverviewTableModel =  UserColumnController.instance().getYouthPlayerOverviewColumnModel();
         playerOverviewTable = new FixedColumnsTable(this.playerOverviewTableModel);
-        var selectionModel = playerOverviewTable.getSelectionModel();
-        selectionModel.addListSelectionListener(this);
-
+        playerOverviewTable.addListSelectionListener(this);
         this.playerDetailsTableModel = UserColumnController.instance().getYouthPlayerDetailsColumnModel();
         FixedColumnsTable playerDetailsTable = new FixedColumnsTable(this.playerDetailsTableModel);
 
@@ -59,18 +57,18 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
 
         playerSkillInfoEditors = new YouthSkillInfoEditor[YouthPlayer.skillIds.length];
 
-        var split1 = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false);
-        var split2 = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false);
-        var split3 = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, false);
-        split2.setLeftComponent(split1);
-        split2.setRightComponent(split3);
+        var splitOverViewFromDevelopment = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false);
+        var splitDevelopmentFromScoutComment = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false);
+        var splitChartFromSkillEditor = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, false);
+        splitDevelopmentFromScoutComment.setLeftComponent(splitOverViewFromDevelopment);
+        splitDevelopmentFromScoutComment.setRightComponent(splitChartFromSkillEditor);
 
-        setDividerLocation(split1, VERTICALSPLIT1_POSITION, 200);
-        setDividerLocation(split2, VERTICALSPLIT2_POSITION, 400);
-        setDividerLocation(split3, HORIZONTALSPLIT_POSITION, 800);
+        setDividerLocation(splitOverViewFromDevelopment, VERTICALSPLIT1_POSITION, 200);
+        setDividerLocation(splitDevelopmentFromScoutComment, VERTICALSPLIT2_POSITION, 400);
+        setDividerLocation(splitChartFromSkillEditor, HORIZONTALSPLIT_POSITION, 800);
 
         // First section
-        split1.setLeftComponent(new JScrollPane(playerOverviewTable.getContainerComponent()));
+        splitOverViewFromDevelopment.setLeftComponent(playerOverviewTable.getContainerComponent());
 
         // Second section
         var developmentPanel = new JPanel(new BorderLayout());
@@ -78,8 +76,8 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
         topLinePanel.add(playerNameLabel, BorderLayout.NORTH);
         topLinePanel.add(new JLabel(TranslationFacility.tr("ls.youth.player.trainingdevelopment")));
         developmentPanel.add(topLinePanel, BorderLayout.NORTH);
-        developmentPanel.add(new JScrollPane(playerDetailsTable.getContainerComponent()));
-        split1.setRightComponent(developmentPanel);
+        developmentPanel.add(playerDetailsTable.getContainerComponent());
+        splitOverViewFromDevelopment.setRightComponent(developmentPanel);
 
         // Third section
 
@@ -130,14 +128,14 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
             skillEditorPanel.add(skillInfoEditor, skillEditorPanelConstraints );
         }
 
-        split3.setLeftComponent(new JScrollPane(scoutAndChartPanel));
-        split3.setRightComponent(new JScrollPane(skillEditorPanel));
+        splitChartFromSkillEditor.setLeftComponent(new JScrollPane(scoutAndChartPanel));
+        splitChartFromSkillEditor.setRightComponent(new JScrollPane(skillEditorPanel));
 
         RefreshManager.instance().registerRefreshable(this);
         playerOverviewTable.setDefaultRenderer(Object.class, new YouthPlayerOverviewTableCellRenderer());
         playerDetailsTable.setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
 
-        this.add(split2, BorderLayout.CENTER);
+        this.add(splitDevelopmentFromScoutComment, BorderLayout.CENTER);
     }
 
     private void setDividerLocation(JSplitPane split, String configKey, int defaultPosition) {

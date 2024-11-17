@@ -36,8 +36,7 @@ public class FixedColumnsTable extends JTable {
     /**
      * Container component for split pane of fixed and scrollable tables
      */
-    private final JScrollPane scrollPane;
-
+    private final JPanel containerComponent;
 
     /**
      * Constructor of table with one fixed columns
@@ -132,15 +131,16 @@ public class FixedColumnsTable extends JTable {
                     dividerLocation.setIntValue(pane.getDividerLocation());
                 }
             });
-            scrollPane = new JScrollPane();
-            scrollPane.setViewportView(splitPane);
-
+            containerComponent = new JPanel();
+            containerComponent.setLayout(new BorderLayout());
+            containerComponent.add(splitPane, BorderLayout.CENTER);
             tableModel.initTable(this);
-
         } else {
             // No fixed columns
             fixed = null;
-            scrollPane = new JScrollPane(this);
+            containerComponent = new JPanel();
+            containerComponent.setLayout(new BorderLayout());
+            containerComponent.add( new JScrollPane(this));
         }
     }
 
@@ -213,7 +213,7 @@ public class FixedColumnsTable extends JTable {
      * @return Component
      */
     public Component getContainerComponent() {
-        return this.scrollPane;
+        return this.containerComponent;
     }
 
     @Override

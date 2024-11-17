@@ -138,8 +138,30 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
                 return new ColorLabelEntry(player.getStatement(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
             }
         });
+        tmp.add(new YouthPlayerColumn("ls.player.injurystatus") {
+            @Override
+            public IHOTableEntry getTableEntry(YouthPlayer player) {
+                var ret = new ColorLabelEntry(player.getInjuryLevel(), getInjuryLevelAsString(player.getInjuryLevel()),  ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
+                ret.setIcon(getInjuryLevelIcon(player.getInjuryLevel()));
+                return ret;
+            }
+        });
 
         return tmp.toArray(new YouthPlayerColumn[0]);
+    }
+
+    private Icon getInjuryLevelIcon(int injuryLevel) {
+        if (injuryLevel > 0) {
+            return ImageUtilities.getInjuryIcon(12,12);
+        } else if (injuryLevel == 0) {
+            return ImageUtilities.getPlasterIcon(12,12);
+        }
+        return null;
+    }
+
+    private String getInjuryLevelAsString(int injuryLevel) {
+        if (injuryLevel >= 0) { return String.valueOf(injuryLevel); }
+        return "";
     }
 
     private int getPlayerCategoryAsInt(YouthPlayer player) {
