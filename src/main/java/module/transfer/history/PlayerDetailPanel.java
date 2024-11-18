@@ -3,7 +3,7 @@ package module.transfer.history;
 import core.constants.player.PlayerSkill;
 import core.db.DBManager;
 import core.gui.comp.panel.ImagePanel;
-import core.gui.comp.renderer.HODefaultTableCellRenderer;
+import core.gui.comp.table.FixedColumnsTable;
 import core.gui.model.UserColumnController;
 import core.gui.theme.ImageUtilities;
 import core.model.HOVerwaltung;
@@ -16,10 +16,7 @@ import module.transfer.PlayerTransfer;
 import module.transfer.XMLParser;
 import module.transfer.ui.layout.TableLayout;
 import module.transfer.ui.layout.TableLayoutConstants;
-import module.transfer.ui.sorter.DefaultTableSorter;
-
 import javax.swing.*;
-import java.awt.*;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -78,7 +75,7 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
     private final JLabel arrow_setpieces = new JLabel((Icon) null, SwingConstants.CENTER);
     private final JLabel arrow_stamina = new JLabel((Icon) null, SwingConstants.CENTER);
     private final JLabel arrow_wing = new JLabel((Icon) null, SwingConstants.CENTER);
-    private final JTable playerTable;
+    private final FixedColumnsTable playerTable;
     private String playerName;
     private int playerId;
 
@@ -90,15 +87,11 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
     public PlayerDetailPanel() {
         super(new BorderLayout());
 
-        var model = getTableModel();
-        playerTable = new JTable(model);
-        playerTable.setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
-        playerTable.setOpaque(true);
-        model.initTable(playerTable);
+        var model = UserColumnController.instance().getPlayerTransferTableModel();
+        playerTable = new FixedColumnsTable(model);
+        playerTable.setOpaque(false);
 
-        final JScrollPane playerPane = new JScrollPane(playerTable);
-        playerPane.setOpaque(false);
-        add(playerPane, BorderLayout.CENTER);
+        add(playerTable.getContainerComponent(), BorderLayout.CENTER);
 
         final double[][] sizes = {
                 {10, 95, 150, 20, 100, 75, 100, TableLayoutConstants.FILL, 30, 110, 30, 110, 30, 110, 30, 120, 10},
@@ -174,7 +167,7 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
     }
 
     private PlayerTransferTableModel getTableModel() {
-        return UserColumnController.instance().getPlayerTransferTableModel();
+        return (PlayerTransferTableModel) playerTable.getModel();
     }
 
     //~ Methods ------------------------------------------------------------------------------------
@@ -263,8 +256,6 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
     private void refreshPlayerTable(List<PlayerTransfer> values) {
         var model = getTableModel();
         model.setValues(values);
-        playerTable.getColumnModel().getColumn(4).setCellRenderer(new IconCellRenderer());
-        playerTable.getColumnModel().getColumn(4).setMaxWidth(20);
     }
 
     /**

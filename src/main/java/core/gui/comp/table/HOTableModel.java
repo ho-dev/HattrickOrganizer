@@ -14,6 +14,7 @@ import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 
 import static java.lang.Math.max;
 
@@ -50,7 +51,7 @@ public abstract class HOTableModel extends AbstractTableModel {
 	protected Object[][] m_clData;
 
 	/** Table component **/
-	protected JTable table;
+	protected List<JTable> tables = new ArrayList<>();
 
 	int selectedRow = -1;
 	/**
@@ -230,7 +231,9 @@ public abstract class HOTableModel extends AbstractTableModel {
 	@Override
 	public void setValueAt(Object value, int row, int column) {
 		m_clData[row][column] = value;
-		fireTableCellUpdated(table.convertRowIndexToView(row),table.convertColumnIndexToView(column));
+		for (var table : tables) {
+			fireTableCellUpdated(table.convertRowIndexToView(row),table.convertColumnIndexToView(column));
+		}
 	}
 
 	/**
@@ -308,10 +311,6 @@ public abstract class HOTableModel extends AbstractTableModel {
 			var tableColumn = getTableColumn(table, index);
 			var modelColumn = this.columns[tableColumn.getModelIndex()];
 
-			if (!modelColumn.isDisplay()) {
-				modelColumn.setDisplay(true);
-				changed = true;
-			}
 			if (modelColumn.getIndex() != index) {
 				changed = true;
 				modelColumn.setIndex(index);
@@ -337,10 +336,11 @@ public abstract class HOTableModel extends AbstractTableModel {
 	/**
 	 * Initialize the table object with data from the model
 	 * Todo: Think about making HOTableModel supporting only FixedColumnsTable (JTable==FixedColumnsTable(0 fixed columns))
+	 *       Then initTable could be part of FixedColumnsTable (HOTable)
 	 * @param table Table object
 	 */
 	public void initTable(JTable table) {
-		this.table = table;
+		this.tables.add(table);
 		if ( !(table instanceof FixedColumnsTable)) {
 			var columnModel = table.getColumnModel();
 			ToolTipHeader header = new ToolTipHeader(columnModel);
@@ -390,23 +390,24 @@ public abstract class HOTableModel extends AbstractTableModel {
 	 * Store user table settings in the database if they were changed by the user
 	 */
 	public void storeUserSettings(){
-		if (table == null) return;
-		var changed = setUserColumnSettings(table);
-
-		RowSorter<HOTableModel> sorter = (RowSorter<HOTableModel>) table.getRowSorter();
-		if (sorter != null){
-			if ( setRowOrderSettings(sorter) ) {
-				changed = true;
+		for ( var table : tables){
+			var changed = setUserColumnSettings(table);
+			RowSorter<HOTableModel> sorter = (RowSorter<HOTableModel>) table.getRowSorter();
+			if (sorter != null){
+				if ( setRowOrderSettings(sorter) ) {
+					changed = true;
+				}
 			}
-		}
-		if (changed){
-			DBManager.instance().saveHOColumnModel(this);
+			if (changed){
+				DBManager.instance().saveHOColumnModel(this);
+				break; 	// do not override with next table's setting
+				      	// if more than one table changes setting the first one is the winner
+			}
 		}
 	}
 
 	/**
 	 * Get row order from user columns and restore it to the given row sorter
-	 *
 	 * @param rowSorter Row sorter
 	 */
 	private void getRowOrderSettings(RowSorter<HOTableModel> rowSorter) {
@@ -453,5 +454,14 @@ public abstract class HOTableModel extends AbstractTableModel {
 			}
 		}
 		return changed;
+	}
+
+	/**
+	 * Returns the primary table
+	 * @return JTable
+	 */
+	public JTable getTable() {
+		if (!tables.isEmpty()) return tables.get(0);
+		return null;
 	}
 }

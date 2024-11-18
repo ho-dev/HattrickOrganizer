@@ -3,7 +3,6 @@ package module.transfer.transfertype;
 
 import core.db.DBManager;
 import core.gui.comp.panel.ImagePanel;
-import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.player.Player;
@@ -12,6 +11,7 @@ import module.training.ui.comp.DividerListener;
 import module.transfer.PlayerRetriever;
 import module.transfer.PlayerTransfer;
 import module.transfer.TransferType;
+import module.transfer.TransfersPanel;
 import module.transfer.history.PlayerDetailPanel;
 import module.transfer.ui.layout.TableLayout;
 import module.transfer.ui.layout.TableLayoutConstants;
@@ -23,7 +23,6 @@ import java.awt.Font;
 import java.io.Serial;
 import java.text.NumberFormat;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -57,17 +56,18 @@ public class TransferTypePane extends JSplitPane implements ListSelectionListene
     //~ Static fields/initializers -----------------------------------------------------------------
 
     /**
-	 * 
-	 */
-	@Serial
+     *
+     */
+    @Serial
     private static final long serialVersionUID = 4235843964542482924L;
 
-	private static final NumberFormat FORMAT = NumberFormat.getIntegerInstance();
+    private static final NumberFormat FORMAT = NumberFormat.getIntegerInstance();
 
     //~ Instance fields ----------------------------------------------------------------------------
 
     private final JPanel sidePanel = new ImagePanel();
     private final JTable transferTable;
+    private final TransfersPanel transfersPanel;
     private List<TransferredPlayer> transferred = new ArrayList<>();
     private final PlayerDetailPanel playerDetailPanel = new PlayerDetailPanel();
 
@@ -76,8 +76,10 @@ public class TransferTypePane extends JSplitPane implements ListSelectionListene
     /**
      * Creates a TransferTypePane.
      */
-    public TransferTypePane() {
+    public TransferTypePane(TransfersPanel transfersPanel) {
         super(JSplitPane.VERTICAL_SPLIT);
+
+        this.transfersPanel = transfersPanel;
 
         FORMAT.setGroupingUsed(true);
         FORMAT.setMaximumFractionDigits(0);
@@ -111,7 +113,7 @@ public class TransferTypePane extends JSplitPane implements ListSelectionListene
 
         setDividerLocation(UserParameter.instance().transferTypePane_splitPane); //$NON-NLS-1$
         addPropertyChangeListener(JSplitPane.DIVIDER_LOCATION_PROPERTY,
-                                  new DividerListener(DividerListener.transferTypePane_splitPane)); //$NON-NLS-1$
+                new DividerListener(DividerListener.transferTypePane_splitPane)); //$NON-NLS-1$
 
         setLeftComponent(topPanel);
         setRightComponent(playerDetailPanel);
@@ -127,7 +129,7 @@ public class TransferTypePane extends JSplitPane implements ListSelectionListene
      * @param transfers List of transfers to show.
      */
     public final void refresh(List<PlayerTransfer> transfers) {
-        final Map<String,TransferredPlayer> players = new LinkedHashMap<>();
+        final Map<String, TransferredPlayer> players = new LinkedHashMap<>();
         final List<PlayerTransfer> wasted = new ArrayList<>();
 
         for (final PlayerTransfer pt : transfers) {
@@ -142,7 +144,7 @@ public class TransferTypePane extends JSplitPane implements ListSelectionListene
                     Player player = PlayerRetriever.getPlayer(pt.getPlayerId());
 
                     if (player != null) {
-                        tt = new TransferredPlayer(player);
+                        tt = new TransferredPlayer(pt.getTransferId(), player);
                     } else {
                         tt = new TransferredPlayer(pt);
                     }
@@ -169,9 +171,9 @@ public class TransferTypePane extends JSplitPane implements ListSelectionListene
         this.sidePanel.removeAll();
 
         final double[][] sizes = {
-                               {10, 185, 10, 90, TableLayoutConstants.FILL, 10},
-                               {10, TableLayoutConstants.PREFERRED, 10}
-                           };
+                {10, 185, 10, 90, TableLayoutConstants.FILL, 10},
+                {10, TableLayoutConstants.PREFERRED, 10}
+        };
         final TableLayout tLayout = new TableLayout(sizes);
         this.sidePanel.setLayout(tLayout);
 
@@ -179,7 +181,7 @@ public class TransferTypePane extends JSplitPane implements ListSelectionListene
         c.vAlign = TableLayoutConstants.CENTER;
 
         c.row1 = 1;
-        c.row2 = c.row1; 
+        c.row2 = c.row1;
 
         c.col1 = 1;
         c.col2 = c.col1;
@@ -213,13 +215,13 @@ public class TransferTypePane extends JSplitPane implements ListSelectionListene
                 c.col2 = c.col1;
                 c.hAlign = TableLayoutConstants.LEFT;
                 this.sidePanel.add(new JLabel(TransferType.getTransferDesc(i) + " ("
-                                              + ttc.getNumber() + ")"), c);
+                        + ttc.getNumber() + ")"), c);
 
                 c.col1 = 2;
                 c.col2 = c.col1;
                 c.hAlign = TableLayoutConstants.CENTER;
                 this.sidePanel.add(new JLabel(CurrencyUtils.CURRENCYSYMBOL),
-                                   c);
+                        c);
 
                 c.col1 = 3;
                 c.col2 = c.col1;
@@ -261,7 +263,7 @@ public class TransferTypePane extends JSplitPane implements ListSelectionListene
 
         final JComboBox comboBox = new JComboBox();
         for (int i = -1; i < TransferType.NUMBER; i++) {
-        	comboBox.addItem(TransferType.getTransferDesc(i));
+            comboBox.addItem(TransferType.getTransferDesc(i));
         }
         final TableColumn column = transferTable.getColumnModel().getColumn(2);
         column.setCellEditor(new DefaultCellEditor(comboBox));
@@ -280,7 +282,9 @@ public class TransferTypePane extends JSplitPane implements ListSelectionListene
         refresh(DBManager.instance().getTransfers(0, true, true));
     }
 
-    /** {@inheritDoc} */
+    /**
+     * {@inheritDoc}
+     */
     public final void valueChanged(ListSelectionEvent e) {
         if (!e.getValueIsAdjusting()) {
             final DefaultTableSorter sorter = (DefaultTableSorter) transferTable.getModel();
@@ -289,8 +293,31 @@ public class TransferTypePane extends JSplitPane implements ListSelectionListene
                 final int index = sorter.modelIndex(transferTable.getSelectedRow());
                 final TransferredPlayer transfer = this.transferred.get(index);
                 this.playerDetailPanel.setPlayer(transfer.getPlayerId(), transfer.getPlayerName());
+                this.transfersPanel.selectTransfer(transfer.getTransferId());
             } else {
                 this.playerDetailPanel.clearPanel();
+            }
+        }
+    }
+
+    private TransferredPlayer getSelectedTransfer() {
+        var viewIndex = transferTable.getSelectedRow();
+        if (viewIndex > -1 && viewIndex < transferred.size()) {
+            return transferred.get(transferTable.convertRowIndexToModel(viewIndex));
+        }
+        return null;
+    }
+
+    public void selectTransfer(int transferId) {
+        var selectedTransfer = getSelectedTransfer();
+        if (selectedTransfer != null && selectedTransfer.getTransferId() != transferId) {
+            var modelIndex = 0;
+            for (var t : transferred) {
+                if (t.getTransferId() == transferId) {
+                    var newViewIndex = transferTable.convertRowIndexToView(modelIndex);
+                    transferTable.setRowSelectionInterval(newViewIndex, newViewIndex);
+                }
+                modelIndex++;
             }
         }
     }

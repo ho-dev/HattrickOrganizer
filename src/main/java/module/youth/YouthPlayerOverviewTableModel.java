@@ -31,6 +31,11 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
                     public IHOTableEntry getTableEntry(YouthPlayer player) {
                         return new ColorLabelEntry(player.getFullName(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
+
+                    @Override
+                    public boolean canBeDisabled() {
+                        return false;
+                    }
                 },
                 new YouthPlayerColumn("ls.player.age") {
                     @Override
@@ -60,8 +65,8 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
                     @Override
                     public IHOTableEntry getTableEntry(YouthPlayer player) {
                         var specialty = player.getSpecialtyString();
-                        var ret =  new ColorLabelEntry(specialty, ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
-                        if (!specialty.isEmpty()){
+                        var ret = new ColorLabelEntry(specialty, ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        if (!specialty.isEmpty()) {
                             ret.setIcon(ImageUtilities.getSmallPlayerSpecialtyIcon(player.getSpecialty()));
                         }
                         return ret;
@@ -109,7 +114,86 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
             });
         }
 
+        tmp.add(new YouthPlayerColumn("ls.player.shirtnumber.short", "ls.player.shirtnumber", 10) {
+            @Override
+            public IHOTableEntry getTableEntry(YouthPlayer player) {
+                return new ColorLabelEntry(getPlayerNumberAsInt(player), player.getPlayerNumber(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
+            }
+        });
+        tmp.add(new YouthPlayerColumn("ls.player.category") {
+            @Override
+            public IHOTableEntry getTableEntry(YouthPlayer player) {
+                return new ColorLabelEntry(getPlayerCategoryAsInt(player), player.getPlayerCategory().toString(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
+            }
+        });
+        tmp.add(new YouthPlayerColumn("ls.player.ownernotes") {
+            @Override
+            public IHOTableEntry getTableEntry(YouthPlayer player) {
+                return new ColorLabelEntry(player.getOwnerNotes(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
+            }
+        });
+        tmp.add(new YouthPlayerColumn("ls.player.statement") {
+            @Override
+            public IHOTableEntry getTableEntry(YouthPlayer player) {
+                return new ColorLabelEntry(player.getStatement(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
+            }
+        });
+        tmp.add(new YouthPlayerColumn("ls.player.injurystatus") {
+            @Override
+            public IHOTableEntry getTableEntry(YouthPlayer player) {
+                var ret = new ColorLabelEntry(player.getInjuryLevel(), getInjuryLevelAsString(player.getInjuryLevel()),  ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
+                ret.setIcon(getInjuryLevelIcon(player.getInjuryLevel()));
+                return ret;
+            }
+        });
+        tmp.add(new YouthPlayerColumn("ls.player.career_goals") {
+            @Override
+            public IHOTableEntry getTableEntry(YouthPlayer player) {
+                return new ColorLabelEntry(player.getCareerGoals(), String.valueOf(player.getCareerGoals()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
+            }
+        });
+        tmp.add(new YouthPlayerColumn("ls.player.season_series_goals") {
+            @Override
+            public IHOTableEntry getTableEntry(YouthPlayer player) {
+                return new ColorLabelEntry(player.getLeagueGoals(), String.valueOf(player.getLeagueGoals()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
+            }
+        });
+        tmp.add(new YouthPlayerColumn("ls.player.hattricks") {
+            @Override
+            public IHOTableEntry getTableEntry(YouthPlayer player) {
+                return new ColorLabelEntry(player.getCareerHattricks(), String.valueOf(player.getCareerHattricks()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
+            }
+        });
+
         return tmp.toArray(new YouthPlayerColumn[0]);
+    }
+
+    private Icon getInjuryLevelIcon(int injuryLevel) {
+        if (injuryLevel > 0) {
+            return ImageUtilities.getInjuryIcon(12,12);
+        } else if (injuryLevel == 0) {
+            return ImageUtilities.getPlasterIcon(12,12);
+        }
+        return null;
+    }
+
+    private String getInjuryLevelAsString(int injuryLevel) {
+        if (injuryLevel >= 0) { return String.valueOf(injuryLevel); }
+        return "";
+    }
+
+    private int getPlayerCategoryAsInt(YouthPlayer player) {
+        var id = player.getPlayerCategory().getId();
+        if ( id != 0) return id;
+        return 100;
+    }
+
+    private int getPlayerNumberAsInt(YouthPlayer player) {
+        try {
+            return Integer.parseInt(player.getPlayerNumber());
+        }
+        catch (NumberFormatException ignored) {}
+        return 0;
     }
 
     @Override

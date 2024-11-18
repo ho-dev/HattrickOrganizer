@@ -40,20 +40,20 @@ public final class MatchesColumnModel extends HOTableModel {
 	public int getRowIndexOfMatch(int matchid) {
 		var modelIndex = getMatchIndex(matchid);
 		if (modelIndex > -1){
-			return this.table.convertRowIndexToView(modelIndex);
+			return getTable().convertRowIndexToView(modelIndex);
 		}
 		return -1;
 	}
 
 	public MatchKurzInfo getMatchAtRow(int tableRow) {
-		if (tableRow > -1 ) return m_clMatches[this.table.convertRowIndexToModel(tableRow)];
+		if (tableRow > -1 ) return m_clMatches[getTable().convertRowIndexToModel(tableRow)];
 		return null;
 	}
 
-	private int getMatchIndex(int matchid) {
+	private int getMatchIndex(int matchId) {
 		int i = 0;
 		for (var match : m_clMatches) {
-			if (match.getMatchID() == matchid) {
+			if (match.getMatchID() == matchId) {
 				return i;
 			}
 			i++;

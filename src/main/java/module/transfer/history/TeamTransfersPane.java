@@ -1,18 +1,15 @@
 package module.transfer.history;
 
 import core.gui.comp.panel.ImagePanel;
-import core.gui.comp.renderer.HODefaultTableCellRenderer;
+import core.gui.comp.table.FixedColumnsTable;
 import core.gui.model.UserColumnController;
 import module.transfer.PlayerTransfer;
-import module.transfer.ui.sorter.DefaultTableSorter;
-import java.awt.BorderLayout;
+import module.transfer.TransfersPanel;
+
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
@@ -22,57 +19,33 @@ import javax.swing.event.ListSelectionListener;
  */
 class TeamTransfersPane extends JPanel implements ListSelectionListener {
 
-	private final JTable transferTable;
+    private final TransfersPanel transferPanel;
     private List<PlayerTransfer> transfers = new ArrayList<>();
-    private PlayerDetailPanel playerDetailPanel;
-    private final ColorCellRenderer greenColumn = new ColorCellRenderer(ColorCellRenderer.GREEN);
-    private final ColorCellRenderer yellowColumn = new ColorCellRenderer(ColorCellRenderer.YELLOW);
-
-
-    //~ Constructors -------------------------------------------------------------------------------
+	private final FixedColumnsTable transferTable;
+    private final PlayerDetailPanel playerDetailPanel;
 
     /**
      * Creates a new TeamTransfersPane object.
      */
-    TeamTransfersPane() {
+    TeamTransfersPane(TransfersPanel transfersPanel) {
         super(new BorderLayout());
 
+        this.transferPanel = transfersPanel;
+
+        this.playerDetailPanel = new PlayerDetailPanel();
         final JPanel mainPanel = new ImagePanel();
         mainPanel.setLayout(new BorderLayout());
         setOpaque(false);
         add(mainPanel, BorderLayout.CENTER);
 
-        var model = getTransferTableModel();
-        final var sorter = new DefaultTableSorter(model);
-        transferTable = new JTable(sorter);
-        transferTable.setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
-        transferTable.setOpaque(false);
-
-        sorter.setTableHeader(transferTable.getTableHeader());
-
-        final JScrollPane pane = new JScrollPane(transferTable);
-        pane.setOpaque(false);
-        mainPanel.add(pane, BorderLayout.CENTER);
-
-        model.initTable(transferTable);
-        refresh(new Vector<>());
-    }
-
-    public static TransferTableModel getTransferTableModel(){
-        return UserColumnController.instance().getTransferTableModel();
-    }
-
-    /**
-     * Creates a new TeamTransfersPane object.
-     */
-    public TeamTransfersPane(PlayerDetailPanel playerDetailPanel) {
-        this();
-        this.playerDetailPanel = playerDetailPanel;
-
-        transferTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
-        transferTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        var model = UserColumnController.instance().getTransferTableModel();
+        transferTable = new FixedColumnsTable(model);
         transferTable.getSelectionModel().addListSelectionListener(this);
-        transferTable.setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
+        mainPanel.add(transferTable.getContainerComponent(), BorderLayout.CENTER);
+    }
+
+    public TransferTableModel getTransferTableModel(){
+        return (TransferTableModel) transferTable.getModel();
     }
 
     //~ Methods ------------------------------------------------------------------------------------
@@ -84,19 +57,6 @@ class TeamTransfersPane extends JPanel implements ListSelectionListener {
      */
     public final void refresh(List<PlayerTransfer> transfers) {
         this.transfers = transfers;
-        transferTable.getColumnModel().getColumn(5).setCellRenderer(new IconCellRenderer());
-        transferTable.getColumnModel().getColumn(5).setMaxWidth(36);
-        transferTable.getColumnModel().getColumn(9).setCellRenderer(greenColumn);
-        transferTable.getColumnModel().getColumn(10).setCellRenderer(greenColumn);
-        transferTable.getColumnModel().getColumn(11).setCellRenderer(greenColumn);
-        transferTable.getColumnModel().getColumn(12).setCellRenderer(yellowColumn);
-        transferTable.getColumnModel().getColumn(13).setCellRenderer(yellowColumn);
-        transferTable.getColumnModel().getColumn(14).setCellRenderer(yellowColumn);
-        transferTable.getColumnModel().getColumn(15).setCellRenderer(yellowColumn);
-        transferTable.getColumnModel().getColumn(16).setCellRenderer(yellowColumn);
-        transferTable.getColumnModel().getColumn(17).setCellRenderer(yellowColumn);
-        transferTable.getColumnModel().getColumn(18).setCellRenderer(yellowColumn);
-        transferTable.getColumnModel().getColumn(19).setCellRenderer(yellowColumn);
         var model = getTransferTableModel();
         model.setValues(transfers);
     }
@@ -104,12 +64,11 @@ class TeamTransfersPane extends JPanel implements ListSelectionListener {
     /** {@inheritDoc} */
     public final void valueChanged(ListSelectionEvent e) {
         if (!e.getValueIsAdjusting()) {
-            final DefaultTableSorter sorter = (DefaultTableSorter) transferTable.getModel();
-
             if (transferTable.getSelectedRow() >= 0) {
-                final int index = sorter.modelIndex(transferTable.getSelectedRow());
+                var index = transferTable.getSelectedModelIndex();
                 final PlayerTransfer transfer = this.transfers.get(index);
                 this.playerDetailPanel.setPlayer(transfer);
+                this.transferPanel.selectTransfer(transfer.getTransferId());
             } else {
                 this.playerDetailPanel.clearPanel();
             }
@@ -120,6 +79,32 @@ class TeamTransfersPane extends JPanel implements ListSelectionListener {
         var model = getTransferTableModel();
         model.storeUserSettings();
         playerDetailPanel.storeUserSettings();
+    }
+
+    public PlayerDetailPanel getPlayerDetailPanel() {
+        return this.playerDetailPanel;
+    }
+
+    private PlayerTransfer getSelectedTransfer() {
+        var viewIndex = transferTable.getSelectedRow();
+        if (viewIndex > -1 && viewIndex < transfers.size()) {
+            return transfers.get(transferTable.convertRowIndexToModel(viewIndex));
+        }
+        return null;
+    }
+
+    public void selectTransfer(int transferId) {
+        var selectedTransfer = getSelectedTransfer();
+        if (selectedTransfer != null && selectedTransfer.getTransferId() != transferId) {
+            var modelIndex = 0;
+            for (var t : transfers) {
+                if (t.getTransferId() == transferId) {
+                    var newViewIndex = transferTable.convertRowIndexToView(modelIndex);
+                    transferTable.setRowSelectionInterval(newViewIndex, newViewIndex);
+                }
+                modelIndex++;
+            }
+        }
     }
 
 }

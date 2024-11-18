@@ -6,6 +6,7 @@ import core.gui.comp.entry.IHOTableEntry;
 import core.gui.comp.table.HOTableModel;
 import core.gui.comp.table.UserColumn;
 import core.gui.model.UserColumnController;
+import core.gui.theme.ImageUtilities;
 import core.util.CurrencyUtils;
 import core.util.HODateTime;
 import module.transfer.PlayerTransfer;
@@ -56,7 +57,9 @@ public class PlayerTransferTableModel extends HOTableModel {
                 new TransferTableColumn(id++,"Type") {
                     @Override
                     public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
-                        return new ColorLabelEntry(PlayerTransfer.BUY, String.valueOf(PlayerTransfer.BUY), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        var ret = new ColorLabelEntry(transfer.getType(), "", ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        ret.setIcon(ImageUtilities.getTransferInIcon());
+                        return ret;
                     }
                 },
                 new TransferTableColumn(id++,"Seller") {

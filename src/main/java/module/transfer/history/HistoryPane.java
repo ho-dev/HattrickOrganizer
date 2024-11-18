@@ -12,10 +12,10 @@ import core.util.CurrencyUtils;
 import core.util.Helper;
 import module.training.ui.comp.DividerListener;
 import module.transfer.PlayerTransfer;
+import module.transfer.TransfersPanel;
 import module.transfer.XMLParser;
 import module.transfer.ui.layout.TableLayout;
 import module.transfer.ui.layout.TableLayoutConstants;
-
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
@@ -40,7 +40,7 @@ public class HistoryPane extends JSplitPane {
     /**
      * Creates an instance of the HistoryPane
      */
-    public HistoryPane() {
+    public HistoryPane(TransfersPanel transfersPanel) {
         super(JSplitPane.VERTICAL_SPLIT);
 
         // Create side panel
@@ -185,8 +185,7 @@ public class HistoryPane extends JSplitPane {
         final JPanel topPanel = new ImagePanel();
         topPanel.setLayout(new BorderLayout());
 
-        PlayerDetailPanel playerDetailPanel = new PlayerDetailPanel();
-        transferPane = new TeamTransfersPane(playerDetailPanel);
+        transferPane = new TeamTransfersPane(transfersPanel);
 
         topPanel.add(transferPane, BorderLayout.CENTER);
         topPanel.add(sidePane, BorderLayout.WEST);
@@ -196,7 +195,7 @@ public class HistoryPane extends JSplitPane {
                                   new DividerListener(DividerListener.transferHistoryPane_splitPane)); //$NON-NLS-1$
 
         setLeftComponent(topPanel);
-        setRightComponent(playerDetailPanel);
+        setRightComponent(transferPane.getPlayerDetailPanel());
 
         //refresh();
     }
@@ -231,4 +230,7 @@ public class HistoryPane extends JSplitPane {
         transferPane.storeUserSettings();
     }
 
+    public void selectTransfer(int transferId) {
+        transferPane.selectTransfer(transferId);
+    }
 }

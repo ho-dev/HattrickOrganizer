@@ -285,7 +285,10 @@ public class Player extends AbstractTable.Storable {
     private int u20InternationalMatches;
 
     /**
-     * Verletzt Wochen
+     * Injury level
+     * The number of weeks the player is predicted to be injured.
+     * If the player is bruised, a value of 0 is returned.
+     * If the player is healthy, a value of -1 is returned.
      */
     private int injuryWeeks = -1;
 
