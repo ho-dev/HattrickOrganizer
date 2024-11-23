@@ -5,64 +5,104 @@ import core.db.AbstractTable;
 public class ScoutEintrag extends AbstractTable.Storable {
     //~ Instance fields ----------------------------------------------------------------------------
 
-    /** Info */
+    /**
+     * Info
+     */
     protected String m_sInfo = "";
 
-    /** Name */
+    /**
+     * Name
+     */
     protected String m_sName = "";
 
-    /** Deadline */
+    /**
+     * Deadline
+     */
     protected java.sql.Timestamp m_clDeadline = new java.sql.Timestamp(System.currentTimeMillis());
 
-    /** soll wecker rappeln */
+    /**
+     * soll wecker rappeln
+     */
     protected boolean m_bWecker;
 
-    /** Alter */
+    /**
+     * Alter
+     */
     protected int m_iAlter = 17;
 
-    /** Age Days */
+    /**
+     * Age Days
+     */
     protected int m_iAgeDays = 0;
 
-    /** Erfahrung */
+    /**
+     * Erfahrung
+     */
     protected int m_iErfahrung = 0;
 
-    /** Fluegelspiel */
+    /**
+     * Fluegelspiel
+     */
     protected int m_iFluegelspiel = 0;
 
-    /** Form */
+    /**
+     * Form
+     */
     protected int m_iForm = 0;
 
-    /** Kondition */
+    /**
+     * Kondition
+     */
     protected int m_iKondition = 0;
 
-    /** Marktwert */
+    /**
+     * Marktwert
+     */
     protected int m_iTSI = 1000;
 
-    /** Passpiel */
+    /**
+     * Passpiel
+     */
     protected int m_iPasspiel = 0;
 
-    /** PlayerID */
+    /**
+     * PlayerID
+     */
     protected int m_iPlayerID;
 
-    /** Price */
+    /**
+     * Price
+     */
     protected int m_iPrice;
 
-    /** Speciality */
+    /**
+     * Speciality
+     */
     protected int m_iSpeciality;
 
-    /** Spielaufbau */
+    /**
+     * Spielaufbau
+     */
     protected int m_iSpielaufbau = 0;
 
-    /** Standards */
+    /**
+     * Standards
+     */
     protected int m_iStandards = 0;
 
-    /** Torschuss */
+    /**
+     * Torschuss
+     */
     protected int m_iTorschuss = 0;
 
-    /** Torwart */
+    /**
+     * Torwart
+     */
     protected int m_iTorwart = 0;
 
-    /** Verteidigung */
+    /**
+     * Verteidigung
+     */
     protected int m_iVerteidigung = 0;
     // Loyalty
     protected int m_iLoyalty = 0;
@@ -71,8 +111,8 @@ public class ScoutEintrag extends AbstractTable.Storable {
     protected int m_ibaseWage = 2500;
     protected int m_iNationality = 0;
     protected int m_iLeadership = 0;
-    
-    
+    private core.model.player.Player player;
+
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -122,24 +162,24 @@ public class ScoutEintrag extends AbstractTable.Storable {
 
     /**
      * Calculates full age with days
-     * 
+     *
      * @return Double value of age & agedays combined,
-     * 			i.e. age + agedays/112
+     * i.e. age + agedays/112
      */
     public double getAlterWithAgeDays() {
-    	double retVal = getAlter();
-    	retVal += (double)getAgeDays()/112;
-    	return retVal;
+        double retVal = getAlter();
+        retVal += (double) getAgeDays() / 112;
+        return retVal;
     }
 
     /**
      * Calculates String for full age with days
-     * 
+     *
      * @return String of age & agedays combined,
-     * 			format is "YY.DDD"
+     * format is "YY.DDD"
      */
     public String getAlterWithAgeDaysAsString() {
-    	// format = yy.ddd
+        // format = yy.ddd
         return getAlter() + "." + getAgeDays();
     }
 
@@ -436,7 +476,7 @@ public class ScoutEintrag extends AbstractTable.Storable {
     public final int getLoyalty() {
         return m_iLoyalty;
     }
-    
+
     /**
      * Setter for property m_bWecker.
      *
@@ -454,7 +494,7 @@ public class ScoutEintrag extends AbstractTable.Storable {
     public final boolean isHomegrown() {
         return m_bHomegrown;
     }
-    
+
     /**
      * Setter for property m_bWecker.
      *
@@ -472,7 +512,7 @@ public class ScoutEintrag extends AbstractTable.Storable {
     public final boolean isWecker() {
         return m_bWecker;
     }
-    
+
     /**
      * Setter for property m_ibaseWage.
      *
@@ -481,15 +521,15 @@ public class ScoutEintrag extends AbstractTable.Storable {
     public final void setbaseWage(int m_ibaseWage) {
         this.m_ibaseWage = m_ibaseWage;
     }
-    
+
     /**
      * Getter for property m_ibaseWage.
      *
      * @return Value of property m_ibaseWage.
      */
     public final Integer getbaseWage() {
-    	return m_ibaseWage;
-	}
+        return m_ibaseWage;
+    }
 
     /**
      * Setter for property m_iNationality.
@@ -499,16 +539,16 @@ public class ScoutEintrag extends AbstractTable.Storable {
     public final void setNationality(int m_iNationality) {
         this.m_iNationality = m_iNationality;
     }
-    
+
     /**
      * Getter for property m_iNationality.
      *
      * @return Value of property m_iNationality.
      */
     public final Integer getNationality() {
-    	return m_iNationality;
-	}
-    
+        return m_iNationality;
+    }
+
     /**
      * Setter for property m_iAgreeability.
      *
@@ -517,16 +557,16 @@ public class ScoutEintrag extends AbstractTable.Storable {
     public final void setAgreeability(int m_iAgreeability) {
         this.m_iAgreeability = m_iAgreeability;
     }
-    
+
     /**
      * Getter for property m_iAgreeability.
      *
      * @return Value of property m_iAgreeability.
      */
     public final Integer getAgreeability() {
-    	return m_iAgreeability;
-	}
-    
+        return m_iAgreeability;
+    }
+
     /**
      * Setter for property m_iLeadership.
      *
@@ -535,15 +575,15 @@ public class ScoutEintrag extends AbstractTable.Storable {
     public final void setLeadership(int m_iLeadership) {
         this.m_iLeadership = m_iLeadership;
     }
-    
+
     /**
      * Getter for property m_iLeadership.
      *
      * @return Value of property m_iLeadership.
      */
     public final Integer getLeadership() {
-    	return m_iLeadership;
-	}
+        return m_iLeadership;
+    }
 
     public final ScoutEintrag duplicate() {
         final ScoutEintrag eintrag = new ScoutEintrag();
@@ -577,7 +617,7 @@ public class ScoutEintrag extends AbstractTable.Storable {
     }
 
     @Override
-	public final boolean equals(Object obj) {
+    public final boolean equals(Object obj) {
         if (obj instanceof ScoutEintrag) {
             return ((ScoutEintrag) obj).getPlayerID() == getPlayerID();
         }
@@ -586,7 +626,32 @@ public class ScoutEintrag extends AbstractTable.Storable {
     }
 
     @Override
-	public final int hashCode() {
+    public final int hashCode() {
         return getPlayerID();
     }
+
+    public core.model.player.Player getPlayer() {
+        if (player == null) {
+            this.player = new core.model.player.Player();
+            player.setFirstName("");  //TODO: fix this
+            player.setNickName(" "); //TODO: fix this
+            player.setLastName(this.getName());
+            player.setSpecialty(this.getSpeciality());
+            player.setExperience(this.getErfahrung());
+            player.setLeadership(this.getLeadership());
+            player.setForm(this.getForm());
+            player.setStamina(this.getKondition());
+            player.setDefendingSkill(this.getVerteidigung());
+            player.setScoringSkill(this.getTorschuss());
+            player.setGoalkeeperSkill(this.getTorwart());
+            player.setWingerSkill(this.getFluegelspiel());
+            player.setPassingSkill(this.getPasspiel());
+            player.setSetPiecesSkill(this.getStandards());
+            player.setPlaymakingSkill(this.getSpielaufbau());
+            player.setLoyalty(this.getLoyalty());
+            player.setHomeGrown(this.isHomegrown());
+        }
+        return player;
+    }
+
 }

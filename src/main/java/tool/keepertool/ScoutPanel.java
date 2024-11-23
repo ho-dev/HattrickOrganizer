@@ -3,13 +3,12 @@ package tool.keepertool;
 import core.gui.HOMainFrame;
 import core.gui.comp.panel.ImagePanel;
 import module.transfer.scout.ScoutEintrag;
-import module.transfer.scout.TransferTableModel;
+import module.transfer.scout.TransferScoutingTableModel;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.Iterator;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -50,7 +49,7 @@ class ScoutPanel extends JPanel {
         players.removeAllItems();
         players.addItem(new PlayerItem());
 
-        final TransferTableModel model = HOMainFrame.instance().getTransferScoutPanel().getScoutPanel()
+        final TransferScoutingTableModel model = HOMainFrame.instance().getTransferScoutPanel().getScoutPanel()
                                                                          .getTransferTable()
                                                                          .getTransferTableModel();
 
