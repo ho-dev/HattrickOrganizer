@@ -7,8 +7,6 @@ import module.transfer.scout.TransferScoutingTableModel;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.GridLayout;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -20,13 +18,9 @@ import javax.swing.SwingConstants;
  * @author draghetto
  */
 class ScoutPanel extends JPanel {
-	
-	private static final long serialVersionUID = 3226277012489531392L;
-	
-    //~ Instance fields ----------------------------------------------------------------------------
 
-	private JComboBox players = new JComboBox();
-    private ResultPanel target;
+	private final JComboBox players = new JComboBox();
+    private final ResultPanel target;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -63,16 +57,13 @@ class ScoutPanel extends JPanel {
             players.setEnabled(false);
         }
 
-        players.addItemListener(new ItemListener() {
-                public void itemStateChanged(ItemEvent e) {
-                    final PlayerItem selected = (PlayerItem) players.getSelectedItem();
-
-                    if (selected != null) {
-                        target.setPlayer(selected.getForm(), selected.getTsi(), 0,
-                                         selected.toString());
-                    }
-                }
-            });
+        players.addItemListener(e -> {
+            final PlayerItem selected = (PlayerItem) players.getSelectedItem();
+            if (selected != null) {
+                target.setPlayer(selected.getForm(), selected.getTsi(), 0,
+                                 selected.toString());
+            }
+        });
 
         reset();
     }
@@ -94,29 +85,27 @@ class ScoutPanel extends JPanel {
         final JPanel buttonPanel = new ImagePanel();
         buttonPanel.setOpaque(false);
         buttonPanel.setLayout(new GridLayout(6, 2));
-        buttonPanel.add(label(""));
-        buttonPanel.add(label(""));
-        buttonPanel.add(label(""));
+        buttonPanel.add(label());
+        buttonPanel.add(label());
+        buttonPanel.add(label());
         buttonPanel.add(players);
-        buttonPanel.add(label(""));
-        buttonPanel.add(label(""));
-        buttonPanel.add(label(""));
-        buttonPanel.add(label(""));
-        buttonPanel.add(label(""));
-        buttonPanel.add(label(""));
-        buttonPanel.add(label(""));
+        buttonPanel.add(label());
+        buttonPanel.add(label());
+        buttonPanel.add(label());
+        buttonPanel.add(label());
+        buttonPanel.add(label());
+        buttonPanel.add(label());
+        buttonPanel.add(label());
         add(buttonPanel, BorderLayout.CENTER);
     }
 
     /**
      * Create a configured label
      *
-     * @param string the label text
-     *
      * @return the built component
      */
-    private Component label(String string) {
-        final JLabel label = new JLabel(string, SwingConstants.CENTER);
+    private Component label() {
+        final JLabel label = new JLabel("", SwingConstants.CENTER);
         label.setOpaque(false);
         return label;
     }

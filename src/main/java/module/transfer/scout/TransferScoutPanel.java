@@ -2,10 +2,6 @@ package module.transfer.scout;
 
 import core.db.DBManager;
 import core.gui.comp.panel.ImagePanel;
-import core.gui.comp.table.TableSorter;
-
-import core.gui.model.UserColumnController;
-
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.event.KeyEvent;
@@ -20,8 +16,6 @@ import javax.swing.*;
  */
 public class TransferScoutPanel extends ImagePanel implements MouseListener, KeyListener {
 
-	private static final long serialVersionUID = 1L;
-	
 	//~ Instance fields ----------------------------------------------------------------------------
     private JSplitPane verticalSplitPane;
     private ScoutThread m_clScoutThread;
@@ -106,8 +100,6 @@ public class TransferScoutPanel extends ImagePanel implements MouseListener, Key
             var model = m_jtTransferTable.getTransferTableModel();
             var modelIndex = m_jtTransferTable.convertRowIndexToModel(row);
             m_jpTransferEingabePanel.setScoutEintrag(model.getScoutListe().get(modelIndex).duplicate());
-        } else {
-            //m_jpTransferEingabePanel.setPlayer( null );
         }
     }
 

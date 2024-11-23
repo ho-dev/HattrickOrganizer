@@ -30,6 +30,7 @@
 ### Special events
 
 ### Transfer
+* Fix display of leadership skill in transfer scouting pane (#2184)
 
 ### Training
 

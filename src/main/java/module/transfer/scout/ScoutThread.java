@@ -1,13 +1,12 @@
 package module.transfer.scout;
 
-import java.util.ArrayList;
 import java.util.Vector;
 
 public class ScoutThread implements Runnable {
     //~ Instance fields ----------------------------------------------------------------------------
 
     private Vector<ScoutEintrag> m_vScoutEintraege;
-    private int difference = core.model.UserParameter.instance().TimeZoneDifference * 3600000;
+    private final int difference = core.model.UserParameter.instance().TimeZoneDifference * 3600000;
 
     //~ Constructors -------------------------------------------------------------------------------
 

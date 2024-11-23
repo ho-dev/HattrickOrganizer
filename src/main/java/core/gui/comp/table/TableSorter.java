@@ -87,23 +87,6 @@ public class TableSorter extends TableMap {
         reallocateIndexes();
     }
 
-    public final module.transfer.scout.ScoutEintrag getScoutEintrag(int row) {
-        if (row > -1) {
-            try {
-                var entry = (ColorLabelEntry) getValueAt(row, idColumn);
-                if ( entry != null) {
-                    return ((TransferScoutingTableModel) getModel())
-                            .getScoutEintrag(Integer.parseInt(entry.getText()));
-                }
-            } catch (Exception e) {
-                HOLogger.instance().log(getClass(),"TableSorter.getScoutEintrag: " + e);
-                return null;
-            }
-        }
-
-        return null;
-    }
-
     @Override
 	public final void setValueAt(Object obj, int i, int j) {
     	getModel().setValueAt(obj, indexes[i], j);
