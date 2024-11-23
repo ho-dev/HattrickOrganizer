@@ -144,12 +144,6 @@ public class TransferScoutPanel extends ImagePanel implements MouseListener, Key
         m_jtTransferTable = new TransferScoutingTable();
         m_jtTransferTable.addMouseListener(this);
         m_jtTransferTable.addKeyListener(this);
-
-//        var panel = new JPanel(new BorderLayout());
-//        panel.add(m_jtTransferTable.getContainerComponent(), BorderLayout.CENTER);
-//
-//        final JScrollPane scrollpane = new JScrollPane(panel);
-////        scrollpane.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
         return m_jtTransferTable.getContainerComponent();
     }
 
