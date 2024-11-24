@@ -28,13 +28,6 @@ class PlayerOverviewTableModel(id: ColumnModelId, name: String) : HOTableModel(i
     internal constructor(id: ColumnModelId) : this(id, "Spieleruebersicht")
 
     init {
-        initialize()
-    }
-
-    /**
-     * initialize all columns.
-     */
-    private fun initialize() {
         val basic: Array<out PlayerColumn>? = UserColumnFactory.createPlayerBasicArray()
         val columns : Array<UserColumn?> = arrayOfNulls(64)
         columns[0] = basic?.get(0)
@@ -228,7 +221,6 @@ class PlayerOverviewTableModel(id: ColumnModelId, name: String) : HOTableModel(i
         val tmpDisplayedColumns = getDisplayedColumns()
         for (i in players!!.indices) {
             val currentPlayer = players!![i]
-
             for (j in tmpDisplayedColumns.indices) {
                 if (tmpDisplayedColumns[j].id == UserColumnFactory.NAME ||
                     tmpDisplayedColumns[j].id == UserColumnFactory.LINEUP ||
