@@ -51,13 +51,6 @@ open class FixedColumnsTable @JvmOverloads constructor(
      * Columns and header tooltips are taken from table model.
      * Column settings are restored from database.
      * Internally two tables are created, "fixed" for the left hand side, "scroll" for the right hand side
-     *
-     * @param tableModel Table model
-     * @param fixedColumnsCount fixed columns count
-     */
-    /**
-     * Constructor of table with one fixed columns
-     * @param tableModel Table model
      */
     init {
         // Handle tool tips
