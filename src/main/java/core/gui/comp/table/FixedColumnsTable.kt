@@ -127,12 +127,12 @@ open class FixedColumnsTable @JvmOverloads constructor(
             val splitPane = JSplitPane(JSplitPane.HORIZONTAL_SPLIT, fixedScrollPane, rightScrollPane)
             if (width == 0) width = 60
             this.dividerLocation = HOConfigurationIntParameter("TableDividerLocation_" + tableModel.id, width)
-            splitPane.dividerLocation = dividerLocation!!.intValue
+            splitPane.dividerLocation = dividerLocation!!.getIntValue()
             splitPane.addPropertyChangeListener { evt: PropertyChangeEvent ->
                 val propertyName = evt.propertyName
                 if (propertyName == "dividerLocation") {
                     val pane = evt.source as JSplitPane
-                    dividerLocation!!.intValue = pane.dividerLocation
+                    dividerLocation!!.setIntValue(pane.dividerLocation)
                 }
             }
             containerComponent = JPanel()
