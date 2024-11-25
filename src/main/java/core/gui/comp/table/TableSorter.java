@@ -5,6 +5,8 @@ import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.IHOTableEntry;
 import core.gui.model.UserColumnFactory;
 import core.util.HOLogger;
+import module.transfer.scout.TransferScoutingTableModel;
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.Serial;
@@ -83,23 +85,6 @@ public class TableSorter extends TableMap {
 	public final void setModel(TableModel tablemodel) {
         super.setModel(tablemodel);
         reallocateIndexes();
-    }
-
-    public final module.transfer.scout.ScoutEintrag getScoutEintrag(int row) {
-        if (row > -1) {
-            try {
-                var entry = (ColorLabelEntry) getValueAt(row, idColumn);
-                if ( entry != null) {
-                    return ((module.transfer.scout.TransferTableModel) getModel())
-                            .getScoutEintrag(Integer.parseInt(entry.getText()));
-                }
-            } catch (Exception e) {
-                HOLogger.instance().log(getClass(),"TableSorter.getScoutEintrag: " + e);
-                return null;
-            }
-        }
-
-        return null;
     }
 
     @Override

@@ -8,8 +8,7 @@
 ### Database
 
 * Increase match report column size (#2065)
-* Table `STADION`: Added column `REBUILT_DATE` and
-  `EXPANSION_DATE` ([#2140](https://github.com/ho-dev/HattrickOrganizer/issues/2140))
+* Table `STADION`: Added column `REBUILT_DATE` and `EXPANSION_DATE` (#2140)
 
 ### Squad
 
@@ -31,6 +30,7 @@
 ### Special events
 
 ### Transfer
+* Fix display of leadership skill in transfer scouting pane (#2184)
 
 ### Training
 
@@ -42,26 +42,23 @@
 * Add columns number, category, statement, owner notes, injury status, career goals, season goals, hattricks to the youth player overview table (#2061)
 
 ### Option setting
-
 * Fix: `Preferences/Formulas`: When changing anything and saving it, the application does not crash anymore during quit.
 
 ### Misc
 
-* Arena sizer: Added the Arena Info Panel (feature [#2140](https://github.com/ho-dev/HattrickOrganizer/issues/2140)) in
-  the tab with name of the stadium.
-* Fix #2137: Resolved an issue where the Download Dialog would not reappear after being closed with the 'X' button. The
-  dialog will now correctly reappear when triggered again.
+* Arena sizer: Added the Arena Info Panel in the tab with name of the stadium (#2140)
+* Resolved an issue where the Download Dialog would not reappear after being closed with the 'X' button. The dialog will now correctly reappear when triggered again. (#2137)
 
 ## Translations
 
-Reports by Contributors - June 23, 2024 - November 17, 2024
+Reports by Contributors - June 23, 2024 - November 18, 2024
 
 * Kristaps 276
 * Tavaro 175
+* Lidegang 143
 * wsbrenk 58
-* Lidegang 29
 * Sebastian Reddig 12
 * Achilles 10
 * Billy Dikkanen 10
 
-Total 570
+Total 684
