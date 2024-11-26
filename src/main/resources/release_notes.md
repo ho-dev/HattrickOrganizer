@@ -17,7 +17,7 @@
 
 ### Team Analyzer
 * Fix illegal argument exception in team rating panel (#2155)
-* 
+
 ### Player Analysis
 * Fix error in rating compare table (#2153)
 
