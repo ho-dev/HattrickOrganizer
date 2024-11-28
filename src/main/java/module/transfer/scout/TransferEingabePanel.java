@@ -337,7 +337,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
         Helper.setComboBoxFromID(jcbDefending, clScoutEntry.getVerteidigung());
         Helper.setComboBoxFromID(jcbSetPieces, clScoutEntry.getStandards());
         Helper.setComboBoxFromID(jcbLoyalty, clScoutEntry.getLoyalty());
-        Helper.setComboBoxFromID(jcbLeadership, clScoutEntry.getLoyalty());
+        Helper.setComboBoxFromID(jcbLeadership, clScoutEntry.getLeadership());
         jchHomegrown.setSelected(clScoutEntry.isHomegrown());
         jcbSpeciality.addItemListener(this);
         jcbExperience.addItemListener(this);
@@ -378,10 +378,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
         tempPlayer.setAgeDays(Integer.parseInt(jtfAge.getText().replaceFirst(".*\\.", "")));
         var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
         byte bIdealPosition = tempPlayer.getIdealPosition();
-        jpBestPosition.setText(MatchRoleID.getNameForPosition(bIdealPosition)
-                + " ("
-                +  tempPlayer.getIdealPositionRating()
-                + ")");
+        jpBestPosition.setText(String.format("%s (%.2f)", MatchRoleID.getNameForPosition(bIdealPosition), tempPlayer.getIdealPositionRating()));
         jpRatingKeeper.getLeft().setText(Helper.getNumberFormat(false, UserParameter.instance().nbDecimals)
                 .format(ratingPredictionModel.getPlayerMatchAverageRating(tempPlayer, IMatchRoleID.keeper, NORMAL)));
         jpRatingDefender.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)

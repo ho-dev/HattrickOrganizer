@@ -99,6 +99,7 @@ public class TransfersPanel extends JPanel implements IRefreshable {
 
 	public void storeUserSettings() {
 		historyPane.storeUserSettings();
+		scoutPanel.storeUserSettings();
 	}
 
 	public void selectTransfer(int transferId) {

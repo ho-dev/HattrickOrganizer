@@ -7,6 +7,7 @@ import module.specialEvents.SpecialEventsTableModel;
 import module.teamAnalyzer.ui.RecapPanelTableModel;
 import module.transfer.history.PlayerTransferTableModel;
 import module.transfer.history.TransferTableModel;
+import module.transfer.scout.TransferScoutingTableModel;
 import module.youth.YouthPlayerDetailsTableModel;
 import module.youth.YouthPlayerOverviewTableModel;
 import module.youth.YouthTrainingViewTableModel;
@@ -35,7 +36,8 @@ public final class UserColumnController {
 		TEAMANALYZERRECAP(10),
 		TEAMTRANSFER(11),
 		PLAYERTRANSFER(12),
-		SPECIALEVENTS(13);
+		SPECIALEVENTS(13),
+		TRANSFERSCOUT(14);
 
 		private final int value;
 		ColumnModelId(int value){this.value=value;}
@@ -71,6 +73,7 @@ public final class UserColumnController {
 
 	private TransferTableModel transferTableModel;
 	private PlayerTransferTableModel playerTransferTableModel;
+	private TransferScoutingTableModel transferScoutingTableModel;
 
 	private SpecialEventsTableModel specialEventsTableModel;
 
@@ -109,6 +112,7 @@ public final class UserColumnController {
 		dbManager.loadHOColumModel(getTeamAnalyzerRecapModel());
 		dbManager.loadHOColumModel(getTransferTableModel());
 		dbManager.loadHOColumModel(getPlayerTransferTableModel());
+		dbManager.loadHOColumModel(getTransferScoutingTableModel());
 		dbManager.loadHOColumModel(getSpecialEventsTableModel());
 	}
 
@@ -224,5 +228,11 @@ public final class UserColumnController {
 			playerTransferTableModel = new PlayerTransferTableModel();
 		}
 		return playerTransferTableModel;
+	}
+	public TransferScoutingTableModel getTransferScoutingTableModel(){
+		if (transferScoutingTableModel==null){
+			transferScoutingTableModel = new TransferScoutingTableModel();
+		}
+		return transferScoutingTableModel;
 	}
 }

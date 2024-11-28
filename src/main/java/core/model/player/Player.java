@@ -944,14 +944,18 @@ public class Player extends AbstractTable.Storable {
 
     List<PlayerPositionRating> getAllPositionRatings() {
         var ret = new ArrayList<PlayerPositionRating>();
-        var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
         for (var p : RatingPredictionModel.playerRatingPositions) {
             for (var behaviour : MatchRoleID.getBehaviours(p)) {
-                var d = ratingPredictionModel.getPlayerMatchAverageRating(this, p, behaviour);
+                var d = getMatchAverageRating(p, behaviour);
                 ret.add(new PlayerPositionRating(p, behaviour, d));
             }
         }
         return ret;
+    }
+
+    public double getMatchAverageRating(int position, byte behaviour) {
+        var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+        return ratingPredictionModel.getPlayerMatchAverageRating(this, position, behaviour);
     }
 
     /**
