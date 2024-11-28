@@ -118,7 +118,7 @@ public class PlayerOverviewTableModel extends HOTableModel {
 	}
 
 	public Player getPlayerAtRow(int tableRow) {
-		if (tableRow > -1 ) return m_vPlayers.get(getTable().convertRowIndexToModel(tableRow));
+		if (tableRow > -1  && tableRow < m_vPlayers.size()) return m_vPlayers.get(getTable().convertRowIndexToModel(tableRow));
 		return null;
 	}
 

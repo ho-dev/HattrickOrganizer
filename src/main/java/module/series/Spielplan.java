@@ -1,15 +1,19 @@
 package module.series;
 
 import core.db.AbstractTable;
+import core.file.xml.TeamStats;
+import core.model.Team;
 import core.model.TranslationFacility;
 import core.model.series.*;
 import core.net.OnlineWorker;
 import core.util.HODateTime;
 import core.util.HOLogger;
+import org.javatuples.Pair;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.lang.Long.compare;
 
 /**
  * Spielplan represents a game schedule, i.e. a particular season in a series.
@@ -122,6 +126,23 @@ public class Spielplan  extends AbstractTable.Storable {
                 .toArray(Paarung[]::new);
     }
 
+    public Map<Integer, Integer> getTeamMatchCount(){
+        var ret = new HashMap<Integer, Integer>();
+        for (var p : m_vEintraege){
+            Increment(ret, p.getHeimId());
+            Increment(ret, p.getGastId());
+        }
+        return ret;
+    }
+
+    private void Increment(HashMap<Integer, Integer> ret, int key) {
+        if (ret.containsKey(key)) {
+            ret.put(key, ret.get(key) + 1);
+        } else {
+            ret.put(key, 1);
+        }
+    }
+
     /**
      * Setter for property m_iSaison.
      *
@@ -227,40 +248,105 @@ public class Spielplan  extends AbstractTable.Storable {
      * @return LigaTabelle – Computed series table.
      */
     protected final LigaTabelle berechneTabelle(int maxMatchDay) {
-        final LigaTabelle tmp = new LigaTabelle();
+        final LigaTabelle ligaTabelle = new LigaTabelle();
         final List<Paarung> spieltag = getPaarungenBySpieltag(maxMatchDay);
 
-        tmp.setLigaId(m_iLigaId);
-        tmp.setLigaName(m_sLigaName);
+        // Determine if teams were replaced during series
+        var currentTeams  = new ArrayList<List<Integer>>();
+        for ( var p : spieltag) {
+            currentTeams.add(new ArrayList<>(List.of(p.getHeimId())));
+            currentTeams.add(new ArrayList<>(List.of(p.getGastId())));
+        }
+        var teamMatchCount = getTeamMatchCount();
+        if (teamMatchCount.size() != 8){
+            // Teams might be replaced during the series
+            m_vEintraege.stream().sorted(Comparator.comparingLong(Paarung::getSpieltag)).forEach(i->{
+                checkIfTeamIsReplaced(i.getHeimId(), currentTeams, teamMatchCount);
+                checkIfTeamIsReplaced(i.getGastId(), currentTeams, teamMatchCount);
+            });
+        }
+        if ( teamMatchCount.size() != 8 ) {
+            // More than 8 teams are found in matches
+            for ( var t: teamMatchCount.entrySet()){
+                HOLogger.instance().warning(getClass(), " Team: " + t.getKey() + " Match count: " + t.getValue());
+            }
+        }
+        ligaTabelle.setLigaId(m_iLigaId);
+        ligaTabelle.setLigaName(m_sLigaName);
 
         for (Paarung paarung : spieltag) {
             // Create table entries for home and away games.
-            tmp.addEintrag(berechneTabellenEintrag(getPaarungenByTeamId(paarung.getHeimId()),
+            ligaTabelle.addEintrag(berechneTabellenEintrag(getPaarungenByTeamId(paarung.getHeimId()),
                     paarung.getHeimId(),
                     paarung.getHeimName(),
                     maxMatchDay));
-            tmp.addEintrag(berechneTabellenEintrag(getPaarungenByTeamId(paarung.getGastId()),
+            ligaTabelle.addEintrag(berechneTabellenEintrag(getPaarungenByTeamId(paarung.getGastId()),
                     paarung.getGastId(),
                     paarung.getGastName(),
                     maxMatchDay));
         }
 
-        if(tmp.getEntries().get(0).getAnzSpiele() > 0) {
-            tmp.sort();
-            berechneAltePositionen(tmp);
+        if(ligaTabelle.getEntries().get(0).getAnzSpiele() > 0) {
+            ligaTabelle.sort();
+            berechneAltePositionen(ligaTabelle);
         }
         else {
             var seriesDetails = OnlineWorker.getSeriesDetails(this.getLigaId());
-            for ( var t : tmp.getEntries()){
+            for ( var t : ligaTabelle.getEntries()){
                 var details = seriesDetails.get(String.valueOf(t.getTeamId()));
                 var position = details.getPosition();
                 t.setPosition(position);
                 t.setAltePosition(position);
             }
-            tmp.sortByPosition();
+            ligaTabelle.sortByPosition();
         }
 
-        return tmp;
+        return ligaTabelle;
+    }
+
+    private void checkIfTeamIsReplaced(int teamId, ArrayList<List<Integer>> currentTeams, Map<Integer, Integer> teamMatchCount) {
+        for (var teamIds : currentTeams) {
+            for (var id : teamIds) {
+                if (id == teamId) {
+                    return;
+                }
+            }
+        }
+
+        // Get opponent team of first round and replace team with their opponent in last round
+        var p = m_vEintraege.stream().filter(i->i.getSpieltag()==1 && (i.getHeimId()==teamId||i.getGastId()==teamId)).findAny();
+        if ( p.isPresent() ) {
+            var paarung = p.get();
+            int opponentAtRound1;
+            int replacement=-1;
+            if ( paarung.getHeimId()==teamId ){
+                opponentAtRound1 = paarung.getGastId();
+                var matchAtLastRound = m_vEintraege.stream().filter(i->i.getSpieltag()==14 && i.getHeimId()==opponentAtRound1).findAny();
+                if ( matchAtLastRound.isPresent() ) {
+                    replacement = matchAtLastRound.get().getGastId();
+                }
+            }
+            else {
+                opponentAtRound1 = paarung.getHeimId();
+                var matchAtLastRound = m_vEintraege.stream().filter(i->i.getSpieltag()==14 && i.getGastId()==opponentAtRound1).findAny();
+                if ( matchAtLastRound.isPresent() ) {
+                    replacement = matchAtLastRound.get().getHeimId();
+                }
+            }
+
+            if ( replacement == -1){
+                // TODO: Opponent of first round also left the series
+            }
+            if (replacement != -1) {
+                for (var ids : currentTeams) {
+                    var ct = ids.get(0);                // Current team id
+                    if (ct.equals(replacement)) { // equals candidate?
+                        ids.add(teamId);     // Add previous team to id list
+                    }
+                }
+            }
+        }
+
     }
 
     /**
@@ -268,8 +354,7 @@ public class Spielplan  extends AbstractTable.Storable {
      *
      * @param maxSpieltag Day until which the table is being calculated (1–14)
      */
-    protected final SerieTableEntry berechneTabellenEintrag(Paarung[] spiele, int teamId,
-                                                            String name, int maxSpieltag) {
+    protected final SerieTableEntry berechneTabellenEintrag(Paarung[] spiele, int teamId, String name, int maxSpieltag) {
         final SerieTableEntry eintrag = new SerieTableEntry();
         int gameNumber = 0;
         int homeVictories = 0;
@@ -439,5 +524,54 @@ public class Spielplan  extends AbstractTable.Storable {
 
     public void addFixtures(List<Paarung> fixtures) {
         m_vEintraege.addAll(fixtures);
+    }
+
+    private static final List<List<Pair<Integer, Integer>>> fixtureEntryIndices = List.of(
+            List.of(new Pair<>(1,2), new Pair<>(3,4), new Pair<>(5,6), new Pair<>(7,8)),
+            List.of(new Pair<>(4,1), new Pair<>(2,7), new Pair<>(6,3), new Pair<>(8,5)),
+            List.of(new Pair<>(1,8), new Pair<>(3,5), new Pair<>(4,2), new Pair<>(7,6)),
+            List.of(new Pair<>(6,1), new Pair<>(2,3), new Pair<>(5,7), new Pair<>(8,4)),
+            List.of(new Pair<>(1,7), new Pair<>(4,5), new Pair<>(3,8), new Pair<>(2,6)),
+            List.of(new Pair<>(5,1), new Pair<>(7,3), new Pair<>(6,4), new Pair<>(8,2)),
+            List.of(new Pair<>(1,3), new Pair<>(2,5), new Pair<>(4,7), new Pair<>(6,8))
+    );
+
+    private static Paarung createFixture(HODateTime date, int round,  TeamStats team1, TeamStats team2) {
+        var ret = new Paarung();
+        ret.setDatum(date);
+        ret.setHeimId(team1.getTeamId());
+        ret.setGastId(team2.getTeamId());
+        ret.setHeimName(team1.getTeamName());
+        ret.setGastName(team2.getTeamName());
+        ret.setSpieltag(round);
+        return ret;
+    }
+
+    public static List<Paarung> createFixtures(HODateTime seriesStartDate, List<TeamStats> teams) {
+        assert teams.size() == 8;
+        var newFixtures = new ArrayList<Paarung>();
+        var date = seriesStartDate;
+        int roundNumber = 1;
+
+        // First series half
+        for (var round : fixtureEntryIndices){
+            for ( var match  : round){
+                newFixtures.add(createFixture(date, roundNumber, teams.get(match.getValue0()), teams.get(match.getValue1())));
+            }
+            roundNumber++;
+            date = date.plusDaysAtSameLocalTime(7);
+        }
+
+        var copy = new ArrayList<>(fixtureEntryIndices);
+        Collections.reverse(copy);
+        // Second series half
+        for (var round : copy){
+            for ( var match  : round){
+                newFixtures.add(createFixture(date, fixtureEntryIndices.indexOf(round)+1, teams.get(match.getValue1()), teams.get(match.getValue0())));
+            }
+            roundNumber++;
+            date = date.plusDaysAtSameLocalTime(7);
+        }
+        return newFixtures;
     }
 }
