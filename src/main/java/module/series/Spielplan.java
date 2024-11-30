@@ -586,7 +586,7 @@ public class Spielplan  extends AbstractTable.Storable {
         // First series half
         for (var round : fixtureEntryIndices){
             for ( var match  : round){
-                newFixtures.add(createFixture(date, roundNumber, teams.get(match.getValue0()), teams.get(match.getValue1())));
+                newFixtures.add(createFixture(date, roundNumber, teams.get(match.getValue0()-1), teams.get(match.getValue1()-1)));
             }
             roundNumber++;
             date = date.plusDaysAtSameLocalTime(7);
@@ -597,7 +597,7 @@ public class Spielplan  extends AbstractTable.Storable {
         // Second series half
         for (var round : copy){
             for ( var match  : round){
-                newFixtures.add(createFixture(date, roundNumber, teams.get(match.getValue1()), teams.get(match.getValue0())));
+                newFixtures.add(createFixture(date, roundNumber, teams.get(match.getValue1()-1), teams.get(match.getValue0()-1)));
             }
             roundNumber++;
             date = date.plusDaysAtSameLocalTime(7);
