@@ -263,11 +263,11 @@ public class TeamOfTheWeekPanel extends LazyPanel implements ChangeListener, Act
 
 	private MatchLineupPosition[] getPlayers(int week, Spielplan plan, boolean isBest) {
 		if (week > 0)
-			matches = plan.getPaarungenBySpieltag(week);
+			matches = plan.getFixturesOfMatchDay(week);
 		else {
-			matches = plan.getPaarungenBySpieltag(1);
+			matches = plan.getFixturesOfMatchDay(1);
 			for (week = 2; week < 15; week++)
-				matches.addAll(plan.getPaarungenBySpieltag(week));
+				matches.addAll(plan.getFixturesOfMatchDay(week));
 		}
 		// TODO For match of year attention of doubles
 		var ret = new MatchLineupPosition[11];

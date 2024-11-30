@@ -165,7 +165,7 @@ final class MatchDayPanel extends JPanel implements ActionListener {
 
         }
 
-       List<Paarung> paarungen = this.model.getCurrentSeries().getPaarungenBySpieltag(spieltag);
+       List<Paarung> paarungen = this.model.getCurrentSeries().getFixturesOfMatchDay(spieltag);
 
         String bordertext = TranslationFacility.tr("Spieltag") + " " + spieltag;
 

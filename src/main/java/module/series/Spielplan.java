@@ -2,18 +2,14 @@ package module.series;
 
 import core.db.AbstractTable;
 import core.file.xml.TeamStats;
-import core.model.Team;
 import core.model.TranslationFacility;
 import core.model.series.*;
 import core.net.OnlineWorker;
 import core.util.HODateTime;
 import core.util.HOLogger;
 import org.javatuples.Pair;
-
 import java.util.*;
 import java.util.stream.Collectors;
-
-import static java.lang.Long.compare;
 
 /**
  * Spielplan represents a game schedule, i.e. a particular season in a series.
@@ -101,31 +97,18 @@ public class Spielplan  extends AbstractTable.Storable {
      * @param gameDay Day number.
      * @return List – List of fixtures for a given match day.
      */
-    public final List<Paarung> getPaarungenBySpieltag(final int gameDay) {
+    public final List<Paarung> getFixturesOfMatchDay(final int gameDay) {
         return m_vEintraege
                 .stream()
                 .filter(fixture -> fixture.getSpieltag() == gameDay)
                 .collect(Collectors.toList());
     }
 
-
-    /////////////////////////////////////////////////////////////////////////////////7
-    //Logik
-    ///////////////////////////////////////////////////////////////////////////////7
-
     /**
-     * Returns the games of a given team, sorted by match day.
-     *
-     * @param teamId ID of the team for which the fixtures are retrieved.
-     * @return Paarung[] – Array of fixtures of team, sorted by match day.
+     * Get all teams that played during the season
+     * There might be teams replaced
+     * @return Set of team ids (size >= 8)
      */
-    public final Paarung[] getPaarungenByTeamId(final int teamId) {
-        return m_vEintraege.stream()
-                .filter(fixture -> (fixture.getHeimId() == teamId) || (fixture.getGastId() == teamId))
-                .sorted()
-                .toArray(Paarung[]::new);
-    }
-
     public Set<Integer> getTeamsInSeries() {
         var ret = new HashSet<Integer>();
         for (var p : m_vEintraege) {
@@ -158,15 +141,10 @@ public class Spielplan  extends AbstractTable.Storable {
     ////////////////////////////////////////////////////////////////////////////////
     public final LigaTabelle getTable() {
         if (m_clTabelle == null) {
-            m_clTabelle = berechneTabelle(14);
+            m_clTabelle = calculateSeriesTable();
         }
-
         return m_clTabelle;
     }
-
-    ////////////////////////////////////////////////////////////////////////////////
-    //Tabellenverlauf
-    ////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Getter for property m_clVerlauf.
@@ -208,18 +186,19 @@ public class Spielplan  extends AbstractTable.Storable {
     /**
      * Retrieves the previous position in series table for each current position in <code>tabelle</code>.
      *
-     * @param tabelle Current series table for which the previous positions are being set.
+     * @param tabelle      Current series table for which the previous positions are being set.
+     * @param currentTeams
      */
-    protected final void berechneAltePositionen(LigaTabelle tabelle) {
+    protected final void calculatePreviousTablePositions(LigaTabelle tabelle, ArrayList<List<Integer>> currentTeams) {
 
-        if (tabelle.getEntries().size() <= 0) {
+        if (tabelle.getEntries().isEmpty()) {
             return;
         }
 
         var spieltag = (tabelle.getEntries().elementAt(0)).getAnzSpiele() - 1;
 
         if (spieltag > 0) {
-            var compare = berechneTabelle(spieltag);
+            var compare = calculateSeriesTable(spieltag, currentTeams);
             compare.sort();
 
             for (int i = 0; i < tabelle.getEntries().size(); i++) {
@@ -235,51 +214,49 @@ public class Spielplan  extends AbstractTable.Storable {
 
     /**
      * Calculates the series table based on the games of a given match day.
-     *
-     * @param maxMatchDay Game day up to which series table is computed.
      * @return LigaTabelle – Computed series table.
      */
-    protected final LigaTabelle berechneTabelle(int maxMatchDay) {
-        final LigaTabelle ligaTabelle = new LigaTabelle();
+    private LigaTabelle calculateSeriesTable() {
+        return calculateSeriesTable(14, GetCurrentTeams());
+    }
 
-        // Determine current teams of the series from last match day
-        final List<Paarung> spieltag = getPaarungenBySpieltag(maxMatchDay);
-        var currentTeams  = new ArrayList<List<Integer>>();
-        for ( var p : spieltag) {
+    /**
+     * Determine current teams of the series from last match day
+     * Each entry is a list of team ids with
+     * first entry specifying the id of the current team and
+     * next optional entry specifying a team which was replaced by the current team during the series
+     * @return List of Lists of team ids
+     */
+    private ArrayList<List<Integer>> GetCurrentTeams() {
+        final List<Paarung> fixturesOfMatchDay = getFixturesOfMatchDay(14);
+        var currentTeams = new ArrayList<List<Integer>>();
+        for (var p : fixturesOfMatchDay) {
             currentTeams.add(new ArrayList<>(List.of(p.getHeimId())));
             currentTeams.add(new ArrayList<>(List.of(p.getGastId())));
         }
 
         // Determine if teams were replaced during series
         var teamsInSeries = getTeamsInSeries();
-        if (teamsInSeries.size() != 8){
-            for (var t: teamsInSeries){
+        if (teamsInSeries.size() != 8) {
+            for (var t : teamsInSeries) {
                 FindReplacementOfTeam(currentTeams, t);
             }
         }
+        return currentTeams;
+    }
 
+    private LigaTabelle calculateSeriesTable(int maxMatchDay, ArrayList<List<Integer>> currentTeams) {
+        final LigaTabelle ligaTabelle = new LigaTabelle();
         ligaTabelle.setLigaId(m_iLigaId);
         ligaTabelle.setLigaName(m_sLigaName);
 
         for( var ids : currentTeams) {
-            ligaTabelle.addEintrag(berechneTabellenEintrag(ids, maxMatchDay));
+            ligaTabelle.addEintrag(calculateTableEntry(ids, maxMatchDay));
         }
-
-//        for (Paarung paarung : spieltag) {
-//            // Create table entries for home and away games.
-//            ligaTabelle.addEintrag(berechneTabellenEintrag(getPaarungenByTeamId(paarung.getHeimId()),
-//                    paarung.getHeimId(),
-//                    paarung.getHeimName(),
-//                    maxMatchDay));
-//            ligaTabelle.addEintrag(berechneTabellenEintrag(getPaarungenByTeamId(paarung.getGastId()),
-//                    paarung.getGastId(),
-//                    paarung.getGastName(),
-//                    maxMatchDay));
-//        }
 
         if(ligaTabelle.getEntries().get(0).getAnzSpiele() > 0) {
             ligaTabelle.sort();
-            berechneAltePositionen(ligaTabelle);
+            calculatePreviousTablePositions(ligaTabelle, currentTeams);
         }
         else {
             var seriesDetails = OnlineWorker.getSeriesDetails(this.getLigaId());
@@ -366,7 +343,7 @@ public class Spielplan  extends AbstractTable.Storable {
      *
      * @param maxMatchDay Day until which the table is being calculated (1–14)
      */
-    private SerieTableEntry berechneTabellenEintrag(List<Integer> ids, int maxMatchDay) {
+    private SerieTableEntry calculateTableEntry(List<Integer> ids, int maxMatchDay) {
         var matches = getMatchesByTeamIds(ids);
         final SerieTableEntry eintrag = new SerieTableEntry();
         int gameNumber = 0;
@@ -390,7 +367,7 @@ public class Spielplan  extends AbstractTable.Storable {
         var name = "";
 
         for ( var match : matches) {
-            if ( match.getSpieltag() == maxMatchDay) { break; }
+            if ( match.getSpieltag() > maxMatchDay) { break; }
 
             // Games already played
             if (match.getToreHeim() > -1) {
@@ -497,8 +474,9 @@ public class Spielplan  extends AbstractTable.Storable {
         	var spieltag = getTable().getEntries().elementAt(0).getAnzSpiele();
             var tabelle = new LigaTabelle[spieltag];
 
+            var currentTeams = GetCurrentTeams();
             for (int i = spieltag; i > 0; i--) {
-                tabelle[i - 1] = berechneTabelle(i);
+                tabelle[i - 1] = calculateSeriesTable(i, currentTeams);
             }
 
             // Create history entries
