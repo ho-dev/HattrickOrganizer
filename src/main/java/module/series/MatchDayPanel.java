@@ -32,7 +32,6 @@ import static core.gui.theme.ThemeManager.getColor;
  */
 final class MatchDayPanel extends JPanel implements ActionListener {
 
-    private static final long serialVersionUID = 6884532906036202996L;
     static final int NAECHSTER_SPIELTAG = -2;
     static final int LETZTER_SPIELTAG = -1;
 
@@ -40,11 +39,11 @@ final class MatchDayPanel extends JPanel implements ActionListener {
     private final JLabel[] homeTeams = new JLabel[4];
     private final JLabel[] visitorTeams = new JLabel[4];
     private final JLabel[] results = new JLabel[4];
-    private int iMatchRound;
+    private final int iMatchRound;
     private static final Color foreground = getColor(HOColorName.LABEL_FG);
     private final Model model;
 
-    protected MatchDayPanel(Model model, int _iMatchRound) {
+    MatchDayPanel(Model model, int _iMatchRound) {
         this.model = model;
         iMatchRound = _iMatchRound;
         initComponents();
@@ -84,7 +83,7 @@ final class MatchDayPanel extends JPanel implements ActionListener {
         }
     }
 
-    protected void changeSeason() {
+    void changeSeason() {
         fillLabels();
     }
 

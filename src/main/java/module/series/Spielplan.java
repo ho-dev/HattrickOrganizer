@@ -186,8 +186,8 @@ public class Spielplan  extends AbstractTable.Storable {
     /**
      * Retrieves the previous position in series table for each current position in <code>tabelle</code>.
      *
-     * @param tabelle      Current series table for which the previous positions are being set.
-     * @param currentTeams
+     * @param tabelle       Current series table for which the previous positions are being set.
+     * @param currentTeams  List containing the current teams of the series
      */
     protected final void calculatePreviousTablePositions(LigaTabelle tabelle, ArrayList<List<Integer>> currentTeams) {
 
@@ -213,7 +213,7 @@ public class Spielplan  extends AbstractTable.Storable {
     }
 
     /**
-     * Calculates the series table based on the games of a given match day.
+     * Calculates the series table
      * @return LigaTabelle – Computed series table.
      */
     private LigaTabelle calculateSeriesTable() {
@@ -245,6 +245,12 @@ public class Spielplan  extends AbstractTable.Storable {
         return currentTeams;
     }
 
+    /**
+     * Calculates the series table of given match day
+     * @param maxMatchDay   1..14
+     * @param currentTeams  List of list of team ids
+     * @return LigaTabelle
+     */
     private LigaTabelle calculateSeriesTable(int maxMatchDay, ArrayList<List<Integer>> currentTeams) {
         final LigaTabelle ligaTabelle = new LigaTabelle();
         ligaTabelle.setLigaId(m_iLigaId);
@@ -272,6 +278,12 @@ public class Spielplan  extends AbstractTable.Storable {
         return ligaTabelle;
     }
 
+    /**
+     * Get all matches of the current team and eventually the team which was replaced by the current team
+     * during the series
+     * @param ids Of the teams
+     * @return List of fixtures
+     */
     private List<Paarung> getMatchesByTeamIds(List<Integer> ids) {
         return m_vEintraege.stream()
                 .filter(fixture -> (ids.contains(fixture.getHeimId()) || (ids.contains(fixture.getGastId()))))
@@ -279,7 +291,12 @@ public class Spielplan  extends AbstractTable.Storable {
                 .toList();
     }
 
-    // TODO: Fix table history
+    /**
+     * Find team replacements during the series
+     * The examined team's id will be added to the list of ids of the current teams if it was replaced during the series
+     * @param currentTeams  List of the current teams
+     * @param t             The examined team
+     */
     private void FindReplacementOfTeam(ArrayList<List<Integer>> currentTeams, Integer t) {
         for ( var ids : currentTeams) {
             if ( ids.contains(t)) {return;} // not replaced
@@ -329,6 +346,12 @@ public class Spielplan  extends AbstractTable.Storable {
         }
     }
 
+    /**
+     * Add team id of replaced team to the replacement team in current team list
+     * @param currentTeams  List of current teams
+     * @param replacement   Id of the replacing team
+     * @param replaceTeam   Id of the replaced team
+     */
     private void CurrentTeamsAddReplacement(ArrayList<List<Integer>> currentTeams, int replacement, Integer replaceTeam) {
         for ( var ids : currentTeams) {
             if ( ids.contains(replacement)) {
@@ -516,6 +539,9 @@ public class Spielplan  extends AbstractTable.Storable {
         m_vEintraege.addAll(fixtures);
     }
 
+    /**
+     * Map of indices used to generate series' fixtures
+     */
     private static final List<List<Pair<Integer, Integer>>> fixtureEntryIndices = List.of(
             List.of(new Pair<>(1,2), new Pair<>(3,4), new Pair<>(5,6), new Pair<>(7,8)),
             List.of(new Pair<>(4,1), new Pair<>(2,7), new Pair<>(6,3), new Pair<>(8,5)),
@@ -526,6 +552,14 @@ public class Spielplan  extends AbstractTable.Storable {
             List.of(new Pair<>(1,3), new Pair<>(2,5), new Pair<>(4,7), new Pair<>(6,8))
     );
 
+    /**
+     * Create one fixture of match day
+     * @param date      Match date
+     * @param round     Match day
+     * @param team1     Id of home team
+     * @param team2     Id of away team
+     * @return Paarung  Fixture
+     */
     private static Paarung createFixture(HODateTime date, int round,  TeamStats team1, TeamStats team2) {
         var ret = new Paarung();
         ret.setDatum(date);
@@ -537,6 +571,12 @@ public class Spielplan  extends AbstractTable.Storable {
         return ret;
     }
 
+    /**
+     * Create all fixtures of a series
+     * @param seriesStartDate   Start date of the series
+     * @param teams             List of 8 teams
+     * @return List of fixtures
+     */
     public static List<Paarung> createFixtures(HODateTime seriesStartDate, List<TeamStats> teams) {
         assert teams.size() == 8;
         var newFixtures = new ArrayList<Paarung>();
