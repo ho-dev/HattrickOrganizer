@@ -36,7 +36,6 @@ public class FilterPanel extends JPanel {
 	private ManualFilterPanel manualPanel;
 
 	private final TeamInfoPanel teamInfoPanel = new TeamInfoPanel();
-	private final ExecutorService downloadExecutor = Executors.newCachedThreadPool();
 
 	/**
 	 * Creates a new FilterPanel object.
@@ -220,6 +219,7 @@ public class FilterPanel extends JPanel {
 
 	class DownloadMatchesWorker extends SwingWorker<Object, Object> {
 		protected Object doInBackground() {
+			ExecutorService downloadExecutor = Executors.newCachedThreadPool();
 			downloadButton.setEnabled(false);
 			// Trigger event in a separate thread to avoid Button UI from being blocked.
 			HOLogger.instance().log(getClass(), "Update for Team " + SystemManager.getActiveTeamId());
