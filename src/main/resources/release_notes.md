@@ -31,6 +31,7 @@
 
 ### Transfer
 * Fix display of leadership skill in transfer scouting pane (#2184)
+* Fix error in download of player transfers (#2151)
 
 ### Training
 
