@@ -1205,10 +1205,9 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
     /**
      * Method that extract a lineup from the full match comment
      *
-     * @param home true for home lineup, false for away
      * @return The list of last names that started the match
      */
-    public final List<String> getLineup(boolean home) {
+    public final List<String> getLineup() {
         try {
             final Pattern p = Pattern.compile(".-.-.");
             final Matcher m = p.matcher(m_sMatchreport);
