@@ -5,6 +5,7 @@ import core.model.cup.CupLevel;
 import core.model.cup.CupLevelIndex;
 import core.model.match.MatchKurzInfo;
 import core.model.enums.MatchType;
+import core.model.match.SourceSystem;
 import core.model.match.Weather;
 import core.util.HODateTime;
 import core.util.HOLogger;
@@ -412,5 +413,16 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		return loadMatchesKurzInfo("WHERE (HEIMID = ? OR GASTID = ?) AND MATCHDATE BETWEEN ? AND ? AND MATCHTYP in ("+ placeholders +") AND STATUS in (?, ?) ORDER BY MatchDate DESC",
 				params.toArray()
 		);
+	}
+
+	public MatchKurzInfo loadMatchesKurzInfo(SourceSystem sourceSystem, int matchId) {
+		var matchTypes = MatchType.fromSourceSystem(sourceSystem);
+		var placeholders =matchTypes.stream().map(i->"?").collect(Collectors.joining(","));
+		var params = new ArrayList<>();
+		params.add(matchId);
+		params.addAll(matchTypes.stream().map(MatchType::getId).toList());
+		var infos =  loadMatchesKurzInfo("WHERE MATCHID = ? AND MATCHTYP IN (" + placeholders + ")", params.toArray());
+		if (!infos.isEmpty()) { return infos.get(0); }
+		return null;
 	}
 }

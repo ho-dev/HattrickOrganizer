@@ -194,6 +194,31 @@ public class OnlineWorker {
 		return allMatches;
 	}
 
+	public static boolean downloadMatchData(int matchId, SourceSystem sourceSystem, boolean refresh) {
+		var info = DBManager.instance().loadMatchKurzInfo(sourceSystem, matchId);
+		if (info == null) {
+			var details = OnlineWorker.downloadMatchDetails(sourceSystem, matchId);
+			if (details != null) {
+				info = new MatchKurzInfo();
+				info.setMatchID(details.getMatchID());
+				info.setMatchType(details.getMatchType());
+			}
+			else {
+				return false;
+			}
+		}
+		return downloadMatchData(info, refresh);
+	}
+
+	private static Matchdetails downloadMatchDetails(SourceSystem sourceSystem, int matchId) {
+        var matchDetails = MyConnector.instance().downloadMatchDetails(sourceSystem.to_string(), matchId);
+        if (matchDetails.isEmpty()) {
+            HOLogger.instance().warning(OnlineWorker.class, "Unable to fetch details for match " + matchId);
+            return null;
+        }
+        return  XMLMatchdetailsParser.parseMatchdetailsFromString(matchDetails, null);
+    }
+
 	/**
 	 * Downloads a match with the given criteria and stores it in the database.
 	 * If a match is already in the db, and refresh is false, nothing is
@@ -273,6 +298,7 @@ public class OnlineWorker {
 						info.setGuestTeamID(details.getGuestTeamId());
 						info.setArenaId(details.getArenaID());
 						info.setMatchSchedule(details.getMatchDate());
+						info.setMatchType(details.getMatchType());
 						int wetterId = details.getWetterId();
 						if (wetterId != -1) {
 							info.setMatchStatus(MatchKurzInfo.FINISHED);
@@ -302,19 +328,27 @@ public class OnlineWorker {
 							}
 						}
 
-						// get the other team
-						int otherId;
-						if (info.isHomeMatch()) {
-							otherId = info.getGuestTeamID();
-						} else {
-							otherId = info.getHomeTeamID();
-						}
-						if (otherId > 0) {
-							Map<String, String> otherTeam = getTeam(otherId);
-							info.setIsDerby(getRegionId(otherTeam) == HOVerwaltung.instance().getModel().getBasics().getRegionId());
-							info.setIsNeutral(info.getArenaId() != HOVerwaltung.instance().getModel().getStadium().getArenaId()
-									&& info.getArenaId() != getArenaId(otherTeam));
-							downloadTeamLogo(otherTeam);
+						if (info.getHomeTeamID() > 0) {
+							int guestRegionId;
+							if (info.isAwayMatch()) {
+								guestRegionId = HOVerwaltung.instance().getModel().getBasics().getRegionId();
+							} else {
+								var guestTeamInfo = getTeam(info.getGuestTeamID());
+								guestRegionId = getRegionId(guestTeamInfo);
+								downloadTeamLogo(guestTeamInfo);
+							}
+							info.setIsDerby(guestRegionId == info.getRegionId());
+
+							int homeArenaId;
+							if(info.isHomeMatch()){
+								homeArenaId = HOVerwaltung.instance().getModel().getStadium().getArenaId();
+							}
+							else {
+								var homeTeamInfo = getTeam(info.getHomeTeamID());
+								homeArenaId = getArenaId(homeTeamInfo);
+								downloadTeamLogo(homeTeamInfo);
+							}
+							info.setIsNeutral(info.getArenaId() != homeArenaId);
 						} else {
 							// Verlegenheitstruppe 08/15
 							info.setIsDerby(false);
@@ -1276,4 +1310,5 @@ public class OnlineWorker {
 		}
 		return seriesDetailsCache.get(seriesId);
 	}
+
 }
