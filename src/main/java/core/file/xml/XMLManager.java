@@ -242,17 +242,11 @@ public class XMLManager {
         }
 
         Document doc = null;
-
         try {
             final java.io.ByteArrayInputStream input = new java.io.ByteArrayInputStream(inputString.getBytes(StandardCharsets.UTF_8));
             final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder;
-
-            //Validierung, Namensräume einschalten
-            //factory.setValidating ( false );
-            //factory.setNamespaceAware ( true );
             builder = factory.newDocumentBuilder();
-
             doc = builder.parse(input);
         } catch (Exception e) {
             HOLogger.instance().log(XMLManager.class,"Parser fehler: " + e);
