@@ -1382,7 +1382,7 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
      *
      * @return int region Id
      */
-    public int getRegionId() {
+    public Integer getRegionId() {
         return m_iRegionId;
     }
 

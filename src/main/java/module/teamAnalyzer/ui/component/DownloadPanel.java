@@ -5,6 +5,7 @@ import core.db.DBManager;
 import core.model.TranslationFacility;
 import core.model.enums.MatchType;
 import core.model.match.Matchdetails;
+import core.model.match.SourceSystem;
 import core.net.OnlineWorker;
 import module.teamAnalyzer.ui.NumberTextField;
 
@@ -97,30 +98,18 @@ public class DownloadPanel extends JPanel {
                 @Override
 				public void actionPerformed(ActionEvent e) {
                     int id = matchId.getValue();
-                    MatchType type = MatchType.LEAGUE;
+                    SourceSystem sourceSystem = SourceSystem.HATTRICK;
                     if (tournament.isSelected()) {
-                    	type = MatchType.TOURNAMENTGROUP;
+                        sourceSystem = SourceSystem.HTOINTEGRATED;
                     }
-
-//                    if (id == 0) {
-//                        status.setText(TranslationFacility.tr("ImportError"));
-//
-//                        return;
-//                    }
-
-                    if (OnlineWorker.downloadMatchData(id, type, false)) {
-
-                    	Matchdetails md = DBManager.instance().loadMatchDetails(type.getId(), id);
-
-	                    if (md.getFetchDatum() != null) {
-	                        status.setText(TranslationFacility.tr("ImportOK"));
-	                        matchId.setText("");
-	                    } else {
-	                        status.setText(TranslationFacility.tr("ImportError"));
-	                    }
+                    if (OnlineWorker.downloadMatchData(id, sourceSystem, false)) {
+                        status.setText(TranslationFacility.tr("ImportOK"));
+                        matchId.setText("");
+                    } else {
+                        status.setText(TranslationFacility.tr("ImportError"));
                     }
                 }
-            });
+        });
     }
 
 

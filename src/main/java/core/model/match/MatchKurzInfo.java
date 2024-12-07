@@ -442,6 +442,11 @@ public class MatchKurzInfo extends AbstractTable.Storable implements Comparable<
 		return m_iHomeTeamID == HOVerwaltung.instance().getModel().getBasics().getTeamId();
 	}
 
+	public final boolean isAwayMatch()
+	{
+		return m_iGuestTeamID == HOVerwaltung.instance().getModel().getBasics().getTeamId();
+	}
+
 	// Return duration of the match in minutes
 	// null, if match is not finished or duration is unknown
 	public Integer getDuration()

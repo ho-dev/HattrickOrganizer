@@ -372,6 +372,13 @@ public class MyConnector {
 		return getCHPPWebFile(urlBuilder.toString());
 	}
 
+	public String downloadMatchDetails(String sourceSystem, int matchId){
+        String urlBuilder = htUrl +
+                "?file=matchdetails&version=3.1&matchID=" + matchId +
+                "&sourceSystem=" + sourceSystem;
+		return getCHPPWebFile(urlBuilder);
+	}
+
 	/**
 	 * Get Matches
 	 */
