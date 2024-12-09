@@ -12,6 +12,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+
+import core.util.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -44,10 +46,14 @@ public final class XMLParser {
 
     	final String xml = MyConnector.instance().getTransfersForPlayer(playerId);
         final List<PlayerTransfer> transferList = new Vector<>();
-        if (xml.isEmpty()) return transferList;
+        if (StringUtils.isEmpty(xml)) {
+            return transferList;
+        }
 
         final Document doc = XMLManager.parseString(xml);
-        if (doc == null) return transferList;
+        if (doc == null) {
+            return transferList;
+        }
 
         //get Root element ('HattrickData') :
         final Element root = doc.getDocumentElement();
