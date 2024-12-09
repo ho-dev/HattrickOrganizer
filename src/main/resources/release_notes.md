@@ -31,6 +31,7 @@
 
 ### Transfer
 * Fix display of leadership skill in transfer scouting pane (#2184)
+* Remove redundant mini scout dialog (#1868)
 
 ### Training
 
