@@ -51,38 +51,38 @@ class MatchFixturesTest {
          */
 
         Assertions.assertEquals(14 * 4, fixtures.size());
-        Assertions.assertTrue(ContainsFixtures(fixtures, 1, 1, 2));
-        Assertions.assertTrue(ContainsFixtures(fixtures, 1, 3, 4));
-        Assertions.assertTrue(ContainsFixtures(fixtures, 1, 5, 6));
-        Assertions.assertTrue(ContainsFixtures(fixtures, 1, 7, 8));
-        Assertions.assertTrue(ContainsFixtures(fixtures, 2, 4, 1));
-        Assertions.assertTrue(ContainsFixtures(fixtures, 2, 2, 7));
-        Assertions.assertTrue(ContainsFixtures(fixtures, 2, 6, 3));
-        Assertions.assertTrue(ContainsFixtures(fixtures, 2, 8, 5));
-        Assertions.assertTrue(ContainsFixtures(fixtures, 3, 1, 8));
-        Assertions.assertTrue(ContainsFixtures(fixtures, 3, 3, 5));
-        Assertions.assertTrue(ContainsFixtures(fixtures, 3, 4, 2));
-        Assertions.assertTrue(ContainsFixtures(fixtures, 3, 7, 6));
-        Assertions.assertTrue(ContainsFixtures(fixtures, 4, 6, 1));
-        Assertions.assertTrue(ContainsFixtures(fixtures, 4, 2, 3));
-        Assertions.assertTrue(ContainsFixtures(fixtures, 4, 5, 7));
-        Assertions.assertTrue(ContainsFixtures(fixtures, 4, 8, 4));
-        Assertions.assertTrue(ContainsFixtures(fixtures, 5, 1, 7));
-        Assertions.assertTrue(ContainsFixtures(fixtures, 5, 4, 5));
-        Assertions.assertTrue(ContainsFixtures(fixtures, 5, 3, 8));
-        Assertions.assertTrue(ContainsFixtures(fixtures, 5, 2, 6));
-        Assertions.assertTrue(ContainsFixtures(fixtures, 6, 5, 1));
-        Assertions.assertTrue(ContainsFixtures(fixtures, 6, 7, 3));
-        Assertions.assertTrue(ContainsFixtures(fixtures, 6, 6, 4));
-        Assertions.assertTrue(ContainsFixtures(fixtures, 6, 8, 2));
-        Assertions.assertTrue(ContainsFixtures(fixtures, 7, 1, 3));
-        Assertions.assertTrue(ContainsFixtures(fixtures, 7, 2, 5));
-        Assertions.assertTrue(ContainsFixtures(fixtures, 7, 4, 7));
-        Assertions.assertTrue(ContainsFixtures(fixtures, 7, 6, 8));
+        Assertions.assertTrue(containsFixtures(fixtures, 1, 1, 2));
+        Assertions.assertTrue(containsFixtures(fixtures, 1, 3, 4));
+        Assertions.assertTrue(containsFixtures(fixtures, 1, 5, 6));
+        Assertions.assertTrue(containsFixtures(fixtures, 1, 7, 8));
+        Assertions.assertTrue(containsFixtures(fixtures, 2, 4, 1));
+        Assertions.assertTrue(containsFixtures(fixtures, 2, 2, 7));
+        Assertions.assertTrue(containsFixtures(fixtures, 2, 6, 3));
+        Assertions.assertTrue(containsFixtures(fixtures, 2, 8, 5));
+        Assertions.assertTrue(containsFixtures(fixtures, 3, 1, 8));
+        Assertions.assertTrue(containsFixtures(fixtures, 3, 3, 5));
+        Assertions.assertTrue(containsFixtures(fixtures, 3, 4, 2));
+        Assertions.assertTrue(containsFixtures(fixtures, 3, 7, 6));
+        Assertions.assertTrue(containsFixtures(fixtures, 4, 6, 1));
+        Assertions.assertTrue(containsFixtures(fixtures, 4, 2, 3));
+        Assertions.assertTrue(containsFixtures(fixtures, 4, 5, 7));
+        Assertions.assertTrue(containsFixtures(fixtures, 4, 8, 4));
+        Assertions.assertTrue(containsFixtures(fixtures, 5, 1, 7));
+        Assertions.assertTrue(containsFixtures(fixtures, 5, 4, 5));
+        Assertions.assertTrue(containsFixtures(fixtures, 5, 3, 8));
+        Assertions.assertTrue(containsFixtures(fixtures, 5, 2, 6));
+        Assertions.assertTrue(containsFixtures(fixtures, 6, 5, 1));
+        Assertions.assertTrue(containsFixtures(fixtures, 6, 7, 3));
+        Assertions.assertTrue(containsFixtures(fixtures, 6, 6, 4));
+        Assertions.assertTrue(containsFixtures(fixtures, 6, 8, 2));
+        Assertions.assertTrue(containsFixtures(fixtures, 7, 1, 3));
+        Assertions.assertTrue(containsFixtures(fixtures, 7, 2, 5));
+        Assertions.assertTrue(containsFixtures(fixtures, 7, 4, 7));
+        Assertions.assertTrue(containsFixtures(fixtures, 7, 6, 8));
 
     }
     
-    private boolean ContainsFixtures(List<Paarung> fixtures, int matchDay, int home, int away) {
+    private boolean containsFixtures(List<Paarung> fixtures, int matchDay, int home, int away) {
         return fixtures.stream().anyMatch(m->m.getSpieltag()==matchDay && m.getHeimId()==home && m.getGastId()== away) &&
                 fixtures.stream().anyMatch(m->m.getSpieltag()==15-matchDay && m.getHeimId()==away && m.getGastId() == home);
     }
