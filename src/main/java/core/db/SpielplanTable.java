@@ -2,7 +2,7 @@ package core.db;
 
 import core.util.HODateTime;
 import core.util.HOLogger;
-import module.series.Spielplan;
+import module.series.MatchFixtures;
 import java.sql.ResultSet;
 import java.sql.Types;
 import java.util.List;
@@ -19,10 +19,10 @@ final class SpielplanTable extends AbstractTable {
 	@Override
 	protected void initColumns() {
 		columns = new ColumnDescriptor[]{
-				ColumnDescriptor.Builder.newInstance().setColumnName("LigaID").setGetter((p) -> ((Spielplan) p).getLigaId()).setSetter((p, v) -> ((Spielplan) p).setLigaId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("Saison").setGetter((p) -> ((Spielplan) p).getSaison()).setSetter((p, v) -> ((Spielplan) p).setSaison((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("LigaName").setGetter((p) -> ((Spielplan) p).getLigaName()).setSetter((p, v) -> ((Spielplan) p).setLigaName((String) v)).setType(Types.VARCHAR).setLength(256).isNullable(true).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("FetchDate").setGetter((p) -> ((Spielplan) p).getFetchDate().toDbTimestamp()).setSetter((p, v) -> ((Spielplan) p).setFetchDate((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(false).build()
+				ColumnDescriptor.Builder.newInstance().setColumnName("LigaID").setGetter((p) -> ((MatchFixtures) p).getLigaId()).setSetter((p, v) -> ((MatchFixtures) p).setLigaId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Saison").setGetter((p) -> ((MatchFixtures) p).getSaison()).setSetter((p, v) -> ((MatchFixtures) p).setSaison((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("LigaName").setGetter((p) -> ((MatchFixtures) p).getLigaName()).setSetter((p, v) -> ((MatchFixtures) p).setLigaName((String) v)).setType(Types.VARCHAR).setLength(256).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("FetchDate").setGetter((p) -> ((MatchFixtures) p).getFetchDate().toDbTimestamp()).setSetter((p, v) -> ((MatchFixtures) p).setFetchDate((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(false).build()
 		};
 	}
 
@@ -31,8 +31,8 @@ final class SpielplanTable extends AbstractTable {
 	/**
 	 * Returns all the game schedules from the database.
 	 */
-	List<Spielplan> getAllSpielplaene() {
-		return load(Spielplan.class, connectionManager.executePreparedQuery(getAllSpielplaeneSql));
+	List<MatchFixtures> getAllSpielplaene() {
+		return load(MatchFixtures.class, connectionManager.executePreparedQuery(getAllSpielplaeneSql));
 	}
 
 	/**
@@ -41,8 +41,8 @@ final class SpielplanTable extends AbstractTable {
 	 * @param ligaId ID of the series.
 	 * @param saison Season number.
 	 */
-	Spielplan getSpielplan(int ligaId, int saison) {
-		return loadOne(Spielplan.class, ligaId, saison);
+	MatchFixtures getSpielplan(int ligaId, int saison) {
+		return loadOne(MatchFixtures.class, ligaId, saison);
 	}
 
 	private final String getLigaID4SaisonIDSql = "SELECT LigaID FROM "+getTableName()+" WHERE Saison=? ORDER BY FETCHDATE DESC LIMIT 1";
@@ -66,11 +66,11 @@ final class SpielplanTable extends AbstractTable {
 	}
 	
 	/**
-	 * Saves a game schedule ({@link Spielplan}) with its associated fixtures.
+	 * Saves a game schedule ({@link MatchFixtures}) with its associated fixtures.
 	 *
 	 * @param plan Spielplan to save.
 	 */
-	void storeSpielplan(Spielplan plan) {
+	void storeSpielplan(MatchFixtures plan) {
 		if (plan != null) {
 			plan.setIsStored(isStored(plan.getLigaId(), plan.getSaison()));
 			store(plan);
@@ -79,8 +79,8 @@ final class SpielplanTable extends AbstractTable {
 
 	private final String loadLatestSpielplanSql = createSelectStatement(" ORDER BY FetchDate DESC LIMIT 1");
 
-	public Spielplan getLatestSpielplan() {
-		return loadOne(Spielplan.class, this.connectionManager.executePreparedQuery(loadLatestSpielplanSql));
+	public MatchFixtures getLatestSpielplan() {
+		return loadOne(MatchFixtures.class, this.connectionManager.executePreparedQuery(loadLatestSpielplanSql));
 	}
 
 	/**

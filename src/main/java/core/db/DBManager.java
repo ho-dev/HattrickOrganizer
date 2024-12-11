@@ -36,7 +36,7 @@ import core.util.HOLogger;
 import core.util.ExceptionUtils;
 import module.ifa.IfaMatch;
 import module.lineup.substitution.model.Substitution;
-import module.series.Spielplan;
+import module.series.MatchFixtures;
 import module.teamAnalyzer.vo.PlayerInfo;
 import module.transfer.PlayerTransfer;
 import module.transfer.scout.ScoutEintrag;
@@ -570,7 +570,7 @@ public class DBManager implements PersistenceManager {
 	 * @param saison die Saison
 	 * @return the spielplan
 	 */
-	public Spielplan getSpielplan(int ligaId, int saison) {
+	public MatchFixtures getSpielplan(int ligaId, int saison) {
 		var ret = ((SpielplanTable) getTable(SpielplanTable.TABLENAME)).getSpielplan(ligaId, saison);
 		if ( ret != null ){
 			ret.addFixtures(loadFixtures(ret));
@@ -579,7 +579,7 @@ public class DBManager implements PersistenceManager {
 	}
 
 	@Override
-	public Spielplan getLatestSpielplan() {
+	public MatchFixtures getLatestSpielplan() {
 		var ret = ((SpielplanTable) getTable(SpielplanTable.TABLENAME)).getLatestSpielplan();
 		if ( ret != null ){
 			ret.addFixtures(loadFixtures(ret));
@@ -592,7 +592,7 @@ public class DBManager implements PersistenceManager {
 	 *
 	 * @param plan the plan
 	 */
-	public void storeSpielplan(Spielplan plan) {
+	public void storeSpielplan(MatchFixtures plan) {
 		if ( plan != null){
 			((SpielplanTable) getTable(SpielplanTable.TABLENAME))
 					.storeSpielplan(plan);
@@ -609,12 +609,12 @@ public class DBManager implements PersistenceManager {
 	 * Loads all the games schedules from the database.
 	 *
 	 * @param withFixtures includes fixtures if set to <code>true</code>
-	 * @return List<Spielplan> – List of all the {@link Spielplan}s.
+	 * @return List<Spielplan> – List of all the {@link MatchFixtures}s.
 	 */
-	public List<Spielplan> getAllSpielplaene(boolean withFixtures) {
+	public List<MatchFixtures> getAllSpielplaene(boolean withFixtures) {
 		var ret =  ((SpielplanTable) getTable(SpielplanTable.TABLENAME)).getAllSpielplaene();
 		if (withFixtures) {
-			for (Spielplan gameSchedule : ret) {
+			for (MatchFixtures gameSchedule : ret) {
 				gameSchedule.addFixtures(loadFixtures(gameSchedule));
 			}
 		}
@@ -1382,12 +1382,12 @@ public class DBManager implements PersistenceManager {
 	 *
 	 * @param plan Schedule for which the fixtures are retrieved, and to which they are added.
 	 */
-	protected List<Paarung> loadFixtures(Spielplan plan) {
+	protected List<Paarung> loadFixtures(MatchFixtures plan) {
 		return ((PaarungTable) getTable(PaarungTable.TABLENAME)).loadFixtures( plan.getLigaId(), plan.getSaison());
 	}
 
 	/**
-	 * Saves the fixtures to an existing game schedule ({@link Spielplan}).
+	 * Saves the fixtures to an existing game schedule ({@link MatchFixtures}).
 	 *
 	 * @param fixtures the fixtures
 	 * @param ligaId   the liga id

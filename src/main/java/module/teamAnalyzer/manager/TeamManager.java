@@ -5,7 +5,7 @@ import core.model.HOVerwaltung;
 import core.model.enums.MatchType;
 import core.model.series.Paarung;
 import core.util.HODateTime;
-import module.series.Spielplan;
+import module.series.MatchFixtures;
 import module.teamAnalyzer.vo.Team;
 import java.util.*;
 
@@ -20,7 +20,7 @@ public class TeamManager {
 	}
 
 	public static List<Team> getLeagueMatches(Boolean includeOwn) {
-		Spielplan league = getDivisionMatches();
+		MatchFixtures league = getDivisionMatches();
 		List<Team> teams = new ArrayList<>();
 		int ownTeamID = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 
@@ -137,7 +137,7 @@ public class TeamManager {
 		return teams;
 	}
 
-	private static Spielplan getDivisionMatches() {
+	private static MatchFixtures getDivisionMatches() {
 		var xtra = HOVerwaltung.instance().getModel().getXtraDaten();
 		if ( xtra != null) {
 			return DBManager.instance().getSpielplan(xtra.getLeagueLevelUnitID(), HOVerwaltung.instance().getModel().getBasics().getSeason());

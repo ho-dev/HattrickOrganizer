@@ -319,7 +319,7 @@ public class Player extends AbstractTable.Storable {
     private List<FuturePlayerSkillTraining> futurePlayerSkillTrainings;
 
     private Integer motherClubId;
-    private String motherClubName;
+    private String motherClubName = "";
 
     /**
      * Number of matches with the current team.

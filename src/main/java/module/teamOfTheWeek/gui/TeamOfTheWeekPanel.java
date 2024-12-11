@@ -11,7 +11,7 @@ import core.model.match.MatchLineupPosition;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.series.Paarung;
-import module.series.Spielplan;
+import module.series.MatchFixtures;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -66,7 +66,7 @@ public class TeamOfTheWeekPanel extends LazyPanel implements ChangeListener, Act
 	}
 
 	private MatchLineupPosition[] calcBestLineup(int week, boolean best) {
-		Spielplan plan = (Spielplan) seasonCombo.getSelectedItem();
+		MatchFixtures plan = (MatchFixtures) seasonCombo.getSelectedItem();
 		if (plan == null) {
 			return null;
 		}
@@ -232,7 +232,7 @@ public class TeamOfTheWeekPanel extends LazyPanel implements ChangeListener, Act
 	}
 
 	private void setWeekLimits() {
-		Spielplan plan = (Spielplan) seasonCombo.getSelectedItem();
+		MatchFixtures plan = (MatchFixtures) seasonCombo.getSelectedItem();
 		int max_week = HOVerwaltung.instance().getModel().getBasics().getSpieltag() - 1;
 		int week = 1;
 
@@ -261,13 +261,13 @@ public class TeamOfTheWeekPanel extends LazyPanel implements ChangeListener, Act
 
 	}
 
-	private MatchLineupPosition[] getPlayers(int week, Spielplan plan, boolean isBest) {
+	private MatchLineupPosition[] getPlayers(int week, MatchFixtures plan, boolean isBest) {
 		if (week > 0)
-			matches = plan.getPaarungenBySpieltag(week);
+			matches = plan.getFixturesOfMatchDay(week);
 		else {
-			matches = plan.getPaarungenBySpieltag(1);
+			matches = plan.getFixturesOfMatchDay(1);
 			for (week = 2; week < 15; week++)
-				matches.addAll(plan.getPaarungenBySpieltag(week));
+				matches.addAll(plan.getFixturesOfMatchDay(week));
 		}
 		// TODO For match of year attention of doubles
 		var ret = new MatchLineupPosition[11];
