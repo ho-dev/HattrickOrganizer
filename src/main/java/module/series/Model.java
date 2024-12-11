@@ -89,8 +89,4 @@ public class Model {
 	public Map<Integer, Map<RatingsStatistics, StatisticsEntry>> getLeagueStatistics() {
 		return leagueStatistics;
 	}
-
-	public void setLeagueStatistics(Map<Integer, Map<RatingsStatistics, StatisticsEntry>> leagueStatistics) {
-		this.leagueStatistics = leagueStatistics;
-	}
 }

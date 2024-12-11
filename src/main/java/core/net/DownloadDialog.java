@@ -15,7 +15,6 @@ import core.model.UserParameter;
 import core.model.enums.MatchType;
 import core.model.match.MatchKurzInfo;
 import core.model.player.Player;
-import core.model.series.Paarung;
 import core.net.login.ProxyDialog;
 import core.util.HODateTime;
 import core.util.HOLogger;
@@ -384,25 +383,6 @@ public class DownloadDialog extends JDialog implements ActionListener {
 
 		HOMainFrame.instance().setInformationCompleted();
 
-	}
-
-	/**
-	 * Create new fixture
-	 * @param date Match date
-	 * @param round Match round
-	 * @param team1 Home team
-	 * @param team2 Guest team
-	 * @return Fixture
-	 */
-	private Paarung createFixture(HODateTime date, int round,  TeamStats team1, TeamStats team2) {
-		var ret = new Paarung();
-		ret.setDatum(date);
-		ret.setHeimId(team1.getTeamId());
-		ret.setGastId(team2.getTeamId());
-		ret.setHeimName(team1.getTeamName());
-		ret.setGastName(team2.getTeamName());
-		ret.setSpieltag(round);
-		return ret;
 	}
 
 	private void downloadOldFixtures(int teamId, List<Object> selection) {

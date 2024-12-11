@@ -102,7 +102,7 @@ public class XMLSpielplanParser {
 			// Einträge adden
 			list = root.getElementsByTagName("Match");
 
-			for (int i = 0; (list != null) && (i < list.getLength()); i++) {
+			for (int i = 0; i < list.getLength(); i++) {
 				plan.addEintrag(createPaarung((Element) list.item(i)));
 			}
 		} catch (Exception e) {

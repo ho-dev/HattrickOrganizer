@@ -27,9 +27,8 @@ public class SeriesPanel extends LazyImagePanel {
 	private SeriesHistoryPanel seriesHistoryPanel;
 	private Model model;
 	private PromotionInfoPanel promotionInfoPanel;
-	private LeaguePromotionHandler promotionHandler;
 
-	@Override
+    @Override
 	protected void initialize() {
 		initPromotionHandler();
 		initComponents();
@@ -39,7 +38,7 @@ public class SeriesPanel extends LazyImagePanel {
 	}
 
 	private void initPromotionHandler() {
-		promotionHandler = new LeaguePromotionHandler();
+        LeaguePromotionHandler promotionHandler = new LeaguePromotionHandler();
 		promotionInfoPanel = new PromotionInfoPanel(promotionHandler);
 	}
 
