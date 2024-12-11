@@ -1,10 +1,8 @@
 // %3943495873:hoplugins.teamAnalyzer.ui.component%
 package module.teamAnalyzer.ui.component;
 
-import core.db.DBManager;
 import core.model.TranslationFacility;
-import core.model.enums.MatchType;
-import core.model.match.Matchdetails;
+import core.model.match.SourceSystem;
 import core.net.OnlineWorker;
 import module.teamAnalyzer.ui.NumberTextField;
 
@@ -20,16 +18,6 @@ import java.awt.event.ActionListener;
  * @author <a href=mailto:draghetto@users.sourceforge.net>Massimiliano Amato</a>
  */
 public class DownloadPanel extends JPanel {
-    //~ Instance fields ----------------------------------------------------------------------------
-
-    /**
-	 *
-	 */
-	private static final long serialVersionUID = -3212179990708350342L;
-
-	String[] matchTypes = {TranslationFacility.tr("NormalMatch"),
-   		 TranslationFacility.tr("TournamentMatch")};
-
 
 	/** Download Button */
     JButton downloadButton = new JButton(TranslationFacility.tr("ls.button.download"));
@@ -93,34 +81,19 @@ public class DownloadPanel extends JPanel {
         constraints.gridy = 7;
         add(status, constraints);
 
-        downloadButton.addActionListener(new ActionListener() {
-                @Override
-				public void actionPerformed(ActionEvent e) {
-                    int id = matchId.getValue();
-                    MatchType type = MatchType.LEAGUE;
-                    if (tournament.isSelected()) {
-                    	type = MatchType.TOURNAMENTGROUP;
-                    }
-
-//                    if (id == 0) {
-//                        status.setText(TranslationFacility.tr("ImportError"));
-//
-//                        return;
-//                    }
-
-                    if (OnlineWorker.downloadMatchData(id, type, false)) {
-
-                    	Matchdetails md = DBManager.instance().loadMatchDetails(type.getId(), id);
-
-	                    if (md.getFetchDatum() != null) {
-	                        status.setText(TranslationFacility.tr("ImportOK"));
-	                        matchId.setText("");
-	                    } else {
-	                        status.setText(TranslationFacility.tr("ImportError"));
-	                    }
-                    }
-                }
-            });
+        downloadButton.addActionListener(e -> {
+            int id = matchId.getValue();
+            SourceSystem sourceSystem = SourceSystem.HATTRICK;
+            if (tournament.isSelected()) {
+                sourceSystem = SourceSystem.HTOINTEGRATED;
+            }
+            if (OnlineWorker.downloadMatchData(id, sourceSystem, false)) {
+                status.setText(TranslationFacility.tr("ImportOK"));
+                matchId.setText("");
+            } else {
+                status.setText(TranslationFacility.tr("ImportError"));
+            }
+        });
     }
 
 

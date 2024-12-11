@@ -5,6 +5,7 @@ import core.model.cup.CupLevel;
 import core.model.cup.CupLevelIndex;
 import core.model.match.MatchKurzInfo;
 import core.model.enums.MatchType;
+import core.model.match.SourceSystem;
 import core.model.match.Weather;
 import core.util.HODateTime;
 import core.util.HOLogger;
@@ -15,6 +16,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -61,17 +63,17 @@ final class MatchesKurzInfoTable extends AbstractTable {
 
 	@Override
 	protected String[] getConstraintStatements() {
-		return new String[] {" PRIMARY KEY (MATCHID, MATCHTYP)"};
+		return new String[]{" PRIMARY KEY (MATCHID, MATCHTYP)"};
 	}
 
-    @Override
-    protected String[] getCreateIndexStatement() {
-        return new String[]{
-                "CREATE INDEX IMATCHKURZINFO_1 ON " + getTableName() + "(" + columns[0].getColumnName() + ")",
-                "CREATE INDEX matchkurzinfo_heimid_idx ON "+ getTableName() + "(" + columns[3].getColumnName() + ")",
-                "CREATE INDEX matchkurzinfo_gastid_idx ON "+ getTableName() + "(" + columns[5].getColumnName() + ")",
-        };
-    }
+	@Override
+	protected String[] getCreateIndexStatement() {
+		return new String[]{
+				"CREATE INDEX IMATCHKURZINFO_1 ON " + getTableName() + "(" + columns[0].getColumnName() + ")",
+				"CREATE INDEX matchkurzinfo_heimid_idx ON " + getTableName() + "(" + columns[3].getColumnName() + ")",
+				"CREATE INDEX matchkurzinfo_gastid_idx ON " + getTableName() + "(" + columns[5].getColumnName() + ")",
+		};
+	}
 
 	/**
 	 * Saves matches into storeMatchKurzInfo table
@@ -83,6 +85,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 			store(match);
 		}
 	}
+
 	void update(MatchKurzInfo match) {
 		match.setIsStored(true);
 		store(match);
@@ -125,16 +128,16 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		var params = new ArrayList<>();
 		var where = new StringBuilder(" WHERE Status=? ");
 		params.add(MatchKurzInfo.FINISHED);
-		if(ownTeam) {
+		if (ownTeam) {
 			where.append(" AND ( GastID = ? OR HeimID = ?)");
 			params.add(teamId);
 			params.add(teamId);
 		}
-		if(bOfficialOnly) {
+		if (bOfficialOnly) {
 			where.append(getOfficialMatchTypWhereClause());
 		}
 		where.append(" ORDER BY MatchDate DESC");
-		if(iNbGames != null) {
+		if (iNbGames != null) {
 			where.append(" LIMIT ").append(iNbGames);
 		}
 		return loadMatchesKurzInfo(where.toString(), params.toArray());
@@ -142,10 +145,11 @@ final class MatchesKurzInfoTable extends AbstractTable {
 
 	/**
 	 * Important: If the teamid = -1 the match type must be ALL_GAMES!
-	 * @param teamId The Teamid or -1 for all
-	 * @param matchType Which matches? Constants in the GamesPanel!
-	 * @param matchLocation Home, Away, Neutral
-	 * @param from filter match schedule date
+	 *
+	 * @param teamId          The Teamid or -1 for all
+	 * @param matchType       Which matches? Constants in the GamesPanel!
+	 * @param matchLocation   Home, Away, Neutral
+	 * @param from            filter match schedule date
 	 * @param includeUpcoming if false filter finished matches only
 	 * @return MatchKurzInfo[] – Array of match info.
 	 */
@@ -162,15 +166,15 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		var sql = new StringBuilder(" WHERE MatchDate>= ? ");
 		params.add(from);
 
-		if(matchType != MatchesPanel.ALL_GAMES){
+		if (matchType != MatchesPanel.ALL_GAMES) {
 			// OTHER TEAM GAMES =============================================
-			if(matchType == MatchesPanel.OTHER_TEAM_GAMES){
+			if (matchType == MatchesPanel.OTHER_TEAM_GAMES) {
 				sql.append(" AND ( GastID != ? AND HeimID != ? )");
 				params.add(teamId);
 				params.add(teamId);
 			}
 			// MY GAMES =============================================
-			else{
+			else {
 				switch (matchLocation) {
 					case HOME -> {
 						sql.append(" AND HeimID = ? AND (isNeutral is NULL OR isNeutral=false) ");
@@ -195,12 +199,12 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		}
 
 		// Filter matchType
-		if (matchType >= 10 ) {
+		if (matchType >= 10) {
 			matchType -= 10;
 			includeUpcoming = false;
 		}
 
-		if( !includeUpcoming) {
+		if (!includeUpcoming) {
 			sql.append(" AND Status=?");
 			params.add(MatchKurzInfo.FINISHED);
 		}
@@ -217,17 +221,17 @@ final class MatchesKurzInfoTable extends AbstractTable {
 			return new ArrayList<>();
 		}
 		return loadMatchesKurzInfo(" WHERE ( GastID = ? OR HeimID = ? ) AND Status= ? AND MatchTyp!= ? ORDER BY MatchDate DESC",
-					teamId,
-					teamId,
-					MatchKurzInfo.UPCOMING,
-					MatchType.LEAGUE.getId());
+				teamId,
+				teamId,
+				MatchKurzInfo.UPCOMING,
+				MatchType.LEAGUE.getId());
 	}
 
 	public MatchKurzInfo loadLastMatchesKurzInfo(int teamId) {
 		return loadOneMatchesKurzInfo(" WHERE ( GastID = ? OR HeimID = ? ) AND Status = ? ORDER BY MatchDate DESC LIMIT 1",
-					teamId,
-					teamId,
-					MatchKurzInfo.FINISHED);
+				teamId,
+				teamId,
+				MatchKurzInfo.FINISHED);
 	}
 
 	public MatchKurzInfo loadNextMatchesKurzInfo(int teamId) {
@@ -238,7 +242,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 				MatchKurzInfo.UPCOMING);
 	}
 
-	private MatchKurzInfo loadOneMatchesKurzInfo(String sql, Object ... params) {
+	private MatchKurzInfo loadOneMatchesKurzInfo(String sql, Object... params) {
 		var matches = loadMatchesKurzInfo(sql, params);
 		if (!matches.isEmpty()) return matches.get(0);
 		return null;
@@ -260,20 +264,23 @@ final class MatchesKurzInfoTable extends AbstractTable {
 	public static StringBuilder getMatchTypWhereClause(int iMatchType) {
 		StringBuilder sql = new StringBuilder(100);
 		switch (iMatchType) {
-			case MatchesPanel.OWN_OFFICIAL_GAMES -> sql.append(" AND ( MatchTyp=").append(MatchType.QUALIFICATION.getId())
-													   .append(" OR MatchTyp=").append(MatchType.LEAGUE.getId()).append(" OR MatchTyp=")
-					                                   .append(MatchType.CUP.getId()).append(" )");
+			case MatchesPanel.OWN_OFFICIAL_GAMES ->
+					sql.append(" AND ( MatchTyp=").append(MatchType.QUALIFICATION.getId())
+							.append(" OR MatchTyp=").append(MatchType.LEAGUE.getId()).append(" OR MatchTyp=")
+							.append(MatchType.CUP.getId()).append(" )");
 			case MatchesPanel.OWN_NATIONAL_CUP_GAMES -> sql.append(" AND MatchTyp = ").append(MatchType.CUP.getId())
-													  .append(" AND CUPLEVEL = ").append(CupLevel.NATIONALorDIVISIONAL.getId());
+					.append(" AND CUPLEVEL = ").append(CupLevel.NATIONALorDIVISIONAL.getId());
 			case MatchesPanel.OWN_LEAGUE_GAMES -> sql.append(" AND MatchTyp=").append(MatchType.LEAGUE.getId());
-			case MatchesPanel.OWN_FRIENDLY_GAMES -> sql.append(" AND ( MatchTyp=").append(MatchType.FRIENDLYNORMAL.getId())
-													.append(" OR MatchTyp=").append(MatchType.FRIENDLYCUPRULES.getId())
-													.append(" OR MatchTyp=").append(MatchType.INTFRIENDLYCUPRULES.getId())
-													.append(" OR MatchTyp=").append(MatchType.INTFRIENDLYNORMAL.getId()).append(" )");
-			case MatchesPanel.OWN_TOURNAMENT_GAMES -> sql.append(" AND ( MatchTyp=").append(MatchType.TOURNAMENTGROUP.getId())
-													.append(" OR MatchTyp=").append(MatchType.TOURNAMENTPLAYOFF.getId()).append(" )");
+			case MatchesPanel.OWN_FRIENDLY_GAMES ->
+					sql.append(" AND ( MatchTyp=").append(MatchType.FRIENDLYNORMAL.getId())
+							.append(" OR MatchTyp=").append(MatchType.FRIENDLYCUPRULES.getId())
+							.append(" OR MatchTyp=").append(MatchType.INTFRIENDLYCUPRULES.getId())
+							.append(" OR MatchTyp=").append(MatchType.INTFRIENDLYNORMAL.getId()).append(" )");
+			case MatchesPanel.OWN_TOURNAMENT_GAMES ->
+					sql.append(" AND ( MatchTyp=").append(MatchType.TOURNAMENTGROUP.getId())
+							.append(" OR MatchTyp=").append(MatchType.TOURNAMENTPLAYOFF.getId()).append(" )");
 			case MatchesPanel.OWN_SECONDARY_CUP_GAMES -> sql.append(" AND MatchTyp = ").append(MatchType.CUP.getId())
-													   .append(" AND CUPLEVEL != ").append(CupLevel.NATIONALorDIVISIONAL.getId());
+					.append(" AND CUPLEVEL != ").append(CupLevel.NATIONALorDIVISIONAL.getId());
 			case MatchesPanel.OWN_QUALIF_GAMES -> sql.append(" AND MatchTyp=").append(MatchType.QUALIFICATION.getId());
 			case MatchesPanel.OWN_CUP_GAMES -> sql.append(" AND (MatchTyp=").append(MatchType.CUP.getId()).append(")");
 		}
@@ -296,7 +303,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 				if (rs.wasNull()) return true;
 				return !forecast.isSure();
 			}
-		} catch(Exception e){
+		} catch (Exception e) {
 			HOLogger.instance().log(getClass(), "DatenbankZugriff.hasUnsureWeatherForecast : " + e);
 		}
 		return false;
@@ -305,12 +312,10 @@ final class MatchesKurzInfoTable extends AbstractTable {
 	/**
 	 * Get all matches with a certain status for the given team from the
 	 * database.
-	 * 
-	 * @param teamId
-	 *            the teamid or -1 for all matches
-	 * @param matchStatus
-	 *            the match status (e.g. IMatchKurzInfo.UPCOMING) or -1 to
-	 *            ignore this parameter
+	 *
+	 * @param teamId      the teamid or -1 for all matches
+	 * @param matchStatus the match status (e.g. IMatchKurzInfo.UPCOMING) or -1 to
+	 *                    ignore this parameter
 	 */
 	List<MatchKurzInfo> getMatchesKurzInfo(final int teamId, final int matchStatus) {
 
@@ -330,19 +335,18 @@ final class MatchesKurzInfoTable extends AbstractTable {
 			params.add(matchStatus);
 		}
 
-		sql.append( " ORDER BY MatchDate DESC");
+		sql.append(" ORDER BY MatchDate DESC");
 		return loadMatchesKurzInfo(sql.toString(), params.toArray());
 	}
 
-	public List<MatchKurzInfo> loadMatchesKurzInfo(String sql, Object ... params) {
+	public List<MatchKurzInfo> loadMatchesKurzInfo(String sql, Object... params) {
 		return load(MatchKurzInfo.class, connectionManager.executePreparedQuery(createSelectStatement(sql), params));
 	}
 
 	/**
 	 * Get all matches for the given team from the database.
-	 * 
-	 * @param teamId
-	 *            the teamid or -1 for all matches
+	 *
+	 * @param teamId the teamid or -1 for all matches
 	 */
 	List<MatchKurzInfo> getMatchesKurzInfo(final int teamId) {
 		return getMatchesKurzInfo(teamId, -1);
@@ -351,12 +355,12 @@ final class MatchesKurzInfoTable extends AbstractTable {
 
 	/**
 	 * Returns the MatchKurzInfo for the match. Returns null if not found.
-	 * 
+	 *
 	 * @param matchid the ID for the match
 	 * @return The kurz info object or null
 	 */
 	MatchKurzInfo getMatchesKurzInfoByMatchID(int matchid, MatchType matchType) {
-		if ( matchType != null&& matchType != MatchType.NONE)
+		if (matchType != null && matchType != MatchType.NONE)
 			return loadOne(MatchKurzInfo.class, matchid, matchType.getId());
 
 		return loadOneMatchesKurzInfo(" WHERE MATCHID=? ", matchid);
@@ -388,19 +392,19 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		params.add(teamId);
 		params.add(teamId);
 		params.add(status);
-		if ( from != null) {
+		if (from != null) {
 			whereClause.append(" AND MATCHDATE > ?");
 			params.add(from);
 		}
 		params.addAll(matchTypes);
-		var placeholders =matchTypes.stream().map(i->"?").collect(Collectors.joining(","));
+		var placeholders = matchTypes.stream().map(i -> "?").collect(Collectors.joining(","));
 		whereClause.append(" AND MATCHTYP IN (").append(placeholders).append(") ORDER BY MatchDate DESC");
 		return loadMatchesKurzInfo(whereClause.toString(), params.toArray());
 	}
 
-	public List<MatchKurzInfo> getMatchesKurzInfo(int teamId, Timestamp  from, Timestamp to, List<MatchType> matchTypes) {
+	public List<MatchKurzInfo> getMatchesKurzInfo(int teamId, Timestamp from, Timestamp to, List<MatchType> matchTypes) {
 		var typeListAsInt = matchTypes.stream().map(MatchType::getId).toList();
-		var placeholders =matchTypes.stream().map(i->"?").collect(Collectors.joining(","));
+		var placeholders = String.join(",", Collections.nCopies(matchTypes.size(), "?"));
 		var params = new ArrayList<>();
 		params.add(teamId);
 		params.add(teamId);
@@ -409,8 +413,21 @@ final class MatchesKurzInfoTable extends AbstractTable {
 		params.addAll(typeListAsInt);
 		params.add(MatchKurzInfo.UPCOMING);
 		params.add(MatchKurzInfo.FINISHED);
-		return loadMatchesKurzInfo("WHERE (HEIMID = ? OR GASTID = ?) AND MATCHDATE BETWEEN ? AND ? AND MATCHTYP in ("+ placeholders +") AND STATUS in (?, ?) ORDER BY MatchDate DESC",
+		return loadMatchesKurzInfo("WHERE (HEIMID = ? OR GASTID = ?) AND MATCHDATE BETWEEN ? AND ? AND MATCHTYP in (" + placeholders + ") AND STATUS in (?, ?) ORDER BY MatchDate DESC",
 				params.toArray()
 		);
+	}
+
+	public MatchKurzInfo loadMatchesKurzInfo(SourceSystem sourceSystem, int matchId) {
+		var matchTypes = MatchType.fromSourceSystem(sourceSystem);
+		var placeholders = String.join(",", Collections.nCopies(matchTypes.size(), "?"));
+		var params = new ArrayList<>();
+		params.add(matchId);
+		params.addAll(matchTypes.stream().map(MatchType::getId).toList());
+		var infos = loadMatchesKurzInfo("WHERE MATCHID = ? AND MATCHTYP IN (" + placeholders + ")", params.toArray());
+		if (!infos.isEmpty()) {
+			return infos.get(0);
+		}
+		return null;
 	}
 }
