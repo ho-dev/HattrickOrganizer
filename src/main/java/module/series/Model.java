@@ -36,15 +36,15 @@ public class Model {
 		}
 	}
 
-	private Spielplan currentSeries;
+	private MatchFixtures currentSeries;
 	private String currentTeam;
 	private Map<Integer, Map<RatingsStatistics, StatisticsEntry>> leagueStatistics;
 
-	public Spielplan getCurrentSeries() {
+	public MatchFixtures getCurrentSeries() {
 		return currentSeries;
 	}
 
-	public void setCurrentSeries(Spielplan currentSeries) {
+	public void setCurrentSeries(MatchFixtures currentSeries) {
 		this.currentSeries = currentSeries;
 		this.leagueStatistics = new HashMap<>();
 		if (currentSeries == null) return;

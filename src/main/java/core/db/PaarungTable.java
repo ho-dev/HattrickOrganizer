@@ -2,7 +2,7 @@ package core.db;
 
 import core.model.series.Paarung;
 import core.util.HODateTime;
-import module.series.Spielplan;
+import module.series.MatchFixtures;
 import java.sql.Types;
 import java.util.List;
 
@@ -34,7 +34,7 @@ public final class PaarungTable extends AbstractTable {
 	}
 
 	/**
-	 * Saves a list of games to a given game schedule, i.e. {@link Spielplan}.
+	 * Saves a list of games to a given game schedule, i.e. {@link MatchFixtures}.
 	 */
 	void storePaarung(List<Paarung> fixtures, int ligaId, int saison) {
 		if (fixtures == null) {

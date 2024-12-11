@@ -21,7 +21,7 @@ import java.awt.*;
 public class SeriesPanel extends LazyImagePanel {
 
 	private JButton deleteButton;
-	private JComboBox<Spielplan> seasonComboBox;
+	private JComboBox<MatchFixtures> seasonComboBox;
 	private SeriesTablePanel seriesTable;
 	private MatchDayPanel[] matchDayPanels;
 	private SeriesHistoryPanel seriesHistoryPanel;
@@ -50,7 +50,7 @@ public class SeriesPanel extends LazyImagePanel {
 
 	private void delete() {
 		if (seasonComboBox.getSelectedItem() != null) {
-			Spielplan spielplan = (Spielplan) seasonComboBox.getSelectedItem();
+			MatchFixtures spielplan = (MatchFixtures) seasonComboBox.getSelectedItem();
 			int value = JOptionPane.showConfirmDialog(this,
 					TranslationFacility.tr("ls.button.delete") + " "
 							+ TranslationFacility.tr("Ligatabelle") + ":\n"
@@ -70,8 +70,8 @@ public class SeriesPanel extends LazyImagePanel {
 
 		this.seasonComboBox.addActionListener(e -> {
 			// Determine current match schedule
-			if (seasonComboBox.getSelectedItem() instanceof Spielplan) {
-				model.setCurrentSeries((Spielplan) seasonComboBox.getSelectedItem());
+			if (seasonComboBox.getSelectedItem() instanceof MatchFixtures) {
+				model.setCurrentSeries((MatchFixtures) seasonComboBox.getSelectedItem());
 			} else {
 				model.setCurrentSeries(null);
 			}
@@ -102,7 +102,7 @@ public class SeriesPanel extends LazyImagePanel {
 	private void fillSaisonCB() {
 		// Get the match schedules as objects with the pairings
 		var spielplaene = DBManager.instance().getAllSpielplaene(true);
-		final Spielplan markierterPlan = (Spielplan) seasonComboBox.getSelectedItem();
+		final MatchFixtures markierterPlan = (MatchFixtures) seasonComboBox.getSelectedItem();
 
 		// Remove all old seasons
 		seasonComboBox.removeAllItems();
@@ -120,8 +120,8 @@ public class SeriesPanel extends LazyImagePanel {
 		}
 
 		// Aktuellen Spielplan bestimmen
-		if (seasonComboBox.getSelectedItem() instanceof Spielplan) {
-			this.model.setCurrentSeries((Spielplan) seasonComboBox.getSelectedItem());
+		if (seasonComboBox.getSelectedItem() instanceof MatchFixtures) {
+			this.model.setCurrentSeries((MatchFixtures) seasonComboBox.getSelectedItem());
 		} else {
 			this.model.setCurrentSeries(null);
 		}

@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 /**
  * Spielplan represents a game schedule, i.e. a particular season in a series.
  */
-public class Spielplan  extends AbstractTable.Storable {
+public class MatchFixtures extends AbstractTable.Storable {
     //~ Instance fields ----------------------------------------------------------------------------
 
     protected LigaTabelle m_clTabelle;
@@ -29,7 +29,7 @@ public class Spielplan  extends AbstractTable.Storable {
     /**
      * Creates a new instance of Spielplan
      */
-    public Spielplan() {
+    public MatchFixtures() {
     }
 
     //~ Methods ------------------------------------------------------------------------------------
@@ -167,9 +167,9 @@ public class Spielplan  extends AbstractTable.Storable {
 
     @Override
 	public final boolean equals(Object o) {
-        if (o instanceof Spielplan) {
-            return (m_iLigaId == ((Spielplan) o).getLigaId())
-                    && (m_iSaison == ((Spielplan) o).getSaison());
+        if (o instanceof MatchFixtures) {
+            return (m_iLigaId == ((MatchFixtures) o).getLigaId())
+                    && (m_iSaison == ((MatchFixtures) o).getSaison());
         } else {
             return false;
         }

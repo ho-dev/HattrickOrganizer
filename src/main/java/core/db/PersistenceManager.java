@@ -10,7 +10,7 @@ import core.model.misc.Economy;
 import core.model.misc.Verein;
 import core.model.player.Player;
 import core.model.series.Liga;
-import module.series.Spielplan;
+import module.series.MatchFixtures;
 import tool.arenasizer.Stadium;
 
 import java.sql.Timestamp;
@@ -147,7 +147,7 @@ public interface PersistenceManager {
      *
      * @return Spielplan – Latest game schedule.  <code>null</code> if none found.
      */
-    Spielplan getLatestSpielplan();
+    MatchFixtures getLatestSpielplan();
 
 
     // Staff

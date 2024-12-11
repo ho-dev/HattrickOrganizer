@@ -22,7 +22,7 @@ import core.util.HOLogger;
 import core.util.Helper;
 import module.nthrf.NtTeamChooser;
 import module.nthrf.NthrfUtil;
-import module.series.Spielplan;
+import module.series.MatchFixtures;
 import tool.updater.UpdateController;
 
 import javax.swing.*;
@@ -328,11 +328,11 @@ public class DownloadDialog extends JDialog implements ActionListener {
 						if ( fixtures.getMatches().isEmpty()){
 							// Matches are not available from hattrick. Initialize them
 							var teamStats = OnlineWorker.getSeriesDetails(leagueId);
-							var newFixtures = Spielplan.createFixtures(model.getXtraDaten().getSeriesMatchDate(),
+							var newFixtures = MatchFixtures.createFixtures(model.getXtraDaten().getSeriesMatchDate(),
 									teamStats.values().stream().sorted(Comparator.comparing(TeamStats::getPosition)).toList());
 							fixtures.addFixtures(newFixtures);
 						}
-						final Spielplan modelFixtures = hov.getModel().getFixtures();
+						final MatchFixtures modelFixtures = hov.getModel().getFixtures();
 						if (modelFixtures != null) {
 							// state of previous download
 							var oldDownloadedFixtures = modelFixtures.getMatches();
