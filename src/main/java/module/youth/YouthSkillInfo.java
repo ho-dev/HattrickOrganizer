@@ -46,6 +46,11 @@ public class YouthSkillInfo {
     private final SkillRange currentValueRange = new SkillRange();
 
     /**
+     * Range of possible maximum values
+     */
+    private final SkillRange maxValueRange = new SkillRange();
+
+    /**
      * Maximum reachable skill level (potential)
      * null as long as not known
      */
@@ -121,6 +126,7 @@ public class YouthSkillInfo {
             }
             currentValueRange.lessThan(max + 1);
             startValueRange.lessThan(max + 1);
+            maxValueRange.between(currentValue, max + 1);
         }
 
         if (currentLevel != null) {
@@ -132,6 +138,7 @@ public class YouthSkillInfo {
 
             startValueRange.lessThan(currentLevel + 1);
             currentValueRange.between(currentLevel, currentLevel + 1);
+            maxValueRange.greaterEqual(currentValue);
         }
 
         if (startLevel != null) {
@@ -145,6 +152,7 @@ public class YouthSkillInfo {
             }
             startValueRange.between(startLevel, startLevel + 1);
             currentValueRange.greaterEqual(startLevel);
+            maxValueRange.greaterEqual(currentValue);
         } else if (currentValue < startValue) {
             if ( currentValue < 0) currentValue = 0;
             startValue = currentValue;
@@ -262,9 +270,12 @@ public class YouthSkillInfo {
      * @return int, 0 if neither current level nor maximum is known
      */
     public int getMinimumPotential() {
-        if (this.max != null) return this.max;
-        if (this.currentLevel != null) return this.currentLevel;
-        return 0;
+        return (int)maxValueRange.greaterEqual;
+    }
+
+    public int getMaximumPotential() {
+        if (Math.round(maxValueRange.lessThan) - maxValueRange.lessThan < 0.001) return (int)maxValueRange.lessThan-1;
+        return (int)maxValueRange.lessThan;
     }
 
     /**
@@ -302,24 +313,26 @@ public class YouthSkillInfo {
      * @param minTop3Max int limit of potential
      */
     public void setMaxLimit(Boolean isKeeper, int minTop3Max) {
-        if ( this.max != null && this.max <= minTop3Max) return;  // nothing to do
-        if (  minTop3Max < 5) {
-            setMax(minTop3Max);
-        }
-        else if ( isKeeper != null){
-            if ( isKeeper) {
+        if (this.max != null && this.max <= minTop3Max) return;  // nothing to do
+        if (minTop3Max < 5) {
+            maxValueRange.lessThan(minTop3Max + 1);
+        } else if (isKeeper != null) {
+            if (isKeeper) {
                 switch (this.skillID) {
-                    case KEEPER, DEFENDING, SETPIECES -> setMax(minTop3Max);
+                    case KEEPER, DEFENDING, SETPIECES -> maxValueRange.lessThan(minTop3Max + 1);
                 }
-            }
-            else {
+            } else {
                 switch (this.skillID) {
-                    case DEFENDING, WINGER, PLAYMAKING, PASSING, SCORING, SETPIECES -> setMax(minTop3Max);
+                    case DEFENDING, WINGER, PLAYMAKING, PASSING, SCORING, SETPIECES -> maxValueRange.lessThan(minTop3Max + 1);
                 }
             }
         }
-        this.currentValueRange.lessThan(minTop3Max+1);
-        this.startValueRange.lessThan(minTop3Max+1);
+        this.currentValueRange.lessThan(minTop3Max + 1);
+        this.startValueRange.lessThan(minTop3Max + 1);
+    }
+
+    public void setMaxLevelLimit(int i) {
+        this.maxValueRange.lessThan(i+1);
     }
 
     // Skill Range class
