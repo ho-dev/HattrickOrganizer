@@ -211,13 +211,13 @@ public class OnlineWorker {
 	}
 
 	private static Matchdetails downloadMatchDetails(SourceSystem sourceSystem, int matchId) {
-        var matchDetails = MyConnector.instance().downloadMatchDetails(sourceSystem.to_string(), matchId);
-        if (matchDetails.isEmpty()) {
-            HOLogger.instance().warning(OnlineWorker.class, "Unable to fetch details for match " + matchId);
-            return null;
-        }
-        return  XMLMatchdetailsParser.parseMatchdetailsFromString(matchDetails, null);
-    }
+		var matchDetails = MyConnector.instance().downloadMatchDetails(sourceSystem.to_string(), matchId);
+		if (matchDetails.isEmpty()) {
+			HOLogger.instance().warning(OnlineWorker.class, "Unable to fetch details for match " + matchId);
+			return null;
+		}
+		return XMLMatchdetailsParser.parseMatchdetailsFromString(matchDetails, null);
+	}
 
 	/**
 	 * Downloads a match with the given criteria and stores it in the database.
@@ -340,17 +340,16 @@ public class OnlineWorker {
 							info.setIsDerby(guestRegionId == info.getRegionId());
 
 							int homeArenaId;
-							if(info.isHomeMatch()){
+							if (info.isHomeMatch()) {
 								homeArenaId = HOVerwaltung.instance().getModel().getStadium().getArenaId();
-							}
-							else {
+							} else {
 								var homeTeamInfo = getTeam(info.getHomeTeamID());
 								homeArenaId = getArenaId(homeTeamInfo);
 								downloadTeamLogo(homeTeamInfo);
 							}
 							info.setIsNeutral(info.getArenaId() != homeArenaId);
 						} else {
-							// Verlegenheitstruppe 08/15
+							// Negative team ids are Verlegenheitstruppe 08/15
 							info.setIsDerby(false);
 							info.setIsNeutral(false);
 						}
@@ -359,10 +358,10 @@ public class OnlineWorker {
 
 				MatchLineup lineup;
 				boolean success;
-				if ( (info.getMatchStatus() == MatchKurzInfo.FINISHED) && (!info.isObsolet())) {
+				if ((info.getMatchStatus() == MatchKurzInfo.FINISHED) && (!info.isObsolet())) {
 					lineup = downloadMatchlineup(matchID, info.getMatchType(), info.getHomeTeamID(), info.getGuestTeamID());
 					if (lineup == null) {
-						if ( !isSilentDownload()) {
+						if (!isSilentDownload()) {
 							String msg = getLangString("Downloadfehler") + " : Error fetching Matchlineup :";
 							// Info
 							setInfoMsg(msg, InfoPanel.FEHLERFARBE);
@@ -392,8 +391,7 @@ public class OnlineWorker {
 					info.setHomeTeamID(lineup.getHomeTeamId());
 					info.setHomeTeamName(lineup.getHomeTeamName());
 					success = DBManager.instance().storeMatch(info, details, lineup);
-				}
-				else{
+				} else {
 					// Update arena and region ids
 					var matches = new ArrayList<MatchKurzInfo>();
 					matches.add(info);
