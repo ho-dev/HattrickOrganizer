@@ -12,6 +12,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
+
+import core.util.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -35,7 +37,7 @@ public final class XMLParser {
     /**
      * Gets all transfers for a player.
      *
-     * @param playerId Player ID
+     * @param playerId Player identifier
      *
      * @return List of transfers.
      *
@@ -44,14 +46,19 @@ public final class XMLParser {
 
     	final String xml = MyConnector.instance().getTransfersForPlayer(playerId);
         final List<PlayerTransfer> transferList = new Vector<>();
+        if (StringUtils.isEmpty(xml)) {
+            return transferList;
+        }
 
         final Document doc = XMLManager.parseString(xml);
+        if (doc == null) {
+            return transferList;
+        }
 
         //get Root element ('HattrickData') :
-        assert doc != null;
         final Element root = doc.getDocumentElement();
 
-        // Get tranfer info
+        // Get transfer info
         final NodeList containers = root.getElementsByTagName("Transfers"); //$NON-NLS-1$
 
         for (int cont = 0; cont < containers.getLength(); cont++) {
@@ -60,7 +67,7 @@ public final class XMLParser {
 
                 // Get the player info
                 final Element playerElement = (Element) container.getElementsByTagName("Player").item(0); //$NON-NLS-1$
-                final int playerid = XMLManager.xmlIntValue(playerElement, "PlayerID"); //$NON-NLS-1$
+                playerId = XMLManager.xmlIntValue(playerElement, "PlayerID"); //$NON-NLS-1$
                 final String playerName = XMLManager.xmlValue(playerElement, "PlayerName"); //$NON-NLS-1$
 
                 // Get the player transfers
@@ -71,33 +78,33 @@ public final class XMLParser {
 
                     if (transfer != null) {
                         final int transferid = XMLManager.xmlIntValue(transfer, "TransferID"); //$NON-NLS-1$
-                        final PlayerTransfer playerTranfer = new PlayerTransfer(transferid, playerid);
-                        playerTranfer.setPlayerName(playerName);
+                        final PlayerTransfer playerTransfer = new PlayerTransfer(transferid, playerId);
+                        playerTransfer.setPlayerName(playerName);
 
                         final String deadline = XMLManager.xmlValue(transfer, "Deadline");
 
                         HODateTime transferDate = HODateTime.fromHT(deadline);
-                        playerTranfer.setDate(transferDate);
+                        playerTransfer.setDate(transferDate);
 
                         var htweek = transferDate.toLocaleHTWeek();
-                        playerTranfer.setSeason(htweek.season);
-                        playerTranfer.setWeek(htweek.week);
+                        playerTransfer.setSeason(htweek.season);
+                        playerTransfer.setWeek(htweek.week);
 
                         final Element buyer = (Element) transfer.getElementsByTagName("Buyer").item(0); //$NON-NLS-1$
                         final Element seller = (Element) transfer.getElementsByTagName("Seller").item(0); //$NON-NLS-1$
 
                         if ((buyer != null) && (seller != null)) {
                             // Get the buyer info
-                            playerTranfer.setBuyerid(XMLManager.xmlIntValue(buyer, "BuyerTeamID")); //$NON-NLS-1$
-                            playerTranfer.setBuyerName(XMLManager.xmlValue(buyer, "BuyerTeamName")); //$NON-NLS-1$
+                            playerTransfer.setBuyerid(XMLManager.xmlIntValue(buyer, "BuyerTeamID")); //$NON-NLS-1$
+                            playerTransfer.setBuyerName(XMLManager.xmlValue(buyer, "BuyerTeamName")); //$NON-NLS-1$
                             // Get the seller info
-                            playerTranfer.setSellerid(XMLManager.xmlIntValue(seller, "SellerTeamID")); //$NON-NLS-1$
-                            playerTranfer.setSellerName(XMLManager.xmlValue(seller, "SellerTeamName")); //$NON-NLS-1$
+                            playerTransfer.setSellerid(XMLManager.xmlIntValue(seller, "SellerTeamID")); //$NON-NLS-1$
+                            playerTransfer.setSellerName(XMLManager.xmlValue(seller, "SellerTeamName")); //$NON-NLS-1$
 
-                            playerTranfer.setPrice(XMLManager.xmlIntValue(transfer, "Price")); //$NON-NLS-1$
-                            playerTranfer.setTsi(XMLManager.xmlIntValue(transfer, "TSI")); //$NON-NLS-1$
+                            playerTransfer.setPrice(XMLManager.xmlIntValue(transfer, "Price")); //$NON-NLS-1$
+                            playerTransfer.setTsi(XMLManager.xmlIntValue(transfer, "TSI")); //$NON-NLS-1$
                         }
-                        transferList.add(playerTranfer);
+                        transferList.add(playerTransfer);
                     }
                 }
             } catch (Exception ignored) {

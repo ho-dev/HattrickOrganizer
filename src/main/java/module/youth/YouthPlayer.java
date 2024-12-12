@@ -492,8 +492,8 @@ public class YouthPlayer extends AbstractTable.Storable {
     private void checkIfSkillsAreKeeperSkills(YouthSkillsInfo skills) {
         var keeper = skills.areKeeperSkills();
         if (keeper != null) {
-            skills.setPlayerMaxSkills(keeper);
-            this.currentSkills.setPlayerMaxSkills(keeper);
+            skills.setPlayerMaxSkillRanges(keeper);
+            this.currentSkills.setPlayerMaxSkillRanges(keeper);
         }
     }
 
