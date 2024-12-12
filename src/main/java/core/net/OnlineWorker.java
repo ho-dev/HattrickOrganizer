@@ -212,8 +212,7 @@ public class OnlineWorker {
 
 	private static Matchdetails downloadMatchDetails(SourceSystem sourceSystem, int matchId) {
 		var matchDetails = MyConnector.instance().downloadMatchDetails(sourceSystem.to_string(), matchId);
-		if (matchDetails.isEmpty()) {
-			HOLogger.instance().warning(OnlineWorker.class, "Unable to fetch details for match " + matchId);
+		if (downloadOfMatchDetailsFailed(matchDetails, matchId)) {
 			return null;
 		}
 		return XMLMatchdetailsParser.parseMatchdetailsFromString(matchDetails, null);
@@ -816,15 +815,14 @@ public class OnlineWorker {
 
 		try {
 			matchDetails = MyConnector.instance().downloadMatchdetails(matchID, matchType);
-			if (matchDetails.isEmpty()) {
-				HOLogger.instance().warning(OnlineWorker.class, "Unable to fetch details for match " + matchID);
+			if (downloadOfMatchDetailsFailed(matchDetails, matchID)) {
 				return null;
 			}
 			HOMainFrame.instance().setWaitInformation();
 			details = XMLMatchdetailsParser.parseMatchdetailsFromString(matchDetails, lineup);
 			HOMainFrame.instance().setWaitInformation();
 			if (details == null) {
-				HOLogger.instance().warning(OnlineWorker.class, "Unable to fetch details for match " + matchID);
+				HOLogger.instance().warning(OnlineWorker.class, "Error parsing match details for match " + matchID);
 				return null;
 			}
 			String arenaString = MyConnector.instance().downloadArena(details.getArenaID());
@@ -838,6 +836,14 @@ public class OnlineWorker {
 			return null;
 		}
 		return details;
+	}
+
+	private static boolean downloadOfMatchDetailsFailed(String matchDetails, int matchID) {
+		if (matchDetails == null || matchDetails.isEmpty()) {
+			HOLogger.instance().warning(OnlineWorker.class, "Unable to download details for match " + matchID);
+			return true;
+		}
+		return false;
 	}
 
 	public static MatchLineup downloadMatchLineup(int matchID, int teamID, MatchType matchType) {
