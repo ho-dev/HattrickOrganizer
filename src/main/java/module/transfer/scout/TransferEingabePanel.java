@@ -72,7 +72,6 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
     private final JButton jbAddTempSpieler = new JButton(TranslationFacility.tr("AddTempspieler"));
     private final JButton jbRemove = new JButton(TranslationFacility.tr("ScoutEntfernen"));
     private final JButton jbAdd = new JButton(TranslationFacility.tr("ls.button.add"));
-    private final JButton jbMiniScout = new JButton(TranslationFacility.tr("ScoutMini"));
     private final JButton jbApply = new JButton(TranslationFacility.tr("ls.button.apply"));
     private final JButton jbRemoveAll = new JButton(TranslationFacility.tr("Scout.RemoveAll"));
     private final JComboBox jcbExperience = new JComboBox(PlayerAbility.ITEMS);
@@ -217,8 +216,6 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
                 clOwner.addScoutEintrag(clScoutEntry);
             } else if (actionEvent.getSource().equals(jbRemove)) {
                 clOwner.removeScoutEintrag(clScoutEntry);
-            } else if (actionEvent.getSource().equals(jbMiniScout)) {
-                new MiniScoutDialog(this);
             }
         }
         checkFields();
@@ -879,9 +876,6 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
 		jbRemoveAll.addActionListener(this);
 		jbRemoveAll.setToolTipText(TranslationFacility.tr("Scout.tt_RemoveAll"));
 		panel.add(jbRemoveAll);
-        jbMiniScout.setToolTipText(TranslationFacility.tr("tt_Transferscout_Miniscout"));
-        jbMiniScout.addActionListener(this);
-        panel.add(jbMiniScout);
         jbAddTempSpieler.setToolTipText(TranslationFacility.tr("tt_add_tempspieler"));
         jbAddTempSpieler.addActionListener(this);
         panel.add(jbAddTempSpieler);

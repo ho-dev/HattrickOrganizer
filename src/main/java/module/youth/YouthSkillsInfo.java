@@ -41,7 +41,7 @@ public class YouthSkillsInfo extends HashMap<PlayerSkill, YouthSkillInfo> {
      * @param isKeeper true, keeper maximums are set
      *                 false, field player maximum is set
      */
-    public void setPlayerMaxSkills(boolean isKeeper) {
+    public void setPlayerMaxSkillRanges(boolean isKeeper) {
         if (size() == 0) return;
         for (var skill : this.values()) {
             if (skill.getMax() == null || skill.getMax() > 4) {
@@ -51,17 +51,17 @@ public class YouthSkillsInfo extends HashMap<PlayerSkill, YouthSkillInfo> {
                     case PASSING:
                     case SCORING:
                         if (isKeeper) {
-                            skill.setMax(4);
+                            skill.setMaxLevelLimit(4);
                         }
                         break;
                     case DEFENDING:
                         if ( isKeeper && (skill.getMax() == null || skill.getMax() > 6)){
-                            skill.setMax(6);
+                            skill.setMaxLevelLimit(6);
                         }
                         break;
                     case KEEPER:
                         if (!isKeeper) {
-                            skill.setMax(4);
+                            skill.setMaxLevelLimit(4);
                         }
                         break;
                 }

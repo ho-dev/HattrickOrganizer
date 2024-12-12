@@ -30,8 +30,9 @@ public class YouthSkillInfoColumn extends JLabel implements IHOTableEntry {
             Color.green
     };
 
-    private Color getSkillRating(Integer maxSkill){
-        if (  maxSkill != null ) return cellSkillRatingColor[Math.max(0,maxSkill-4)];
+    private Color getSkillRating(YouthSkillInfo skillInfo){
+        if (skillInfo.getMax() != null) return cellSkillRatingColor[Math.max(0,skillInfo.getMax()-4)];
+        if (skillInfo.getMaximumPotential() < 6) return cellSkillRatingColor[Math.max(0,skillInfo.getMaximumPotential()-4)];
         return Color.white;
     }
 
@@ -58,7 +59,7 @@ public class YouthSkillInfoColumn extends JLabel implements IHOTableEntry {
 
     @Override
     public JComponent getComponent(boolean isSelected) {
-        setBackground(getSkillRating(skillInfo.getMax()));
+        setBackground(getSkillRating(skillInfo));
         return this;
     }
 
@@ -82,7 +83,7 @@ public class YouthSkillInfoColumn extends JLabel implements IHOTableEntry {
 
     @Override
     public void createComponent() {
-        this.setBackground(getSkillRating(this.skillInfo.getMax()));
+        this.setBackground(getSkillRating(skillInfo));
     }
 
     @Override
@@ -93,7 +94,7 @@ public class YouthSkillInfoColumn extends JLabel implements IHOTableEntry {
         int style = (this.skillInfo.isTop3() != null && this.skillInfo.isTop3()) ? Font.BOLD : Font.PLAIN;
         this.setFont(getFont().deriveFont(style));
         this.setOpaque(true);
-        this.setBackground(getSkillRating(this.skillInfo.getMax()));
+        this.setBackground(getSkillRating(skillInfo));
         repaint();
     }
 
@@ -112,8 +113,8 @@ public class YouthSkillInfoColumn extends JLabel implements IHOTableEntry {
         var xStart = this.skillInfo.getStartLevel();
         if (xStart != null) xStart*=10;
         else xStart = 0;
-        var xEnd = this.skillInfo.getMax();
-        if (xEnd != null && xEnd < 8) xEnd = 10 * xEnd + 9;
+        var xEnd = this.skillInfo.getMaximumPotential();
+        if (xEnd < 8) xEnd = 10 * xEnd + 9;
         else xEnd = 83;
         g.fillRect(xStart, 0, xEnd-xStart, bar_thickness);
 
