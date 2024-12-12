@@ -10,7 +10,7 @@ import java.awt.*;
 /**
  * Renderer for the rating table cells
  * 
- * @see hoplugins.teamAnalyzer.ui.RatingPanel
+ * @see module.teamAnalyzer.ui.RatingPanel
  * 
  * @author flattermann <HO@flattermann.net>
  *

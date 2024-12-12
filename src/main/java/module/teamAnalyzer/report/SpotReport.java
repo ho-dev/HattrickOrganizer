@@ -28,7 +28,7 @@ public class SpotReport extends Report {
     /**
      * Creates a new SpotReport object.
      *
-     * @param pp
+     * @param pp PlayerPerformance
      */
     public SpotReport(PlayerPerformance pp) {
         super(pp);

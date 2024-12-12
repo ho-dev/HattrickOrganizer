@@ -422,12 +422,6 @@ public class FilterPanel extends JPanel {
 		return panel;
 	}
 
-	/**
-	 * Convenience method.
-	 * 
-	 * @param key
-	 * @return
-	 */
 	private String getLangStr(String key) {
 		return TranslationFacility.tr(key);
 	}

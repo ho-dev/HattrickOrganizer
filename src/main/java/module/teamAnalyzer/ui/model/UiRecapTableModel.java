@@ -44,9 +44,8 @@ public class UiRecapTableModel extends BaseTableModel {
     /**
      * Returns the column class type
      *
-     * @param column
-     *
-     * @return
+     * @param column the column
+     * @return the class type
      */
     @Override
 	public Class<?> getColumnClass(int column) {

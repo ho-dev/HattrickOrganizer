@@ -44,10 +44,9 @@ public class UiFilterTableModel extends BaseTableModel {
     /**
      * Returns true if the cell is editable
      *
-     * @param row
-     * @param column
-     *
-     * @return
+     * @param row    the row
+     * @param column the column
+     * @return {@code true} when editable, otherwise {@code fase}
      */
     @Override
 	public boolean isCellEditable(int row, int column) {
@@ -67,9 +66,8 @@ public class UiFilterTableModel extends BaseTableModel {
     /**
      * Returns the column class type
      *
-     * @param column
-     *
-     * @return
+     * @param column the column
+     * @return the class type
      */
     @Override
 	public Class<?> getColumnClass(int column) {

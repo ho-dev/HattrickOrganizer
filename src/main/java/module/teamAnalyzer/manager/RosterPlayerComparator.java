@@ -14,14 +14,6 @@ import java.util.Comparator;
 public class RosterPlayerComparator implements Comparator<RosterPlayerData> {
     //~ Methods ------------------------------------------------------------------------------------
 
-    /**
-     * Compare two objects
-     *
-     * @param o1
-     * @param o2
-     *
-     * @return
-     */
     public int compare(RosterPlayerData o1, RosterPlayerData o2) {
         int s1 = o1.getMainPosition();
         int s2 = o2.getMainPosition();
