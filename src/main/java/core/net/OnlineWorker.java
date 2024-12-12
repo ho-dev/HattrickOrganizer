@@ -838,9 +838,9 @@ public class OnlineWorker {
 		return details;
 	}
 
-	private static boolean downloadOfMatchDetailsFailed(String matchDetails, int matchID) {
-		if (matchDetails == null || matchDetails.isEmpty()) {
-			HOLogger.instance().warning(OnlineWorker.class, "Unable to download details for match " + matchID);
+	private static boolean downloadOfMatchDetailsFailed(String matchDetails, int matchId) {
+		if (StringUtils.isEmpty(matchDetails)) {
+			HOLogger.instance().warning(OnlineWorker.class, "Unable to download details for match " + matchId);
 			return true;
 		}
 		return false;
