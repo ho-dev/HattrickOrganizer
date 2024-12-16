@@ -9,8 +9,7 @@ package core.file.xml;
 import core.model.series.Paarung;
 import core.util.HODateTime;
 import core.util.HOLogger;
-import core.util.Helper;
-import module.series.Spielplan;
+import module.series.MatchFixtures;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -28,8 +27,8 @@ public class XMLSpielplanParser {
 	private XMLSpielplanParser() {
 	}
 
-	public static Spielplan parseSpielplanFromString(String input) {
-		Spielplan plan;
+	public static MatchFixtures parseSpielplanFromString(String input) {
+		MatchFixtures plan;
 		try {
 			plan = createSpielplan(XMLManager.parseString(input));
 		} catch (RuntimeException e) {
@@ -70,8 +69,8 @@ public class XMLSpielplanParser {
 		return spiel;
 	}
 
-	private static Spielplan createSpielplan(Document doc) {
-		Spielplan plan = new Spielplan();
+	private static MatchFixtures createSpielplan(Document doc) {
+		MatchFixtures plan = new MatchFixtures();
 		Element ele;
 		Element root;
 		NodeList list;
@@ -103,7 +102,7 @@ public class XMLSpielplanParser {
 			// Einträge adden
 			list = root.getElementsByTagName("Match");
 
-			for (int i = 0; (list != null) && (i < list.getLength()); i++) {
+			for (int i = 0; i < list.getLength(); i++) {
 				plan.addEintrag(createPaarung((Element) list.item(i)));
 			}
 		} catch (Exception e) {

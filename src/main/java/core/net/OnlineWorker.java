@@ -25,7 +25,7 @@ import core.util.Helper;
 import core.util.StringUtils;
 import module.lineup.Lineup;
 import module.nthrf.NtTeamDetails;
-import module.series.Spielplan;
+import module.series.MatchFixtures;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -689,7 +689,7 @@ public class OnlineWorker {
 	 *
 	 * @return true on sucess, false on failure
 	 */
-	public static Spielplan downloadLeagueFixtures(int season, int leagueID) {
+	public static MatchFixtures downloadLeagueFixtures(int season, int leagueID) {
 		String leagueFixtures;
 		try {
 			HOMainFrame.instance().setWaitInformation();

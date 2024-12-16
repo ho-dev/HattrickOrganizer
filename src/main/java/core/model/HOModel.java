@@ -20,7 +20,7 @@ import core.model.series.Liga;
 import core.training.TrainingManager;
 import core.util.HOLogger;
 import module.lineup.Lineup;
-import module.series.Spielplan;
+import module.series.MatchFixtures;
 import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.ht.HattrickManager;
 import module.teamAnalyzer.manager.PlayerDataManager;
@@ -44,7 +44,7 @@ public class HOModel {
     private Basics basics;
     private Economy economy;
     private Liga liga;
-    private Spielplan spielplan;
+    private MatchFixtures spielplan;
     private Stadium stadium;
     private Team team;
     private static List<Player> oldPlayers;
@@ -389,7 +389,7 @@ public class HOModel {
      *
      * @param m_clSpielplan New value of property m_clSpielplan.
      */
-    public final void setFixtures(Spielplan m_clSpielplan) {
+    public final void setFixtures(MatchFixtures m_clSpielplan) {
         this.spielplan = m_clSpielplan;
     }
 
@@ -400,7 +400,7 @@ public class HOModel {
      *
      * @return Value of property m_clSpielplan.
      */
-    public final Spielplan getFixtures() {
+    public final MatchFixtures getFixtures() {
         if (spielplan == null) {
             spielplan = getPersistenceManager().getLatestSpielplan(); // valid only for the current Model
         }
@@ -617,7 +617,7 @@ public class HOModel {
      *
      * @param fixtures Spielplan
      */
-    public final synchronized void saveFixtures(Spielplan fixtures) {
+    public final synchronized void saveFixtures(MatchFixtures fixtures) {
         setFixtures(fixtures);
         if (spielplan != null)
             DBManager.instance().storeSpielplan(spielplan);

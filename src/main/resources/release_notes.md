@@ -18,11 +18,13 @@
 ### Team Analyzer
 * Fix illegal argument exception in team rating panel (#2155)
 * Fix team analyzer match download (#2152)
+* Fix refresh button of the filter panel working only once (#2158) 
 
 ### Player Analysis
 * Fix error in rating compare table (#2153)
 
-### Rating
+### Series
+* Fix table calculation if teams were replaced during series (#2178)
 
 ### Matches
 
@@ -54,14 +56,14 @@
 
 ## Translations
 
-Reports by Contributors - June 23, 2024 - November 18, 2024
+Reports by Contributors - June 23, 2024 - December 01, 2024
 
-* Kristaps 276
+* Kristaps 278
 * Tavaro 175
 * Lidegang 143
-* wsbrenk 58
+* wsbrenk 60
 * Sebastian Reddig 12
 * Achilles 10
 * Billy Dikkanen 10
 
-Total 684
+Total 688
