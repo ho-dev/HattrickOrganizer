@@ -22,7 +22,8 @@
 ### Player Analysis
 * Fix error in rating compare table (#2153)
 
-### Rating
+### Series
+* Fix table calculation if teams were replaced during series (#2178)
 
 ### Matches
 
