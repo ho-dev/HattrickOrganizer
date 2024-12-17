@@ -57,11 +57,7 @@ public class UiFilterTableModel extends BaseTableModel {
 
         String available = (String) getValueAt(row, 6);
 
-        if (available.equalsIgnoreCase("true")) {
-            return true;
-        }
-
-        return false;
+        return available.equalsIgnoreCase("true");
     }
 
     /**

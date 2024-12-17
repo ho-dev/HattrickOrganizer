@@ -135,11 +135,7 @@ public class LanguageTableModel extends AbstractTableModel implements TableModel
 
 	@Override
 	public boolean isCellEditable(int rowIndex, int columnIndex) {
-		if((this.isDestinationFile) && (columnIndex == 1) && (rowIndex > 1)) {
-			return true;
-		} else {
-			return false;
-		}
+        return (this.isDestinationFile) && (columnIndex == 1) && (rowIndex > 1);
 	}
 	
 	/* (non-Javadoc)

@@ -44,11 +44,7 @@ public class ManualFilterTableRenderer extends DefaultTableCellRenderer {
 			setBackground(ThemeManager.getColor(HOColorName.TABLE_SELECTION_BG));
 		}
 
-		if (!available.equalsIgnoreCase("true")) {
-			setEnabled(false);
-		} else {
-			setEnabled(true);
-		}
+        setEnabled(available.equalsIgnoreCase("true"));
 		
 		if (value instanceof ImageIcon) {
 			setIcon(ThemeManager.getIcon(HOIconName.MATCHICONS[type.getIconArrayIndex()]));

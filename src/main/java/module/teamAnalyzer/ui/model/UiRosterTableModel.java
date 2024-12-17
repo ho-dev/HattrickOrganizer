@@ -49,11 +49,7 @@ public class UiRosterTableModel extends BaseTableModel {
      */
     @Override
 	public boolean isCellEditable(int row, int column) {
-        if ((column > 4) && (column < 9)) {
-            return true;
-        }
-
-        return false;
+        return (column > 4) && (column < 9);
     }
 
     /**
