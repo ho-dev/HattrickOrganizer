@@ -129,7 +129,7 @@ public class HrfTableCellRenderer extends JLabel implements TableCellRenderer
 		{
 			label = new JLabel();
 		}
-		if(value.getClass().equals(ImageIcon.class) == false)
+		if(!value.getClass().equals(ImageIcon.class))
 		{
 			label.setText(value.toString());
 			label.setFont(table.getFont());

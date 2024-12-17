@@ -80,7 +80,7 @@ final class SpielerSternePanel extends ImagePanel implements ActionListener {
 	protected final void clear() {
 
 		// We want empty frames in the on field positions hidden when empty
-		if ((m_bOnScreen == true)
+		if ((m_bOnScreen)
 				&& ((m_iPositionsID >= IMatchRoleID.startLineup) && (m_iPositionsID < IMatchRoleID.startReserves))) {
 			removePanel();
 		}
@@ -185,7 +185,7 @@ final class SpielerSternePanel extends ImagePanel implements ActionListener {
 		if (player != null) {
 
 			// Make sure this is on screen, we got a player to display
-			if (m_bOnScreen == false) {
+			if (!m_bOnScreen) {
 				addPanel();
 			}
 

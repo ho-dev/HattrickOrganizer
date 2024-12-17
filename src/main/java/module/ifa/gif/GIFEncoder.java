@@ -75,7 +75,7 @@ public class GIFEncoder {
 	    image, 0, 0, width_, height_, values, 0, width_);
 	
 	try {
-	    if(grabber.grabPixels() != true)
+	    if(!grabber.grabPixels())
 		throw new AWTException("Grabber returned false: " +
 				       grabber.status());
 	}

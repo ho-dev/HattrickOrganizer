@@ -42,7 +42,7 @@ public class HomegrownEntry extends AbstractHOTableEntry{
 			if ((entry.getPlayer() != null) && (getPlayer() != null)) {
 
 				if (entry.getPlayer().isHomeGrown() != getPlayer().isHomeGrown()) {
-					if (getPlayer().isHomeGrown() == true) {
+					if (getPlayer().isHomeGrown()) {
 						return 1;
 					} else {
 						return -1;
