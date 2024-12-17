@@ -38,7 +38,7 @@ public class PositionReport extends Report {
     /**
      * Add a performance to the report, and updated the tactic list
      *
-     * @param pp
+     * @param pp PlayerPerformance
      */
     @Override
 	public void addPerformance(PlayerPerformance pp) {
@@ -66,7 +66,7 @@ public class PositionReport extends Report {
      * Update the tactic detail list with the new performance Gets the tactic report for the tactic
      * position (offensive mid, def midfielder etc), and add the new performance
      *
-     * @param pp
+     * @param pp PlayerPerformance
      */
     private void updateTacticDetails(PlayerPerformance pp) {
         TacticReport report = (TacticReport) tacticReports.get("" + pp.getPosition());

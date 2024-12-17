@@ -176,9 +176,6 @@ public class ConnTest {
         return ip;
     }
 
-	/**
-	 * @param args
-	 */
 	public static void main(String[] args) {
 		new ConnTest();
 	}

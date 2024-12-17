@@ -78,10 +78,6 @@ public class LanguageTableModel extends AbstractTableModel implements TableModel
 		this.data = map;
 	}
 
-	/**
-	 * Constructor to create a table model for the given language name
-	 * @param languageName
-	 */
 	public LanguageTableModel(String languageName) {
 		this();
 		this.isDestinationFile = true;

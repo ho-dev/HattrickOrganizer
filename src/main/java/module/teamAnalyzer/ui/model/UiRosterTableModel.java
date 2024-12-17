@@ -56,10 +56,6 @@ public class UiRosterTableModel extends BaseTableModel {
         return false;
     }
 
-    /**
-     * Returns the column class type
-     */
-
     /*public Class getColumnClass(int column) {
        if (column > 9) {
            return JComponent.class;

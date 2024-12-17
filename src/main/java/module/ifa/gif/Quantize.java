@@ -597,7 +597,7 @@ public class Quantize {
             /**
              * Remove any nodes that have fewer than threshold
              * pixels. Also, as long as we're walking the tree:
-             *
+             * <p>
              *  - figure out the color with the fewest pixels
              *  - recalculate the total number of colors in the tree
              */

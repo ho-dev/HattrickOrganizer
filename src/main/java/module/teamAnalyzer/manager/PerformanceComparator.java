@@ -14,14 +14,6 @@ import java.util.Comparator;
 class PerformanceComparator implements Comparator<TacticReport> {
     //~ Methods ------------------------------------------------------------------------------------
 
-    /**
-     * Compare two objects
-     *
-     * @param o1
-     * @param o2
-     *
-     * @return
-     */
     public int compare(TacticReport o1, TacticReport o2) {
         int s1 = o1.getAppearance();
         int s2 = o2.getAppearance();

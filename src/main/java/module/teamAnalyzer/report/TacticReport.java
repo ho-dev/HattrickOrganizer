@@ -20,7 +20,7 @@ public class TacticReport extends Report {
     /**
      * Creates a new TacticReport object.
      *
-     * @param pp
+     * @param pp PlayerPerformance
      */
     public TacticReport(PlayerPerformance pp) {
         super(pp);

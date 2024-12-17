@@ -12,7 +12,7 @@ import java.nio.charset.StandardCharsets;
 /**
  * Simple converter to convert an language file for the use in HO. Input must be
  * UTF-16 encoded, the output will be ASCII with Unicode notation.
- * 
+ * <p>
  * Note: the Oracle JDK contains a generic tool already, example call:
  * C:\Java\jdk6\bin\native2ascii -encoding utf-16 Hebrew.utf16.properties Hebrew.properties
  */
