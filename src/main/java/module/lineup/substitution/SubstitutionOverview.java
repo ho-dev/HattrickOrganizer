@@ -398,7 +398,7 @@ public class SubstitutionOverview extends JPanel {
 	 * listed.
 	 *
 	 */
-	private class SubstitutionsTableModel extends AbstractTableModel {
+	private static class SubstitutionsTableModel extends AbstractTableModel {
 
 		public static final int WARNING_COL_IDX = 0;
 		public static final int ORDERTYPE_COL_IDX = 1;
