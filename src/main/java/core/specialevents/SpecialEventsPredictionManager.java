@@ -238,7 +238,7 @@ public class SpecialEventsPredictionManager {
                     PlayerInfo latestPlayerInfo = PlayerDataManager.getLatestPlayerInfo(playerPerformance.getSpielerId());
                     int age = latestPlayerInfo.getAge();
                     int wage = latestPlayerInfo.getSalary();
-                    int tsi = latestPlayerInfo.getTSI();
+                    int tsi = latestPlayerInfo.getTsi();
                     double form = latestPlayerInfo.getForm();
                     double stamina = latestPlayerInfo.getStamina();
                     int spec = latestPlayerInfo.getSpecialEvent();
@@ -246,7 +246,7 @@ public class SpecialEventsPredictionManager {
                     player = oppPlayerSkillEstimator.calcPlayer(age, wage, tsi, form, stamina, spec, role, -1);
                     player.setPlayerId(playerPerformance.getSpielerId());
                     player.setLastName(playerPerformance.getSpielerName());
-                    player.setHomeGrown(latestPlayerInfo.getMotherClubBonus());
+                    player.setHomeGrown(latestPlayerInfo.isMotherClubBonus());
                     player.setLoyalty(latestPlayerInfo.getLoyalty());
                     player.setExperience(latestPlayerInfo.getExperience());
                     player.setAge(age);

@@ -129,10 +129,10 @@ public class HattrickManager {
         for (var player : players) {
             squadInfo.incrementPlayerCount();
             if (player.isTransferListed()) squadInfo.incrementTransferListedCount();
-            if (player.getMotherClubBonus()) squadInfo.incrementHomegrownCount();
+            if (player.isMotherClubBonus()) squadInfo.incrementHomegrownCount();
 
             squadInfo.addSalary(player.getSalary());
-            squadInfo.addTsi(player.getTSI());
+            squadInfo.addTsi(player.getTsi());
             var injuryLevel = player.getInjuryLevel();
             switch (injuryLevel) {
                 case 0:

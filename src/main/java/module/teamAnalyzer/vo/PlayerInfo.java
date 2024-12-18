@@ -4,11 +4,15 @@ import core.db.AbstractTable;
 import core.file.xml.SafeInsertMap;
 import core.util.HODateTime;
 import core.util.HOLogger;
+import lombok.Getter;
+import lombok.Setter;
 import module.teamAnalyzer.manager.PlayerDataManager;
 
 import static module.lineup.substitution.LanguageStringLookup.getPosition;
 
+@Getter
 public class PlayerInfo extends AbstractTable.Storable {
+
     private int injuryLevel;
     private HODateTime lastMatchDate = null;
     private int lastMatchId;
@@ -17,22 +21,36 @@ public class PlayerInfo extends AbstractTable.Storable {
     private float lastMatchRatingEndOfGame;
     private float rating;
     //~ Instance fields ----------------------------------------------------------------------------
+    @Setter
     String name = "";
+    //~ Methods ------------------------------------------------------------------------------------
+    @Setter
     int age;
+    @Setter
     int experience;
+    @Setter
     int form;
+    @Setter
     int playerId;
+    @Setter
     int specialEvent;
     int status;
     int injuryStatus = 0;
     int bookingStatus = 0;
     int transferListedStatus = 0;
-    int tSI;
+    @Setter
+    int tsi;
+    @Setter
     int teamId;
+    @Setter
     int salary; // Money in SEK
+    @Setter
     int stamina;
+    @Setter
     boolean motherClubBonus;
+    @Setter
     int loyalty;
+    @Setter
     private int week;
 
     public PlayerInfo(SafeInsertMap i) {
@@ -53,8 +71,8 @@ public class PlayerInfo extends AbstractTable.Storable {
 
         switch (cards) {
             case 1 -> bookingStatus = PlayerDataManager.YELLOW;
-            case 2 ->  bookingStatus = PlayerDataManager.DOUBLE_YELLOW;
-            case 3 ->  bookingStatus = PlayerDataManager.SUSPENDED;
+            case 2 -> bookingStatus = PlayerDataManager.DOUBLE_YELLOW;
+            case 3 -> bookingStatus = PlayerDataManager.SUSPENDED;
             default -> bookingStatus = 0;
         }
 
@@ -64,19 +82,17 @@ public class PlayerInfo extends AbstractTable.Storable {
             default -> injuryStatus = PlayerDataManager.INJURED;
         }
 
-        if(parseBooleanWithDefault(i.get("TransferListed"), false)) {
+        if (parseBooleanWithDefault(i.get("TransferListed"), false)) {
             transferListedStatus = PlayerDataManager.TRANSFER_LISTED;
-        }
-        else{
+        } else {
             transferListedStatus = 0;
         }
 
         this.status = injuryStatus + 10 * bookingStatus + 100 * transferListedStatus;
-//        HOLogger.instance().debug(this.getClass(), this.name + ":" + i );
 
 
         this.teamId = Integer.parseInt(i.get("TeamID"));
-        this.tSI = Integer.parseInt(i.get("MarketValue"));
+        this.tsi = Integer.parseInt(i.get("MarketValue"));
         this.lastMatchDate = HODateTime.fromHT(i.get("LastMatch_Date"));
         this.rating = Float.parseFloat(i.get("LastMatch_Rating"));
         this.lastMatchId = Integer.parseInt(i.get("LastMatch_id"));
@@ -88,80 +104,21 @@ public class PlayerInfo extends AbstractTable.Storable {
     private int parseIntWithDefault(String s, int i) {
         try {
             return Integer.parseInt(s);
+        } catch (NumberFormatException ignored) {
         }
-        catch (NumberFormatException ignored){}
         return i;
     }
 
     private boolean parseBooleanWithDefault(String s, boolean res) {
         try {
             return Boolean.parseBoolean(s);
-        }
-        catch (NumberFormatException e){
+        } catch (NumberFormatException e) {
             HOLogger.instance().error(this.getClass(), res + " could not be recognized as a valid boolean");
         }
         return res;
     }
 
     public PlayerInfo() {
-
-    }
-
-    public int getInjuryLevel(){
-        return injuryLevel;
-    }
-
-    public int getBookingStatus(){
-        return bookingStatus;
-    }
-
-    //~ Methods ------------------------------------------------------------------------------------
-    public void setAge(int i) {
-        age = i;
-    }
-
-    public int getAge() {
-        return age;
-    }
-
-    public void setExperience(int i) {
-        experience = i;
-    }
-
-    public int getExperience() {
-        return experience;
-    }
-
-    public void setForm(int i) {
-        form = i;
-    }
-
-    public int getForm() {
-        return form;
-    }
-
-    public void setName(String string) {
-        name = string;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setPlayerId(int i) {
-        playerId = i;
-    }
-
-    public int getPlayerId() {
-        return playerId;
-    }
-
-    public void setSpecialEvent(int i) {
-        specialEvent = i;
-    }
-
-    public int getSpecialEvent() {
-        return specialEvent;
     }
 
     public void setStatus(int i) {
@@ -169,68 +126,14 @@ public class PlayerInfo extends AbstractTable.Storable {
 
         int digit = i % 10;
         this.injuryStatus = digit;
-        i = i/10;
+        i = i / 10;
 
         digit = i % 10;
         this.bookingStatus = digit;
-        i = i/10;
+        i = i / 10;
 
         digit = i % 10;
-        this.transferListedStatus= digit;
-
-
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setTSI(int i) {
-        tSI = i;
-    }
-
-    public int getTSI() {
-        return tSI;
-    }
-
-    public void setTeamId(int i) {
-        teamId = i;
-    }
-
-    public int getTeamId() {
-        return teamId;
-    }
-
-    public void setSalary(int salary) {
-        this.salary = salary;
-    }
-
-    public int getSalary() {
-        return salary;
-    }
-
-    public void setStamina(int stamina) {
-        this.stamina = stamina;
-    }
-
-    public int getStamina() {
-        return this.stamina;
-    }
-
-    public void setMotherClubBonus(boolean bonus) {
-        this.motherClubBonus = bonus;
-    }
-
-    public boolean getMotherClubBonus() {
-        return this.motherClubBonus;
-    }
-
-    public void setLoyalty(int loyalty) {
-        this.loyalty = loyalty;
-    }
-
-    public int getLoyalty() {
-        return this.loyalty;
+        this.transferListedStatus = digit;
     }
 
     /**
@@ -251,23 +154,7 @@ public class PlayerInfo extends AbstractTable.Storable {
                 ", loyalty=" + loyalty;
     }
 
-    public HODateTime getLastMatchDate() {
-        return lastMatchDate;
-    }
-
-    public float getRating() {
-        return rating;
-    }
-
-    public int getWeek() {
-        return week;
-    }
-
-    public void setWeek(int week) {
-        this.week = week;
-    }
-
-    public boolean isTransferListed(){
+    public boolean isTransferListed() {
         return transferListedStatus != 0;
     }
 }

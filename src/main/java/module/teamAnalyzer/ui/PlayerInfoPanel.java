@@ -34,7 +34,7 @@ public class PlayerInfoPanel extends JPanel {
 	public void setValue(PlayerInfo oldPlayer) {
 		clearData();
 		expLabel.setText(PlayerAbility.getNameForSkill(oldPlayer.getExperience(), false));
-		tsiLabel.setText("" + oldPlayer.getTSI());
+		tsiLabel.setText("" + oldPlayer.getTsi());
 		ageLabel.setText("" + oldPlayer.getAge());
 		formLabel.setText(PlayerAbility.getNameForSkill(oldPlayer.getForm(), false));
 
