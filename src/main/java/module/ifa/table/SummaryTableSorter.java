@@ -35,7 +35,7 @@ public class SummaryTableSorter<M extends TableModel> extends TableRowSorter<M> 
 	}
 
 	@SuppressWarnings("hiding")
-	class SummaryModelWrapper<M extends TableModel> extends DefaultRowSorter.ModelWrapper<M, Integer> {
+    static class SummaryModelWrapper<M extends TableModel> extends DefaultRowSorter.ModelWrapper<M, Integer> {
 		private DefaultRowSorter.ModelWrapper<M, Integer> delegate;
 
 		public SummaryModelWrapper(DefaultRowSorter.ModelWrapper<M, Integer> delegate) {

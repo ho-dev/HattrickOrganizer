@@ -486,7 +486,7 @@ public class FilterPanel extends JPanel {
 		comboBox.setSelectedItem(item);
 	}
 
-	private class ComboBoxRenderer extends JLabel implements ListCellRenderer {
+	private static class ComboBoxRenderer extends JLabel implements ListCellRenderer {
 
 		private static final long serialVersionUID = 1148438406134827829L;
 		private final ListCellRenderer delegate;
