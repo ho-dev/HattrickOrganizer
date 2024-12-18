@@ -17,6 +17,7 @@
 
 ### Team Analyzer
 * Fix illegal argument exception in team rating panel (#2155)
+* Fix team analyzer match download (#2152)
 * Fix refresh button of the filter panel working only once (#2158) 
 
 ### Player Analysis

@@ -194,6 +194,30 @@ public class OnlineWorker {
 		return allMatches;
 	}
 
+	public static boolean downloadMatchData(int matchId, SourceSystem sourceSystem, boolean refresh) {
+		var info = DBManager.instance().loadMatchKurzInfo(sourceSystem, matchId);
+		if (info == null) {
+			var details = OnlineWorker.downloadMatchDetails(sourceSystem, matchId);
+			if (details != null) {
+				info = new MatchKurzInfo();
+				info.setMatchID(details.getMatchID());
+				info.setMatchType(details.getMatchType());
+			}
+			else {
+				return false;
+			}
+		}
+		return downloadMatchData(info, refresh);
+	}
+
+	private static Matchdetails downloadMatchDetails(SourceSystem sourceSystem, int matchId) {
+		var matchDetails = MyConnector.instance().downloadMatchDetails(sourceSystem.to_string(), matchId);
+		if (downloadOfMatchDetailsFailed(matchDetails, matchId)) {
+			return null;
+		}
+		return XMLMatchdetailsParser.parseMatchdetailsFromString(matchDetails, null);
+	}
+
 	/**
 	 * Downloads a match with the given criteria and stores it in the database.
 	 * If a match is already in the db, and refresh is false, nothing is
@@ -273,6 +297,7 @@ public class OnlineWorker {
 						info.setGuestTeamID(details.getGuestTeamId());
 						info.setArenaId(details.getArenaID());
 						info.setMatchSchedule(details.getMatchDate());
+						info.setMatchType(details.getMatchType());
 						int wetterId = details.getWetterId();
 						if (wetterId != -1) {
 							info.setMatchStatus(MatchKurzInfo.FINISHED);
@@ -302,21 +327,28 @@ public class OnlineWorker {
 							}
 						}
 
-						// get the other team
-						int otherId;
-						if (info.isHomeMatch()) {
-							otherId = info.getGuestTeamID();
+						if (info.getHomeTeamID() > 0) {
+							int guestRegionId;
+							if (info.isAwayMatch()) {
+								guestRegionId = HOVerwaltung.instance().getModel().getBasics().getRegionId();
+							} else {
+								var guestTeamInfo = getTeam(info.getGuestTeamID());
+								guestRegionId = getRegionId(guestTeamInfo);
+								downloadTeamLogo(guestTeamInfo);
+							}
+							info.setIsDerby(guestRegionId == info.getRegionId());
+
+							int homeArenaId;
+							if (info.isHomeMatch()) {
+								homeArenaId = HOVerwaltung.instance().getModel().getStadium().getArenaId();
+							} else {
+								var homeTeamInfo = getTeam(info.getHomeTeamID());
+								homeArenaId = getArenaId(homeTeamInfo);
+								downloadTeamLogo(homeTeamInfo);
+							}
+							info.setIsNeutral(info.getArenaId() != homeArenaId);
 						} else {
-							otherId = info.getHomeTeamID();
-						}
-						if (otherId > 0) {
-							Map<String, String> otherTeam = getTeam(otherId);
-							info.setIsDerby(getRegionId(otherTeam) == HOVerwaltung.instance().getModel().getBasics().getRegionId());
-							info.setIsNeutral(info.getArenaId() != HOVerwaltung.instance().getModel().getStadium().getArenaId()
-									&& info.getArenaId() != getArenaId(otherTeam));
-							downloadTeamLogo(otherTeam);
-						} else {
-							// Verlegenheitstruppe 08/15
+							// Negative team ids are Verlegenheitstruppe 08/15
 							info.setIsDerby(false);
 							info.setIsNeutral(false);
 						}
@@ -325,10 +357,10 @@ public class OnlineWorker {
 
 				MatchLineup lineup;
 				boolean success;
-				if ( (info.getMatchStatus() == MatchKurzInfo.FINISHED) && (!info.isObsolet())) {
+				if ((info.getMatchStatus() == MatchKurzInfo.FINISHED) && (!info.isObsolet())) {
 					lineup = downloadMatchlineup(matchID, info.getMatchType(), info.getHomeTeamID(), info.getGuestTeamID());
 					if (lineup == null) {
-						if ( !isSilentDownload()) {
+						if (!isSilentDownload()) {
 							String msg = getLangString("Downloadfehler") + " : Error fetching Matchlineup :";
 							// Info
 							setInfoMsg(msg, InfoPanel.FEHLERFARBE);
@@ -358,8 +390,7 @@ public class OnlineWorker {
 					info.setHomeTeamID(lineup.getHomeTeamId());
 					info.setHomeTeamName(lineup.getHomeTeamName());
 					success = DBManager.instance().storeMatch(info, details, lineup);
-				}
-				else{
+				} else {
 					// Update arena and region ids
 					var matches = new ArrayList<MatchKurzInfo>();
 					matches.add(info);
@@ -784,15 +815,14 @@ public class OnlineWorker {
 
 		try {
 			matchDetails = MyConnector.instance().downloadMatchdetails(matchID, matchType);
-			if (matchDetails.isEmpty()) {
-				HOLogger.instance().warning(OnlineWorker.class, "Unable to fetch details for match " + matchID);
+			if (downloadOfMatchDetailsFailed(matchDetails, matchID)) {
 				return null;
 			}
 			HOMainFrame.instance().setWaitInformation();
 			details = XMLMatchdetailsParser.parseMatchdetailsFromString(matchDetails, lineup);
 			HOMainFrame.instance().setWaitInformation();
 			if (details == null) {
-				HOLogger.instance().warning(OnlineWorker.class, "Unable to fetch details for match " + matchID);
+				HOLogger.instance().warning(OnlineWorker.class, "Error parsing match details for match " + matchID);
 				return null;
 			}
 			String arenaString = MyConnector.instance().downloadArena(details.getArenaID());
@@ -806,6 +836,14 @@ public class OnlineWorker {
 			return null;
 		}
 		return details;
+	}
+
+	private static boolean downloadOfMatchDetailsFailed(String matchDetails, int matchId) {
+		if (StringUtils.isEmpty(matchDetails)) {
+			HOLogger.instance().warning(OnlineWorker.class, "Unable to download details for match " + matchId);
+			return true;
+		}
+		return false;
 	}
 
 	public static MatchLineup downloadMatchLineup(int matchID, int teamID, MatchType matchType) {
@@ -1276,4 +1314,5 @@ public class OnlineWorker {
 		}
 		return seriesDetailsCache.get(seriesId);
 	}
+
 }

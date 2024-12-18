@@ -2364,6 +2364,10 @@ public class DBManager implements PersistenceManager {
 		return ((MatchesKurzInfoTable)getTable(MatchesKurzInfoTable.TABLENAME)).getMatchesKurzInfo(teamId, status, from, matchTypes);
 	}
 
+	public MatchKurzInfo loadMatchKurzInfo(SourceSystem sourceSystem, int matchId) {
+		return ((MatchesKurzInfoTable)getTable(MatchesKurzInfoTable.TABLENAME)).loadMatchesKurzInfo(sourceSystem, matchId);
+	}
+
 	public String loadLatestTSINotInjured(int playerId) {
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME)).loadLatestTSINotInjured(playerId);
 	}
