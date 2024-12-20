@@ -8,7 +8,6 @@ import core.gui.model.UserColumnController.ColumnModelId
 import core.model.player.Player
 import core.util.HODateTime
 import module.playerOverview.SpielerTrainingsVergleichsPanel
-import java.io.Serial
 
 /**
  * Model used to display players in the Squad table.
