@@ -35,13 +35,13 @@ public class LanguageTableModel extends AbstractTableModel implements TableModel
 	private Map<String, String> data;
 	private List<String> keys = new ArrayList<>();
 	private boolean isDestinationFile = false;
-	private String langauageName = "";
+	private String languageName = "";
 	
 	/**
 	 * Default constructor to create an English table model
 	 */
 	public LanguageTableModel() {
-		this.langauageName = "English";
+		this.languageName = "English";
 		
 		LinkedHashMap<String, String> map = new LinkedHashMap<>();
 		
@@ -81,7 +81,7 @@ public class LanguageTableModel extends AbstractTableModel implements TableModel
 	public LanguageTableModel(String languageName) {
 		this();
 		this.isDestinationFile = true;
-		this.langauageName = languageName;
+		this.languageName = languageName;
 		
 		ResourceBundle englishBundle = Translator.loadDefault().getResourceBundle();
 		ResourceBundle destBundle = Translator.load(languageName).getResourceBundle();
@@ -150,7 +150,7 @@ public class LanguageTableModel extends AbstractTableModel implements TableModel
 	 */
 	public void save() {
 		StringBuilder fileName = new StringBuilder("language/");
-		fileName.append(this.langauageName);
+		fileName.append(this.languageName);
 		fileName.append(".properties");
 		URL destinationPath = this.getClass().getClassLoader().getResource(fileName.toString());
 
@@ -170,7 +170,7 @@ public class LanguageTableModel extends AbstractTableModel implements TableModel
 			
 			String message = "Please pass the file " + destinationPath.getPath() + " to a developer who will commit it for you.";
 			JOptionPane.showMessageDialog(new JFrame(), message, "Saved", JOptionPane.INFORMATION_MESSAGE);
-			HOLogger.instance().info(getClass(), "Language file " + langauageName + ".properties saved.");
+			HOLogger.instance().info(getClass(), "Language file " + languageName + ".properties saved.");
 			
 		} catch (IOException ioe) {
 			HOLogger.instance().error(getClass(), ioe.getMessage());
