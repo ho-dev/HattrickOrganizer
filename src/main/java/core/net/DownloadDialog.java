@@ -448,7 +448,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 				if (homodel != null) {
 					var ntTeams = DBManager.instance().loadAllNtTeamDetails();
 					// save the model in the database
-					homodel.saveHRF();
+					homodel.storeModel();
 					// Only update when the model is newer than existing
 					if (HOVerwaltung.isNewModel(homodel)) {
 						hov.setModel(homodel);

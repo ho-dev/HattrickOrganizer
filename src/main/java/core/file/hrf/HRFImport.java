@@ -74,7 +74,7 @@ public class HRFImport {
 						if (storedHrf != null) {
 							DBManager.instance().deleteHRF(storedHrf.getHrfId());
 						}
-						homodel.saveHRF();
+						homodel.storeModel();
 						var training = homodel.getTraining();
 						if ( training != null) {
 							DBManager.instance().saveTraining(training, HODateTime.now());

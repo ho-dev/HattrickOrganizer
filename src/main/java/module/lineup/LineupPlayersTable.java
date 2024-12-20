@@ -52,7 +52,9 @@ public final class LineupPlayersTable extends FixedColumnsTable implements core.
 		var selectedPlayer = tableModel.getSelectedPlayer();
 		resetPlayers();
 		repaint();
-		if ( selectedPlayer != null ) {tableModel.selectPlayer(selectedPlayer.getPlayerId());}
+		if (selectedPlayer != null) {
+			tableModel.selectPlayer(selectedPlayer.getPlayerId());
+		}
 	}
 
 	@Override

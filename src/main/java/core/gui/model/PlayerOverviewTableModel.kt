@@ -154,27 +154,27 @@ class PlayerOverviewTableModel(id: ColumnModelId, name: String) : HOTableModel(i
         initData()
     }
 
-
     /**
      * Returns the [Player] with the same ID as the instance passed, or `null`.
      */
     private fun getPreviousPlayerDevelopmentStage(currentDevelopmentStage: Player): Player? {
         val id = currentDevelopmentStage.playerId
+        if ( id >= 0 ) {
+            // not a temporary player
+            val selectedPlayerDevelopmentStage = SpielerTrainingsVergleichsPanel.getSelectedPlayerDevelopmentStage()
+            var i = 0
+            while ((selectedPlayerDevelopmentStage != null) && (i < selectedPlayerDevelopmentStage.size)) {
+                val selectedDevelopmentStage = selectedPlayerDevelopmentStage[i]
 
-        val selectedPlayerDevelopmentStage = SpielerTrainingsVergleichsPanel.getSelectedPlayerDevelopmentStage()
-        var i = 0
-        while ((selectedPlayerDevelopmentStage != null) && (i < selectedPlayerDevelopmentStage.size)) {
-            val selectedDevelopmentStage = selectedPlayerDevelopmentStage[i]
-
-            if (selectedDevelopmentStage.playerId == id) {
-                return selectedDevelopmentStage
+                if (selectedDevelopmentStage.playerId == id) {
+                    return selectedDevelopmentStage
+                }
+                i++
             }
-            i++
-        }
-
-        if (SpielerTrainingsVergleichsPanel.isDevelopmentStageSelected()) {
-            val hrf = SpielerTrainingsVergleichsPanel.getSelectedHrfId()
-            return getFirstPlayerDevelopmentStageAfterSelected(currentDevelopmentStage, hrf)
+            if (SpielerTrainingsVergleichsPanel.isDevelopmentStageSelected()) {
+                val hrf = SpielerTrainingsVergleichsPanel.getSelectedHrfId()
+                return getFirstPlayerDevelopmentStageAfterSelected(currentDevelopmentStage, hrf)
+            }
         }
         return null
     }

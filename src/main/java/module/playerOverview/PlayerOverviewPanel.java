@@ -173,7 +173,9 @@ public class PlayerOverviewPanel extends ImagePanel {
 						var player = playerOverviewTable.getSelectedPlayer();
 						if (player == null) {
 							player = HOMainFrame.instance().getSelectedPlayer();
-							playerOverviewTable.selectPlayer(player.getPlayerId());
+							if ( player != null) {
+								playerOverviewTable.selectPlayer(player.getPlayerId());
+							}
 						} else {
 							HOMainFrame.instance().selectPlayer(player);
 						}

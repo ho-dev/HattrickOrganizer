@@ -597,7 +597,7 @@ public class HOModel {
     /**
      * save the model in the database
      */
-    public final synchronized void saveHRF() {
+    public final synchronized void storeModel() {
         var time = getBasics().getDatum();
         DBManager.instance().saveHRF(this.hrf);
         DBManager.instance().saveBasics(getHrfId(), getBasics());
