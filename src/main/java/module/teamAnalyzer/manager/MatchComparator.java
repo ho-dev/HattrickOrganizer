@@ -16,14 +16,6 @@ import java.util.Date;
 class MatchComparator implements Comparator<Match> {
     //~ Methods ------------------------------------------------------------------------------------
 
-    /**
-     * Compare two objects
-     *
-     * @param o1
-     * @param o2
-     *
-     * @return
-     */
     @Override
 	public int compare(Match o1, Match o2) {
         HODateTime s1 = o1.getMatchDate();

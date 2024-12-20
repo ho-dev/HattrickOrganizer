@@ -90,7 +90,7 @@ public class Report {
      * Add another performance to the Report, updating appearance and average rating the rest has
      * to be updated in child classes
      *
-     * @param pp
+     * @param pp PlayerPerformance
      */
     public void addPerformance(PlayerPerformance pp) {
         appearance++;

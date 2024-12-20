@@ -16,14 +16,6 @@ import java.util.Comparator;
 class AppearanceComparator implements Comparator<PlayerAppearance> {
     //~ Methods ------------------------------------------------------------------------------------
 
-    /**
-     * Compare two objects
-     *
-     * @param o1
-     * @param o2
-     *
-     * @return
-     */
     public int compare(PlayerAppearance o1, PlayerAppearance o2) {
         int s1 = o1.getAppearance();
         int s2 = o2.getAppearance();
