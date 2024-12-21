@@ -95,7 +95,7 @@ public class OnlineWorker {
 								getLangString("Fehler"), JOptionPane.ERROR_MESSAGE);
 					} else {
 						// save the model in the database
-						homodel.saveHRF();
+						homodel.storeModel();
 						homodel.setFixtures(hov.getModel().getFixtures());
 						// Add old players to the model
 						homodel.setFormerPlayers(DBManager.instance().loadAllPlayers());

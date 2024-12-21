@@ -203,8 +203,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
             var player = new Player();
             player.setHrfDate();
             player.setNationalityId(HOVerwaltung.instance().getModel().getBasics().getLand());
-            player.setPlayerId(module.transfer.scout.TransferEingabePanel
-                    .getNextTempSpielerID());
+            player.setPlayerId(module.transfer.scout.TransferEingabePanel.getNextTempSpielerID());
             player.setLastName("Temp " + Math.abs(1000 + player.getPlayerId()));
             player.setAge(getAge());
             player.setAgeDays(getAgeDays());

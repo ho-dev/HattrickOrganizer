@@ -1,5 +1,6 @@
 package module.lineup;
 
+import core.gui.HOMainFrame;
 import core.gui.Updatable;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
@@ -28,6 +29,7 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 	private JSplitPane horizontalSplitPane;
 	private JSplitPane verticalSplitPane;
 	private final List<Updatable> updatables = new ArrayList<>();
+	private boolean areSelecting = false;
 
 	public LineupPanel() {
 		initComponents();
@@ -136,6 +138,23 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 
 	private Component initSpielerTabelle() {
 		lineupPlayersTable = new LineupPlayersTable();
+		lineupPlayersTable.getSelectionModel().addListSelectionListener(
+				e -> {
+					if (!areSelecting) {
+						areSelecting = true;
+						var player = lineupPlayersTable.getPlayer(e.getFirstIndex());
+						if (player == null) {
+							player = HOMainFrame.instance().getSelectedPlayer();
+							if (player != null) {
+								lineupPlayersTable.setPlayer(player.getPlayerId());
+							}
+						} else {
+							HOMainFrame.instance().selectPlayer(player);
+						}
+						areSelecting = false;
+					}
+				}
+		);
 		return lineupPlayersTable.getContainerComponent();
 	}
 
