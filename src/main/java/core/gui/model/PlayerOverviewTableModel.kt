@@ -29,7 +29,7 @@ class PlayerOverviewTableModel(id: ColumnModelId, name: String) : HOTableModel(i
 
     init {
         val basic: Array<out PlayerColumn>? = UserColumnFactory.createPlayerBasicArray()
-        val columns : Array<UserColumn?> = arrayOfNulls(64)
+        val columns : Array<UserColumn?> = arrayOfNulls(69)
         columns[0] = basic?.get(0)
         columns[48] = basic?.get(1)
 
@@ -77,6 +77,11 @@ class PlayerOverviewTableModel(id: ColumnModelId, name: String) : HOTableModel(i
         columns[61] = additionalArray?.get(23) // schum-rank
         columns[62] = additionalArray?.get(24) // schum-rank benchmark
         columns[63] = BooleanColumn(UserColumnFactory.AUTO_LINEUP, " ", "AutoAufstellung", 28)
+        columns[64] = additionalArray?.get(25)
+        columns[65] = additionalArray?.get(26)
+        columns[66] = additionalArray?.get(27)
+        columns[67] = additionalArray?.get(28)
+        columns[68] = additionalArray?.get(29)
 
         this.columns = columns.filterNotNull().toTypedArray()
         assert(this.columns.size == columns.size)
