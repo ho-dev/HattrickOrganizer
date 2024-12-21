@@ -11,7 +11,7 @@ class HOCurrency(var swedishKrona: Int) {
         val currencyFormatter = getLocalCurrencyFormatter()
 
         private fun getLocalCurrencyFormatter(): NumberFormat {
-            var ret = CurrencyUtils.getLeagueCurrencyFormater(HOVerwaltung.instance().getModel().getLeagueIdPremierTeam())
+            val ret = CurrencyUtils.getLeagueCurrencyFormater(HOVerwaltung.instance().getModel().getLeagueIdPremierTeam())
             ret.maximumFractionDigits = 0
             return ret
         }
@@ -22,7 +22,7 @@ class HOCurrency(var swedishKrona: Int) {
      * and converting to the local currency
      */
     fun toLocale(): Int {
-        return ((swedishKrona/100.0 + 0.5).toInt() * 100 * HOCurrency.currencyFactor).toInt()
+        return ((swedishKrona/100.0 + 0.5).toInt() * 100 * currencyFactor).toInt()
     }
 
     fun toLocaleString(): String {

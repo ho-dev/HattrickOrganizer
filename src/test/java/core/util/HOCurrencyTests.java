@@ -7,8 +7,6 @@ import core.model.XtraData;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import static java.lang.Math.round;
-
 public class HOCurrencyTests {
 
     @Test
