@@ -11,6 +11,7 @@ import core.model.player.Player;
 import core.util.HODateTime;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -141,7 +142,7 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
         tmp.add(new YouthPlayerColumn("ls.player.injurystatus") {
             @Override
             public IHOTableEntry getTableEntry(YouthPlayer player) {
-                var ret = new ColorLabelEntry(player.getInjuryLevel(), getInjuryLevelAsString(player.getInjuryLevel()),  ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
+                var ret = new ColorLabelEntry(player.getInjuryLevel(), getInjuryLevelAsString(player.getInjuryLevel()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
                 ret.setIcon(getInjuryLevelIcon(player.getInjuryLevel()));
                 return ret;
             }
@@ -162,6 +163,23 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
             @Override
             public IHOTableEntry getTableEntry(YouthPlayer player) {
                 return new ColorLabelEntry(player.getCareerHattricks(), String.valueOf(player.getCareerHattricks()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
+            }
+        });
+        tmp.add(new YouthPlayerColumn("ls.player.ratemyacademyscore", "ls.player.ratemyacademyscore.tooltip", 60) {
+            @Override
+            public IHOTableEntry getTableEntry(YouthPlayer player) {
+                var score = player.calculateRateMyAcademyScore();
+                Color backgroundColor;
+                if (score >= 3000) {
+                    backgroundColor = new Color(100, 180, 250);
+                } else if (score >= 2400) {
+                    backgroundColor = Color.green;
+                } else if (score >= 2000) {
+                    backgroundColor = Color.lightGray;
+                } else {
+                    backgroundColor = ColorLabelEntry.BG_STANDARD;
+                }
+                return new ColorLabelEntry(score, String.valueOf(score), ColorLabelEntry.FG_STANDARD, backgroundColor, SwingConstants.RIGHT);
             }
         });
 
