@@ -13,10 +13,7 @@ import core.net.MyConnector;
 import core.net.OnlineWorker;
 import core.rating.RatingPredictionModel;
 import core.training.*;
-import core.util.HODateTime;
-import core.util.HOLogger;
-import core.util.HelperWrapper;
-import core.util.Htms;
+import core.util.*;
 
 import java.time.Duration;
 import java.util.*;
@@ -969,9 +966,9 @@ public class Player extends AbstractTable.Storable {
         for (var p : allPositionRatings) {
             if (threshold == null) {
                 threshold = p.getRating() * tolerance;
-                ret.add(MatchRoleID.getPosition(p.getRoleId(), p.getBehaviour()));
+                ret.add(getPosition(p.getRoleId(), p.getBehaviour()));
             } else if (p.getRating() >= threshold) {
-                ret.add(MatchRoleID.getPosition(p.getRoleId(), p.getBehaviour()));
+                ret.add(getPosition(p.getRoleId(), p.getBehaviour()));
             } else {
                 break;
             }
@@ -1813,7 +1810,7 @@ public class Player extends AbstractTable.Storable {
      * @param old player to copy from
      */
     public void copySkills(Player old) {
-        for (var s : PlayerSkill.values()) {
+        for (var s : values()) {
             setValue4Skill(s, old.getValue4Skill(s));
         }
     }
@@ -2370,7 +2367,7 @@ public class Player extends AbstractTable.Storable {
             Player previousPlayer = null;
             for (var p : DBManager.instance().loadPlayerHistory(this.getPlayerId())) {
                 if (previousPlayer != null) {
-                    for (var skillType : PlayerSkill.values()) {
+                    for (var skillType : values()) {
                         var newValue = p.getValue4Skill(skillType);
                         var change = newValue - previousPlayer.getValue4Skill(skillType);
                         if (change != 0) {
@@ -2460,6 +2457,44 @@ public class Player extends AbstractTable.Storable {
         tsi *= ageFactor;
 
         return round(tsi/10) * 10;
+    }
+
+    /**
+     * Cost to convert a player to coach
+     * <p>
+     * Price(sk) = 47.500.000 * a / (ExpLevel - 1)
+     * <p>
+     * Where a = 7.11 for excellent, 1.00 for solid, 0.296 for passable and 0.037 for inadequate coach
+     * ExpLevel = experience level of the player, considering the sublevel, if known
+     * <p>
+     * Notes:
+     * <p>
+     * 1 - For ExpLevel, disastrous is 1.0-2.0, wretched 2.0-3.0, etc...
+     * 2 - For those who have foxtrick, an estimation of the experience sublevel can be found in the players page in the link "Performance history".
+     * 3 - Example: a player with experience level titanic (15.3) would cost 47 500 000 * 7.11 / (15.3 - 1) = € 2.36kk to convert to an excellent coach.
+     * 4 - The cost to convert a player to weak coach is always € 10k.
+     *
+     * @param trainerSkill 4..8
+     * @return HOCurrency
+     */
+    public HOCurrency calculateCoachConversionCosts(int trainerSkill){
+        var experience = this.getSkill(EXPERIENCE);
+        if ( experience >= trainerSkill && trainerSkill >= 4 && trainerSkill < 9){
+            if ( trainerSkill >= 5){
+                var a = switch (trainerSkill) {
+                    case 5 -> 0.037;
+                    case 6 -> 0.296;
+                    case 7 -> 1;
+                    case 8 -> 7.11;
+                    default -> throw new IllegalStateException("Unexpected value: " + trainerSkill);
+                };
+                return new HOCurrency((int)(47500000 * a / (experience-1)));
+            }
+            else {
+                return new HOCurrency(100000);
+            }
+        }
+        return null;
     }
 
 }
