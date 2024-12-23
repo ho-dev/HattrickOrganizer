@@ -45,6 +45,7 @@
 
 ### Youth
 * Add columns number, category, statement, owner notes, injury status, career goals, season goals, hattricks to the youth player overview table (#2061)
+* Rate my academy score (#2117)
 
 ### Option setting
 * Fix: `Preferences/Formulas`: When changing anything and saving it, the application does not crash anymore during quit.

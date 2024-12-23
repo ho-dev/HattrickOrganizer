@@ -17,8 +17,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
-import static java.lang.Math.max;
-import static java.lang.Math.min;
+import static java.lang.Math.*;
 
 public class YouthPlayer extends AbstractTable.Storable {
     private int hrfid;
@@ -1271,5 +1270,93 @@ public class YouthPlayer extends AbstractTable.Storable {
             return (int) (max + factorCurrent*skillInfo.getCurrentValue());
         }
         return 0;
+    }
+
+    public int calculateRateMyAcademyScore() {
+        double keeperScore = 0;
+        double fieldPlayerScore = 0;
+
+        for (var skill : this.currentSkills.values()) {
+
+            //  x*0.87^(8-(1...y))
+            var x = switch (skill.getSkillID()) {
+                case KEEPER -> 130;
+                case DEFENDING -> 230;
+                case PLAYMAKING -> 200;
+                case PASSING -> 180;
+                case WINGER -> 140;
+                case SCORING -> 210;
+                case SETPIECES -> 40;
+                default -> 0;
+            };
+
+            if (x == 0) continue;
+
+            var potential = 0;
+            if (skill.isMaxAvailable()) {
+                potential = skill.getMax();
+            } else if (skill.isCurrentLevelAvailable()) {
+                potential = skill.getCurrentLevel() + 1;
+            } else {
+                switch (skill.getSkillID()) {
+                    case KEEPER:
+                        potential = 1;
+                        break;
+                    case SETPIECES:
+                        potential = 3;
+                        break;
+                    default: {
+                        if (isOverallSkillsLevelAvailable()) {
+                            potential = getOverallSkillsLevel() - 1;
+                        } else {
+                            potential = 3;
+                        }
+                    }
+                    ;
+                }
+            }
+
+            var score = 0.0;
+            for (var p = 1; p <= potential; p++) {
+                score += x * pow( 0.87, 8.0 - p);
+            }
+
+            switch (skill.getSkillID()) {
+                case KEEPER:
+                    keeperScore += score * 2.2;
+                    break;
+                case DEFENDING:
+                case SETPIECES:
+                    fieldPlayerScore += score;
+                    keeperScore += score * 2.2;
+                    break;
+                default:
+                    fieldPlayerScore += score;
+                    break;
+            }
+        }
+
+        var specialty = getSpecialty();
+        if ( specialty != null) {
+            switch (getSpecialty()) {
+                case NoSpecialty:
+                    break;
+                case Regainer:
+                    fieldPlayerScore += 100;
+                    keeperScore += 100;
+                    break;
+                default:
+                    fieldPlayerScore += 200;
+                    keeperScore += 100;
+            }
+        }
+
+        var rateMyAcademyScore = (int) max(keeperScore, fieldPlayerScore);
+        var age = getAgeYears();
+        if ( age >= 16 ){
+            var n =  (age - 17) * 112 + getAgeDays() + max(0, canBePromotedIn);
+            rateMyAcademyScore -= 10*n;
+        }
+        return rateMyAcademyScore;
     }
 }
