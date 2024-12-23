@@ -218,6 +218,11 @@ public abstract class BaseTheme implements Theme {
       addDefaultColor(DOWNLOAD_MATCH, new Color(238, 39, 39, 255));
 
       addDefaultColor(LINK_LABEL_FG, new Color(6, 69, 173));
+
+       addDefaultColor(YOUTH_ABOVE_AVERAGE_RATING, LIGHT_GRAY);
+       addDefaultColor(YOUTH_HIGH_RATING, GREEN);
+       addDefaultColor(YOUTH_HIGHEST_RATING, new Color(100, 180, 250));
+
    }
 
    private void addDefaultColor(HOColorName hoColorName, Color color) {

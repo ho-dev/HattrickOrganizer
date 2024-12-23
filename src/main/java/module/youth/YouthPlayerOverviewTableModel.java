@@ -5,7 +5,9 @@ import core.gui.comp.entry.IHOTableEntry;
 import core.gui.comp.table.HOTableModel;
 import core.gui.comp.table.UserColumn;
 import core.gui.model.UserColumnController;
+import core.gui.theme.HOColorName;
 import core.gui.theme.ImageUtilities;
+import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
 import core.util.HODateTime;
@@ -19,6 +21,10 @@ import static module.youth.YouthSkillInfo.getSkillName;
 
 
 public class YouthPlayerOverviewTableModel extends HOTableModel {
+
+    private final Color aboveAverageRatingColor = ThemeManager.getColor(HOColorName.YOUTH_ABOVE_AVERAGE_RATING);
+    private final Color highRatingColor = ThemeManager.getColor(HOColorName.YOUTH_HIGH_RATING);
+    private final Color highestRatingColor = ThemeManager.getColor(HOColorName.YOUTH_HIGHEST_RATING);
 
     public YouthPlayerOverviewTableModel(UserColumnController.ColumnModelId id) {
         super(id, "YouthPlayerOverview");
@@ -76,7 +82,18 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
                 new YouthPlayerColumn("ls.youth.player.potential") {
                     @Override
                     public IHOTableEntry getTableEntry(YouthPlayer player) {
-                        return new ColorLabelEntry(player.getPotential(), "" + player.getPotential(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
+                        var score = player.getPotential();
+                        Color backgroundColor;
+                        if (score >= 30) {
+                            backgroundColor = highestRatingColor;
+                        } else if (score >= 24) {
+                            backgroundColor = highRatingColor;
+                        } else if (score >= 18) {
+                            backgroundColor = aboveAverageRatingColor;
+                        } else {
+                            backgroundColor = ColorLabelEntry.BG_STANDARD;
+                        }
+                        return new ColorLabelEntry(player.getPotential(), "" + player.getPotential(), ColorLabelEntry.FG_STANDARD, backgroundColor, SwingConstants.RIGHT);
                     }
                 },
                 new YouthPlayerColumn("ls.youth.player.average") {
@@ -171,11 +188,11 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
                 var score = player.calculateRateMyAcademyScore();
                 Color backgroundColor;
                 if (score >= 3000) {
-                    backgroundColor = new Color(100, 180, 250);
+                    backgroundColor = highestRatingColor;
                 } else if (score >= 2400) {
-                    backgroundColor = Color.green;
+                    backgroundColor = highRatingColor;
                 } else if (score >= 2000) {
-                    backgroundColor = Color.lightGray;
+                    backgroundColor = aboveAverageRatingColor;
                 } else {
                     backgroundColor = ColorLabelEntry.BG_STANDARD;
                 }
