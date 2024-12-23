@@ -1,9 +1,6 @@
 package core.gui.theme;
 
-import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
-
-import java.awt.*;
 
 /**
  * Constants for Colors used in HO.
