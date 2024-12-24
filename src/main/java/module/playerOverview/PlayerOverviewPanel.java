@@ -145,7 +145,6 @@ public class PlayerOverviewPanel extends ImagePanel {
 	 * Initialise the players tables
 	 */
 	private Component initPlayersTable() {
-
 		JPanel overviewPanel = new JPanel();
 		overviewPanel.setLayout(new BorderLayout());
 
@@ -155,7 +154,12 @@ public class PlayerOverviewPanel extends ImagePanel {
 		TeamSummaryModel teamSummaryModel = new TeamSummaryModel();
 		teamSummaryModel.setPlayers(HOVerwaltung.instance().getModel().getCurrentPlayers());
 		teamSummaryPanel = new TeamSummaryPanel(teamSummaryModel);
-		overviewPanel.add(teamSummaryPanel, BorderLayout.SOUTH);
+		var scrollPane = new JScrollPane(teamSummaryPanel,
+				JScrollPane.VERTICAL_SCROLLBAR_NEVER,
+				JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+		scrollPane.setPreferredSize(new Dimension((int) teamSummaryPanel.getPreferredSize().getWidth(),
+				(int) teamSummaryPanel.getPreferredSize().getHeight() + 22));
+		overviewPanel.add(scrollPane, BorderLayout.SOUTH);
 		return overviewPanel;
 	}
 

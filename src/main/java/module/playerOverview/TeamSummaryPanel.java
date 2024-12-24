@@ -52,7 +52,6 @@ public class TeamSummaryPanel extends ImagePanel implements ChangeListener, Refr
 
     private void createField(String labelName, JComponent fieldLabel) {
         this.add(new JLabel(labelName));
-//        this.add(Box.createHorizontalStrut(2));
         this.add(fieldLabel);
     }
 
