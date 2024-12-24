@@ -4,7 +4,6 @@ import core.constants.player.PlayerSpeciality;
 import core.gui.HOMainFrame;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.theme.*;
-import core.model.UserParameter;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.training.TrainingPreviewPlayers;
