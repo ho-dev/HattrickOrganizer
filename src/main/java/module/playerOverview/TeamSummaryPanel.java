@@ -51,7 +51,13 @@ public class TeamSummaryPanel extends ImagePanel implements ChangeListener, Refr
     }
 
     private void createField(String labelName, JComponent fieldLabel) {
-        this.add(new JLabel(labelName));
+        var label = new JLabel(labelName);
+        var preferredSize = label.getPreferredSize();
+        preferredSize.height=fieldLabel.getPreferredSize().height;
+        label.setPreferredSize(preferredSize);
+        label.setAlignmentY(TOP_ALIGNMENT);
+        fieldLabel.setAlignmentY(TOP_ALIGNMENT);
+        this.add(label);
         this.add(fieldLabel);
     }
 
