@@ -4,6 +4,7 @@ import core.constants.player.PlayerSpeciality;
 import core.gui.HOMainFrame;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.theme.*;
+import core.model.UserParameter;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.training.TrainingPreviewPlayers;
@@ -46,9 +47,6 @@ public final class PlayerLabelEntry implements IHOTableEntry {
     private JLabel suspendedLabel;
     private JLabel twoYellowCardsLabel;
     private JLabel oneYellowCardLabel;
-
-    private static final int PLAYER_LABEL_ENTRY_HEIGHT = 18;
-    private static final int PLAYER_LABEL_ENTRY_WIDTH = 130;
 
     // Label for the player name (depending on status)
     public PlayerLabelEntry(@Nullable Player player, @Nullable MatchRoleID playerMatchRoleID,
@@ -270,8 +268,6 @@ public final class PlayerLabelEntry implements IHOTableEntry {
             showJersey();
             updateDisplay(m_clPlayer);
         }
-
-        m_clComponent.setPreferredSize(new Dimension(PLAYER_LABEL_ENTRY_WIDTH, PLAYER_LABEL_ENTRY_HEIGHT));
     }
 
     private void addPlayerStatusIcons(JPanel infoPanel) {
