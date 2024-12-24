@@ -11,6 +11,7 @@ import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
+import core.model.UserParameter;
 import core.model.match.IMatchDetails;
 import core.model.match.Weather;
 import core.model.player.Player;
@@ -420,6 +421,8 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		layout.setConstraints(m_jcbPredictionModel, constraints);
 		add(m_jcbPredictionModel);
 
+		var fontSize = UserParameter.instance().fontSize;
+
 		yPos++;
 		initLabel(constraints, layout, new JLabel(""), yPos);
 		constraints.gridx = 2;
@@ -427,7 +430,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		constraints.fill = GridBagConstraints.NONE;
 		constraints.anchor = GridBagConstraints.CENTER;
 		m_jbReset.setToolTipText(getTranslation("ls.module.lineup.reset_settings.tt"));
-		m_jbReset.setIcon(ImageUtilities.getSvgIcon(HOIconName.RESET, Map.of("lineColor", HOColorName.RESET_COLOR), 18, 18));
+		m_jbReset.setIcon(ImageUtilities.getSvgIcon(HOIconName.RESET, Map.of("lineColor", HOColorName.RESET_COLOR), fontSize, fontSize));
 		m_jbReset.setBackground(ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER));
 
 		m_jbReset.addActionListener(e -> {
