@@ -22,7 +22,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.Map;
 import java.util.Objects;
-import java.util.ResourceBundle;
 import javax.swing.*;
 import static core.util.Helper.getTranslation;
 import static module.lineup.LineupPanel.TITLE_FG;
