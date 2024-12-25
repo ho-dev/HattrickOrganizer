@@ -10,7 +10,7 @@ class YouthPlayerTests {
     @Test
     fun test() {
         // Prepare model
-        var properties = Properties()
+        val properties = Properties()
         properties.setProperty("age", "16")
         properties.setProperty("agedays", "84")
         properties.setProperty("canbepromotedin", "96")
@@ -24,7 +24,7 @@ class YouthPlayerTests {
         youthPlayer.ageDays += 1;
         Assertions.assertEquals(2148, youthPlayer.calculateRateMyAcademyScore())
 
-        youthPlayer.canBePromotedIn += 1;
+        youthPlayer.canBePromotedIn += 1
         Assertions.assertEquals(2138, youthPlayer.calculateRateMyAcademyScore())
 
         youthPlayer.specialty = Specialty.Head
