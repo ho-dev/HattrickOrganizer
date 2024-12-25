@@ -940,7 +940,11 @@ public class YouthPlayer extends AbstractTable.Storable {
         rating = getDouble(properties, "rating");
         youthMatchDate = HODateTime.fromHT(properties.getProperty("youthmatchdate"));
 
-        var playerStatusPreviousDownload = HOVerwaltung.instance().getModel().getCurrentYouthPlayer(id);
+        YouthPlayer playerStatusPreviousDownload =null;
+        var model = HOVerwaltung.instance().getModel();
+        if ( model != null ) {
+            playerStatusPreviousDownload = HOVerwaltung.instance().getModel().getCurrentYouthPlayer(id);
+        }
         for (var skillId : YouthPlayer.skillIds) {
             var skillinfo = parseSkillInfo(properties, skillId);
             if (playerStatusPreviousDownload != null) {
@@ -1272,7 +1276,7 @@ public class YouthPlayer extends AbstractTable.Storable {
         return 0;
     }
 
-    public int calculateRateMyAcademyScore() {
+    public long calculateRateMyAcademyScore() {
         double keeperScore = 0;
         double fieldPlayerScore = 0;
 
@@ -1312,7 +1316,6 @@ public class YouthPlayer extends AbstractTable.Storable {
                             potential = 3;
                         }
                     }
-                    ;
                 }
             }
 
@@ -1351,7 +1354,7 @@ public class YouthPlayer extends AbstractTable.Storable {
             }
         }
 
-        var rateMyAcademyScore = (int) max(keeperScore, fieldPlayerScore);
+        var rateMyAcademyScore = round(max(keeperScore, fieldPlayerScore));
         var age = getAgeYears();
         if ( age >= 16 ){
             var n =  (age - 17) * 112 + getAgeDays() + max(0, canBePromotedIn);

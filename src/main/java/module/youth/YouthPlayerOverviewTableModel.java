@@ -22,9 +22,6 @@ import static module.youth.YouthSkillInfo.getSkillName;
 
 public class YouthPlayerOverviewTableModel extends HOTableModel {
 
-    private final Color aboveAverageRatingColor = ThemeManager.getColor(HOColorName.YOUTH_ABOVE_AVERAGE_RATING);
-    private final Color highRatingColor = ThemeManager.getColor(HOColorName.YOUTH_HIGH_RATING);
-    private final Color highestRatingColor = ThemeManager.getColor(HOColorName.YOUTH_HIGHEST_RATING);
 
     public YouthPlayerOverviewTableModel(UserColumnController.ColumnModelId id) {
         super(id, "YouthPlayerOverview");
@@ -32,6 +29,11 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
     }
 
     private YouthPlayerColumn[] initColumns() {
+
+        final Color aboveAverageRatingColor = ThemeManager.getColor(HOColorName.YOUTH_ABOVE_AVERAGE_RATING);
+        final Color highRatingColor = ThemeManager.getColor(HOColorName.YOUTH_HIGH_RATING);
+        final Color highestRatingColor = ThemeManager.getColor(HOColorName.YOUTH_HIGHEST_RATING);
+
         var tmp = new ArrayList<>(List.of(
                 new YouthPlayerColumn("ls.player.name") {
                     @Override
