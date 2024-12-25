@@ -2488,10 +2488,10 @@ public class Player extends AbstractTable.Storable {
                     case 8 -> 7.11;
                     default -> throw new IllegalStateException("Unexpected value: " + trainerSkill);
                 };
-                return new HOCurrency((int)(47500000 * a / (experience-1)));
+                return new HOCurrency((int)(47_500_000 * a / (experience-1)));
             }
             else {
-                return new HOCurrency(100000);
+                return new HOCurrency(100_000);
             }
         }
         return null;
