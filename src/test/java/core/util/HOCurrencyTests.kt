@@ -1,33 +1,30 @@
-package core.util;
+package core.util
 
-import core.model.HOModel;
-import core.model.HOVerwaltung;
-import core.model.UserParameter;
-import core.model.XtraData;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
+import core.model.HOModel
+import core.model.HOVerwaltung
+import core.model.UserParameter
+import core.model.XtraData
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.Test
 
-public class HOCurrencyTests {
-
+class HOCurrencyTests {
     @Test
-    void test() {
+    fun test() {
         // Prepare model
-        var hov = HOVerwaltung.instance();
-        hov.setModel(new HOModel(1));
-        hov.getModel().setXtraDaten(new XtraData());
-        hov.getModel().getXtraDaten().setCountryId(3);
-        UserParameter.instance().FXrate = 10;
+        val hov = HOVerwaltung.instance()
+        hov.model = HOModel(1)
+        hov.model.xtraDaten = XtraData()
+        hov.model.xtraDaten.countryId = 3
+        UserParameter.instance().FXrate = 10f
 
-        var c = new HOCurrency(10);
-        Assertions.assertEquals(0, c.toLocale());
+        val c = HOCurrency(10)
+        Assertions.assertEquals(0, c.toLocale())
 
-        var e = new HOCurrency(50);
-        Assertions.assertEquals(10, e.toLocale());
+        val e = HOCurrency(50)
+        Assertions.assertEquals(10, e.toLocale())
 
-        var d = new HOCurrency(c.getSwedishKrona()+90);
-        var nbsp = "\u00A0";
-        Assertions.assertEquals("10" + nbsp + "€", d.toLocaleString());
-
+        val d = HOCurrency(c.swedishKrona + 90)
+        val nbsp = "\u00A0"
+        Assertions.assertEquals("10" + nbsp + "€", d.toLocaleString())
     }
-
 }
