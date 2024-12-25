@@ -515,7 +515,7 @@ final public class UserColumnFactory {
      * @return PlayerColumn[]
      */
     public static PlayerColumn[] createPlayerAdditionalArray() {
-        final PlayerColumn[] playerAdditionalArray = new PlayerColumn[25];
+        final PlayerColumn[] playerAdditionalArray = new PlayerColumn[30];
 
         playerAdditionalArray[0] = new PlayerColumn(10, "ls.player.shirtnumber.short", "ls.player.shirtnumber", 25) {
             @Override
@@ -948,7 +948,48 @@ final public class UserColumnFactory {
                 return new ColorLabelEntry(r, t, ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
             }
         };
+        playerAdditionalArray[25] = new PlayerColumn(900, "ls.player.cost-to-convert-trainer-weak", "ls.player.cost-to-convert-trainer-weak.tooltip",  40) {
+            @Override
+            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
+                return getTrainerTransferEntry(player, 4);
+            }
+        };
+        playerAdditionalArray[26] = new PlayerColumn(901, "ls.player.cost-to-convert-trainer-inadequate", "ls.player.cost-to-convert-trainer-inadequate.tooltip", 40) {
+            @Override
+            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
+                return getTrainerTransferEntry(player, 5);
+            }
+        };
+        playerAdditionalArray[27] = new PlayerColumn(902, "ls.player.cost-to-convert-trainer-passable", "ls.player.cost-to-convert-trainer-passable.tooltip", 40) {
+            @Override
+            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
+                return getTrainerTransferEntry(player, 6);
+            }
+        };
+        playerAdditionalArray[28] = new PlayerColumn(903, "ls.player.cost-to-convert-trainer-solid", "ls.player.cost-to-convert-trainer-solid.tooltip", 40) {
+            @Override
+            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
+                return getTrainerTransferEntry(player, 7);
+            }
+        };
+        playerAdditionalArray[29] = new PlayerColumn(904, "ls.player.cost-to-convert-trainer-excellent", "ls.player.cost-to-convert-trainer-excellent.tooltip", 40) {
+            @Override
+            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
+                return getTrainerTransferEntry(player, 8);
+            }
+        };
 
         return playerAdditionalArray;
+    }
+
+    private static IHOTableEntry getTrainerTransferEntry(Player player, int i) {
+        var costs = player.calculateCoachConversionCosts(i);
+        var string = "";
+        var swedishKrona = 0;
+        if (costs != null){
+            string = costs.toLocaleString();
+            swedishKrona = costs.getSwedishKrona();
+        }
+        return new ColorLabelEntry(swedishKrona, string, ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
     }
 }
