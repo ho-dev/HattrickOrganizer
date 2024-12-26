@@ -2,6 +2,7 @@
 
 * Calculation of the tsi sub by approximating the tsi formula (#235)
 * Restoring user's table sorting settings (#2119)
+* Display coach conversion costs (#2204)
 
 ## [Detailed Changelog](https://github.com/ho-dev/HattrickOrganizer/issues?q=milestone%3A9.0)
 
@@ -14,6 +15,7 @@
 
 * Calculation of the tsi sub by approximating the tsi formula (#235)
 * Fix display of best position rating (#2166)
+* Display coach conversion costs (#2204)
 
 ### Team Analyzer
 * Fix illegal argument exception in team rating panel (#2155)
@@ -45,6 +47,7 @@
 
 ### Youth
 * Add columns number, category, statement, owner notes, injury status, career goals, season goals, hattricks to the youth player overview table (#2061)
+* Rate my academy score (#2117)
 
 ### Option setting
 * Fix: `Preferences/Formulas`: When changing anything and saving it, the application does not crash anymore during quit.

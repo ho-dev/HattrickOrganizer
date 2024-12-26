@@ -1,6 +1,5 @@
 package core.gui.theme;
 
-import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
 
 /**
@@ -181,7 +180,11 @@ public enum HOColorName {
 	//Player details
 	PLAYER_DETAILS_BAR_BORDER_COLOR,
 	PLAYER_DETAILS_BAR_FILL_GREEN,
-	PLAYER_DETAILS_STARS_FILL;
+	PLAYER_DETAILS_STARS_FILL,
+
+	YOUTH_ABOVE_AVERAGE_RATING,
+	YOUTH_HIGH_RATING,
+	YOUTH_HIGHEST_RATING;
 
 	@Override
 	public String toString(){
