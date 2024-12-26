@@ -26,21 +26,15 @@ public class SeriesPanel extends LazyImagePanel {
 	private MatchDayPanel[] matchDayPanels;
 	private SeriesHistoryPanel seriesHistoryPanel;
 	private Model model;
-	private PromotionInfoPanel promotionInfoPanel;
 
     @Override
 	protected void initialize() {
-		initPromotionHandler();
 		initComponents();
 		fillSaisonCB();
 		addListeners();
 		registerRefreshable(true);
 	}
 
-	private void initPromotionHandler() {
-        LeaguePromotionHandler promotionHandler = new LeaguePromotionHandler();
-		promotionInfoPanel = new PromotionInfoPanel(promotionHandler);
-	}
 
 	@Override
 	protected void update() {
