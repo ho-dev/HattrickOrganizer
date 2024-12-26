@@ -9,6 +9,7 @@ import core.gui.model.VAPTableModel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.model.UserParameter;
 import core.model.enums.RatingsStatistics;
 import core.model.series.SerieTableEntry;
 import core.util.HOLogger;
@@ -154,11 +155,13 @@ class SeriesTablePanel extends ImagePanel {
 		// combobox
 		constraints.gridx = 0;
 		constraints.gridy = 0;
-		constraints.insets = new Insets(4, 0, 0, 100);
+		constraints.insets = new Insets(4, 0, 4, 100);
 		constraints.anchor = GridBagConstraints.LINE_END;
 		m_jcbStatsAggType = new JComboBox(new String[]{"Max", "Avg"});
 		m_jcbStatsAggType.addActionListener(e -> populateSerieTableStatsOnly());
 
+
+		var fontSize = UserParameter.instance().fontSize;
 		layout.setConstraints(m_jcbStatsAggType, constraints);
 		panel.add(m_jcbStatsAggType);
 
@@ -166,7 +169,7 @@ class SeriesTablePanel extends ImagePanel {
 		constraints.gridy = 1;
 		constraints.insets = new Insets(0, 4, 4, 4);
 		seriesTable.setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
-		seriesTable.setRowHeight(30);
+		seriesTable.setRowHeight(2 * fontSize);
 		layout.setConstraints(seriesTable, constraints);
 		panel.add(seriesTable);
 

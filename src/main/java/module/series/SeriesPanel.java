@@ -141,29 +141,28 @@ public class SeriesPanel extends LazyImagePanel {
 
 		// ComboBox für Saisonauswahl
 		final JPanel panel = new ImagePanel(new BorderLayout());
-
 		final JPanel toolbarPanel = new ImagePanel(null);
+		var fontSize = UserParameter.instance().fontSize;
+		var gap = 10;
+		var xLocation = 10;
+		var yLocation = 5;
+		var width = 20 * fontSize;
+		var height = 2 * fontSize;
 		seasonComboBox = new JComboBox();
-		seasonComboBox.setToolTipText(TranslationFacility.tr(
-				"tt_Ligatabelle_Saisonauswahl"));
-		seasonComboBox.setSize(200, 25);
-		seasonComboBox.setLocation(10, 5);
+		seasonComboBox.setToolTipText(TranslationFacility.tr("tt_Ligatabelle_Saisonauswahl"));
+		seasonComboBox.setSize(width, height);
+		seasonComboBox.setLocation(xLocation, yLocation);
 		toolbarPanel.add(seasonComboBox);
 
 		deleteButton = new JButton(ThemeManager.getIcon(HOIconName.REMOVE));
-		deleteButton.setToolTipText(TranslationFacility.tr(
-				"tt_Ligatabelle_SaisonLoeschen"));
-		deleteButton.setSize(25, 25);
-		deleteButton.setLocation(220, 5);
+		deleteButton.setToolTipText(TranslationFacility.tr("tt_Ligatabelle_SaisonLoeschen"));
+		xLocation += width + gap;
+		width = 2 * fontSize;
+		deleteButton.setSize(width, height);
+		deleteButton.setLocation(xLocation, yLocation);
 		deleteButton.setBackground(ThemeManager.getColor(HOColorName.BUTTON_BG));
 		toolbarPanel.add(deleteButton);
-
-		promotionInfoPanel.setSize(650, 30);
-		promotionInfoPanel.setLocation(290, 5);
-
-		toolbarPanel.add(promotionInfoPanel);
-
-		toolbarPanel.setPreferredSize(new Dimension(240, 35));
+		toolbarPanel.setPreferredSize(new Dimension(xLocation+width, yLocation + height));
 		panel.add(toolbarPanel, BorderLayout.NORTH);
 
 		JSplitPane leagueStatsPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, initLigaTabelle(), initTabellenverlaufStatistik());
@@ -184,12 +183,10 @@ public class SeriesPanel extends LazyImagePanel {
 
 	private Component initLigaTabelle() {
 		seriesTable = new SeriesTablePanel(this.model);
-
 		JScrollPane scrollpane = new JScrollPane(seriesTable);
 		scrollpane.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
 		scrollpane.setPreferredSize(new Dimension((int) seriesTable.getPreferredSize().getWidth(),
 				(int) seriesTable.getPreferredSize().getHeight() + 22));
-
 		return scrollpane;
 	}
 
