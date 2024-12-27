@@ -7,10 +7,9 @@ import core.model.enums.MatchType;
 import core.model.match.Matchdetails;
 import core.model.player.Player;
 import core.net.OnlineWorker;
+import org.jetbrains.annotations.NotNull;
 
-import java.io.Serial;
 import java.util.Vector;
-
 
 /**
  * 
@@ -177,7 +176,7 @@ public class PlayerAnalysisModel extends HOTableModel {
     }
 
 	@Override
-	public String toString() {
+	public @NotNull String toString() {
 		var  s = super.toString();
 		return (instance == 0) ? s : (s + instance);
 	}

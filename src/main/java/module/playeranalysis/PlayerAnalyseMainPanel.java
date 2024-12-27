@@ -1,6 +1,5 @@
 package module.playeranalysis;
 
-import core.gui.ApplicationClosingListener;
 import core.gui.HOMainFrame;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
@@ -8,12 +7,8 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
-
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-
 
 public class PlayerAnalyseMainPanel extends LazyImagePanel {
 

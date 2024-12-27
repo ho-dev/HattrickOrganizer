@@ -166,16 +166,12 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 
 	private Component initSpielerMatchesTabelle(int spielerid) {
 		m_jtSpielerMatchesTable = new SpielerMatchesTable(spielerid, columnModelInstance);
-		JScrollPane scrollpane = new JScrollPane(m_jtSpielerMatchesTable);
-//		scrollpane.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
-		return scrollpane;
+		return new JScrollPane(m_jtSpielerMatchesTable);
 	}
 
 	private Component initSpielerPositionTabelle(int spielerid) {
 		m_jtSpielerPositionTable = new SpielerPositionTable(spielerid);
-		JScrollPane scrollpane = new JScrollPane(m_jtSpielerPositionTable);
-//		scrollpane.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
-		return scrollpane;
+		return new JScrollPane(m_jtSpielerPositionTable);
 	}
 
 	/**
