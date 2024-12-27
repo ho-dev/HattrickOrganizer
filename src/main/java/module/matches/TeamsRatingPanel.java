@@ -18,12 +18,10 @@ import javax.swing.*;
  */
 class TeamsRatingPanel extends LazyImagePanel {
 
-	private final double MIN_WIDTH_BAR = 0.2;  // minimum width of the rating bar to ensure proper visibility in case of extreme ratings ratio
-	private final int RATING_BAR_WIDTH = 18 * UserParameter.instance().fontSize;
+    private final int RATING_BAR_WIDTH = 18 * UserParameter.instance().fontSize;
 	private final int RATING_BAR_HEIGHT = 4 * UserParameter.instance().fontSize;
 	private final int INSET = UserParameter.instance().fontSize;
-	private final double RATING_MAX = 21d;
-	private final int LARGE_RATING_BAR_HEIGHT = 2*(RATING_BAR_HEIGHT + INSET);
+    private final int LARGE_RATING_BAR_HEIGHT = 2*(RATING_BAR_HEIGHT + INSET);
 	private JLabel m_jlGuestTeamName;
 	private JLabel m_jlHomeTeamName;
 	private final MatchesModel matchesModel;
@@ -245,14 +243,17 @@ class TeamsRatingPanel extends LazyImagePanel {
 
 	private void setBarValue(int index, int value) {
 		double htValue = 1 + (value-1d)/4;
-		bars[index].setValue((int) (htValue * 100 / RATING_MAX));
+        double RATING_MAX = 21d;
+        bars[index].setValue((int) (htValue * 100 / RATING_MAX));
 		bars[index].setString(PlayerAbility.getNameForSkill(true,htValue));
 	}
 
 
 	private void setValue(CustomProgressBar rating, int val1, int val2){
 		rating.setBackground(ThemeManager.getColor(HOColorName.GUEST_ACTION));
-		rating.setValue(val1, val2, MIN_WIDTH_BAR);
+        // minimum width of the rating bar to ensure proper visibility in case of extreme ratings ratio
+        double MIN_WIDTH_BAR = 0.2;
+        rating.setValue(val1, val2, MIN_WIDTH_BAR);
 		double htValHome = 1 + (val1-1d)/4;
 		double htValGuest = 1 + (val2-1d)/4;
 		rating.setToolTipText(String.format(Helper.getTranslation("ls.module.matches.ratingRatio"), htValHome, htValGuest));

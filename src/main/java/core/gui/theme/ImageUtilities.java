@@ -18,14 +18,9 @@ import java.awt.*;
 import java.awt.Font;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
-import java.awt.image.FilteredImageSource;
-import java.awt.image.ImageProducer;
 import java.awt.image.PixelGrabber;
 import java.util.*;
-
 import javax.swing.*;
-
-import static core.gui.theme.HOIconName.TRICKOT;
 
 public class ImageUtilities {
 
@@ -38,54 +33,7 @@ public class ImageUtilities {
     private static final Hashtable<Integer,ImageIcon> m_clPfeilWideCache = new Hashtable<>();
     private static final Hashtable<Integer,ImageIcon> m_clPfeilLightCache = new Hashtable<>();
     private static final Hashtable<Integer,ImageIcon> m_clPfeilWideLightCache = new Hashtable<>();
-    /** Cache für Transparent gemachte Bilder */
-    public static HashMap<Image,Image> m_clTransparentsCache = new HashMap<>();
-    public static ImageIcon MINILEER = new ImageIcon(new BufferedImage(8, 8, BufferedImage.TYPE_INT_ARGB));
-
-	/**
-	 * Tauscht eine Farbe im Image durch eine andere
-	 *
-	 */
-	public static Image changeColor(Image im, Color original, Color change) {
-	    final ImageProducer ip = new FilteredImageSource(im.getSource(),
-	    		new ColorChangeFilter(original, change));
-	    return Toolkit.getDefaultToolkit().createImage(ip);
-	}
-
-
-
-	/**
-	 * Makes a colour in the image transparent.
-	 */
-	public static Image makeColorTransparent(Image im, Color color) {
-		Image image;
-
-		//Cache durchsuchen
-		image = m_clTransparentsCache.get(im);
-
-		//Nicht im Cache -> laden
-		if (image == null) {
-			final ImageProducer ip = new FilteredImageSource(im.getSource(), new TransparentFilter(color));
-			image = Toolkit.getDefaultToolkit().createImage(ip);
-
-			//Bild in den Cache hinzufügen
-			m_clTransparentsCache.put(im, image);
-		}
-
-		return image;
-	}
-
-	/**
-	 * Copies the second image on the first image.
-	 */
-	public static Image merge(Image background, Image foreground) {
-	    final BufferedImage image = new BufferedImage(
-	    		background.getWidth(null), background.getHeight(null), BufferedImage.TYPE_INT_ARGB);
-	    image.getGraphics().drawImage(background, 0, 0, null);
-	    image.getGraphics().drawImage(foreground, 0, 0, null);
-	
-	    return image;
-	}
+	public static ImageIcon MINILEER = new ImageIcon(new BufferedImage(8, 8, BufferedImage.TYPE_INT_ARGB));
 
 	public static ImageIcon getImageIcon4Change(int wert, boolean aktuell) {
 		if (wert == 0) return null;
@@ -337,9 +285,7 @@ public class ImageUtilities {
 	 *
 	 */
 	public static Icon getImage4Position(int posid, byte taktik, int trickotnummer) {
-		Color trickotfarbe;
-		Image trickotImage;
-		Icon komplettIcon;
+        Icon komplettIcon;
 		StringBuilder key = new StringBuilder(20);
 		// Im Cache nachsehen
 		key.append("trickot_").append(posid).append("_").append(taktik).append("_").append(trickotnummer);
@@ -617,8 +563,8 @@ public class ImageUtilities {
 	/**
 	 * Transforms an icon into an image.
 	 * Cf. 	<a href="https://stackoverflow.com/a/5831357">...</a>
-	 * @param icon
-	 * @return
+	 * @param icon Icon
+	 * @return Image
 	 */
 	public static Image iconToImage(Icon icon) {
 		if (icon instanceof ImageIcon) {

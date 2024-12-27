@@ -27,11 +27,10 @@ import java.awt.event.ActionListener;
  */
 final class SpielerSternePanel extends ImagePanel implements ActionListener {
 
-	private static final long serialVersionUID = 744463551751056443L;
-	private int PANEL_WIDTH = Helper.calcCellWidth(120);
-	private int PANEL_HEIGHT = Helper.calcCellWidth(69);
-	private int PANEL_HEIGHT_REDUCED = Helper.calcCellWidth(44);
-	private int m_iPositionsID = -1;
+	private final int PANEL_WIDTH = Helper.calcCellWidth(120);
+	private final int PANEL_HEIGHT = Helper.calcCellWidth(69);
+	private final int PANEL_HEIGHT_REDUCED = Helper.calcCellWidth(44);
+	private final int m_iPositionsID;
 
 	private final JLabel position = new JLabel();
 	private final JButton playerButton = new JButton();
@@ -41,13 +40,13 @@ final class SpielerSternePanel extends ImagePanel implements ActionListener {
 
 	private MatchLineup m_clMatchLineup;
 	private MatchLineupPosition m_clMatchPlayer;
-	private RatingTableEntry m_jpSterne = new RatingTableEntry();
-	private Box m_jpDummy = new Box(BoxLayout.X_AXIS);
-	private JPanel m_jpParent;
+	private final RatingTableEntry m_jpSterne = new RatingTableEntry();
+	private final Box m_jpDummy = new Box(BoxLayout.X_AXIS);
+	private final JPanel m_jpParent;
 	private boolean m_bOnScreen = false;
-	private GridBagConstraints m_gbcConstraints = new GridBagConstraints();
+	private final GridBagConstraints m_gbcConstraints = new GridBagConstraints();
 
-	protected SpielerSternePanel(int positionsID, boolean print, JPanel parent, int x, int y) {
+	SpielerSternePanel(int positionsID, boolean print, JPanel parent, int x, int y) {
 		super(print);
 
 		m_iPositionsID = positionsID;
@@ -74,7 +73,7 @@ final class SpielerSternePanel extends ImagePanel implements ActionListener {
 	}
 
 	@Override
-	public final void actionPerformed(ActionEvent e) {
+	public void actionPerformed(ActionEvent e) {
 		new SpielerDetailDialog(core.gui.HOMainFrame.instance(), m_clMatchPlayer,
 				m_clMatchLineup);
 	}
@@ -192,7 +191,7 @@ final class SpielerSternePanel extends ImagePanel implements ActionListener {
 
 			String displayName = "";
 			if (!StringUtils.isEmpty(matchLineupPosition.getSpielerName())) {
-				displayName = matchLineupPosition.getSpielerName().substring(0, 1)
+				displayName = matchLineupPosition.getSpielerName().charAt(0)
 						+ "."
 						+ matchLineupPosition.getSpielerName().substring(matchLineupPosition.getSpielerName().indexOf(" ") + 1);
 			}

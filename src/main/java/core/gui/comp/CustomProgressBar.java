@@ -4,19 +4,18 @@ import core.gui.theme.ImageUtilities;
 import core.model.UserParameter;
 
 import java.awt.*;
-import java.text.NumberFormat;
 import javax.swing.JPanel;
 
 public class CustomProgressBar extends JPanel{
-    private Color m_colorFill, m_colorBorder, m_colorBG;
-    private double m_minimum = 0.0;
-    private double m_maximum = 100.0;
+    private final Color m_colorFill;
+    private final Color m_colorBorder;
+    private final Color m_colorBG;
     private double m_value = 100.0;
-    private int m_width;
-    private int m_height;
+    private final int m_width;
+    private final int m_height;
     private String m_leftText = "";
     private String m_rightText = "";
-    private Font m_f;
+    private final Font m_f;
 
     public CustomProgressBar(Color colorBG, Color colorFill, Color colorBorder, int iWidth, int iHeight, Font f) {
         m_colorFill = colorFill;
@@ -39,6 +38,8 @@ public class CustomProgressBar extends JPanel{
 
         //fill progress
         if (m_value != 0) {
+            double m_minimum = 0.0;
+            double m_maximum = 100.0;
             final int drawAmount = (int) (((m_value - m_minimum) / (m_maximum - m_minimum)) * m_width);
             final int leftBlockWidth = drawAmount - 2;
             final int rightBlockWidth = m_width - 2 - leftBlockWidth;
