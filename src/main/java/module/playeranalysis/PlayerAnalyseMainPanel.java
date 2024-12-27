@@ -83,8 +83,7 @@ public class PlayerAnalyseMainPanel extends LazyImagePanel {
 		playersPanel1 = new SpielerAnalysePanel(1);
 		playersPanel2 = new SpielerAnalysePanel(2);
 		splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, playersPanel1, playersPanel2);
-		splitPane
-				.setDividerLocation(UserParameter.instance().spielerAnalysePanel_horizontalSplitPane);
+		splitPane.setDividerLocation(UserParameter.instance().spielerAnalysePanel_horizontalSplitPane);
 		add(splitPane, BorderLayout.CENTER);
 
 		if (!UserParameter.instance().spieleranalyseVertikal) {

@@ -20,11 +20,6 @@ import java.util.Vector;
  */
 public class PlayerAnalysisModel extends HOTableModel {
 
-	/**
-	 *
-	 */
-	@Serial
-	private static final long serialVersionUID = -2953738895366809237L;
 	private final int instance;
 	private Vector<PlayerMatchCBItem> m_vSpielerMatchCBItem;
 

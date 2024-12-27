@@ -26,6 +26,7 @@ final class SpielerMatchesTable extends JTable {
 		m_clTableModel.initTable(this);
 		setOpaque(false);
 		setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
+		setAutoResizeMode(AUTO_RESIZE_OFF);
 	}
 
 	void storeUserSettings() {

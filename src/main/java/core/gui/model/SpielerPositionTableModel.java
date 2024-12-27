@@ -75,13 +75,6 @@ public class SpielerPositionTableModel extends AbstractTableModel {
     //-----Zugriffsmethoden----------------------------------------        
     public final int getColumnCount() {
         return m_sColumnNames.length;
-
-        /*
-           if ( m_clData!=null && m_clData.length > 0 && m_clData[0] != null )
-               return m_clData[0].length;
-           else
-               return 0;
-         */
     }
 
     @Override
@@ -145,11 +138,9 @@ public class SpielerPositionTableModel extends AbstractTableModel {
             final float[] rating = m_playersEvaluation.get(i);
 
             //Position
-            m_clData[i][0] = new ColorLabelEntry(ImageUtilities.getJerseyIcon(MatchRoleID
-                                                                    .getHTPosidForHOPosition4Image((byte) rating[3]),
-                                                                    (byte) 0, 0),
-                                                 -MatchRoleID.getSortId((byte) rating[3],
-                                                                            false),
+            m_clData[i][0] = new ColorLabelEntry(
+                    ImageUtilities.getJerseyIcon(MatchRoleID.getHTPosidForHOPosition4Image((byte) rating[3]), (byte) 0, 0),
+                                                 -MatchRoleID.getSortId((byte) rating[3], false),
                                                  ColorLabelEntry.FG_STANDARD,
                                                  ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
             ((ColorLabelEntry) m_clData[i][0]).setText(MatchRoleID.getNameForPosition((byte) rating[3]));
