@@ -7,6 +7,7 @@ import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.model.TranslationFacility;
+import core.model.UserParameter;
 import core.model.match.MatchLineup;
 import core.model.match.MatchLineupPosition;
 import core.model.player.IMatchRoleID;
@@ -16,6 +17,7 @@ import core.util.Helper;
 import core.util.StringUtils;
 
 import javax.swing.*;
+import javax.swing.border.BevelBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,12 +29,16 @@ final class SpielerSternePanel extends ImagePanel implements ActionListener {
 
 	private static final long serialVersionUID = 744463551751056443L;
 	private int PANEL_WIDTH = Helper.calcCellWidth(120);
-	private int PANEL_HEIGHT = Helper.calcCellWidth(59);
+	private int PANEL_HEIGHT = Helper.calcCellWidth(69);
 	private int PANEL_HEIGHT_REDUCED = Helper.calcCellWidth(44);
 	private int m_iPositionsID = -1;
-	private final JButton m_jbSpieler = new JButton();
-	private final JLabel m_jlPosition = new JLabel();
-	private final JLabel m_jlSpecial = new JLabel();
+
+	private final JLabel position = new JLabel();
+	private final JButton playerButton = new JButton();
+	private final JLabel specialty = new JLabel();
+	private final JLabel name = new JLabel();
+	private final JLabel shirt = new JLabel();
+
 	private MatchLineup m_clMatchLineup;
 	private MatchLineupPosition m_clMatchPlayer;
 	private RatingTableEntry m_jpSterne = new RatingTableEntry();
@@ -40,10 +46,6 @@ final class SpielerSternePanel extends ImagePanel implements ActionListener {
 	private JPanel m_jpParent;
 	private boolean m_bOnScreen = false;
 	private GridBagConstraints m_gbcConstraints = new GridBagConstraints();
-
-	protected SpielerSternePanel(int positionsID, JPanel parent, int x, int y) {
-		this(positionsID, false, parent, x, y);
-	}
 
 	protected SpielerSternePanel(int positionsID, boolean print, JPanel parent, int x, int y) {
 		super(print);
@@ -77,7 +79,7 @@ final class SpielerSternePanel extends ImagePanel implements ActionListener {
 				m_clMatchLineup);
 	}
 
-	protected final void clear() {
+	void clear() {
 
 		// We want empty frames in the on field positions hidden when empty
 		if ((m_bOnScreen)
@@ -87,11 +89,11 @@ final class SpielerSternePanel extends ImagePanel implements ActionListener {
 
 		// lets leave the position text, right? - Blaghaid
 		// m_jlPosition.setText("");
-		m_jbSpieler.setText("");
-		m_jbSpieler.setIcon(null);
-		m_jbSpieler.setEnabled(false);
+		playerButton.setText("");
+		playerButton.setEnabled(false);
 		m_jpSterne.clear();
-		m_jlSpecial.setIcon(null);
+		specialty.setIcon(null);
+		shirt.setIcon(null);
 		repaint();
 	}
 
@@ -99,6 +101,7 @@ final class SpielerSternePanel extends ImagePanel implements ActionListener {
 	 * Erzeugt die Komponenten
 	 */
 	private void initComponents() {
+		var fontSize = UserParameter.instance().fontSize;
 		final GridBagLayout layout = new GridBagLayout();
 		final GridBagConstraints constraints = new GridBagConstraints();
 		constraints.fill = GridBagConstraints.BOTH;
@@ -108,42 +111,41 @@ final class SpielerSternePanel extends ImagePanel implements ActionListener {
 
 		setLayout(layout);
 
-		setBorder(javax.swing.BorderFactory
-				.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+		setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 
 		constraints.gridx = 0;
 		constraints.gridy = 0;
-		m_jlPosition.setPreferredSize(new Dimension(100, 10));
-		layout.setConstraints(m_jlPosition, constraints);
-		add(m_jlPosition);
+		layout.setConstraints(position, constraints);
+		add(position);
 
-		final JPanel panel = new JPanel(new BorderLayout());
-		panel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-		panel.setBackground(ColorLabelEntry.BG_STANDARD);
-		panel.setOpaque(true);
+//		final JPanel playerDetailsPanel = new JPanel(new BorderLayout());
+//		playerDetailsPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+//		playerDetailsPanel.setBackground(ColorLabelEntry.BG_STANDARD);
+//		playerDetailsPanel.setOpaque(true);
 
-		m_jbSpieler.setToolTipText(TranslationFacility.tr(
-				"tt_Spiel_Spielerdetails"));
-		m_jbSpieler.setHorizontalAlignment(SwingConstants.LEFT);
-		m_jbSpieler.setMargin(new Insets(0, 1, 0, 1));
-		m_jbSpieler.setPreferredSize(new Dimension(125, 15));
-		m_jbSpieler.setFocusPainted(false);
-		m_jbSpieler.setEnabled(false);
-		m_jbSpieler.addActionListener(this);
-		m_jbSpieler.setBackground(ColorLabelEntry.BG_STANDARD);
-		m_jbSpieler.setOpaque(true);
-		m_jbSpieler.setBorder(BorderFactory.createEmptyBorder());
-		panel.add(m_jbSpieler, BorderLayout.CENTER);
+		playerButton.setLayout(new BorderLayout());
+		playerButton.setToolTipText(TranslationFacility.tr("tt_Spiel_Spielerdetails"));
+		playerButton.setHorizontalAlignment(SwingConstants.LEFT);
+		playerButton.setMargin(new Insets(0, 1, 0, 1));
+		playerButton.setFocusPainted(false);
+		playerButton.setEnabled(false);
+		playerButton.addActionListener(this);
+		playerButton.setBackground(ColorLabelEntry.BG_STANDARD);
+		playerButton.setOpaque(false);
+		playerButton.setBorder(BorderFactory.createEmptyBorder());
 
-		panel.add(m_jlSpecial, BorderLayout.EAST);
+		shirt.setPreferredSize(new Dimension(2*fontSize, 2*fontSize));
+		playerButton.add(shirt, BorderLayout.WEST);
+		playerButton.add(name, BorderLayout.CENTER);
+		playerButton.add(specialty, BorderLayout.EAST);
+//		playerDetailsPanel.add(m_jbSpieler, BorderLayout.CENTER);
 
 		constraints.gridx = 0;
 		constraints.gridy = 1;
-		constraints.weighty = 0.5; // Give extra vertical space to the player
-									// button
+		constraints.weighty = 0.5; // Give extra vertical space to the player button
 		constraints.gridwidth = 1;
-		layout.setConstraints(panel, constraints);
-		add(panel);
+//		layout.setConstraints(m_jbSpieler, constraints);
+		add(playerButton, constraints);
 
 		switch (m_iPositionsID) {
 		case IMatchRoleID.keeper:
@@ -178,43 +180,43 @@ final class SpielerSternePanel extends ImagePanel implements ActionListener {
 		}
 	}
 
-	public final void refresh(MatchLineup lineup, MatchLineupPosition player) {
+	public void refresh(MatchLineup lineup, MatchLineupPosition matchLineupPosition) {
 		m_clMatchLineup = lineup;
-		m_clMatchPlayer = player;
+		m_clMatchPlayer = matchLineupPosition;
 
-		if (player != null) {
-
+		if (matchLineupPosition != null) {
 			// Make sure this is on screen, we got a player to display
 			if (!m_bOnScreen) {
 				addPanel();
 			}
 
 			String displayName = "";
-			if (!StringUtils.isEmpty(player.getSpielerName())) {
-				displayName = player.getSpielerName().substring(0, 1)
+			if (!StringUtils.isEmpty(matchLineupPosition.getSpielerName())) {
+				displayName = matchLineupPosition.getSpielerName().substring(0, 1)
 						+ "."
-						+ player.getSpielerName().substring(
-								player.getSpielerName().indexOf(" ") + 1);
+						+ matchLineupPosition.getSpielerName().substring(matchLineupPosition.getSpielerName().indexOf(" ") + 1);
 			}
-			m_jbSpieler.setText(displayName);
+			name.setText(displayName);
 
 			int trickotnummer = 0;
-			final Player spieler = core.model.HOVerwaltung.instance()
-					.getModel().getCurrentPlayer(player.getPlayerId());
+			final Player player = core.model.HOVerwaltung.instance().getModel().getCurrentPlayer(matchLineupPosition.getPlayerId());
 
-			if (spieler != null) {
-				trickotnummer = spieler.getShirtNumber();
-				m_jlSpecial.setIcon(ImageUtilities.getLargePlayerSpecialtyIcon(HOIconName.SPECIALTIES[spieler
-						.getSpecialty()]));
+			if (player != null) {
+				trickotnummer = player.getShirtNumber();
+				specialty.setIcon(ImageUtilities.getPlayerSpecialtyIcon(HOIconName.SPECIALTIES[player.getSpecialty()], UserParameter.instance().fontSize));
 			} else {
-				m_jlSpecial.setIcon(null);
+				specialty.setIcon(null);
 			}
 
-			m_jbSpieler.setIcon(ImageUtilities.getImage4Position(player.getRoleId(),
-					player.getBehaviour(), trickotnummer));
-			m_jbSpieler.setEnabled(player.getPlayerId() > 0);
-			m_jpSterne.setRating((float) player.getRating() * 2f, true);
-			initLabel(player.getRoleId(), player.getBehaviour());
+			if (matchLineupPosition.getPlayerId() > 0) {
+				shirt.setIcon(ImageUtilities.getImage4Position(matchLineupPosition.getRoleId(), matchLineupPosition.getBehaviour(), trickotnummer));
+			}
+			else {
+				shirt.setIcon(null);
+			}
+			playerButton.setEnabled(matchLineupPosition.getPlayerId() > 0);
+			m_jpSterne.setRating((float) matchLineupPosition.getRating() * 2f, true);
+			initLabel(matchLineupPosition.getRoleId(), matchLineupPosition.getBehaviour());
 
 		} else {
 			clear();
@@ -236,42 +238,42 @@ final class SpielerSternePanel extends ImagePanel implements ActionListener {
 		m_jpParent.repaint();
 	}
 
-	protected final void initLabel(int posid, byte taktik) {
+	private void initLabel(int posid, byte taktik) {
 
 		switch (posid) {
 
 		case IMatchRoleID.setPieces: {
-			m_jlPosition.setText(TranslationFacility.tr("match.setpiecestaker"));
+			position.setText(TranslationFacility.tr("match.setpiecestaker"));
 			break;
 		}
 		case IMatchRoleID.captain: {
-			m_jlPosition.setText(TranslationFacility.tr("Spielfuehrer"));
+			position.setText(TranslationFacility.tr("Spielfuehrer"));
 			break;
 		}
 		case IMatchRoleID.substCD1: {
-			m_jlPosition.setText(TranslationFacility.tr("Reserve") + " "
+			position.setText(TranslationFacility.tr("Reserve") + " "
 					+ TranslationFacility.tr("defender"));
 			break;
 		}
 		case IMatchRoleID.substFW1: {
-			m_jlPosition.setText(TranslationFacility.tr("Reserve") + " "
+			position.setText(TranslationFacility.tr("Reserve") + " "
 					+ TranslationFacility.tr("ls.player.position.forward"));
 			break;
 		}
 		case IMatchRoleID.substWI1: {
-			m_jlPosition.setText(TranslationFacility.tr("Reserve") + " "
+			position.setText(TranslationFacility.tr("Reserve") + " "
 					+ TranslationFacility.tr("ls.player.position.winger"));
 			break;
 		}
 		case IMatchRoleID.substIM1: {
-			m_jlPosition.setText(TranslationFacility.tr("Reserve")
+			position.setText(TranslationFacility.tr("Reserve")
 					+ " "
 					+ TranslationFacility.tr(
 							"ls.player.position.innermidfielder"));
 			break;
 		}
 		case IMatchRoleID.substGK1: {
-			m_jlPosition.setText(TranslationFacility.tr("Reserve") + " "
+			position.setText(TranslationFacility.tr("Reserve") + " "
 					+ TranslationFacility.tr("ls.player.position.keeper"));
 			break;
 		}
@@ -280,11 +282,10 @@ final class SpielerSternePanel extends ImagePanel implements ActionListener {
 			// least 3...
 			if ((posid >= IMatchRoleID.FirstPlayerReplaced)
 					&& (posid <= IMatchRoleID.ThirdPlayerReplaced)) {
-				m_jlPosition.setText(TranslationFacility.tr("Ausgewechselt"));
+				position.setText(TranslationFacility.tr("Ausgewechselt"));
 				break;
 			} else {
-
-				m_jlPosition.setText(MatchRoleID
+				position.setText(MatchRoleID
 						.getNameForPosition(MatchRoleID.getPosition(posid,
 								taktik)));
 			}

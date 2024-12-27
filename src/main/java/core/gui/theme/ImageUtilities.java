@@ -25,6 +25,8 @@ import java.util.*;
 
 import javax.swing.*;
 
+import static core.gui.theme.HOIconName.TRICKOT;
+
 public class ImageUtilities {
 
 	private ImageUtilities() {
@@ -342,67 +344,11 @@ public class ImageUtilities {
 		// Im Cache nachsehen
 		key.append("trickot_").append(posid).append("_").append(taktik).append("_").append(trickotnummer);
 		komplettIcon = ThemeManager.getIcon(key.toString());
-		
 		if (komplettIcon == null) {
-			trickotfarbe = getJerseyColorByPosition(posid);
-
-			// Bild laden, transparenz hinzu, trikofarbe wechseln
-			trickotImage = changeColor(
-					changeColor(
-							makeColorTransparent(
-									iconToImage(ThemeManager.getIcon(HOIconName.TRICKOT)),
-									Color.WHITE
-							),
-							Color.WHITE,
-							trickotfarbe),
-					new Color(100, 100, 100),
-					trickotfarbe.brighter());
-			komplettIcon = new ImageIcon(trickotImage);
-			BufferedImage largeImage = new BufferedImage(28, 14, BufferedImage.TYPE_INT_ARGB);
-			// Large Icon
-			largeImage = (BufferedImage) merge(largeImage, iconToImage(komplettIcon));
-			komplettIcon = new ImageIcon(largeImage);
-
-		// Trickotnummer
-			if ((trickotnummer > 0) && (trickotnummer < 100)) {
-				BufferedImage image = new BufferedImage(28, 14, BufferedImage.TYPE_INT_ARGB);
-
-				// 5;
-				int xPosText = 20;
-	
-				// Helper.makeColorTransparent( image, Color.white );
-				final Graphics2D g2d = (Graphics2D) image.getGraphics();
-	
-				// Wert eintragen
-				// g2d.setComposite ( AlphaComposite.getInstance(
-				// AlphaComposite.SRC_OVER, 1.0f ) );
-				g2d.setRenderingHint(
-						RenderingHints.KEY_TEXT_ANTIALIASING,
-						RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-				g2d.setRenderingHint(
-						RenderingHints.KEY_RENDERING,
-						RenderingHints.VALUE_RENDER_QUALITY);
-				g2d.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, UserParameter.instance().fontSize));
-	
-				// Position bei grossen Zahlen weiter nach vorne
-				if (trickotnummer > 9) {
-					xPosText = 13;
-				}
-	
-				g2d.setColor(Color.black);
-				g2d.drawString(trickotnummer + "", xPosText, 13);
-	
-				// Zusammenführen
-				image = (BufferedImage) merge(image, iconToImage(komplettIcon));
-	
-				// Icon erstellen und in den Cache packen
-				komplettIcon = new ImageIcon(image);
-				
-			}
+			komplettIcon = ImageUtilities.getJerseyIcon(posid, taktik,  trickotnummer);
 			// In den Cache hinzufügen
 			ThemeManager.instance().put(key.toString(), komplettIcon);
-		} // komplettIcon == null 
-	
+		} // komplettIcon == null
 		return komplettIcon;
 	}
 
@@ -499,14 +445,12 @@ public class ImageUtilities {
 	}
 
     public static Icon getJerseyIcon(int posid, byte taktik, int trickotnummer) {
-        return getJerseyIcon(posid, taktik, trickotnummer, 20);
+        return getJerseyIcon(posid, taktik, trickotnummer, 2 * UserParameter.instance().fontSize);
     }
 
     public static Icon getJerseyIcon(int posid, byte taktik, int trickotnummer, int size) {
         String key = "trickot_" + posid + "_" + taktik + "_" + trickotnummer + "_" + size;
         Icon komplettIcon = ThemeManager.getIcon(key);
-
-
         if (komplettIcon == null) {
             Color jerseyColor = getJerseyColorByPosition(posid);
 
@@ -532,7 +476,6 @@ public class ImageUtilities {
             komplettIcon = new OverlayIcon(jerseyIcon, numberIcon, size, size);
             ThemeManager.instance().put(key, komplettIcon);
         }
-
         return komplettIcon;
     }
 

@@ -5,6 +5,7 @@ import core.gui.comp.CustomProgressBar;
 import core.gui.comp.panel.LazyImagePanel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
+import core.model.UserParameter;
 import core.model.match.MatchKurzInfo;
 import core.model.match.Matchdetails;
 import core.util.Helper;
@@ -18,9 +19,9 @@ import javax.swing.*;
 class TeamsRatingPanel extends LazyImagePanel {
 
 	private final double MIN_WIDTH_BAR = 0.2;  // minimum width of the rating bar to ensure proper visibility in case of extreme ratings ratio
-	private final int RATING_BAR_WIDTH = 200;
-	private final int RATING_BAR_HEIGHT = 50;
-	private final int INSET = 12;
+	private final int RATING_BAR_WIDTH = 18 * UserParameter.instance().fontSize;
+	private final int RATING_BAR_HEIGHT = 4 * UserParameter.instance().fontSize;
+	private final int INSET = UserParameter.instance().fontSize;
 	private final double RATING_MAX = 21d;
 	private final int LARGE_RATING_BAR_HEIGHT = 2*(RATING_BAR_HEIGHT + INSET);
 	private JLabel m_jlGuestTeamName;
@@ -98,6 +99,7 @@ class TeamsRatingPanel extends LazyImagePanel {
 
 	private void initComponents() {
 
+		var fontSize = UserParameter.instance().fontSize;
 
 		f =  new JLabel("").getFont();
 		f = f.deriveFont(f.getStyle() | Font.BOLD);
@@ -105,7 +107,7 @@ class TeamsRatingPanel extends LazyImagePanel {
 		bars = new JProgressBar[14];
 		for (int i = 0; i < 14; i++) {
 			bars[i] = new JProgressBar(0, 100);
-			bars[i].setPreferredSize(new Dimension(200, 20)); //25 if nimbus
+			bars[i].setPreferredSize(new Dimension(20 * fontSize, 2 * fontSize)); //25 if nimbus
 			bars[i].setStringPainted(true);
 		}
 

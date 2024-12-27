@@ -76,7 +76,6 @@ public class MatchReportPanel extends LazyImagePanel {
 			List<MatchEvent> matchHighlights = details.downloadHighlightsIfMissing();
 			if ( matchHighlights == null) return;
 
-//			JLabel timeLabel, eventIcon, eventDescription;
 			//Icon icon;
 			boolean bEventHighlighted;
 			boolean bMatchFinished = false;
@@ -123,8 +122,6 @@ public class MatchReportPanel extends LazyImagePanel {
 					}
 
 					var icons = highlight.getIcons();
-
-
 					var eventIcon = new JPanel();
 					eventIcon.setLayout(new BoxLayout(eventIcon, BoxLayout.Y_AXIS));
 					for ( var icon : icons){
@@ -186,7 +183,8 @@ public class MatchReportPanel extends LazyImagePanel {
 					panel.add(eventIcon);
 
 					var eventDescription = new JLabel();
-					eventDescription.setText("<html><body style='width: 350px'>"+highlight.getEventText()+"</p></html>");
+					var textWidth = f.getSize() * 30;
+					eventDescription.setText("<html><body style='width: " + textWidth + "px'>"+highlight.getEventText()+"</p></html>");
 					highlightLabels.add(eventDescription);
 					constraints.anchor = GridBagConstraints.LINE_START;
 					constraints.fill = GridBagConstraints.HORIZONTAL;

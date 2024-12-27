@@ -130,22 +130,17 @@ public final class MatchesPanel extends LazyImagePanel {
 		matchesTable.storeUserSettings();
 		matchesOverviewTable.storeUserSettings();
 		UserParameter parameter = UserParameter.instance();
-		parameter.spielePanel_horizontalLeftSplitPane = horizontalLeftSplitPane
-				.getDividerLocation();
+		parameter.spielePanel_horizontalLeftSplitPane = horizontalLeftSplitPane.getDividerLocation();
 		parameter.spielePanel_verticalSplitPane = verticalSplitPane.getDividerLocation();
 	}
 
 	private void adoptLineup() {
-		if ((matchesModel.getMatch() != null)
-				&& (matchesModel.getMatch().getMatchStatus() == MatchKurzInfo.FINISHED)) {
+		if (matchesModel.getMatch() != null && (matchesModel.getMatch().getMatchStatus() == MatchKurzInfo.FINISHED)) {
 			int teamid = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 			List<MatchLineupPosition> positions = DBManager.instance().getMatchLineupPlayers(
 					matchesModel.getMatch().getMatchID(), matchesModel.getMatch().getMatchType(), teamid);
 			Lineup lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
-
-			lineup.clearLineup(); // To make sure the old one is
-			// gone.
-
+			lineup.clearLineup(); // To make sure the old one is gone.
 			if (positions != null) {
 				for (MatchLineupPosition player : positions) {
 					if (player.getRoleId() == IMatchRoleID.setPieces) {
@@ -382,8 +377,7 @@ public final class MatchesPanel extends LazyImagePanel {
 
 		// Allgemein
 		StaerkenvergleichPanel teamsComparePanel = new StaerkenvergleichPanel(this.matchesModel);
-		matchDetailsTabbedPane.addTab(TranslationFacility.tr("Allgemein"),
-				new JScrollPane(teamsComparePanel));
+		matchDetailsTabbedPane.addTab(TranslationFacility.tr("Allgemein"), new JScrollPane(teamsComparePanel));
 
 
 		// Rating Panel

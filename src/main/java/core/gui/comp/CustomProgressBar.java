@@ -1,6 +1,7 @@
 package core.gui.comp;
 
 import core.gui.theme.ImageUtilities;
+import core.model.UserParameter;
 
 import java.awt.*;
 import java.text.NumberFormat;
@@ -23,7 +24,7 @@ public class CustomProgressBar extends JPanel{
         m_colorBG = colorBG;
         m_width = iWidth;
         m_height = iHeight;
-        m_f = f.deriveFont(Font.BOLD, 16f);
+        m_f = f.deriveFont(Font.BOLD, UserParameter.instance().fontSize + 4);
         setPreferredSize(new Dimension(m_width, m_height));
         setBackground(colorBG);
     }
@@ -47,16 +48,17 @@ public class CustomProgressBar extends JPanel{
             g.setFont(m_f);
             Canvas c = new Canvas();
             FontMetrics fm = c.getFontMetrics(m_f);
-            final int textHeight = fm.getHeight();
-            final int y = (m_height - textHeight) / 2 + 15;
+//            final int textHeight = fm.getHeight();
+            var textHeight = m_f.getSize();
+            final int y = (m_height+textHeight)/2;
 
-            if (m_leftText != "") {
+            if (!m_leftText.isEmpty()) {
                 final int leftTextWidth = fm.stringWidth(m_leftText);
                 g.setColor(ImageUtilities.getColorForContrast(m_colorFill));
                 g.drawString(m_leftText, ((leftBlockWidth-leftTextWidth) / 2), y);
             }
 
-            if (m_rightText != "") {
+            if (!m_rightText.isEmpty()) {
                 final int rightTextWidth = fm.stringWidth(m_rightText);
                 g.setColor(ImageUtilities.getColorForContrast(m_colorBG));
                 g.drawString(m_rightText, (leftBlockWidth + (rightBlockWidth-rightTextWidth) / 2), y);

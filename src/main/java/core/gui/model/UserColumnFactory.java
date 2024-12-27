@@ -604,7 +604,7 @@ final public class UserColumnFactory {
         };
 
         // Position
-        playerAdditionalArray[4] = new PlayerColumn(LINEUP, " ", "Aufgestellt", 28) {
+        playerAdditionalArray[4] = new PlayerColumn(LINEUP, " ", "Aufgestellt", 40) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
                 final HOModel model = HOVerwaltung.instance().getModel();

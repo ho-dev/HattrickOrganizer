@@ -73,7 +73,8 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 
 	private void addListeners() {
 
-		Map<Object, Object> colorMap = Map.of("trainingColor1", ThemeManager.getColor(HOColorName.TRAINING_ICON_COLOR_1),
+		Map<Object, Object> colorMap = Map.of(
+				"trainingColor1", ThemeManager.getColor(HOColorName.TRAINING_ICON_COLOR_1),
 				"trainingColor2", ThemeManager.getColor(HOColorName.TRAINING_ICON_COLOR_2));
 
 		Object[] options = {Helper.getTranslation("ls.button.close")};

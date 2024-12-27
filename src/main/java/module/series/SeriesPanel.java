@@ -9,9 +9,6 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
-import module.series.promotion.LeaguePromotionHandler;
-import module.series.promotion.PromotionInfoPanel;
-
 import javax.swing.*;
 import java.awt.*;
 

@@ -60,8 +60,6 @@ public class SpielHighlightPanel extends LazyImagePanel {
 			
 			Matchdetails details = this.matchesModel.getDetails();
 
-			//JLabel playerlabel, matchEventPlayer, resultlabel ;
-
 			List<MatchEvent> matchHighlights = details.downloadHighlightsIfMissing();
 			List<Icon> icons;
 			boolean bEventHighlighted;
