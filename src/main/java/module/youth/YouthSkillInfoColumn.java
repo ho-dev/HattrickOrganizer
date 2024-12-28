@@ -2,6 +2,7 @@ package module.youth;
 
 import core.gui.comp.entry.IHOTableEntry;
 import core.model.TranslationFacility;
+import core.model.UserParameter;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -19,8 +20,7 @@ public class YouthSkillInfoColumn extends JLabel implements IHOTableEntry {
     private static final Color Color_TrainedRange = new Color(0, 153, 0);
     private static final Color Color_Background = Color.lightGray;
 
-    private static final int bar_width = 100; // pixels to display skill range from 0 to 9 (8.3)
-    private static final int bar_thickness = 12;
+    private static final int bar_width = 8 * UserParameter.instance().fontSize; // pixels to display skill range from 0 to 9 (8.3)
 
     private final Color[] cellSkillRatingColor = new Color[]{
             new Color(255,204,204),         // light red
@@ -108,20 +108,21 @@ public class YouthSkillInfoColumn extends JLabel implements IHOTableEntry {
         g.setColor(Color_Background);
         g.fillRect(0, 0, bar_width, bar_thickness);
 
+        var f = bar_width/10;
         // draw possible range
         g.setColor(Color_PossibleRange);
         var xStart = this.skillInfo.getStartLevel();
-        if (xStart != null) xStart*=10;
+        if (xStart != null) xStart*=f;
         else xStart = 0;
         var xEnd = this.skillInfo.getMaximumPotential();
-        if (xEnd < 8) xEnd = 10 * xEnd + 9;
-        else xEnd = 83;
+        if (xEnd < 8) xEnd = (int)(f * (xEnd + .9));
+        else xEnd = (int)(8.3*f);
         g.fillRect(xStart, 0, xEnd-xStart, bar_thickness);
 
         // draw trained range
-        xStart = (int) (this.skillInfo.getStartValue() * 10);
+        xStart = (int) (this.skillInfo.getStartValue() * f);
         g.setColor(getColorTrainedBar());
-        xEnd = (int) (this.skillInfo.getCurrentValue() * 10);
+        xEnd = (int) (this.skillInfo.getCurrentValue() * f);
         g.fillRect(xStart, 0, xEnd-xStart+1, bar_thickness);
     }
 
