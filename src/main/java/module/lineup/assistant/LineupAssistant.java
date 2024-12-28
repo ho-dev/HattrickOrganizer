@@ -344,7 +344,7 @@ public class LineupAssistant {
 		List<Player> players = HOVerwaltung.instance().getModel().getCurrentPlayers();
 		for (Player player : players) {
 			if (player.getPlayerId() == playerID) {
-				return player.isLineupDisabled();
+				return player.isExternallyRecruitedCoach();
 			}
 		}
 		return true;

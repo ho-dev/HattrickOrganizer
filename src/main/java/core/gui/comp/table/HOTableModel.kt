@@ -199,7 +199,7 @@ abstract class HOTableModel protected constructor(
     fun getPositionInArray(searchId: Int): Int {
         val tmpColumns = getDisplayedColumns()
         for (i in tmpColumns.indices) {
-            if (tmpColumns[i]!!.getId() == searchId) return i
+            if (tmpColumns[i].getId() == searchId) return i
         }
         return -1
     }

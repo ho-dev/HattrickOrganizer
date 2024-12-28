@@ -137,7 +137,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 
 		// Apply the Group Filter
 		for (Player player : allPlayers) {
-			if (player.isLineupDisabled()) continue;
+			if (player.isExternallyRecruitedCoach()) continue;
 			// No Filter
 			if (!bGroupFiltered || (sGroup.equals(player.getTeamGroup()) && !bSelectedGroupExcluded)
 					|| (!sGroup.equals(player.getTeamGroup()) && bSelectedGroupExcluded)) {

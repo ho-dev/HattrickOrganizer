@@ -59,7 +59,7 @@ public class PenaltyTakersView extends JPanel {
 	public void setPlayers(List<Player> players) {
 		this.players = new ArrayList<>();
 		for (Player player : players) {
-			if (!player.isLineupDisabled()) {
+			if (!player.isExternallyRecruitedCoach()) {
 				this.players.add(new PenaltyTaker(player));
 			}
 		}

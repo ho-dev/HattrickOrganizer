@@ -10,6 +10,7 @@ import java.awt.event.AdjustmentListener
 import java.beans.PropertyChangeEvent
 import javax.swing.*
 import javax.swing.event.ListSelectionListener
+import javax.swing.event.TableModelEvent
 import javax.swing.table.TableCellRenderer
 import javax.swing.table.TableColumn
 import javax.swing.table.TableModel
@@ -222,5 +223,16 @@ open class FixedColumnsTable @JvmOverloads constructor(
             return fixed!!.columnModel.getColumn(i)
         }
         return super.getColumnModel().getColumn(i - fixedColumnsCount)
+    }
+
+    fun getUserColumn(e: TableModelEvent): UserColumn? {
+        if (e.column >= 0 && e.source.equals(this.model)){
+            val modelIndex = convertColumnIndexToModel(e.column)
+            if ( modelIndex > -1) {
+                val hoTableModel = this.model as HOTableModel
+                return hoTableModel.getDisplayedColumns()[modelIndex]
+            }
+        }
+        return null;
     }
 }
