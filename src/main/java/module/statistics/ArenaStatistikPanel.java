@@ -37,10 +37,12 @@ public class ArenaStatistikPanel extends LazyImagePanel {
 		ImagePanel panel = new ImagePanel(null);
 
 		matchFilterComboBox = new JComboBox(getMatchFilterItems());
-		matchFilterComboBox.setFont(matchFilterComboBox.getFont().deriveFont(Font.BOLD));
-		matchFilterComboBox.setSize(200, 25);
+		var font = matchFilterComboBox.getFont().deriveFont(Font.BOLD);
+		matchFilterComboBox.setFont(font);
+		var fontSize = font.getSize();
+		matchFilterComboBox.setSize(20*fontSize, 2*fontSize);
 		matchFilterComboBox.setLocation(10, 5);
-		panel.setPreferredSize(new Dimension(240, 35));
+		panel.setPreferredSize(new Dimension(20*fontSize, 3*fontSize));
 		panel.add(matchFilterComboBox);
 		add(panel, BorderLayout.NORTH);
 
