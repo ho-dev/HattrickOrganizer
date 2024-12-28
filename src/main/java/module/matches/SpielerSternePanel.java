@@ -117,11 +117,6 @@ final class SpielerSternePanel extends ImagePanel implements ActionListener {
 		layout.setConstraints(position, constraints);
 		add(position);
 
-//		final JPanel playerDetailsPanel = new JPanel(new BorderLayout());
-//		playerDetailsPanel.setBorder(BorderFactory.createLineBorder(Color.GRAY));
-//		playerDetailsPanel.setBackground(ColorLabelEntry.BG_STANDARD);
-//		playerDetailsPanel.setOpaque(true);
-
 		playerButton.setLayout(new BorderLayout());
 		playerButton.setToolTipText(TranslationFacility.tr("tt_Spiel_Spielerdetails"));
 		playerButton.setHorizontalAlignment(SwingConstants.LEFT);
@@ -137,13 +132,11 @@ final class SpielerSternePanel extends ImagePanel implements ActionListener {
 		playerButton.add(shirt, BorderLayout.WEST);
 		playerButton.add(name, BorderLayout.CENTER);
 		playerButton.add(specialty, BorderLayout.EAST);
-//		playerDetailsPanel.add(m_jbSpieler, BorderLayout.CENTER);
 
 		constraints.gridx = 0;
 		constraints.gridy = 1;
 		constraints.weighty = 0.5; // Give extra vertical space to the player button
 		constraints.gridwidth = 1;
-//		layout.setConstraints(m_jbSpieler, constraints);
 		add(playerButton, constraints);
 
 		switch (m_iPositionsID) {

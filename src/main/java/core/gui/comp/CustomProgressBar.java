@@ -49,7 +49,6 @@ public class CustomProgressBar extends JPanel{
             g.setFont(m_f);
             Canvas c = new Canvas();
             FontMetrics fm = c.getFontMetrics(m_f);
-//            final int textHeight = fm.getHeight();
             var textHeight = m_f.getSize();
             final int y = (m_height+textHeight)/2;
 
