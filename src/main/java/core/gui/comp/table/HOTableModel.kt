@@ -169,7 +169,7 @@ abstract class HOTableModel protected constructor(
      */
     override fun getColumnName(columnIndex: Int): String? {
         if (displayedColumnCount > columnIndex) {
-            return getDisplayedColumns()[columnIndex]!!.getColumnName()
+            return getDisplayedColumns()[columnIndex].getColumnName()
         }
 
         return null
@@ -199,7 +199,7 @@ abstract class HOTableModel protected constructor(
     fun getPositionInArray(searchId: Int): Int {
         val tmpColumns = getDisplayedColumns()
         for (i in tmpColumns.indices) {
-            if (tmpColumns[i]!!.getId() == searchId) return i
+            if (tmpColumns[i].getId() == searchId) return i
         }
         return -1
     }
@@ -260,7 +260,7 @@ abstract class HOTableModel protected constructor(
      */
     private fun setUserColumnSettings(table: JTable): Boolean {
         var changed = false
-        var displayedColumns = getDisplayedColumns()
+        val displayedColumns = getDisplayedColumns()
         for (index in 0..<table.columnCount) {
             val tableColumn = getTableColumn(table, index)
             val modelColumn = displayedColumns[tableColumn.modelIndex]
