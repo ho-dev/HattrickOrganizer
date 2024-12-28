@@ -225,6 +225,9 @@ open class FixedColumnsTable @JvmOverloads constructor(
         return super.getColumnModel().getColumn(i - fixedColumnsCount)
     }
 
+    /**
+     * Return the user column of the event
+     */
     fun getUserColumn(e: TableModelEvent): UserColumn? {
         if (e.column >= 0 && e.source.equals(this.model)){
             val modelIndex = convertColumnIndexToModel(e.column)
@@ -233,6 +236,6 @@ open class FixedColumnsTable @JvmOverloads constructor(
                 return hoTableModel.getDisplayedColumns()[modelIndex]
             }
         }
-        return null;
+        return null
     }
 }

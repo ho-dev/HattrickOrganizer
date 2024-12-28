@@ -169,7 +169,7 @@ abstract class HOTableModel protected constructor(
      */
     override fun getColumnName(columnIndex: Int): String? {
         if (displayedColumnCount > columnIndex) {
-            return getDisplayedColumns()[columnIndex]!!.getColumnName()
+            return getDisplayedColumns()[columnIndex].getColumnName()
         }
 
         return null
