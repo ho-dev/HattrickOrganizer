@@ -4,6 +4,7 @@ package module.transfer.history;
 
 import core.gui.comp.panel.ImagePanel;
 import core.model.TranslationFacility;
+import core.model.UserParameter;
 import module.transfer.ui.layout.TableLayout;
 
 import javax.swing.*;
@@ -49,18 +50,19 @@ class TotalsPanel extends JPanel {
     /**
      * Creates a TotalsPanel.
      *
-     * @param titel Name for the type of transfers.
+     * @param title Name for the type of transfers.
      * @param currency Currency symbol
      */
-    public TotalsPanel(String titel, String currency) {
+    public TotalsPanel(String title, String currency) {
         super(new BorderLayout());
 
         FORMAT.setGroupingUsed(true);
         FORMAT.setMaximumFractionDigits(0);
 
+        var fontSize = UserParameter.instance().fontSize;
         final double[][] sizes = {
-                               {10, 75, 20, 75, 20, 75, 10},
-                               {20, 20, 20, 10, 20}
+                               {fontSize, 6*fontSize, 2*fontSize, 6*fontSize, 2*fontSize, 6*fontSize, fontSize},
+                               {2*fontSize, 2*fontSize, 2*fontSize, fontSize, 2*fontSize}
                            };
 
         final JPanel panel = new ImagePanel();
@@ -68,12 +70,10 @@ class TotalsPanel extends JPanel {
 
         final TableLayout layout = new TableLayout(sizes);
         panel.setLayout(layout);
-        panel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.GRAY),
-                                                         titel));
+        panel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.GRAY), title));
 
         panel.add(new JLabel(TranslationFacility.tr("Total"), SwingConstants.CENTER), "3, 0"); //$NON-NLS-1$ //$NON-NLS-2$
-        panel.add(new JLabel(TranslationFacility.tr("Durchschnitt"),
-                             SwingConstants.CENTER), "5, 0"); //$NON-NLS-1$ 
+        panel.add(new JLabel(TranslationFacility.tr("Durchschnitt"), SwingConstants.CENTER), "5, 0"); //$NON-NLS-1$
 
         panel.add(new JLabel(TranslationFacility.tr("Purchases"), SwingConstants.LEFT), "1, 1"); //$NON-NLS-1$ //$NON-NLS-2$
         panel.add(new JLabel(currency, SwingConstants.RIGHT), "2, 1"); //$NON-NLS-1$

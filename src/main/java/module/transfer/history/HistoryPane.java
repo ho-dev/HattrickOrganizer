@@ -43,11 +43,12 @@ public class HistoryPane extends JSplitPane {
     public HistoryPane(TransfersPanel transfersPanel) {
         super(JSplitPane.VERTICAL_SPLIT);
 
+        var fontSize = UserParameter.instance().fontSize;
         // Create side panel
         final double[][] sizes = {
                                {TableLayoutConstants.PREFERRED, TableLayoutConstants.FILL},
                                {
-                                   TableLayoutConstants.PREFERRED, 10, TableLayoutConstants.PREFERRED,
+                                   TableLayoutConstants.PREFERRED, fontSize, TableLayoutConstants.PREFERRED,
                                    TableLayoutConstants.FILL, TableLayoutConstants.PREFERRED, TableLayoutConstants.PREFERRED,
                                    TableLayoutConstants.PREFERRED
                                }
@@ -59,10 +60,10 @@ public class HistoryPane extends JSplitPane {
         final JPanel filterPanel = new ImagePanel();
         filterPanel.setLayout(new TableLayout(new double[][]{
                                                   {
-                                                      10, TableLayoutConstants.PREFERRED, 50,
-                                                      TableLayoutConstants.FILL, 10
+                                                      fontSize, TableLayoutConstants.PREFERRED, 4*fontSize,
+                                                      TableLayoutConstants.FILL, fontSize
                                                   },
-                                                  {10, TableLayoutConstants.PREFERRED, TableLayoutConstants.PREFERRED,TableLayoutConstants.PREFERRED}
+                                                  {fontSize, TableLayoutConstants.PREFERRED, TableLayoutConstants.PREFERRED,TableLayoutConstants.PREFERRED}
                                               }));
 
         final JRadioButton rb1 = new JRadioButton(TranslationFacility.tr("AllSeasons")); //$NON-NLS-1$
@@ -150,8 +151,8 @@ public class HistoryPane extends JSplitPane {
 
         final JPanel amountPanel = new ImagePanel();
         amountPanel.setLayout(new TableLayout(new double[][]{
-                                                  {.25, 75, 25, .5, 75, 25, .25},
-                                                  {10, 20, 20}
+                                                  {.25, 6*fontSize, 2*fontSize, .5, 6*fontSize, 2*fontSize, .25},
+                                                  {fontSize, 2*fontSize, 2*fontSize}
                                               }));
 
         final JLabel amTrans = new JLabel(TranslationFacility.tr("Transfers") + ":", SwingConstants.LEFT);

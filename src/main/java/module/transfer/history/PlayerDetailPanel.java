@@ -8,6 +8,7 @@ import core.gui.model.UserColumnController;
 import core.gui.theme.ImageUtilities;
 import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
+import core.model.UserParameter;
 import core.model.player.Player;
 import core.util.HODateTime;
 import core.util.Helper;
@@ -33,8 +34,7 @@ import static core.util.CurrencyUtils.convertCurrency;
  * @author <a href=mailto:nethyperon@users.sourceforge.net>Boy van der Werf</a>
  */
 public class PlayerDetailPanel extends JPanel implements ActionListener {
-    @Serial
-    private static final long serialVersionUID = -6855218725568752692L;
+
     private static final String SKILL_PLAYMAKING = TranslationFacility.tr("ls.player.skill.playmaking");
     private static final String SKILL_PASSING = TranslationFacility.tr("ls.player.skill.passing");
     private static final String SKILL_WING = TranslationFacility.tr("ls.player.skill.winger");
@@ -93,9 +93,10 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
 
         add(playerTable.getContainerComponent(), BorderLayout.CENTER);
 
+        var fontSize = UserParameter.instance().fontSize;
         final double[][] sizes = {
-                {10, 95, 150, 20, 100, 75, 100, TableLayoutConstants.FILL, 30, 110, 30, 110, 30, 110, 30, 120, 10},
-                {20, 20, 20}
+                {fontSize, 8*fontSize, 12*fontSize, 2*fontSize, 8*fontSize, 6*fontSize, 8*fontSize, TableLayoutConstants.FILL, 3*fontSize, 9*fontSize, 3*fontSize, 9*fontSize, 3*fontSize, 9*fontSize, 3*fontSize, 10*fontSize, fontSize},
+                {2*fontSize, 2*fontSize, 2*fontSize}
         };
 
         final JPanel detailPanel = new ImagePanel();

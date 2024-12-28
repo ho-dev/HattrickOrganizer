@@ -18,8 +18,6 @@ import java.util.Vector;
 
 public class TransfersPanel extends JPanel implements IRefreshable {
 
-	@Serial
-	private static final long serialVersionUID = -5312017309355429020L;
 	private final HistoryPane historyPane;
 	private List<Player> oldplayers;
 	private List<Player> players;

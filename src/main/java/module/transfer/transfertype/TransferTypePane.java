@@ -53,17 +53,8 @@ import javax.swing.table.TableModel;
  */
 public class TransferTypePane extends JSplitPane implements ListSelectionListener,
                                                             TableModelListener {
-    //~ Static fields/initializers -----------------------------------------------------------------
-
-    /**
-     *
-     */
-    @Serial
-    private static final long serialVersionUID = 4235843964542482924L;
 
     private static final NumberFormat FORMAT = NumberFormat.getIntegerInstance();
-
-    //~ Instance fields ----------------------------------------------------------------------------
 
     private final JPanel sidePanel = new ImagePanel();
     private final JTable transferTable;
@@ -71,7 +62,6 @@ public class TransferTypePane extends JSplitPane implements ListSelectionListene
     private List<TransferredPlayer> transferred = new ArrayList<>();
     private final PlayerDetailPanel playerDetailPanel = new PlayerDetailPanel();
 
-    //~ Constructors -------------------------------------------------------------------------------
 
     /**
      * Creates a TransferTypePane.
@@ -170,9 +160,10 @@ public class TransferTypePane extends JSplitPane implements ListSelectionListene
 
         this.sidePanel.removeAll();
 
+        var fontSize = UserParameter.instance().fontSize;
         final double[][] sizes = {
-                {10, 185, 10, 90, TableLayoutConstants.FILL, 10},
-                {10, TableLayoutConstants.PREFERRED, 10}
+                {fontSize, 15*fontSize, fontSize, 8*fontSize, TableLayoutConstants.FILL, fontSize},
+                {fontSize, TableLayoutConstants.PREFERRED, fontSize}
         };
         final TableLayout tLayout = new TableLayout(sizes);
         this.sidePanel.setLayout(tLayout);
@@ -267,7 +258,7 @@ public class TransferTypePane extends JSplitPane implements ListSelectionListene
         }
         final TableColumn column = transferTable.getColumnModel().getColumn(2);
         column.setCellEditor(new DefaultCellEditor(comboBox));
-        column.setPreferredWidth(120);
+        column.setPreferredWidth(10*fontSize);
 
         sorter.getTableModel().addTableModelListener(this);
         updateUI();
