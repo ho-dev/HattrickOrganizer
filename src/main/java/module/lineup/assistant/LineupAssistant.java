@@ -91,7 +91,6 @@ public class LineupAssistant {
 			doPlayerLineupIdealPosition(IMatchRoleID.FORWARD_TOWING, bForm, bInjured, bSuspended, lPlayers, lPositions);
 		}
 
-		byte[] order;
 		var fieldPlayerPositionOrder = new ArrayList<Byte>();
 		var reservePositionOrder = new ArrayList<Byte>();
 		fieldPlayerPositionOrder.add(IMatchRoleID.KEEPER);
