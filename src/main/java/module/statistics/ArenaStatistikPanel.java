@@ -6,11 +6,9 @@ import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
 import core.model.TranslationFacility;
 import module.matches.MatchesPanel;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 
 public class ArenaStatistikPanel extends LazyImagePanel {
 

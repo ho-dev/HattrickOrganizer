@@ -17,17 +17,14 @@ import module.transfer.ui.layout.TableLayout;
 import module.transfer.ui.layout.TableLayoutConstants;
 import module.transfer.ui.layout.TableLayoutConstraints;
 import module.transfer.ui.sorter.DefaultTableSorter;
-
 import java.awt.BorderLayout;
 import java.awt.Font;
-import java.io.Serial;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
-
 import javax.swing.BorderFactory;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;

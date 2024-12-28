@@ -19,24 +19,14 @@ import java.text.NumberFormat;
  * @author <a href=mailto:nethyperon@users.sourceforge.net>Boy van der Werf</a>
  */
 class TotalsPanel extends JPanel {
-    //~ Static fields/initializers -----------------------------------------------------------------
-
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 957113178669933183L;
 
 	private static final NumberFormat FORMAT = NumberFormat.getIntegerInstance();
 
-    //~ Instance fields ----------------------------------------------------------------------------
-
-    private JLabel buyAvgPrice = new JLabel("", SwingConstants.RIGHT); //$NON-NLS-1$
-    private JLabel buyTotPrice = new JLabel("", SwingConstants.RIGHT); //$NON-NLS-1$
-    private JLabel diffTotPrice = new JLabel("", SwingConstants.RIGHT); //$NON-NLS-1$
-    private JLabel sellAvgPrice = new JLabel("", SwingConstants.RIGHT); //$NON-NLS-1$
-    private JLabel sellTotPrice = new JLabel("", SwingConstants.RIGHT); //$NON-NLS-1$
-
-    //~ Constructors -------------------------------------------------------------------------------
+    private final JLabel buyAvgPrice = new JLabel("", SwingConstants.RIGHT); //$NON-NLS-1$
+    private final JLabel buyTotPrice = new JLabel("", SwingConstants.RIGHT); //$NON-NLS-1$
+    private final JLabel diffTotPrice = new JLabel("", SwingConstants.RIGHT); //$NON-NLS-1$
+    private final JLabel sellAvgPrice = new JLabel("", SwingConstants.RIGHT); //$NON-NLS-1$
+    private final JLabel sellTotPrice = new JLabel("", SwingConstants.RIGHT); //$NON-NLS-1$
 
     /**
      * Creates a TotalsPanel.

@@ -22,10 +22,8 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.Serial;
 import java.util.List;
 import java.util.Vector;
-
 import static core.util.CurrencyUtils.convertCurrency;
 
 /**

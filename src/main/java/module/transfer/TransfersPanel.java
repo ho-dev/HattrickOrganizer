@@ -12,7 +12,6 @@ import module.transfer.transfertype.TransferTypePane;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.Serial;
 import java.util.List;
 import java.util.Vector;
 
