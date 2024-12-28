@@ -9,10 +9,7 @@ import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.rating.RatingPredictionModel;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Vector;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static core.rating.RatingPredictionModel.getBehaviour;
@@ -94,160 +91,42 @@ public class LineupAssistant {
 			doPlayerLineupIdealPosition(IMatchRoleID.FORWARD_TOWING, bForm, bInjured, bSuspended, lPlayers, lPositions);
 		}
 
-		// set Goalkeeper
-		doSpielerAufstellen(IMatchRoleID.KEEPER, bForm, bInjured, bSuspended, lPlayers, lPositions);
-
 		byte[] order;
+		var fieldPlayerPositionOrder = new ArrayList<Byte>();
+		var reservePositionOrder = new ArrayList<Byte>();
+		fieldPlayerPositionOrder.add(IMatchRoleID.KEEPER);
+		reservePositionOrder.add(IMatchRoleID.KEEPER);
 		// nun reihenfolge beachten und unbesetzte füllen
 		switch (sectorsStrengthPriority) {
 			case AW_MF_ST -> {
-				order = new byte[18];
-				// DEFENCE
-				order[0] = IMatchRoleID.CENTRAL_DEFENDER;
-				order[1] = IMatchRoleID.CENTRAL_DEFENDER_TOWING;
-				order[2] = IMatchRoleID.CENTRAL_DEFENDER_OFF;
-				order[3] = IMatchRoleID.BACK;
-				order[4] = IMatchRoleID.BACK_DEF;
-				order[5] = IMatchRoleID.BACK_OFF;
-				order[6] = IMatchRoleID.BACK_TOMID;
-				// MIDFIELD
-				order[7] = IMatchRoleID.MIDFIELDER;
-				order[8] = IMatchRoleID.MIDFIELDER_OFF;
-				order[9] = IMatchRoleID.MIDFIELDER_DEF;
-				order[10] = IMatchRoleID.MIDFIELDER_TOWING;
-				order[11] = IMatchRoleID.WINGER;
-				order[12] = IMatchRoleID.WINGER_DEF;
-				order[13] = IMatchRoleID.WINGER_OFF;
-				order[14] = IMatchRoleID.WINGER_TOMID;
-				// FORWARD
-				order[15] = IMatchRoleID.FORWARD;
-				order[16] = IMatchRoleID.FORWARD_DEF;
-				order[17] = IMatchRoleID.FORWARD_TOWING;
+				addDefence(fieldPlayerPositionOrder, reservePositionOrder);
+				addMidfield(fieldPlayerPositionOrder, reservePositionOrder);
+				addForward(fieldPlayerPositionOrder, reservePositionOrder);
 			}
 			case AW_ST_MF -> {
-				order = new byte[18];
-				// DEFENCE
-				order[0] = IMatchRoleID.CENTRAL_DEFENDER;
-				order[1] = IMatchRoleID.CENTRAL_DEFENDER_TOWING;
-				order[2] = IMatchRoleID.CENTRAL_DEFENDER_OFF;
-				order[3] = IMatchRoleID.BACK;
-				order[4] = IMatchRoleID.BACK_DEF;
-				order[5] = IMatchRoleID.BACK_OFF;
-				order[6] = IMatchRoleID.BACK_TOMID;
-				// FORWARD
-				order[7] = IMatchRoleID.FORWARD;
-				order[8] = IMatchRoleID.FORWARD_DEF;
-				order[9] = IMatchRoleID.FORWARD_TOWING;
-
-				// MIDFIELD
-				order[10] = IMatchRoleID.MIDFIELDER;
-				order[11] = IMatchRoleID.MIDFIELDER_OFF;
-				order[12] = IMatchRoleID.MIDFIELDER_DEF;
-				order[13] = IMatchRoleID.MIDFIELDER_TOWING;
-				order[14] = IMatchRoleID.WINGER;
-				order[15] = IMatchRoleID.WINGER_DEF;
-				order[16] = IMatchRoleID.WINGER_OFF;
-				order[17] = IMatchRoleID.WINGER_TOMID;
+				addDefence(fieldPlayerPositionOrder, reservePositionOrder);
+				addForward(fieldPlayerPositionOrder, reservePositionOrder);
+				addMidfield(fieldPlayerPositionOrder, reservePositionOrder);
 			}
 			case MF_AW_ST -> {
-				order = new byte[18];
-
-				// MIDFIELD
-				order[0] = IMatchRoleID.MIDFIELDER;
-				order[1] = IMatchRoleID.MIDFIELDER_OFF;
-				order[2] = IMatchRoleID.MIDFIELDER_DEF;
-				order[3] = IMatchRoleID.MIDFIELDER_TOWING;
-				order[4] = IMatchRoleID.WINGER;
-				order[5] = IMatchRoleID.WINGER_DEF;
-				order[6] = IMatchRoleID.WINGER_OFF;
-				order[7] = IMatchRoleID.WINGER_TOMID;
-				// DEFENCE
-				order[8] = IMatchRoleID.CENTRAL_DEFENDER;
-				order[9] = IMatchRoleID.CENTRAL_DEFENDER_TOWING;
-				order[10] = IMatchRoleID.CENTRAL_DEFENDER_OFF;
-				order[11] = IMatchRoleID.BACK;
-				order[12] = IMatchRoleID.BACK_DEF;
-				order[13] = IMatchRoleID.BACK_OFF;
-				order[14] = IMatchRoleID.BACK_TOMID;
-				// FORWARD
-				order[15] = IMatchRoleID.FORWARD;
-				order[16] = IMatchRoleID.FORWARD_DEF;
-				order[17] = IMatchRoleID.FORWARD_TOWING;
+				addMidfield(fieldPlayerPositionOrder, reservePositionOrder);
+				addDefence(fieldPlayerPositionOrder, reservePositionOrder);
+				addForward(fieldPlayerPositionOrder, reservePositionOrder);
 			}
 			case MF_ST_AW -> {
-				order = new byte[18];
-
-				// MIDFIELD
-				order[0] = IMatchRoleID.MIDFIELDER;
-				order[1] = IMatchRoleID.MIDFIELDER_OFF;
-				order[2] = IMatchRoleID.MIDFIELDER_DEF;
-				order[3] = IMatchRoleID.MIDFIELDER_TOWING;
-				order[4] = IMatchRoleID.WINGER;
-				order[5] = IMatchRoleID.WINGER_DEF;
-				order[6] = IMatchRoleID.WINGER_OFF;
-				order[7] = IMatchRoleID.WINGER_TOMID;
-				// FORWARD
-				order[8] = IMatchRoleID.FORWARD;
-				order[9] = IMatchRoleID.FORWARD_DEF;
-				order[10] = IMatchRoleID.FORWARD_TOWING;
-				// DEFENCE
-				order[11] = IMatchRoleID.CENTRAL_DEFENDER;
-				order[12] = IMatchRoleID.CENTRAL_DEFENDER_TOWING;
-				order[13] = IMatchRoleID.CENTRAL_DEFENDER_OFF;
-				order[14] = IMatchRoleID.BACK;
-				order[15] = IMatchRoleID.BACK_DEF;
-				order[16] = IMatchRoleID.BACK_OFF;
-				order[17] = IMatchRoleID.BACK_TOMID;
+				addMidfield(fieldPlayerPositionOrder, reservePositionOrder);
+				addForward(fieldPlayerPositionOrder, reservePositionOrder);
+				addDefence(fieldPlayerPositionOrder, reservePositionOrder);
 			}
 			case ST_MF_AW -> {
-				order = new byte[18];
-
-				// FORWARD
-				order[0] = IMatchRoleID.FORWARD;
-				order[1] = IMatchRoleID.FORWARD_DEF;
-				order[2] = IMatchRoleID.FORWARD_TOWING;
-				// MIDFIELD
-				order[3] = IMatchRoleID.MIDFIELDER;
-				order[4] = IMatchRoleID.MIDFIELDER_OFF;
-				order[5] = IMatchRoleID.MIDFIELDER_DEF;
-				order[6] = IMatchRoleID.MIDFIELDER_TOWING;
-				order[7] = IMatchRoleID.WINGER;
-				order[8] = IMatchRoleID.WINGER_DEF;
-				order[9] = IMatchRoleID.WINGER_OFF;
-				order[10] = IMatchRoleID.WINGER_TOMID;
-
-				// DEFENCE
-				order[11] = IMatchRoleID.CENTRAL_DEFENDER;
-				order[12] = IMatchRoleID.CENTRAL_DEFENDER_TOWING;
-				order[13] = IMatchRoleID.CENTRAL_DEFENDER_OFF;
-				order[14] = IMatchRoleID.BACK;
-				order[15] = IMatchRoleID.BACK_DEF;
-				order[16] = IMatchRoleID.BACK_OFF;
-				order[17] = IMatchRoleID.BACK_TOMID;
+				addForward(fieldPlayerPositionOrder, reservePositionOrder);
+				addMidfield(fieldPlayerPositionOrder, reservePositionOrder);
+				addDefence(fieldPlayerPositionOrder, reservePositionOrder);
 			}
 			case ST_AW_MF -> {
-				order = new byte[18];
-				// FORWARD
-				order[0] = IMatchRoleID.FORWARD;
-				order[1] = IMatchRoleID.FORWARD_DEF;
-				order[2] = IMatchRoleID.FORWARD_TOWING;
-				// DEFENCE
-				order[3] = IMatchRoleID.CENTRAL_DEFENDER;
-				order[4] = IMatchRoleID.CENTRAL_DEFENDER_TOWING;
-				order[5] = IMatchRoleID.CENTRAL_DEFENDER_OFF;
-				order[6] = IMatchRoleID.BACK;
-				order[7] = IMatchRoleID.BACK_DEF;
-				order[8] = IMatchRoleID.BACK_OFF;
-				order[9] = IMatchRoleID.BACK_TOMID;
-				// MIDFIELD
-				order[10] = IMatchRoleID.MIDFIELDER;
-				order[11] = IMatchRoleID.MIDFIELDER_OFF;
-				order[12] = IMatchRoleID.MIDFIELDER_DEF;
-				order[13] = IMatchRoleID.MIDFIELDER_TOWING;
-				order[14] = IMatchRoleID.WINGER;
-				order[15] = IMatchRoleID.WINGER_DEF;
-				order[16] = IMatchRoleID.WINGER_OFF;
-				order[17] = IMatchRoleID.WINGER_TOMID;
+				addForward(fieldPlayerPositionOrder, reservePositionOrder);
+				addDefence(fieldPlayerPositionOrder, reservePositionOrder);
+				addMidfield(fieldPlayerPositionOrder, reservePositionOrder);
 			}
 			default -> {
 				return;
@@ -256,7 +135,7 @@ public class LineupAssistant {
 			// break;
 		}
 
-		for (byte b : order) {
+		for (byte b : fieldPlayerPositionOrder) {
 			doSpielerAufstellen(b, bForm, bInjured, bSuspended, lPlayers, lPositions);
 		}
 
@@ -287,27 +166,47 @@ public class LineupAssistant {
 		}
 
 		// fill remaining seats
-		// TW
-		doReserveSpielerAufstellen(IMatchRoleID.KEEPER, bForm, bInjured,
-				bSuspended, lPlayers, lPositions);
+		for ( byte b : reservePositionOrder) {
+			doReserveSpielerAufstellen(b, bForm, bInjured, bSuspended, lPlayers, lPositions);
+		}
+	}
 
-		// abwehr
-		doReserveSpielerAufstellen(IMatchRoleID.CENTRAL_DEFENDER, bForm, bInjured,
-				bSuspended, lPlayers, lPositions);
+	private void addForward(ArrayList<Byte> fieldPlayerPositionOrder, ArrayList<Byte> reservePositionOrder) {
+		// FORWARD
+		fieldPlayerPositionOrder.add(IMatchRoleID.FORWARD);
+		fieldPlayerPositionOrder.add(IMatchRoleID.FORWARD_DEF);
+		fieldPlayerPositionOrder.add(IMatchRoleID.FORWARD_TOWING);
 
-		// WB
-		doReserveSpielerAufstellen(IMatchRoleID.BACK, bForm, bInjured,
-				bSuspended, lPlayers, lPositions);
+		reservePositionOrder.add(IMatchRoleID.FORWARD);
+	}
 
-		// mittelfeld
-		doReserveSpielerAufstellen(IMatchRoleID.MIDFIELDER, bForm, bInjured,
-				bSuspended, lPlayers, lPositions);
-		doReserveSpielerAufstellen(IMatchRoleID.WINGER, bForm, bInjured,
-				bSuspended, lPlayers, lPositions);
+	private void addMidfield(ArrayList<Byte> fieldPlayerPositionOrder, ArrayList<Byte> reservePositionOrder) {
+		// MIDFIELD
+		fieldPlayerPositionOrder.add(IMatchRoleID.MIDFIELDER);
+		fieldPlayerPositionOrder.add(IMatchRoleID.MIDFIELDER_OFF);
+		fieldPlayerPositionOrder.add(IMatchRoleID.MIDFIELDER_DEF);
+		fieldPlayerPositionOrder.add(IMatchRoleID.MIDFIELDER_TOWING);
+		fieldPlayerPositionOrder.add(IMatchRoleID.WINGER);
+		fieldPlayerPositionOrder.add(IMatchRoleID.WINGER_DEF);
+		fieldPlayerPositionOrder.add(IMatchRoleID.WINGER_OFF);
+		fieldPlayerPositionOrder.add(IMatchRoleID.WINGER_TOMID);
 
-		// sturm
-		doReserveSpielerAufstellen(IMatchRoleID.FORWARD, bForm, bInjured,
-				bSuspended, lPlayers, lPositions);
+		reservePositionOrder.add(IMatchRoleID.MIDFIELDER);
+		reservePositionOrder.add(IMatchRoleID.WINGER);
+	}
+
+	private void addDefence(ArrayList<Byte> fieldPlayerPositionOrder, ArrayList<Byte> reservePositionOrder) {
+		// DEFENCE
+		fieldPlayerPositionOrder.add(IMatchRoleID.CENTRAL_DEFENDER);
+		fieldPlayerPositionOrder.add(IMatchRoleID.CENTRAL_DEFENDER_TOWING);
+		fieldPlayerPositionOrder.add(IMatchRoleID.CENTRAL_DEFENDER_OFF);
+		fieldPlayerPositionOrder.add(IMatchRoleID.BACK);
+		fieldPlayerPositionOrder.add(IMatchRoleID.BACK_DEF);
+		fieldPlayerPositionOrder.add(IMatchRoleID.BACK_OFF);
+		fieldPlayerPositionOrder.add(IMatchRoleID.BACK_TOMID);
+
+		reservePositionOrder.add(IMatchRoleID.CENTRAL_DEFENDER);
+		reservePositionOrder.add(IMatchRoleID.BACK);
 	}
 
 	/**
