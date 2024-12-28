@@ -108,11 +108,11 @@ public class YouthSkillInfoColumn extends JLabel implements IHOTableEntry {
         g.setColor(Color_Background);
         g.fillRect(0, 0, bar_width, bar_thickness);
 
-        var f = bar_width/10;
+        var f = bar_width/10.0;
         // draw possible range
         g.setColor(Color_PossibleRange);
         var xStart = this.skillInfo.getStartLevel();
-        if (xStart != null) xStart*=f;
+        if (xStart != null) xStart = (int)(xStart*f);
         else xStart = 0;
         var xEnd = this.skillInfo.getMaximumPotential();
         if (xEnd < 8) xEnd = (int)(f * (xEnd + .9));
