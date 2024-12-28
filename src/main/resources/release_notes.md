@@ -51,6 +51,7 @@
 
 ### Option setting
 * Fix: `Preferences/Formulas`: When changing anything and saving it, the application does not crash anymore during quit.
+* Increase maximum font size (#2014)
 
 ### Misc
 
@@ -59,14 +60,15 @@
 
 ## Translations
 
-Reports by Contributors - June 23, 2024 - December 01, 2024
+Reports by Contributors - June 23, 2024 - December 28, 2024
 
 * Kristaps 310
 * Tavaro 175
 * Lidegang 143
-* wsbrenk 60
+* wsbrenk 84
+* Moorhuhninho 25
 * Sebastian Reddig 12
 * Achilles 10
 * Billy Dikkanen 10
 
-Total 720
+Total 769
