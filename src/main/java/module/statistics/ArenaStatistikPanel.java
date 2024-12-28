@@ -13,7 +13,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 
 public class ArenaStatistikPanel extends LazyImagePanel {
-	private static final long serialVersionUID = 2679088584924124183L;
+
 	private ArenaStatistikTable arenaStatistikTable;
 	private JComboBox matchFilterComboBox;
 
@@ -31,7 +31,7 @@ public class ArenaStatistikPanel extends LazyImagePanel {
 			arenaStatistikTable.refresh(((CBItem) matchFilterComboBox.getSelectedItem()).getId());
 		}
 	}
-	
+
 	private void initComponents() {
 		setLayout(new BorderLayout());
 		ImagePanel panel = new ImagePanel(null);
@@ -40,9 +40,9 @@ public class ArenaStatistikPanel extends LazyImagePanel {
 		var font = matchFilterComboBox.getFont().deriveFont(Font.BOLD);
 		matchFilterComboBox.setFont(font);
 		var fontSize = font.getSize();
-		matchFilterComboBox.setSize(20*fontSize, 2*fontSize);
+		matchFilterComboBox.setSize(20 * fontSize, 2 * fontSize);
 		matchFilterComboBox.setLocation(10, 5);
-		panel.setPreferredSize(new Dimension(20*fontSize, 3*fontSize));
+		panel.setPreferredSize(new Dimension(20 * fontSize, 3 * fontSize));
 		panel.add(matchFilterComboBox);
 		add(panel, BorderLayout.NORTH);
 
@@ -56,20 +56,15 @@ public class ArenaStatistikPanel extends LazyImagePanel {
 	}
 
 	private void addListeners() {
-		this.matchFilterComboBox.addItemListener(new ItemListener() {
-
-			@Override
-			public final void itemStateChanged(ItemEvent e) {
-				if (e.getStateChange() == ItemEvent.SELECTED) {
-					// Änderung der Tabelle -> Anderer Filter!
-					update();
-				}
+		this.matchFilterComboBox.addItemListener(e -> {
+			if (e.getStateChange() == ItemEvent.SELECTED) {
+				update();
 			}
 		});
 	}
 
 	private CBItem[] getMatchFilterItems() {
-		CBItem[] matchFilterItems = {
+		return new CBItem[]{
 				new CBItem(TranslationFacility.tr("NurEigeneSpiele"),
 						MatchesPanel.OWN_GAMES),
 				new CBItem(TranslationFacility.tr("NurEigenePflichtspiele"),
@@ -83,7 +78,6 @@ public class ArenaStatistikPanel extends LazyImagePanel {
 				new CBItem(TranslationFacility.tr("OnlyQualificationMatches"),
 						MatchesPanel.OWN_QUALIF_GAMES),
 				new CBItem(TranslationFacility.tr("NurEigeneFreundschaftsspiele"),
-						MatchesPanel.OWN_FRIENDLY_GAMES) };
-		return matchFilterItems;
+						MatchesPanel.OWN_FRIENDLY_GAMES)};
 	}
 }
