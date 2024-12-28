@@ -260,9 +260,10 @@ abstract class HOTableModel protected constructor(
      */
     private fun setUserColumnSettings(table: JTable): Boolean {
         var changed = false
+        var displayedColumns = getDisplayedColumns()
         for (index in 0..<table.columnCount) {
             val tableColumn = getTableColumn(table, index)
-            val modelColumn = columns[tableColumn.modelIndex]
+            val modelColumn = displayedColumns[tableColumn.modelIndex]
 
             if (modelColumn.getIndex() != index) {
                 changed = true
