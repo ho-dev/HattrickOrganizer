@@ -383,10 +383,7 @@ public class MatchFixtures extends AbstractTable.Storable {
         int homePoints = 0;
         int awayPoints = 0;
 
-        var teamId = ids.get(0); // First entry is the current existing teams
-
-        eintrag.setTeamId(teamId);
-
+        eintrag.setTeamId(ids.get(0)); // First entry is the current existing teams
         var name = "";
 
         for ( var match : matches) {
@@ -397,7 +394,7 @@ public class MatchFixtures extends AbstractTable.Storable {
                 gameNumber++;
 
                 // Home game
-                if (match.getHeimId() == teamId) {
+                if (ids.contains(match.getHeimId())) {
                     name = match.getHeimName();
                     // Win
                     if (match.getToreHeim() > match.getToreGast()) {
