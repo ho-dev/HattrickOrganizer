@@ -4,6 +4,7 @@ import javax.swing.*;
 
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
+import core.model.UserParameter;
 import org.jetbrains.annotations.Nullable;
 import org.knowm.xchart.XChartPanel;
 import org.knowm.xchart.XYChart;
@@ -85,6 +86,11 @@ public class HOLinesChart implements IChart {
         m_chart.getStyler().setToolTipsEnabled(true);
         m_chart.getStyler().setToolTipType(Styler.ToolTipType.yLabels);
         m_chart.getStyler().setDecimalPattern("#0.00");
+
+        var font = m_chart.getStyler().getCursorFont().deriveFont((float) UserParameter.instance().fontSize);
+        m_chart.getStyler().setAnnotationTextFont(font);
+        m_chart.getStyler().setToolTipFont(font);
+        m_chart.getStyler().setAxisTickLabelsFont(font);
 
         if (y1_axisMin != null) m_axeStyler.setYAxisMin(0, y1_axisMin);
         if (y1_axisMax != null) m_axeStyler.setYAxisMax(0, y1_axisMax);
@@ -297,9 +303,6 @@ public class HOLinesChart implements IChart {
         updateGraph();
 
     }
-
-
-
 }
 
 

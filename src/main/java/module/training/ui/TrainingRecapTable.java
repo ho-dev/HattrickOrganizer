@@ -242,15 +242,16 @@ public class TrainingRecapTable extends JScrollPane {
             _columnModel.removeColumn(_columnModel.getColumn(fixedColumns));
         }
 
-        fixed.getColumnModel().getColumn(0).setMaxWidth(150);
-        fixed.getColumnModel().getColumn(0).setMinWidth(150);
-        fixed.getColumnModel().getColumn(0).setWidth(150);
-        fixed.getColumnModel().getColumn(1).setMaxWidth(60);
-        fixed.getColumnModel().getColumn(1).setMinWidth(60);
-        fixed.getColumnModel().getColumn(1).setWidth(60);
-        fixed.getColumnModel().getColumn(2).setMaxWidth(200);
-        fixed.getColumnModel().getColumn(2).setMinWidth(200);
-        fixed.getColumnModel().getColumn(2).setPreferredWidth(200);
+        var fontSize = UserParameter.instance().fontSize;
+        fixed.getColumnModel().getColumn(0).setMaxWidth(12*fontSize);
+        fixed.getColumnModel().getColumn(0).setMinWidth(12*fontSize);
+        fixed.getColumnModel().getColumn(0).setWidth(12*fontSize);
+        fixed.getColumnModel().getColumn(1).setMaxWidth(5*fontSize);
+        fixed.getColumnModel().getColumn(1).setMinWidth(5*fontSize);
+        fixed.getColumnModel().getColumn(1).setWidth(5*fontSize);
+        fixed.getColumnModel().getColumn(2).setMaxWidth(17*fontSize);
+        fixed.getColumnModel().getColumn(2).setMinWidth(17*fontSize);
+        fixed.getColumnModel().getColumn(2).setPreferredWidth(17*fontSize);
         fixed.getColumnModel().getColumn(3).setMaxWidth(0);
         fixed.getColumnModel().getColumn(3).setMinWidth(0);
         fixed.getColumnModel().getColumn(3).setPreferredWidth(0);

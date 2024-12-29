@@ -98,7 +98,7 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
 
         var width = UserParameter.instance().fontSize * 10;
 
-        m_jslFontSize = new SliderPanel(TranslationFacility.tr("Schriftgroesse"), 16, 8, 1, 1.0f, width);
+        m_jslFontSize = new SliderPanel(TranslationFacility.tr("Schriftgroesse"), 32, 8, 1, 1.0f, width);
         m_jslFontSize.setToolTipText(TranslationFacility.tr("tt_Optionen_Schriftgroesse"));
         m_jslFontSize.setValue(core.model.UserParameter.temp().fontSize);
         m_jslFontSize.addChangeListener(this);

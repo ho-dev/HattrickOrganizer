@@ -37,13 +37,15 @@ final class SeriesHistoryPanel extends JPanel {
 	 */
     SeriesHistoryPanel(Model model) {
 		this.model = model;
-		setPreferredSize(new Dimension(700, 240));
+		var fontSize = UserParameter.instance().fontSize;
+		setPreferredSize(new Dimension(60 * fontSize, 20 * fontSize));
 		initValues();
 	}
 
 	@Override
 	public void paint(Graphics g) {
 		final Graphics2D g2d = (Graphics2D) g;
+		final int fontSize = UserParameter.instance().fontSize;
 
 		// Antialiasing
 		g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -60,12 +62,11 @@ final class SeriesHistoryPanel extends JPanel {
 			final int anzahlPlaetze = m_clVerlaufeintraege.length + 1;
 			final int anzahlSpieltage = m_clVerlaufeintraege[0].getPlatzierungen().length;
 			final int abstandVertikal = getHeight() / (anzahlPlaetze + 1);
-            int TEAM_NAME_WIDTH = 180;
+            int TEAM_NAME_WIDTH = 15 * fontSize;
             final int abstandHorizontal = (getWidth() - TEAM_NAME_WIDTH) / anzahlSpieltage;
 
-			final int fontsize = UserParameter.instance().fontSize;
-			final Font fettFont = new Font("sansserif", Font.BOLD, fontsize);
-			final Font normalFont = new Font("sansserif", Font.PLAIN, fontsize);
+			final Font fettFont = new Font("sansserif", Font.BOLD, fontSize);
+			final Font normalFont = new Font("sansserif", Font.PLAIN, fontSize);
 
 			// Koordinatenkreuz
 			g2d.setColor(ThemeManager.getColor(HOColorName.LEAGUEHISTORY_CROSS_FG));
@@ -109,7 +110,7 @@ final class SeriesHistoryPanel extends JPanel {
 				g2d.setFont(fettFont);
 				g2d.drawString((i + 1) + ".", (getWidth() + 7) - TEAM_NAME_WIDTH, (getHeight()
 						/ anzahlPlaetze * (i + 1))
-						+ abstandVertikal - (fontsize / 2));
+						+ abstandVertikal - (fontSize / 2));
 
 				// Eigenes Team blau machen
 				if (m_clVerlaufeintraege[i].getTeamId() == aktuelleTeamId) {
@@ -122,8 +123,8 @@ final class SeriesHistoryPanel extends JPanel {
 				g2d.drawString(
 						m_clVerlaufeintraege[i].getTeamName().substring(0,
 								Math.min(30, m_clVerlaufeintraege[i].getTeamName().length())),
-						(getWidth() + 20) - TEAM_NAME_WIDTH,
-						(getHeight() / anzahlPlaetze * (i + 1)) + abstandVertikal - (fontsize / 2));
+						(getWidth() + 8 + fontSize) - TEAM_NAME_WIDTH,
+						(getHeight() / anzahlPlaetze * (i + 1)) + abstandVertikal - (fontSize / 2));
 			}
 
 			// Spieltage

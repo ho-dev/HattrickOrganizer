@@ -18,15 +18,12 @@ import core.module.IModule;
 import core.util.HODateTime;
 import core.util.HOLogger;
 import core.util.Helper;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.Serial;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
 import static core.model.player.IMatchRoleID.*;
 import static core.util.Helper.formatCurrency;
 import static core.util.Helper.parseCurrency;
@@ -40,16 +37,12 @@ import static core.util.Helper.parseCurrency;
 public class TransferEingabePanel extends ImagePanel implements ItemListener, ActionListener,
                                                                 FocusListener, KeyListener
 {
-    //~ Static fields/initializers -----------------------------------------------------------------
 
-	@Serial
-    private static final long serialVersionUID = -3287232092187457640L;
 	private static int iTempSpielerID = -1001;
 
     //~ Instance fields ----------------------------------------------------------------------------
 
-    private final ColorLabelEntry jpBestPosition = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD,
-    		ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+    private final ColorLabelEntry jpBestPosition = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
     private final DoubleLabelEntries jpRatingWingback = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
     private final DoubleLabelEntries jpRatingWingbackDefensive = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
     private final DoubleLabelEntries jpRatingWingbackTowardsMiddle = new DoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);

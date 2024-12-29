@@ -11,6 +11,7 @@ import core.gui.model.PlayerCBItemRenderer;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.model.UserParameter;
 import core.model.match.MatchKurzInfo;
 import core.model.player.Player;
 import core.net.HattrickLink;
@@ -133,32 +134,30 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 
 		int spielerid = -1;
 		if (playerComboBox.getSelectedItem() != null) {
-			spielerid = ((PlayerCBItem) playerComboBox.getSelectedItem()).getPlayer()
-					.getPlayerId();
+			spielerid = ((PlayerCBItem) playerComboBox.getSelectedItem()).getPlayer().getPlayerId();
 		}
 
 		JSplitPane horizontalSplitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false,
 				initSpielerMatchesTabelle(spielerid), initSpielerPositionTabelle(spielerid));
 
-		horizontalSplitPane
-				.setDividerLocation((core.model.UserParameter.instance().hoMainFrame_height) / 3);
+		horizontalSplitPane.setDividerLocation((core.model.UserParameter.instance().hoMainFrame_height) / 3);
 		add(horizontalSplitPane, BorderLayout.CENTER);
 	}
 
 	private Component initSpielerCB() {
 		final ImagePanel panel = new ImagePanel(null);
-
+		var fontSize = UserParameter.instance().fontSize;
 		playerComboBox = new JComboBox();
 		playerComboBox.setRenderer(new PlayerCBItemRenderer());
 		playerComboBox.setMaximumRowCount(25);
-		playerComboBox.setMaximumSize(new Dimension(200, 25));
-		playerComboBox.setSize(200, 25);
+		playerComboBox.setMaximumSize(new Dimension(20*fontSize, 2* fontSize));
+		playerComboBox.setSize(20 * fontSize, 2*fontSize);
 		playerComboBox.setLocation(10, 5);
 		playerComboBox.setBackground(ThemeManager.getColor(HOColorName.TABLEENTRY_BG));
 
 		panel.add(playerComboBox);
 
-		panel.setPreferredSize(new Dimension(220, 35));
+		panel.setPreferredSize(new Dimension(20 * fontSize, 3*fontSize));
 
 		fillSpielerCB();
 
@@ -167,16 +166,12 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 
 	private Component initSpielerMatchesTabelle(int spielerid) {
 		m_jtSpielerMatchesTable = new SpielerMatchesTable(spielerid, columnModelInstance);
-		JScrollPane scrollpane = new JScrollPane(m_jtSpielerMatchesTable);
-		scrollpane.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
-		return scrollpane;
+		return new JScrollPane(m_jtSpielerMatchesTable);
 	}
 
 	private Component initSpielerPositionTabelle(int spielerid) {
 		m_jtSpielerPositionTable = new SpielerPositionTable(spielerid);
-		JScrollPane scrollpane = new JScrollPane(m_jtSpielerPositionTable);
-		scrollpane.getViewport().setScrollMode(JViewport.BACKINGSTORE_SCROLL_MODE);
-		return scrollpane;
+		return new JScrollPane(m_jtSpielerPositionTable);
 	}
 
 	/**

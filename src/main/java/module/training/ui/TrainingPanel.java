@@ -16,6 +16,7 @@ import module.training.ui.model.FutureTrainingsTableModel;
 import module.training.ui.model.ModelChange;
 import module.training.ui.model.PastTrainingsTableModel;
 import module.training.ui.model.TrainingModel;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
@@ -42,9 +43,8 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 	private JTable futureTrainingsTable;
 	private JButton m_jbEditAllFutureTrainings;
 	private JButton m_jbEditSelectedFutureTrainings;
-	private JSplitPane splitPane;
 
-	private ListSelectionModel m_lsm;
+    private ListSelectionModel m_lsm;
 
 	private final TrainingModel model;
 
@@ -73,7 +73,8 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 
 	private void addListeners() {
 
-		Map<Object, Object> colorMap = Map.of("trainingColor1", ThemeManager.getColor(HOColorName.TRAINING_ICON_COLOR_1),
+		Map<Object, Object> colorMap = Map.of(
+				"trainingColor1", ThemeManager.getColor(HOColorName.TRAINING_ICON_COLOR_1),
 				"trainingColor2", ThemeManager.getColor(HOColorName.TRAINING_ICON_COLOR_2));
 
 		Object[] options = {Helper.getTranslation("ls.button.close")};
@@ -243,7 +244,7 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 				return c;
 			}
 
-			public String getToolTipText(MouseEvent e) {
+			public String getToolTipText(@NotNull MouseEvent e) {
 				String tip = null;
 				java.awt.Point p = e.getPoint();
 				int rowIndex = rowAtPoint(p);
@@ -283,7 +284,7 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 		lGbc.fill = GridBagConstraints.BOTH;
 		futureTrainingsPanel.add(lowerScrollPane, lGbc);
 
-		splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, pastTrainingsPanel, futureTrainingsPanel);
+        JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, pastTrainingsPanel, futureTrainingsPanel);
 		UserParameter.instance().training_pastFutureTrainingsSplitPane.init(splitPane);
 		setLayout(new BorderLayout());
 		add(splitPane, BorderLayout.CENTER);

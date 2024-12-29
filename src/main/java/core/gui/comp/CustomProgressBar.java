@@ -1,21 +1,21 @@
 package core.gui.comp;
 
 import core.gui.theme.ImageUtilities;
+import core.model.UserParameter;
 
 import java.awt.*;
-import java.text.NumberFormat;
 import javax.swing.JPanel;
 
 public class CustomProgressBar extends JPanel{
-    private Color m_colorFill, m_colorBorder, m_colorBG;
-    private double m_minimum = 0.0;
-    private double m_maximum = 100.0;
+    private final Color m_colorFill;
+    private final Color m_colorBorder;
+    private final Color m_colorBG;
     private double m_value = 100.0;
-    private int m_width;
-    private int m_height;
+    private final int m_width;
+    private final int m_height;
     private String m_leftText = "";
     private String m_rightText = "";
-    private Font m_f;
+    private final Font m_f;
 
     public CustomProgressBar(Color colorBG, Color colorFill, Color colorBorder, int iWidth, int iHeight, Font f) {
         m_colorFill = colorFill;
@@ -23,7 +23,7 @@ public class CustomProgressBar extends JPanel{
         m_colorBG = colorBG;
         m_width = iWidth;
         m_height = iHeight;
-        m_f = f.deriveFont(Font.BOLD, 16f);
+        m_f = f.deriveFont(Font.BOLD, UserParameter.instance().fontSize + 4);
         setPreferredSize(new Dimension(m_width, m_height));
         setBackground(colorBG);
     }
@@ -38,6 +38,8 @@ public class CustomProgressBar extends JPanel{
 
         //fill progress
         if (m_value != 0) {
+            double m_minimum = 0.0;
+            double m_maximum = 100.0;
             final int drawAmount = (int) (((m_value - m_minimum) / (m_maximum - m_minimum)) * m_width);
             final int leftBlockWidth = drawAmount - 2;
             final int rightBlockWidth = m_width - 2 - leftBlockWidth;
@@ -47,16 +49,16 @@ public class CustomProgressBar extends JPanel{
             g.setFont(m_f);
             Canvas c = new Canvas();
             FontMetrics fm = c.getFontMetrics(m_f);
-            final int textHeight = fm.getHeight();
-            final int y = (m_height - textHeight) / 2 + 15;
+            var textHeight = m_f.getSize();
+            final int y = (m_height+textHeight)/2;
 
-            if (m_leftText != "") {
+            if (!m_leftText.isEmpty()) {
                 final int leftTextWidth = fm.stringWidth(m_leftText);
                 g.setColor(ImageUtilities.getColorForContrast(m_colorFill));
                 g.drawString(m_leftText, ((leftBlockWidth-leftTextWidth) / 2), y);
             }
 
-            if (m_rightText != "") {
+            if (!m_rightText.isEmpty()) {
                 final int rightTextWidth = fm.stringWidth(m_rightText);
                 g.setColor(ImageUtilities.getColorForContrast(m_colorBG));
                 g.drawString(m_rightText, (leftBlockWidth + (rightBlockWidth-rightTextWidth) / 2), y);

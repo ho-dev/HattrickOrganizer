@@ -1,7 +1,6 @@
 package core.option;
 
 import core.gui.comp.panel.ImagePanel;
-import core.util.HOLogger;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -59,8 +58,6 @@ public final class SliderPanel extends ImagePanel implements ChangeListener {
     }
 
     public float getValue() {
-        HOLogger.instance().log(getClass(),(float) m_jslSlider.getValue() + " : "
-                           + (m_jslSlider.getValue() / m_fFaktor));
         return m_jslSlider.getValue() / m_fFaktor;
     }
 

@@ -84,7 +84,6 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         gbc.fill = GridBagConstraints.HORIZONTAL;
         m_jcbUpcomingGames = new JComboBox<>();
         m_jcbUpcomingGames.setRenderer(new MatchOrdersRenderer());
-        m_jcbUpcomingGames.setPreferredSize(new Dimension(160, 25));
         layout.setConstraints(m_jcbUpcomingGames, gbc);
         add(m_jcbUpcomingGames);
 

@@ -33,10 +33,8 @@ public class HODefaultTableCellRenderer implements javax.swing.table.TableCellRe
             if (isSelected) {
                 component.setOpaque(true);
             }
-            //if (row % 2 == 0) component.setBackground(ColorLabelEntry.BG_ALTERNATE);
             return component;
-        } else if (value instanceof JComponent) {
-            final JComponent component = (JComponent) value;
+        } else if (value instanceof JComponent component) {
             component.setOpaque(true);
             component.setBackground(isSelected ? SELECTION_BG : ColorLabelEntry.BG_STANDARD);
             component.setForeground(isSelected ? SELECTION_FG : ColorLabelEntry.FG_STANDARD);

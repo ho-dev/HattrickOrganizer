@@ -11,37 +11,34 @@ import javax.swing.table.AbstractTableModel;
 import java.util.Vector;
 
 public class SpielerPositionTableModel extends AbstractTableModel {
-    //~ Instance fields ----------------------------------------------------------------------------
-
-	private static final long serialVersionUID = -4407511039452889638L;
 
     public String[] m_sToolTipStrings = {
-    	TranslationFacility.tr("Position"),
-        //Maximal
-	    TranslationFacility.tr("Maximal"),
-        //Minimal
-	    TranslationFacility.tr("Minimal"),
-        //Durchschnitt
-	    TranslationFacility.tr("Durchschnitt"),
+            TranslationFacility.tr("Position"),
+            //Maximal
+            TranslationFacility.tr("Maximal"),
+            //Minimal
+            TranslationFacility.tr("Minimal"),
+            //Durchschnitt
+            TranslationFacility.tr("Durchschnitt"),
     };
 
     protected Object[][] m_clData;
 
     protected String[] m_sColumnNames = {
-                                            TranslationFacility.tr("Position"),
-                                            
+            TranslationFacility.tr("Position"),
 
-    //Maximal
-    TranslationFacility.tr("Maximal"),
-                                            
 
-    //Minimal
-    TranslationFacility.tr("Minimal"),
-                                            
+            //Maximal
+            TranslationFacility.tr("Maximal"),
 
-    //Durchschnitt
-    TranslationFacility.tr("Durchschnitt"),
-                                        };
+
+            //Minimal
+            TranslationFacility.tr("Minimal"),
+
+
+            //Durchschnitt
+            TranslationFacility.tr("Durchschnitt"),
+    };
     private Vector<float[]> m_playersEvaluation;
 
     //~ Constructors -------------------------------------------------------------------------------
@@ -57,12 +54,12 @@ public class SpielerPositionTableModel extends AbstractTableModel {
     //~ Methods ------------------------------------------------------------------------------------
 
     @Override
-	public final boolean isCellEditable(int row, int col) {
+    public final boolean isCellEditable(int row, int col) {
         return false;
     }
 
     @Override
-	public final Class<?> getColumnClass(int columnIndex) {
+    public final Class<?> getColumnClass(int columnIndex) {
         final Object obj = getValueAt(0, columnIndex);
 
         if (obj != null) {
@@ -75,17 +72,10 @@ public class SpielerPositionTableModel extends AbstractTableModel {
     //-----Zugriffsmethoden----------------------------------------        
     public final int getColumnCount() {
         return m_sColumnNames.length;
-
-        /*
-           if ( m_clData!=null && m_clData.length > 0 && m_clData[0] != null )
-               return m_clData[0].length;
-           else
-               return 0;
-         */
     }
 
     @Override
-	public final String getColumnName(int columnIndex) {
+    public final String getColumnName(int columnIndex) {
         if ((m_sColumnNames != null) && (m_sColumnNames.length > columnIndex)) {
             return m_sColumnNames[columnIndex];
         }
@@ -112,7 +102,7 @@ public class SpielerPositionTableModel extends AbstractTableModel {
     }
 
     @Override
-	public final void setValueAt(Object value, int row, int column) {
+    public final void setValueAt(Object value, int row, int column) {
         m_clData[row][column] = value;
     }
 
@@ -145,24 +135,21 @@ public class SpielerPositionTableModel extends AbstractTableModel {
             final float[] rating = m_playersEvaluation.get(i);
 
             //Position
-            m_clData[i][0] = new ColorLabelEntry(ImageUtilities.getJerseyIcon(MatchRoleID
-                                                                    .getHTPosidForHOPosition4Image((byte) rating[3]),
-                                                                    (byte) 0, 0),
-                                                 -MatchRoleID.getSortId((byte) rating[3],
-                                                                            false),
-                                                 ColorLabelEntry.FG_STANDARD,
-                                                 ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+            m_clData[i][0] = new ColorLabelEntry(
+                    ImageUtilities.getJerseyIcon(MatchRoleID.getHTPosidForHOPosition4Image((byte) rating[3]), (byte) 0, 0),
+                    -MatchRoleID.getSortId((byte) rating[3], false),
+                    ColorLabelEntry.FG_STANDARD,
+                    ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
             ((ColorLabelEntry) m_clData[i][0]).setText(MatchRoleID.getNameForPosition((byte) rating[3]));
 
             //Maximal
-            m_clData[i][1] = new RatingTableEntry((int)(rating[0] * 2));
+            m_clData[i][1] = new RatingTableEntry((int) (rating[0] * 2));
 
             //Minial
-            m_clData[i][2] = new RatingTableEntry((int)(rating[1] * 2));
+            m_clData[i][2] = new RatingTableEntry((int) (rating[1] * 2));
 
             //Durchschnitt
-            m_clData[i][3] = new RatingTableEntry((int)Math.round(rating[2] * 2));
+            m_clData[i][3] = new RatingTableEntry(Math.round(rating[2] * 2));
         }
     }
-
 }

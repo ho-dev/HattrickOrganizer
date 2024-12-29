@@ -249,8 +249,7 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 		constraints.insets = new Insets(5, 3, 2, 2);
 
 		final JPanel panel = new JPanel(layout);
-		panel.setBorder(BorderFactory.createLineBorder(ThemeManager
-				.getColor(HOColorName.PANEL_BORDER)));
+		panel.setBorder(BorderFactory.createLineBorder(ThemeManager.getColor(HOColorName.PANEL_BORDER)));
 		panel.setBackground(getBackground());
 
 		// Match
@@ -381,7 +380,6 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 		constraints.gridx = 1;
 		constraints.gridy = 4;
 		heimTeamNameLabel = new JLabel();
-		heimTeamNameLabel.setPreferredSize(new Dimension(140, 14));
 		heimTeamNameLabel.setFont(heimTeamNameLabel.getFont().deriveFont(Font.BOLD));
 		layout.setConstraints(heimTeamNameLabel, constraints);
 		panel.add(heimTeamNameLabel);
@@ -402,7 +400,6 @@ class StaerkenvergleichPanel extends LazyImagePanel {
 		constraints.gridx = 4;
 		constraints.gridy = 4;
 		gastTeamNameLabel = new JLabel();
-		gastTeamNameLabel.setPreferredSize(new Dimension(140, 14));
 		gastTeamNameLabel.setFont(gastTeamNameLabel.getFont().deriveFont(Font.BOLD));
 		layout.setConstraints(gastTeamNameLabel, constraints);
 		panel.add(gastTeamNameLabel);

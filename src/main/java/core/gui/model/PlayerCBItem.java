@@ -6,6 +6,7 @@ import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.model.UserParameter;
 import core.model.match.MatchLineupPosition;
 import core.model.player.Player;
 import org.jetbrains.annotations.Nullable;
@@ -14,7 +15,7 @@ import java.awt.*;
 
 public class PlayerCBItem implements Comparable<PlayerCBItem>, ComboItem {
 
-    protected static int PLAYER_COMBO_HEIGHT = 35;
+    protected static int PLAYER_COMBO_HEIGHT = UserParameter.instance().fontSize * 3;
     public static javax.swing.JLabel m_jlLeer = new javax.swing.JLabel(" ");
     public PlayerLabelEntry m_clEntry;
     private @Nullable Player m_clPlayer;

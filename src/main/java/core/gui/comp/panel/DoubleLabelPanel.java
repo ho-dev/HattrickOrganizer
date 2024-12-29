@@ -26,7 +26,7 @@ public class DoubleLabelPanel extends JPanel {
         layout.setVgap(0);
         setLayout(layout);
         // Fix right label width to avoid components moving when values change.
-        var width = 60;
+        var width = UserParameter.instance().fontSize * 5;
         var height = UserParameter.instance().fontSize;
         rightLabel.setMinimumSize(new Dimension(width, height));
         rightLabel.setMaximumSize(new Dimension(width, height));
