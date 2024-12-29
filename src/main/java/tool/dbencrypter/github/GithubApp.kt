@@ -62,7 +62,7 @@ class GithubApp {
 		val request = Request.Builder()
 			.url(url)
 			.header("Authorization", "Bearer $token")
-			.header("Accept", "application/vnd.github.v3+json")
+			.header("Accept", "application/vnd.github+json")
 			.post(requestBody)
 			.build()
 
@@ -141,10 +141,10 @@ class GithubApp {
 			println("Access Code: $accessToken")
 			createGitHubIssue(
 				accessToken,
-				"tychobrailleur",
-				"NotHO",
+				"ho-dev",
+				"HattrickOrganizer",
 				"[BUG] Test",
-				"Test"
+				"Github App Test (Ignore)"
 			)
 		}
 	}
