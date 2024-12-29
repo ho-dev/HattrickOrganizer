@@ -12,16 +12,15 @@ import core.util.Helper;
 import java.awt.*;
 import javax.swing.*;
 
-
 /**
  * Panel showing detailed team ratings of selected match
  */
 class TeamsRatingPanel extends LazyImagePanel {
 
-    private final int RATING_BAR_WIDTH = 18 * UserParameter.instance().fontSize;
+	private final int RATING_BAR_WIDTH = 18 * UserParameter.instance().fontSize;
 	private final int RATING_BAR_HEIGHT = 4 * UserParameter.instance().fontSize;
 	private final int INSET = UserParameter.instance().fontSize;
-    private final int LARGE_RATING_BAR_HEIGHT = 2*(RATING_BAR_HEIGHT + INSET);
+	private final int LARGE_RATING_BAR_HEIGHT = 2 * (RATING_BAR_HEIGHT + INSET);
 	private JLabel m_jlGuestTeamName;
 	private JLabel m_jlHomeTeamName;
 	private final MatchesModel matchesModel;
@@ -30,7 +29,6 @@ class TeamsRatingPanel extends LazyImagePanel {
 	private JPanel m_jpBottom;
 	private GridBagConstraints m_jgbcBottom;
 	private Font f;
-
 
 	TeamsRatingPanel(MatchesModel matchesModel) {
 		this(matchesModel, false);
@@ -60,8 +58,7 @@ class TeamsRatingPanel extends LazyImagePanel {
 
 		Matchdetails details = matchesModel.getDetails();
 
-		if (details.getHomeHatStats() == 0)
-		{
+		if (details.getHomeHatStats() == 0) {
 			clear();
 			return;
 		}
@@ -99,13 +96,13 @@ class TeamsRatingPanel extends LazyImagePanel {
 
 		var fontSize = UserParameter.instance().fontSize;
 
-		f =  new JLabel("").getFont();
+		f = new JLabel("").getFont();
 		f = f.deriveFont(f.getStyle() | Font.BOLD);
 
 		bars = new JProgressBar[14];
 		for (int i = 0; i < 14; i++) {
 			bars[i] = new JProgressBar(0, 100);
-			bars[i].setPreferredSize(new Dimension(20 * fontSize, 2 * fontSize)); //25 if nimbus
+			bars[i].setPreferredSize(new Dimension(20 * fontSize, 2 * fontSize));
 			bars[i].setStringPainted(true);
 		}
 
@@ -157,7 +154,6 @@ class TeamsRatingPanel extends LazyImagePanel {
 		m_jpBottom.setBorder(BorderFactory.createLineBorder(ThemeManager
 				.getColor(HOColorName.PANEL_BORDER)));
 
-
 		m_jgbcBottom.insets = new Insets(8, 8, 0, 8);
 
 		m_jgbcBottom.gridx = 0;
@@ -196,7 +192,7 @@ class TeamsRatingPanel extends LazyImagePanel {
 	}
 
 	private CustomProgressBar createRatingBar() {
-				return createRatingBar(false);
+		return createRatingBar(false);
 	}
 
 	private CustomProgressBar createRatingBar(boolean isLarge) {
@@ -209,8 +205,8 @@ class TeamsRatingPanel extends LazyImagePanel {
 		JLabel label = new JLabel(Helper.getTranslation(txt));
 		label.setFont(f);
 		add(label, 0, row);
-		add(bars[row-1],1, row);
-		add(bars[row+6], 2, row);
+		add(bars[row - 1], 1, row);
+		add(bars[row + 6], 2, row);
 	}
 
 	private void add(JComponent comp, int x, int y) {
@@ -231,7 +227,7 @@ class TeamsRatingPanel extends LazyImagePanel {
 		resetValue(centralAttack);
 		resetValue(rightAttack);
 
-		for (var bar:bars){
+		for (var bar : bars) {
 			bar.setValue(0);
 			bar.setString("");
 		}
@@ -242,30 +238,24 @@ class TeamsRatingPanel extends LazyImagePanel {
 	}
 
 	private void setBarValue(int index, int value) {
-		double htValue = 1 + (value-1d)/4;
-        double RATING_MAX = 21d;
-        bars[index].setValue((int) (htValue * 100 / RATING_MAX));
-		bars[index].setString(PlayerAbility.getNameForSkill(true,htValue));
+		double htValue = 1 + (value - 1d) / 4;
+		double RATING_MAX = 21d;
+		bars[index].setValue((int) (htValue * 100 / RATING_MAX));
+		bars[index].setString(PlayerAbility.getNameForSkill(true, htValue));
 	}
 
-
-	private void setValue(CustomProgressBar rating, int val1, int val2){
+	private void setValue(CustomProgressBar rating, int val1, int val2) {
 		rating.setBackground(ThemeManager.getColor(HOColorName.GUEST_ACTION));
-        // minimum width of the rating bar to ensure proper visibility in case of extreme ratings ratio
-        double MIN_WIDTH_BAR = 0.2;
-        rating.setValue(val1, val2, MIN_WIDTH_BAR);
-		double htValHome = 1 + (val1-1d)/4;
-		double htValGuest = 1 + (val2-1d)/4;
+		// minimum width of the rating bar to ensure proper visibility in case of extreme ratings ratio
+		double MIN_WIDTH_BAR = 0.2;
+		rating.setValue(val1, val2, MIN_WIDTH_BAR);
+		double htValHome = 1 + (val1 - 1d) / 4;
+		double htValGuest = 1 + (val2 - 1d) / 4;
 		rating.setToolTipText(String.format(Helper.getTranslation("ls.module.matches.ratingRatio"), htValHome, htValGuest));
 	}
 
-	private void resetValue(CustomProgressBar rating){
+	private void resetValue(CustomProgressBar rating) {
 		rating.setBackground(ThemeManager.getColor(HOColorName.NEUTRAL_ACTION));
 		rating.resetValue();
 	}
-
 }
-
-
-
-
