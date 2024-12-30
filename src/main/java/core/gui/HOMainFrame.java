@@ -382,13 +382,9 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 
 		initModuleFunctionMenus(functionsMenu, modulesMenu);
 
-		// Help =========================================================================
-
-		// add Top Level Menus
 		menuBar.add(functionsMenu);
 		menuBar.add(new ToolManager().getToolMenu());
 		menuBar.add(modulesMenu);
-
 		menuBar.add(createHelpMenu());
 
 		if (!HO.isRelease()) {
