@@ -139,10 +139,19 @@ class GithubApp {
 				}
 			}
 			println("Access Code: $accessToken")
+			/*
 			createGitHubIssue(
 				accessToken,
 				"ho-dev",
 				"HattrickOrganizer",
+				"[BUG] Test",
+				"Github App Test (Ignore)"
+			)
+			 */
+			createGitHubIssue(
+				accessToken,
+				"ho-dev",
+				"test-ghapp",
 				"[BUG] Test",
 				"Github App Test (Ignore)"
 			)
