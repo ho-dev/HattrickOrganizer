@@ -9,5 +9,3 @@
  - [ ] has been updated
  - [ ] does not require update
 
-
-3. [Optional] suggested person to review this PR @___
