@@ -13,12 +13,24 @@ class DbEncrypterPanel : JPanel() {
 		val gbc = GridBagConstraints()
 
 		gbc.insets = Insets(5, 5, 5, 5)
-		gbc.gridx = 0
+
+		// Row 0
 		gbc.gridy = 0
 		gbc.fill = GridBagConstraints.HORIZONTAL
 		gbc.weightx = 1.0
 		gbc.weighty = 1.0
-		gbc.gridwidth = 4
+
+		gbc.gridx = 0
+		add(Box.createHorizontalStrut(42), gbc)
+		gbc.gridx = 1
+		add(Box.createHorizontalStrut(42), gbc)
+		gbc.gridx = 2
+		add(Box.createHorizontalStrut(42), gbc)
+
+		// Row 1
+		gbc.gridy++
+		gbc.gridx = 0
+		gbc.gridwidth = 3
 		gbc.anchor = GridBagConstraints.NORTH
 
 		add(
@@ -30,7 +42,7 @@ class DbEncrypterPanel : JPanel() {
 		)
 
 		// Row 2
-		gbc.gridy = 1
+		gbc.gridy++
 		gbc.gridx = 0
 		gbc.gridwidth = 1
 
@@ -44,7 +56,7 @@ class DbEncrypterPanel : JPanel() {
 		add(summaryInput, gbc)
 
 		// Row 3
-		gbc.gridy = 2
+		gbc.gridy++
 		gbc.gridx = 0
 		gbc.gridwidth = 1
 
@@ -62,7 +74,24 @@ class DbEncrypterPanel : JPanel() {
 
 		// Row 4
 		gbc.fill = currentFill
-		gbc.gridy = 3
+		gbc.gridy++
+		gbc.gridx = 0
+		gbc.gridwidth = 1
+
+		add(JLabel(TranslationFacility.tr("Attach encrypted database?")), gbc)
+
+		gbc.anchor = GridBagConstraints.WEST
+		gbc.fill = GridBagConstraints.NONE
+		gbc.gridx = 1
+		gbc.gridwidth = 2
+
+		val attachCheckbox = JCheckBox("")
+		add(attachCheckbox, gbc)
+
+		// Row 5
+		gbc.anchor = GridBagConstraints.NORTH
+		gbc.fill = currentFill
+		gbc.gridy++
 		gbc.gridx = 0
 		gbc.gridwidth = 2
 
