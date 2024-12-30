@@ -329,7 +329,7 @@ public class Player extends AbstractTable.Storable {
     /**
      * Externally recruited coaches are no longer allowed to be part of the lineup
      */
-    private boolean lineupDisabled = false;
+    private boolean isExternallyRecruitedCoach = false;
 
     private List<SkillChange> skillChanges;
 
@@ -405,7 +405,7 @@ public class Player extends AbstractTable.Storable {
         currentTeamGoals = properties.getInt("goalscurrentteam", 0);
         currentTeamMatches = properties.getInt("matchescurrentteam", 0);
 
-        this.lineupDisabled = properties.getBoolean("lineupdisabled", false);
+        this.isExternallyRecruitedCoach = properties.getBoolean("lineupdisabled", false);
         this.rating = properties.getInt("rating", 0);
         this.trainerType = TrainerType.fromInt(properties.getInt("trainertype", -1));
         this.coachSkill = properties.getInt("trainerskilllevel", 0);
@@ -1226,7 +1226,7 @@ public class Player extends AbstractTable.Storable {
      * set whether that player can be selected by the assistant
      */
     public void setCanBeSelectedByAssistant(boolean flag) {
-        if (this.isLineupDisabled()) flag = false;
+        if (this.isExternallyRecruitedCoach()) flag = false;
         getNotes().setEligibleToPlay(flag);
         DBManager.instance().storePlayerNotes(notes);
     }
@@ -1235,7 +1235,7 @@ public class Player extends AbstractTable.Storable {
      * get whether that player can be selected by the assistant
      */
     public boolean getCanBeSelectedByAssistant() {
-        return !this.isLineupDisabled() && getNotes().isEligibleToPlay();
+        return !this.isExternallyRecruitedCoach() && getNotes().isEligibleToPlay();
     }
 
     public void setPlayerId(int m_iSpielerID) {
@@ -1529,12 +1529,12 @@ public class Player extends AbstractTable.Storable {
         return ret;
     }
 
-    public boolean isLineupDisabled() {
-        return lineupDisabled;
+    public boolean isExternallyRecruitedCoach() {
+        return isExternallyRecruitedCoach;
     }
 
-    public void setLineupDisabled(Boolean lineupDisabled) {
-        this.lineupDisabled = Objects.requireNonNullElse(lineupDisabled, false);
+    public void setExternallyRecruitedCoach(Boolean externallyRecruitedCoach) {
+        this.isExternallyRecruitedCoach = Objects.requireNonNullElse(externallyRecruitedCoach, false);
     }
 
     public static class Notes extends AbstractTable.Storable {

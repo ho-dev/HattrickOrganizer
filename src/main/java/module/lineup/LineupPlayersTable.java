@@ -80,8 +80,9 @@ public final class LineupPlayersTable extends FixedColumnsTable implements core.
 			var c = e.getColumn();
 			var player = tableModel.getPlayerAtRow(r);
 			if (player != null) {
-				if (c == tableModel.getPositionInArray(UserColumnFactory.AUTO_LINEUP)) {
-					var autoLineup = tableModel.getValueAt(r,c);
+				var userColumn = this.getUserColumn(e);
+				if (userColumn != null && userColumn.getId() == UserColumnFactory.AUTO_LINEUP) {
+					var autoLineup = tableModel.getValueAt(convertRowIndexToModel(r),convertColumnIndexToModel(c));
 					if (autoLineup != null){
 						player.setCanBeSelectedByAssistant((boolean) autoLineup);
 						if( player.getCanBeSelectedByAssistant()){

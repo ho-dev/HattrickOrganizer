@@ -9,16 +9,15 @@ import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.rating.RatingPredictionModel;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Vector;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static core.rating.RatingPredictionModel.getBehaviour;
 
 public class LineupAssistant {
-	/** Order for lineup assistent */
+	/**
+	 * Order for lineup assistent
+	 */
 	public static final byte AW_MF_ST = 0;
 	public static final byte AW_ST_MF = 1;
 	public static final byte MF_ST_AW = 2;
@@ -35,7 +34,7 @@ public class LineupAssistant {
 	public final boolean isPlayerInLineup(int spielerId, List<MatchLineupPosition> positions) {
 		if (positions != null) {
 			for (var position : positions) {
-				if ( position.getPlayerId() == spielerId) {
+				if (position.getPlayerId() == spielerId) {
 					return true;
 				}
 			}
@@ -44,24 +43,24 @@ public class LineupAssistant {
 		return false;
 	}
 
-    public final boolean isPlayerInStartingEleven(int spielerId, Vector<MatchLineupPosition> lineupPositions) {
-		for ( var pos : lineupPositions){
-			if ( pos.getPlayerId() == spielerId ) return true;
+	public final boolean isPlayerInStartingEleven(int spielerId, Vector<MatchLineupPosition> lineupPositions) {
+		for (var pos : lineupPositions) {
+			if (pos.getPlayerId() == spielerId) return true;
 		}
-        return false;
-    }
+		return false;
+	}
 
 	/**
 	 * Assistant to create automatic lineup
-	 * 
-	 * @param lPositions: list of positions to be filled
-	 * @param lPlayers: list of available players
+	 *
+	 * @param lPositions:              list of positions to be filled
+	 * @param lPlayers:                list of available players
 	 * @param sectorsStrengthPriority: priority in sector strength (e.g. MID-FOR-DE)
-	 * @param bForm: whether or not to consider the form
-	 * @param idealPosFirst: whether or not to consider best position first
-	 * @param bInjured: whether or not to consider injured player
-	 * @param bSuspended: whether or not to advanced suspended player
-	 * @param weather: Actual weather
+	 * @param bForm:                   whether or not to consider the form
+	 * @param idealPosFirst:           whether or not to consider best position first
+	 * @param bInjured:                whether or not to consider injured player
+	 * @param bSuspended:              whether or not to advanced suspended player
+	 * @param weather:                 Actual weather
 	 */
 	public final void doLineup(List<MatchLineupPosition> lPositions, List<Player> lPlayers,
 							   byte sectorsStrengthPriority, boolean bForm, boolean idealPosFirst, boolean bInjured,
@@ -92,160 +91,41 @@ public class LineupAssistant {
 			doPlayerLineupIdealPosition(IMatchRoleID.FORWARD_TOWING, bForm, bInjured, bSuspended, lPlayers, lPositions);
 		}
 
-		// set Goalkeeper
-		doSpielerAufstellen(IMatchRoleID.KEEPER, bForm, bInjured, bSuspended,lPlayers, lPositions);
-
-		byte[] order;
+		var fieldPlayerPositionOrder = new ArrayList<Byte>();
+		var reservePositionOrder = new ArrayList<Byte>();
+		fieldPlayerPositionOrder.add(IMatchRoleID.KEEPER);
+		reservePositionOrder.add(IMatchRoleID.KEEPER);
 		// nun reihenfolge beachten und unbesetzte füllen
 		switch (sectorsStrengthPriority) {
 			case AW_MF_ST -> {
-				order = new byte[18];
-				// DEFENCE
-				order[0] = IMatchRoleID.CENTRAL_DEFENDER;
-				order[1] = IMatchRoleID.CENTRAL_DEFENDER_TOWING;
-				order[2] = IMatchRoleID.CENTRAL_DEFENDER_OFF;
-				order[3] = IMatchRoleID.BACK;
-				order[4] = IMatchRoleID.BACK_DEF;
-				order[5] = IMatchRoleID.BACK_OFF;
-				order[6] = IMatchRoleID.BACK_TOMID;
-				// MIDFIELD
-				order[7] = IMatchRoleID.MIDFIELDER;
-				order[8] = IMatchRoleID.MIDFIELDER_OFF;
-				order[9] = IMatchRoleID.MIDFIELDER_DEF;
-				order[10] = IMatchRoleID.MIDFIELDER_TOWING;
-				order[11] = IMatchRoleID.WINGER;
-				order[12] = IMatchRoleID.WINGER_DEF;
-				order[13] = IMatchRoleID.WINGER_OFF;
-				order[14] = IMatchRoleID.WINGER_TOMID;
-				// FORWARD
-				order[15] = IMatchRoleID.FORWARD;
-				order[16] = IMatchRoleID.FORWARD_DEF;
-				order[17] = IMatchRoleID.FORWARD_TOWING;
+				addDefence(fieldPlayerPositionOrder, reservePositionOrder);
+				addMidfield(fieldPlayerPositionOrder, reservePositionOrder);
+				addForward(fieldPlayerPositionOrder, reservePositionOrder);
 			}
 			case AW_ST_MF -> {
-				order = new byte[18];
-				// DEFENCE
-				order[0] = IMatchRoleID.CENTRAL_DEFENDER;
-				order[1] = IMatchRoleID.CENTRAL_DEFENDER_TOWING;
-				order[2] = IMatchRoleID.CENTRAL_DEFENDER_OFF;
-				order[3] = IMatchRoleID.BACK;
-				order[4] = IMatchRoleID.BACK_DEF;
-				order[5] = IMatchRoleID.BACK_OFF;
-				order[6] = IMatchRoleID.BACK_TOMID;
-				// FORWARD
-				order[7] = IMatchRoleID.FORWARD;
-				order[8] = IMatchRoleID.FORWARD_DEF;
-				order[9] = IMatchRoleID.FORWARD_TOWING;
-
-				// MIDFIELD
-				order[10] = IMatchRoleID.MIDFIELDER;
-				order[11] = IMatchRoleID.MIDFIELDER_OFF;
-				order[12] = IMatchRoleID.MIDFIELDER_DEF;
-				order[13] = IMatchRoleID.MIDFIELDER_TOWING;
-				order[14] = IMatchRoleID.WINGER;
-				order[15] = IMatchRoleID.WINGER_DEF;
-				order[16] = IMatchRoleID.WINGER_OFF;
-				order[17] = IMatchRoleID.WINGER_TOMID;
+				addDefence(fieldPlayerPositionOrder, reservePositionOrder);
+				addForward(fieldPlayerPositionOrder, reservePositionOrder);
+				addMidfield(fieldPlayerPositionOrder, reservePositionOrder);
 			}
 			case MF_AW_ST -> {
-				order = new byte[18];
-
-				// MIDFIELD
-				order[0] = IMatchRoleID.MIDFIELDER;
-				order[1] = IMatchRoleID.MIDFIELDER_OFF;
-				order[2] = IMatchRoleID.MIDFIELDER_DEF;
-				order[3] = IMatchRoleID.MIDFIELDER_TOWING;
-				order[4] = IMatchRoleID.WINGER;
-				order[5] = IMatchRoleID.WINGER_DEF;
-				order[6] = IMatchRoleID.WINGER_OFF;
-				order[7] = IMatchRoleID.WINGER_TOMID;
-				// DEFENCE
-				order[8] = IMatchRoleID.CENTRAL_DEFENDER;
-				order[9] = IMatchRoleID.CENTRAL_DEFENDER_TOWING;
-				order[10] = IMatchRoleID.CENTRAL_DEFENDER_OFF;
-				order[11] = IMatchRoleID.BACK;
-				order[12] = IMatchRoleID.BACK_DEF;
-				order[13] = IMatchRoleID.BACK_OFF;
-				order[14] = IMatchRoleID.BACK_TOMID;
-				// FORWARD
-				order[15] = IMatchRoleID.FORWARD;
-				order[16] = IMatchRoleID.FORWARD_DEF;
-				order[17] = IMatchRoleID.FORWARD_TOWING;
+				addMidfield(fieldPlayerPositionOrder, reservePositionOrder);
+				addDefence(fieldPlayerPositionOrder, reservePositionOrder);
+				addForward(fieldPlayerPositionOrder, reservePositionOrder);
 			}
 			case MF_ST_AW -> {
-				order = new byte[18];
-
-				// MIDFIELD
-				order[0] = IMatchRoleID.MIDFIELDER;
-				order[1] = IMatchRoleID.MIDFIELDER_OFF;
-				order[2] = IMatchRoleID.MIDFIELDER_DEF;
-				order[3] = IMatchRoleID.MIDFIELDER_TOWING;
-				order[4] = IMatchRoleID.WINGER;
-				order[5] = IMatchRoleID.WINGER_DEF;
-				order[6] = IMatchRoleID.WINGER_OFF;
-				order[7] = IMatchRoleID.WINGER_TOMID;
-				// FORWARD
-				order[8] = IMatchRoleID.FORWARD;
-				order[9] = IMatchRoleID.FORWARD_DEF;
-				order[10] = IMatchRoleID.FORWARD_TOWING;
-				// DEFENCE
-				order[11] = IMatchRoleID.CENTRAL_DEFENDER;
-				order[12] = IMatchRoleID.CENTRAL_DEFENDER_TOWING;
-				order[13] = IMatchRoleID.CENTRAL_DEFENDER_OFF;
-				order[14] = IMatchRoleID.BACK;
-				order[15] = IMatchRoleID.BACK_DEF;
-				order[16] = IMatchRoleID.BACK_OFF;
-				order[17] = IMatchRoleID.BACK_TOMID;
+				addMidfield(fieldPlayerPositionOrder, reservePositionOrder);
+				addForward(fieldPlayerPositionOrder, reservePositionOrder);
+				addDefence(fieldPlayerPositionOrder, reservePositionOrder);
 			}
 			case ST_MF_AW -> {
-				order = new byte[18];
-
-				// FORWARD
-				order[0] = IMatchRoleID.FORWARD;
-				order[1] = IMatchRoleID.FORWARD_DEF;
-				order[2] = IMatchRoleID.FORWARD_TOWING;
-				// MIDFIELD
-				order[3] = IMatchRoleID.MIDFIELDER;
-				order[4] = IMatchRoleID.MIDFIELDER_OFF;
-				order[5] = IMatchRoleID.MIDFIELDER_DEF;
-				order[6] = IMatchRoleID.MIDFIELDER_TOWING;
-				order[7] = IMatchRoleID.WINGER;
-				order[8] = IMatchRoleID.WINGER_DEF;
-				order[9] = IMatchRoleID.WINGER_OFF;
-				order[10] = IMatchRoleID.WINGER_TOMID;
-
-				// DEFENCE
-				order[11] = IMatchRoleID.CENTRAL_DEFENDER;
-				order[12] = IMatchRoleID.CENTRAL_DEFENDER_TOWING;
-				order[13] = IMatchRoleID.CENTRAL_DEFENDER_OFF;
-				order[14] = IMatchRoleID.BACK;
-				order[15] = IMatchRoleID.BACK_DEF;
-				order[16] = IMatchRoleID.BACK_OFF;
-				order[17] = IMatchRoleID.BACK_TOMID;
+				addForward(fieldPlayerPositionOrder, reservePositionOrder);
+				addMidfield(fieldPlayerPositionOrder, reservePositionOrder);
+				addDefence(fieldPlayerPositionOrder, reservePositionOrder);
 			}
 			case ST_AW_MF -> {
-				order = new byte[18];
-				// FORWARD
-				order[0] = IMatchRoleID.FORWARD;
-				order[1] = IMatchRoleID.FORWARD_DEF;
-				order[2] = IMatchRoleID.FORWARD_TOWING;
-				// DEFENCE
-				order[3] = IMatchRoleID.CENTRAL_DEFENDER;
-				order[4] = IMatchRoleID.CENTRAL_DEFENDER_TOWING;
-				order[5] = IMatchRoleID.CENTRAL_DEFENDER_OFF;
-				order[6] = IMatchRoleID.BACK;
-				order[7] = IMatchRoleID.BACK_DEF;
-				order[8] = IMatchRoleID.BACK_OFF;
-				order[9] = IMatchRoleID.BACK_TOMID;
-				// MIDFIELD
-				order[10] = IMatchRoleID.MIDFIELDER;
-				order[11] = IMatchRoleID.MIDFIELDER_OFF;
-				order[12] = IMatchRoleID.MIDFIELDER_DEF;
-				order[13] = IMatchRoleID.MIDFIELDER_TOWING;
-				order[14] = IMatchRoleID.WINGER;
-				order[15] = IMatchRoleID.WINGER_DEF;
-				order[16] = IMatchRoleID.WINGER_OFF;
-				order[17] = IMatchRoleID.WINGER_TOMID;
+				addForward(fieldPlayerPositionOrder, reservePositionOrder);
+				addDefence(fieldPlayerPositionOrder, reservePositionOrder);
+				addMidfield(fieldPlayerPositionOrder, reservePositionOrder);
 			}
 			default -> {
 				return;
@@ -254,7 +134,7 @@ public class LineupAssistant {
 			// break;
 		}
 
-		for (byte b : order) {
+		for (byte b : fieldPlayerPositionOrder) {
 			doSpielerAufstellen(b, bForm, bInjured, bSuspended, lPlayers, lPositions);
 		}
 
@@ -285,66 +165,84 @@ public class LineupAssistant {
 		}
 
 		// fill remaining seats
-		// TW
-		doReserveSpielerAufstellen(IMatchRoleID.KEEPER, bForm, bInjured,
-				bSuspended, lPlayers, lPositions);
+		for ( byte b : reservePositionOrder) {
+			doReserveSpielerAufstellen(b, bForm, bInjured, bSuspended, lPlayers, lPositions);
+		}
+	}
 
-		// abwehr
-		doReserveSpielerAufstellen(IMatchRoleID.CENTRAL_DEFENDER, bForm, bInjured,
-				bSuspended, lPlayers, lPositions);
+	private void addForward(ArrayList<Byte> fieldPlayerPositionOrder, ArrayList<Byte> reservePositionOrder) {
+		// FORWARD
+		fieldPlayerPositionOrder.add(IMatchRoleID.FORWARD);
+		fieldPlayerPositionOrder.add(IMatchRoleID.FORWARD_DEF);
+		fieldPlayerPositionOrder.add(IMatchRoleID.FORWARD_TOWING);
 
-		// WB
-		doReserveSpielerAufstellen(IMatchRoleID.BACK, bForm, bInjured,
-				bSuspended, lPlayers, lPositions);
+		reservePositionOrder.add(IMatchRoleID.FORWARD);
+	}
 
-		// mittelfeld
-		doReserveSpielerAufstellen(IMatchRoleID.MIDFIELDER, bForm, bInjured,
-				bSuspended, lPlayers, lPositions);
-		doReserveSpielerAufstellen(IMatchRoleID.WINGER, bForm, bInjured,
-				bSuspended, lPlayers, lPositions);
+	private void addMidfield(ArrayList<Byte> fieldPlayerPositionOrder, ArrayList<Byte> reservePositionOrder) {
+		// MIDFIELD
+		fieldPlayerPositionOrder.add(IMatchRoleID.MIDFIELDER);
+		fieldPlayerPositionOrder.add(IMatchRoleID.MIDFIELDER_OFF);
+		fieldPlayerPositionOrder.add(IMatchRoleID.MIDFIELDER_DEF);
+		fieldPlayerPositionOrder.add(IMatchRoleID.MIDFIELDER_TOWING);
+		fieldPlayerPositionOrder.add(IMatchRoleID.WINGER);
+		fieldPlayerPositionOrder.add(IMatchRoleID.WINGER_DEF);
+		fieldPlayerPositionOrder.add(IMatchRoleID.WINGER_OFF);
+		fieldPlayerPositionOrder.add(IMatchRoleID.WINGER_TOMID);
 
-		// sturm
-		doReserveSpielerAufstellen(IMatchRoleID.FORWARD, bForm, bInjured,
-				bSuspended, lPlayers, lPositions);
+		reservePositionOrder.add(IMatchRoleID.MIDFIELDER);
+		reservePositionOrder.add(IMatchRoleID.WINGER);
+	}
+
+	private void addDefence(ArrayList<Byte> fieldPlayerPositionOrder, ArrayList<Byte> reservePositionOrder) {
+		// DEFENCE
+		fieldPlayerPositionOrder.add(IMatchRoleID.CENTRAL_DEFENDER);
+		fieldPlayerPositionOrder.add(IMatchRoleID.CENTRAL_DEFENDER_TOWING);
+		fieldPlayerPositionOrder.add(IMatchRoleID.CENTRAL_DEFENDER_OFF);
+		fieldPlayerPositionOrder.add(IMatchRoleID.BACK);
+		fieldPlayerPositionOrder.add(IMatchRoleID.BACK_DEF);
+		fieldPlayerPositionOrder.add(IMatchRoleID.BACK_OFF);
+		fieldPlayerPositionOrder.add(IMatchRoleID.BACK_TOMID);
+
+		reservePositionOrder.add(IMatchRoleID.CENTRAL_DEFENDER);
+		reservePositionOrder.add(IMatchRoleID.BACK);
 	}
 
 	/**
 	 * resets all connections between position and player
-	 * 
-	 * @param positionen
-	 *            a vector of player positions
+	 *
+	 * @param positionen a vector of player positions
 	 */
 	public final void resetPositionsbesetzungen(Vector<MatchLineupPosition> positionen) {
-		for ( var pos: positionen){
+		for (var pos : positionen) {
 			pos.setPlayerIdIfValidForLineup(0);
 		}
 	}
-	
+
 	/**
 	 * Resets the orders for all positions to normal
-	 * @param positions
-	 * 		a vector of player positions
+	 *
+	 * @param positions a vector of player positions
 	 */
 	public final void resetPositionOrders(Vector<MatchLineupPosition> positions) {
-		if ( positions==null) return;
-		for  ( var pos : positions){
-			pos.setBehaviour((byte)0);
+		if (positions == null) return;
+		for (var pos : positions) {
+			pos.setBehaviour((byte) 0);
 		}
 	}
 
 	/**
 	 * Checks if there is a player with a specified id in the current team and not disabled for lineup.
-	 * 
-	 * @param playerID
-	 *            the id of the player
+	 *
+	 * @param playerID the id of the player
 	 * @return <code>true</code> if there is not disabled player with the specified id in the
-	 *         team, <code>false</code> otherwise.
+	 * team, <code>false</code> otherwise.
 	 */
 	public static boolean isPlayerEnabledForLineup(int playerID) {
 		List<Player> players = HOVerwaltung.instance().getModel().getCurrentPlayers();
 		for (Player player : players) {
 			if (player.getPlayerId() == playerID) {
-				return player.isLineupDisabled();
+				return player.getCanBeSelectedByAssistant();
 			}
 		}
 		return true;
@@ -392,8 +290,8 @@ public class LineupAssistant {
 	 * besetzt die Torwart Positionen im Vector m_vPositionen
 	 */
 	protected final void doReserveSpielerAufstellen(byte position, boolean mitForm,
-			boolean ignoreVerletzung, boolean ignoreSperre, List<Player> vPlayer,
-			List<MatchLineupPosition> positionen) {
+													boolean ignoreVerletzung, boolean ignoreSperre, List<Player> vPlayer,
+													List<MatchLineupPosition> positionen) {
 		MatchRoleID pos;
 		Player player;
 
@@ -401,14 +299,14 @@ public class LineupAssistant {
 			pos = positionen.get(i);
 
 			// Ignore already assigned positions and non substitute position
-			if ((pos.getPlayerId() > 0) || ! IMatchRoleID.aSubstitutesMatchRoleID.contains(pos.getId())) {
+			if ((pos.getPlayerId() > 0) || !IMatchRoleID.aSubstitutesMatchRoleID.contains(pos.getId())) {
 				continue;
 			}
 
 			// nur exacte Pos
 			if (pos.getPosition() == position) {
 				player = getBestPlayerForPosition(position, mitForm, ignoreVerletzung, ignoreSperre,
-                        vPlayer, positionen);
+						vPlayer, positionen);
 
 				// position besetzen
 				if (player != null) {
@@ -422,8 +320,8 @@ public class LineupAssistant {
 	 * besetzt die Torwart Positionen im Vector m_vPositionen
 	 */
 	protected final void doReserveSpielerAufstellenIdealPos(byte position, boolean mitForm,
-			boolean ignoreVerletzung, boolean ignoreSperre, List<Player> vPlayer,
-			List<MatchLineupPosition> positionen) {
+															boolean ignoreVerletzung, boolean ignoreSperre, List<Player> vPlayer,
+															List<MatchLineupPosition> positionen) {
 		MatchRoleID pos;
 		Player player;
 
@@ -451,19 +349,19 @@ public class LineupAssistant {
 
 	/**
 	 * automatic lineup
-	 * @param position: current position being optimized
-	 * @param mitForm: whether or not to consider the form
+	 *
+	 * @param position:         current position being optimized
+	 * @param mitForm:          whether or not to consider the form
 	 * @param ignoreVerletzung: whether or not to align the injured player
-	 * @param ignoreSperre:  whether or not to align the red-carded player
-	 * @param vPlayer: current position being optimized
-	 * @param positionen: list of position to be filled
+	 * @param ignoreSperre:     whether or not to align the red-carded player
+	 * @param vPlayer:          current position being optimized
+	 * @param positionen:       list of position to be filled
 	 */
 	protected final void doSpielerAufstellen(byte position, boolean mitForm,
-			boolean ignoreVerletzung, boolean ignoreSperre, List<Player> vPlayer,
-			List<MatchLineupPosition> positionen) {
+											 boolean ignoreVerletzung, boolean ignoreSperre, List<Player> vPlayer,
+											 List<MatchLineupPosition> positionen) {
 		MatchRoleID pos;
 		Player player;
-//		final Vector<IMatchRoleID> zusPos = new Vector<IMatchRoleID>();
 
 		for (int i = 0; (positionen != null) && (vPlayer != null) && (i < positionen.size()); i++) {
 			pos = positionen.get(i);
@@ -476,7 +374,7 @@ public class LineupAssistant {
 			// position found => get the best player or that position
 			if (pos.getPosition() == position) {
 				player = getBestPlayerForPosition(position, mitForm, ignoreVerletzung, ignoreSperre,
-                        vPlayer, positionen);
+						vPlayer, positionen);
 
 				// fill the position
 				if (player != null) {

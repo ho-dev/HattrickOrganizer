@@ -99,7 +99,7 @@ final class SpielerTable extends AbstractTable {
 				ColumnDescriptor.Builder.newInstance().setColumnName("MotherclubId").setGetter((p) -> ((Player) p).getMotherClubId()).setSetter((p, v) -> ((Player) p).setMotherClubId((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("MotherclubName").setGetter((p) -> ((Player) p).getMotherClubName()).setSetter((p, v) -> ((Player) p).setMotherClubName((String) v)).setType(Types.VARCHAR).isNullable(true).setLength(255).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("MatchesCurrentTeam").setGetter((p) -> ((Player) p).getCurrentTeamMatches()).setSetter((p, v) -> ((Player) p).setCurrentTeamMatches((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("LineupDisabled").setGetter((p) -> ((Player) p).isLineupDisabled()).setSetter((p, v) -> ((Player) p).setLineupDisabled((Boolean) v)).setType(Types.BOOLEAN).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("LineupDisabled").setGetter((p) -> ((Player) p).isExternallyRecruitedCoach()).setSetter((p, v) -> ((Player) p).setExternallyRecruitedCoach((Boolean) v)).setType(Types.BOOLEAN).isNullable(true).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("ContractDate").setGetter((p) -> ((Player) p).getContractDate()).setSetter((p, v) -> ((Player) p).setContractDate((String) v)).setType(Types.VARCHAR).isNullable(true).setLength(100).build()
 		};
 	}
@@ -251,16 +251,14 @@ final class SpielerTable extends AbstractTable {
 		return loadOne(Player.class, connectionManager.executePreparedQuery(loadPlayerAfterSql, playerId, before));
 	}
 
-	private final String loadPlayersBeforeSql = "SELECT S.* FROM SPIELER S INNER JOIN ( SELECT SPIELERID, MAX(DATUM) AS DATUM  FROM SPIELER WHERE DATUM<=? AND (FIRSTNAME IS NULL AND LASTNAME=? OR FIRSTNAME=? AND LASTNAME=?) GROUP BY SPIELERID ) IJ ON S.SPIELERID = IJ.SPIELERID AND S.DATUM = IJ.DATUM";
-
-	public List<Player> loadPlayersBefore(String playerName, Timestamp before) {
-		return loadPlayers(loadPlayersBeforeSql, playerName, before);
+    public List<Player> loadPlayersBefore(String playerName, Timestamp before) {
+        String loadPlayersBeforeSql = "SELECT S.* FROM SPIELER S INNER JOIN ( SELECT SPIELERID, MAX(DATUM) AS DATUM  FROM SPIELER WHERE DATUM<=? AND (FIRSTNAME IS NULL AND LASTNAME=? OR FIRSTNAME=? AND LASTNAME=?) GROUP BY SPIELERID ) IJ ON S.SPIELERID = IJ.SPIELERID AND S.DATUM = IJ.DATUM";
+        return loadPlayers(loadPlayersBeforeSql, playerName, before);
 	}
 
-	private final String loadPlayersAfterSql = "SELECT S.* FROM SPIELER S INNER JOIN ( SELECT SPIELERID, MIN(DATUM) AS DATUM  FROM SPIELER WHERE DATUM>=? AND (FIRSTNAME IS NULL AND LASTNAME=? OR FIRSTNAME=? AND LASTNAME=?) GROUP BY SPIELERID ) IJ ON S.SPIELERID = IJ.SPIELERID AND S.DATUM = IJ.DATUM";
-
-	public List<Player> loadPlayersAfter(String playerName, Timestamp after) {
-		return loadPlayers(loadPlayersAfterSql, playerName, after);
+    public List<Player> loadPlayersAfter(String playerName, Timestamp after) {
+        String loadPlayersAfterSql = "SELECT S.* FROM SPIELER S INNER JOIN ( SELECT SPIELERID, MIN(DATUM) AS DATUM  FROM SPIELER WHERE DATUM>=? AND (FIRSTNAME IS NULL AND LASTNAME=? OR FIRSTNAME=? AND LASTNAME=?) GROUP BY SPIELERID ) IJ ON S.SPIELERID = IJ.SPIELERID AND S.DATUM = IJ.DATUM";
+        return loadPlayers(loadPlayersAfterSql, playerName, after);
 	}
 
 	private List<Player> loadPlayers(String query, String playerName, Timestamp time) {
@@ -270,16 +268,14 @@ final class SpielerTable extends AbstractTable {
 		return load(Player.class, connectionManager.executePreparedQuery(query, time, playerName, firstName, lastName));
 	}
 
-	private final String preSql = "select marktwert from SPIELER where spielerid=? and verletzt=-1 order by DATUM desc";
-
-	private final String postSql = "select marktwert from SPIELER where spielerid=? and verletzt>-1 order by DATUM desc";
-
-	public String loadLatestTSINotInjured(int playerId) {
-		return loadLatestTSI(preSql, playerId);
+    public String loadLatestTSINotInjured(int playerId) {
+        String preSql = "select marktwert from SPIELER where spielerid=? and verletzt=-1 order by DATUM desc";
+        return loadLatestTSI(preSql, playerId);
 	}
 
 	public String loadLatestTSIInjured(int playerId) {
-		return loadLatestTSI(postSql, playerId);
+        String postSql = "select marktwert from SPIELER where spielerid=? and verletzt>-1 order by DATUM desc";
+        return loadLatestTSI(postSql, playerId);
 	}
 
 	private String loadLatestTSI(String query, int playerId) {

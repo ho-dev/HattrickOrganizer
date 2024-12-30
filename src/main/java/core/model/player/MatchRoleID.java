@@ -122,36 +122,6 @@ public class MatchRoleID extends AbstractTable.Storable implements java.io.Seria
 
 	public MatchRoleID(){}
 
-//	// //////////////////Load/Save/////////////////
-//
-//	/**
-//	 * Konstruktor lädt die MatchRoleID aus einem InputStream
-//	 *
-//	 * @param dis
-//	 *            Der InputStream aus dem gelesen wird
-//	 */
-//	public MatchRoleID(DataInputStream dis) {
-//		// DataInputStream dis = null;
-//		// byte data[] = null;
-//		try {
-//			// Einzulesenden Strom konvertieren
-//			// bais = new ByteArrayInputStream(data);
-//			// dis = new DataInputStream (bais);
-//			// Daten auslesen
-//			m_iId = dis.readInt();
-//			m_iSpielerId = dis.readInt();
-//			m_bTaktik = dis.readByte();
-//
-//			// Und wieder schliessen
-//			// dis.close ();
-//		} catch (IOException ioe) {
-//			HOLogger.instance().log(getClass(), ioe);
-//		}
-//	}
-
-	// ~ Methods
-	// ------------------------------------------------------------------------------------
-
 	/**
 	 * Returns a possible HT position ID for a HO position ID. Use only for
 	 * loading the position image
