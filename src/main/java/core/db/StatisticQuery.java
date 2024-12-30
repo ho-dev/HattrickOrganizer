@@ -3,8 +3,8 @@ package core.db;
 import core.gui.model.ArenaStatistikModel;
 import core.gui.model.ArenaStatistikTableModel;
 import core.model.HOVerwaltung;
-import core.model.match.MatchKurzInfo;
 import core.model.enums.MatchType;
+import core.model.match.MatchKurzInfo;
 import core.util.HODateTime;
 import core.util.HOLogger;
 
@@ -57,7 +57,7 @@ public class StatisticQuery {
 					tempwerte[13] = rs.getDouble("Bewertung") / 2d;
 					tempwerte[14] = rs.getDouble("Loyalty");
 					tempwerte[15] = rs.getTimestamp("Datum").getTime();
-					tempwerte[16] = rs.getDouble("Kondition") ; // temporary statistics of stamina without sub to check sub stamina calculation
+					tempwerte[16] = rs.getDouble("Kondition"); // temporary statistics of stamina without sub to check sub stamina calculation
 
 					//TSI, alle Marktwerte / 1000 teilen
 					if (rs.getTimestamp("Datum").before(DBManager.TSIDATE)) {
@@ -84,8 +84,8 @@ public class StatisticQuery {
 							werte[13] = rset.getDouble("Bewertung") / 2d;
 						}
 
-                        rset.close();
-                    }
+						rset.close();
+					}
 
 					for (int j = 0; j < werte.length; j++) {
 						returnWerte[j][i] = werte[j];
@@ -152,7 +152,7 @@ public class StatisticQuery {
 		}
 
 		arenamodels = liste.toArray(new ArenaStatistikModel[0]);
-		
+
 
 		// Jetzt noch die Arenadate für die Zeit holen
 		for (ArenaStatistikModel arenaStatistikModel : arenamodels) {
@@ -160,22 +160,22 @@ public class StatisticQuery {
 
 			var stadium = DBManager.instance().getStadion(hrfid);
 			if (stadium != null) {
-				arenaStatistikModel.setArenaGroesse(stadium.getGesamtgroesse());
-				arenaStatistikModel.setMaxTerraces(stadium.getStehplaetze());
-				arenaStatistikModel.setMaxBasic(stadium.getSitzplaetze());
-				arenaStatistikModel.setMaxRoof(stadium.getUeberdachteSitzplaetze());
-				arenaStatistikModel.setMaxVip(stadium.getLogen());
+				arenaStatistikModel.setArenaGroesse(stadium.getTotalSize());
+				arenaStatistikModel.setMaxTerraces(stadium.getTerraces());
+				arenaStatistikModel.setMaxBasic(stadium.getBasicSeating());
+				arenaStatistikModel.setMaxRoof(stadium.getUnderRoofSeating());
+				arenaStatistikModel.setMaxVip(stadium.getVipBox());
 				maxArenaGroesse = Math.max(arenaStatistikModel.getArenaGroesse(), maxArenaGroesse);
 			}
 
 			if (arenaStatistikModel.getZuschaueranzahl() > arenaStatistikModel.getArenaGroesse()) {
 				stadium = DBManager.instance().getStadion(hrfid + 1);
 				if (stadium != null) {
-					arenaStatistikModel.setArenaGroesse(stadium.getGesamtgroesse());
-					arenaStatistikModel.setMaxTerraces(stadium.getStehplaetze());
-					arenaStatistikModel.setMaxBasic(stadium.getSitzplaetze());
-					arenaStatistikModel.setMaxRoof(stadium.getUeberdachteSitzplaetze());
-					arenaStatistikModel.setMaxVip(stadium.getLogen());
+					arenaStatistikModel.setArenaGroesse(stadium.getTotalSize());
+					arenaStatistikModel.setMaxTerraces(stadium.getTerraces());
+					arenaStatistikModel.setMaxBasic(stadium.getBasicSeating());
+					arenaStatistikModel.setMaxRoof(stadium.getUnderRoofSeating());
+					arenaStatistikModel.setMaxVip(stadium.getVipBox());
 					maxArenaGroesse = Math.max(arenaStatistikModel.getArenaGroesse(), maxArenaGroesse);
 				}
 			}
@@ -212,7 +212,7 @@ public class StatisticQuery {
 				HOLogger.instance().log(StatisticQuery.class, e);
 			}
 		}
-        tablemodel = new ArenaStatistikTableModel(arenamodels, maxArenaGroesse, maxFans);
+		tablemodel = new ArenaStatistikTableModel(arenamodels, maxArenaGroesse, maxFans);
 
 		return tablemodel;
 	}
@@ -235,8 +235,8 @@ public class StatisticQuery {
 
 
 		statement += (" Trainer=0 AND SPIELER.HRF_ID IN ("
-				+ loadHrfIdPerWeekList(nbHRF).stream().map(String::valueOf).collect(Collectors.joining(","))
-				+ ") ORDER BY Datum DESC");
+			+ loadHrfIdPerWeekList(nbHRF).stream().map(String::valueOf).collect(Collectors.joining(","))
+			+ ") ORDER BY Datum DESC");
 
 		try {
 			final ResultSet rs = Objects.requireNonNull(dbManager.getConnectionManager()).executeQuery(statement);
@@ -249,8 +249,8 @@ public class StatisticQuery {
 				while (rs.next()) {
 					final double[] thisHRFvalues = new double[nbColumnsHRF];
 					thisHRFvalues[0] = rs.getDouble("Fuehrung");  //Leadership
-					thisHRFvalues[1] = rs.getDouble("Erfahrung")+ rs.getDouble("SubExperience"); //Experience
-					thisHRFvalues[2] = rs.getDouble("Form")+ rs.getDouble("SubForm");
+					thisHRFvalues[1] = rs.getDouble("Erfahrung") + rs.getDouble("SubExperience"); //Experience
+					thisHRFvalues[2] = rs.getDouble("Form") + rs.getDouble("SubForm");
 					thisHRFvalues[3] = rs.getDouble("Kondition"); //Stamina
 					thisHRFvalues[4] = rs.getDouble("Torwart") + rs.getDouble("SubTorwart");  //Goalkeeper
 					thisHRFvalues[5] = rs.getDouble("Verteidigung") + rs.getDouble("SubVerteidigung"); //Defence
@@ -334,8 +334,8 @@ public class StatisticQuery {
 
 	private static String getGetDataForClubStatisticsPanelStatement(int numParameters) {
 		return "SELECT * FROM VEREIN INNER JOIN HRF on VEREIN.HRF_ID = HRF.HRF_ID WHERE HRF.HRF_ID IN (" +
-							DBManager.getPlaceholders(numParameters) +
-							") ORDER BY HRF.DATUM ASC";
+			DBManager.getPlaceholders(numParameters) +
+			") ORDER BY HRF.DATUM ASC";
 	}
 
 	// The data returned by this function are displayed in the Club tab of the statistics module
@@ -344,7 +344,7 @@ public class StatisticQuery {
 		double[][] returnValues;
 		Vector<double[]> values = new Vector<>();
 		var hrflist = loadHrfIdPerWeekList(iNumberHRF);
-		if (hrflist.size()< iNumberHRF) iNumberHRF = hrflist.size();
+		if (hrflist.size() < iNumberHRF) iNumberHRF = hrflist.size();
 
 		try (var rs = Objects.requireNonNull(dbManager.getConnectionManager()).executePreparedQuery(getGetDataForClubStatisticsPanelStatement(iNumberHRF), hrflist.toArray())) {
 
@@ -378,8 +378,7 @@ public class StatisticQuery {
 					returnValues[j][i] = werte[j];
 				}
 			}
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			HOLogger.instance().log(StatisticQuery.class, e);
 			return new double[0][0];
 		}
@@ -397,7 +396,7 @@ public class StatisticQuery {
 		final float fxRate = core.model.UserParameter.instance().FXrate;
 		double[][] returnValues;
 		Vector<double[]> values = new Vector<>();
-		var from = HODateTime.now().minus(iNumberWeeks*7, ChronoUnit.DAYS);
+		var from = HODateTime.now().minus(iNumberWeeks * 7, ChronoUnit.DAYS);
 
 		try (ResultSet rs = Objects.requireNonNull(dbManager.getConnectionManager()).executePreparedQuery(getDataForFinancesStatisticsPanelSql, from.toDbTimestamp())) {
 			if (rs == null) return new double[0][0];
@@ -410,7 +409,7 @@ public class StatisticQuery {
 				tempValues[3] = rs.getDouble("IncomeSum") / fxRate;
 				tempValues[4] = rs.getDouble("CostsSum") / fxRate;
 				tempValues[5] = tempValues[4] - tempValues[3];
-				tempValues[6] = tempValues[3] - ((rs.getDouble("IncomeSoldPlayers")+rs.getDouble("IncomeSoldPlayersCommission")) / fxRate);
+				tempValues[6] = tempValues[3] - ((rs.getDouble("IncomeSoldPlayers") + rs.getDouble("IncomeSoldPlayersCommission")) / fxRate);
 				tempValues[7] = tempValues[4] - (rs.getDouble("CostsBoughtPlayers") / fxRate);
 				tempValues[8] = tempValues[7] - tempValues[6];
 				tempValues[9] = rs.getDouble("IncomeSpectators") / fxRate;
@@ -436,8 +435,7 @@ public class StatisticQuery {
 					returnValues[j][i] = werte[j];
 				}
 			}
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			HOLogger.instance().log(StatisticQuery.class, e);
 			return new double[0][0];
 		}
