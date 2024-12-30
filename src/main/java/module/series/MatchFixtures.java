@@ -239,7 +239,7 @@ public class MatchFixtures extends AbstractTable.Storable {
         var teamsInSeries = getTeamsInSeries();
         if (teamsInSeries.size() != 8) {
             for (var t : teamsInSeries) {
-                FindReplacementOfTeam(currentTeams, t);
+                findReplacementOfTeam(currentTeams, t);
             }
         }
         return currentTeams;
@@ -297,46 +297,57 @@ public class MatchFixtures extends AbstractTable.Storable {
      * @param currentTeams  List of the current teams
      * @param t             The examined team
      */
-    private void FindReplacementOfTeam(ArrayList<List<Integer>> currentTeams, Integer t) {
-        for ( var ids : currentTeams) {
-            if ( ids.contains(t)) {return;} // not replaced
+    private void findReplacementOfTeam(ArrayList<List<Integer>> currentTeams, Integer t) {
+        for (var ids : currentTeams) {
+            if (ids.contains(t)) {
+                return;
+            } // not replaced
         }
 
         // Find replacement of team
         List<Integer> replaces = new ArrayList<>();
         replaces.add(t);
 
-        while ( !replaces.isEmpty() ) {
+        while (!replaces.isEmpty()) {
             var replaceTeam = replaces.get(0);
             for (var i = 0; i < 7; i++) {
                 int finalI = i;
                 var match = m_vEintraege.stream().filter(p -> p.getSpieltag() == 1 + finalI && (p.getHeimId() == replaceTeam || p.getGastId() == replaceTeam)).findAny();
-                if ( match.isPresent()) {
+                if (match.isPresent()) {
                     // Find reverse match
-                    if ( match.get().getHeimId() == replaceTeam) {
+                    if (match.get().getHeimId() == replaceTeam) {
                         var opponentAtRound = match.get().getGastId();
                         var reverseMatch = m_vEintraege.stream().filter(p -> p.getSpieltag() == 14 - finalI && (p.getHeimId() == opponentAtRound)).findAny();
-                        if ( reverseMatch.isPresent()) {
+                        if (reverseMatch.isEmpty()) {
+                            var replacedBy = isReplacedBy(currentTeams, opponentAtRound);
+                            if (replacedBy != null) {
+                                reverseMatch = m_vEintraege.stream().filter(p -> p.getSpieltag() == 14 - finalI && (p.getHeimId() == replacedBy)).findAny();
+                            }
+                        }
+                        if (reverseMatch.isPresent()) {
                             var replacement = reverseMatch.get().getGastId();
                             CurrentTeamsAddReplacement(currentTeams, replacement, replaceTeam);
                             replaces.remove(replaceTeam);
                             break;
-                        }
-                        else {
+                        } else if (isReplacedBy(currentTeams, opponentAtRound) == null) {
                             // opponent of this round is also replaced, try next round to find replacement of replaceTeam
                             replaces.add(opponentAtRound);
                         }
-                    }
-                    else {
+                    } else {
                         var opponentAtRound = match.get().getHeimId();
                         var reverseMatch = m_vEintraege.stream().filter(p -> p.getSpieltag() == 14 - finalI && (p.getGastId() == opponentAtRound)).findAny();
-                        if ( reverseMatch.isPresent()) {
+                        if (reverseMatch.isEmpty()) {
+                            var replacedBy = isReplacedBy(currentTeams, opponentAtRound);
+                            if (replacedBy != null) {
+                                reverseMatch = m_vEintraege.stream().filter(p -> p.getSpieltag() == 14 - finalI && (p.getGastId() == replacedBy)).findAny();
+                            }
+                        }
+                        if (reverseMatch.isPresent()) {
                             var replacement = reverseMatch.get().getHeimId();
                             CurrentTeamsAddReplacement(currentTeams, replacement, replaceTeam);
                             replaces.remove(replaceTeam);
                             break;
-                        }
-                        else {
+                        } else if (isReplacedBy(currentTeams, opponentAtRound) == null) {
                             // opponent of this round is also replaced, try next round to find replacement of replaceTeam
                             replaces.add(opponentAtRound);
                         }
@@ -344,6 +355,21 @@ public class MatchFixtures extends AbstractTable.Storable {
                 }
             }
         }
+    }
+
+    /**
+     * Check if team is already registered as replaced team in list of current teams
+     * @param currentTeams      Current teams including replacements
+     * @param opponentAtRound   Team id
+     * @return Integer          Null, if not replaced
+     */
+    private Integer isReplacedBy(ArrayList<List<Integer>> currentTeams, int opponentAtRound) {
+        for (var t : currentTeams) {
+            if (t.size() > 1 && t.get(1) == opponentAtRound) {
+                return t.get(0);
+            }
+        }
+        return null;
     }
 
     /**
