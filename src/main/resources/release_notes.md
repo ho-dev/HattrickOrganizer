@@ -20,7 +20,7 @@
 ### Team Analyzer
 * Fix illegal argument exception in team rating panel (#2155)
 * Fix team analyzer match download (#2152)
-* Fix refresh button of the filter panel working only once (#2158) 
+* Fix refresh button of the filter panel working only once (#2158)
 
 ### Player Analysis
 * Fix error in rating compare table (#2153)
@@ -57,6 +57,7 @@
 
 * Arena sizer: Added the Arena Info Panel in the tab with name of the stadium (#2140)
 * Resolved an issue where the Download Dialog would not reappear after being closed with the 'X' button. The dialog will now correctly reappear when triggered again. (#2137)
+* Remove unused issue reporting template on github. (#2209)
 
 ## Translations
 
