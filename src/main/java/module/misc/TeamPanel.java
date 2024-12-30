@@ -24,107 +24,107 @@ class TeamPanel extends JPanel {
 
 	//~ Instance fields ----------------------------------------------------------------------------
 
-    private final ColorLabelEntry leagueLabel 	= new ColorLabelEntry("");
-    private final ColorLabelEntry managerLabel 	= new ColorLabelEntry("");
-    private final ColorLabelEntry posLabel		= new ColorLabelEntry("");
-    private final ColorLabelEntry pointsLabel	= new ColorLabelEntry("");
-    private final ColorLabelEntry seasonLabel	= new ColorLabelEntry("");
-    private final ColorLabelEntry matchRoundLabel = new ColorLabelEntry("");
-    private final ColorLabelEntry arenaLabel	= new ColorLabelEntry("");
-    private final ColorLabelEntry teamLabel	 	= new ColorLabelEntry("");
-    private final ColorLabelEntry teamIdLabel 	= new ColorLabelEntry("");
-    private final ColorLabelEntry goalsLabel	= new ColorLabelEntry("");
+	private final ColorLabelEntry leagueLabel = new ColorLabelEntry("");
+	private final ColorLabelEntry managerLabel = new ColorLabelEntry("");
+	private final ColorLabelEntry posLabel = new ColorLabelEntry("");
+	private final ColorLabelEntry pointsLabel = new ColorLabelEntry("");
+	private final ColorLabelEntry seasonLabel = new ColorLabelEntry("");
+	private final ColorLabelEntry matchRoundLabel = new ColorLabelEntry("");
+	private final ColorLabelEntry arenaLabel = new ColorLabelEntry("");
+	private final ColorLabelEntry teamLabel = new ColorLabelEntry("");
+	private final ColorLabelEntry teamIdLabel = new ColorLabelEntry("");
+	private final ColorLabelEntry goalsLabel = new ColorLabelEntry("");
 
-    final GridBagLayout layout = new GridBagLayout();
-    final GridBagConstraints constraints = new GridBagConstraints();
+	final GridBagLayout layout = new GridBagLayout();
+	final GridBagConstraints constraints = new GridBagConstraints();
 
-    /**
-     * Creates a new BasicsPanel object.
-     */
-    TeamPanel() {
-        initComponents();
-     }
+	/**
+	 * Creates a new BasicsPanel object.
+	 */
+	TeamPanel() {
+		initComponents();
+	}
 
-    void setLabels() {
-        final Basics basics = HOVerwaltung.instance().getModel().getBasics();
-        final Liga liga = HOVerwaltung.instance().getModel().getLeague();
-        final int teamId =  HOVerwaltung.instance().getModel().getBasics().getTeamId();
-        if(teamId > 0){
-	        teamIdLabel.setText(basics.getTeamId()+"");
-	        teamLabel.setText(basics.getTeamName());
-	        managerLabel.setText(basics.getManager());
-	        arenaLabel.setText(HOVerwaltung.instance().getModel().getStadium().getStadienname());
-	        seasonLabel.setText(basics.getSeason() + "");
-	        if(liga != null){
-	        	matchRoundLabel.setText(liga.getSpieltag() + "");
-	        	leagueLabel.setText(liga.getLiga());
-	        	posLabel.setText(liga.getPlatzierung() + "");
-	        	pointsLabel.setText(liga.getPunkte() + "");
-	        	goalsLabel.setText(liga.getToreFuer() + ":" + liga.getToreGegen());
-	        }
-        }
-    }
+	void setLabels() {
+		final Basics basics = HOVerwaltung.instance().getModel().getBasics();
+		final Liga liga = HOVerwaltung.instance().getModel().getLeague();
+		final int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+		if (teamId > 0) {
+			teamIdLabel.setText(basics.getTeamId() + "");
+			teamLabel.setText(basics.getTeamName());
+			managerLabel.setText(basics.getManager());
+			arenaLabel.setText(HOVerwaltung.instance().getModel().getStadium().getStadiumName());
+			seasonLabel.setText(basics.getSeason() + "");
+			if (liga != null) {
+				matchRoundLabel.setText(liga.getSpieltag() + "");
+				leagueLabel.setText(liga.getLiga());
+				posLabel.setText(liga.getPlatzierung() + "");
+				pointsLabel.setText(liga.getPunkte() + "");
+				goalsLabel.setText(liga.getToreFuer() + ":" + liga.getToreGegen());
+			}
+		}
+	}
 
-    private void initComponents() {
-        JLabel label;
+	private void initComponents() {
+		JLabel label;
 
-        constraints.fill = GridBagConstraints.NONE;
-        constraints.weightx = 0.0;
-        constraints.weighty = 0.0;
-        constraints.insets = new Insets(4, 4, 4, 4);
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.insets = new Insets(4, 4, 4, 4);
 
-        this.setBackground(ThemeManager.getColor(HOColorName.PANEL_BG));
-        var title = getTranslation("Allgemein");
-        var titledBorder = BorderFactory.createTitledBorder(title);
-        titledBorder.setTitleColor(ThemeManager.getColor(HOColorName.LINEUP_HIGHLIGHT_FG));
-        setBorder(titledBorder);
+		this.setBackground(ThemeManager.getColor(HOColorName.PANEL_BG));
+		var title = getTranslation("Allgemein");
+		var titledBorder = BorderFactory.createTitledBorder(title);
+		titledBorder.setTitleColor(ThemeManager.getColor(HOColorName.LINEUP_HIGHLIGHT_FG));
+		setBorder(titledBorder);
 
-        setLayout(layout);
-        label = new JLabel(TranslationFacility.tr("ls.team.id"));
-        add(label,teamIdLabel.getComponent(false),1);
+		setLayout(layout);
+		label = new JLabel(TranslationFacility.tr("ls.team.id"));
+		add(label, teamIdLabel.getComponent(false), 1);
 
-        label = new JLabel(TranslationFacility.tr("Verein"));
-        add(label,teamLabel.getComponent(false),2);
+		label = new JLabel(TranslationFacility.tr("Verein"));
+		add(label, teamLabel.getComponent(false), 2);
 
-        label = new JLabel(TranslationFacility.tr("Manager"));
-        add(label,managerLabel.getComponent(false),3);
+		label = new JLabel(TranslationFacility.tr("Manager"));
+		add(label, managerLabel.getComponent(false), 3);
 
-        label = new JLabel(TranslationFacility.tr("Stadion"));
-        add(label,arenaLabel.getComponent(false),4);
+		label = new JLabel(TranslationFacility.tr("Stadion"));
+		add(label, arenaLabel.getComponent(false), 4);
 
-        label = new JLabel(TranslationFacility.tr("Season"));
-        add(label,seasonLabel.getComponent(false),5);
+		label = new JLabel(TranslationFacility.tr("Season"));
+		add(label, seasonLabel.getComponent(false), 5);
 
-        label = new JLabel(TranslationFacility.tr("Spieltag"));
-        add(label,matchRoundLabel.getComponent(false),6);
+		label = new JLabel(TranslationFacility.tr("Spieltag"));
+		add(label, matchRoundLabel.getComponent(false), 6);
 
-        label = new JLabel(TranslationFacility.tr("Liga"));
-        add(label,leagueLabel.getComponent(false),7);
+		label = new JLabel(TranslationFacility.tr("Liga"));
+		add(label, leagueLabel.getComponent(false), 7);
 
-        label = new JLabel(TranslationFacility.tr("Platzierung"));
-        add(label,posLabel.getComponent(false),8);
+		label = new JLabel(TranslationFacility.tr("Platzierung"));
+		add(label, posLabel.getComponent(false), 8);
 
-        label = new JLabel(TranslationFacility.tr("Punkte"));
-        add(label,pointsLabel.getComponent(false),9);
+		label = new JLabel(TranslationFacility.tr("Punkte"));
+		add(label, pointsLabel.getComponent(false), 9);
 
-        label = new JLabel(TranslationFacility.tr("Torverhaeltnis"));
-        add(label,goalsLabel.getComponent(false),10);
+		label = new JLabel(TranslationFacility.tr("Torverhaeltnis"));
+		add(label, goalsLabel.getComponent(false), 10);
 
-    }
+	}
 
-    private void add(JLabel label,Component comp, int y){
-    	constraints.anchor = GridBagConstraints.WEST;
-    	constraints.gridx = 0;
-    	constraints.gridy = y;
-    	constraints.gridwidth = 1;
-    	layout.setConstraints(label, constraints);
-    	add(label);
-    	constraints.anchor = GridBagConstraints.EAST;
-    	constraints.gridx = 1;
-    	constraints.gridy = y;
-    	constraints.gridwidth = 1;
-    	layout.setConstraints(comp, constraints);
-    	add(comp);
-    }
+	private void add(JLabel label, Component comp, int y) {
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.gridx = 0;
+		constraints.gridy = y;
+		constraints.gridwidth = 1;
+		layout.setConstraints(label, constraints);
+		add(label);
+		constraints.anchor = GridBagConstraints.EAST;
+		constraints.gridx = 1;
+		constraints.gridy = y;
+		constraints.gridwidth = 1;
+		layout.setConstraints(comp, constraints);
+		add(comp);
+	}
 
 }
