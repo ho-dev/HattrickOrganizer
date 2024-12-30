@@ -3,6 +3,7 @@ package tool.dbencrypter
 import core.db.user.UserManager
 import core.model.TranslationFacility
 import tool.dbencrypter.encrypt.DbEncrypterManager
+import tool.dbencrypter.github.GithubApp
 import java.awt.*
 import javax.swing.*
 
@@ -102,11 +103,29 @@ class DbEncrypterPanel : JPanel() {
 
 		val encryptButton = JButton(TranslationFacility.tr("reporter.encrypt"))
 		encryptButton.addActionListener { _ ->
-			val encrypter = DbEncrypterManager(UserManager.instance())
-			encrypter.encrypt()
+//			val encrypter = DbEncrypterManager(UserManager.instance())
+//			encrypter.encrypt()
+
+			val issueReporterManager = IssueReporterManager(
+				GithubApp(),
+				DbEncrypterManager(UserManager.instance())
+			)
+
+			issueReporterManager.reportIssue(
+				descriptionInput.text,
+				summaryInput.text,
+				attachCheckbox.isSelected,
+				DbEncrypterPanel::doSomething
+			)
 		}
 
 		add(encryptButton, gbc)
+	}
+
+	companion object {
+		private fun doSomething() {
+			println("Update")
+		}
 	}
 }
 
