@@ -245,7 +245,7 @@ public class LineupAssistant {
 				return player.getCanBeSelectedByAssistant();
 			}
 		}
-		return true;
+		return false;
 	}
 
 	/**
