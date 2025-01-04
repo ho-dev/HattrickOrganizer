@@ -69,27 +69,20 @@ public class PlausibilityCheck {
 
 	public static String getComment(Problem problem, Substitution substitution) {
 		if (problem instanceof Error) {
-			switch ((Error) problem) {
-			case PLAYERIN_NOT_IN_LINEUP:
-			case PLAYERIN_NOT_REAL:
-				return TranslationFacility.tr(problem.getLanguageKey(),
-						getPlayerIn(substitution).getFullName());
-			case PLAYEROUT_NOT_IN_LINEUP:
-			case PLAYEROUT_NOT_REAL:
-				return TranslationFacility.tr(problem.getLanguageKey(),
-						getPlayerOut(substitution).getFullName());
-			default:
-				return TranslationFacility.tr(problem.getLanguageKey());
-			}
+            return switch ((Error) problem) {
+                case PLAYERIN_NOT_IN_LINEUP, PLAYERIN_NOT_REAL -> TranslationFacility.tr(problem.getLanguageKey(),
+                        getPlayerIn(substitution).getFullName());
+                case PLAYEROUT_NOT_IN_LINEUP, PLAYEROUT_NOT_REAL -> TranslationFacility.tr(problem.getLanguageKey(),
+                        getPlayerOut(substitution).getFullName());
+                default -> TranslationFacility.tr(problem.getLanguageKey());
+            };
 		} else if (problem instanceof Uncertainty) {
-			switch ((Uncertainty) problem) {
-			case SAME_TACTIC:
-				return TranslationFacility.tr(problem.getLanguageKey(),
-						getPlayerOut(substitution).getFullName(),
-						LanguageStringLookup.getBehaviour(substitution.getBehaviour()));
-			}
+            if (problem == Uncertainty.SAME_TACTIC) {
+                return TranslationFacility.tr(problem.getLanguageKey(),
+                        getPlayerOut(substitution).getFullName(),
+                        LanguageStringLookup.getBehaviour(substitution.getBehaviour()));
+            }
 		}
-
 		return null;
 	}
 
