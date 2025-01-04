@@ -458,8 +458,8 @@ public class MatchRoleID extends AbstractTable.Storable implements java.io.Seria
 	 * @param spielerId
 	 *            New value of property m_iSpielerId.
 	 */
-	public final void setPlayerIdIfValidForLineup(int spielerId) {
-		setPlayerIdIfValidForLineup(spielerId, HOVerwaltung.instance().getModel().getCurrentLineup());
+	public final boolean setPlayerIdIfValidForLineup(int spielerId) {
+		return setPlayerIdIfValidForLineup(spielerId, HOVerwaltung.instance().getModel().getCurrentLineup());
 	}
 
 	public final void setPlayerId(int id){
@@ -475,7 +475,7 @@ public class MatchRoleID extends AbstractTable.Storable implements java.io.Seria
 	 * @param lineup
 	 *            The lineup that will be used to check for available space.
 	 */
-	public final void setPlayerIdIfValidForLineup(int spielerId, Lineup lineup) {
+	public final boolean setPlayerIdIfValidForLineup(int spielerId, Lineup lineup) {
 
 		boolean containsPlayer = (m_iSpielerId > 0) || (m_iSpielerId < -10);
 		boolean incomingEmpty = (spielerId < 1) && (spielerId > -10);
@@ -487,9 +487,11 @@ public class MatchRoleID extends AbstractTable.Storable implements java.io.Seria
 				&& m_iId < IMatchRoleID.startReserves && !lineup.hasFreePosition()) {
 			HOLogger.instance().debug(getClass(),
 					"Blocked from setting player at position: " + m_iSpielerId + " " + m_iId);
+			return false;
 		} else {
 			this.m_iSpielerId = spielerId;
 		}
+		return true;
 	}
 
 	/**

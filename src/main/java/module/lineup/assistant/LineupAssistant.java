@@ -67,28 +67,29 @@ public class LineupAssistant {
 							   boolean ignoreSuspended, Weather weather) {
 
 		var lPositions = allPositions.stream().filter(i -> i.isFieldMatchRoleId() && isSelectedByAssistant(i)).toList();
+		ArrayList<Player> players = new ArrayList<>(lPlayers.stream().filter(i -> (i.getInjuryWeeks() < 1 || ignoreInjured) && (!i.isRedCarded() || ignoreSuspended)).toList());
 
 		// only setup player in ideal position
 		if (idealPosFirst) {
-			doPlayerLineupIdealPosition(IMatchRoleID.KEEPER, bForm, ignoreInjured, ignoreSuspended, lPlayers, lPositions);
-			doPlayerLineupIdealPosition(IMatchRoleID.CENTRAL_DEFENDER, bForm, ignoreInjured, ignoreSuspended, lPlayers, lPositions);
-			doPlayerLineupIdealPosition(IMatchRoleID.CENTRAL_DEFENDER_TOWING, bForm, ignoreInjured, ignoreSuspended, lPlayers, lPositions);
-			doPlayerLineupIdealPosition(IMatchRoleID.CENTRAL_DEFENDER_OFF, bForm, ignoreInjured, ignoreSuspended, lPlayers, lPositions);
-			doPlayerLineupIdealPosition(IMatchRoleID.BACK, bForm, ignoreInjured, ignoreSuspended, lPlayers, lPositions);
-			doPlayerLineupIdealPosition(IMatchRoleID.BACK_TOMID, bForm, ignoreInjured, ignoreSuspended, lPlayers, lPositions);
-			doPlayerLineupIdealPosition(IMatchRoleID.BACK_OFF, bForm, ignoreInjured, ignoreSuspended, lPlayers, lPositions);
-			doPlayerLineupIdealPosition(IMatchRoleID.BACK_DEF, bForm, ignoreInjured, ignoreSuspended, lPlayers, lPositions);
-			doPlayerLineupIdealPosition(IMatchRoleID.MIDFIELDER, bForm, ignoreInjured, ignoreSuspended, lPlayers, lPositions);
-			doPlayerLineupIdealPosition(IMatchRoleID.MIDFIELDER_OFF, bForm, ignoreInjured, ignoreSuspended, lPlayers, lPositions);
-			doPlayerLineupIdealPosition(IMatchRoleID.MIDFIELDER_DEF, bForm, ignoreInjured, ignoreSuspended, lPlayers, lPositions);
-			doPlayerLineupIdealPosition(IMatchRoleID.MIDFIELDER_TOWING, bForm, ignoreInjured, ignoreSuspended, lPlayers, lPositions);
-			doPlayerLineupIdealPosition(IMatchRoleID.WINGER, bForm, ignoreInjured, ignoreSuspended, lPlayers, lPositions);
-			doPlayerLineupIdealPosition(IMatchRoleID.WINGER_OFF, bForm, ignoreInjured, ignoreSuspended, lPlayers, lPositions);
-			doPlayerLineupIdealPosition(IMatchRoleID.WINGER_DEF, bForm, ignoreInjured, ignoreSuspended, lPlayers, lPositions);
-			doPlayerLineupIdealPosition(IMatchRoleID.WINGER_TOMID, bForm, ignoreInjured, ignoreSuspended, lPlayers, lPositions);
-			doPlayerLineupIdealPosition(IMatchRoleID.FORWARD, bForm, ignoreInjured, ignoreSuspended, lPlayers, lPositions);
-			doPlayerLineupIdealPosition(IMatchRoleID.FORWARD_DEF, bForm, ignoreInjured, ignoreSuspended, lPlayers, lPositions);
-			doPlayerLineupIdealPosition(IMatchRoleID.FORWARD_TOWING, bForm, ignoreInjured, ignoreSuspended, lPlayers, lPositions);
+			doPlayerLineupIdealPosition(IMatchRoleID.KEEPER, bForm, ignoreInjured, ignoreSuspended, players, lPositions);
+			doPlayerLineupIdealPosition(IMatchRoleID.CENTRAL_DEFENDER, bForm, ignoreInjured, ignoreSuspended, players, lPositions);
+			doPlayerLineupIdealPosition(IMatchRoleID.CENTRAL_DEFENDER_TOWING, bForm, ignoreInjured, ignoreSuspended, players, lPositions);
+			doPlayerLineupIdealPosition(IMatchRoleID.CENTRAL_DEFENDER_OFF, bForm, ignoreInjured, ignoreSuspended, players, lPositions);
+			doPlayerLineupIdealPosition(IMatchRoleID.BACK, bForm, ignoreInjured, ignoreSuspended, players, lPositions);
+			doPlayerLineupIdealPosition(IMatchRoleID.BACK_TOMID, bForm, ignoreInjured, ignoreSuspended, players, lPositions);
+			doPlayerLineupIdealPosition(IMatchRoleID.BACK_OFF, bForm, ignoreInjured, ignoreSuspended, players, lPositions);
+			doPlayerLineupIdealPosition(IMatchRoleID.BACK_DEF, bForm, ignoreInjured, ignoreSuspended, players, lPositions);
+			doPlayerLineupIdealPosition(IMatchRoleID.MIDFIELDER, bForm, ignoreInjured, ignoreSuspended, players, lPositions);
+			doPlayerLineupIdealPosition(IMatchRoleID.MIDFIELDER_OFF, bForm, ignoreInjured, ignoreSuspended, players, lPositions);
+			doPlayerLineupIdealPosition(IMatchRoleID.MIDFIELDER_DEF, bForm, ignoreInjured, ignoreSuspended, players, lPositions);
+			doPlayerLineupIdealPosition(IMatchRoleID.MIDFIELDER_TOWING, bForm, ignoreInjured, ignoreSuspended, players, lPositions);
+			doPlayerLineupIdealPosition(IMatchRoleID.WINGER, bForm, ignoreInjured, ignoreSuspended, players, lPositions);
+			doPlayerLineupIdealPosition(IMatchRoleID.WINGER_OFF, bForm, ignoreInjured, ignoreSuspended, players, lPositions);
+			doPlayerLineupIdealPosition(IMatchRoleID.WINGER_DEF, bForm, ignoreInjured, ignoreSuspended, players, lPositions);
+			doPlayerLineupIdealPosition(IMatchRoleID.WINGER_TOMID, bForm, ignoreInjured, ignoreSuspended, players, lPositions);
+			doPlayerLineupIdealPosition(IMatchRoleID.FORWARD, bForm, ignoreInjured, ignoreSuspended, players, lPositions);
+			doPlayerLineupIdealPosition(IMatchRoleID.FORWARD_DEF, bForm, ignoreInjured, ignoreSuspended, players, lPositions);
+			doPlayerLineupIdealPosition(IMatchRoleID.FORWARD_TOWING, bForm, ignoreInjured, ignoreSuspended, players, lPositions);
 		}
 
 		var fieldPlayerPositionOrder = new ArrayList<List<Byte>>();
@@ -137,7 +138,6 @@ public class LineupAssistant {
 			}
 		}
 
-		ArrayList<Player> players = new ArrayList<>(lPlayers.stream().filter(i -> (i.getInjuryWeeks() < 1 || ignoreInjured) && (!i.isRedCarded() || ignoreSuspended)).toList());
 		for (var playerPositions : fieldPlayerPositionOrder) {
 			optimizeLineup(playerPositions, players, lPositions);
 		}
@@ -147,23 +147,23 @@ public class LineupAssistant {
 		// Ideal position first
 		if (idealPosFirst) {
 			doReserveSpielerAufstellenIdealPos(IMatchRoleID.KEEPER, bForm, ignoreInjured,
-					ignoreSuspended, lPlayers, lPositions);
+					ignoreSuspended, players, lPositions);
 			doReserveSpielerAufstellenIdealPos(IMatchRoleID.CENTRAL_DEFENDER, bForm,
-					ignoreInjured, ignoreSuspended, lPlayers, lPositions);
+					ignoreInjured, ignoreSuspended, players, lPositions);
 			doReserveSpielerAufstellenIdealPos(IMatchRoleID.BACK, bForm,
-					ignoreInjured, ignoreSuspended, lPlayers, lPositions);
+					ignoreInjured, ignoreSuspended, players, lPositions);
 			doReserveSpielerAufstellenIdealPos(IMatchRoleID.MIDFIELDER, bForm,
-					ignoreInjured, ignoreSuspended, lPlayers, lPositions);
+					ignoreInjured, ignoreSuspended, players, lPositions);
 			doReserveSpielerAufstellenIdealPos(IMatchRoleID.WINGER, bForm, ignoreInjured,
-					ignoreSuspended, lPlayers, lPositions);
+					ignoreSuspended, players, lPositions);
 			doReserveSpielerAufstellenIdealPos(IMatchRoleID.FORWARD, bForm, ignoreInjured,
-					ignoreSuspended, lPlayers, lPositions);
+					ignoreSuspended, players, lPositions);
 		}
 
 		reservePositionOrder.add(List.of(IMatchRoleID.EXTRA));
-		var substitutelPositions = allPositions.stream().filter(MatchRoleID::isSubstitutesMatchRoleId).toList();
+		var substitutePositions = allPositions.stream().filter(MatchRoleID::isSubstitutesMatchRoleId).toList();
 		for (var b : reservePositionOrder) {
-			optimizeLineup(b, players, substitutelPositions);
+			optimizeLineup(b, players, substitutePositions);
 		}
 
 		var backupPositionOrder = List.of(
@@ -175,7 +175,7 @@ public class LineupAssistant {
 				List.of(IMatchRoleID.FORWARD),
 				List.of(IMatchRoleID.EXTRA)
 		);
-		var backupCandidates = new ArrayList<>(substitutelPositions.stream().map(MatchLineupPosition::getPlayer).toList());
+		var backupCandidates = new ArrayList<>(substitutePositions.stream().map(MatchLineupPosition::getPlayer).toList());
 		lPositions = allPositions.stream().filter(MatchRoleID::isBackupsMatchRoleId).toList();
 		for (var b : backupPositionOrder) {
 			// local backup candidates list without player of corresponding substitutes slot
@@ -426,7 +426,9 @@ public class LineupAssistant {
 
 				// occupy position
 				if (player != null) {
-					pos.setPlayerIdIfValidForLineup(player.getPlayerId());
+					if ( pos.setPlayerIdIfValidForLineup(player.getPlayerId())) {
+						players.remove(player);
+					}
 				}
 			}
 		}
