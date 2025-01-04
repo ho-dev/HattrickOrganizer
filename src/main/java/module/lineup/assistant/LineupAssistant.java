@@ -8,8 +8,6 @@ import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.rating.RatingPredictionModel;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -379,33 +377,6 @@ public class LineupAssistant {
 		return getBestPlayerForPosition(position, considerForm, ignoredInjury, ignoreRedCarded, playersIdealPositionOnly, positions);
 	}
 
-	protected final void doReserveSpielerAufstellen(byte position, boolean mitForm,
-													boolean ignoreVerletzung, boolean ignoreSperre, List<Player> vPlayer,
-													List<MatchLineupPosition> positionen) {
-		MatchRoleID pos;
-		Player player;
-
-		for (int i = 0; (positionen != null) && (vPlayer != null) && (i < positionen.size()); i++) {
-			pos = positionen.get(i);
-
-			// Ignore already assigned positions and non substitute position
-			if ((pos.getPlayerId() > 0) || !IMatchRoleID.aSubstitutesMatchRoleID.contains(pos.getId())) {
-				continue;
-			}
-
-			// nur exacte Pos
-			if (pos.getPosition() == position) {
-				player = getBestPlayerForPosition(position, mitForm, ignoreVerletzung, ignoreSperre,
-						vPlayer, positionen);
-
-				// position besetzen
-				if (player != null) {
-					pos.setPlayerIdIfValidForLineup(player.getPlayerId());
-				}
-			}
-		}
-	}
-
 	protected final void doReserveSpielerAufstellenIdealPos(byte position, boolean mitForm,
 															boolean ignoreVerletzung, boolean ignoreSperre, List<Player> vPlayer,
 															List<MatchLineupPosition> positionen) {
@@ -427,42 +398,6 @@ public class LineupAssistant {
 						ignoreSperre, vPlayer, positionen);
 
 				// position besetzen
-				if (player != null) {
-					pos.setPlayerIdIfValidForLineup(player.getPlayerId());
-				}
-			}
-		}
-	}
-
-	/**
-	 * automatic lineup
-	 *
-	 * @param position:         current position being optimized
-	 * @param mitForm:          whether or not to consider the form
-	 * @param ignoreVerletzung: whether or not to align the injured player
-	 * @param ignoreSperre:     whether or not to align the red-carded player
-	 * @param vPlayer:          current position being optimized
-	 * @param positionen:       list of position to be filled
-	 */
-	protected final void doSpielerAufstellen(byte position, boolean mitForm,
-											 boolean ignoreVerletzung, boolean ignoreSperre, List<Player> vPlayer,
-											 List<MatchLineupPosition> positionen) {
-		Player player;
-		if ((positionen == null) || (vPlayer == null)  ) return;
-
-		for (var pos : positionen) {
-
-			//Ignore already assigned positions and substitutes
-			if ((pos.getPlayerId() > 0) || (pos.getId() >= IMatchRoleID.startReserves)) {
-				continue;
-			}
-
-			// position found => get the best player or that position
-			if (pos.getPosition() == position) {
-				player = getBestPlayerForPosition(position, mitForm, ignoreVerletzung, ignoreSperre,
-						vPlayer, positionen);
-
-				// fill the position
 				if (player != null) {
 					pos.setPlayerIdIfValidForLineup(player.getPlayerId());
 				}
@@ -501,27 +436,4 @@ public class LineupAssistant {
 		var statusMap = Objects.requireNonNull(HOMainFrame.instance().getLineupPanel()).getAssistantPositionsStatus();
 		return !statusMap.containsKey(position.getId()) || statusMap.get(position.getId());
 	}
-
-	private Vector<MatchLineupPosition> filterPositions(List<MatchLineupPosition> positions, boolean isFieldPosition) {
-		// Remove "red" positions from the position selection of the AssistantPanel.
-		Vector<MatchLineupPosition> returnVec = new Vector<>();
-		Map<Integer, Boolean> statusMap = Objects.requireNonNull(HOMainFrame.instance().getLineupPanel()).getAssistantPositionsStatus();
-		for (var pos : positions) {
-			if (isFieldPosition){
-				if (!pos.isFieldMatchRoleId()){
-					continue;
-				}
-			}
-			else {
-				if (pos.isFieldMatchRoleId()){
-					continue;
-				}
-			}
-			if ((!statusMap.containsKey(pos.getId())) || (statusMap.get(pos.getId()))) {
-				returnVec.add(pos);
-			}
-		}
-		return returnVec;
-	}
-
 }
