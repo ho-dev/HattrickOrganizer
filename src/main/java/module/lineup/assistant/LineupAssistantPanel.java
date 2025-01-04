@@ -350,8 +350,7 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 
 	public Map<Integer, Boolean> getPositionsStatus() {
 		HashMap<Integer, Boolean> returnMap = new HashMap<>();
-		for (Map.Entry<PlayerPositionPanel, LineupAssistantSelectorOverlay> entry : positions
-				.entrySet()) {
+		for (Map.Entry<PlayerPositionPanel, LineupAssistantSelectorOverlay> entry : positions.entrySet()) {
 			returnMap.put(entry.getKey().getPositionsID(), entry.getValue().isSelected());
 		}
 

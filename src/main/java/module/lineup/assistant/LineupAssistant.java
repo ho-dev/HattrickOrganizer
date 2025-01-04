@@ -8,6 +8,7 @@ import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.rating.RatingPredictionModel;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -24,6 +25,7 @@ public class LineupAssistant {
 	public static final byte MF_AW_ST = 3;
 	public static final byte ST_AW_MF = 4;
 	public static final byte ST_MF_AW = 5;
+	private int additionalBenchSlot = 0;
 
 	public LineupAssistant() {
 	}
@@ -53,7 +55,7 @@ public class LineupAssistant {
 	/**
 	 * Assistant to create automatic lineup
 	 *
-	 * @param lPositions:              list of positions to be filled
+	 * @param allPositions:              list of positions to be filled
 	 * @param lPlayers:                list of available players
 	 * @param sectorsStrengthPriority: priority in sector strength (e.g. MID-FOR-DE)
 	 * @param bForm:                   whether or not to consider the form
@@ -62,11 +64,11 @@ public class LineupAssistant {
 	 * @param ignoreSuspended:              whether or not to advanced suspended player
 	 * @param weather:                 Actual weather
 	 */
-	public final void doLineup(List<MatchLineupPosition> lPositions, List<Player> lPlayers,
+	public final void doLineup(List<MatchLineupPosition> allPositions, List<Player> lPlayers,
 							   byte sectorsStrengthPriority, boolean bForm, boolean idealPosFirst, boolean ignoreInjured,
 							   boolean ignoreSuspended, Weather weather) {
 
-		lPositions = filterPositions(lPositions);
+		var lPositions = allPositions.stream().filter(i -> i.isFieldMatchRoleId() && isSelectedByAssistant(i)).toList();
 
 		// only setup player in ideal position
 		if (idealPosFirst) {
@@ -95,34 +97,39 @@ public class LineupAssistant {
 		var reservePositionOrder = new ArrayList<List<Byte>>();
 		fieldPlayerPositionOrder.add(List.of(IMatchRoleID.KEEPER));
 		reservePositionOrder.add(List.of(IMatchRoleID.KEEPER));
-		// nun reihenfolge beachten und unbesetzte füllen
 		switch (sectorsStrengthPriority) {
 			case AW_MF_ST -> {
+				additionalBenchSlot = IMatchRoleID.CENTRAL_DEFENDER;
 				addDefence(fieldPlayerPositionOrder, reservePositionOrder);
 				addMidfield(fieldPlayerPositionOrder, reservePositionOrder);
 				addForward(fieldPlayerPositionOrder, reservePositionOrder);
 			}
 			case AW_ST_MF -> {
+				additionalBenchSlot = IMatchRoleID.CENTRAL_DEFENDER;
 				addDefence(fieldPlayerPositionOrder, reservePositionOrder);
 				addForward(fieldPlayerPositionOrder, reservePositionOrder);
 				addMidfield(fieldPlayerPositionOrder, reservePositionOrder);
 			}
 			case MF_AW_ST -> {
+				additionalBenchSlot = IMatchRoleID.MIDFIELDER;
 				addMidfield(fieldPlayerPositionOrder, reservePositionOrder);
 				addDefence(fieldPlayerPositionOrder, reservePositionOrder);
 				addForward(fieldPlayerPositionOrder, reservePositionOrder);
 			}
 			case MF_ST_AW -> {
+				additionalBenchSlot = IMatchRoleID.MIDFIELDER;
 				addMidfield(fieldPlayerPositionOrder, reservePositionOrder);
 				addForward(fieldPlayerPositionOrder, reservePositionOrder);
 				addDefence(fieldPlayerPositionOrder, reservePositionOrder);
 			}
 			case ST_MF_AW -> {
+				additionalBenchSlot = IMatchRoleID.FORWARD;
 				addForward(fieldPlayerPositionOrder, reservePositionOrder);
 				addMidfield(fieldPlayerPositionOrder, reservePositionOrder);
 				addDefence(fieldPlayerPositionOrder, reservePositionOrder);
 			}
 			case ST_AW_MF -> {
+				additionalBenchSlot = IMatchRoleID.FORWARD;
 				addForward(fieldPlayerPositionOrder, reservePositionOrder);
 				addDefence(fieldPlayerPositionOrder, reservePositionOrder);
 				addMidfield(fieldPlayerPositionOrder, reservePositionOrder);
@@ -130,79 +137,118 @@ public class LineupAssistant {
 			default -> {
 				return;
 			}
-
-			// break;
 		}
 
-		ArrayList<Player> players = new ArrayList<>(lPlayers.stream().filter(i->(i.getInjuryWeeks()<1 || ignoreInjured) && (!i.isRedCarded() || ignoreSuspended)).toList());
+		ArrayList<Player> players = new ArrayList<>(lPlayers.stream().filter(i -> (i.getInjuryWeeks() < 1 || ignoreInjured) && (!i.isRedCarded() || ignoreSuspended)).toList());
 		for (var playerPositions : fieldPlayerPositionOrder) {
 			optimizeLineup(playerPositions, players, lPositions);
 		}
 
+		// TODO: Fix substitutes must not be in field positions
 		// Fill subs ========
 		// Ideal position first
 		if (idealPosFirst) {
-			// TW
 			doReserveSpielerAufstellenIdealPos(IMatchRoleID.KEEPER, bForm, ignoreInjured,
 					ignoreSuspended, lPlayers, lPositions);
-
-			// abwehr
 			doReserveSpielerAufstellenIdealPos(IMatchRoleID.CENTRAL_DEFENDER, bForm,
 					ignoreInjured, ignoreSuspended, lPlayers, lPositions);
-
-			// WB
 			doReserveSpielerAufstellenIdealPos(IMatchRoleID.BACK, bForm,
 					ignoreInjured, ignoreSuspended, lPlayers, lPositions);
-
-			// mittelfeld
 			doReserveSpielerAufstellenIdealPos(IMatchRoleID.MIDFIELDER, bForm,
 					ignoreInjured, ignoreSuspended, lPlayers, lPositions);
 			doReserveSpielerAufstellenIdealPos(IMatchRoleID.WINGER, bForm, ignoreInjured,
 					ignoreSuspended, lPlayers, lPositions);
-
-			// sturm
 			doReserveSpielerAufstellenIdealPos(IMatchRoleID.FORWARD, bForm, ignoreInjured,
 					ignoreSuspended, lPlayers, lPositions);
 		}
 
-		// fill remaining seats
-		for ( var b : reservePositionOrder) {
-			optimizeLineup(b,  players, lPositions);
+		reservePositionOrder.add(List.of(IMatchRoleID.EXTRA));
+		var substitutelPositions = allPositions.stream().filter(MatchRoleID::isSubstitutesMatchRoleId).toList();
+		for (var b : reservePositionOrder) {
+			optimizeLineup(b, players, substitutelPositions);
+		}
+
+		var backupPositionOrder = List.of(
+				List.of(IMatchRoleID.KEEPER),
+				List.of(IMatchRoleID.CENTRAL_DEFENDER),
+				List.of(IMatchRoleID.BACK),
+				List.of(IMatchRoleID.MIDFIELDER),
+				List.of(IMatchRoleID.WINGER),
+				List.of(IMatchRoleID.FORWARD),
+				List.of(IMatchRoleID.EXTRA)
+		);
+		var backupCandidates = new ArrayList<>(substitutelPositions.stream().map(MatchLineupPosition::getPlayer).toList());
+		lPositions = allPositions.stream().filter(MatchRoleID::isBackupsMatchRoleId).toList();
+		for (var b : backupPositionOrder) {
+			// local backup candidates list without player of corresponding substitutes slot
+			var substitutePosition = getSubstitutePosition(b.get(0));
+			var matchLineupPosition = allPositions.stream().filter(i->i.getRoleId()==substitutePosition).findFirst();
+			if (matchLineupPosition.isPresent()) {
+				var substitutePlayerId = matchLineupPosition.get().getPlayerId();
+				var backupCandidatesForPosition = new ArrayList<>(backupCandidates.stream().filter(i->i.getPlayerId() != substitutePlayerId).toList());
+				optimizeLineup(b, backupCandidatesForPosition, lPositions);
+			}
 		}
 	}
 
-	private void optimizeLineup(List<Byte> playerPositions, ArrayList<Player> players, List<MatchLineupPosition> lineupPositions) {
-		if ((lineupPositions == null) || (players == null)  ) return;
+	private int getSubstitutePosition(byte position) {
+		return switch (position){
+			case IMatchRoleID.KEEPER -> IMatchRoleID.substGK1;
+			case IMatchRoleID.CENTRAL_DEFENDER -> IMatchRoleID.substCD1;
+			case IMatchRoleID.BACK -> IMatchRoleID.substWB1;
+			case IMatchRoleID.MIDFIELDER -> IMatchRoleID.substIM1;
+			case IMatchRoleID.WINGER -> IMatchRoleID.substWI1;
+			case IMatchRoleID.FORWARD -> IMatchRoleID.substFW1;
+			case IMatchRoleID.EXTRA -> IMatchRoleID.substXT1;
+            default -> throw new IllegalStateException("Unexpected value: " + position);
+        };
+	}
 
+	private void optimizeLineup(List<Byte> requestedPositions, ArrayList<Player> players, List<MatchLineupPosition> lineupPositions) {
+		if ((lineupPositions == null) || (players == null)) return;
 		for (var pos : lineupPositions) {
+			if (pos.getPlayerId() == 0 &&   // there isn't already a player at this position
+					requestedPositions.contains(pos.getPosition())) {
 
-			//Ignore already assigned positions and substitutes
-			if ((pos.getPlayerId() > 0) || (pos.getId() >= IMatchRoleID.startReserves || !playerPositions.contains(pos.getPosition()))) {
-				continue;
-			}
+				var behaviours = new ArrayList<>(MatchLineupPosition.getBehaviours(pos.getRoleId()));
+				if (behaviours.isEmpty()) {behaviours.add(IMatchRoleID.NORMAL);}
+				var maxRating = -1.0;
+				Player bestPlayer = null;
+				byte bestBehaviour = 0;
+				for (var behaviour : behaviours) {
+					for (var player : players) {
+						var r = player.getMatchBeginningRating(getRatingPosition(pos.getRoleId()), behaviour);
+						if (r > maxRating) {
+							maxRating = r;
+							bestPlayer = player;
+							bestBehaviour = behaviour;
+						}
+					}
+				}
 
-			var behaviours = MatchLineupPosition.getBehaviours(pos.getRoleId());
-			var maxRating = -1.0;
-			Player bestPlayer = null;
-			byte bestBehaviour = 0;
-			for (var behaviour : behaviours) {
-				for (var player : players) {
-					var r = player.getMatchAverageRating(pos.getRoleId(), behaviour);
-					if (r > maxRating) {
-						maxRating = r;
-						bestPlayer = player;
-						bestBehaviour = behaviour;
+				// fill the position
+				if (bestPlayer != null) {
+					pos.setPlayerIdIfValidForLineup(bestPlayer.getPlayerId());
+					pos.setBehaviour(bestBehaviour);
+					if (!pos.isBackupsMatchRoleId()) {
+						players.remove(bestPlayer);
 					}
 				}
 			}
-
-			// fill the position
-			if (bestPlayer != null) {
-				pos.setPlayerIdIfValidForLineup(bestPlayer.getPlayerId());
-				pos.setBehaviour(bestBehaviour);
-				players.remove(bestPlayer);
-			}
 		}
+	}
+
+	private int getRatingPosition(int roleId) {
+		return switch (roleId){
+			case IMatchRoleID.substGK1, IMatchRoleID.substGK2 -> IMatchRoleID.keeper;
+			case IMatchRoleID.substWB1, IMatchRoleID.substWB2 -> IMatchRoleID.leftBack;
+			case IMatchRoleID.substCD1, IMatchRoleID.substCD2 -> IMatchRoleID.middleCentralDefender;
+			case IMatchRoleID.substWI1, IMatchRoleID.substWI2 -> IMatchRoleID.leftWinger;
+			case IMatchRoleID.substIM1, IMatchRoleID.substIM2 -> IMatchRoleID.centralInnerMidfield;
+			case IMatchRoleID.substFW1, IMatchRoleID.substFW2 -> IMatchRoleID.centralForward;
+			case IMatchRoleID.substXT1, IMatchRoleID.substXT2 -> additionalBenchSlot;
+            default -> roleId;
+        };
 	}
 
 	private void addForward(List<List<Byte>> fieldPlayerPositionOrder, List<List<Byte>> reservePositionOrder) {
@@ -451,11 +497,26 @@ public class LineupAssistant {
 		}
 	}
 
-	private Vector<MatchLineupPosition> filterPositions(List<MatchLineupPosition> positions) {
+	private boolean isSelectedByAssistant(MatchLineupPosition position) {
+		var statusMap = Objects.requireNonNull(HOMainFrame.instance().getLineupPanel()).getAssistantPositionsStatus();
+		return !statusMap.containsKey(position.getId()) || statusMap.get(position.getId());
+	}
+
+	private Vector<MatchLineupPosition> filterPositions(List<MatchLineupPosition> positions, boolean isFieldPosition) {
 		// Remove "red" positions from the position selection of the AssistantPanel.
 		Vector<MatchLineupPosition> returnVec = new Vector<>();
 		Map<Integer, Boolean> statusMap = Objects.requireNonNull(HOMainFrame.instance().getLineupPanel()).getAssistantPositionsStatus();
 		for (var pos : positions) {
+			if (isFieldPosition){
+				if (!pos.isFieldMatchRoleId()){
+					continue;
+				}
+			}
+			else {
+				if (pos.isFieldMatchRoleId()){
+					continue;
+				}
+			}
 			if ((!statusMap.containsKey(pos.getId())) || (statusMap.get(pos.getId()))) {
 				returnVec.add(pos);
 			}
