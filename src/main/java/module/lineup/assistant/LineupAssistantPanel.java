@@ -213,7 +213,7 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
             }
 		}
 
-		final List<Player> selectablePlayers = new Vector<>();
+		final List<Player> selectablePlayers = new ArrayList<>();
 		final List<Player> allPlayers = hoModel.getCurrentPlayers();
 
 		for (Player player: allPlayers) {

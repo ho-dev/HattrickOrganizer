@@ -142,9 +142,6 @@ public class LineupAssistant {
 			optimizeLineup(playerPositions, players, lPositions);
 		}
 
-		// TODO: Fix substitutes must not be in field positions
-		// Fill subs ========
-		// Ideal position first
 		if (idealPosFirst) {
 			doReserveSpielerAufstellenIdealPos(IMatchRoleID.KEEPER, bForm, ignoreInjured,
 					ignoreSuspended, players, lPositions);
@@ -175,7 +172,10 @@ public class LineupAssistant {
 				List.of(IMatchRoleID.FORWARD),
 				List.of(IMatchRoleID.EXTRA)
 		);
-		var backupCandidates = new ArrayList<>(substitutePositions.stream().map(MatchLineupPosition::getPlayer).toList());
+		var backupCandidates = new ArrayList<>(substitutePositions.stream()
+				.map(MatchLineupPosition::getPlayer)
+				.filter(Objects::nonNull)
+				.toList());
 		lPositions = allPositions.stream().filter(MatchRoleID::isBackupsMatchRoleId).toList();
 		for (var b : backupPositionOrder) {
 			// local backup candidates list without player of corresponding substitutes slot
