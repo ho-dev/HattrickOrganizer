@@ -35,6 +35,8 @@
 
 ### Lineup
 
+* Refactoring of lineup assistant (#163)
+
 ### Special events
 
 ### Transfer
