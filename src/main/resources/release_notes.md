@@ -35,6 +35,7 @@
 
 ### Lineup
 
+* Lineup assistant optimizes behaviour settings (#163)
 * Fix substitution plausibility check (#2224)
 
 ### Special events

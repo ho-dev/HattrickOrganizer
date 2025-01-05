@@ -424,7 +424,6 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         setPlayerTooltip(m_clSelectedPlayer.getPlayer());
     }
 
-
     protected void setPlayersList2(List<Player> allPlayers, @Nullable Player selectedPlayer, int playerIDcorrespondingSub) {
 
         m_jcbPlayer.removeItemListener(this);

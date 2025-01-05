@@ -955,6 +955,11 @@ public class Player extends AbstractTable.Storable {
         return ratingPredictionModel.getPlayerMatchAverageRating(this, position, behaviour);
     }
 
+    public double getMatchBeginningRating(int position, byte behaviour) {
+        var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+        return ratingPredictionModel.getPlayerRatingMatchBeginning(this, position, behaviour);
+    }
+
     /**
      * Calculate player alternative best positions (weather impact not relevant here)
      */

@@ -1150,9 +1150,9 @@ public class Lineup{
 	 * Assistant to create automatically the lineup
 	 */
 	public final void optimizeLineup(List<Player> players, byte sectorsStrengthPriority, boolean withForm,
-									 boolean idealPosFirst, boolean considerInjured, boolean considereSuspended) {
+									 boolean idealPosFirst, boolean considerInjured, boolean considereSuspended, boolean useAverageRating) {
 		m_clAssi.doLineup(getAllPositions(), players, sectorsStrengthPriority, withForm, idealPosFirst,
-				considerInjured, considereSuspended, getWeather());
+				considerInjured, considereSuspended, useAverageRating, getWeather());
 		setAutoKicker(null);
 		setAutoKapitaen(null);
 	}

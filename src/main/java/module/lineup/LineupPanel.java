@@ -222,6 +222,10 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 		return this.getLineupAssistantPanel().isConsiderForm();
 	}
 
+	public boolean isUseAverageRating() {
+		return  this.getLineupAssistantPanel().isUseAverageRating();
+	}
+
 	public boolean isAssistantIgnoreInjured() {
 		return this.getLineupAssistantPanel().isIgnoreInjured();
 	}
