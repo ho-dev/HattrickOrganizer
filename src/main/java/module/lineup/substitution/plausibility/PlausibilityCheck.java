@@ -24,7 +24,7 @@ public class PlausibilityCheck {
 		}
 		
 		// check if there is a subjectPlayer
-		if (subjectPlayerID <= 0 || LineupAssistant.isPlayerEnabledForLineup(subjectPlayerID)) {
+		if (subjectPlayerID <= 0 || !LineupAssistant.isPlayerEnabledForLineup(subjectPlayerID)) {
 			return switch (substitution.getOrderType()) {
 				case SUBSTITUTION -> Error.SUBSTITUTION_PLAYER_MISSING;
 				case POSITION_SWAP -> Error.POSITIONSWAP_PLAYER_MISSING;
@@ -40,7 +40,7 @@ public class PlausibilityCheck {
 					return Error.PLAYERIN_NOT_REAL;
 				}
 
-				if (objectPlayerID <= 0 || LineupAssistant.isPlayerEnabledForLineup(objectPlayerID)) {
+				if (objectPlayerID <= 0 || !LineupAssistant.isPlayerEnabledForLineup(objectPlayerID)) {
 					if (substitution.getOrderType() == SUBSTITUTION) {
 						return Error.SUBSTITUTION_PLAYER_MISSING;
 					} else if (substitution.getOrderType() == POSITION_SWAP) {
@@ -68,28 +68,21 @@ public class PlausibilityCheck {
 	}
 
 	public static String getComment(Problem problem, Substitution substitution) {
-		if (problem instanceof Error) {
-			switch ((Error) problem) {
-			case PLAYERIN_NOT_IN_LINEUP:
-			case PLAYERIN_NOT_REAL:
-				return TranslationFacility.tr(problem.getLanguageKey(),
-						getPlayerIn(substitution).getFullName());
-			case PLAYEROUT_NOT_IN_LINEUP:
-			case PLAYEROUT_NOT_REAL:
-				return TranslationFacility.tr(problem.getLanguageKey(),
-						getPlayerOut(substitution).getFullName());
-			default:
-				return TranslationFacility.tr(problem.getLanguageKey());
-			}
+		if (problem instanceof Error p) {
+            return switch (p) {
+                case PLAYERIN_NOT_IN_LINEUP, PLAYERIN_NOT_REAL -> TranslationFacility.tr(problem.getLanguageKey(),
+                        getPlayerIn(substitution).getFullName());
+                case PLAYEROUT_NOT_IN_LINEUP, PLAYEROUT_NOT_REAL -> TranslationFacility.tr(problem.getLanguageKey(),
+                        getPlayerOut(substitution).getFullName());
+                default -> TranslationFacility.tr(problem.getLanguageKey());
+            };
 		} else if (problem instanceof Uncertainty) {
-			switch ((Uncertainty) problem) {
-			case SAME_TACTIC:
-				return TranslationFacility.tr(problem.getLanguageKey(),
-						getPlayerOut(substitution).getFullName(),
-						LanguageStringLookup.getBehaviour(substitution.getBehaviour()));
-			}
+            if (problem == Uncertainty.SAME_TACTIC) {
+                return TranslationFacility.tr(problem.getLanguageKey(),
+                        getPlayerOut(substitution).getFullName(),
+                        LanguageStringLookup.getBehaviour(substitution.getBehaviour()));
+            }
 		}
-
 		return null;
 	}
 

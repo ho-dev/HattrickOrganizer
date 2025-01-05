@@ -36,6 +36,7 @@
 ### Lineup
 
 * Refactoring of lineup assistant (#163)
+* Fix substitution plausibility check (#2224)
 
 ### Special events
 
@@ -74,7 +75,7 @@
 
 Reports by Contributors - June 23, 2024 - December 28, 2024
 
-* Kristaps 310
+* Kristaps 322
 * Tavaro 175
 * Lidegang 143
 * wsbrenk 84
@@ -83,4 +84,4 @@ Reports by Contributors - June 23, 2024 - December 28, 2024
 * Achilles 10
 * Billy Dikkanen 10
 
-Total 769
+Total 781
