@@ -68,8 +68,8 @@ public class PlausibilityCheck {
 	}
 
 	public static String getComment(Problem problem, Substitution substitution) {
-		if (problem instanceof Error) {
-            return switch ((Error) problem) {
+		if (problem instanceof Error p) {
+            return switch (p) {
                 case PLAYERIN_NOT_IN_LINEUP, PLAYERIN_NOT_REAL -> TranslationFacility.tr(problem.getLanguageKey(),
                         getPlayerIn(substitution).getFullName());
                 case PLAYEROUT_NOT_IN_LINEUP, PLAYEROUT_NOT_REAL -> TranslationFacility.tr(problem.getLanguageKey(),
