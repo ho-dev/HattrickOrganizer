@@ -47,6 +47,7 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 	private final JComboBox<String> m_jcbGroups = new JComboBox<>(GroupTeamFactory.TEAMS_GROUPS);
 	private final JCheckBox m_jcbxFilterPlayerPositionCB = new JCheckBox("", userParameter.aufstellungsAssistentPanel_cbfilter);
 	private final JCheckBox m_jcbxConsiderForm = new JCheckBox("", userParameter.aufstellungsAssistentPanel_form);
+	private final JCheckBox isUsePlayerAverageRatingCheckbox = new JCheckBox("", userParameter.aufstellungsAssistentPanel_averagerating);
 	private final JCheckBox m_jcbxConsiderInjuredPlayers = new JCheckBox("", userParameter.aufstellungsAssistentPanel_verletzt);
 	private final JCheckBox m_jcbxConsiderSuspendedPlayers = new JCheckBox("", userParameter.aufstellungsAssistentPanel_gesperrt);
 	private final JCheckBox m_jcbxIdealPositionFirst = new JCheckBox("", userParameter.aufstellungsAssistentPanel_idealPosition);
@@ -95,6 +96,10 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 
 	public final boolean isConsiderForm() {
 		return m_jcbxConsiderForm.isSelected();
+	}
+
+	public final boolean isUseAverageRating(){
+		return isUsePlayerAverageRatingCheckbox.isSelected();
 	}
 
 	public final boolean isIgnoreSuspended() {
@@ -244,7 +249,8 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 						isConsiderForm(),
 						isIdealPositionZuerst(),
 						isIgnoreInjured(),
-						isIgnoreSuspended()
+						isIgnoreSuspended(),
+						isUseAverageRating()
 				);
 
 		mainFrame.setInformation(TranslationFacility.tr("Autoaufstellung_fertig"));
@@ -462,54 +468,66 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 		label.setToolTipText(getTranslation("tt_AufstellungsAssistent_Form"));
 		addLabel(constraints, layout, label);
 
-		constraints.gridx = 1;
+		constraints.gridx++;
 		m_jcbxConsiderForm.setToolTipText(getTranslation("tt_AufstellungsAssistent_Form"));
 		layout.setConstraints(m_jcbxConsiderForm, constraints);
 		add(m_jcbxConsiderForm);
 
-		constraints.gridx = 2;
+		constraints.gridx++;
 		label = new JLabel(getTranslation("Verletze_aufstellen"));
 		label.setToolTipText(getTranslation("tt_AufstellungsAssistent_Verletzte"));
 		addLabel(constraints, layout, label);
 
-		constraints.gridx = 3;
+		constraints.gridx++;
 		m_jcbxConsiderInjuredPlayers.setToolTipText(getTranslation("tt_AufstellungsAssistent_Verletzte"));
 		layout.setConstraints(m_jcbxConsiderInjuredPlayers, constraints);
 		add(m_jcbxConsiderInjuredPlayers);
 
 		// Line 6 ===============================================
 		constraints.gridx = 0;
-		constraints.gridy = 5;
+		constraints.gridy++;
 		label = new JLabel(getTranslation("Gesperrte_aufstellen"));
 		label.setToolTipText(getTranslation("tt_AufstellungsAssistent_Gesperrte"));
 		addLabel(constraints, layout, label);
 
-		constraints.gridx = 1;
+		constraints.gridx++;
 		m_jcbxConsiderSuspendedPlayers.setToolTipText(getTranslation("tt_AufstellungsAssistent_Gesperrte"));
 		layout.setConstraints(m_jcbxConsiderSuspendedPlayers, constraints);
 		add(m_jcbxConsiderSuspendedPlayers);
 
-		constraints.gridx = 2;
+		constraints.gridx++;
 		label = new JLabel(getTranslation("Idealposition_zuerst"));
 		label.setToolTipText(getTranslation("tt_AufstellungsAssistent_Idealposition"));
 		addLabel(constraints, layout, label);
 
-		constraints.gridx = 3;
+		constraints.gridx++;
 		m_jcbxIdealPositionFirst.setToolTipText(getTranslation("tt_AufstellungsAssistent_Idealposition"));
 		layout.setConstraints(m_jcbxIdealPositionFirst, constraints);
 		add(m_jcbxIdealPositionFirst);
 
-		// Line 7 (break line)  =============================================================================
+		// Line 7 ===============================================
 		constraints.gridx = 0;
-		constraints.gridy = 6;
+		constraints.gridy++;
+		label = new JLabel(getTranslation("use_average_rating"));
+		label.setToolTipText(getTranslation("tt_use_average_rating"));
+		addLabel(constraints, layout, label);
+
+		constraints.gridx++;
+		isUsePlayerAverageRatingCheckbox.setToolTipText(getTranslation("tt_use_average_rating"));
+		layout.setConstraints(isUsePlayerAverageRatingCheckbox, constraints);
+		add(isUsePlayerAverageRatingCheckbox);
+
+		// Line 8 (break line)  =============================================================================
+		constraints.gridx = 0;
+		constraints.gridy++;
 		addLabel(constraints, layout, new JLabel(" "));
 
-		// Line 8 =============================================================================
+		// Line 9 =============================================================================
 		constraints.gridx = 0;
-		constraints.gridy = 7;
+		constraints.gridy++;
 		addLabel(constraints, layout, new JLabel(getTranslation("ls.module.lineup.assistant.priority")));
 
-		constraints.gridx = 1;
+		constraints.gridx++;
 		constraints.gridwidth = 2;
 		constraints.fill = GridBagConstraints.NONE;
 		constraints.anchor = GridBagConstraints.WEST;
@@ -519,9 +537,9 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 		m_jcbPriority.setBackground(ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER));
 		add(m_jcbPriority);
 
-		// Line 9 =============================================================================
+		// Line 10 =============================================================================
 		constraints.gridx = 0;
-		constraints.gridy = 8;
+		constraints.gridy++;
 		constraints.gridwidth = 4;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
 		constraints.anchor = GridBagConstraints.CENTER;

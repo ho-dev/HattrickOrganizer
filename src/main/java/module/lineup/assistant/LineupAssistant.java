@@ -53,21 +53,22 @@ public class LineupAssistant {
 	/**
 	 * Assistant to create automatic lineup
 	 *
-	 * @param allPositions:              list of positions to be filled
-	 * @param lPlayers:                list of available players
-	 * @param sectorsStrengthPriority: priority in sector strength (e.g. MID-FOR-DE)
-	 * @param bForm:                   whether or not to consider the form
-	 * @param idealPosFirst:           whether or not to consider best position first
-	 * @param ignoreInjured:                whether or not to consider injured player
-	 * @param ignoreSuspended:              whether or not to advanced suspended player
-	 * @param weather:                 Actual weather
+	 * @param allPositions            :              list of positions to be filled
+	 * @param lPlayers                :                list of available players
+	 * @param sectorsStrengthPriority : priority in sector strength (e.g. MID-FOR-DE)
+	 * @param bForm                   :                   whether or not to consider the form
+	 * @param idealPosFirst           :           whether or not to consider best position first
+	 * @param ignoreInjured           :                whether or not to consider injured player
+	 * @param ignoreSuspended         :              whether or not to advanced suspended player
+	 * @param useAverageRating
+	 * @param weather                 :                 Actual weather
 	 */
 	public final void doLineup(List<MatchLineupPosition> allPositions, List<Player> lPlayers,
 							   byte sectorsStrengthPriority, boolean bForm, boolean idealPosFirst, boolean ignoreInjured,
-							   boolean ignoreSuspended, Weather weather) {
+							   boolean ignoreSuspended, boolean useAverageRating, Weather weather) {
 
 		var lPositions = allPositions.stream().filter(i -> i.isFieldMatchRoleId() && isSelectedByAssistant(i)).toList();
-		ArrayList<Player> players = new ArrayList<>(lPlayers.stream().filter(i -> (i.getInjuryWeeks() < 1 || ignoreInjured) && (!i.isRedCarded() || ignoreSuspended)).toList());
+		var players = lPlayers.stream().filter(i -> (i.getInjuryWeeks() < 1 || ignoreInjured) && (!i.isRedCarded() || ignoreSuspended)).collect(Collectors.toList());
 
 		// only setup player in ideal position
 		if (idealPosFirst) {
@@ -139,7 +140,7 @@ public class LineupAssistant {
 		}
 
 		for (var playerPositions : fieldPlayerPositionOrder) {
-			optimizeLineup(playerPositions, players, lPositions);
+			optimizeLineup(playerPositions, players, lPositions, useAverageRating);
 		}
 
 		if (idealPosFirst) {
@@ -160,7 +161,7 @@ public class LineupAssistant {
 		reservePositionOrder.add(List.of(IMatchRoleID.EXTRA));
 		var substitutePositions = allPositions.stream().filter(MatchRoleID::isSubstitutesMatchRoleId).toList();
 		for (var b : reservePositionOrder) {
-			optimizeLineup(b, players, substitutePositions);
+			optimizeLineup(b, players, substitutePositions, useAverageRating);
 		}
 
 		var backupPositionOrder = List.of(
@@ -172,10 +173,10 @@ public class LineupAssistant {
 				List.of(IMatchRoleID.FORWARD),
 				List.of(IMatchRoleID.EXTRA)
 		);
-		var backupCandidates = new ArrayList<>(substitutePositions.stream()
+		var backupCandidates = substitutePositions.stream()
 				.map(MatchLineupPosition::getPlayer)
 				.filter(Objects::nonNull)
-				.toList());
+				.toList();
 		lPositions = allPositions.stream().filter(MatchRoleID::isBackupsMatchRoleId).toList();
 		for (var b : backupPositionOrder) {
 			// local backup candidates list without player of corresponding substitutes slot
@@ -183,8 +184,8 @@ public class LineupAssistant {
 			var matchLineupPosition = allPositions.stream().filter(i->i.getRoleId()==substitutePosition).findFirst();
 			if (matchLineupPosition.isPresent()) {
 				var substitutePlayerId = matchLineupPosition.get().getPlayerId();
-				var backupCandidatesForPosition = new ArrayList<>(backupCandidates.stream().filter(i->i.getPlayerId() != substitutePlayerId).toList());
-				optimizeLineup(b, backupCandidatesForPosition, lPositions);
+				var backupCandidatesForPosition = backupCandidates.stream().filter(i->i.getPlayerId() != substitutePlayerId).collect(Collectors.toList());
+				optimizeLineup(b, backupCandidatesForPosition, lPositions, useAverageRating);
 			}
 		}
 	}
@@ -202,7 +203,7 @@ public class LineupAssistant {
         };
 	}
 
-	private void optimizeLineup(List<Byte> requestedPositions, ArrayList<Player> players, List<MatchLineupPosition> lineupPositions) {
+	private void optimizeLineup(List<Byte> requestedPositions, List<Player> players, List<MatchLineupPosition> lineupPositions, boolean useAverageRating) {
 		if ((lineupPositions == null) || (players == null)) return;
 		for (var pos : lineupPositions) {
 			if (pos.getPlayerId() == 0 &&   // there isn't already a player at this position
@@ -215,7 +216,9 @@ public class LineupAssistant {
 				byte bestBehaviour = 0;
 				for (var behaviour : behaviours) {
 					for (var player : players) {
-						var r = player.getMatchBeginningRating(getRatingPosition(pos.getRoleId()), behaviour);
+						var r = useAverageRating?
+								player.getMatchAverageRating(getRatingPosition(pos.getRoleId()), behaviour):
+								player.getMatchBeginningRating(getRatingPosition(pos.getRoleId()), behaviour);
 						if (r > maxRating) {
 							maxRating = r;
 							bestPlayer = player;

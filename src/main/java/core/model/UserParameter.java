@@ -71,6 +71,7 @@ public final class UserParameter extends Configuration {
      */
     public boolean aufstellungsAssistentPanel_cbfilter;
     public boolean aufstellungsAssistentPanel_form = true;
+    public boolean aufstellungsAssistentPanel_averagerating = true;
     public boolean aufstellungsAssistentPanel_gesperrt;
     public boolean aufstellungsAssistentPanel_idealPosition;
     public boolean aufstellungsAssistentPanel_notLast;
@@ -428,6 +429,7 @@ public final class UserParameter extends Configuration {
         map.put("ProxyAuthAktiv", String.valueOf(ProxyAuthAktiv));
         map.put("aufstellungsAssistentPanel_cbfilter", String.valueOf(aufstellungsAssistentPanel_cbfilter));
         map.put("aufstellungsAssistentPanel_form", String.valueOf(aufstellungsAssistentPanel_form));
+        map.put("aufstellungsAssistentPanel_averagerating", String.valueOf(aufstellungsAssistentPanel_averagerating));
         map.put("aufstellungsAssistentPanel_gesperrt", String.valueOf(aufstellungsAssistentPanel_gesperrt));
         map.put("aufstellungsAssistentPanel_idealPosition", String.valueOf(aufstellungsAssistentPanel_idealPosition));
         map.put("lineupAssistentPanel_include_group", String.valueOf(lineupAssistentPanel_include_group));
@@ -671,6 +673,7 @@ public final class UserParameter extends Configuration {
         ProxyAuthAktiv = getBooleanValue(values, "ProxyAuthAktiv");
         aufstellungsAssistentPanel_cbfilter = getBooleanValue(values, "aufstellungsAssistentPanel_cbfilter");
         aufstellungsAssistentPanel_form = getBooleanValue(values, "aufstellungsAssistentPanel_form");
+        aufstellungsAssistentPanel_averagerating = getBooleanValue(values, "aufstellungsAssistentPanel_averagerating");
         aufstellungsAssistentPanel_gesperrt = getBooleanValue(values, "aufstellungsAssistentPanel_gesperrt");
         aufstellungsAssistentPanel_idealPosition = getBooleanValue(values, "aufstellungsAssistentPanel_idealPosition");
         lineupAssistentPanel_include_group = getBooleanValue(values, "lineupAssistentPanel_include_group");

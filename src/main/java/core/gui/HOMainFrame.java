@@ -665,6 +665,7 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 		parameter.aufstellungsAssistentPanel_cbfilter = lineupPanel.isAssistantGroupFilter();
 		parameter.aufstellungsAssistentPanel_idealPosition = lineupPanel.isAssistantBestPositionFirst();
 		parameter.aufstellungsAssistentPanel_form = lineupPanel.isAssistantConsiderForm();
+		parameter.aufstellungsAssistentPanel_averagerating = lineupPanel.isUseAverageRating();
 		parameter.aufstellungsAssistentPanel_verletzt = lineupPanel.isAssistantIgnoreInjured();
 		parameter.aufstellungsAssistentPanel_gesperrt = lineupPanel.isAssistantIgnoreSuspended();
 		parameter.aufstellungsAssistentPanel_notLast = lineupPanel.isAssistantExcludeLastMatch();
