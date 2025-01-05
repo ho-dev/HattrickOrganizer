@@ -60,7 +60,7 @@ public class LineupAssistant {
 	 * @param idealPosFirst           :           whether or not to consider best position first
 	 * @param ignoreInjured           :                whether or not to consider injured player
 	 * @param ignoreSuspended         :              whether or not to advanced suspended player
-	 * @param useAverageRating
+	 * @param useAverageRating Use players's average rating instead of first minute rating
 	 * @param weather                 :                 Actual weather
 	 */
 	public final void doLineup(List<MatchLineupPosition> allPositions, List<Player> lPlayers,
