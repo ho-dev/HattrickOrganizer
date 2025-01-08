@@ -28,7 +28,7 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 	private LineupRatingAssistantPanel lineupRatingAssistantPanel;
 	private JSplitPane horizontalSplitPane;
 	private JSplitPane verticalSplitPane;
-	private final List<Updatable> updatables = new ArrayList<>();
+	private final List<Updatable> updatable = new ArrayList<>();
 	private boolean areSelecting = false;
 
 	public LineupPanel() {
@@ -97,12 +97,12 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 	}
 
 	public void addUpdateable(Updatable updatable) {
-		this.updatables.add(updatable);
+		this.updatable.add(updatable);
 	}
 
 	private void fireUpdate() {
-		for (int i = this.updatables.size() - 1; i >= 0; i--) {
-			this.updatables.get(i).update();
+		for (int i = this.updatable.size() - 1; i >= 0; i--) {
+			this.updatable.get(i).update();
 		}
 	}
 

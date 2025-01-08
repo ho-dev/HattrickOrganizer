@@ -764,21 +764,6 @@ public class Lineup{
 		return "           ";
 	}
 
-	public void printLineup() {
-		try {
-			String res = "*******************************************************************************************";
-			res += "\n" + "           " + "           " + this.tryGetPlayerNameByPositionID(100);
-			res += "\n" + this.tryGetPlayerNameByPositionID(101) + "   " + this.tryGetPlayerNameByPositionID(102) + "   " + this.tryGetPlayerNameByPositionID(103) + "   " + this.tryGetPlayerNameByPositionID(104) + "   " + this.tryGetPlayerNameByPositionID(105);
-			res += "\n" + this.tryGetPlayerNameByPositionID(106) + "   " + this.tryGetPlayerNameByPositionID(107) + "   " + this.tryGetPlayerNameByPositionID(108) + "   " + this.tryGetPlayerNameByPositionID(109) + "   " + this.tryGetPlayerNameByPositionID(110);
-			res += "\n" + "           " + this.tryGetPlayerNameByPositionID(111) + "   " + this.tryGetPlayerNameByPositionID(112) + "   " + this.tryGetPlayerNameByPositionID(113);
-			res += "\n*******************************************************************************************";
-			System.out.println(res);
-		}
-		catch (Exception e) {
-			System.out.println("could not print lineup");
-		}
-	}
-
 	/**
 	 * Get the position object by position id.
 	 */
@@ -1271,13 +1256,6 @@ public class Lineup{
 	 * Remove a spare player.
 	 */
 	public final void resetSubstituteBench() {
-		// Nur Reservespieler
-		/*final Vector<IMatchRoleID> vReserve = new Vector<IMatchRoleID>();
-		for (IMatchRoleID pos : m_vPositions) {
-			if (((MatchRoleID) pos).getId() >= IMatchRoleID.startReserves) {
-				vReserve.add(pos);
-			}
-		}*/
 		m_clAssi.resetPositionsbesetzungen(m_vBenchPositions);
 	}
 
@@ -1503,99 +1481,6 @@ public class Lineup{
 		return roleId;
 	}
 
-//	/**
-//	 * Amend the lineup by applying the Given MatchOrder
-//	 */
-//	public void UpdateLineupWithMatchOrder(Substitution sub) {
-//		MatchRoleID matchRoleIDPlayer, matchRoleIDAffectedPlayer;
-//		int newRoleId;
-//		byte tactic;
-//
-//		Player ObjectPlayer;
-//		switch (sub.getOrderType()) {
-//			case SUBSTITUTION:
-//				matchRoleIDAffectedPlayer = this.getPositionByPlayerId(sub.getSubjectPlayerID());
-//				if (matchRoleIDAffectedPlayer == null) {
-//					HOLogger.instance().warning(Lineup.class, String.format("The player id: %s cannot do the substitution", sub.getSubjectPlayerID()));
-//					break;
-//				}
-//
-//				matchRoleIDPlayer = getPositionByPlayerId(sub.getObjectPlayerID());
-//				if (matchRoleIDPlayer == null) {
-//					HOLogger.instance().warning(Lineup.class, String.format("The substitution of player id: %s has not been recognized", sub.getObjectPlayerID()));
-//					break;
-//				}
-//				ObjectPlayer = this.getPlayerByPositionID(matchRoleIDPlayer.getId());
-//				if (ObjectPlayer == null) {
-//					HOLogger.instance().warning(Lineup.class, String.format("The player id: %s cannot do the substitution", sub.getObjectPlayerID()));
-//					break;
-//				}
-//				ObjectPlayer.setGameStartingTime(sub.getMatchMinuteCriteria());
-//				tactic = sub.getBehaviour();
-//				if (tactic == -1) tactic = matchRoleIDAffectedPlayer.getTactic();
-//				newRoleId = sub.getRoleId();
-//				if ( newRoleId != -1 ) {
-//					var posid = getPositionById(newRoleId);
-//					if (  posid != null && posid.getPlayerId() == 0){
-//						if ( newRoleId != matchRoleIDAffectedPlayer.getId() ) {
-//							setSpielerAtPosition(matchRoleIDAffectedPlayer.getId(), 0, MatchRoleID.NORMAL);  // clear old position
-//						}
-//					} else {
-//						HOLogger.instance().warning(Lineup.class, String.format("The player id: %s cannot do the substitution. Position is not free.", sub.getObjectPlayerID()));
-//						break;
-//					}
-//				} else {
-//					newRoleId = matchRoleIDAffectedPlayer.getId();
-//				}
-//				setSpielerAtPosition(newRoleId, matchRoleIDPlayer.getPlayerId(), tactic);
-//				break;
-//
-//			case POSITION_SWAP:
-//				matchRoleIDAffectedPlayer = getPositionByPlayerId(sub.getSubjectPlayerID());
-//				matchRoleIDPlayer = getPositionByPlayerId(sub.getObjectPlayerID());
-//				if (matchRoleIDAffectedPlayer != null && matchRoleIDPlayer != null) {
-//					matchRoleIDAffectedPlayer.setPlayerIdIfValidForLineup(sub.getObjectPlayerID());
-//					matchRoleIDPlayer.setPlayerIdIfValidForLineup(sub.getSubjectPlayerID());
-//				} else {
-//					if (matchRoleIDAffectedPlayer == null) {
-//						HOLogger.instance().warning(Lineup.class, String.format("The player id: %s is (no longer) in lineup.", sub.getSubjectPlayerID()));
-//					}
-//					if (matchRoleIDPlayer == null) {
-//						HOLogger.instance().warning(Lineup.class, String.format("The player id: %s is (no longer) in lineup.", sub.getObjectPlayerID()));
-//					}
-//				}
-//				break;
-//
-//			case NEW_BEHAVIOUR:
-//				newRoleId = sub.getRoleId();
-//				matchRoleIDAffectedPlayer = getPositionByPlayerId(sub.getSubjectPlayerID());
-//				if (matchRoleIDAffectedPlayer == null) {
-//					HOLogger.instance().warning(Lineup.class, String.format("The player id: %s cannot do the substitution", sub.getSubjectPlayerID()));
-//					break;
-//				}
-//				if (newRoleId == -1) {
-//					newRoleId = matchRoleIDAffectedPlayer.getId();
-//				} else if (newRoleId != matchRoleIDAffectedPlayer.getId()) {
-//					var pos = getPositionById(newRoleId);
-//					if (pos != null && pos.getPlayerId() > 0) {
-//						HOLogger.instance().warning(Lineup.class, String.format("The player id: %s cannot do the substitution. Position is not free.", sub.getObjectPlayerID()));
-//						break;
-//					}
-//				}
-//				tactic = sub.getBehaviour();
-//				if (tactic == -1) tactic = MatchRoleID.NORMAL;
-//				setSpielerAtPosition(newRoleId, sub.getSubjectPlayerID(), tactic);
-//				break;
-//
-//			case MAN_MARKING:
-//				// TODO: handle man marking orders
-//				break;
-//			default:
-//				HOLogger.instance().error(Lineup.class, String.format("Incorrect Prediction Rating: the following match order has not been considered: %s", sub.getOrderType()));
-//				break;
-//		}
-//	}
-
 	public void adjustBackupPlayers() {
 		Player player = this.getPlayerByPositionID(IMatchRoleID.substGK1);
 		int substGK = (player == null) ? 0 : player.getPlayerId();
@@ -1640,8 +1525,6 @@ public class Lineup{
 				// need to remove that player from that backup position
 				this.setSpielerAtPosition(iBackupPositionID, 0);
 			}
-
-
 		}
 	}
 

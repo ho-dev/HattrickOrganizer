@@ -415,13 +415,15 @@ public class MatchFixtures extends AbstractTable.Storable {
         for ( var match : matches) {
             if ( match.getSpieltag() > maxMatchDay) { break; }
 
+            var isHomeTeam = ids.contains(match.getHeimId());
+            name = isHomeTeam?match.getHeimName():match.getGastName();
+
             // Games already played
             if (match.getToreHeim() > -1) {
                 gameNumber++;
 
                 // Home game
-                if (ids.contains(match.getHeimId())) {
-                    name = match.getHeimName();
+                if (isHomeTeam) {
                     // Win
                     if (match.getToreHeim() > match.getToreGast()) {
                         eintrag.addSerienEintrag(match.getSpieltag() - 1, SerieTableEntry.H_SIEG);
@@ -448,7 +450,6 @@ public class MatchFixtures extends AbstractTable.Storable {
                 }
                 // Away
                 else {
-                    name = match.getGastName();
                     // Defeat
                     if (match.getToreHeim() > match.getToreGast()) {
                         eintrag.addSerienEintrag(match.getSpieltag() - 1, SerieTableEntry.A_NIED);
