@@ -10,6 +10,7 @@ import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.player.FuturePlayer;
 import core.model.player.MatchRoleID;
+import core.model.player.Player;
 import core.training.FuturePlayerTraining;
 import core.training.FutureTrainingManager;
 import core.training.WeeklyTrainingType;
@@ -34,7 +35,7 @@ import static core.constants.player.PlayerSkill.STAMINA;
  *
  * @author <a href=mailto:draghetto@users.sourceforge.net>Massimiliano Amato</a>
  */
-public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
+public class PlayerDetailPanel extends LazyImagePanel {
 
     @Serial
     private static final long serialVersionUID = -6606934473344186243L;
@@ -45,6 +46,7 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
     private JComboBox[] trainingPlanSelection;
     private JLabel[] skillLabel;
     private final TrainingModel model;
+    private Player editingPlayer = null;
 
     /**
      * Creates the panel and its components
@@ -65,7 +67,7 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
     protected void update() {
         if ( m_jtaNotes.isFocusOwner() ){
             // Notes could be changed
-            saveNotes();
+            saveNotes(m_jtaNotes.getText());
         }
         loadFromModel();
     }
@@ -269,7 +271,17 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
         m_jtaNotes = new JTextArea(5,8);
         m_jtaNotes.setEditable(false);
         m_jtaNotes.setBackground(ColorLabelEntry.BG_STANDARD);
-        m_jtaNotes.addFocusListener(this);
+        m_jtaNotes.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                editingPlayer = model.getActivePlayer();
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                editingPlayer = null;
+            }
+        });
 
         JPanel panel2 = new ImagePanel();
         panel2.setLayout(new BorderLayout());
@@ -311,20 +323,9 @@ public class PlayerDetailPanel extends LazyImagePanel implements FocusListener {
         }
     }
 
-    @Override
-    public void focusGained(FocusEvent e) {
-
-    }
-
-    @Override
-    public void focusLost(FocusEvent e) {
-        saveNotes();
-    }
-
-    private void saveNotes() {
-        var player = this.model.getActivePlayer();
-        if( player!= null){
-            player.setNote(m_jtaNotes.getText());
+    private void saveNotes(String notes) {
+        if( editingPlayer!= null && !notes.equals(editingPlayer.getNote())){
+            editingPlayer.setNote(m_jtaNotes.getText());
         }
     }
 
