@@ -499,7 +499,7 @@ final public class UserColumnFactory {
      * @return PlayerColumn[]
      */
     public static PlayerColumn[] createPlayerAdditionalArray() {
-        final PlayerColumn[] playerAdditionalArray = new PlayerColumn[30];
+        final PlayerColumn[] playerAdditionalArray = new PlayerColumn[31];
 
         playerAdditionalArray[0] = new PlayerColumn(10, "ls.player.shirtnumber.short", "ls.player.shirtnumber", 25) {
             @Override
@@ -962,7 +962,13 @@ final public class UserColumnFactory {
                 return getTrainerTransferEntry(player, 8);
             }
         };
-
+        // mother club name
+        playerAdditionalArray[30] = new PlayerColumn(905, "ls.player.training.notes", 20) {
+            @Override
+            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
+                return new ColorLabelEntry(player.getNote().replace('\n', '/'), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+            }
+        };
         return playerAdditionalArray;
     }
 

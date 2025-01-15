@@ -16,6 +16,7 @@
 * Calculation of the tsi sub by approximating the tsi formula (#235)
 * Fix display of best position rating (#2166)
 * Display coach conversion costs (#2204)
+* New column "trainer notes" (#2229)
 
 ### Team Analyzer
 

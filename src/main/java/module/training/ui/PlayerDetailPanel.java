@@ -328,6 +328,4 @@ public class PlayerDetailPanel extends LazyImagePanel {
             editingPlayer.setNote(m_jtaNotes.getText());
         }
     }
-
-
 }
