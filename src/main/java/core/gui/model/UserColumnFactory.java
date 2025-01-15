@@ -962,7 +962,6 @@ final public class UserColumnFactory {
                 return getTrainerTransferEntry(player, 8);
             }
         };
-        // mother club name
         playerAdditionalArray[30] = new PlayerColumn(905, "ls.player.training.notes", 20) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
