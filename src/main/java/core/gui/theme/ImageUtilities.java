@@ -32,7 +32,7 @@ public class ImageUtilities {
     private static final Hashtable<Integer,ImageIcon> m_clPfeilCache = new Hashtable<>();
     private static final Hashtable<Integer,ImageIcon> m_clPfeilWideCache = new Hashtable<>();
     private static final Hashtable<Integer,ImageIcon> m_clPfeilLightCache = new Hashtable<>();
-    private static final Hashtable<Integer,ImageIcon> m_clPfeilWideLightCache = new Hashtable<>();
+//    private static final Hashtable<Integer,ImageIcon> m_clPfeilWideLightCache = new Hashtable<>();
 	public static ImageIcon MINILEER = new ImageIcon(new BufferedImage(8, 8, BufferedImage.TYPE_INT_ARGB));
 
 	public static ImageIcon getImageIcon4Change(int wert, boolean aktuell) {
@@ -233,7 +233,7 @@ public class ImageUtilities {
         }
         //In Cache
         else {
-			icon = m_clPfeilWideCache.get(keywert);
+ 			icon = m_clPfeilWideCache.get(keywert);
         }
         return icon;
     }
@@ -593,8 +593,8 @@ public class ImageUtilities {
 	}
 
 	public static Icon getScaledIcon(Icon icon, int width, int height) {
-		if (icon instanceof DerivableIcon derivableIcon) {
-			return derivableIcon.derive(width, height);
+		if (icon instanceof DerivableIcon) {
+			return ((DerivableIcon<Icon>) icon).derive(width, height);
 		} else {
 			return new DerivableImageIcon(iconToImage(icon), width, height, Image.SCALE_SMOOTH);
 		}
