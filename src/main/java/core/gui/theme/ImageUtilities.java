@@ -299,8 +299,10 @@ public class ImageUtilities {
 	}
 
 	public static ImageIcon getCountryFlagIcon(int iCountryID) {
-		WorldDetailLeague leagueDetail = WorldDetailsManager.instance().getWorldDetailLeagueByCountryId(iCountryID);
-	    if ( leagueDetail != null ) return getLeagueFlagIcon(leagueDetail.getLeagueId());
+		if (iCountryID > 0) {
+			WorldDetailLeague leagueDetail = WorldDetailsManager.instance().getWorldDetailLeagueByCountryId(iCountryID);
+			if (leagueDetail != null) return getLeagueFlagIcon(leagueDetail.getLeagueId());
+		}
 	    return  null;
 	}
 
