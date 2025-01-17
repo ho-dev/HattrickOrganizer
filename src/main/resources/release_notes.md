@@ -16,6 +16,7 @@
 * Calculation of the tsi sub by approximating the tsi formula (#235)
 * Fix display of best position rating (#2166)
 * Display coach conversion costs (#2204)
+* New column "trainer notes" (#2229)
 
 ### Team Analyzer
 
@@ -73,15 +74,15 @@
 
 ## Translations
 
-Reports by Contributors - June 23, 2024 - January 06, 2025
+Reports by Contributors - June 23, 2024 - January 08, 2025
 
 * Kristaps 322
 * Tavaro 175
-* Lidegang 143
+* Lidegang 157
 * wsbrenk 89
 * Moorhuhninho 25
 * Sebastian Reddig 12
 * Achilles 10
 * Billy Dikkanen 10
 
-Total 786
+Total 800

@@ -28,7 +28,7 @@ class PlayerOverviewTableModel(id: ColumnModelId, name: String) : HOTableModel(i
 
     init {
         val basic: Array<out PlayerColumn>? = UserColumnFactory.createPlayerBasicArray()
-        val columns : Array<UserColumn?> = arrayOfNulls(69)
+        val columns : Array<UserColumn?> = arrayOfNulls(70)
         columns[0] = basic?.get(0)
         columns[48] = basic?.get(1)
 
@@ -81,6 +81,7 @@ class PlayerOverviewTableModel(id: ColumnModelId, name: String) : HOTableModel(i
         columns[66] = additionalArray?.get(27)
         columns[67] = additionalArray?.get(28)
         columns[68] = additionalArray?.get(29)
+        columns[69] = additionalArray?.get(30)
 
         this.columns = columns.filterNotNull().toTypedArray()
         assert(this.columns.size == columns.size)
