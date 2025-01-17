@@ -157,7 +157,7 @@ public class HRFStringParser {
 					var ownTeamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 					if (hoModel.getBasics().getTeamId() != ownTeamId && ownTeamId != 0) {
 						HOLogger.instance().error(HOModel.class, "properties of other team can not be imported: " + hoModel.getBasics().getTeamName());
-						return null; // properties of foreign team
+						return hoModel; // properties of foreign team
 					}
 				}
 				// league
