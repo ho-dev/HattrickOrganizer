@@ -235,7 +235,8 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 						include = false;
 					}
 				}
-				if (include && ! hoModel.getCurrentLineup().isPlayerInStartingEleven(player.getPlayerId())) {
+				if (include &&
+						! hoModel.getCurrentLineup().isPlayerInStartingEleven(player.getPlayerId())) { // not already in current lineup
 					selectablePlayers.add(player);
 				}
 			}
