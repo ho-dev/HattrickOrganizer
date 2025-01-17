@@ -3,6 +3,7 @@ package module.training.ui;
 
 import core.constants.player.PlayerAbility;
 import core.constants.player.PlayerSkill;
+import core.gui.RefreshManager;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
@@ -66,8 +67,7 @@ public class PlayerDetailPanel extends LazyImagePanel {
     @Override
     protected void update() {
         if ( m_jtaNotes.isFocusOwner() ){
-            // Notes could be changed
-            saveNotes(m_jtaNotes.getText());
+            stopEdit();
         }
         loadFromModel();
     }
@@ -274,12 +274,12 @@ public class PlayerDetailPanel extends LazyImagePanel {
         m_jtaNotes.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
-                editingPlayer = model.getActivePlayer();
+                startEdit(model.getActivePlayer());
             }
 
             @Override
             public void focusLost(FocusEvent e) {
-                editingPlayer = null;
+                stopEdit();
             }
         });
 
@@ -299,6 +299,20 @@ public class PlayerDetailPanel extends LazyImagePanel {
         maingbc.gridy++;
         gbc.weighty = 1.0;
         add(dummyPanelToConsumeAllExtraSpace, maingbc);
+    }
+
+    private void startEdit(Player activePlayer) {
+        if (this.editingPlayer!=null) {
+            stopEdit();
+        }
+        this.editingPlayer = activePlayer;
+    }
+
+    private void stopEdit() {
+        if (this.editingPlayer != null){
+            saveNotes(m_jtaNotes.getText());
+            this.editingPlayer = null;
+        }
     }
 
     private void selectTraining(ActionEvent e, PlayerSkill skillIndex) {
@@ -324,8 +338,9 @@ public class PlayerDetailPanel extends LazyImagePanel {
     }
 
     private void saveNotes(String notes) {
-        if( editingPlayer!= null && !notes.equals(editingPlayer.getNote())){
-            editingPlayer.setNote(m_jtaNotes.getText());
+        if(editingPlayer!= null && !notes.equals(editingPlayer.getNote())){
+            editingPlayer.setNote(notes);
+            RefreshManager.instance().doReInit();
         }
     }
 }
