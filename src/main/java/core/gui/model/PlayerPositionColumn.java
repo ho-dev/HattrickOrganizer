@@ -32,10 +32,10 @@ public class PlayerPositionColumn extends PlayerColumn {
     /**
      * constructor
      *
-     * @param id
-     * @param name
-     * @param tooltip
-     * @param position
+     * @param id        User column identifier
+     * @param name      Column header string
+     * @param tooltip   Column tool tip
+     * @param position  Lineup position code
      */
     protected PlayerPositionColumn(int id, String name, String tooltip, byte position) {
         super(id, name, tooltip);
@@ -53,11 +53,11 @@ public class PlayerPositionColumn extends PlayerColumn {
     }
 
     /**
-     * returns player value
+     * Returns player value
      * overwritten by created columns
      *
-     * @param player
-     * @return
+     * @param player Player
+     * @return ColorLabelEntry
      */
     public ColorLabelEntry getEntryValue(Player player) {
         var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
@@ -75,10 +75,10 @@ public class PlayerPositionColumn extends PlayerColumn {
     }
 
     /**
-     * return a value if comparePlayer is not null
+     * Return a value if comparePlayer is not null
      *
-     * @param player
-     * @param comparePlayer
+     * @param player         Player
+     * @param comparePlayer  Player to compare with
      * @return ColorLabelEntry
      */
     public ColorLabelEntry getCompareValue(Player player, Player comparePlayer) {
