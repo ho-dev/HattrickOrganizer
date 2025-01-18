@@ -1,13 +1,12 @@
 package tool.dbencrypter
 
-import core.db.user.UserManager
 import core.model.TranslationFacility
-import tool.dbencrypter.encrypt.DbEncrypterManager
-import tool.dbencrypter.github.GithubApp
-import java.awt.*
+import java.awt.GridBagConstraints
+import java.awt.GridBagLayout
+import java.awt.Insets
 import javax.swing.*
 
-class DbEncrypterPanel : JPanel() {
+class DbEncrypterPanel(issueReporterManager: IssueReporterManager) : JPanel() {
 
 	init {
 		layout = GridBagLayout()
@@ -106,10 +105,10 @@ class DbEncrypterPanel : JPanel() {
 //			val encrypter = DbEncrypterManager(UserManager.instance())
 //			encrypter.encrypt()
 
-			val issueReporterManager = IssueReporterManager(
-				GithubApp(),
-				DbEncrypterManager(UserManager.instance())
-			)
+//			val issueReporterManager = IssueReporterManager(
+//				GithubApp(),
+//				DbEncrypterManager(UserManager.instance())
+//			)
 
 			issueReporterManager.reportIssue(
 				descriptionInput.text,
@@ -127,14 +126,4 @@ class DbEncrypterPanel : JPanel() {
 			println("Update")
 		}
 	}
-}
-
-fun main() {
-	val frame = JFrame()
-	frame.contentPane.layout = BorderLayout()
-	frame.size = Dimension(600, 300)
-	frame.defaultCloseOperation = JFrame.EXIT_ON_CLOSE
-
-	frame.contentPane.add(DbEncrypterPanel())
-	frame.isVisible = true
 }
