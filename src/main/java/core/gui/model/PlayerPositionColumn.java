@@ -5,6 +5,7 @@ import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.DoubleLabelEntries;
 import core.gui.comp.entry.IHOTableEntry;
 import core.model.HOVerwaltung;
+import core.model.UserParameter;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import core.util.Helper;
@@ -39,11 +40,12 @@ public class PlayerPositionColumn extends PlayerColumn {
     protected PlayerPositionColumn(int id, String name, String tooltip, byte position) {
         super(id, name, tooltip);
         this.position = position;
+        this.preferredWidth = UserParameter.instance().fontSize * 5;
     }
 
     /**
      * returns TableEntry
-     * will not be overwrite
+     * will not be overridden
      */
     @Override
     public IHOTableEntry getTableEntry(Player player, Player comparePlayer) {
