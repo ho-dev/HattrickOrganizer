@@ -2,6 +2,7 @@ package core.gui;
 
 import core.HO;
 import core.db.DBManager;
+import core.db.user.UserManager;
 import core.file.hrf.HRFImport;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.tabbedPane.HOTabbedPane;
@@ -31,7 +32,9 @@ import module.playeranalysis.PlayerAnalysisModulePanel;
 import module.transfer.TransfersPanel;
 import tool.ToolManager;
 import tool.dbcleanup.DBCleanupTool;
-import tool.dbencrypter.DbEncrypterDialog;
+import tool.dbencrypter.IssueReporterManager;
+import tool.dbencrypter.encrypt.DbEncrypterManager;
+import tool.dbencrypter.github.GithubApp;
 import tool.updater.UpdateController;
 
 import javax.swing.*;
@@ -434,9 +437,13 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 		helpMenu.add(bugReportMenuItem);
 		helpMenu.addSeparator();
 
-        final JMenuItem dbEncryptedExport = new JMenuItem(TranslationFacility.tr("Send Encrypted DB"));
+		final JMenuItem dbEncryptedExport = new JMenuItem(TranslationFacility.tr("Submit Issue"));
 		dbEncryptedExport.addActionListener(e -> {
-			new DbEncrypterDialog(HOMainFrame.instance());
+			IssueReporterManager reporterManager = new IssueReporterManager(
+				new GithubApp(),
+				new DbEncrypterManager(UserManager.instance())
+			);
+			reporterManager.launchDialog(HOMainFrame.instance());
 		});
 		helpMenu.add(dbEncryptedExport);
 
@@ -558,7 +565,7 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 			this.processWindowEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
 		});
 		fileMenu.add(quitMenuItem);
-        return fileMenu;
+		return fileMenu;
 	}
 
 	/**

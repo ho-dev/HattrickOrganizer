@@ -39,6 +39,8 @@ public final class UserParameter extends Configuration {
     public String AccessToken = "";
     public String TokenSecret = "";
 
+	public String githubAccessToken = "";
+
     public String ProxyAuthName = "";
     public String ProxyAuthPassword = "";
 
@@ -413,6 +415,7 @@ public final class UserParameter extends Configuration {
 
         map.put("AccessToken", String.valueOf(AccessToken));
         map.put("TokenSecret", String.valueOf(TokenSecret));
+		map.put("githubAccessToken", githubAccessToken);
 
         map.put("ProxyAuthName", String.valueOf(ProxyAuthName));
         map.put("ProxyAuthPassword", String.valueOf(ProxyAuthPassword));
@@ -654,9 +657,14 @@ public final class UserParameter extends Configuration {
     }
 
     @Override
+	/**
+	 * gets the values of a map, and initialises the corresponding instance variables in
+	 * <code>UserParameter</code>.
+	 */
     public void setValues(Map<String, String> values) {
         AccessToken = getStringValue(values, "AccessToken");
         TokenSecret = getStringValue(values, "TokenSecret");
+		githubAccessToken = getStringValue(values, "githubAccessToken");
 
         ProxyAuthName = getStringValue(values, "ProxyAuthName");
         ProxyAuthPassword = getStringValue(values, "ProxyAuthPassword");
@@ -907,7 +915,6 @@ public final class UserParameter extends Configuration {
      * Reads the legacy language {@code legacyLanguage} and returns the language.
      *
      * @return the language
-     *
      * @since 9.0 - added due to renaming the language {@code Deutsch} to {@code German}.
      */
     private static String readLegacyLanguage(String legacyLanguage) {

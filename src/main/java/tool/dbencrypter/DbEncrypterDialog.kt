@@ -5,7 +5,7 @@ import java.awt.BorderLayout
 import javax.swing.JDialog
 import javax.swing.JFrame
 
-internal class DbEncrypterDialog(private var owner: JFrame) : JDialog(owner, true) {
+class DbEncrypterDialog(val owner: JFrame, val reporterManager: IssueReporterManager) : JDialog(owner, true) {
 
 	init {
 		setSize(600, 400)
@@ -16,9 +16,17 @@ internal class DbEncrypterDialog(private var owner: JFrame) : JDialog(owner, tru
 	}
 
 	private fun initComponents() {
-		val mainPanel = DbEncrypterPanel()
+		val mainPanel = DbEncrypterPanel(reporterManager)
 		contentPane.layout = BorderLayout()
 		contentPane.add(mainPanel, BorderLayout.CENTER)
+	}
+
+	fun start() {
 		isVisible = true
+	}
+
+	fun close() {
+		isVisible = false
+		dispose()
 	}
 }
