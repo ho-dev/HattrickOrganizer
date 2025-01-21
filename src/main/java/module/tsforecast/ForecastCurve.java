@@ -43,14 +43,11 @@ import static java.lang.Integer.parseInt;
 
 abstract class ForecastCurve extends Curve {
 
-	public static final boolean FUTURE = true;
-	public static final boolean PAST = false;
-
+	// TODO: General spirit of nt teams is at 5.0
 	protected double m_dGeneralSpirit = 4.5D;
-	protected double m_dTrainerLeadership = 0.6D;
 	protected int m_iNoWeeksForecast = 4;
 
-	public ForecastCurve(DBManager dbManager, boolean future) throws SQLException {
+	public ForecastCurve(DBManager dbManager, boolean future) {
 		super(dbManager);
 		if (future)
 			readFutureMatches();
@@ -84,10 +81,6 @@ abstract class ForecastCurve extends Curve {
 					m_clPoint.m_iAttitude = parseInt(value);
 			}
 		}
-	}
-
-	public double getGeneralSpirit() {
-		return m_dGeneralSpirit;
 	}
 
 	public void setGeneralSpirit(double d) throws Exception {
@@ -238,7 +231,7 @@ abstract class ForecastCurve extends Curve {
 			types.add(MatchType.LEAGUE.getId());
 			var matches = dbManager.getMatchesKurzInfo(ibasics.getTeamId(), MatchKurzInfo.FINISHED, start, types );
 
-			int iMatchDay = 0;
+			int iMatchDay;
 			HODateTime maxDate = null;
 
 			Curve.Point point;
