@@ -33,10 +33,7 @@ import core.util.HODateTime;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.Properties;
+import java.util.*;
 
 import static java.lang.Integer.parseInt;
 
@@ -145,106 +142,87 @@ abstract class ForecastCurve extends Curve {
 		}
 	}
 
-	// -- protected
-	// ----------------------------------------------------------------------
-
 	protected abstract double forecastUpdate(Curve.Point point1,
 			Curve.Point point2) throws Exception;
 
-	// -- private
-	// ------------------------------------------------------------------------
-
-	private void readFutureMatches() throws SQLException {
+	private void readFutureMatches() {
 		Basics ibasics = HOVerwaltung.instance().getModel().getBasics();
-		Liga iliga = HOVerwaltung.instance().getModel().getLeague();
+		if (ibasics == null) return;
 
 		// MASTERS_MATCH 7 ???
 
-		// find last match (League, Cup or Qualification)
-		if (ibasics != null && iliga != null) {
-			var matchesKurzInfo = dbManager.getMatchesKurzInfo(
-					"where (HEIMID=? or GASTID=?) and MATCHDATE = (select MAX(MATCHDATE) from MATCHESKURZINFO where (HEIMID=? or GASTID=?) and (MATCHTYP=? or MATCHTYP=? or MATCHTYP=?) and STATUS=1)",
-							ibasics.getTeamId(),
-					ibasics.getTeamId(),
-					ibasics.getTeamId(),
-					ibasics.getTeamId(),
-					MatchType.LEAGUE.getId(),
-					MatchType.QUALIFICATION.getId(),
-					MatchType.CUP.getId()
-			);
-
-			if (!matchesKurzInfo.isEmpty()) {
-				var match = matchesKurzInfo.get(0);
-				short start = 0;
-				Curve.Point point;
-				var matchDate = match.getMatchSchedule();
-				MatchType lastMatchType = match.getMatchType();
-				point = new Curve.Point(matchDate,
-						IMatchDetails.EINSTELLUNG_NORMAL,
-						ibasics.getSpieltag(), lastMatchType);
-				m_clPoints.add(point);
-				addUpdatePoints(point);
-				if (lastMatchType == MatchType.LEAGUE) {
-					start = -1;
-				}
-
-				// 14 Ligaspiele
-				// Relegation am 15. Spieltag
-				// Pokalrunde 1 ist Die vor 1. Ligaspiel
-				// 16 Pokalrunden
-				// P0 L1 P1 L2 P2 L3 P3 L4 P4 L5 P5 L6 P6 L7 P7 L8 P8 L9 P9 L0
-				// P0 L1 P1 L2 P2 L3 P3 L4 P4 Rel P5 Reset P0
-				// Masters ?
-
-				for (short s = start; s < m_iNoWeeksForecast; s++) { // 16 weeks
-																		// ahead
-
-					if (lastMatchType == MatchType.CUP) { // add League Match
-						// SUNDAY = 0
-						matchDate = matchDate.plus( Calendar.SATURDAY - Calendar.TUESDAY - 1, ChronoUnit.DAYS);
-						switch (ibasics.getSpieltag() + s) {
-							case 16 -> point = new Point(matchDate,	TEAM_SPIRIT_RESET, RESET_PT);
-							case 15 -> {
-								point = new Point(matchDate,
-										IMatchDetails.EINSTELLUNG_NORMAL,
-										ibasics.getSpieltag() + s,
-										MatchType.QUALIFICATION);
-								point.m_strTooltip = TranslationFacility.tr(
-												"ls.match.matchtype.qualification");
-							}
-							default -> {
-								point = new Point(matchDate,
-										IMatchDetails.EINSTELLUNG_NORMAL,
-										ibasics.getSpieltag() + s, MatchType.LEAGUE);
-								point.m_strTooltip = (ibasics.getSpieltag() + s)
-										+ ". "
-										+ TranslationFacility.tr(
-												"ls.match.matchtype.league");
-							}
-						}
-						m_clPoints.add(point);
-						addUpdatePoints(point);
-					}
-					// add Cup Match
-					matchDate = matchDate.plus( Calendar.TUESDAY + 1, ChronoUnit.DAYS);
-					point = new Curve.Point(matchDate,
-							IMatchDetails.EINSTELLUNG_NORMAL,
-							ibasics.getSpieltag() + s, MatchType.CUP);
-					point.m_strTooltip = (ibasics.getSpieltag() + s)
-							+ ". "
-							+ TranslationFacility.tr(
-							"ls.match.matchtype.cup");
-					m_clPoints.add(point);
-					addUpdatePoints(point);
-					lastMatchType = MatchType.CUP;
-
+		var teamId = ibasics.getTeamId();
+		var matches = DBManager.instance().getMatchesKurzInfo(teamId, MatchKurzInfo.UPCOMING);
+		if (matches.isEmpty()) return;
+		var cupMatch = matches.stream().filter(i -> i.getMatchType() == MatchType.CUP).findAny();
+		if (cupMatch.isEmpty()) {
+			// no upcoming cup match found (might be not yet loaded)
+			var latestCupMatch = dbManager.getMatchesKurzInfo("where (HEIMID=? or GASTID=?) and MATCHTYP=? ORDER BY MATCHDATE desc LIMIT 1 ", teamId, teamId, MatchType.CUP.getId());
+			if (!latestCupMatch.isEmpty()) {
+				var match = latestCupMatch.get(0);
+				// check if it was won
+				if (teamId == match.getHomeTeamID() && match.getHomeTeamGoals() > match.getGuestTeamGoals() ||
+						teamId == match.getGuestTeamID() && match.getGuestTeamGoals() > match.getHomeTeamGoals()) {
+					cupMatch = java.util.Optional.of(match);
 				}
 			}
-			// Daten mit Datenbankdaten anreichern
+		}
+
+		if (cupMatch.isPresent()) {
+			// create future cup match dates
+			for (int i = 0; i < m_iNoWeeksForecast; i++) {
+				var nextPossibleCupMatch = new MatchKurzInfo();
+				nextPossibleCupMatch.setMatchType(MatchType.CUP);
+				nextPossibleCupMatch.setMatchSchedule(cupMatch.get().getMatchSchedule().plus(7, ChronoUnit.DAYS));
+				matches.add(nextPossibleCupMatch);
+				cupMatch = java.util.Optional.of(nextPossibleCupMatch);
+			}
+		}
+
+		var matchSorted = matches.stream().sorted(Comparator.comparing(MatchKurzInfo::getMatchSchedule)).toList();
+		var toDate = ibasics.getDatum().plus(7 * m_iNoWeeksForecast, ChronoUnit.DAYS);
+		for (var match : matchSorted) {
+			var matchDate = match.getMatchSchedule();
+			if (matchDate.isAfter(toDate)) break;
+
+			var htweek = matchDate.toHTWeek();
+			Curve.Point point;
+			if (match.getMatchType() == MatchType.LEAGUE) {
+				switch (htweek.week) {
+					case 16 -> point = new Point(matchDate, TEAM_SPIRIT_RESET, RESET_PT);
+					case 15 -> {
+						point = new Point(matchDate,
+								IMatchDetails.EINSTELLUNG_NORMAL,
+								htweek.week,
+								MatchType.QUALIFICATION);
+						point.m_strTooltip = TranslationFacility.tr("ls.match.matchtype.qualification");
+					}
+					default -> {
+						point = new Point(matchDate,
+								IMatchDetails.EINSTELLUNG_NORMAL,
+								htweek.week, MatchType.LEAGUE);
+						point.m_strTooltip = (htweek.week)
+								+ ". "
+								+ TranslationFacility.tr("ls.match.matchtype.league");
+					}
+				}
+				m_clPoints.add(point);
+				addUpdatePoints(point);
+			} else if (match.getMatchType() == MatchType.CUP) {
+				// add Cup Match
+				point = new Curve.Point(matchDate,
+						IMatchDetails.EINSTELLUNG_NORMAL,
+						htweek.week, MatchType.CUP);
+				point.m_strTooltip = htweek.week
+						+ ". "
+						+ TranslationFacility.tr("ls.match.matchtype.cup");
+				m_clPoints.add(point);
+				addUpdatePoints(point);
+			}
 		}
 	}
 
-	private void readPastMatches() throws SQLException {
+	private void readPastMatches() {
 		Basics ibasics = HOVerwaltung.instance().getModel().getBasics();
 		Liga iliga = HOVerwaltung.instance().getModel().getLeague();
 		if (iliga != null) {

@@ -74,15 +74,15 @@
 
 ## Translations
 
-Reports by Contributors - June 23, 2024 - January 08, 2025
+Reports by Contributors - June 23, 2024 - January 20, 2025
 
 * Kristaps 322
 * Tavaro 175
-* Lidegang 157
-* wsbrenk 89
+* Lidegang 158
+* wsbrenk 91
 * Moorhuhninho 25
 * Sebastian Reddig 12
 * Achilles 10
 * Billy Dikkanen 10
 
-Total 800
+Total 803
