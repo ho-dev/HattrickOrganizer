@@ -23,6 +23,7 @@ package module.tsforecast;
 import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
+import core.model.cup.CupLevel;
 import core.model.enums.MatchType;
 import core.model.match.IMatchDetails;
 import core.model.match.MatchKurzInfo;
@@ -154,10 +155,12 @@ abstract class ForecastCurve extends Curve {
 		var teamId = ibasics.getTeamId();
 		var matches = DBManager.instance().getMatchesKurzInfo(teamId, MatchKurzInfo.UPCOMING);
 		if (matches.isEmpty()) return;
-		var cupMatch = matches.stream().filter(i -> i.getMatchType() == MatchType.CUP).findAny();
+		var cupMatch = matches.stream().filter(i -> i.getMatchType() == MatchType.CUP && i.getCupLevel() == CupLevel.NATIONALorDIVISIONAL).findAny();
 		if (cupMatch.isEmpty()) {
 			// no upcoming cup match found (might be not yet loaded)
-			var latestCupMatch = dbManager.getMatchesKurzInfo("where (HEIMID=? or GASTID=?) and MATCHTYP=? ORDER BY MATCHDATE desc LIMIT 1 ", teamId, teamId, MatchType.CUP.getId());
+			var latestCupMatch = dbManager.getMatchesKurzInfo(
+					"where (HEIMID=? or GASTID=?) and MATCHTYP=? and CUPLEVEL=? ORDER BY MATCHDATE desc LIMIT 1 ",
+					teamId, teamId, MatchType.CUP.getId(), CupLevel.NATIONALorDIVISIONAL.getId());
 			if (!latestCupMatch.isEmpty()) {
 				var match = latestCupMatch.get(0);
 				// check if it was won
@@ -171,11 +174,12 @@ abstract class ForecastCurve extends Curve {
 		if (cupMatch.isPresent()) {
 			// create future cup match dates
 			for (int i = 0; i < m_iNoWeeksForecast; i++) {
-				var nextPossibleCupMatch = new MatchKurzInfo();
-				nextPossibleCupMatch.setMatchType(MatchType.CUP);
-				nextPossibleCupMatch.setMatchSchedule(cupMatch.get().getMatchSchedule().plus(7, ChronoUnit.DAYS));
-				matches.add(nextPossibleCupMatch);
-				cupMatch = java.util.Optional.of(nextPossibleCupMatch);
+				var potentialCupMatch = new MatchKurzInfo();
+				potentialCupMatch.setMatchType(MatchType.CUP);
+				potentialCupMatch.setMatchStatus(-1);
+				potentialCupMatch.setMatchSchedule(cupMatch.get().getMatchSchedule().plus(7, ChronoUnit.DAYS));
+				matches.add(potentialCupMatch);
+				cupMatch = java.util.Optional.of(potentialCupMatch);
 			}
 		}
 
@@ -208,14 +212,16 @@ abstract class ForecastCurve extends Curve {
 				}
 				m_clPoints.add(point);
 				addUpdatePoints(point);
-			} else if (match.getMatchType() == MatchType.CUP) {
+			} else if (match.getMatchType() == MatchType.CUP && match.getCupLevel() == CupLevel.NATIONALorDIVISIONAL) {
+				var matchTypTooltip = new StringBuilder("ls.match.matchtype.cup");
+				if (match.getMatchStatus() == -1) matchTypTooltip.append(".potential");
 				// add Cup Match
 				point = new Curve.Point(matchDate,
 						IMatchDetails.EINSTELLUNG_NORMAL,
 						htweek.week, MatchType.CUP);
 				point.m_strTooltip = htweek.week
 						+ ". "
-						+ TranslationFacility.tr("ls.match.matchtype.cup");
+						+ TranslationFacility.tr(matchTypTooltip.toString());
 				m_clPoints.add(point);
 				addUpdatePoints(point);
 			}
