@@ -30,8 +30,6 @@ import core.model.match.MatchKurzInfo;
 import core.model.misc.Basics;
 import core.model.series.Liga;
 import core.util.HODateTime;
-
-import java.sql.SQLException;
 import java.text.DateFormat;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
@@ -72,19 +70,6 @@ abstract class ForecastCurve extends Curve {
 		if (pos >= 0 && pos < m_clPoints.size()) {
 			(m_clPoints.get(pos)).m_iAttitude = a;
 			forecast(pos);
-		}
-	}
-
-	public void setAttitudes(Properties properties) {
-		for (Point m_clPoint : m_clPoints) {
-			if (m_clPoint.m_mtMatchType != UNKNOWN_MATCH) {
-				String str = "Match_"
-						+ DateFormat.getDateInstance(DateFormat.SHORT).format(
-						m_clPoint.m_dDate);
-				String value = properties.getProperty(str);
-				if (value != null)
-					m_clPoint.m_iAttitude = parseInt(value);
-			}
 		}
 	}
 

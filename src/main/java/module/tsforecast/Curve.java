@@ -20,7 +20,6 @@ package module.tsforecast;
  * @author  michael.roux
  */
 
-import core.db.ConnectionManager;
 import core.db.DBManager;
 import core.model.match.IMatchDetails;
 import core.model.enums.MatchType;
@@ -35,7 +34,6 @@ class Curve {
 
 	static final int WEEKS_BACK = 26;
 
-	static final int RESET = -1;
 	static final MatchType UNKNOWN_MATCH = MatchType.NONE;
 
 	static final double TEAM_SPIRIT_UNKNOWN = -1D;
@@ -146,10 +144,6 @@ class Curve {
 		return m_currentPoint.m_mtMatchType;
 	}
 
-	int getMatchDay() {
-		return m_currentPoint.m_iMatchDay;
-	}
-
 	String getTooltip() {
 		return m_currentPoint.m_strTooltip;
 	}
@@ -164,10 +158,6 @@ class Curve {
 
 	void setColor(Color color) {
 		m_Color = color;
-	}
-
-	Point getFirstPoint() {
-		return m_clPoints.get(0);
 	}
 
 	Point getLastPoint() {
