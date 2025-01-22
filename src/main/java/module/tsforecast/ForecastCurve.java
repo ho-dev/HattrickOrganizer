@@ -43,17 +43,22 @@ import static java.lang.Integer.parseInt;
 
 abstract class ForecastCurve extends Curve {
 
-	// TODO: General spirit of nt teams is at 5.0
 	protected double m_dGeneralSpirit = 4.5D;
 	protected int m_iNoWeeksForecast = 4;
 
 	public ForecastCurve(DBManager dbManager, boolean future) {
 		super(dbManager);
-		if (future)
-			readFutureMatches();
-		else
-			readPastMatches();
-		Collections.sort(m_clPoints);
+		var basics = HOVerwaltung.instance().getModel().getBasics();
+		if (basics != null) {
+			if (basics.isNationalTeam()) {
+				m_dGeneralSpirit = 5D;
+			}
+			if (future)
+				readFutureMatches();
+			else
+				readPastMatches();
+			Collections.sort(m_clPoints);
+		}
 	}
 
 	public void setSpirit(int pos, double spirit) throws Exception {
@@ -117,7 +122,7 @@ abstract class ForecastCurve extends Curve {
 					point2.m_dSpirit = point1.m_dSpirit;
 				} else {
 					if (point2.m_iPointType == RESET_PT)
-						point2.m_dSpirit = TEAM_SPIRIT_RESET;
+						point2.m_dSpirit = m_dGeneralSpirit;
 					else if (point1.m_iAttitude == IMatchDetails.EINSTELLUNG_PIC)
 						point2.m_dSpirit = point1.m_dSpirit + point1.m_dSpirit
 								/ 3D;
@@ -186,7 +191,7 @@ abstract class ForecastCurve extends Curve {
 			Curve.Point point;
 			if (match.getMatchType() == MatchType.LEAGUE) {
 				switch (htweek.week) {
-					case 16 -> point = new Point(matchDate, TEAM_SPIRIT_RESET, RESET_PT);
+					case 16 -> point = new Point(matchDate, m_dGeneralSpirit, RESET_PT);
 					case 15 -> {
 						point = new Point(matchDate,
 								IMatchDetails.EINSTELLUNG_NORMAL,
@@ -314,7 +319,7 @@ abstract class ForecastCurve extends Curve {
 			pointDate = pointDate.plus( 7, ChronoUnit.DAYS); // Matchday 16
 
 			if (maxDate.isAfter(pointDate)) {
-				p = new Curve.Point(pointDate, TEAM_SPIRIT_RESET, RESET_PT);
+				p = new Curve.Point(pointDate, m_dGeneralSpirit, RESET_PT);
 				m_clPoints.add(p);
 				addUpdatePoints(p, true);
 			}

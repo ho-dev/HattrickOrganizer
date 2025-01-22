@@ -39,7 +39,6 @@ class Curve {
 	static final MatchType UNKNOWN_MATCH = MatchType.NONE;
 
 	static final double TEAM_SPIRIT_UNKNOWN = -1D;
-	static final double TEAM_SPIRIT_RESET = 4.5D;
 
 	static final int STANDARD_PT = 0;
 	static final int RESET_PT = 1;
