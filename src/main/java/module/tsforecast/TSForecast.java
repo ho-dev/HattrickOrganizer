@@ -303,6 +303,7 @@ public class TSForecast extends LazyImagePanel implements ActionListener, ItemLi
 		boolean bshowCupMatches = ModuleConfig.instance().getBoolean(TS_SHOWCUPMATCHES);
 		boolean bshowQualMatches = ModuleConfig.instance().getBoolean(TS_SHOWQUALIFICATIONMATCH);
 
+		// TODO: Add option to set future training intensity settings
 		for (boolean flag = m_LoepiForecast.first() && m_LoepiForecast.next(); flag;) {
 			if (m_LoepiForecast.getAttitude() != IMatchDetails.EINSTELLUNG_UNBEKANNT) {
 				if (m_LoepiForecast.getMatchType() == MatchType.LEAGUE

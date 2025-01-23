@@ -142,6 +142,7 @@ protected void paintComponent( Graphics g) {
   }
 
 
+  // TODO: Add tooltip and markers for each match (including friendlies)
   private void drawCurve( Graphics2D graphics2d, Curve curve) {
     graphics2d.setColor( curve.getColor());
     if(curve.first()) {
@@ -158,15 +159,17 @@ protected void paintComponent( Graphics g) {
         x = (double)Duration.between(m_startDate.instant, curveDate.instant).toHours()/24D + dayOffset;
         iSpirit = (int)((curve.getSpirit() * (double)m_iMaxY) / m_dValues);
 
+        // TODO: Image of match type + tooltip of match information
+
         if( curve.getPointType() == Curve.RESET_PT) {
-          graphics2d.drawString( "R", (int)(x * m_dFactor + (double)m_iCoordX0), m_iMaxY + DYFrame - 2 - iSpirit);
+          graphics2d.drawString( "Reset", (int)(x * m_dFactor + (double)m_iCoordX0), m_iMaxY + DYFrame - 2 - iSpirit);
         }
         else if( curve.getAttitude() != IMatchDetails.EINSTELLUNG_NORMAL
               && curve.getAttitude() != IMatchDetails.EINSTELLUNG_UNBEKANNT) {
           if( curve.getAttitude() == IMatchDetails.EINSTELLUNG_PIC)
-            graphics2d.drawString( "P", (int)(x * m_dFactor + (double)m_iCoordX0), m_iMaxY + DYFrame - 2 - iSpirit);
+            graphics2d.drawString( "PIC", (int)(x * m_dFactor + (double)m_iCoordX0), m_iMaxY + DYFrame + UserParameter.instance().fontSize + 2 - iSpirit);
           else
-            graphics2d.drawString("M", (int)(x * m_dFactor + (double)m_iCoordX0), m_iMaxY + DYFrame - 2 - iSpirit);
+            graphics2d.drawString("MOTS", (int)(x * m_dFactor + (double)m_iCoordX0), m_iMaxY + DYFrame - 2 - iSpirit);
         }
 
         polygon1.addPoint((int)(x * m_dFactor + (double)m_iCoordX0), m_iMaxY + DYFrame - iSpirit);

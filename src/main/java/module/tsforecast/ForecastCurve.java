@@ -30,11 +30,8 @@ import core.model.match.MatchKurzInfo;
 import core.model.misc.Basics;
 import core.model.series.Liga;
 import core.util.HODateTime;
-import java.text.DateFormat;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-
-import static java.lang.Integer.parseInt;
 
 // Referenced classes of package hoplugins.tsforecast:
 //            Curve
@@ -95,6 +92,7 @@ abstract class ForecastCurve extends Curve {
 		super.addPoint(i, point);
 	}
 
+	// TODO: Add impact of training intensity settings
 	public void forecast(int pos) throws Exception {
 		if (m_clPoints.size() > pos) {
 			Curve.Point point1 = m_clPoints.get(pos);
@@ -129,6 +127,7 @@ abstract class ForecastCurve extends Curve {
 	protected abstract double forecastUpdate(Curve.Point point1,
 			Curve.Point point2) throws Exception;
 
+	// TODO: Add training events (Intensity)
 	private void readFutureMatches() {
 		Basics ibasics = HOVerwaltung.instance().getModel().getBasics();
 		if (ibasics == null) return;
@@ -166,9 +165,9 @@ abstract class ForecastCurve extends Curve {
 			}
 		}
 
-		var matchSorted = matches.stream().sorted(Comparator.comparing(MatchKurzInfo::getMatchSchedule)).toList();
+		var matchesSorted = matches.stream().sorted(Comparator.comparing(MatchKurzInfo::getMatchSchedule)).toList();
 		var toDate = ibasics.getDatum().plus(7 * m_iNoWeeksForecast, ChronoUnit.DAYS);
-		for (var match : matchSorted) {
+		for (var match : matchesSorted) {
 			var matchDate = match.getMatchSchedule();
 			if (matchDate.isAfter(toDate)) break;
 
