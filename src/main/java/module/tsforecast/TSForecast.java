@@ -22,7 +22,6 @@ import java.math.BigDecimal;
 public class TSForecast extends LazyImagePanel implements ActionListener, ItemListener {
 	private final DBManager dbManager;
 
-	private static final long serialVersionUID = 1L;
 	static final String TS_SHOWCUPMATCHES = "TS_ShowCupMatches";
 	static final String TS_SHOWQUALIFICATIONMATCH = "TS_ShowQualificationMatch";
 	static final String TS_HISTORY = "TS_History";
