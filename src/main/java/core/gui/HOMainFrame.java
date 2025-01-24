@@ -39,6 +39,7 @@ import tool.updater.UpdateController;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -453,7 +454,7 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 		helpMenu.add(checkUpdateMuenuItem);// Help | check update
 
 		final JMenuItem changelogMenuItem = new JMenuItem(TranslationFacility.tr("ls.menu.help.changelog"));
-		changelogMenuItem.addActionListener(e -> {
+		changelogMenuItem.addActionListener((ActionEvent e) -> {
 			if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
 				try {
 					File jarFile = new File(this.getClass().getProtectionDomain().getCodeSource().getLocation().toURI());

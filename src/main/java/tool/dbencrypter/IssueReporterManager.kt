@@ -4,6 +4,9 @@ import tool.dbencrypter.encrypt.DbEncrypterManager
 import tool.dbencrypter.github.GithubApp
 import javax.swing.JFrame
 
+/**
+ * Main class of the issue reporter tool.
+ */
 class IssueReporterManager(private val githubApp: GithubApp, private val dbEncrypterManager: DbEncrypterManager) {
 
 	fun launchDialog(owner: JFrame) {
