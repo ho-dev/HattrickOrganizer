@@ -102,14 +102,6 @@ class DbEncrypterPanel(issueReporterManager: IssueReporterManager) : JPanel() {
 
 		val encryptButton = JButton(TranslationFacility.tr("reporter.encrypt"))
 		encryptButton.addActionListener { _ ->
-//			val encrypter = DbEncrypterManager(UserManager.instance())
-//			encrypter.encrypt()
-
-//			val issueReporterManager = IssueReporterManager(
-//				GithubApp(),
-//				DbEncrypterManager(UserManager.instance())
-//			)
-
 			issueReporterManager.reportIssue(
 				descriptionInput.text,
 				summaryInput.text,
