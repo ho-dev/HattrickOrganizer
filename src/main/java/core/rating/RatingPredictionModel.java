@@ -1748,6 +1748,6 @@ public class RatingPredictionModel {
         }
         a *= f / n;
         // 0,017272a + 1,042313
-        return 0.01727 * a + 1.042313;
+        return 0.017272 * a + 1.042313;
     }
 }

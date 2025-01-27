@@ -17,6 +17,7 @@
 * Fix display of best position rating (#2166)
 * Display coach conversion costs (#2204)
 * New column "trainer notes" (#2229)
+* Fix initial size of skill and position columns (#2217)
 * Fix long shot rating calculation (#2237)
 
 ### Team Analyzer

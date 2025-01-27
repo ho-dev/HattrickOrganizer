@@ -116,7 +116,7 @@ class PlayerOverviewTableModel(id: ColumnModelId, name: String) : HOTableModel(i
     }
 
     fun getPlayerAtRow(tableRow: Int): Player? {
-        if (players != null && tableRow > -1) {
+        if (players != null && tableRow > -1 && tableRow < players!!.size) {
             val modelIndex = table!!.convertRowIndexToModel(tableRow)
             if (modelIndex < players!!.size) {
                 return players!![modelIndex]

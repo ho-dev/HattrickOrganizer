@@ -5,6 +5,7 @@ import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.DoubleLabelEntries;
 import core.gui.comp.entry.IHOTableEntry;
 import core.model.HOVerwaltung;
+import core.model.UserParameter;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import core.util.Helper;
@@ -31,19 +32,20 @@ public class PlayerPositionColumn extends PlayerColumn {
     /**
      * constructor
      *
-     * @param id
-     * @param name
-     * @param tooltip
-     * @param position
+     * @param id        User column identifier
+     * @param name      Column header string
+     * @param tooltip   Column tool tip
+     * @param position  Lineup position code
      */
     protected PlayerPositionColumn(int id, String name, String tooltip, byte position) {
         super(id, name, tooltip);
         this.position = position;
+        this.preferredWidth = UserParameter.instance().fontSize * 5;
     }
 
     /**
      * returns TableEntry
-     * will not be overwrite
+     * will not be overridden
      */
     @Override
     public IHOTableEntry getTableEntry(Player player, Player comparePlayer) {
@@ -51,11 +53,11 @@ public class PlayerPositionColumn extends PlayerColumn {
     }
 
     /**
-     * returns player value
+     * Returns player value
      * overwritten by created columns
      *
-     * @param player
-     * @return
+     * @param player Player
+     * @return ColorLabelEntry
      */
     public ColorLabelEntry getEntryValue(Player player) {
         var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
@@ -73,10 +75,10 @@ public class PlayerPositionColumn extends PlayerColumn {
     }
 
     /**
-     * return a value if comparePlayer is not null
+     * Return a value if comparePlayer is not null
      *
-     * @param player
-     * @param comparePlayer
+     * @param player         Player
+     * @param comparePlayer  Player to compare with
      * @return ColorLabelEntry
      */
     public ColorLabelEntry getCompareValue(Player player, Player comparePlayer) {
