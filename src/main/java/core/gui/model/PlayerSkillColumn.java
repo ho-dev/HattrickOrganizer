@@ -5,6 +5,7 @@ import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.DoubleLabelEntries;
 import core.gui.comp.entry.IHOTableEntry;
 import core.gui.comp.entry.SkillEntry;
+import core.model.UserParameter;
 import core.model.player.Player;
 import core.util.Helper;
 
@@ -38,6 +39,7 @@ public class PlayerSkillColumn extends PlayerColumn {
 	protected PlayerSkillColumn(int id,String name, String tooltip,PlayerSkill skill){
 		super(id,name,tooltip);
 		this.skill = skill;
+		this.preferredWidth = UserParameter.instance().fontSize * 5;
 		background = (skill == PlayerSkill.EXPERIENCE
 				||  skill == PlayerSkill.FORM
 				|| skill == PlayerSkill.LEADERSHIP
