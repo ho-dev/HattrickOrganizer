@@ -1,6 +1,6 @@
 ## Highlights
 
-* Calculation of the tsi sub by approximating the tsi formula (#235)
+* Calculation of the form sub by approximating the tsi formula (#235)
 * Restoring user's table sorting settings (#2119)
 * Display coach conversion costs (#2204)
 
@@ -13,7 +13,7 @@
 
 ### Squad
 
-* Calculation of the tsi sub by approximating the tsi formula (#235)
+* Calculation of the form sub by approximating the tsi formula (#235)
 * Fix display of best position rating (#2166)
 * Display coach conversion costs (#2204)
 * New column "trainer notes" (#2229)
