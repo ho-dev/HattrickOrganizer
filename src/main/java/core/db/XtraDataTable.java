@@ -22,7 +22,12 @@ final class XtraDataTable extends AbstractTable {
 				ColumnDescriptor.Builder.newInstance().setColumnName("TrainingDate").setGetter((p) -> ((XtraData) p).getNextTrainingDate().toDbTimestamp()).setSetter((p, v) -> ((XtraData) p).setTrainingDate((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("EconomyDate").setGetter((p) -> ((XtraData) p).getEconomyDate().toDbTimestamp()).setSetter((p, v) -> ((XtraData) p).setEconomyDate((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("LeagueLevelUnitID").setGetter((p) -> ((XtraData) p).getLeagueLevelUnitID()).setSetter((p, v) -> ((XtraData) p).setLeagueLevelUnitID((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("CountryId").setGetter((p) -> ((XtraData) p).getCountryId()).setSetter((p, v) -> ((XtraData) p).setCountryId((Integer) v)).setType(Types.INTEGER).isNullable(true).build()
+				ColumnDescriptor.Builder.newInstance().setColumnName("CountryId").setGetter((p) -> ((XtraData) p).getCountryId()).setSetter((p, v) -> ((XtraData) p).setCountryId((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("DailyUpdate1").setGetter((p) -> ((XtraData) p).getDailyUpdates().get(0).toDbTimestamp()).setSetter((p, v) -> ((XtraData) p).setDailyUpdate(0, (HODateTime) v)).setType(Types.TIMESTAMP).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("DailyUpdate2").setGetter((p) -> ((XtraData) p).getDailyUpdates().get(0).toDbTimestamp()).setSetter((p, v) -> ((XtraData) p).setDailyUpdate(1, (HODateTime) v)).setType(Types.TIMESTAMP).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("DailyUpdate3").setGetter((p) -> ((XtraData) p).getDailyUpdates().get(0).toDbTimestamp()).setSetter((p, v) -> ((XtraData) p).setDailyUpdate(2, (HODateTime) v)).setType(Types.TIMESTAMP).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("DailyUpdate4").setGetter((p) -> ((XtraData) p).getDailyUpdates().get(0).toDbTimestamp()).setSetter((p, v) -> ((XtraData) p).setDailyUpdate(3, (HODateTime) v)).setType(Types.TIMESTAMP).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("DailyUpdate5").setGetter((p) -> ((XtraData) p).getDailyUpdates().get(0).toDbTimestamp()).setSetter((p, v) -> ((XtraData) p).setDailyUpdate(4, (HODateTime) v)).setType(Types.TIMESTAMP).isNullable(true).build()
 		};
 	}
 

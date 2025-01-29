@@ -4,6 +4,7 @@ import core.db.AbstractTable;
 import core.util.HODateTime;
 import org.apache.commons.lang3.math.NumberUtils;
 
+import java.util.ArrayList;
 import java.util.Properties;
 
 public class XtraData extends AbstractTable.Storable {
@@ -28,6 +29,8 @@ public class XtraData extends AbstractTable.Storable {
     private int m_iLeagueLevelUnitID = -1;
     private int hrfId;
 
+    private ArrayList<HODateTime> dailyUpdates;
+
     //~ Constructors -------------------------------------------------------------------------------
 
     /**
@@ -42,6 +45,11 @@ public class XtraData extends AbstractTable.Storable {
         m_clEconomyDate = HODateTime.fromHT(properties.getProperty("economydate"));
         m_TrainingDate = HODateTime.fromHT(properties.getProperty("trainingdate"));
         m_iLeagueLevelUnitID = getInteger(properties, "leaguelevelunitid", -1);
+
+        dailyUpdates = new ArrayList<>();
+        for (int i=1; i<6; ++i){
+            dailyUpdates.add(HODateTime.fromHT(properties.getProperty("dailyupdate" + i, "")));
+        }
     }
 
     private Integer getInteger(Properties properties, String key, Integer def) {
@@ -201,5 +209,26 @@ public class XtraData extends AbstractTable.Storable {
 
     public void setHrfId(int hrfId) {
         this.hrfId = hrfId;
+    }
+
+    public HODateTime getLatestDailyUpdateDateBeforeTraining() {
+        if (!dailyUpdates.isEmpty()) {
+            return dailyUpdates.stream().filter(i->i != null && i.isBefore(m_TrainingDate)).max(HODateTime::compareTo).orElse(null);
+        }
+        return null;
+    }
+
+    public ArrayList<HODateTime> getDailyUpdates() {return dailyUpdates;}
+
+    public void setDailyUpdate(int update, HODateTime v) {
+        if ( update < 5) {
+            if (dailyUpdates == null) {
+                dailyUpdates = new ArrayList<>();
+                for (int i = 0; i < 5; i++) {
+                    dailyUpdates.add(null);
+                }
+            }
+            dailyUpdates.set(update, v);
+        }
     }
 }

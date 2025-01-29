@@ -108,6 +108,11 @@ final class DBUpdater {
 		sql = "UPDATE " + UserColumnsTable.TABLENAME + " SET MODELL_INDEX=63 WHERE COLUMN_ID=3510";
 		connectionManager.executeUpdate(sql);
 
+		var xtraDataTable = dbManager.getTable(XtraDataTable.TABLENAME);
+		for ( int i=1; i<6; i++) {
+			xtraDataTable.tryAddColumn("DAILYUPDATE" + i, "TIMESTAMP");
+		}
+
 		updateDBVersion(dbVersion, 900);
 	}
 
