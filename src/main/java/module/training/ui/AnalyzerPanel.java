@@ -251,7 +251,7 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
 		cBox.addActionListener(this);
 
 		JPanel panel = new ImagePanel(new FlowLayout(FlowLayout.LEFT));
-		panel.add(new JLabel(ImageUtilities.getWideImageIcon4Change(change, true)));
+		panel.add(new JLabel(ImageUtilities.getWideImageIcon4Change(change)));
 		panel.add(cBox);
 
 		return panel;

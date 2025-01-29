@@ -10,6 +10,7 @@
 
 * Increase match report column size (#2065)
 * Table `STADION`: Added column `REBUILT_DATE` and `EXPANSION_DATE` (#2140)
+* Fix import of nt hrf files (#2233)
 
 ### Squad
 

@@ -32,7 +32,7 @@ public class ImageUtilities {
     private static final Hashtable<Integer,ImageIcon> m_clPfeilCache = new Hashtable<>();
     private static final Hashtable<Integer,ImageIcon> m_clPfeilWideCache = new Hashtable<>();
     private static final Hashtable<Integer,ImageIcon> m_clPfeilLightCache = new Hashtable<>();
-    private static final Hashtable<Integer,ImageIcon> m_clPfeilWideLightCache = new Hashtable<>();
+//    private static final Hashtable<Integer,ImageIcon> m_clPfeilWideLightCache = new Hashtable<>();
 	public static ImageIcon MINILEER = new ImageIcon(new BufferedImage(8, 8, BufferedImage.TYPE_INT_ARGB));
 
 	public static ImageIcon getImageIcon4Change(int wert, boolean aktuell) {
@@ -159,17 +159,15 @@ public class ImageUtilities {
 	/**
 	 * Creates a wide image for use where value can be greater than 99
 	 * @param value the Value
-	 * @param current
 	 * @return an icon representation of the value
 	 */
-	public static ImageIcon getWideImageIcon4Change(int value, boolean current) {
+	public static ImageIcon getWideImageIcon4Change(int value) {
         ImageIcon icon;
         final Integer keywert = value;
         int xPosText = 8;
 
         // Not in cache
-        if ((!m_clPfeilWideCache.containsKey(keywert) && current)
-            || (!m_clPfeilWideCache.containsKey(keywert) && !current)) {
+        if (!m_clPfeilWideCache.containsKey(keywert)) {
             final BufferedImage image = new BufferedImage(24, 14, BufferedImage.TYPE_INT_ARGB);
             final java.awt.Graphics2D g2d = (java.awt.Graphics2D) image.getGraphics();
             if (value != 0)
@@ -178,9 +176,6 @@ public class ImageUtilities {
 	                final int[] xpoints = {5, 11, 12, 18, 15, 15, 8, 8, 5};
 	                final int[] ypoints = {6, 0, 0, 6, 6, 13, 13, 6, 6};
 	                //Fill polygon
-	                if (!current) {
-	                    g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
-	                }
 	                int farbwert = Math.min(240, 90 + (50 * value));
 	                g2d.setColor(new Color(0, farbwert, 0));
 	                g2d.fillPolygon(xpoints, ypoints, xpoints.length);
@@ -190,10 +185,6 @@ public class ImageUtilities {
 	                g2d.setColor(new Color(40, farbwert, 40));
 	                g2d.drawPolygon(xpoints, ypoints, xpoints.length);
 	
-	                //Enter value
-	                if (!current) {
-	                    g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-	                }
 	                g2d.setFont(new java.awt.Font("sansserif", java.awt.Font.PLAIN, 10));
 	
 	                //For 1 and 2, use white at top
@@ -217,12 +208,6 @@ public class ImageUtilities {
 	            } else {
 	                final int[] xpoints = {5, 11, 12, 18, 15, 15, 8, 8, 5};
 	                final int[] ypoints = {7, 13, 13, 7, 7, 0, 0, 7, 7};
-	
-	                //Fill Polygon
-	                if (!current) {
-	                    g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.4f));
-	                }
-	
 	                int farbwert = Math.min(240, 90 - (50 * value));
 	                g2d.setColor(new Color(farbwert, 0, 0));
 	                g2d.fillPolygon(xpoints, ypoints, xpoints.length);
@@ -231,12 +216,7 @@ public class ImageUtilities {
 	                farbwert = Math.min(255, 105 - (50 * value));
 	                g2d.setColor(new Color(farbwert, 40, 40));
 	                g2d.drawPolygon(xpoints, ypoints, xpoints.length);
-	
-	                //Enter value
-	                if (!current) {
-	                    g2d.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f));
-	                }
-	
+
 	                g2d.setFont(new java.awt.Font("sansserif", java.awt.Font.PLAIN, 10));
 	                // No need to worry about space for - as absolute value is used.
 	                if (Math.abs(value) > 9)
@@ -249,19 +229,11 @@ public class ImageUtilities {
             }
             //Make the Icon and cache it
             icon = new ImageIcon(image);
-            if (current) {
-            	m_clPfeilWideCache.put(keywert, icon);
-            } else {
-                m_clPfeilWideLightCache.put(keywert, icon);
-            }
+           	m_clPfeilWideCache.put(keywert, icon);
         }
         //In Cache
         else {
-            if (current) {
-                icon = m_clPfeilWideCache.get(keywert);
-            } else {
-                icon = m_clPfeilWideLightCache.get(keywert);
-            }
+ 			icon = m_clPfeilWideCache.get(keywert);
         }
         return icon;
     }
@@ -299,8 +271,10 @@ public class ImageUtilities {
 	}
 
 	public static ImageIcon getCountryFlagIcon(int iCountryID) {
-		WorldDetailLeague leagueDetail = WorldDetailsManager.instance().getWorldDetailLeagueByCountryId(iCountryID);
-	    if ( leagueDetail != null ) return getLeagueFlagIcon(leagueDetail.getLeagueId());
+		if (iCountryID > 0) {
+			WorldDetailLeague leagueDetail = WorldDetailsManager.instance().getWorldDetailLeagueByCountryId(iCountryID);
+			if (leagueDetail != null) return getLeagueFlagIcon(leagueDetail.getLeagueId());
+		}
 	    return  null;
 	}
 
