@@ -13,21 +13,13 @@ package module.tsforecast;
  *04.09.06  Version 0.3 Change formula to a trainerLS-based formula
  */
 
-/**
- *
- * @author  michael.roux
- */
-
 import core.db.DBManager;
 
 import java.sql.SQLException;
 
-// Referenced classes of package hoplugins.tsforecast:
-//            ForecastCurve, Curve
-
 public class LoepiCurve extends ForecastCurve {
 
-	private TrainerCurve m_TrainerCurve = null;
+	private TrainerCurve m_TrainerCurve;
 
 	public LoepiCurve(DBManager dbManager, TrainerCurve t, boolean future) throws SQLException {
 		super(dbManager, future);
@@ -45,8 +37,7 @@ public class LoepiCurve extends ForecastCurve {
 	// alte Formel: TS(neu)=TS(alt)*(1+((TS(alt)-4,5)*(-1)/(Faktor/1,5))/100).
 
 	@Override
-	protected double forecastUpdate(Curve.Point point1, Curve.Point point2)
-			throws Exception {
+	protected double forecastUpdate(Curve.Point point1, Curve.Point point2) {
 
 		double dRet = point1.m_dSpirit;
 		var targetSpirit = getTargetSpirit();

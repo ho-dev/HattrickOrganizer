@@ -32,17 +32,11 @@ import core.model.series.Liga;
 import core.util.HODateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.stream.Collectors;
-
 import static core.model.StaffType.SPORTPSYCHOLOGIST;
 import static java.lang.Math.*;
 
-// Referenced classes of package hoplugins.tsforecast:
-//            Curve
-
 abstract class ForecastCurve extends Curve {
 
-	//protected double m_dGeneralSpirit = 4.5D;
 	boolean isNtTeam;
 	double psychologyEffect;
 	protected int m_iNoWeeksForecast = 4;
@@ -52,11 +46,11 @@ abstract class ForecastCurve extends Curve {
 		var basics = HOVerwaltung.instance().getModel().getBasics();
 		if (basics != null) {
 			isNtTeam = basics.isNationalTeam();
-			var teamPsychologist = HOVerwaltung.instance().getModel().getStaff().stream().filter(i->i.getStaffType()==SPORTPSYCHOLOGIST).findAny().orElse(null);
-			if ( teamPsychologist != null ) {
-				psychologyEffect = teamPsychologist.getLevel()/10.0;
-			}
-			if (future)
+            HOVerwaltung.instance().getModel().getStaff().stream()
+					.filter(i -> i.getStaffType() == SPORTPSYCHOLOGIST)
+					.findAny()
+					.ifPresent(teamPsychologist -> psychologyEffect = teamPsychologist.getLevel() / 10.0);
+            if (future)
 				readFutureMatches();
 			else
 				readPastMatches();
@@ -153,7 +147,7 @@ abstract class ForecastCurve extends Curve {
 	 * @param spiritBefore				team spirit before changing the training intensity [0..10]
 	 * @param trainingIntensityBefore	training intensity [0..100]%
 	 * @param trainingIntensityAfter	training intensity [0..100]%
-	 * @return
+	 * @return double Team spirit value after intensity change
 	 */
 	protected  double calculateTeamSpiritBoost(double spiritBefore, double trainingIntensityBefore, double trainingIntensityAfter) {
 		return min(10, spiritBefore * pow(1.2, log(trainingIntensityAfter/trainingIntensityBefore)/log(0.7)));

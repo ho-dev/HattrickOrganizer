@@ -12,11 +12,6 @@ package module.tsforecast;
  *21.02.07  Version 0.2  added tooltip
  */
 
-/**
- *
- * @author  michael.roux
- */
-
 import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
@@ -30,9 +25,9 @@ import java.awt.event.ActionListener;
 
 final class FutureMatchBox extends ImagePanel {
 
-	private JRadioButton m_rbPIC = null;
-	private JRadioButton m_rbNORM = null;
-	private JRadioButton m_rbMOTS = null;
+	private JRadioButton m_rbPIC;
+	private JRadioButton m_rbNORM;
+	private JRadioButton m_rbMOTS;
 
 	public FutureMatchBox(String text, String tooltip, int iCmd, int iSelected, MatchType iType) {
 		m_rbPIC = new JRadioButton();
@@ -80,15 +75,7 @@ final class FutureMatchBox extends ImagePanel {
 		add(lText, gridbagconstraints);
 	}
 
-	public final int isSelected() {
-		if (m_rbMOTS.isSelected())
-			return IMatchDetails.EINSTELLUNG_MOTS;
-		else if (m_rbPIC.isSelected())
-			return IMatchDetails.EINSTELLUNG_PIC;
-		return IMatchDetails.EINSTELLUNG_NORMAL;
-	}
-
-	public final void setSelected(int i) {
+	public void setSelected(int i) {
 		switch (i) {
 		case IMatchDetails.EINSTELLUNG_MOTS:
 			m_rbMOTS.setSelected(true);
@@ -103,7 +90,7 @@ final class FutureMatchBox extends ImagePanel {
 		}
 	}
 
-	public final void addActionListener(ActionListener actionlistener) {
+	public void addActionListener(ActionListener actionlistener) {
 		m_rbPIC.addActionListener(actionlistener);
 		m_rbNORM.addActionListener(actionlistener);
 		m_rbMOTS.addActionListener(actionlistener);

@@ -12,8 +12,6 @@ import core.module.config.ModuleConfig;
 import core.util.HOLogger;
 
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -333,7 +331,7 @@ public class TSForecast extends LazyImagePanel implements ActionListener, ItemLi
                     if ( e.getSource() instanceof TrainingIntensityEditor editor) {
                         editor.updatePoint();
 						m_jpGraphics.repaint();
-					};
+					}
                 });
 				gridbagconstraints.gridy++;
 				m_jpGamesPanel.add(trainingIntensityEditor, gridbagconstraints);
