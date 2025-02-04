@@ -74,6 +74,7 @@
 * Resolved an issue where the Download Dialog would not reappear after being closed with the 'X' button. The dialog will
   now correctly reappear when triggered again. (#2137)
 * Remove unused issue reporting template on github. (#2209)
+* Fix hrf import parse error of arena expansion date (#2239)
 
 ## Translations
 
