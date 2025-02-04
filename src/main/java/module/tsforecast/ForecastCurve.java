@@ -32,21 +32,29 @@ import core.model.series.Liga;
 import core.util.HODateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.stream.Collectors;
+
+import static core.model.StaffType.SPORTPSYCHOLOGIST;
+import static java.lang.Math.*;
 
 // Referenced classes of package hoplugins.tsforecast:
 //            Curve
 
 abstract class ForecastCurve extends Curve {
 
-	protected double m_dGeneralSpirit = 4.5D;
+	//protected double m_dGeneralSpirit = 4.5D;
+	boolean isNtTeam;
+	double psychologyEffect;
 	protected int m_iNoWeeksForecast = 4;
 
 	public ForecastCurve(DBManager dbManager, boolean future) {
 		super(dbManager);
 		var basics = HOVerwaltung.instance().getModel().getBasics();
 		if (basics != null) {
-			if (basics.isNationalTeam()) {
-				m_dGeneralSpirit = 5D;
+			isNtTeam = basics.isNationalTeam();
+			var teamPsychologist = HOVerwaltung.instance().getModel().getStaff().stream().filter(i->i.getStaffType()==SPORTPSYCHOLOGIST).findAny().orElse(null);
+			if ( teamPsychologist != null ) {
+				psychologyEffect = teamPsychologist.getLevel()/10.0;
 			}
 			if (future)
 				readFutureMatches();
@@ -54,6 +62,14 @@ abstract class ForecastCurve extends Curve {
 				readPastMatches();
 			Collections.sort(m_clPoints);
 		}
+	}
+
+	public double getTargetSpirit(){
+		var ret = 4.5 + psychologyEffect;
+		if (isNtTeam){
+			ret += 0.5;
+		}
+		return ret;
 	}
 
 	public void setSpirit(int pos, double spirit) throws Exception {
@@ -70,10 +86,10 @@ abstract class ForecastCurve extends Curve {
 		}
 	}
 
-	public void setGeneralSpirit(double d) throws Exception {
-		m_dGeneralSpirit = d;
-		forecast(0);
-	}
+//	public void setGeneralSpirit(double d) throws Exception {
+//		m_dGeneralSpirit = d;
+//		forecast(0);
+//	}
 
 	public void setStartPoint(Curve.Point point) {
 		super.addPoint(0, point);
@@ -105,7 +121,7 @@ abstract class ForecastCurve extends Curve {
 					point2.m_dSpirit = point1.m_dSpirit;
 				} else {
 					if (point2.m_iPointType == RESET_PT)
-						point2.m_dSpirit = m_dGeneralSpirit;
+						point2.m_dSpirit = getTargetSpirit();
 					else if (point1.m_iAttitude == IMatchDetails.EINSTELLUNG_PIC)
 						point2.m_dSpirit = point1.m_dSpirit + point1.m_dSpirit
 								/ 3D;
@@ -122,6 +138,25 @@ abstract class ForecastCurve extends Curve {
 				point1 = point2;
 			}
 		}
+	}
+
+	/**
+	 *  Calculate the team spirit after changing the training intensity
+	 * 	// HT-Tools Hattrick Manager Assistant
+	 * 	//Copyright 2014-2015 Ventouris Anastasios
+	 * 	//Licensed under GPL v3
+	 * 	//		TSafter = (TSbefore * Math.pow(1.2, Math.log(TIafter / TIbefore, 0.7))).toFixed(2);
+	 * 	//
+	 * 	//		if (TSafter > 10) {
+	 * 	//			TSafter = 10;
+	 * 	//		}
+	 * @param spiritBefore				team spirit before changing the training intensity [0..10]
+	 * @param trainingIntensityBefore	training intensity [0..100]%
+	 * @param trainingIntensityAfter	training intensity [0..100]%
+	 * @return
+	 */
+	protected  double calculateTeamSpiritBoost(double spiritBefore, double trainingIntensityBefore, double trainingIntensityAfter) {
+		return min(10, spiritBefore * pow(1.2, log(trainingIntensityAfter/trainingIntensityBefore)/log(0.7)));
 	}
 
 	protected abstract double forecastUpdate(Curve.Point point1,
@@ -153,6 +188,15 @@ abstract class ForecastCurve extends Curve {
 			}
 		}
 
+		var toDate = ibasics.getDatum().plus(7 * m_iNoWeeksForecast, ChronoUnit.DAYS);
+		var trainingIntensityChangeDate = HOVerwaltung.instance().getModel().getXtraDaten().getLatestDailyUpdateDateBeforeTraining();
+		if (trainingIntensityChangeDate == null){
+			trainingIntensityChangeDate = HOVerwaltung.instance().getModel().getXtraDaten().getNextTrainingDate();
+		}
+		var training = HOVerwaltung.instance().getModel().getTraining();
+		var intensity = (double)training.getTrainingIntensity();
+		var spirit = HOVerwaltung.instance().getModel().getTeam().getTeamSpirit();
+
 		if (cupMatch.isPresent()) {
 			// create future cup match dates
 			for (int i = 0; i < m_iNoWeeksForecast; i++) {
@@ -166,47 +210,57 @@ abstract class ForecastCurve extends Curve {
 		}
 
 		var matchesSorted = matches.stream().sorted(Comparator.comparing(MatchKurzInfo::getMatchSchedule)).toList();
-		var toDate = ibasics.getDatum().plus(7 * m_iNoWeeksForecast, ChronoUnit.DAYS);
 		for (var match : matchesSorted) {
 			var matchDate = match.getMatchSchedule();
 			if (matchDate.isAfter(toDate)) break;
+
+			if (trainingIntensityChangeDate.isBefore(matchDate)) {
+				m_clPoints.add(new Point(trainingIntensityChangeDate, spirit, TRAINING_PT, intensity));
+				trainingIntensityChangeDate=trainingIntensityChangeDate.plus(7, ChronoUnit.DAYS);
+			}
 
 			var htweek = matchDate.toHTWeek();
 			Curve.Point point;
 			if (match.getMatchType() == MatchType.LEAGUE) {
 				switch (htweek.week) {
-					case 16 -> point = new Point(matchDate, m_dGeneralSpirit, RESET_PT);
+					case 16 -> point = new Point(matchDate, getTargetSpirit(), RESET_PT);
 					case 15 -> {
 						point = new Point(matchDate,
 								IMatchDetails.EINSTELLUNG_NORMAL,
 								htweek.week,
-								MatchType.QUALIFICATION);
+								MatchType.QUALIFICATION,
+								intensity);
 						point.m_strTooltip = TranslationFacility.tr("ls.match.matchtype.qualification");
 					}
 					default -> {
 						point = new Point(matchDate,
 								IMatchDetails.EINSTELLUNG_NORMAL,
-								htweek.week, MatchType.LEAGUE);
+								htweek.week, MatchType.LEAGUE, intensity);
 						point.m_strTooltip = (htweek.week)
 								+ ". "
 								+ TranslationFacility.tr("ls.match.matchtype.league");
 					}
 				}
 				m_clPoints.add(point);
-				addUpdatePoints(point);
+//				addUpdatePoints(point);
 			} else if (match.getMatchType() == MatchType.CUP && match.getCupLevel() == CupLevel.NATIONALorDIVISIONAL) {
 				var matchTypTooltip = new StringBuilder("ls.match.matchtype.cup");
 				if (match.getMatchStatus() == -1) matchTypTooltip.append(".potential");
 				// add Cup Match
 				point = new Curve.Point(matchDate,
 						IMatchDetails.EINSTELLUNG_NORMAL,
-						htweek.week, MatchType.CUP);
+						htweek.week, MatchType.CUP, intensity);
 				point.m_strTooltip = htweek.week
 						+ ". "
 						+ TranslationFacility.tr(matchTypTooltip.toString());
 				m_clPoints.add(point);
-				addUpdatePoints(point);
+//				addUpdatePoints(point);
 			}
+		}
+
+//		Collections.sort(m_clPoints);
+		for ( var point : m_clPoints) {
+			addUpdatePoints(point);
 		}
 	}
 
@@ -230,7 +284,7 @@ abstract class ForecastCurve extends Curve {
 					var sortDate = details.getMatchDate();
 					iMatchDay = sortDate.toLocaleHTWeek().week;
 					var attitude = ibasics.getTeamId()==details.getHomeTeamId()?details.getHomeEinstellung():details.getGuestEinstellung();
-					point = new Point(sortDate, attitude, iMatchDay, details.getMatchType());
+					point = new Point(sortDate, attitude, iMatchDay, details.getMatchType(), -1);
 
 					m_clPoints.add(point);
 					maxDate = point.m_dDate;
@@ -264,28 +318,21 @@ abstract class ForecastCurve extends Curve {
 				|| point.m_mtMatchType == MatchType.QUALIFICATION
 				|| point.m_iPointType == RESET_PT) {
 			pointDate = pointDate.plus(21, ChronoUnit.HOURS); // Sunday 15:00
-			m_clPoints.add(new Curve.Point(pointDate,
-					TEAM_SPIRIT_UNKNOWN));
+			m_clPoints.add(new Curve.Point(pointDate, TEAM_SPIRIT_UNKNOWN, UPDATE_PT));
 			pointDate = pointDate.plus( 21, ChronoUnit.HOURS); // Monday 12:00
-			m_clPoints.add(new Curve.Point(pointDate,
-					TEAM_SPIRIT_UNKNOWN));
+			m_clPoints.add(new Curve.Point(pointDate, TEAM_SPIRIT_UNKNOWN, UPDATE_PT));
 			pointDate = pointDate.plus( 21, ChronoUnit.HOURS); // Tuesday 09:00
-			m_clPoints.add(new Curve.Point(pointDate,
-					TEAM_SPIRIT_UNKNOWN));
+			m_clPoints.add(new Curve.Point(pointDate, TEAM_SPIRIT_UNKNOWN, UPDATE_PT));
 		}
 		if (bAllPoints || point.m_mtMatchType == MatchType.CUP) {
 			pointDate = pointDate.plus(21, ChronoUnit.HOURS); // Wednesday 06:00
-			m_clPoints.add(new Curve.Point(pointDate,
-					TEAM_SPIRIT_UNKNOWN));
+			m_clPoints.add(new Curve.Point(pointDate, TEAM_SPIRIT_UNKNOWN, UPDATE_PT));
 			pointDate = pointDate.plus(21, ChronoUnit.HOURS); // Thursday 03:00
-			m_clPoints.add(new Curve.Point(pointDate,
-					TEAM_SPIRIT_UNKNOWN));
+			m_clPoints.add(new Curve.Point(pointDate, TEAM_SPIRIT_UNKNOWN, UPDATE_PT));
 			pointDate = pointDate.plus(21, ChronoUnit.HOURS); // Friday 00:00
-			m_clPoints.add(new Curve.Point(pointDate,
-					TEAM_SPIRIT_UNKNOWN));
+			m_clPoints.add(new Curve.Point(pointDate, TEAM_SPIRIT_UNKNOWN, UPDATE_PT));
 			pointDate = pointDate.plus(21, ChronoUnit.HOURS); // Friday 21:00
-			m_clPoints.add(new Curve.Point(pointDate,
-					TEAM_SPIRIT_UNKNOWN));
+			m_clPoints.add(new Curve.Point(pointDate, TEAM_SPIRIT_UNKNOWN, UPDATE_PT));
 		}
 	}
 
@@ -295,7 +342,7 @@ abstract class ForecastCurve extends Curve {
 		if (maxDate != null && maxDate.isAfter(pointDate)) {
 			Curve.Point p = new Curve.Point(pointDate,
 					IMatchDetails.EINSTELLUNG_UNBEKANNT, 15,
-					MatchType.QUALIFICATION);
+					MatchType.QUALIFICATION, -1);
 			// don't add point only update points, real point come from database
 			// if at all
 			addUpdatePoints(p, true);
@@ -303,7 +350,7 @@ abstract class ForecastCurve extends Curve {
 			pointDate = pointDate.plus( 7, ChronoUnit.DAYS); // Matchday 16
 
 			if (maxDate.isAfter(pointDate)) {
-				p = new Curve.Point(pointDate, m_dGeneralSpirit, RESET_PT);
+				p = new Curve.Point(pointDate, getTargetSpirit(), RESET_PT);
 				m_clPoints.add(p);
 				addUpdatePoints(p, true);
 			}

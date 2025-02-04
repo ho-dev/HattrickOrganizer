@@ -4,6 +4,7 @@ import core.db.AbstractTable;
 import core.util.HODateTime;
 import org.apache.commons.lang3.math.NumberUtils;
 
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Properties;
 
@@ -212,8 +213,14 @@ public class XtraData extends AbstractTable.Storable {
     }
 
     public HODateTime getLatestDailyUpdateDateBeforeTraining() {
-        if (!dailyUpdates.isEmpty()) {
-            return dailyUpdates.stream().filter(i->i != null && i.isBefore(m_TrainingDate)).max(HODateTime::compareTo).orElse(null);
+        if (dailyUpdates != null && !dailyUpdates.isEmpty()) {
+            var update = dailyUpdates.stream().filter(i->i != null && i.isBefore(m_TrainingDate)).max(HODateTime::compareTo).orElse(null);
+            if ( update == null){
+                // Latest update of current training date is already missed, try next one
+                var nextTrainingDate = m_TrainingDate.plus(7, ChronoUnit.DAYS);
+                update = dailyUpdates.stream().filter(i->i != null && i.isBefore(nextTrainingDate)).max(HODateTime::compareTo).orElse(null);
+            }
+            return update;
         }
         return null;
     }

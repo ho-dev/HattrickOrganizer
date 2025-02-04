@@ -12,6 +12,8 @@ import core.module.config.ModuleConfig;
 import core.util.HOLogger;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -103,13 +105,13 @@ public class TSForecast extends LazyImagePanel implements ActionListener, ItemLi
 		add(m_jpGraphics, gridbagconstraints);
 
 		initCurves();
-		double d = ModuleConfig.instance().getBigDecimal(TS_GENERALSPIRIT).doubleValue();
-		try {
-			m_LoepiForecast.setGeneralSpirit(d);
-			m_LoepiHist.setGeneralSpirit(d);
-		} catch (Exception e) {
-			throw new RuntimeException();
-		}
+//		double d = ModuleConfig.instance().getBigDecimal(TS_GENERALSPIRIT).doubleValue();
+//		try {
+//			m_LoepiForecast.setGeneralSpirit(d);
+//			m_LoepiHist.setGeneralSpirit(d);
+//		} catch (Exception e) {
+//			throw new RuntimeException();
+//		}
 	}
 
 	/**
@@ -324,6 +326,17 @@ public class TSForecast extends LazyImagePanel implements ActionListener, ItemLi
 									+ TranslationFacility.tr("EndOFSeason")),
 							gridbagconstraints);
 				}
+			}
+			else if ( m_LoepiForecast.isTrainingUpdate()){
+				var trainingIntensityEditor = new TrainingIntensityEditor(m_LoepiForecast);
+				trainingIntensityEditor.addChangeListener(e -> {
+                    if ( e.getSource() instanceof TrainingIntensityEditor editor) {
+                        editor.updatePoint();
+						m_jpGraphics.repaint();
+					};
+                });
+				gridbagconstraints.gridy++;
+				m_jpGamesPanel.add(trainingIntensityEditor, gridbagconstraints);
 			}
 			flag = m_LoepiForecast.next();
 			iCmdID++;

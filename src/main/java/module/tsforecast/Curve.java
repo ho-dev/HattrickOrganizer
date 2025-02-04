@@ -38,8 +38,10 @@ class Curve {
 
 	static final double TEAM_SPIRIT_UNKNOWN = -1D;
 
+	static final int UPDATE_PT = -1;
 	static final int STANDARD_PT = 0;
 	static final int RESET_PT = 1;
+	static final int TRAINING_PT = 2;
 	static final int NEW_TRAINER_PT = 10;
 	static final int TRAINER_DOWN_PT = 11;
 	static final int START_TRAINER_PT = 12;
@@ -52,6 +54,21 @@ class Curve {
 	private Point m_currentPoint = null;
 	private Color m_Color = null;
 
+	public void propagateTrainingIntensity(Point point) {
+		boolean skipping = true;
+		for (var p : m_clPoints) {
+			if (skipping ){
+				if (p == point) skipping = false;
+			}
+			else if ( p.m_iPointType != point.m_iPointType ) {
+				p.trainingIntensity = point.trainingIntensity;
+			}
+			else{
+				break;
+			}
+		}
+	}
+
 	public static class Point implements Comparable<Point> {
 
 		double m_dSpirit;
@@ -61,6 +78,7 @@ class Curve {
 		MatchType m_mtMatchType;
 		int m_iPointType;
 		String m_strTooltip = null;
+		double trainingIntensity;
 
 		Point(Point point) {
 			m_dDate = point.m_dDate;
@@ -70,32 +88,43 @@ class Curve {
 			m_mtMatchType = point.m_mtMatchType;
 			m_iPointType = point.m_iPointType;
 			m_strTooltip = point.m_strTooltip;
+			trainingIntensity = point.trainingIntensity;
 		}
 
 		Point(HODateTime date, double dSpirit, int iAttitude, int iMatchDay,
-				MatchType iMatchType, int iPointType) {
+				MatchType iMatchType, int iPointType, double trainingIntensity) {
 			m_dDate = date;
 			m_dSpirit = dSpirit;
 			m_iAttitude = iAttitude;
 			m_iMatchDay = iMatchDay;
 			m_mtMatchType = iMatchType;
 			m_iPointType = iPointType;
+			this.trainingIntensity = trainingIntensity;
+		}
+
+		Point(HODateTime date, int iAttitude, int iMatchDay, MatchType matchType, double trainingIntensity) {
+			this(date, TEAM_SPIRIT_UNKNOWN, iAttitude, iMatchDay, matchType,
+					STANDARD_PT, trainingIntensity);
 		}
 
 		Point(HODateTime date, int iAttitude, int iMatchDay, MatchType matchType) {
 			this(date, TEAM_SPIRIT_UNKNOWN, iAttitude, iMatchDay, matchType,
-					STANDARD_PT);
+					STANDARD_PT, -1);
 		}
 
 		Point(HODateTime date, double dSpirit) {
 			this(date, dSpirit, IMatchDetails.EINSTELLUNG_UNBEKANNT, 0,
-					UNKNOWN_MATCH, STANDARD_PT);
+					UNKNOWN_MATCH, STANDARD_PT, -1);
 		}
 
-		Point(HODateTime date, double dSpirit, int iPointType) { // Spirit or Coach
-															// leadership
+		Point(HODateTime date, double dSpirit, int iPointType, double trainingIntensity) { // Spirit or coach leadership
 			this(date, dSpirit, IMatchDetails.EINSTELLUNG_UNBEKANNT, 0,
-					UNKNOWN_MATCH, iPointType);
+					UNKNOWN_MATCH, iPointType, trainingIntensity);
+		}
+
+		Point(HODateTime date, double dSpirit, int iPointType) { // Spirit or coach leadership
+			this(date, dSpirit, IMatchDetails.EINSTELLUNG_UNBEKANNT, 0,
+					UNKNOWN_MATCH, iPointType, -1);
 		}
 
 		@Override
@@ -128,6 +157,8 @@ class Curve {
 
 	}
 
+	double getTrainingIntensity() {return m_currentPoint.trainingIntensity;}
+
 	HODateTime getDate() {
 		return m_currentPoint.m_dDate;
 	}
@@ -156,6 +187,10 @@ class Curve {
 		return m_currentPoint.m_iPointType;
 	}
 
+	public boolean isTrainingUpdate() {
+		return this.getPointType() == TRAINING_PT;
+	}
+
 	void setColor(Color color) {
 		m_Color = color;
 	}
@@ -163,6 +198,8 @@ class Curve {
 	Point getLastPoint() {
 		return m_clPoints.get(m_clPoints.size() - 1);
 	}
+
+	Point getCurrentPoint() {return m_currentPoint;}
 
 	void addPoint(int i, Point point) {
 		m_clPoints.add(i, new Point(point));

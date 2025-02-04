@@ -36,7 +36,7 @@ class ConfidenceCurve extends Curve {
 					var date = HODateTime.fromDbTimestamp(resultset.getTimestamp("DATUM"));
 					if (start.isBefore(date)
 							&& !HOVerwaltung.instance().getModel().getBasics().getDatum().isBefore(date)) {
-						m_clPoints.add(new Point(date, 1 + resultset.getInt("ISELBSTVERTRAUEN")));
+						m_clPoints.add(new Point(date, 1 + resultset.getInt("ISELBSTVERTRAUEN"), -1));
 					}
 				}
 			}

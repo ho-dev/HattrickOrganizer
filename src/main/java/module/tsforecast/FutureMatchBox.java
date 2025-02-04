@@ -30,7 +30,6 @@ import java.awt.event.ActionListener;
 
 final class FutureMatchBox extends ImagePanel {
 
-	private static final long serialVersionUID = 1L;
 	private JRadioButton m_rbPIC = null;
 	private JRadioButton m_rbNORM = null;
 	private JRadioButton m_rbMOTS = null;
