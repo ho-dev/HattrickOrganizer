@@ -1,9 +1,7 @@
 package tool.dbencrypter
 
 import core.model.TranslationFacility
-import java.awt.GridBagConstraints
-import java.awt.GridBagLayout
-import java.awt.Insets
+import java.awt.*
 import javax.swing.*
 
 class DbEncrypterPanel(issueReporterManager: IssueReporterManager) : JPanel() {
@@ -106,7 +104,8 @@ class DbEncrypterPanel(issueReporterManager: IssueReporterManager) : JPanel() {
 				descriptionInput.text,
 				summaryInput.text,
 				attachCheckbox.isSelected,
-				DbEncrypterPanel::doSomething
+				DbEncrypterPanel::doSomething,
+				DbEncrypterPanel::promptDeviceCode
 			)
 		}
 
@@ -116,6 +115,24 @@ class DbEncrypterPanel(issueReporterManager: IssueReporterManager) : JPanel() {
 	companion object {
 		private fun doSomething() {
 			println("Update")
+		}
+
+		private fun promptDeviceCode(code: String) {
+			val largeFont = Font("Ubuntu Sans", Font.BOLD, 90)
+
+			val mainPanel = JPanel()
+			mainPanel.layout = BorderLayout()
+			mainPanel.add(
+				JLabel("Copy and paste the following code in the GitHub Activation page, and click OK once done:"),
+				BorderLayout.NORTH
+			)
+			val labelCode = JTextField(code)
+			labelCode.font = largeFont
+			labelCode.isEditable = false
+			labelCode.border = BorderFactory.createEmptyBorder()
+			mainPanel.add(labelCode, BorderLayout.CENTER)
+
+			JOptionPane.showMessageDialog(null, mainPanel)
 		}
 	}
 }

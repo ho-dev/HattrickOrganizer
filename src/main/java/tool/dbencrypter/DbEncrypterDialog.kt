@@ -5,7 +5,7 @@ import java.awt.BorderLayout
 import javax.swing.JDialog
 import javax.swing.JFrame
 
-class DbEncrypterDialog(val owner: JFrame, val reporterManager: IssueReporterManager) : JDialog(owner, true) {
+class DbEncrypterDialog(val owner: JFrame, private val reporterManager: IssueReporterManager) : JDialog(owner, true) {
 
 	init {
 		setSize(600, 400)

@@ -3,6 +3,7 @@ package tool.dbencrypter.github
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import core.model.UserParameter
+import core.util.BrowserLauncher
 import core.util.HOLogger
 import core.util.StringUtils
 import okhttp3.*
@@ -76,13 +77,14 @@ class GithubApp {
 				if (response.isSuccessful) {
 					println("Issue created successfully: ${response.body?.string()}")
 				} else {
+					// TODO Handle 401 {"message":"Bad credentials","documentation_url":"https://docs.github.com/rest","status":"401"}
 					println("Failed to create issue: ${response.code} - ${response.body?.string()}")
 				}
 			}
 		})
 	}
 
-	fun requestDeviceCode(title: String, body: String) {
+	fun requestDeviceCode(title: String, body: String, codePrompt: (String) -> Unit) {
 		// FIXME UserParameter should be passed to this class, rather than using singleton.
 		val githubAccessToken = UserParameter.instance().githubAccessToken
 		var accessToken = ""
@@ -107,7 +109,11 @@ class GithubApp {
 				println(responseAsJson.asMap())
 
 				// Get device code
+				val verificationUrl = responseAsJson.getAsJsonPrimitive("verification_uri").asString
 				val deviceCode: String = responseAsJson.getAsJsonPrimitive("device_code").asString
+				val userCode: String = responseAsJson.getAsJsonPrimitive("user_code").asString
+				BrowserLauncher.openURL(verificationUrl)
+				codePrompt(userCode) // This will block until user confirms.
 
 				val accessTokenBody: RequestBody = FormBody.Builder()
 					.add("client_id", parameters)
@@ -128,7 +134,7 @@ class GithubApp {
 					val tokenResponse = gson.fromJson(accessTokenResponse.body?.string(), JsonObject::class.java)
 					if (tokenResponse.has("access_token")) {
 						accessToken = tokenResponse.getAsJsonPrimitive("access_token").asString
-						// TODO persist accesstoken.
+						// DELETE FROM USERCONFIGURATION WHERE CONFIG_KEY = 'githubAccessToken'
 						UserParameter.instance().githubAccessToken = accessToken
 						break
 					} else if (tokenResponse.has("error")) {
@@ -140,7 +146,7 @@ class GithubApp {
 						} else if (errorVal == "slow_down") {
 							Thread.sleep(10_000)
 						} else {
-							HOLogger.instance().error(javaClass, "Unrecoverable error: ${errorVal}")
+							HOLogger.instance().error(javaClass, "Unrecoverable error: $errorVal")
 							break
 						}
 					}
