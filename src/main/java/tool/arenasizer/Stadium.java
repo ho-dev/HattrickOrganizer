@@ -2,6 +2,7 @@ package tool.arenasizer;
 
 import core.db.AbstractTable;
 import core.util.HODateTime;
+import core.util.HOLogger;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -111,8 +112,18 @@ public class Stadium extends AbstractTable.Storable {
 		if (underConstruction) {
 			expansionCosts = NumberUtils.toInt(properties.getProperty("expandcost"), 0);
 		}
-		rebuiltDate = HODateTime.fromHT(properties.getProperty("rebuiltdate"));
-		expansionDate = HODateTime.fromHT(properties.getProperty("expansiondate"));
+		rebuiltDate = getArenaDate(properties, "rebuiltdate");
+		expansionDate = getArenaDate(properties, "expansiondate");
+	}
+
+	private HODateTime getArenaDate(Properties properties, String key) {
+		try {
+			return HODateTime.fromHT(properties.getProperty(key));
+		}
+		catch (Exception e) {
+			HOLogger.instance().warning(this.getClass(), e.getMessage() + " parsing arena " + key + ": " + properties.getProperty(key));
+			return null;
+		}
 	}
 
 	public int getTotalSize() {
