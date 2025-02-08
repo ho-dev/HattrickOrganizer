@@ -14,14 +14,20 @@ class IssueReporterManager(private val githubApp: GithubApp, private val dbEncry
 		reporterDialog.start()
 	}
 
-	fun reportIssue(description: String, summary: String, attachDb: Boolean, progressManager: () -> Unit) {
+	fun reportIssue(
+		description: String,
+		summary: String,
+		attachDb: Boolean,
+		progressManager: () -> Unit,
+		codePrompt: (String) -> Unit
+	) {
 		if (attachDb) {
 			dbEncrypterManager.encrypt()
 			// TODO Upload Encrypted database, and get link
 		}
 
 		progressManager()
-		githubApp.requestDeviceCode(summary, description)
+		githubApp.requestDeviceCode(summary, description, codePrompt)
 		progressManager()
 	}
 }
