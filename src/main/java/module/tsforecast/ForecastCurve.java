@@ -32,6 +32,8 @@ import core.model.series.Liga;
 import core.util.HODateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.stream.Collectors;
+
 import static core.model.StaffType.SPORTPSYCHOLOGIST;
 import static java.lang.Math.*;
 
@@ -190,6 +192,8 @@ abstract class ForecastCurve extends Curve {
 		var training = HOVerwaltung.instance().getModel().getTraining();
 		var intensity = (double)training.getTrainingIntensity();
 		var spirit = HOVerwaltung.instance().getModel().getTeam().getTeamSpirit();
+		var updates = HOVerwaltung.instance().getModel().getXtraDaten().getDailyUpdates();
+		var nextDailyUpdates = updates.stream().filter(Objects::nonNull).sorted().collect(Collectors.toList());
 
 		if (cupMatch.isPresent()) {
 			// create future cup match dates
@@ -208,10 +212,15 @@ abstract class ForecastCurve extends Curve {
 			var matchDate = match.getMatchSchedule();
 			if (matchDate.isAfter(toDate)) break;
 
+			// Insert daily update points which are before training intensity changes
+			// or before match date if current date is after training intensity change
+			insertDailyUpdates(nextDailyUpdates, trainingIntensityChangeDate.isBefore(matchDate)? trainingIntensityChangeDate: matchDate);
 			if (trainingIntensityChangeDate.isBefore(matchDate)) {
 				m_clPoints.add(new Point(trainingIntensityChangeDate, spirit, TRAINING_PT, intensity));
 				trainingIntensityChangeDate=trainingIntensityChangeDate.plus(7, ChronoUnit.DAYS);
 			}
+			// Insert daily update points which are between training intensity change and match date
+			insertDailyUpdates(nextDailyUpdates, matchDate);
 
 			var htweek = matchDate.toHTWeek();
 			Curve.Point point;
@@ -236,7 +245,6 @@ abstract class ForecastCurve extends Curve {
 					}
 				}
 				m_clPoints.add(point);
-//				addUpdatePoints(point);
 			} else if (match.getMatchType() == MatchType.CUP && match.getCupLevel() == CupLevel.NATIONALorDIVISIONAL) {
 				var matchTypTooltip = new StringBuilder("ls.match.matchtype.cup");
 				if (match.getMatchStatus() == -1) matchTypTooltip.append(".potential");
@@ -248,13 +256,21 @@ abstract class ForecastCurve extends Curve {
 						+ ". "
 						+ TranslationFacility.tr(matchTypTooltip.toString());
 				m_clPoints.add(point);
-//				addUpdatePoints(point);
 			}
 		}
+	}
 
-//		Collections.sort(m_clPoints);
-		for ( var point : m_clPoints) {
-			addUpdatePoints(point);
+	private void insertDailyUpdates(List<HODateTime> nextDailyUpdates, HODateTime until) {
+		var removeUpdates = new ArrayList<HODateTime>();
+		for (var update: nextDailyUpdates){
+			if ( update.isBefore(until)) {
+				m_clPoints.add(new Curve.Point(update, TEAM_SPIRIT_UNKNOWN, UPDATE_PT));
+				removeUpdates.add(update);
+			}
+		}
+		for (var remove: removeUpdates) {
+			nextDailyUpdates.remove(remove);
+			nextDailyUpdates.add(remove.plus(7, ChronoUnit.DAYS));
 		}
 	}
 

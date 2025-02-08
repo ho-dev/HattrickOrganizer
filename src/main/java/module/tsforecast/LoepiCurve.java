@@ -48,8 +48,12 @@ public class LoepiCurve extends ForecastCurve {
 			dRet *= 1.0D + (((dRet - targetSpirit) * -1D)
 					* (m_TrainerCurve.getLeadership(point1.m_dDate) / 2D) / 100D);
 		}
-		if ( point1.trainingIntensity != point2.trainingIntensity) {
-			dRet = calculateTeamSpiritBoost(dRet, point1.trainingIntensity, point2.trainingIntensity);
+		if (point1.trainingIntensity != point2.trainingIntensity) {
+			if (point2.trainingIntensity == -1) {
+				point2.trainingIntensity = point1.trainingIntensity;
+			} else {
+				dRet = calculateTeamSpiritBoost(dRet, point1.trainingIntensity, point2.trainingIntensity);
+			}
 		}
 		return dRet;
 	}
