@@ -103,13 +103,6 @@ public class TSForecast extends LazyImagePanel implements ActionListener, ItemLi
 		add(m_jpGraphics, gridbagconstraints);
 
 		initCurves();
-//		double d = ModuleConfig.instance().getBigDecimal(TS_GENERALSPIRIT).doubleValue();
-//		try {
-//			m_LoepiForecast.setGeneralSpirit(d);
-//			m_LoepiHist.setGeneralSpirit(d);
-//		} catch (Exception e) {
-//			throw new RuntimeException();
-//		}
 	}
 
 	/**
@@ -292,29 +285,24 @@ public class TSForecast extends LazyImagePanel implements ActionListener, ItemLi
 		gridbagconstraints.anchor = GridBagConstraints.NORTHWEST;
 
 		int iCmdID = 0;
-		JLabel jlabel = new JLabel(" PIC  N  MOTS");
 
-		gridbagconstraints.insets = new Insets(10, 0, 2, 0);
 		gridbagconstraints.gridy = 0;
-		m_jpGamesPanel.add(jlabel, gridbagconstraints);
-		gridbagconstraints.insets = new Insets(0, 0, 0, 0);
+		gridbagconstraints.insets = new Insets(10, 0, 10, 0);
 
 		boolean bshowCupMatches = ModuleConfig.instance().getBoolean(TS_SHOWCUPMATCHES);
 		boolean bshowQualMatches = ModuleConfig.instance().getBoolean(TS_SHOWQUALIFICATIONMATCH);
-
-		// TODO: Add option to set future training intensity settings
 		for (boolean flag = m_LoepiForecast.first() && m_LoepiForecast.next(); flag;) {
 			if (m_LoepiForecast.getAttitude() != IMatchDetails.EINSTELLUNG_UNBEKANNT) {
 				if (m_LoepiForecast.getMatchType() == MatchType.LEAGUE
 						|| (m_LoepiForecast.getMatchType() == MatchType.CUP && bshowCupMatches)
 						|| (m_LoepiForecast.getMatchType() == MatchType.QUALIFICATION && bshowQualMatches)) {
 
-					FutureMatchBox futurematchbox = new FutureMatchBox(m_LoepiForecast.getDate().toLocaleDate(),
+					TeamAttitudeEditor teamAttitudeEditor = new TeamAttitudeEditor(m_LoepiForecast.getDate().toLocaleDate(),
 							m_LoepiForecast.getTooltip(), iCmdID, m_LoepiForecast.getAttitude(),
 							m_LoepiForecast.getMatchType());
-					futurematchbox.addActionListener(this);
+					teamAttitudeEditor.addActionListener(this);
 					gridbagconstraints.gridy++;
-					m_jpGamesPanel.add(futurematchbox, gridbagconstraints);
+					m_jpGamesPanel.add(teamAttitudeEditor, gridbagconstraints);
 				}
 				// indicate end of season
 				if (m_LoepiForecast.getMatchType() == MatchType.QUALIFICATION) {

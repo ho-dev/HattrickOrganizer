@@ -12,7 +12,7 @@ package module.tsforecast;
  *04.09.06  Version 0.2  UpdateFactor becomes TrainerLS
  *09.02.07  Version 0.3  replaced readFutureMatches with generated matches schedule instead of database driven
  *21.02.07  Version 0.4  added tooltip to points
- *01.10.09  Version 0.5  improve forcast formula
+ *01.10.09  Version 0.5  improve forecast formula
  */
 
 /*
@@ -314,10 +314,6 @@ abstract class ForecastCurve extends Curve {
 				}
 			}
 		}
-	}
-
-	private void addUpdatePoints(Curve.Point point) {
-		addUpdatePoints(point, false);
 	}
 
 	private void addUpdatePoints(Curve.Point point, boolean bAllPoints) {

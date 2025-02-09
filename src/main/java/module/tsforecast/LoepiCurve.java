@@ -19,7 +19,7 @@ import java.sql.SQLException;
 
 public class LoepiCurve extends ForecastCurve {
 
-	private TrainerCurve m_TrainerCurve;
+	private final TrainerCurve m_TrainerCurve;
 
 	public LoepiCurve(DBManager dbManager, TrainerCurve t, boolean future) throws SQLException {
 		super(dbManager, future);

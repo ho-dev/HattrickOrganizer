@@ -23,13 +23,18 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
-final class FutureMatchBox extends ImagePanel {
+final class TeamAttitudeEditor extends ImagePanel {
 
 	private JRadioButton m_rbPIC;
 	private JRadioButton m_rbNORM;
 	private JRadioButton m_rbMOTS;
 
-	public FutureMatchBox(String text, String tooltip, int iCmd, int iSelected, MatchType iType) {
+	public TeamAttitudeEditor(String matchDate, String tooltip, int iCmd, int iSelected, MatchType iType) {
+		super(new BorderLayout());
+		var label  = new JLabel( TranslationFacility.tr("ls.team.teamattitude") + " "+ matchDate);
+		label.setToolTipText(tooltip);
+		this.add( label, BorderLayout.NORTH);
+
 		m_rbPIC = new JRadioButton();
 		m_rbPIC.setActionCommand("P" + iCmd);
 		m_rbPIC.setToolTipText(TranslationFacility.tr("ls.team.teamattitude.playitcool"));
@@ -52,27 +57,35 @@ final class FutureMatchBox extends ImagePanel {
 
 		GridBagLayout gridbaglayout = new GridBagLayout();
 		GridBagConstraints gridbagconstraints = new GridBagConstraints();
-		setLayout(gridbaglayout);
+		var gridPanel = new JPanel(gridbaglayout);
+		gridbagconstraints.insets = new Insets(0, 5, 0, 5);
+		gridbagconstraints.anchor = GridBagConstraints.CENTER;
 		gridbagconstraints.fill = GridBagConstraints.HORIZONTAL;
 
+		gridbagconstraints.gridy = 0;
 		gridbagconstraints.gridx = 0;
-		add(m_rbPIC, gridbagconstraints);
+		gridPanel.add(m_rbPIC, gridbagconstraints);
 
 		gridbagconstraints.gridx = 1;
-		add(m_rbNORM, gridbagconstraints);
+		gridPanel.add(m_rbNORM, gridbagconstraints);
 
 		gridbagconstraints.gridx = 2;
-		add(m_rbMOTS, gridbagconstraints);
+		gridPanel.add(m_rbMOTS, gridbagconstraints);
 
 		gridbagconstraints.gridx = 3;
 		JLabel lIcon = new JLabel(ThemeManager.getIcon(HOIconName.MATCHICONS[iType.getIconArrayIndex()]));
 		lIcon.setToolTipText(iType.getName());
-		add(lIcon, gridbagconstraints);
+		gridPanel.add(lIcon, gridbagconstraints);
 
-		gridbagconstraints.gridx = 4;
-		JLabel lText = new JLabel("  " + text + " ", SwingConstants.LEFT);
-		lText.setToolTipText(tooltip);
-		add(lText, gridbagconstraints);
+		gridbagconstraints.gridy = 1;
+		gridbagconstraints.gridx = 0;
+		gridPanel.add(new JLabel("PIC", null, SwingConstants.CENTER), gridbagconstraints);
+		gridbagconstraints.gridx++;
+		gridPanel.add(new JLabel("N", null, SwingConstants.CENTER), gridbagconstraints);
+		gridbagconstraints.gridx++;
+		gridPanel.add(new JLabel("MOTS", null, SwingConstants.CENTER), gridbagconstraints);
+
+		this.add(gridPanel, BorderLayout.CENTER);
 	}
 
 	public void setSelected(int i) {
