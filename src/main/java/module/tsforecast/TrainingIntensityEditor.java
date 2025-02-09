@@ -1,8 +1,6 @@
 package module.tsforecast;
 
 import core.model.TranslationFacility;
-import core.model.Translator;
-
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -29,13 +27,7 @@ public class TrainingIntensityEditor extends JPanel {
         this.add(trainingIntensityLabel = new JLabel(TranslationFacility.tr("ls.team.trainingintensity") + " " + curve.getDate().toLocaleDateTime()), BorderLayout.NORTH);
 
         trainingIntensityLabel = new JLabel("" + curve.getTrainingIntensity());
-        this.trainingIntensitySlider.addChangeListener(new ChangeListener() {
-
-            @Override
-            public void stateChanged(ChangeEvent e) {
-                trainingIntensityLabel.setText("" + trainingIntensitySlider.getValue());
-            }
-        });
+        this.trainingIntensitySlider.addChangeListener(e -> trainingIntensityLabel.setText("" + trainingIntensitySlider.getValue()));
         this.add(trainingIntensityLabel, BorderLayout.WEST);
     }
 

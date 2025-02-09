@@ -307,7 +307,7 @@ abstract class ForecastCurve extends Curve {
 			for ( var p : points){
 				point = p;
 				if (point.m_mtMatchType == MatchType.LEAGUE) {
-					addUpdatePoints(point, true);
+					addUpdatePoints(point);
 					if (point.m_iMatchDay == 14) {
 						addEndOfSeasonPoints(point, maxDate);
 					}
@@ -316,31 +316,25 @@ abstract class ForecastCurve extends Curve {
 		}
 	}
 
-	private void addUpdatePoints(Curve.Point point, boolean bAllPoints) {
+	private void addUpdatePoints(Point point) {
 		var pointDate=point.m_dDate;
 
 		// League game ?
-		if (bAllPoints || point.m_mtMatchType == MatchType.LEAGUE
-				|| point.m_mtMatchType == MatchType.QUALIFICATION
-				|| point.m_iPointType == RESET_PT) {
-			pointDate = pointDate.plus(21, ChronoUnit.HOURS); // Sunday 15:00
-			m_clPoints.add(new Curve.Point(pointDate, TEAM_SPIRIT_UNKNOWN, UPDATE_PT));
-			pointDate = pointDate.plus( 21, ChronoUnit.HOURS); // Monday 12:00
-			m_clPoints.add(new Curve.Point(pointDate, TEAM_SPIRIT_UNKNOWN, UPDATE_PT));
-			pointDate = pointDate.plus( 21, ChronoUnit.HOURS); // Tuesday 09:00
-			m_clPoints.add(new Curve.Point(pointDate, TEAM_SPIRIT_UNKNOWN, UPDATE_PT));
-		}
-		if (bAllPoints || point.m_mtMatchType == MatchType.CUP) {
-			pointDate = pointDate.plus(21, ChronoUnit.HOURS); // Wednesday 06:00
-			m_clPoints.add(new Curve.Point(pointDate, TEAM_SPIRIT_UNKNOWN, UPDATE_PT));
-			pointDate = pointDate.plus(21, ChronoUnit.HOURS); // Thursday 03:00
-			m_clPoints.add(new Curve.Point(pointDate, TEAM_SPIRIT_UNKNOWN, UPDATE_PT));
-			pointDate = pointDate.plus(21, ChronoUnit.HOURS); // Friday 00:00
-			m_clPoints.add(new Curve.Point(pointDate, TEAM_SPIRIT_UNKNOWN, UPDATE_PT));
-			pointDate = pointDate.plus(21, ChronoUnit.HOURS); // Friday 21:00
-			m_clPoints.add(new Curve.Point(pointDate, TEAM_SPIRIT_UNKNOWN, UPDATE_PT));
-		}
-	}
+        pointDate = pointDate.plus(21, ChronoUnit.HOURS); // Sunday 15:00
+        m_clPoints.add(new Point(pointDate, TEAM_SPIRIT_UNKNOWN, UPDATE_PT));
+        pointDate = pointDate.plus( 21, ChronoUnit.HOURS); // Monday 12:00
+        m_clPoints.add(new Point(pointDate, TEAM_SPIRIT_UNKNOWN, UPDATE_PT));
+        pointDate = pointDate.plus( 21, ChronoUnit.HOURS); // Tuesday 09:00
+        m_clPoints.add(new Point(pointDate, TEAM_SPIRIT_UNKNOWN, UPDATE_PT));
+        pointDate = pointDate.plus(21, ChronoUnit.HOURS); // Wednesday 06:00
+        m_clPoints.add(new Point(pointDate, TEAM_SPIRIT_UNKNOWN, UPDATE_PT));
+        pointDate = pointDate.plus(21, ChronoUnit.HOURS); // Thursday 03:00
+        m_clPoints.add(new Point(pointDate, TEAM_SPIRIT_UNKNOWN, UPDATE_PT));
+        pointDate = pointDate.plus(21, ChronoUnit.HOURS); // Friday 00:00
+        m_clPoints.add(new Point(pointDate, TEAM_SPIRIT_UNKNOWN, UPDATE_PT));
+        pointDate = pointDate.plus(21, ChronoUnit.HOURS); // Friday 21:00
+        m_clPoints.add(new Point(pointDate, TEAM_SPIRIT_UNKNOWN, UPDATE_PT));
+    }
 
 	private void addEndOfSeasonPoints(Curve.Point point, HODateTime maxDate) {
 		var pointDate = point.m_dDate.plus(7, ChronoUnit.DAYS); 	// L14 p14 rel p15 RE p0 L1 (Kleinbuchstaben ist optional)
@@ -351,14 +345,14 @@ abstract class ForecastCurve extends Curve {
 					MatchType.QUALIFICATION, -1);
 			// don't add point only update points, real point come from database
 			// if at all
-			addUpdatePoints(p, true);
+			addUpdatePoints(p);
 
 			pointDate = pointDate.plus( 7, ChronoUnit.DAYS); // Matchday 16
 
 			if (maxDate.isAfter(pointDate)) {
 				p = new Curve.Point(pointDate, getTargetSpirit(), RESET_PT);
 				m_clPoints.add(p);
-				addUpdatePoints(p, true);
+				addUpdatePoints(p);
 			}
 		}
 	}

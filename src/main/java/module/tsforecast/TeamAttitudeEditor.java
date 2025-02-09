@@ -25,9 +25,9 @@ import java.awt.event.ActionListener;
 
 final class TeamAttitudeEditor extends ImagePanel {
 
-	private JRadioButton m_rbPIC;
-	private JRadioButton m_rbNORM;
-	private JRadioButton m_rbMOTS;
+	private final JRadioButton m_rbPIC;
+	private final JRadioButton m_rbNORM;
+	private final JRadioButton m_rbMOTS;
 
 	public TeamAttitudeEditor(String matchDate, String tooltip, int iCmd, int iSelected, MatchType iType) {
 		super(new BorderLayout());
