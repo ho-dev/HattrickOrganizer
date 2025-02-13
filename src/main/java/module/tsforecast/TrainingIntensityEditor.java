@@ -2,7 +2,6 @@ package module.tsforecast;
 
 import core.model.TranslationFacility;
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 
@@ -33,7 +32,10 @@ public class TrainingIntensityEditor extends JPanel {
 
     public void updatePoint(){
         point.trainingIntensity = trainingIntensitySlider.getValue();
-        curve.propagateTrainingIntensity(point);
+        var pos = curve.propagateTrainingIntensity(point);
+        if ( pos >= 0) {
+            curve.forecast(pos);
+        }
     }
 
     public void addChangeListener(ChangeListener o) {

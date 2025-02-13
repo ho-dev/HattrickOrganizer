@@ -49,7 +49,7 @@ public class HistoryCurve extends Curve {
 		fillupSpirit();
 	}
 
-	private static final String readSpiritHistorySql  = "select DATUM, ISTIMMUNG from HRF, TEAM where HRF.HRF_ID = TEAM.HRF_ID and DATUM <= ? and DATUM > ? order by DATUM";
+	private static final String readSpiritHistorySql  = "select DATUM, ISTIMMUNG, TRAININGSINTENSITAET from HRF, TEAM where HRF.HRF_ID = TEAM.HRF_ID and DATUM <= ? and DATUM > ? order by DATUM";
 
 	private void readSpiritHistory() throws SQLException {
 		Basics ibasics = HOVerwaltung.instance().getModel().getBasics();
@@ -60,7 +60,9 @@ public class HistoryCurve extends Curve {
 					double dSpirit = rs.getInt("ISTIMMUNG") + 0.5D;
 					if (dSpirit > m_dMaxSpirit)
 						dSpirit = m_dMaxSpirit;
-					m_clPoints.add(new Point(HODateTime.fromDbTimestamp(rs.getTimestamp("DATUM")), dSpirit));
+
+					double trainingIntensity = rs.getInt("TRAININGSINTENSITAET");
+					m_clPoints.add(new Point(HODateTime.fromDbTimestamp(rs.getTimestamp("DATUM")), dSpirit, trainingIntensity));
 				}
 			}
 		}

@@ -316,9 +316,11 @@ public class TSForecast extends LazyImagePanel implements ActionListener, ItemLi
 			else if ( m_LoepiForecast.isTrainingUpdate()){
 				var trainingIntensityEditor = new TrainingIntensityEditor(m_LoepiForecast);
 				trainingIntensityEditor.addChangeListener(e -> {
-                    if ( e.getSource() instanceof TrainingIntensityEditor editor) {
-                        editor.updatePoint();
-						m_jpGraphics.repaint();
+                    if ( e.getSource() instanceof JSlider slider) {
+						if ( slider.getParent() instanceof TrainingIntensityEditor editor ) {
+							editor.updatePoint();
+							m_jpGraphics.repaint();
+						}
 					}
                 });
 				gridbagconstraints.gridy++;

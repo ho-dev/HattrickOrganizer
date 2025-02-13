@@ -54,10 +54,12 @@ class Curve {
 	private Point m_currentPoint = null;
 	private Color m_Color = null;
 
-	public void propagateTrainingIntensity(Point point) {
+	public int propagateTrainingIntensity(Point point) {
+		int ret = -1;
 		boolean skipping = true;
 		for (var p : m_clPoints) {
 			if (skipping ){
+				ret++;
 				if (p == point) skipping = false;
 			}
 			else if ( p.m_iPointType != point.m_iPointType ) {
@@ -67,6 +69,7 @@ class Curve {
 				break;
 			}
 		}
+		return ret;
 	}
 
 	public static class Point implements Comparable<Point> {
@@ -112,9 +115,9 @@ class Curve {
 					STANDARD_PT, -1);
 		}
 
-		Point(HODateTime date, double dSpirit) {
+		Point(HODateTime date, double dSpirit, double trainingIntensity) {
 			this(date, dSpirit, IMatchDetails.EINSTELLUNG_UNBEKANNT, 0,
-					UNKNOWN_MATCH, STANDARD_PT, -1);
+					UNKNOWN_MATCH, STANDARD_PT, trainingIntensity);
 		}
 
 		Point(HODateTime date, double dSpirit, int iPointType, double trainingIntensity) { // Spirit or coach leadership

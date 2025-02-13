@@ -104,8 +104,7 @@ abstract class ForecastCurve extends Curve {
 		super.addPoint(i, point);
 	}
 
-	// TODO: Add impact of training intensity settings
-	public void forecast(int pos) throws Exception {
+	public void forecast(int pos) {
 		if (m_clPoints.size() > pos) {
 			Curve.Point point1 = m_clPoints.get(pos);
 			Curve.Point point2;
@@ -152,11 +151,11 @@ abstract class ForecastCurve extends Curve {
 	 * @return double Team spirit value after intensity change
 	 */
 	protected  double calculateTeamSpiritBoost(double spiritBefore, double trainingIntensityBefore, double trainingIntensityAfter) {
-		return min(10, spiritBefore * pow(1.2, log(trainingIntensityAfter/trainingIntensityBefore)/log(0.7)));
+		return min(10, spiritBefore * pow(1.2, log10(trainingIntensityAfter/trainingIntensityBefore)/log10(0.7)));
 	}
 
 	protected abstract double forecastUpdate(Curve.Point point1,
-			Curve.Point point2) throws Exception;
+			Curve.Point point2);
 
 	// TODO: Add training events (Intensity)
 	private void readFutureMatches() {
@@ -214,13 +213,13 @@ abstract class ForecastCurve extends Curve {
 
 			// Insert daily update points which are before training intensity changes
 			// or before match date if current date is after training intensity change
-			insertDailyUpdates(nextDailyUpdates, trainingIntensityChangeDate.isBefore(matchDate)? trainingIntensityChangeDate: matchDate);
+			insertDailyUpdates(nextDailyUpdates, intensity, trainingIntensityChangeDate.isBefore(matchDate)? trainingIntensityChangeDate: matchDate);
 			if (trainingIntensityChangeDate.isBefore(matchDate)) {
 				m_clPoints.add(new Point(trainingIntensityChangeDate, spirit, TRAINING_PT, intensity));
 				trainingIntensityChangeDate=trainingIntensityChangeDate.plus(7, ChronoUnit.DAYS);
 			}
 			// Insert daily update points which are between training intensity change and match date
-			insertDailyUpdates(nextDailyUpdates, matchDate);
+			insertDailyUpdates(nextDailyUpdates, intensity, matchDate);
 
 			var htweek = matchDate.toHTWeek();
 			Curve.Point point;
@@ -260,11 +259,11 @@ abstract class ForecastCurve extends Curve {
 		}
 	}
 
-	private void insertDailyUpdates(List<HODateTime> nextDailyUpdates, HODateTime until) {
+	private void insertDailyUpdates(List<HODateTime> nextDailyUpdates, double intensity, HODateTime until) {
 		var removeUpdates = new ArrayList<HODateTime>();
 		for (var update: nextDailyUpdates){
 			if ( update.isBefore(until)) {
-				m_clPoints.add(new Curve.Point(update, TEAM_SPIRIT_UNKNOWN, UPDATE_PT));
+				m_clPoints.add(new Curve.Point(update, TEAM_SPIRIT_UNKNOWN, UPDATE_PT, intensity));
 				removeUpdates.add(update);
 			}
 		}
