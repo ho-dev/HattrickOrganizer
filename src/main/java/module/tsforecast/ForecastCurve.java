@@ -68,24 +68,19 @@ abstract class ForecastCurve extends Curve {
 		return ret;
 	}
 
-	public void setSpirit(int pos, double spirit) throws Exception {
+	public void setSpirit(int pos, double spirit) {
 		if (pos >= 0 && pos < m_clPoints.size()) {
 			(m_clPoints.get(pos)).m_dSpirit = spirit;
 			forecast(pos);
 		}
 	}
 
-	public void setAttitude(int pos, int a) throws Exception {
+	public void setAttitude(int pos, int a) {
 		if (pos >= 0 && pos < m_clPoints.size()) {
 			(m_clPoints.get(pos)).m_iAttitude = a;
 			forecast(pos);
 		}
 	}
-
-//	public void setGeneralSpirit(double d) throws Exception {
-//		m_dGeneralSpirit = d;
-//		forecast(0);
-//	}
 
 	public void setStartPoint(Curve.Point point) {
 		super.addPoint(0, point);

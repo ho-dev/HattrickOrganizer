@@ -1,6 +1,5 @@
 package module.tsforecast;
 
-import core.db.ConnectionManager;
 import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.enums.MatchType;
