@@ -3,7 +3,7 @@
 * Calculation of the form sub by approximating the tsi formula (#235)
 * Restoring user's table sorting settings (#2119)
 * Display coach conversion costs (#2204)
-* Team spirit boost calculation when changing training intensity (#1063)
+* Team spirit boost calculation when changing training intensity (#1064)
 
 ## [Detailed Changelog](https://github.com/ho-dev/HattrickOrganizer/issues?q=milestone%3A9.0)
 
@@ -44,7 +44,7 @@
 
 ### Team spirit forecast
 
-* Team spirit boost calculation when changing training intensity (#1063)
+* Team spirit boost calculation when changing training intensity (#1064)
 
 ### Transfer
 
