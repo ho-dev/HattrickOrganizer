@@ -36,7 +36,7 @@ final class DBUpdater {
 			try {
 				switch (version) {
 					default:
-						// Attention: Defailt case as first case is intented - do not move it to the last place
+						// Attention: Default case as first case is intended - do not move it to the last place
 						// Unsupported database version
 						// We upgrade database from version 300 (HO 3.0)
 						HOLogger.instance().log(getClass(), "DB version " + version + " is too old");

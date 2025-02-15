@@ -164,14 +164,20 @@ class TSPanel extends JPanel {
         iSpirit = (int) ((curve.getSpirit() * (double) m_iMaxY) / m_dValues);
 
         if (curve.getPointType() == Curve.RESET_PT) {
-          graphics2d.drawString("Reset", (int) (x * m_dFactor + (double) m_iCoordX0), m_iMaxY + DYFrame - 2 - iSpirit);
+          graphics2d.drawString(TranslationFacility.tr("teamspirit.forecast.reset"),
+                  (int) (x * m_dFactor + (double) m_iCoordX0),
+                  m_iMaxY + DYFrame - 2 - iSpirit);
         } else {
           if (curve.getAttitude() != IMatchDetails.EINSTELLUNG_NORMAL
                   && curve.getAttitude() != IMatchDetails.EINSTELLUNG_UNBEKANNT) {
             if (curve.getAttitude() == IMatchDetails.EINSTELLUNG_PIC)
-              graphics2d.drawString("PIC", (int) (x * m_dFactor + (double) m_iCoordX0), m_iMaxY + DYFrame + 2 * UserParameter.instance().fontSize + 2 - iSpirit);
+              graphics2d.drawString(TranslationFacility.tr("ls.team.teamattitude_short.playitcool"),
+                      (int) (x * m_dFactor + (double) m_iCoordX0),
+                      m_iMaxY + DYFrame + 2 * UserParameter.instance().fontSize + 2 - iSpirit);
             else
-              graphics2d.drawString("MOTS", (int) (x * m_dFactor + (double) m_iCoordX0), m_iMaxY + DYFrame - 2 - iSpirit);
+              graphics2d.drawString(TranslationFacility.tr("ls.team.teamattitude_short.matchoftheseason"),
+                      (int) (x * m_dFactor + (double) m_iCoordX0),
+                      m_iMaxY + DYFrame - 2 - iSpirit);
           }
 
           // Draw match type icon
