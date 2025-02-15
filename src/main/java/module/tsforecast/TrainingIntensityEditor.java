@@ -34,7 +34,7 @@ public class TrainingIntensityEditor extends JPanel {
         point.trainingIntensity = trainingIntensitySlider.getValue();
         var pos = curve.propagateTrainingIntensity(point);
         if ( pos >= 0) {
-            curve.forecast(pos);
+            curve.forecast(pos-1);
         }
     }
 
