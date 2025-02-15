@@ -23,10 +23,24 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 
+/**
+ * Editor to set team's attitude in future matches
+ */
 final class TeamAttitudeEditor extends ImagePanel {
 
+	/**
+	 * Play it cool button
+	 */
 	private final JRadioButton m_rbPIC;
+
+	/**
+	 * Play normal button
+	 */
 	private final JRadioButton m_rbNORM;
+
+	/**
+	 * Match of the season button
+	 */
 	private final JRadioButton m_rbMOTS;
 
 	public TeamAttitudeEditor(String matchDate, String tooltip, int iCmd, int iSelected, MatchType iType) {

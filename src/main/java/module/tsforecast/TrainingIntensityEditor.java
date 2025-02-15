@@ -5,13 +5,36 @@ import javax.swing.*;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 
+/**
+ * Editor to set training intensity of future training weeks
+ */
 public class TrainingIntensityEditor extends JPanel {
 
+    /**
+     * Label showing the training intensity value
+     */
     JLabel trainingIntensityLabel;
+
+    /**
+     * Slider to edit training intensity value
+     */
     JSlider trainingIntensitySlider;
+
+    /**
+     * The complete curve data
+     */
     LoepiCurve curve;
+
+    /**
+     * The training intensity event point
+     */
     Curve.Point point;
 
+    /**
+     * Create a training intensity editor
+     * The event point that should be edited is the current point of the given loepi curve
+     * @param curve LoepiCurve, that should be edited
+     */
     public TrainingIntensityEditor(LoepiCurve curve) {
         super(new BorderLayout());
         trainingIntensitySlider = new JSlider(0, 100, (int)curve.getTrainingIntensity());
@@ -30,6 +53,10 @@ public class TrainingIntensityEditor extends JPanel {
         this.add(trainingIntensityLabel, BorderLayout.WEST);
     }
 
+    /**
+     * Update the point.
+     * The new value is read from the slider and propagated to the point and all it's successors.
+     */
     public void updatePoint(){
         point.trainingIntensity = trainingIntensitySlider.getValue();
         var pos = curve.propagateTrainingIntensity(point);
@@ -38,6 +65,10 @@ public class TrainingIntensityEditor extends JPanel {
         }
     }
 
+    /**
+     * Add a change listener to the training slider
+     * @param o ChangeListener
+     */
     public void addChangeListener(ChangeListener o) {
         this.trainingIntensitySlider.addChangeListener(o);
     }

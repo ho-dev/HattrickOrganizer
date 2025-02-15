@@ -39,10 +39,17 @@ import static java.lang.Math.*;
 
 abstract class ForecastCurve extends Curve {
 
+	// National teams have higher team spirit target
 	boolean isNtTeam;
+	// A psychologist also increase the team spirit target
 	double psychologyEffect;
 	protected int m_iNoWeeksForecast = 4;
 
+	/**
+	 * Create forecast curve
+	 * @param dbManager Database connection
+	 * @param future	If false the past spirit events are evaluated
+	 */
 	public ForecastCurve(DBManager dbManager, boolean future) {
 		super(dbManager);
 		var basics = HOVerwaltung.instance().getModel().getBasics();
@@ -60,6 +67,10 @@ abstract class ForecastCurve extends Curve {
 		}
 	}
 
+	/**
+	 * Get the team spirit target value
+	 * @return double
+	 */
 	public double getTargetSpirit(){
 		var ret = 4.5 + psychologyEffect;
 		if (isNtTeam){
@@ -68,6 +79,11 @@ abstract class ForecastCurve extends Curve {
 		return ret;
 	}
 
+	/**
+	 * Set the team spirit value of one point in the curve
+	 * @param pos Index of curve point
+	 * @param spirit Value of the team spirit
+	 */
 	public void setSpirit(int pos, double spirit) {
 		if (pos >= 0 && pos < m_clPoints.size()) {
 			(m_clPoints.get(pos)).m_dSpirit = spirit;
@@ -75,6 +91,11 @@ abstract class ForecastCurve extends Curve {
 		}
 	}
 
+	/**
+	 * Set the team attitude of one point in the curve
+	 * @param pos Index of curve point
+	 * @param a Value of team attitude
+	 */
 	public void setAttitude(int pos, int a) {
 		if (pos >= 0 && pos < m_clPoints.size()) {
 			(m_clPoints.get(pos)).m_iAttitude = a;
@@ -82,6 +103,10 @@ abstract class ForecastCurve extends Curve {
 		}
 	}
 
+	/**
+	 * Add last historical point as start of the future points
+	 * @param point Curve.Point
+	 */
 	public void setStartPoint(Curve.Point point) {
 		super.addPoint(0, point);
 		// delete all points that are before startpoint
@@ -99,6 +124,10 @@ abstract class ForecastCurve extends Curve {
 		super.addPoint(i, point);
 	}
 
+	/**
+	 * Calculate effect to the team spirit of future events
+	 * @param pos Index of the first event, to start the calculation
+	 */
 	public void forecast(int pos) {
 		if (m_clPoints.size() > pos) {
 			Curve.Point point1 = m_clPoints.get(pos);
@@ -152,17 +181,21 @@ abstract class ForecastCurve extends Curve {
 	protected abstract double forecastUpdate(Curve.Point point1,
 			Curve.Point point2);
 
-	// TODO: Add training events (Intensity)
+	/**
+	 * Add future events
+	 */
 	private void readFutureMatches() {
 		Basics ibasics = HOVerwaltung.instance().getModel().getBasics();
 		if (ibasics == null) return;
 
-		// MASTERS_MATCH 7 ???
-
 		var teamId = ibasics.getTeamId();
 		var matches = DBManager.instance().getMatchesKurzInfo(teamId, MatchKurzInfo.UPCOMING);
 		if (matches.isEmpty()) return;
-		var cupMatch = matches.stream().filter(i -> i.getMatchType() == MatchType.CUP && i.getCupLevel() == CupLevel.NATIONALorDIVISIONAL).findAny();
+
+		var cupMatch = matches.stream()
+				.filter(i -> i.getMatchType() == MatchType.CUP &&
+						i.getCupLevel() == CupLevel.NATIONALorDIVISIONAL)
+				.findAny();
 		if (cupMatch.isEmpty()) {
 			// no upcoming cup match found (might be not yet loaded)
 			var latestCupMatch = dbManager.getMatchesKurzInfo(
@@ -181,6 +214,7 @@ abstract class ForecastCurve extends Curve {
 		var toDate = ibasics.getDatum().plus(7 * m_iNoWeeksForecast, ChronoUnit.DAYS);
 		var trainingIntensityChangeDate = HOVerwaltung.instance().getModel().getXtraDaten().getLatestDailyUpdateDateBeforeTraining();
 		if (trainingIntensityChangeDate == null){
+			// Should only happen as long as no daily updates were downloaded from hattrick
 			trainingIntensityChangeDate = HOVerwaltung.instance().getModel().getXtraDaten().getNextTrainingDate();
 		}
 		var training = HOVerwaltung.instance().getModel().getTraining();
@@ -190,7 +224,7 @@ abstract class ForecastCurve extends Curve {
 		var nextDailyUpdates = updates.stream().filter(Objects::nonNull).sorted().collect(Collectors.toList());
 
 		if (cupMatch.isPresent()) {
-			// create future cup match dates
+			// create future cup match dates, if team is still in cup
 			for (int i = 0; i < m_iNoWeeksForecast; i++) {
 				var potentialCupMatch = new MatchKurzInfo();
 				potentialCupMatch.setMatchType(MatchType.CUP);
@@ -208,7 +242,8 @@ abstract class ForecastCurve extends Curve {
 
 			// Insert daily update points which are before training intensity changes
 			// or before match date if current date is after training intensity change
-			insertDailyUpdates(nextDailyUpdates, intensity, trainingIntensityChangeDate.isBefore(matchDate)? trainingIntensityChangeDate: matchDate);
+			insertDailyUpdates(nextDailyUpdates, intensity,
+					trainingIntensityChangeDate.isBefore(matchDate)? trainingIntensityChangeDate: matchDate);
 			if (trainingIntensityChangeDate.isBefore(matchDate)) {
 				m_clPoints.add(new Point(trainingIntensityChangeDate, spirit, TRAINING_PT, intensity));
 				trainingIntensityChangeDate=trainingIntensityChangeDate.plus(7, ChronoUnit.DAYS);
@@ -254,6 +289,13 @@ abstract class ForecastCurve extends Curve {
 		}
 	}
 
+	/**
+	 * Insert daily update events to the curve which are before argument until
+	 * Daily updates which are inserted to the curve are replaced by new ones of the upcoming week
+	 * @param nextDailyUpdates List of next upcoming update dates
+	 * @param intensity Training intensity value which is set for each inserted event
+	 * @param until HODateTime until the updates should be inserted
+	 */
 	private void insertDailyUpdates(List<HODateTime> nextDailyUpdates, double intensity, HODateTime until) {
 		var removeUpdates = new ArrayList<HODateTime>();
 		for (var update: nextDailyUpdates){

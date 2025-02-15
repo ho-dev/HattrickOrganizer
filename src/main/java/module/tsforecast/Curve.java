@@ -54,6 +54,12 @@ class Curve {
 	private Point m_currentPoint = null;
 	private Color m_Color = null;
 
+	/**
+	 * Set the training intensity of point's successors to the same value
+	 * up to the next training intensity change point
+	 * @param point Updated point
+	 * @return Index of point in the curve
+	 */
 	public int propagateTrainingIntensity(Point point) {
 		int ret = -1;
 		boolean skipping = true;
@@ -211,5 +217,4 @@ class Curve {
 	protected static int getDiffDays(Point point1, Point point2) {
 		return (int)Duration.between(point1.m_dDate.instant, point2.m_dDate.instant).toDays();
 	}
-
 }

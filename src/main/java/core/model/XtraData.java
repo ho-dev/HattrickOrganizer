@@ -212,6 +212,11 @@ public class XtraData extends AbstractTable.Storable {
         this.hrfId = hrfId;
     }
 
+    /**
+     * Get latest daily update date before next upcoming training
+     * If this date is in the past, the result is incremented by one week.
+     * @return HODateTime
+     */
     public HODateTime getLatestDailyUpdateDateBeforeTraining() {
         if (dailyUpdates != null && !dailyUpdates.isEmpty()) {
             var update = dailyUpdates.stream().filter(i->i != null && i.isBefore(m_TrainingDate)).max(HODateTime::compareTo).orElse(null);
@@ -225,8 +230,17 @@ public class XtraData extends AbstractTable.Storable {
         return null;
     }
 
+    /**
+     * Get the list of daily updates of the next 7 days
+     * @return List of HODateTime
+     */
     public ArrayList<HODateTime> getDailyUpdates() {return dailyUpdates;}
 
+    /**
+     * Set one daily update
+     * @param update Index [0..4]
+     * @param v HODateTime
+     */
     public void setDailyUpdate(int update, HODateTime v) {
         if ( update < 5) {
             if (dailyUpdates == null) {
