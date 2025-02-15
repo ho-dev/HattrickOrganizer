@@ -34,6 +34,7 @@ import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
+import core.model.enums.MatchType;
 import core.model.match.IMatchDetails;
 import core.util.HODateTime;
 
@@ -73,7 +74,6 @@ class TSPanel extends JPanel {
   private final Icon m_newImage = ThemeManager.getIcon(HOIconName.MATCHICONS[2]);
   private final Icon m_startImage = ThemeManager.getIcon(HOIconName.SMILEYS[1]);
 
-
   private HODateTime m_startDate = null;
   private int m_iDaysToDisplay = 0;
   private int m_iTodayPosition = 0;
@@ -81,7 +81,6 @@ class TSPanel extends JPanel {
   private boolean m_bShowConfidenceScale = true;
 
   private final ArrayList<Curve> m_Curves = new ArrayList<>();
-
 
   TSPanel() {
     setDoubleBuffered(true);
@@ -148,8 +147,6 @@ class TSPanel extends JPanel {
     }
   }
 
-
-  // TODO: Add tooltip and markers for each match (including friendlies)
   private void drawCurve(Graphics2D graphics2d, Curve curve) {
     graphics2d.setColor(curve.getColor());
     if (curve.first()) {
@@ -166,18 +163,27 @@ class TSPanel extends JPanel {
         x = (double) Duration.between(m_startDate.instant, curveDate.instant).toHours() / 24D + dayOffset;
         iSpirit = (int) ((curve.getSpirit() * (double) m_iMaxY) / m_dValues);
 
-        // TODO: Image of match type + tooltip of match information
-
         if (curve.getPointType() == Curve.RESET_PT) {
           graphics2d.drawString("Reset", (int) (x * m_dFactor + (double) m_iCoordX0), m_iMaxY + DYFrame - 2 - iSpirit);
-        } else if (curve.getAttitude() != IMatchDetails.EINSTELLUNG_NORMAL
-                && curve.getAttitude() != IMatchDetails.EINSTELLUNG_UNBEKANNT) {
-          if (curve.getAttitude() == IMatchDetails.EINSTELLUNG_PIC)
-            graphics2d.drawString("PIC", (int) (x * m_dFactor + (double) m_iCoordX0), m_iMaxY + DYFrame + UserParameter.instance().fontSize + 2 - iSpirit);
-          else
-            graphics2d.drawString("MOTS", (int) (x * m_dFactor + (double) m_iCoordX0), m_iMaxY + DYFrame - 2 - iSpirit);
-        }
+        } else {
+          if (curve.getAttitude() != IMatchDetails.EINSTELLUNG_NORMAL
+                  && curve.getAttitude() != IMatchDetails.EINSTELLUNG_UNBEKANNT) {
+            if (curve.getAttitude() == IMatchDetails.EINSTELLUNG_PIC)
+              graphics2d.drawString("PIC", (int) (x * m_dFactor + (double) m_iCoordX0), m_iMaxY + DYFrame + 2 * UserParameter.instance().fontSize + 2 - iSpirit);
+            else
+              graphics2d.drawString("MOTS", (int) (x * m_dFactor + (double) m_iCoordX0), m_iMaxY + DYFrame - 2 - iSpirit);
+          }
 
+          // Draw match type icon
+          if (curve.getPointType() == Curve.STANDARD_PT){
+            if (curve.getMatchType() != MatchType.NONE) {
+              var icon = ThemeManager.getIcon(HOIconName.MATCHICONS[curve.getMatchType().getIconArrayIndex()]);
+              graphics2d.drawImage(ImageUtilities.iconToImage(icon),
+                      (int) (x * m_dFactor + (double) m_iCoordX0), m_iMaxY + DYFrame - 2 - iSpirit,
+                      ((ImageIcon) m_startImage).getImageObserver());
+            }
+          }
+        }
         polygon1.addPoint((int) (x * m_dFactor + (double) m_iCoordX0), m_iMaxY + DYFrame - iSpirit);
         polygon2.addPoint((int) (x * m_dFactor + (double) m_iCoordX0), m_iMaxY + DYFrame - iSpirit + 1);
       }
@@ -186,7 +192,6 @@ class TSPanel extends JPanel {
       graphics2d.drawPolyline(polygon2.xpoints, polygon2.ypoints, polygon2.npoints);
     }
   }
-
 
   private void drawIndicators(Graphics2D graphics2d, Curve curve) {
     graphics2d.setColor(Color.BLACK);
@@ -230,7 +235,6 @@ class TSPanel extends JPanel {
       }
     }
   }
-
 
   private void drawCoordSystem(Graphics2D graphics2d) {
     FontRenderContext fontrendercontext = graphics2d.getFontRenderContext();
@@ -281,7 +285,6 @@ class TSPanel extends JPanel {
     // y-axis
     graphics2d.drawLine(m_iCoordX0, m_iMaxY + DYFrame + 3, m_iCoordX0, DYFrame - 3);
   }
-
 
   private void drawSeason(Graphics2D graphics2d) {
     var today = HOVerwaltung.instance().getModel().getBasics().getDatum();
