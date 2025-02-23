@@ -13,21 +13,13 @@ package module.tsforecast;
  *04.09.06  Version 0.3 Change formula to a trainerLS-based formula
  */
 
-/**
- *
- * @author  michael.roux
- */
-
 import core.db.DBManager;
 
 import java.sql.SQLException;
 
-// Referenced classes of package hoplugins.tsforecast:
-//            ForecastCurve, Curve
-
 public class LoepiCurve extends ForecastCurve {
 
-	private TrainerCurve m_TrainerCurve = null;
+	private final TrainerCurve m_TrainerCurve;
 
 	public LoepiCurve(DBManager dbManager, TrainerCurve t, boolean future) throws SQLException {
 		super(dbManager, future);
@@ -45,16 +37,23 @@ public class LoepiCurve extends ForecastCurve {
 	// alte Formel: TS(neu)=TS(alt)*(1+((TS(alt)-4,5)*(-1)/(Faktor/1,5))/100).
 
 	@Override
-	protected double forecastUpdate(Curve.Point point1, Curve.Point point2)
-			throws Exception {
+	protected double forecastUpdate(Curve.Point point1, Curve.Point point2) {
 
 		double dRet = point1.m_dSpirit;
-		if (dRet >= m_dGeneralSpirit) {
-			dRet *= 1.0D - (((dRet - m_dGeneralSpirit) / (m_TrainerCurve
+		var targetSpirit = getTargetSpirit();
+		if (dRet >= targetSpirit) {
+			dRet *= 1.0D - (((dRet - targetSpirit) / (m_TrainerCurve
 					.getLeadership(point1.m_dDate) / 3D)) / 100D);
 		} else {
-			dRet *= 1.0D + (((dRet - m_dGeneralSpirit) * -1D)
+			dRet *= 1.0D + (((dRet - targetSpirit) * -1D)
 					* (m_TrainerCurve.getLeadership(point1.m_dDate) / 2D) / 100D);
+		}
+		if (point1.trainingIntensity != point2.trainingIntensity) {
+			if (point2.trainingIntensity == -1) {
+				point2.trainingIntensity = point1.trainingIntensity;
+			} else {
+				dRet = calculateTeamSpiritBoost(dRet, point1.trainingIntensity, point2.trainingIntensity);
+			}
 		}
 		return dRet;
 	}

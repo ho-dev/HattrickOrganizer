@@ -88,6 +88,8 @@ Please open a request if the language you are interested in is not listed.
 
 ## Acknowledgements
 
+Thanks to Ventouris Anastasios (HT-Tasos) for allowing us to use the formulas of his [HT-Tools](https://github.com/ventouris/hattricktools) application
+
 The following companies are kindly supporting HO open source project:
 
 <a href="https://www.jetbrains.com/?from=HO"> <img src="https://user-images.githubusercontent.com/1136496/54837108-e40f7f80-4cc5-11e9-9ea9-047856d17bb4.png" alt="Jetbrains"  width="31" height="34"> </a> [**Jetbrains**](https://www.jetbrains.com/?from=HO) with its full-featured development toolbox
@@ -110,22 +112,23 @@ these here.
   * License: Apache License, version 2.0
   * For details, see [``docs/Licences/common-codecs/LICENSE.txt``](Licences/common-codecs/LICENSE.txt)
 
+* darklaf
+  * License: MIT
+  * For details, see [``docs/Licences/darklaf/README``](Licences/darklaf/LICENSE)
+
 * hsqldb
   * License: has its own licence based on BSD
   * For details, see [``docs/Licences/hsqldb/LICENSE.txt``](Licences/hsqldb/LICENSE.txt)
-
-* scribe
-  * License: MIT
-  * For details, see [``docs/Licences/scribe/LICENSE.txt``](Licences/scribe/LICENSE.txt)
-
-* ospackage
-  * License: Apache License, version 2.0
-  * For details, see [``docs/Licences/ospackage/LICENSE.txt``](Licences/ospackage/LICENSE.txt)
 
 * OkHttp
   * License: Apache License, version 2.0
   * For details, see [``http://www.apache.org/licenses/LICENSE-2.0.txt``](http://www.apache.org/licenses/LICENSE-2.0.txt)
 
-* darklaf
+* ospackage
+  * License: Apache License, version 2.0
+  * For details, see [``docs/Licences/ospackage/LICENSE.txt``](Licences/ospackage/LICENSE.txt)
+
+* scribe
   * License: MIT
-  * For details, see [``docs/Licences/darklaf/README``](Licences/darklaf/LICENSE)
+  * For details, see [``docs/Licences/scribe/LICENSE.txt``](Licences/scribe/LICENSE.txt)
+

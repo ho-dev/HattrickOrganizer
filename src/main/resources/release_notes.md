@@ -1,8 +1,9 @@
 ## Highlights
 
-* Calculation of the tsi sub by approximating the tsi formula (#235)
+* Calculation of the form sub by approximating the tsi formula (#235)
 * Restoring user's table sorting settings (#2119)
 * Display coach conversion costs (#2204)
+* Team spirit boost calculation when changing training intensity (#1064)
 
 ## [Detailed Changelog](https://github.com/ho-dev/HattrickOrganizer/issues?q=milestone%3A9.0)
 
@@ -14,7 +15,7 @@
 
 ### Squad
 
-* Calculation of the tsi sub by approximating the tsi formula (#235)
+* Calculation of the form sub by approximating the tsi formula (#235)
 * Fix display of best position rating (#2166)
 * Display coach conversion costs (#2204)
 * New column "trainer notes" (#2229)
@@ -42,7 +43,9 @@
 * Lineup assistant optimizes behaviour settings (#163)
 * Fix substitution plausibility check (#2224)
 
-### Special events
+### Team spirit forecast
+
+* Team spirit boost calculation when changing training intensity (#1064)
 
 ### Transfer
 
@@ -78,15 +81,15 @@
 
 ## Translations
 
-Reports by Contributors - June 23, 2024 - January 08, 2025
+Reports by Contributors - June 23, 2024 - February 15, 2025
 
 * Kristaps 322
 * Tavaro 175
-* Lidegang 157
-* wsbrenk 89
+* Lidegang 158
+* wsbrenk 93
 * Moorhuhninho 25
 * Sebastian Reddig 12
 * Achilles 10
 * Billy Dikkanen 10
 
-Total 800
+Total 805

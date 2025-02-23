@@ -680,6 +680,13 @@ public class HRFStringBuilder {
         appendKeyValue(xtraStringBuilder, "TrainingDate", worldDataMap.get("TrainingDate"));
         appendKeyValue(xtraStringBuilder, "EconomyDate", worldDataMap.get("EconomyDate"));
         appendKeyValue(xtraStringBuilder, "SeriesMatchDate", worldDataMap.get("SeriesMatchDate"));
+        // "Daily" updates of next 7 Hattrick days
+        appendKeyValue(xtraStringBuilder, "DailyUpdate1", worldDataMap.get("Sequence1"));
+        appendKeyValue(xtraStringBuilder, "DailyUpdate2", worldDataMap.get("Sequence2"));
+        appendKeyValue(xtraStringBuilder, "DailyUpdate3", worldDataMap.get("Sequence3"));
+        // Don't take over the numbering of the chpp api to make it easier to work with loops
+        appendKeyValue(xtraStringBuilder, "DailyUpdate4", worldDataMap.get("Sequence5"));
+        appendKeyValue(xtraStringBuilder, "DailyUpdate5", worldDataMap.get("Sequence7"));
         appendKeyValue(xtraStringBuilder, "CountryId", worldDataMap.get("CountryID"));
         var currencyRate = worldDataMap.get("CurrencyRate");
         if (!StringUtils.isEmpty(currencyRate)) {

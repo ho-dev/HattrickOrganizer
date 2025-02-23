@@ -324,7 +324,7 @@ final class MatchesKurzInfoTable extends AbstractTable {
 
 		var sep = "WHERE";
 		if (teamId > -1) {
-			sql.append(sep).append(" GastID=? OR HeimID=?");
+			sql.append(sep).append(" (GastID=? OR HeimID=?)");
 			sep = " AND";
 			params.add(teamId);
 			params.add(teamId);

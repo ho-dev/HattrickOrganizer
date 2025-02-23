@@ -150,6 +150,12 @@ public class XMLWorldDetailsParser {
 					ele = (Element) root.getElementsByTagName("SeriesMatchDate").item(0);
 					map.put("SeriesMatchDate", (XMLManager.getFirstChildNodeValue(ele)));
 
+					XMLManager.xmlValue2Hash(map, root, "Sequence1");
+					XMLManager.xmlValue2Hash(map, root, "Sequence2");
+					XMLManager.xmlValue2Hash(map, root, "Sequence3");
+					XMLManager.xmlValue2Hash(map, root, "Sequence5");
+					XMLManager.xmlValue2Hash(map, root, "Sequence7");
+
 					// Country
 					root = (Element) root.getElementsByTagName("Country").item(0);
 					ele = (Element) root.getElementsByTagName("CountryID").item(0);
