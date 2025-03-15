@@ -4,6 +4,8 @@ import core.db.AbstractTable;
 import core.util.HODateTime;
 import org.apache.commons.lang3.math.NumberUtils;
 
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Properties;
 
 public class XtraData extends AbstractTable.Storable {
@@ -28,6 +30,8 @@ public class XtraData extends AbstractTable.Storable {
     private int m_iLeagueLevelUnitID = -1;
     private int hrfId;
 
+    private ArrayList<HODateTime> dailyUpdates;
+
     //~ Constructors -------------------------------------------------------------------------------
 
     /**
@@ -42,6 +46,11 @@ public class XtraData extends AbstractTable.Storable {
         m_clEconomyDate = HODateTime.fromHT(properties.getProperty("economydate"));
         m_TrainingDate = HODateTime.fromHT(properties.getProperty("trainingdate"));
         m_iLeagueLevelUnitID = getInteger(properties, "leaguelevelunitid", -1);
+
+        dailyUpdates = new ArrayList<>();
+        for (int i=1; i<6; ++i){
+            dailyUpdates.add(HODateTime.fromHT(properties.getProperty("dailyupdate" + i, "")));
+        }
     }
 
     private Integer getInteger(Properties properties, String key, Integer def) {
@@ -201,5 +210,46 @@ public class XtraData extends AbstractTable.Storable {
 
     public void setHrfId(int hrfId) {
         this.hrfId = hrfId;
+    }
+
+    /**
+     * Get latest daily update date before next upcoming training
+     * If this date is in the past, the result is incremented by one week.
+     * @return HODateTime
+     */
+    public HODateTime getLatestDailyUpdateDateBeforeTraining() {
+        if (dailyUpdates != null && !dailyUpdates.isEmpty()) {
+            var update = dailyUpdates.stream().filter(i->i != null && i.isBefore(m_TrainingDate)).max(HODateTime::compareTo).orElse(null);
+            if ( update == null){
+                // Latest update of current training date is already missed, try next one
+                var nextTrainingDate = m_TrainingDate.plus(7, ChronoUnit.DAYS);
+                update = dailyUpdates.stream().filter(i->i != null && i.isBefore(nextTrainingDate)).max(HODateTime::compareTo).orElse(null);
+            }
+            return update;
+        }
+        return null;
+    }
+
+    /**
+     * Get the list of daily updates of the next 7 days
+     * @return List of HODateTime
+     */
+    public ArrayList<HODateTime> getDailyUpdates() {return dailyUpdates;}
+
+    /**
+     * Set one daily update
+     * @param update Index [0..4]
+     * @param v HODateTime
+     */
+    public void setDailyUpdate(int update, HODateTime v) {
+        if ( update < 5) {
+            if (dailyUpdates == null) {
+                dailyUpdates = new ArrayList<>();
+                for (int i = 0; i < 5; i++) {
+                    dailyUpdates.add(null);
+                }
+            }
+            dailyUpdates.set(update, v);
+        }
     }
 }
