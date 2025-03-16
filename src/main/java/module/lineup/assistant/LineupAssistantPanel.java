@@ -184,6 +184,7 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 			removeGUI();
 			updateDefaultSelection();
 
+			// TODO: Create LineupAssistant here (remove it from Lineup class)
 			startAssistant(hoModel, mainFrame);
 
 		} else if (actionEvent.getSource().equals(overlayCancel)) {
