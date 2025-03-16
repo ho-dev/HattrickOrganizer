@@ -1712,11 +1712,14 @@ public class RatingPredictionModel {
         var sumSetPieces = 0.;
         var n = 0;
         for (var p : lineup.getFieldPositions()) {
+            if ( p.getRoleId() == keeper) continue;
             var player = p.getPlayer();
+
             if (player != null) {
+                var loyalty = calcLoyalty(player);
                 n++;
-                sumScoring += calcSkillRating(player.getSkill(SCORING));
-                sumSetPieces += calcSkillRating(player.getSkill(SETPIECES));
+                sumScoring += loyalty + calcSkillRating(player.getSkill(SCORING));
+                sumSetPieces += loyalty + calcSkillRating(player.getSkill(SETPIECES));
             }
         }
 

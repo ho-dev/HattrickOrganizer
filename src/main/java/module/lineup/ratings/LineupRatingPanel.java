@@ -629,7 +629,9 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
             setLoddar(Helper.round(minuteRating.loddar(currentLineup), 2));
             setiHatStats((int) minuteRating.hatstats(currentLineup));
             int iTacticType = currentLineup.getTacticType();
-            setTactic(iTacticType, (float) ratingPredictionModel.getTacticRating(currentLineup, minute));
+            var tacticRating = ratingPredictionModel.getTacticRating(currentLineup, minute);
+            if ( tacticRating > 0) tacticRating +=1;
+            setTactic(iTacticType, (float)tacticRating );
             setFormationExperience(currentLineup.getCurrentTeamFormationString(), currentLineup.getExperienceForCurrentTeamFormation());
 
             // Recalculate Borders
