@@ -17,9 +17,11 @@ class DbEncrypterManager(private val userManager: UserManager) {
 	private val publicKeyRetriever: PublicKeyRetriever = FilePublicKeyRetriever("export")
 	private val fileSymEncryptor: SymFileEncryptor = AESSymFileEncryptor()
 
-	fun encrypt() {
+	fun encrypt(): String {
 		val hoZip = zipDatabase()
 		encryptFile(hoZip.path)
+
+		return hoZip.path
 	}
 
 	private fun zipDatabase(): HOZip {

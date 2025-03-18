@@ -1,7 +1,9 @@
 package tool.dbencrypter
 
+import core.model.UserParameter
 import tool.dbencrypter.encrypt.DbEncrypterManager
 import tool.dbencrypter.github.GithubApp
+import java.io.File
 import javax.swing.JFrame
 
 /**
@@ -21,13 +23,19 @@ class IssueReporterManager(private val githubApp: GithubApp, private val dbEncry
 		progressManager: () -> Unit,
 		codePrompt: (String) -> Unit
 	) {
+		var path: String? = null
 		if (attachDb) {
-			dbEncrypterManager.encrypt()
+			path = dbEncrypterManager.encrypt()
+			println("Path: $path")
 			// TODO Upload Encrypted database, and get link
 		}
 
 		progressManager()
 		githubApp.requestDeviceCode(summary, description, codePrompt)
 		progressManager()
+
+		if (attachDb) {
+			githubApp.uploadFile(File(path), "8", "ho-dev", "test-ghapp", UserParameter.instance().githubAccessToken)
+		}
 	}
 }
