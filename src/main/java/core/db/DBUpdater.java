@@ -32,6 +32,11 @@ final class DBUpdater {
 
 		int version = ((UserConfigurationTable) dbManager.getTable(UserConfigurationTable.TABLENAME)).getDBVersion();
 
+		if ( DBManager.getVersion() < version ) {
+			// Sometimes dev versions increase the db version, although they shouldn't do so.
+			version = DBManager.getVersion();
+		}
+
 		if (version != DBVersion) {
 			try {
 				switch (version) {
@@ -862,26 +867,26 @@ final class DBUpdater {
 		HOLogger.instance().info(DBUpdater.class, "updateDBv300() successfully completed");
 	}
 
-	private void updateDBVersion(int DBVersion, int version) {
-		if (version < DBVersion) {
+	private void updateDBVersion(int targetDBVersion, int updateVersion) {
+		if (updateVersion < targetDBVersion) {
 			if (!HO.isDevelopment()) {
-				HOLogger.instance().info(DBUpdater.class, "Update to " + version + " done. Updating DBVersion");
-				dbManager.saveUserParameter("DBVersion", version);
+				HOLogger.instance().info(DBUpdater.class, "Update to " + updateVersion + " done. Updating DBVersion");
+				dbManager.saveUserParameter("DBVersion", updateVersion);
 			}
 			else {
-				HOLogger.instance().debug(DBUpdater.class, "Update to " + version + " done but this is a development version so DBVersion will remain unchanged");
+				HOLogger.instance().debug(DBUpdater.class, "Update to " + updateVersion + " done but this is a development version so DBVersion will remain unchanged");
 			}
 		}
-		else if (version == DBVersion) {
+		else if (updateVersion == targetDBVersion) {
 			if (!HO.isDevelopment()) {
-				HOLogger.instance().info(DBUpdater.class, "Update complete, setting DBVersion to " + version);
-				dbManager.saveUserParameter("DBVersion", version);
+				HOLogger.instance().info(DBUpdater.class, "Update complete, setting DBVersion to " + updateVersion);
+				dbManager.saveUserParameter("DBVersion", updateVersion);
 			} else {
-				HOLogger.instance().debug(DBUpdater.class, "Update to " + version + " complete but this is a development version so DBVersion will remain unchanged");
+				HOLogger.instance().debug(DBUpdater.class, "Update to " + updateVersion + " complete but this is a development version so DBVersion will remain unchanged");
 			}
 		}
 		else {
-			HOLogger.instance().error(DBUpdater.class, "Error trying to set DB version to unidentified value:  " + version
+			HOLogger.instance().error(DBUpdater.class, "Error trying to set DB version to unidentified value:  " + updateVersion
 							+ " (isDevelopment=" + HO.isDevelopment() + ")");
 		}
 	}
