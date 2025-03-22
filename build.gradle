@@ -22,13 +22,13 @@ buildscript {
 plugins {
     id "java"
     id "groovy"
-    id "org.jetbrains.kotlin.jvm" version "1.9.21"
+    id "org.jetbrains.kotlin.jvm" version "2.1.20"
     id "application"
     id "org.kordamp.gradle.markdown" version "2.2.0"
     id "com.github.breadmoirai.github-release" version "2.5.2"
-    id "com.install4j.gradle" version "9.0.6"
-    id "org.barfuin.gradle.taskinfo" version "2.1.0"
-    id "io.freefair.lombok" version "8.10"
+    id "com.install4j.gradle" version "10.0.8"
+    id "org.barfuin.gradle.taskinfo" version "2.2.0"
+    id "io.freefair.lombok" version "8.13"
 }
 apply plugin: de.jansauer.poeditor.POEditorPlugin
 
@@ -46,10 +46,10 @@ repositories {
 }
 
 dependencies {
-    implementation "com.install4j:install4j-runtime:10.0.7"
+    implementation "com.install4j:install4j-runtime:10.0.8"
     implementation "com.github.scribejava:scribejava-core:8.3.3"
-    implementation 'org.hsqldb:hsqldb:2.7.3'
-    implementation 'com.google.code.gson:gson:2.10'
+    implementation "org.hsqldb:hsqldb:2.7.4"
+    implementation "com.google.code.gson:gson:2.12.1"
     implementation "com.squareup.okhttp3:okhttp:4.12.0"
     implementation "com.squareup.okhttp3:okhttp-tls:4.12.0"
     implementation "com.squareup.okhttp3:logging-interceptor:4.12.0"
@@ -57,15 +57,15 @@ dependencies {
     implementation "com.github.weisj:darklaf-theme:3.0.2"
     implementation "com.github.weisj:darklaf-property-loader:3.0.2"
     implementation "org.javatuples:javatuples:1.2"
-    implementation "org.apache.commons:commons-text:1.12.0"
-    implementation "org.knowm.xchart:xchart:3.8.7"
-    implementation 'org.jsoup:jsoup:1.18.1'
-    implementation "org.jetbrains:annotations:24.1.0"
-    implementation 'org.codehaus.groovy:groovy-all:3.0.21'
+    implementation "org.apache.commons:commons-text:1.13.0"
+    implementation "org.knowm.xchart:xchart:3.8.8"
+    implementation "org.jsoup:jsoup:1.19.1"
+    implementation "org.jetbrains:annotations:26.0.2"
+    implementation "org.codehaus.groovy:groovy-all:3.0.24"
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-    testImplementation "org.junit.jupiter:junit-jupiter:5.10.2"
+    testImplementation "org.junit.jupiter:junit-jupiter:5.13.0-M1"
     testImplementation "org.assertj:assertj-core:3.26.3"
-    testImplementation "org.jetbrains.kotlin:kotlin-test:1.9.21"
+    testImplementation "org.jetbrains.kotlin:kotlin-test:2.1.20"
 }
 
 test {
@@ -509,7 +509,7 @@ tasks.register("pushDB") {
             println("Pushing DB: copying DB from ${projectDir} into `${tempDir}/db/`")
             project.delete(files("${tempDir}/db"))
             copy {
-                from"${projectDir}/db"
+                from "${projectDir}/db"
                 into "${tempDir}/db"
                 exclude "**/logs/**"
             }
