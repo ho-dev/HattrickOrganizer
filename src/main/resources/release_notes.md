@@ -37,8 +37,6 @@
 
 * Fix table calculation if teams were replaced during series (#2178)
 
-### Matches
-
 ### Lineup
 
 * Lineup assistant optimizes behaviour settings (#163)
@@ -53,8 +51,6 @@
 * Fix display of leadership skill in transfer scouting pane (#2184)
 * Fix error in download of player transfers (#2151)
 * Remove redundant mini scout dialog (#1868)
-
-### Training
 
 ### International Friendlies
 
