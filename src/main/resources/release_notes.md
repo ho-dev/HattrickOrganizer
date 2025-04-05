@@ -37,8 +37,6 @@
 
 * Fix table calculation if teams were replaced during series (#2178)
 
-### Matches
-
 ### Lineup
 
 * Lineup assistant optimizes behaviour settings (#163)
@@ -53,8 +51,6 @@
 * Fix display of leadership skill in transfer scouting pane (#2184)
 * Fix error in download of player transfers (#2151)
 * Remove redundant mini scout dialog (#1868)
-
-### Training
 
 ### International Friendlies
 
@@ -83,15 +79,15 @@
 
 ## Translations
 
-Reports by Contributors - June 23, 2024 - February 15, 2025
+Reports by Contributors - June 23, 2024 - March 23, 2025
 
 * Kristaps 322
 * Tavaro 175
 * Lidegang 158
-* wsbrenk 93
+* wsbrenk 97
 * Moorhuhninho 25
 * Sebastian Reddig 12
 * Achilles 10
 * Billy Dikkanen 10
 
-Total 805
+Total 809
