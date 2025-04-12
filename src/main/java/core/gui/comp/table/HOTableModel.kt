@@ -375,7 +375,7 @@ abstract class HOTableModel protected constructor(
                 val index = userColumns.indexOf(col)
                 if (index > -1) {
                     val sortKey = RowSorter.SortKey(index, col.getSortOrder())
-                    if (sortKey.column > -1 && sortKey.column < rowSorter.modelRowCount) {
+                    if (sortKey.column > -1 && sortKey.column < rowSorter.model.columnCount) {
                         sortKeys.add(sortKey)
                     }
                 }
