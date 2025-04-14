@@ -231,7 +231,7 @@ abstract class HOTableModel protected constructor(
     private fun moveColumn(table: JTable, userColumn: UserColumn) {
         if (table is FixedColumnsTable) {
             val targetIndex = userColumn.getIndex() - table.fixedColumnsCount
-            if (targetIndex > 0) {
+            if (targetIndex >= 0) {
                 try {
                     val index = table.getColumnModel().getColumnIndex(userColumn.getId())
                     if (index != targetIndex) {

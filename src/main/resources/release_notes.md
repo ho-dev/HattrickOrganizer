@@ -22,6 +22,7 @@
 * Fix initial size of skill and position columns (#2217)
 * Fix long shot rating calculation (#2237)
 * Fix consideration of the loyalty influence on the long shot tactic level (#2247)
+* Fix column order sorting error (#2265)
 
 ### Team Analyzer
 
