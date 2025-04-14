@@ -1,4 +1,3 @@
-// %3513105810:hoplugins.trainingExperience.ui.model%
 package module.training.ui.model;
 
 import core.constants.player.PlayerSkill;
