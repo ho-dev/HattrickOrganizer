@@ -31,7 +31,7 @@ public class PluginIfaUtils {
 		throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
 	}
 
-	private static String getTeamDetails(int teamID) throws Exception {
+	private static String getTeamDetails(int teamID) {
 		return MyConnector.instance().getTeamDetails(teamID);
 	}
 
