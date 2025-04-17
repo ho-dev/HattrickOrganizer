@@ -56,6 +56,7 @@
 ### International Friendlies
 
 * Fix database error on match reload (#2063)
+* Add new countries (#2255)
 
 ### Youth
 
