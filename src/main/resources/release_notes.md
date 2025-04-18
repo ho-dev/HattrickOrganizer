@@ -23,6 +23,7 @@
 * Fix long shot rating calculation (#2237)
 * Fix consideration of the loyalty influence on the long shot tactic level (#2247)
 * Fix column order sorting error (#2265)
+* Players who are promoted from youth to adults keep their sub skills (#2267)
 
 ### Team Analyzer
 
