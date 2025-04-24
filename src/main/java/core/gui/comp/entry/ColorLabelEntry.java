@@ -10,7 +10,7 @@ import java.awt.Color;
 import java.awt.Font;
 import javax.swing.*;
 
-public class ColorLabelEntry extends JLabel implements IHOTableEntry {
+public class ColorLabelEntry extends JLabel implements IHOTableCellEntry {
 
     public static final Color FG_STANDARD = ThemeManager.getColor(HOColorName.TABLEENTRY_FG);
     public static final Color BG_STANDARD = ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
@@ -328,7 +328,7 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
      * Compare two ColorLabelEntry objects based on non negative number or text.
      */
     @Override
-    public final int compareTo(@NotNull IHOTableEntry obj) {
+    public final int compareTo(@NotNull IHOTableCellEntry obj) {
         if (obj instanceof ColorLabelEntry entry) {
 
             if (number != Float.NEGATIVE_INFINITY) {
@@ -366,7 +366,7 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
     }
 
     @Override
-    public final int compareToThird(IHOTableEntry obj) {
+    public final int compareToThird(IHOTableCellEntry obj) {
         return this.compareTo(obj);
     }
 

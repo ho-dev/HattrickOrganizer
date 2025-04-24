@@ -1,7 +1,7 @@
 package module.specialEvents;
 
 import core.gui.comp.entry.ColorLabelEntry;
-import core.gui.comp.entry.IHOTableEntry;
+import core.gui.comp.entry.IHOTableCellEntry;
 import core.gui.comp.table.HOTableModel;
 import core.gui.comp.table.UserColumn;
 import core.gui.model.UserColumnController;
@@ -29,7 +29,7 @@ public class SpecialEventsTableModel extends HOTableModel {
 		this.columns = new ArrayList<>(List.of(
 				new SpecialEventsColumn("SpieleDetails") {
 					@Override
-					public IHOTableEntry getTableEntry(MatchRow entry) {
+					public IHOTableCellEntry getTableEntry(MatchRow entry) {
 						var highlight = entry.getMatchHighlight();
 						var ret = new ColorLabelEntry(HODateTime.toEpochSecond(highlight.getMatchDate()), HODateTime.toLocaleDateTime(highlight.getMatchDate()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
 						ret.setIcon(highlight.getMatchType().getIcon());
@@ -38,7 +38,7 @@ public class SpecialEventsTableModel extends HOTableModel {
 				},
 				new SpecialEventsColumn("ls.team.tactic") {
 					@Override
-					public IHOTableEntry getTableEntry(MatchRow entry) {
+					public IHOTableCellEntry getTableEntry(MatchRow entry) {
 						var tacticId = entry.getMatch().getHostingTeamTactic();
 						var ret = new ColorLabelEntry(tacticId, "", ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
 						ret.setIcon(getTacticIcon(tacticId));
@@ -47,25 +47,25 @@ public class SpecialEventsTableModel extends HOTableModel {
 				},
 				new SpecialEventsColumn("Heim") {
 					@Override
-					public IHOTableEntry getTableEntry(MatchRow entry) {
+					public IHOTableCellEntry getTableEntry(MatchRow entry) {
 						return  new ColorLabelEntry(entry.getMatch().getHostingTeam(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
 					}
 				},
 				new SpecialEventsColumn("ls.match.result") {
 					@Override
-					public IHOTableEntry getTableEntry(MatchRow entry) {
+					public IHOTableCellEntry getTableEntry(MatchRow entry) {
 						return  new ColorLabelEntry(entry.getMatch().getMatchResult(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
 					}
 				},
 				new SpecialEventsColumn("Gast") {
 					@Override
-					public IHOTableEntry getTableEntry(MatchRow entry) {
+					public IHOTableCellEntry getTableEntry(MatchRow entry) {
 						return  new ColorLabelEntry(entry.getMatch().getVisitingTeam(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
 					}
 				},
 				new SpecialEventsColumn("ls.team.guest.tactic") {
 					@Override
-					public IHOTableEntry getTableEntry(MatchRow entry) {
+					public IHOTableCellEntry getTableEntry(MatchRow entry) {
 						var tacticId = entry.getMatch().getVisitingTeamTactic();
 						var ret = new ColorLabelEntry(tacticId, "", ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
 						ret.setIcon(getTacticIcon(tacticId));
@@ -74,13 +74,13 @@ public class SpecialEventsTableModel extends HOTableModel {
 				},
 				new SpecialEventsColumn("ls.match.minute") {
 					@Override
-					public IHOTableEntry getTableEntry(MatchRow entry) {
+					public IHOTableCellEntry getTableEntry(MatchRow entry) {
 						return  new ColorLabelEntry(entry.getMatchHighlight().getMinute(), String.valueOf(entry.getMatchHighlight().getMinute()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
 					}
 				},
 				new SpecialEventsColumn("Event") {
 					@Override
-					public IHOTableEntry getTableEntry(MatchRow entry) {
+					public IHOTableCellEntry getTableEntry(MatchRow entry) {
 						var ret =  new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
 						var highlight = entry.getMatchHighlight();
 						for ( var icon : highlight.getIcons()){
@@ -91,7 +91,7 @@ public class SpecialEventsTableModel extends HOTableModel {
 				},
 				new SpecialEventsColumn("ls.match.event.details") {
 					@Override
-					public IHOTableEntry getTableEntry(MatchRow entry) {
+					public IHOTableCellEntry getTableEntry(MatchRow entry) {
 						var matchHighlight = entry.getMatchHighlight();
 						var ret =   new ColorLabelEntry(SpecialEventsDM.getSEText(matchHighlight), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
 						var eventText = matchHighlight.getEventText();
@@ -103,7 +103,7 @@ public class SpecialEventsTableModel extends HOTableModel {
 				},
 				new SpecialEventsColumn("Spieler") {
 					@Override
-					public IHOTableEntry getTableEntry(MatchRow entry) {
+					public IHOTableCellEntry getTableEntry(MatchRow entry) {
 						var highlight = entry.getMatchHighlight();
 						var playerName = highlight.getPlayerName();
 						var sb = new StringBuilder();

@@ -53,7 +53,7 @@ final public class UserColumnFactory {
         final PlayerColumn2[] playerColumn2Array = new PlayerColumn2[5];
         playerColumn2Array[0] = new PlayerColumn2(590, "ls.team.teamspirit") {
             @Override
-            public IHOTableEntry getTableEntry(PlayerMatchCBItem spielerCBItem) {
+            public IHOTableCellEntry getTableEntry(PlayerMatchCBItem spielerCBItem) {
                 return new ColorLabelEntry(spielerCBItem.getStimmung(),
                         ColorLabelEntry.FG_STANDARD,
                         ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
@@ -62,7 +62,7 @@ final public class UserColumnFactory {
 
         playerColumn2Array[1] = new PlayerColumn2(600, "ls.team.confidence") {
             @Override
-            public IHOTableEntry getTableEntry(PlayerMatchCBItem spielerCBItem) {
+            public IHOTableCellEntry getTableEntry(PlayerMatchCBItem spielerCBItem) {
                 return new ColorLabelEntry(spielerCBItem.getSelbstvertrauen(),
                         ColorLabelEntry.FG_STANDARD,
                         ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
@@ -71,7 +71,7 @@ final public class UserColumnFactory {
 
         playerColumn2Array[2] = new PlayerColumn2(601, "Position") {
             @Override
-            public IHOTableEntry getTableEntry(PlayerMatchCBItem spielerCBItem) {
+            public IHOTableCellEntry getTableEntry(PlayerMatchCBItem spielerCBItem) {
                 ColorLabelEntry colorLabelEntry = new ColorLabelEntry(ImageUtilities
                         .getJerseyIcon(
                                 MatchRoleID.getHTPosidForHOPosition4Image((byte) spielerCBItem.getPosition()),
@@ -94,14 +94,14 @@ final public class UserColumnFactory {
 
         playerColumn2Array[3] = new PlayerColumn2(RATING, "Rating") {
             @Override
-            public IHOTableEntry getTableEntry(PlayerMatchCBItem spielerCBItem) {
+            public IHOTableCellEntry getTableEntry(PlayerMatchCBItem spielerCBItem) {
                 return new RatingTableEntry(spielerCBItem.getRating(), false);
             }
         };
 
         playerColumn2Array[4] = new PlayerColumn2(602, "ls.player.age") {
             @Override
-            public IHOTableEntry getTableEntry(PlayerMatchCBItem spielerCBItem) {
+            public IHOTableCellEntry getTableEntry(PlayerMatchCBItem spielerCBItem) {
                 Player player = spielerCBItem.getSpieler();
                 var matchDate = spielerCBItem.getMatchdetails().getMatchDate();
 
@@ -131,7 +131,7 @@ final public class UserColumnFactory {
         final MatchDetailsColumn[] matchDetailsColumnsArray = new MatchDetailsColumn[4];
         matchDetailsColumnsArray[0] = new MatchDetailsColumn(550, "ls.match.weather", 30) {
             @Override
-            public IHOTableEntry getTableEntry(Matchdetails matchdetails) {
+            public IHOTableCellEntry getTableEntry(Matchdetails matchdetails) {
                 return new ColorLabelEntry(ThemeManager.getIcon(HOIconName.WEATHER[matchdetails.getWetterId()]),
                         matchdetails.getWetterId(),
                         ColorLabelEntry.FG_STANDARD,
@@ -140,7 +140,7 @@ final public class UserColumnFactory {
         };// Wetter
         matchDetailsColumnsArray[1] = new MatchDetailsColumn(560, "ls.team.teamattitude") {
             @Override
-            public IHOTableEntry getTableEntry(Matchdetails matchdetails) {
+            public IHOTableCellEntry getTableEntry(Matchdetails matchdetails) {
                 final int teamid = HOVerwaltung.instance().getModel()
                         .getBasics().getTeamId();
                 int einstellung = (matchdetails.getHomeTeamId() == teamid) ? matchdetails.getHomeEinstellung() : matchdetails.getGuestEinstellung();
@@ -150,7 +150,7 @@ final public class UserColumnFactory {
         };
         matchDetailsColumnsArray[2] = new MatchDetailsColumn(570, "ls.team.tactic") {
             @Override
-            public IHOTableEntry getTableEntry(Matchdetails matchdetails) {
+            public IHOTableCellEntry getTableEntry(Matchdetails matchdetails) {
                 final int teamid = HOVerwaltung.instance().getModel()
                         .getBasics().getTeamId();
                 int tactic = (matchdetails.getHomeTeamId() == teamid) ? matchdetails.getHomeTacticType() : matchdetails.getGuestTacticType();
@@ -160,7 +160,7 @@ final public class UserColumnFactory {
         };
         matchDetailsColumnsArray[3] = new MatchDetailsColumn(580, "ls.team.tacticalskill") {
             @Override
-            public IHOTableEntry getTableEntry(Matchdetails matchdetails) {
+            public IHOTableCellEntry getTableEntry(Matchdetails matchdetails) {
                 final int teamid = HOVerwaltung.instance().getModel()
                         .getBasics().getTeamId();
                 int tacticSkill = (matchdetails.getHomeTeamId() == teamid) ? matchdetails.getHomeTacticSkill() : matchdetails.getGuestTacticSkill();
@@ -242,7 +242,7 @@ final public class UserColumnFactory {
         final PlayerColumn[] playerBasicArray = new PlayerColumn[2];
         playerBasicArray[0] = new PlayerColumn(NAME, "ls.player.name", 160) {
             @Override
-            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
+            public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
                 var team = HOVerwaltung.instance().getModel().getCurrentLineup();
                 var pos = team.getPositionById(player.getPlayerId());
                 return new PlayerLabelEntry(player, pos, 0f, false, false);
@@ -256,7 +256,7 @@ final public class UserColumnFactory {
 
         playerBasicArray[1] = new PlayerColumn(ID, "ls.player.id", 0) {
             @Override
-            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
+            public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
                 return new ColorLabelEntry(player.getPlayerId(),
                         String.valueOf(player.getPlayerId()),
                         ColorLabelEntry.FG_STANDARD,
@@ -314,7 +314,7 @@ final public class UserColumnFactory {
         final MatchKurzInfoColumn[] matchesArray = new MatchKurzInfoColumn[8];
         matchesArray[0] = new MatchKurzInfoColumn(450, "Datum", 70) {
             @Override
-            public IHOTableEntry getTableEntry(MatchKurzInfo match) {
+            public IHOTableCellEntry getTableEntry(MatchKurzInfo match) {
                 return new ColorLabelEntry(match.getMatchSchedule().instant.getEpochSecond(),
                         match.getMatchSchedule().toLocaleDateTime(),
                         ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD,
@@ -322,7 +322,7 @@ final public class UserColumnFactory {
             }
 
             @Override
-            public IHOTableEntry getTableEntry(PlayerMatchCBItem spielerCBItem) {
+            public IHOTableCellEntry getTableEntry(PlayerMatchCBItem spielerCBItem) {
                 return new ColorLabelEntry(spielerCBItem.getMatchdate().instant.getEpochSecond(),
                         HODateTime.toLocaleDateTime(spielerCBItem.getMatchdate()),
                         ColorLabelEntry.FG_STANDARD,
@@ -332,14 +332,14 @@ final public class UserColumnFactory {
 
         matchesArray[1] = new MatchKurzInfoColumn(460, "Spielart", 20) {
             @Override
-            public IHOTableEntry getTableEntry(MatchKurzInfo match) {
+            public IHOTableCellEntry getTableEntry(MatchKurzInfo match) {
                 return new ColorLabelEntry(ThemeManager.getIcon(HOIconName.MATCHICONS[match.getMatchTypeExtended().getIconArrayIndex()]),
                         match.getMatchType().getId(), ColorLabelEntry.FG_STANDARD,
                         ColorLabelEntry.BG_STANDARD, SwingConstants.CENTER);
             }
 
             @Override
-            public IHOTableEntry getTableEntry(PlayerMatchCBItem spielerCBItem) {
+            public IHOTableCellEntry getTableEntry(PlayerMatchCBItem spielerCBItem) {
                 return new ColorLabelEntry(ThemeManager.getIcon(HOIconName.MATCHICONS[spielerCBItem.getMatchType().getIconArrayIndex()]),
                         spielerCBItem.getMatchType().getMatchTypeId(),
                         ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD,
@@ -349,7 +349,7 @@ final public class UserColumnFactory {
 
         matchesArray[2] = new MatchKurzInfoColumn(470, "Heim", 60) {
             @Override
-            public IHOTableEntry getTableEntry(MatchKurzInfo match) {
+            public IHOTableCellEntry getTableEntry(MatchKurzInfo match) {
                 ColorLabelEntry entry = new ColorLabelEntry(match.getHomeTeamName(), ColorLabelEntry.FG_STANDARD,
                         ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                 entry.setFGColor((match.getHomeTeamID() == HOVerwaltung.instance().getModel().getBasics()
@@ -364,7 +364,7 @@ final public class UserColumnFactory {
             }
 
             @Override
-            public IHOTableEntry getTableEntry(PlayerMatchCBItem spielerCBItem) {
+            public IHOTableCellEntry getTableEntry(PlayerMatchCBItem spielerCBItem) {
                 ColorLabelEntry entry = new ColorLabelEntry(spielerCBItem.getHomeTeamName(),
                         ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD,
                         SwingConstants.LEFT);
@@ -382,7 +382,7 @@ final public class UserColumnFactory {
 
         matchesArray[3] = new MatchKurzInfoColumn(480, "Gast", 60) {
             @Override
-            public IHOTableEntry getTableEntry(MatchKurzInfo match) {
+            public IHOTableCellEntry getTableEntry(MatchKurzInfo match) {
                 ColorLabelEntry entry = new ColorLabelEntry(match.getGuestTeamName(), ColorLabelEntry.FG_STANDARD,
                         ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                 entry.setFGColor((match.getGuestTeamID() == HOVerwaltung.instance().getModel().getBasics()
@@ -398,7 +398,7 @@ final public class UserColumnFactory {
             }
 
             @Override
-            public IHOTableEntry getTableEntry(PlayerMatchCBItem spielerCBItem) {
+            public IHOTableCellEntry getTableEntry(PlayerMatchCBItem spielerCBItem) {
                 ColorLabelEntry entry = new ColorLabelEntry(spielerCBItem.getGuestTeamName(),
                         ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD,
                         SwingConstants.LEFT);
@@ -416,14 +416,14 @@ final public class UserColumnFactory {
 
         matchesArray[4] = new MatchKurzInfoColumn(490, "ls.match.result", 45) {
             @Override
-            public IHOTableEntry getTableEntry(MatchKurzInfo match) {
+            public IHOTableCellEntry getTableEntry(MatchKurzInfo match) {
                 return new ColorLabelEntry(match.getResultLong(),
                         ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD,
                         SwingConstants.LEFT);
             }
 
             @Override
-            public IHOTableEntry getTableEntry(PlayerMatchCBItem spielerCBItem) {
+            public IHOTableCellEntry getTableEntry(PlayerMatchCBItem spielerCBItem) {
                 return new ColorLabelEntry(spielerCBItem.getMatchdetails().getResultEx(),
                         ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD,
                         SwingConstants.CENTER);
@@ -433,7 +433,7 @@ final public class UserColumnFactory {
 
         matchesArray[5] = new MatchKurzInfoColumn(494, "ls.match.hatstats.me", 80) {
             @Override
-            public IHOTableEntry getTableEntry(MatchKurzInfo match, Matchdetails matchDetails) {
+            public IHOTableCellEntry getTableEntry(MatchKurzInfo match, Matchdetails matchDetails) {
                 int hatstats = 0;
                 if (matchDetails!=null){
                     hatstats = match.isHomeMatch() ? matchDetails.getHomeHatStats() : matchDetails.getAwayHatStats();
@@ -444,7 +444,7 @@ final public class UserColumnFactory {
             }
 
             @Override
-            public IHOTableEntry getTableEntry(PlayerMatchCBItem spielerCBItem) {
+            public IHOTableCellEntry getTableEntry(PlayerMatchCBItem spielerCBItem) {
                 return new ColorLabelEntry("not implemented 123456789",
                         ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD,
                         SwingConstants.CENTER);
@@ -454,7 +454,7 @@ final public class UserColumnFactory {
 
         matchesArray[6] = new MatchKurzInfoColumn(498, "ls.match.hatstats.opp", 80) {
             @Override
-            public IHOTableEntry getTableEntry(MatchKurzInfo match, Matchdetails matchDetails) {
+            public IHOTableCellEntry getTableEntry(MatchKurzInfo match, Matchdetails matchDetails) {
                 int hatstats = 0;
                 if (matchDetails != null) {
                     hatstats = match.isHomeMatch() ? matchDetails.getAwayHatStats() : matchDetails.getHomeHatStats();
@@ -465,7 +465,7 @@ final public class UserColumnFactory {
             }
 
             @Override
-            public IHOTableEntry getTableEntry(PlayerMatchCBItem spielerCBItem) {
+            public IHOTableCellEntry getTableEntry(PlayerMatchCBItem spielerCBItem) {
                 return new ColorLabelEntry("not implemented 123456789",
                         ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD,
                         SwingConstants.CENTER);
@@ -476,14 +476,14 @@ final public class UserColumnFactory {
         matchesArray[7] = new MatchKurzInfoColumn(500, "ls.match.id", 55) {
 
             @Override
-            public IHOTableEntry getTableEntry(MatchKurzInfo match) {
+            public IHOTableCellEntry getTableEntry(MatchKurzInfo match) {
                 return new ColorLabelEntry(match.getMatchID(), String.valueOf(match.getMatchID()),
                         ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD,
                         SwingConstants.RIGHT);
             }
 
             @Override
-            public IHOTableEntry getTableEntry(PlayerMatchCBItem spielerCBItem) {
+            public IHOTableCellEntry getTableEntry(PlayerMatchCBItem spielerCBItem) {
                 return new ColorLabelEntry(String.valueOf(spielerCBItem.getMatchID()),
                         ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD,
                         SwingConstants.CENTER);
@@ -503,7 +503,7 @@ final public class UserColumnFactory {
 
         playerAdditionalArray[0] = new PlayerColumn(10, "ls.player.shirtnumber.short", "ls.player.shirtnumber", 25) {
             @Override
-            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
+            public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
                 int sort = player.getShirtNumber();
                 if (sort <= 0) {
                     // Temporary players don't have a shirt number
@@ -522,7 +522,7 @@ final public class UserColumnFactory {
 
         playerAdditionalArray[1] = new PlayerColumn(20, " ", "ls.player.nationality", 25) {
             @Override
-            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
+            public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
                 return new ColorLabelEntry(ImageUtilities.getCountryFlagIcon(player.getNationalityId()),
                         player.getNationalityId(),
                         ColorLabelEntry.FG_STANDARD,
@@ -532,7 +532,7 @@ final public class UserColumnFactory {
 
         playerAdditionalArray[2] = new PlayerColumn(30, "ls.player.age", 55) {
             @Override
-            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
+            public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
                 String ageString = player.getAgeWithDaysAsString();
                 int birthdays;
                 boolean playerExists;
@@ -560,7 +560,7 @@ final public class UserColumnFactory {
 
         playerAdditionalArray[3] = new PlayerColumn(40, "BestePosition", 100) {
             @Override
-            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
+            public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
 
                 byte idealPosition = player.getIdealPosition();
                 String posValue = String.format("%s (%.2f)",
@@ -590,7 +590,7 @@ final public class UserColumnFactory {
         // Position
         playerAdditionalArray[4] = new PlayerColumn(LINEUP, " ", "Aufgestellt", 40) {
             @Override
-            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
+            public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
                 final HOModel model = HOVerwaltung.instance().getModel();
                 var team = model.getCurrentLineup();
                 final MatchRoleID positionBySpielerId =  team.getPositionByPlayerId(player.getPlayerId());
@@ -621,7 +621,7 @@ final public class UserColumnFactory {
 
         playerAdditionalArray[5] = new PlayerColumn(GROUP, "Gruppe", 50) {
             @Override
-            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
+            public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
                 SmilieEntry smilieEntry = new SmilieEntry();
                 smilieEntry.setPlayer(player);
                 return smilieEntry;
@@ -630,7 +630,7 @@ final public class UserColumnFactory {
 
         playerAdditionalArray[6] = new PlayerColumn(70, "Status", 50) {
             @Override
-            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
+            public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
                 PlayerStatusLabelEntry entry = new PlayerStatusLabelEntry();
                 entry.setPlayer(player);
                 return entry;
@@ -639,7 +639,7 @@ final public class UserColumnFactory {
 
         playerAdditionalArray[7] = new PlayerColumn(421, "ls.player.wage", 100) {
             @Override
-            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
+            public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
                 final String bonus = "";
                 final int gehalt = (int) (player.getWage() / core.model.UserParameter.instance().FXrate);
                 final String gehalttext = Helper.getNumberFormat(true, 0).format(gehalt);
@@ -669,7 +669,7 @@ final public class UserColumnFactory {
         };
         playerAdditionalArray[8] = new PlayerColumn(430, "ls.player.tsi", 0) {
             @Override
-            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
+            public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
                 final String text = Helper.getNumberFormat(false, 0).format(player.getTsi());
                 if (playerCompare == null) {
                     return new DoubleLabelEntries(new ColorLabelEntry(player
@@ -706,7 +706,7 @@ final public class UserColumnFactory {
         // Last match rating column.
         playerAdditionalArray[9] = new PlayerColumn(RATING, "Rating", 40) {
             @Override
-            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
+            public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
                 var lastMatchRating = player.getLastMatchRating();
                 if (lastMatchRating != null && lastMatchRating > 0) {
                     return new RatingTableEntry(lastMatchRating, true);
@@ -718,7 +718,7 @@ final public class UserColumnFactory {
         // Last Match date column.
         playerAdditionalArray[10] = new PlayerColumn(LAST_MATCH_RATING, "LastMatchRating", 80) {
             @Override
-            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
+            public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
                 var matchId = player.getLastMatchId();
                 if (matchId != null && matchId > 0) {
                     MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(matchId, null);
@@ -739,7 +739,7 @@ final public class UserColumnFactory {
 
         playerAdditionalArray[11] = new PlayerColumn(436, "Marktwert", 140) {
             @Override
-            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
+            public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
                 if (playerCompare == null) {
 
                     return new DoubleLabelEntries(new ColorLabelEntry(0,
@@ -768,7 +768,7 @@ final public class UserColumnFactory {
 
         playerAdditionalArray[12] = new PlayerColumn(437, "ls.player.short_motherclub", "ls.player.motherclub", 25) {
             @Override
-            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
+            public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
                 HomegrownEntry home = new HomegrownEntry();
                 home.setPlayer(player);
                 setPreferredWidth(35);
@@ -778,7 +778,7 @@ final public class UserColumnFactory {
 
         playerAdditionalArray[13] = new PlayerColumn(438, "ls.player.category", "ls.player.category", 25) {
             @Override
-            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
+            public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
                 var category = player.getPlayerCategory();
                 String text;
                 double sort;
@@ -794,13 +794,13 @@ final public class UserColumnFactory {
         };
         playerAdditionalArray[14] = new PlayerColumn(439, "ls.player.statement", "ls.player.statement", 25) {
             @Override
-            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
+            public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
                 return new ColorLabelEntry(player.getPlayerStatement(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
             }
         };
         playerAdditionalArray[15] = new PlayerColumn(441, "ls.player.ownernotes", "ls.player.ownernotes", 25) {
             @Override
-            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
+            public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
                 return new ColorLabelEntry(player.getOwnerNotes(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
             }
         };
@@ -809,7 +809,7 @@ final public class UserColumnFactory {
         // Last match rating end of game column.
         playerAdditionalArray[16] = new PlayerColumn(891, "ls.player.ratingend", 60) {
             @Override
-            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
+            public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
                 var lastMatchRatingEndOfGame = player.getLastMatchRatingEndOfGame();
                 if (lastMatchRatingEndOfGame != null && lastMatchRatingEndOfGame > 0) {
 //                    MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(player.getLastMatchId(), null);
@@ -825,7 +825,7 @@ final public class UserColumnFactory {
         //last match minutes played
         playerAdditionalArray[17] = new PlayerColumn(DURATION, "ls.player.lastminutes", 50) {
             @Override
-            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
+            public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
                 var minutes = player.getLastMatchMinutes();
                 String text;
                 if (minutes == null) {
@@ -841,7 +841,7 @@ final public class UserColumnFactory {
         //last match position
         playerAdditionalArray[18] = new PlayerColumn(892, "ls.player.lastlineup", 50) {
             @Override
-            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
+            public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
                 var position = player.getLastMatchPosition();
                 double sort;
                 String text;
@@ -859,7 +859,7 @@ final public class UserColumnFactory {
         // mother club name
         playerAdditionalArray[19] = new PlayerColumn(893, "ls.player.motherclub.name", 50) {
             @Override
-            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
+            public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
                 return new ColorLabelEntry(player.getOrDownloadMotherClubName(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
             }
         };
@@ -867,7 +867,7 @@ final public class UserColumnFactory {
         // matches current team
         playerAdditionalArray[20] = new PlayerColumn(894, "ls.player.matchescurrentteam", 50) {
             @Override
-            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
+            public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
                 var m = player.getCurrentTeamMatches();
                 String t;
                 if ( m!= null){
@@ -884,7 +884,7 @@ final public class UserColumnFactory {
         // htms28
         playerAdditionalArray[21] = new PlayerColumn(895, "ls.player.htms28", 50) {
             @Override
-            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
+            public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
                 var m = player.getHtms28();
                 String t;
                 if ( m!= null){
@@ -900,7 +900,7 @@ final public class UserColumnFactory {
 
         playerAdditionalArray[22] = new PlayerColumn(896, "ls.player.htms", 50) {
             @Override
-            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
+            public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
                 var m = player.getHtms();
                 String t;
                 if ( m!= null){
@@ -916,7 +916,7 @@ final public class UserColumnFactory {
         // Schum-rank rating column.
         playerAdditionalArray[23] = new PlayerColumn(897, "ls.player.schum-rank", 40) {
             @Override
-            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
+            public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
                 var schumrank = player.getSchumRank();
                 String t = String.format("%.2f", schumrank);
                 return new ColorLabelEntry(schumrank, t, ColorLabelEntry.FG_STANDARD, player.isExcellentSchumRank()?Color.green:ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
@@ -924,7 +924,7 @@ final public class UserColumnFactory {
         };
         playerAdditionalArray[24] = new PlayerColumn(SCHUM_RANK_BENCHMARK, "ls.player.schum-rank-benchmark", 40) { // 898
             @Override
-            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
+            public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
                 var schumrank = player.getSchumRank();
                 var benchmark = player.getSchumRankBenchmark();
                 var r = schumrank/benchmark*100;
@@ -934,44 +934,44 @@ final public class UserColumnFactory {
         };
         playerAdditionalArray[25] = new PlayerColumn(900, "ls.player.cost-to-convert-trainer-weak", "ls.player.cost-to-convert-trainer-weak.tooltip",  40) {
             @Override
-            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
+            public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
                 return getTrainerTransferEntry(player, 4);
             }
         };
         playerAdditionalArray[26] = new PlayerColumn(901, "ls.player.cost-to-convert-trainer-inadequate", "ls.player.cost-to-convert-trainer-inadequate.tooltip", 40) {
             @Override
-            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
+            public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
                 return getTrainerTransferEntry(player, 5);
             }
         };
         playerAdditionalArray[27] = new PlayerColumn(902, "ls.player.cost-to-convert-trainer-passable", "ls.player.cost-to-convert-trainer-passable.tooltip", 40) {
             @Override
-            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
+            public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
                 return getTrainerTransferEntry(player, 6);
             }
         };
         playerAdditionalArray[28] = new PlayerColumn(903, "ls.player.cost-to-convert-trainer-solid", "ls.player.cost-to-convert-trainer-solid.tooltip", 40) {
             @Override
-            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
+            public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
                 return getTrainerTransferEntry(player, 7);
             }
         };
         playerAdditionalArray[29] = new PlayerColumn(904, "ls.player.cost-to-convert-trainer-excellent", "ls.player.cost-to-convert-trainer-excellent.tooltip", 40) {
             @Override
-            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
+            public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
                 return getTrainerTransferEntry(player, 8);
             }
         };
         playerAdditionalArray[30] = new PlayerColumn(905, "ls.player.training.notes", 20) {
             @Override
-            public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
+            public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
                 return new ColorLabelEntry(player.getNote().replace('\n', '/'), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
             }
         };
         return playerAdditionalArray;
     }
 
-    private static IHOTableEntry getTrainerTransferEntry(Player player, int i) {
+    private static IHOTableCellEntry getTrainerTransferEntry(Player player, int i) {
         var costs = player.calculateCoachConversionCosts(i);
         var string = "";
         var swedishKrona = 0;

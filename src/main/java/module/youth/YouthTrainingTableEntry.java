@@ -1,13 +1,12 @@
 package module.youth;
 
-import core.gui.comp.entry.IHOTableEntry;
-import core.model.HOVerwaltung;
+import core.gui.comp.entry.IHOTableCellEntry;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.event.ListDataListener;
 
-public class YouthTrainingTableEntry implements IHOTableEntry {
+public class YouthTrainingTableEntry implements IHOTableCellEntry {
 
     public static class ComboBoxModel implements javax.swing.ComboBoxModel<YouthTrainingType> {
 
@@ -70,12 +69,12 @@ public class YouthTrainingTableEntry implements IHOTableEntry {
     }
 
     @Override
-    public int compareTo(@NotNull IHOTableEntry obj) {
+    public int compareTo(@NotNull IHOTableCellEntry obj) {
         return 0;
     }
 
     @Override
-    public int compareToThird(IHOTableEntry obj) {
+    public int compareToThird(IHOTableCellEntry obj) {
         return 0;
     }
 

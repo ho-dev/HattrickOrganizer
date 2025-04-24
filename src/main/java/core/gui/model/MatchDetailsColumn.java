@@ -1,6 +1,6 @@
 package core.gui.model;
 
-import core.gui.comp.entry.IHOTableEntry;
+import core.gui.comp.entry.IHOTableCellEntry;
 import core.gui.comp.table.UserColumn;
 import core.model.match.Matchdetails;
 
@@ -40,7 +40,7 @@ public class MatchDetailsColumn extends UserColumn {
 	 * @param match
 	 * @return TableEntry
 	 */
-	public IHOTableEntry getTableEntry(Matchdetails match){
+	public IHOTableCellEntry getTableEntry(Matchdetails match){
 		return null;
 	}
 }

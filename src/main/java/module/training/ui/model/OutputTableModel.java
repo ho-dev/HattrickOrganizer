@@ -1,6 +1,10 @@
 package module.training.ui.model;
 
 import core.constants.player.PlayerSkill;
+import core.gui.comp.entry.ColorLabelEntry;
+import core.gui.comp.entry.IHOTableCellEntry;
+import core.gui.comp.table.HOTableModel;
+import core.gui.model.UserColumnController;
 import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
 import core.model.player.Player;
@@ -12,9 +16,7 @@ import module.training.Skills;
 import module.training.ui.comp.PlayerNameCell;
 import module.training.ui.comp.TrainingPriorityCell;
 import module.training.ui.comp.VerticalIndicator;
-
 import javax.swing.*;
-import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,7 +27,7 @@ import java.util.List;
  * A - 2325 Himberg Tabellenmodel und Daten für die dargestellte Tabelle
  * für das HO Plugin
  */
-public class OutputTableModel extends AbstractTableModel {
+public class OutputTableModel extends HOTableModel {
 
     // common column of fixed and scrolled tables
     private static final int COL_PLAYER_ID = 11;
@@ -37,13 +39,95 @@ public class OutputTableModel extends AbstractTableModel {
      *
      * @param model the training model
      */
-    public OutputTableModel(TrainingModel model) {
-        this.model = model;
+//    public OutputTableModel(TrainingModel model) {
+//        this.model = model;
+//    }
+
+    public OutputTableModel(UserColumnController.ColumnModelId id) {
+        super(id, "TrainingOverview");
+
+        columns = new ArrayList<>(List.of(
+                new TrainingColumn("Spieler") {
+                    @Override
+                    public IHOTableCellEntry getTableEntry(TrainingEntry entry) {
+                        return new ColorLabelEntry(entry.getTrainingSpeed(), entry.getPlayer().getFullName(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                    }
+
+                    @Override
+                    public boolean canBeDisabled() {
+                        return false;
+                    }
+                },
+                new TrainingColumn("ls.player.age") {
+                    @Override
+                    public IHOTableCellEntry getTableEntry(TrainingEntry entry) {
+                        return new ColorLabelEntry(entry.getPlayer().getAgeWithDaysAsString(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                    }
+                },
+                new TrainingColumn("trainpre.priority") {
+                    @Override
+                    public IHOTableCellEntry getTableEntry(TrainingEntry entry) {
+                        return new ColorLabelEntry(entry.getTrainingPriority(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                    }
+                },
+                new TrainingColumn("ls.player.skill.keeper") {
+                    @Override
+                    public IHOTableCellEntry getTableEntry(TrainingEntry entry) {
+                        return new ColorLabelEntry(createIcon(entry.getPlayer(),  PlayerSkill.KEEPER), 1.,  ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                    }
+                },
+                new TrainingColumn("ls.player.skill.defending") {
+                    @Override
+                    public IHOTableCellEntry getTableEntry(TrainingEntry entry) {
+                        return new ColorLabelEntry(entry.getPlayerName(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                    }
+                },
+                new TrainingColumn("ls.player.skill.playmaking") {
+                    @Override
+                    public IHOTableCellEntry getTableEntry(TrainingEntry entry) {
+                        return new ColorLabelEntry(entry.getPlayerName(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                    }
+                },
+                new TrainingColumn("ls.player.skill.passing") {
+                    @Override
+                    public IHOTableCellEntry getTableEntry(TrainingEntry entry) {
+                        return new ColorLabelEntry(entry.getPlayerName(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                    }
+                },
+                new TrainingColumn("ls.player.skill.winger") {
+                    @Override
+                    public IHOTableCellEntry getTableEntry(TrainingEntry entry) {
+                        return new ColorLabelEntry(entry.getPlayerName(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                    }
+                },
+                new TrainingColumn("ls.player.skill.scoring") {
+                    @Override
+                    public IHOTableCellEntry getTableEntry(TrainingEntry entry) {
+                        return new ColorLabelEntry(entry.getPlayerName(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                    }
+                },
+                new TrainingColumn("ls.player.skill.setpieces") {
+                    @Override
+                    public IHOTableCellEntry getTableEntry(TrainingEntry entry) {
+                        return new ColorLabelEntry(entry.getPlayerName(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                    }
+                },
+                new TrainingColumn("ls.player.skill.stamina") {
+                    @Override
+                    public IHOTableCellEntry getTableEntry(TrainingEntry entry) {
+                        return new ColorLabelEntry(entry.getPlayerName(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                    }
+                },
+                new TrainingColumn("ls.player.id") {
+                    @Override
+                    public IHOTableCellEntry getTableEntry(TrainingEntry entry) {
+                        return new ColorLabelEntry(entry.getPlayerName(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                    }
+                }
+        )).toArray(new TrainingColumn[0]);
     }
 
-    public int getPlayerIdColumn() {
-        return COL_PLAYER_ID;
-    }
+
 
     /*
      * (non-Javadoc)
@@ -129,26 +213,26 @@ public class OutputTableModel extends AbstractTableModel {
      *
      * @see javax.swing.table.TableModel#getValueAt(int, int)
      */
-    @Override
-    public Object getValueAt(int rowIndex, int columnIndex) {
-        var ftm = data.get(rowIndex);
-        var player = ftm.getPlayer();
-        return switch (columnIndex) {
-            case COL_PLAYER_ID -> Integer.toString(player.getPlayerId());
-            case 0 -> createPlayerNameCell(player, ftm.getTrainingSpeed());
-            case 1 -> player.getAgeWithDaysAsString();
-            case 2 -> createBestPositionCell(player);
-            case 3 -> createIcon(player, PlayerSkill.KEEPER);
-            case 4 -> createIcon(player, PlayerSkill.DEFENDING);
-            case 5 -> createIcon(player, PlayerSkill.PLAYMAKING);
-            case 6 -> createIcon(player, PlayerSkill.PASSING);
-            case 7 -> createIcon(player, PlayerSkill.WINGER);
-            case 8 -> createIcon(player, PlayerSkill.SCORING);
-            case 9 -> createIcon(player, PlayerSkill.SETPIECES);
-            case 10 -> createIcon(player, PlayerSkill.STAMINA);
-            default -> "";
-        };
-    }
+//    @Override
+//    public Object getValueAt(int rowIndex, int columnIndex) {
+//        var ftm = data.get(rowIndex);
+//        var player = ftm.getPlayer();
+//        return switch (columnIndex) {
+//            case COL_PLAYER_ID -> Integer.toString(player.getPlayerId());
+//            case 0 -> createPlayerNameCell(player, ftm.getTrainingSpeed());
+//            case 1 -> player.getAgeWithDaysAsString();
+//            case 2 -> createBestPositionCell(player);
+//            case 3 -> createIcon(player, PlayerSkill.KEEPER);
+//            case 4 -> createIcon(player, PlayerSkill.DEFENDING);
+//            case 5 -> createIcon(player, PlayerSkill.PLAYMAKING);
+//            case 6 -> createIcon(player, PlayerSkill.PASSING);
+//            case 7 -> createIcon(player, PlayerSkill.WINGER);
+//            case 8 -> createIcon(player, PlayerSkill.SCORING);
+//            case 9 -> createIcon(player, PlayerSkill.SETPIECES);
+//            case 10 -> createIcon(player, PlayerSkill.STAMINA);
+//            default -> "";
+//        };
+//    }
 
     /**
      * Refill the table with the new training based on the last changes
@@ -207,5 +291,10 @@ public class OutputTableModel extends AbstractTableModel {
                 HODateTime.now() :
                 model.getFutureTrainings().get(0).getTrainingDate();
         return new TrainingPriorityCell(player, firstTrainingDate);
+    }
+
+    @Override
+    protected void initData() {
+
     }
 }

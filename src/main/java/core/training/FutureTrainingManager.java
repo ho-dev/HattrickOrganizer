@@ -32,6 +32,11 @@ public class FutureTrainingManager {
 
 	/** Active player */
 	private final Player player;
+
+	public List<TrainingPerWeek> getFutureTrainings() {
+		return futureTrainings;
+	}
+
 	private final List<TrainingPerWeek> futureTrainings;
 	private List<SkillChange> futureSkillups;
 	private double trainingSpeed;
@@ -206,9 +211,9 @@ public class FutureTrainingManager {
 	/**
 	 * Returns training speed multiplier for training prediction sorting
 	 */
-	public int getTrainingSpeed()
+	public double getTrainingSpeed()
 	{
-		return (int)(trainingSpeed * 100.0);
+		return (trainingSpeed * 100.0);
 	}
 
 

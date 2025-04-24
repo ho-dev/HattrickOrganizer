@@ -3,7 +3,7 @@ package core.gui.model;
 import core.constants.player.PlayerSkill;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.DoubleLabelEntries;
-import core.gui.comp.entry.IHOTableEntry;
+import core.gui.comp.entry.IHOTableCellEntry;
 import core.gui.comp.entry.SkillEntry;
 import core.model.UserParameter;
 import core.model.player.Player;
@@ -50,11 +50,11 @@ public class PlayerSkillColumn extends PlayerColumn {
 	 * overwritten by created columns
 	 */
 	@Override
-	public IHOTableEntry getTableEntry(Player player, Player comparePlayer){
+	public IHOTableCellEntry getTableEntry(Player player, Player comparePlayer){
 		return new DoubleLabelEntries(getSkillValue(player),getCompareValue(player,comparePlayer));
 	}
 	
-	public  IHOTableEntry getSkillValue(Player player) {
+	public IHOTableCellEntry getSkillValue(Player player) {
 		var value = player.getValue4Skill(skill);
 		if (skill == PlayerSkill.LEADERSHIP || skill == PlayerSkill.LOYALTY) {
 			return new ColorLabelEntry(value, background, false, 0);
