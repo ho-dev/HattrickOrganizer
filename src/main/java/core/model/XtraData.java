@@ -4,6 +4,7 @@ import core.db.AbstractTable;
 import core.util.HODateTime;
 import org.apache.commons.lang3.math.NumberUtils;
 
+import java.sql.Timestamp;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Properties;
@@ -235,6 +236,13 @@ public class XtraData extends AbstractTable.Storable {
      * @return List of HODateTime
      */
     public ArrayList<HODateTime> getDailyUpdates() {return dailyUpdates;}
+
+    public Timestamp getDailyUpdate(int index){
+        if (dailyUpdates!=null && index > -1 && index < dailyUpdates.size()){
+            return dailyUpdates.get(index).toDbTimestamp();
+        }
+        return null;
+    }
 
     /**
      * Set one daily update
