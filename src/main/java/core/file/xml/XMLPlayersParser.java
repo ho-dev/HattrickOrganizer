@@ -103,8 +103,9 @@ public class XMLPlayersParser {
 
         var hash = new SafeInsertMap();
 
-        //ht füllen
         hash.put("TeamID", teamID);
+        xmlValue2Hash(hash, root, "OwnerNotes");
+        xmlValue2Hash(hash, root, "Statement");
 
         var ele = (Element) root.getElementsByTagName("PlayerID").item(0);
         hash.put("PlayerID", (XMLManager.getFirstChildNodeValue(ele)));
