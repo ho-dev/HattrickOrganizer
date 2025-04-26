@@ -56,6 +56,24 @@ public class HOVerwaltung {
 	 */
 	public void setModel(HOModel model) {
 		HOModel oldModel = m_clHoModel;
+		if ( oldModel != null && model != null) {
+			for (var player : model.getCurrentPlayers()) {
+				if (oldModel.getCurrentPlayers().stream().noneMatch(i -> i.getPlayerId() == player.getPlayerId())) {
+					// Check if new player was youth player in old model
+					// Todo: Check if player id can be used instead of name filtering
+					var youthPlayer = oldModel.getCurrentYouthPlayers().stream().filter(i -> i.getFullName().equals(player.getFullName())).findFirst();
+					if (youthPlayer.isPresent()) {
+						for (var skill : youthPlayer.get().getCurrentSkills().values()) {
+							var currentLevel = player.getValue4Skill(skill.getSkillID());
+							if (currentLevel == (int) skill.getCurrentValue()) {
+								// Estimate in youth academy matches the current skill level
+								player.setSubskill4PlayerSkill(skill.getSkillID(), skill.getCurrentValue() - currentLevel);
+							}
+						}
+					}
+				}
+			}
+		}
 		m_clHoModel = model;
 		support.firePropertyChange("m_clHoModel", oldModel, m_clHoModel);
 	}

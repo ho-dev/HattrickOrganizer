@@ -23,6 +23,8 @@
 * Fix long shot rating calculation (#2237)
 * Fix consideration of the loyalty influence on the long shot tactic level (#2247)
 * Fix column order sorting error (#2265)
+* Players who are promoted from youth to adults keep their sub skills (#2267)
+* Fix player statement and owner notes in overview table (#2271)
 
 ### Team Analyzer
 
@@ -56,6 +58,7 @@
 ### International Friendlies
 
 * Fix database error on match reload (#2063)
+* Add new countries (#2255)
 
 ### Youth
 
@@ -80,9 +83,10 @@
 
 ## Translations
 
-Reports by Contributors - June 23, 2024 - April 05, 2025
+Reports by Contributors - June 23, 2024 - April 15, 2025
 
 * Kristaps 322
+* sich 224
 * Tavaro 175
 * Lidegang 161
 * wsbrenk 97
@@ -91,4 +95,4 @@ Reports by Contributors - June 23, 2024 - April 05, 2025
 * Achilles 10
 * Billy Dikkanen 10
 
-Total 812
+Total 1036
