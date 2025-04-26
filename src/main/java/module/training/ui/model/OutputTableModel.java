@@ -32,7 +32,7 @@ public class OutputTableModel extends HOTableModel {
     // common column of fixed and scrolled tables
     private static final int COL_PLAYER_ID = 11;
     private List<FutureTrainingManager> data = new ArrayList<>();
-    private final TrainingModel model;
+//    private final TrainingModel model;
 
     /**
      * Constructor
@@ -73,55 +73,55 @@ public class OutputTableModel extends HOTableModel {
                 new TrainingColumn("ls.player.skill.keeper") {
                     @Override
                     public IHOTableCellEntry getTableEntry(TrainingEntry entry) {
-                        return new ColorLabelEntry(createIcon(entry.getPlayer(),  PlayerSkill.KEEPER), 1.,  ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        return createIcon(entry.getPlayer(),  PlayerSkill.KEEPER);
                     }
                 },
                 new TrainingColumn("ls.player.skill.defending") {
                     @Override
                     public IHOTableCellEntry getTableEntry(TrainingEntry entry) {
-                        return new ColorLabelEntry(entry.getPlayerName(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        return createIcon(entry.getPlayer(),  PlayerSkill.DEFENDING);
                     }
                 },
                 new TrainingColumn("ls.player.skill.playmaking") {
                     @Override
                     public IHOTableCellEntry getTableEntry(TrainingEntry entry) {
-                        return new ColorLabelEntry(entry.getPlayerName(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        return createIcon(entry.getPlayer(),  PlayerSkill.PLAYMAKING);
                     }
                 },
                 new TrainingColumn("ls.player.skill.passing") {
                     @Override
                     public IHOTableCellEntry getTableEntry(TrainingEntry entry) {
-                        return new ColorLabelEntry(entry.getPlayerName(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        return createIcon(entry.getPlayer(),  PlayerSkill.PASSING);
                     }
                 },
                 new TrainingColumn("ls.player.skill.winger") {
                     @Override
                     public IHOTableCellEntry getTableEntry(TrainingEntry entry) {
-                        return new ColorLabelEntry(entry.getPlayerName(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        return createIcon(entry.getPlayer(),  PlayerSkill.WINGER);
                     }
                 },
                 new TrainingColumn("ls.player.skill.scoring") {
                     @Override
                     public IHOTableCellEntry getTableEntry(TrainingEntry entry) {
-                        return new ColorLabelEntry(entry.getPlayerName(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        return createIcon(entry.getPlayer(),  PlayerSkill.SCORING);
                     }
                 },
                 new TrainingColumn("ls.player.skill.setpieces") {
                     @Override
                     public IHOTableCellEntry getTableEntry(TrainingEntry entry) {
-                        return new ColorLabelEntry(entry.getPlayerName(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        return createIcon(entry.getPlayer(),  PlayerSkill.SETPIECES);
                     }
                 },
                 new TrainingColumn("ls.player.skill.stamina") {
                     @Override
                     public IHOTableCellEntry getTableEntry(TrainingEntry entry) {
-                        return new ColorLabelEntry(entry.getPlayerName(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        return createIcon(entry.getPlayer(),  PlayerSkill.STAMINA);
                     }
                 },
                 new TrainingColumn("ls.player.id") {
                     @Override
                     public IHOTableCellEntry getTableEntry(TrainingEntry entry) {
-                        return new ColorLabelEntry(entry.getPlayerName(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        return new ColorLabelEntry(entry.getPlayer().getPlayerId(), String.valueOf(entry.getPlayer().getPlayerId()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 }
         )).toArray(new TrainingColumn[0]);
@@ -129,67 +129,67 @@ public class OutputTableModel extends HOTableModel {
 
 
 
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.swing.table.TableModel#getColumnClass(int)
-     */
-    @Override
-    public Class<?> getColumnClass(int columnIndex) {
-        return switch (columnIndex) {
-            case COL_PLAYER_ID -> String.class;
-            case 0 -> PlayerNameCell.class;
-            case 1 -> String.class;
-            case 2 -> TrainingPriorityCell.class;
-            case 3, 4, 5, 6, 7, 8, 9, 10 -> VerticalIndicator.class;
-            default -> super.getColumnClass(columnIndex);
-        };
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.swing.table.TableModel#getColumnCount()
-     */
-    @Override
-    public int getColumnCount() {
-        return 12;
-    }
-
-    /*
-     * (non-Javadoc)
-     *
-     * @see javax.swing.table.TableModel#getColumnName(int)
-     */
-    @Override
-    public String getColumnName(int columnIndex) {
-        return switch (columnIndex) {
-            case COL_PLAYER_ID -> TranslationFacility.tr("ls.player.id");
-            case 0 -> TranslationFacility.tr("Spieler");
-            case 1 -> TranslationFacility.tr("ls.player.age");
-            case 2 -> TranslationFacility.tr("trainpre.priority");
-            case 3 -> TranslationFacility.tr("ls.player.skill.keeper");
-            case 4 -> TranslationFacility.tr("ls.player.skill.defending");
-            case 5 -> TranslationFacility.tr("ls.player.skill.playmaking");
-            case 6 -> TranslationFacility.tr("ls.player.skill.passing");
-            case 7 -> TranslationFacility.tr("ls.player.skill.winger");
-            case 8 -> TranslationFacility.tr("ls.player.skill.scoring");
-            case 9 -> TranslationFacility.tr("ls.player.skill.setpieces");
-            case 10 -> TranslationFacility.tr("ls.player.skill.stamina");
-            default -> "";
-        };
-    }
-
+//    /*
+//     * (non-Javadoc)
+//     *
+//     * @see javax.swing.table.TableModel#getColumnClass(int)
+//     */
+//    @Override
+//    public Class<?> getColumnClass(int columnIndex) {
+//        return switch (columnIndex) {
+//            case COL_PLAYER_ID -> String.class;
+//            case 0 -> PlayerNameCell.class;
+//            case 1 -> String.class;
+//            case 2 -> TrainingPriorityCell.class;
+//            case 3, 4, 5, 6, 7, 8, 9, 10 -> VerticalIndicator.class;
+//            default -> super.getColumnClass(columnIndex);
+//        };
+//    }
+//
+//    /*
+//     * (non-Javadoc)
+//     *
+//     * @see javax.swing.table.TableModel#getColumnCount()
+//     */
+//    @Override
+//    public int getColumnCount() {
+//        return 12;
+//    }
+//
+//    /*
+//     * (non-Javadoc)
+//     *
+//     * @see javax.swing.table.TableModel#getColumnName(int)
+//     */
+//    @Override
+//    public String getColumnName(int columnIndex) {
+//        return switch (columnIndex) {
+//            case COL_PLAYER_ID -> TranslationFacility.tr("ls.player.id");
+//            case 0 -> TranslationFacility.tr("Spieler");
+//            case 1 -> TranslationFacility.tr("ls.player.age");
+//            case 2 -> TranslationFacility.tr("trainpre.priority");
+//            case 3 -> TranslationFacility.tr("ls.player.skill.keeper");
+//            case 4 -> TranslationFacility.tr("ls.player.skill.defending");
+//            case 5 -> TranslationFacility.tr("ls.player.skill.playmaking");
+//            case 6 -> TranslationFacility.tr("ls.player.skill.passing");
+//            case 7 -> TranslationFacility.tr("ls.player.skill.winger");
+//            case 8 -> TranslationFacility.tr("ls.player.skill.scoring");
+//            case 9 -> TranslationFacility.tr("ls.player.skill.setpieces");
+//            case 10 -> TranslationFacility.tr("ls.player.skill.stamina");
+//            default -> "";
+//        };
+//    }
+//
     /*
      * (non-Javadoc)
      *
      * @see javax.swing.table.TableModel#getRowCount()
      */
-    @Override
-    public int getRowCount() {
-        return (this.data != null) ? data.size() : 0;
-    }
-
+//    @Override
+//    public int getRowCount() {
+//        return (this.data != null) ? data.size() : 0;
+//    }
+//
     /**
      * Returns as toolTip for the cell, the last skillup for the proper player
      * and skill
