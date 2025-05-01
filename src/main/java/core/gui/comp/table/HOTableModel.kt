@@ -231,7 +231,7 @@ abstract class HOTableModel protected constructor(
     private fun moveColumn(table: JTable, userColumn: UserColumn) {
         if (table is FixedColumnsTable) {
             val targetIndex = userColumn.getIndex() - table.fixedColumnsCount
-            if (targetIndex > 0) {
+            if (targetIndex >= 0) {
                 try {
                     val index = table.getColumnModel().getColumnIndex(userColumn.getId())
                     if (index != targetIndex) {
@@ -373,8 +373,12 @@ abstract class HOTableModel protected constructor(
             val userColumns = Arrays.stream(this.columns).toList()
             for (col in sortColumns) {
                 val index = userColumns.indexOf(col)
-                val sortKey = RowSorter.SortKey(index, col.getSortOrder())
-                sortKeys.add(sortKey)
+                if (index > -1) {
+                    val sortKey = RowSorter.SortKey(index, col.getSortOrder())
+                    if (sortKey.column > -1 && sortKey.column < rowSorter.model.columnCount) {
+                        sortKeys.add(sortKey)
+                    }
+                }
             }
         }
         rowSorter.sortKeys = sortKeys

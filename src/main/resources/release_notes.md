@@ -22,6 +22,9 @@
 * Fix initial size of skill and position columns (#2217)
 * Fix long shot rating calculation (#2237)
 * Fix consideration of the loyalty influence on the long shot tactic level (#2247)
+* Fix column order sorting error (#2265)
+* Players who are promoted from youth to adults keep their sub skills (#2267)
+* Fix player statement and owner notes in overview table (#2271)
 
 ### Team Analyzer
 
@@ -36,8 +39,6 @@
 ### Series
 
 * Fix table calculation if teams were replaced during series (#2178)
-
-### Matches
 
 ### Lineup
 
@@ -54,11 +55,10 @@
 * Fix error in download of player transfers (#2151)
 * Remove redundant mini scout dialog (#1868)
 
-### Training
-
 ### International Friendlies
 
 * Fix database error on match reload (#2063)
+* Add new countries (#2255)
 
 ### Youth
 
@@ -83,15 +83,16 @@
 
 ## Translations
 
-Reports by Contributors - June 23, 2024 - February 15, 2025
+Reports by Contributors - June 23, 2024 - May 01, 2025
 
 * Kristaps 322
+* sich 224
+* Lidegang 179
 * Tavaro 175
-* Lidegang 158
-* wsbrenk 93
+* wsbrenk 97
 * Moorhuhninho 25
 * Sebastian Reddig 12
 * Achilles 10
 * Billy Dikkanen 10
 
-Total 805
+Total 1036

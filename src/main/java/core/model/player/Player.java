@@ -1817,6 +1817,7 @@ public class Player extends AbstractTable.Storable {
     public void copySkills(Player old) {
         for (var s : values()) {
             setValue4Skill(s, old.getValue4Skill(s));
+            setSubskill4PlayerSkill(s, old.getSub4Skill(s));
         }
     }
 
@@ -2039,7 +2040,7 @@ public class Player extends AbstractTable.Storable {
         var playerBefore = DBManager.instance().getSpieler(previousID).stream()
                 .filter(i -> i.getPlayerId() == this.getPlayerId()).findFirst().orElse(null);
         if (playerBefore == null) {
-            playerBefore = this.cloneWithoutSubSkills();
+            playerBefore = this.copyPlayer();
         }
         // since we don't want to work with temp player objects we calculate skill by skill
         // whereas experience is calculated within the first skill
@@ -2190,7 +2191,7 @@ public class Player extends AbstractTable.Storable {
         return schumRankBenchmark;
     }
 
-    private Player cloneWithoutSubSkills() {
+    private Player copyPlayer() {
         var ret = new Player();
         ret.setHrfId(this.hrfId);
         ret.copySkills(this);

@@ -310,7 +310,7 @@ public class MatchFixtures extends AbstractTable.Storable {
 
         while (!replaces.isEmpty()) {
             var replaceTeam = replaces.get(0);
-            for (var i = 0; i < 7; i++) {
+            for (var i = 0; i < 14; i++) {
                 int finalI = i;
                 var match = m_vEintraege.stream().filter(p -> p.getSpieltag() == 1 + finalI && (p.getHeimId() == replaceTeam || p.getGastId() == replaceTeam)).findAny();
                 if (match.isPresent()) {
