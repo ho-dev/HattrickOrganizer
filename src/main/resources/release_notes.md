@@ -83,12 +83,12 @@
 
 ## Translations
 
-Reports by Contributors - June 23, 2024 - April 15, 2025
+Reports by Contributors - June 23, 2024 - May 01, 2025
 
 * Kristaps 322
 * sich 224
+* Lidegang 179
 * Tavaro 175
-* Lidegang 161
 * wsbrenk 97
 * Moorhuhninho 25
 * Sebastian Reddig 12
