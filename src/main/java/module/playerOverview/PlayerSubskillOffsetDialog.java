@@ -153,6 +153,7 @@ final class PlayerSubskillOffsetDialog extends JDialog implements ActionListener
 		constraints.gridx = 1;
 		constraints.gridy = 2;
 		tsi = new JFormattedTextField();
+		tsi.setToolTipText(TranslationFacility.tr("ls.player.tsi.calculatedversusindicated"));
 		tsi.setEnabled(false);
 		getContentPane().add(tsi, constraints);
 
