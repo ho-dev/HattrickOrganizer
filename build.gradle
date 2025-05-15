@@ -362,7 +362,7 @@ tasks.register("pushmd")  {
         def contributorFilter = ["Che"]
 
         def commitCount = callGit('git rev-list 9.0..HEAD --count')
-        def diff = callGit('git diff --shortstat 9.00..HEAD')
+        def diff = callGit('git diff --shortstat 9.0..HEAD')
         def contributors = filter(callGit('git shortlog -s -n 9.0..HEAD'), contributorFilter)
         def latestCommit = callGit('git log -1 --pretty=format:"%s"')
 

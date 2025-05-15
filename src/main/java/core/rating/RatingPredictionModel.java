@@ -1166,7 +1166,8 @@ public class RatingPredictionModel {
      * @return Double
      */
     protected double calcPlayerTacticStrength(Player player, PlayerSkill skill) {
-        var ret = calcStrength(player, skill);
+        var loyalty = calcLoyalty(player);
+        var ret = loyalty + calcStrength(player, skill);
         var xp = calcSkillRating(player.getSkillValue(EXPERIENCE));
         var f = Math.log10(xp) * 4. / 3.;
         ret += f;
@@ -1695,7 +1696,8 @@ public class RatingPredictionModel {
         for (var p : lineup.getFieldPositions()) {
             var player = p.getPlayer();
             if (player != null) {
-                sumPassing += calcSkillRating(player.getSkill(PASSING));
+                var loyalty = calcLoyalty(player);
+                sumPassing += loyalty + calcSkillRating(player.getSkill(PASSING));
             }
         }
         return sumPassing / 5. - 2.;
@@ -1743,8 +1745,9 @@ public class RatingPredictionModel {
         for (var p : defence) {
             var player = p.getPlayer();
             var form = player.getForm();
-            var passing = calcSkillRating(player.getSkill(PASSING));
-            var defending = calcSkillRating(player.getSkill(DEFENDING));
+            var loyalty = calcLoyalty(player);
+            var passing = loyalty +  calcSkillRating(player.getSkill(PASSING));
+            var defending = loyalty + calcSkillRating(player.getSkill(DEFENDING));
             n++;
             f += form;
             a += 2 * passing + defending;
