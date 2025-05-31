@@ -213,7 +213,7 @@ public class FutureTrainingManager {
 	 */
 	public double getTrainingSpeed()
 	{
-		return (trainingSpeed * 100.0);
+		return trainingSpeed * 100.0;
 	}
 
 

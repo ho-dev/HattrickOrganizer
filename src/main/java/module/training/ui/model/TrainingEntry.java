@@ -3,10 +3,13 @@ package module.training.ui.model;
 import core.model.player.Player;
 import core.training.FutureTrainingManager;
 import core.util.HODateTime;
-import module.training.ui.comp.TrainingPriorityCell;
 
 public class TrainingEntry {
-    private FutureTrainingManager futureTrainingManager;
+    private final FutureTrainingManager futureTrainingManager;
+
+    public TrainingEntry(FutureTrainingManager futureTrainingManager){
+        this.futureTrainingManager=futureTrainingManager;
+    }
 
     public Player getPlayer() {
         return this.futureTrainingManager.getPlayer();

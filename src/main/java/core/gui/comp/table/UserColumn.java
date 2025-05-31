@@ -146,12 +146,18 @@ public abstract class UserColumn {
 	}
 
 	/**
-	 * Some columns must be displayed, so some columns are not editable
+	 * Some columns must be displayed, so some columns are not editable in options dialog
 	 * @return boolean
 	 */
 	public boolean canBeDisabled(){
 		return true;
 	}
+
+	/**
+	 * Column is not visible (width is reduced to zero).
+	 * @return boolean
+	 */
+	public boolean isHidden(){return false;}
 
 	/**
 	 * set minWidth and prefWidth in the TableColumn

@@ -310,6 +310,11 @@ abstract class HOTableModel protected constructor(
         for (userColumn in displayedColumns) {
             val tableColumn = getTableColumn(table, i++)
             tableColumn.identifier = userColumn.getId()
+            if (userColumn.isHidden){
+                tableColumn.preferredWidth=0
+                tableColumn.minWidth=0
+                tableColumn.maxWidth=0
+            }
         }
         getUserColumnSettings(table)
 

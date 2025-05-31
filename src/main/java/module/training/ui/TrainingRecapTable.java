@@ -116,12 +116,11 @@ public class TrainingRecapTable extends JScrollPane {
             }
 
             Vector<String> row = new Vector<>();
-
             row.add(player.getFullName());
             row.add(player.getAgeWithDaysAsString());
             byte bIdealPosition = player.getIdealPosition();
             row.add(String.format(MatchRoleID.getNameForPosition(bIdealPosition) + " (%.2f)", player.getIdealPositionRating()));
-            row.add(Integer.toString(ftm.getTrainingSpeed()));
+            row.add(Integer.toString((int) ftm.getTrainingSpeed()));
             row.add(Integer.toString(player.getPlayerId()));
 
             for (int i = 0; i < UserParameter.instance().futureWeeks; i++) {
