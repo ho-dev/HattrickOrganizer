@@ -5,6 +5,7 @@
 ## [Detailed Changelog](https://github.com/ho-dev/HattrickOrganizer/issues?q=milestone%3A9.0)
 
 ### Database
+* Fix init of xtra data table (#2284)
 
 
 ### Squad
