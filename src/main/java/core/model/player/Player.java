@@ -1957,10 +1957,10 @@ public class Player extends AbstractTable.Storable {
     }
 
     public String getBestPositionInfo() {
-        return MatchRoleID.getNameForPosition(getIdealPosition())
-                + " ("
-                + getIdealPositionRating()
-                + ")";
+        var idealPosition = getIdealPosition();
+        return String.format("%s (%.2f)",
+                MatchRoleID.getNameForPosition(idealPosition),
+                this.getPositionRating(idealPosition));
     }
 
     public FuturePlayerTraining.Priority getFuturePlayerSkillTrainingPriority(PlayerSkill skillIndex) {

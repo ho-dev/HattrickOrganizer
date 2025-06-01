@@ -5,8 +5,6 @@ import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.IHOTableCellEntry;
 import core.gui.comp.table.HOTableModel;
 import core.gui.model.UserColumnController;
-import core.gui.theme.HOColorName;
-import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
 import core.training.FutureTrainingManager;
@@ -23,7 +21,6 @@ import module.training.ui.model.TrainingEntry;
 import module.training.ui.model.TrainingModel;
 
 import javax.swing.*;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +41,7 @@ public class TrainingProgressTableModel extends HOTableModel {
     /**
      * Constructor
      *
-     * @param model the training model
+     * @param columnModelId Column model id defined in UserColumnController
      */
     public TrainingProgressTableModel(UserColumnController.ColumnModelId columnModelId) {
         super(columnModelId, "TrainingOverview");

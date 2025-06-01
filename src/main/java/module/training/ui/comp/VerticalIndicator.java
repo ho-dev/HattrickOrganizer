@@ -38,6 +38,7 @@ public class VerticalIndicator extends JPanel implements IHOTableCellEntry {
 		super();
 		this.actual = _actual;
 		this.total = _total;
+		createComponent();
 	}
 
 	// ~ Methods
