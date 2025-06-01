@@ -20,8 +20,8 @@ public class VerticalIndicator extends JPanel implements IHOTableCellEntry {
 	// ~ Instance fields
 	// ----------------------------------------------------------------------------
 
-	private double actual;
-	private double total;
+	private final double actual;
+	private final double total;
 
 	// ~ Constructors
 	// -------------------------------------------------------------------------------
@@ -47,7 +47,7 @@ public class VerticalIndicator extends JPanel implements IHOTableCellEntry {
 	/**
 	 * Get Training Percentage
 	 * 
-	 * @return
+	 * @return double
 	 */
 	public double getPercentage() {
 		return min(100., actual / total * 100d);
@@ -56,7 +56,7 @@ public class VerticalIndicator extends JPanel implements IHOTableCellEntry {
 	/**
 	 * Get Text describing training situation
 	 * 
-	 * @return
+	 * @return String
 	 */
 	public String getText() {
 		return actual + "(" + total + ")"; //$NON-NLS-1$ //$NON-NLS-2$
@@ -65,7 +65,7 @@ public class VerticalIndicator extends JPanel implements IHOTableCellEntry {
 	/**
 	 * Return toolTip text
 	 * 
-	 * @return
+	 * @return String
 	 */
 	@Override
 	public String getToolTipText() {
@@ -75,7 +75,7 @@ public class VerticalIndicator extends JPanel implements IHOTableCellEntry {
 	/**
 	 * Get number of training points for skillup
 	 * 
-	 * @return
+	 * @return double
 	 */
 	public double getTotal() {
 		return total;
