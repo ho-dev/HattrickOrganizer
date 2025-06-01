@@ -33,9 +33,6 @@ public class OutputPanel extends LazyImagePanel {
 
     private final TrainingProgressTableModel trainingProgressTableModel;
     private FixedColumnsTable trainingProgressTable;
-
-//    private JTable fixedOutputTable;
-//    private JTable outputTable;
     private JButton importButton;
     private JButton calculateButton;
     private final TrainingModel trainingModel;
@@ -48,6 +45,10 @@ public class OutputPanel extends LazyImagePanel {
         super();
         this.trainingProgressTableModel = UserColumnController.instance().getTrainingProgressTableModel();
         this.trainingModel = model;
+    }
+
+    public void storeUserSettings(){
+        this.trainingProgressTableModel.storeUserSettings();
     }
 
     @Override
