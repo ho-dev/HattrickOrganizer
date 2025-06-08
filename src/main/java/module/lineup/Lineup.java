@@ -714,17 +714,6 @@ public class Lineup{
 		return null;
 	}
 
-	public String tryGetPlayerNameByPositionID(int positionId) {
-		try {
-			var posid = getPositionById(positionId);
-			if (posid != null){
-				return HOVerwaltung.instance().getModel().getCurrentPlayer(posid.getPlayerId()).getShortName();
-			}
-		} catch (Exception ignored) {
-		}
-		return "           ";
-	}
-
 	/**
 	 * Get the position object by position id.
 	 */
