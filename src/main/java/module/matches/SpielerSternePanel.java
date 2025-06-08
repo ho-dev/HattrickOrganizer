@@ -154,6 +154,7 @@ final class SpielerSternePanel extends ImagePanel implements ActionListener {
 		case IMatchRoleID.rightForward:
 		case IMatchRoleID.centralForward:
 		case IMatchRoleID.leftForward:
+		case IMatchRoleID.redCardedPlayer1:
 		case IMatchRoleID.FirstPlayerReplaced: {
 			constraints.gridx = 0;
 			constraints.gridy = 2;
