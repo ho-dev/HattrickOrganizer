@@ -245,6 +245,19 @@ public class XtraData extends AbstractTable.Storable {
     }
 
     /**
+     * Get one daily update time stamp
+     * @param index Index of the update list [0..4]
+     * @return Timestamp
+     */
+    public Timestamp getDailyUpdate(int index){
+        if (dailyUpdates!=null && index > -1 && index < dailyUpdates.size()){
+            var dailyUpdate = dailyUpdates.get(index);
+            if ( dailyUpdate != null ) return dailyUpdate.toDbTimestamp();
+        }
+        return null;
+    }
+
+    /**
      * Set one daily update
      * @param update Index [0..4]
      * @param v HODateTime

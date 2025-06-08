@@ -37,7 +37,5 @@
 
 Reports by Contributors - May 11, 2025 - May 18, 2025
 
-* Kristaps 39
-* Lidegang 2
 
 Total 41
