@@ -88,14 +88,15 @@ public interface IMatchRoleID {
     int penaltyTaker10 = 31;
     int penaltyTaker11 = 32;
 
-//    /** ab welccher PositionsID gehört Pos zur Reserve Bank */
-//
+    int redCardedPlayer1 = 33;
+    int redCardedPlayer2 = 34;
+    int redCardedPlayer3 = 35;
+
     //First id of the reserves
     int startReserves = substitutionKeeper;
 
     // Start of player list is not a good idea to hard code at 0 either
     int startLineup = keeper;
-//
 
 
     // ===========  MatchBehaviourID ================
@@ -136,6 +137,9 @@ public interface IMatchRoleID {
     byte SUBSTITUTED1 = 18;
     byte SUBSTITUTED2 = 19;
     byte SUBSTITUTED3 = 20;
+    byte REDCARDED1 = 33;
+    byte REDCARDED2 = 34;
+    byte REDCARDED3 = 35;
     byte FORWARD_TOWING = 21;
     byte UNKNOWN = -1;
     byte EXTRA = 30;

@@ -73,6 +73,7 @@ public class Lineup{
 	private int m_iKicker = -1;
 
 	private Vector<MatchLineupPosition> replacedPositions = new Vector<>();
+	private Vector<MatchLineupPosition> redCardedPositions = new Vector<>();
 	MatchLineupPosition captain;
 	MatchLineupPosition setPiecesTaker;
 	private Player.ManMarkingPosition manMarkingPosition;
@@ -303,46 +304,6 @@ public class Lineup{
 				RedCardCriteria.parse(properties.getProperty(prefix + "card")),
 				GoalDiffCriteria.parse(properties.getProperty(prefix + "standing")));
 	}
-
-//	/**
-//	 * get the tactic level for AiM/AoW
-//	 *
-//	 * @return tactic level
-//	 */
-//	public final float getTacticLevelAimAow() {
-//		return HOVerwaltung.instance().getModel().getRatingPredictionModel().getTacticRating()
-//		return Math.max(1, new RatingPredictionManager(this, HOVerwaltung.instance().getModel().getTeam()).getTacticLevelAowAim());
-//	}
-//
-//	/**
-//	 * get the tactic level for counter
-//	 *
-//	 * @return tactic level
-//	 */
-//	public final float getTacticLevelCounter() {
-//		return (new RatingPredictionManager(this, HOVerwaltung.instance().getModel().getTeam())).getTacticLevelCounter();
-//	}
-//
-//	/**
-//	 * get the tactic level for pressing
-//	 *
-//	 * @return tactic level
-//	 */
-//	public final float getTacticLevelPressing() {
-//		return Math.max(1, new RatingPredictionManager(this, HOVerwaltung.instance().getModel().getTeam()).getTacticLevelPressing());
-//	}
-//
-//	/**
-//	 * get the tactic level for Long Shots
-//	 *
-//	 * @return tactic level
-//	 */
-//	public final float getTacticLevelLongShots() {
-//		return Math.max(1, new RatingPredictionManager(this, HOVerwaltung.instance().getModel().getTeam()).getTacticLevelLongShots());
-//	}
-//	public final float getTacticLevelCreative() {
-//		return Math.max(1, new RatingPredictionManager(this, HOVerwaltung.instance().getModel().getTeam()).getTacticLevelCreative());
-//	}
 
 	/**
 	 * Setter for property m_iAttitude.
@@ -788,10 +749,15 @@ public class Lineup{
 		return getPositionByPlayerId(playerid, true);
 	}
 
-	public final MatchLineupPosition getPositionByPlayerId(int playerid, boolean includeReplacedPlayers) {
+	public final MatchLineupPosition getPositionByPlayerId(int playerid, boolean includeRemovedPlayers) {
 		MatchLineupPosition ret = getPositionByPlayerId(playerid, m_vFieldPositions);
 		if ( ret == null ) ret = getPositionByPlayerId(playerid, m_vBenchPositions);
-		if ( ret == null & includeReplacedPlayers) ret = getPositionByPlayerId(playerid, replacedPositions);
+		if ( includeRemovedPlayers){
+			if ( ret == null ) ret = getPositionByPlayerId(playerid, replacedPositions);
+			if ( ret == null ) {
+				ret = getPositionByPlayerId(playerid, redCardedPositions);
+			}
+		}
 		return ret;
 	}
 
@@ -825,6 +791,9 @@ public class Lineup{
 		else if ( position.isReplacedMatchRoleId()){
 			setPosition(this.replacedPositions,position);
 		}
+		else if ( position.isRedCardedMatchRoleId()){
+			setPosition(this.redCardedPositions, position);
+		}
 	}
 
 	private void setPosition(Vector<MatchLineupPosition> m_vPositionen, MatchLineupPosition spos) {
@@ -854,6 +823,7 @@ public class Lineup{
 		if (m_vFieldPositions != null) ret.addAll(m_vFieldPositions);
 		if (m_vBenchPositions != null) ret.addAll(m_vBenchPositions);
 		if (replacedPositions != null) ret.addAll(replacedPositions);
+		if (redCardedPositions != null) ret.addAll(redCardedPositions);
 		if (penaltyTakers != null) ret.addAll(penaltyTakers);
 		if (captain != null) ret.add(captain);
 		if (setPiecesTaker != null) ret.add(setPiecesTaker);
@@ -865,6 +835,7 @@ public class Lineup{
 	}
 
 	public Vector<MatchLineupPosition> getReplacedPositions(){return replacedPositions;}
+	public Vector<MatchLineupPosition> getRedCardedPositions(){return redCardedPositions;}
 
 	/**
 	 * Place a player to a certain position and check/solve dependencies.
@@ -1064,17 +1035,6 @@ public class Lineup{
 		}
 		return IMatchRoleID.UNKNOWN;
 	}
-
-//	public final float getTacticLevel(int type) {
-//		return switch (type) {
-//			case IMatchDetails.TAKTIK_PRESSING -> getTacticLevelPressing();
-//			case IMatchDetails.TAKTIK_KONTER -> getTacticLevelCounter();
-//			case IMatchDetails.TAKTIK_MIDDLE, IMatchDetails.TAKTIK_WINGS -> getTacticLevelAimAow();
-//			case IMatchDetails.TAKTIK_LONGSHOTS -> getTacticLevelLongShots();
-//			case IMatchDetails.TAKTIK_CREATIVE -> getTacticLevelCreative();
-//			default -> 0.0f;
-//		};
-//	}
 
 	/**
 	 * Setter for property m_iTacticType.
@@ -1374,6 +1334,10 @@ public class Lineup{
 		replacedPositions = new Vector<>();
 		for (int i = IMatchRoleID.FirstPlayerReplaced; i <= IMatchRoleID.ThirdPlayerReplaced; i++) {
 			replacedPositions.add(new MatchLineupPosition( i, 0, (byte) 0));
+		}
+		redCardedPositions = new Vector<>();
+		for ( int i =IMatchRoleID.redCardedPlayer1; i <= IMatchRoleID.redCardedPlayer3; i++){
+			redCardedPositions.add(new MatchLineupPosition(i, 0, (byte)0));
 		}
 	}
 

@@ -180,8 +180,8 @@ public class MatchLineupTeam extends AbstractTable.Storable {
 	 * 
 	 * @return The object matching the criteria, or null if none found
 	 */
-	public final MatchLineupPosition getPlayerByID(int playerId, boolean includeReplacedPlayers) {
-		return this.lineup.getPositionByPlayerId(playerId, includeReplacedPlayers);
+	public final MatchLineupPosition getPlayerByID(int playerId, boolean includeRemovedPlayers) {
+		return this.lineup.getPositionByPlayerId(playerId, includeRemovedPlayers);
 	}
 	public final MatchLineupPosition getPlayerByID(Integer playerId) {
 		if ( playerId != null ) {
@@ -590,8 +590,9 @@ public class MatchLineupTeam extends AbstractTable.Storable {
 		// get the starting positions
 		var allActivePlayers = new Vector<MatchLineupPosition>();
 		allActivePlayers.addAll(this.lineup.getFieldPositions());
-		// add start positions of replaced players
+		// add start positions of removed players
 		allActivePlayers.addAll(this.lineup.getReplacedPositions());
+		allActivePlayers.addAll(this.lineup.getRedCardedPositions());
 		for (var iMatchRole : allActivePlayers) {
 			if (iMatchRole.getStartPosition() >= 0) {
 				lastMatchAppearances.put(iMatchRole.getStartPosition(), new MatchAppearance(iMatchRole, 0));
