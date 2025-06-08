@@ -38,12 +38,12 @@ public class SkillupTableRenderer extends DefaultTableCellRenderer {
 		SkillupTableModel model = (SkillupTableModel)table.getModel();
 		var skillup = model.getSkillup(table.convertRowIndexToModel(row));
 
-		if ( column == 0 ){
-			setIcon(TrainingLegendPanel.getSkillupTypeIcon(skillup.getType(), skillup.getChange()));
-		}
-		else {
-			setIcon(null);
-		}
+//		if ( column == 0 ){
+//			setIcon(TrainingLegendPanel.getSkillupTypeIcon(skillup.getType(), skillup.getChange()));
+//		}
+//		else {
+//			setIcon(null);
+//		}
 		if (skillup.getDate().isAfter(HOVerwaltung.instance().getModel().getBasics().getDatum()) ) {
 			cell.setForeground(Skills.getSkillColor(skillup.getType()));
 		} else {

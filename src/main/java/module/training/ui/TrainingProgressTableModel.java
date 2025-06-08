@@ -30,9 +30,7 @@ import java.util.List;
  */
 public class TrainingProgressTableModel extends HOTableModel {
 
-    // common column of fixed and scrolled tables
     private static final int COL_PLAYER_ID = 11;
-//    private List<FutureTrainingManager> data = new ArrayList<>();
     private TrainingModel model;
 
     /**
@@ -184,10 +182,11 @@ public class TrainingProgressTableModel extends HOTableModel {
         m_clData = new Object[currentPlayers.size()][getDisplayedColumns().length];
         int rownum = 0;
         for (var player : currentPlayers) {
-            int colnum = 0;
+            int column = 0;
+            var training = new TrainingEntry(new FutureTrainingManager(player, this.model.getFutureTrainings()));
             for ( var col : getDisplayedColumns()){
-                m_clData[rownum][colnum] = ((TrainingColumn)col).getTableEntry(new TrainingEntry(new FutureTrainingManager(player, this.model.getFutureTrainings())));
-                colnum++;
+                m_clData[rownum][column] = ((TrainingColumn)col).getTableEntry(training);
+                column++;
             }
             rownum++;
         }

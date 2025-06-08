@@ -3,11 +3,18 @@ package module.training.ui.model;
 import core.model.player.Player;
 import core.training.FutureTrainingManager;
 import core.util.HODateTime;
+import module.training.PastTrainingManager;
 
 public class TrainingEntry {
     private final FutureTrainingManager futureTrainingManager;
+    private final PastTrainingManager pastTrainingManager;
 
     public TrainingEntry(FutureTrainingManager futureTrainingManager){
+        this.pastTrainingManager=null;
+        this.futureTrainingManager=futureTrainingManager;
+    }
+    public TrainingEntry(PastTrainingManager pastTrainingManager, FutureTrainingManager futureTrainingManager){
+        this.pastTrainingManager=pastTrainingManager;
         this.futureTrainingManager=futureTrainingManager;
     }
 

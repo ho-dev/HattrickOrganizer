@@ -2,8 +2,9 @@ package module.training.ui.model;
 
 import core.gui.comp.entry.IHOTableCellEntry;
 import core.gui.comp.table.UserColumn;
+import module.training.PlayerSkillChange;
 
-public abstract class TrainingColumn extends UserColumn {
+public class TrainingColumn extends UserColumn {
     static int nextId=0;
     public TrainingColumn(String name) {
         this( name, 80);
@@ -19,5 +20,6 @@ public abstract class TrainingColumn extends UserColumn {
         this.setDisplay(true);
     }
 
-    public abstract IHOTableCellEntry getTableEntry(TrainingEntry entry);
+    public IHOTableCellEntry getTableEntry(TrainingEntry entry) {return null;}
+    public IHOTableCellEntry getTableEntry(PlayerSkillChange entry) {return null;}
 }

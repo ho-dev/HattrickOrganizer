@@ -2,6 +2,8 @@ package module.training.ui;
 
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyPanel;
+import core.gui.comp.table.FixedColumnsTable;
+import core.gui.model.UserColumnController;
 import core.model.player.SkillChange;
 import core.util.Helper;
 import module.training.ui.model.SkillupTableModel;
@@ -20,7 +22,7 @@ import javax.swing.SwingConstants;
 
 public class TrainingDevelopmentPanel extends LazyPanel {
 
-	private SkillupTable table;
+	private FixedColumnsTable table;
 	private final TrainingModel model;
 
 	private JLabel title;
@@ -53,14 +55,14 @@ public class TrainingDevelopmentPanel extends LazyPanel {
 	 * Populate the table
 	 */
 	private void loadFromModel() {
-		List<SkillChange> skillups = new ArrayList<>();
-		if (this.model.getActivePlayer() != null) {
-			this.title.setText(Helper.getTranslation("ls.module.training.training_development")+ " " + this.model.getActivePlayer().getFullName());
-			skillups.addAll(this.model.getSkillupManager().getTrainedSkillups());
-			skillups.addAll(this.model.getFutureTrainingManager().getFutureSkillups());
-			Collections.reverse(skillups);
-		}
-		((SkillupTableModel) this.table.getModel()).setData(this.model.getActivePlayer(), skillups);
+//		List<SkillChange> skillups = new ArrayList<>();
+//		if (this.model.getActivePlayer() != null) {
+//			this.title.setText(Helper.getTranslation("ls.module.training.training_development")+ " " + this.model.getActivePlayer().getFullName());
+//			skillups.addAll(this.model.getSkillupManager().getTrainedSkillups());
+//			skillups.addAll(this.model.getFutureTrainingManager().getFutureSkillups());
+//			Collections.reverse(skillups);
+//		}
+		((SkillupTableModel) this.table.getModel()).setTrainingModel(this.model);
 	}
 
 	/**
@@ -71,22 +73,22 @@ public class TrainingDevelopmentPanel extends LazyPanel {
 	 * @param width
 	 *            new width
 	 */
-	private void setColumnWidth(int col, int width) {
-		table.getTableHeader().getColumnModel().getColumn(col).setWidth(width);
-		table.getTableHeader().getColumnModel().getColumn(col).setPreferredWidth(width);
-		table.getTableHeader().getColumnModel().getColumn(col).setMaxWidth(200);
-		table.getTableHeader().getColumnModel().getColumn(col).setMinWidth(0);
-	}
+//	private void setColumnWidth(int col, int width) {
+//		table.getTableHeader().getColumnModel().getColumn(col).setWidth(width);
+//		table.getTableHeader().getColumnModel().getColumn(col).setPreferredWidth(width);
+//		table.getTableHeader().getColumnModel().getColumn(col).setMaxWidth(200);
+//		table.getTableHeader().getColumnModel().getColumn(col).setMinWidth(0);
+//	}
 
 	/**
 	 * Initialize the object layout
 	 */
 	private void initComponents() {
-		table = new SkillupTable(new SkillupTableModel());
+		table = new FixedColumnsTable(UserColumnController.instance().getSkillupTableModel());
 		table.setDefaultRenderer(Object.class, new SkillupTableRenderer());
 
-		setColumnWidth(1, 50);
-		setColumnWidth(2, 50);
+//		setColumnWidth(1, 50);
+//		setColumnWidth(2, 50);
 
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
