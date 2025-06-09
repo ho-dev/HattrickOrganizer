@@ -564,18 +564,17 @@ public class MatchLineupTeam extends AbstractTable.Storable {
 
 	private HashMap<Integer, HashMap<MatchRoleID.Sector, Integer>> playersMinutesInSector;
 
-	private void addPlayersMinutesInSector(int playerId, MatchRoleID.Sector sector, int minutes){
+	private void addPlayersMinutesInSector(int playerId, MatchRoleID.Sector sector, int minutes) {
 		if (playersMinutesInSector == null) {
 			playersMinutesInSector = new HashMap<>();
 		}
 
 		var minutesInSector = playersMinutesInSector.get(playerId);
-		if ( minutesInSector == null){
+		if (minutesInSector == null) {
 			minutesInSector = new HashMap<>();
 			minutesInSector.put(sector, minutes);
 			playersMinutesInSector.put(playerId, minutesInSector);
-		}
-		else {
+		} else {
 			minutesInSector.merge(sector, minutes, Integer::sum);
 		}
 	}
@@ -606,6 +605,18 @@ public class MatchLineupTeam extends AbstractTable.Storable {
 		for (Substitution i : this.getSubstitutions()) {
 			if (i.getOrderType() != MatchOrderType.MAN_MARKING) {
 				examineSubstitution(i);
+			}
+		}
+
+		// Red carded players
+		for ( var redCarded : this.lineup.getRedCardedPositions()){
+			if ( redCarded.getStartPosition() > 0 ) {
+				var player = this.getPlayerByID(redCarded.getPlayerId(), true);
+				var events = this.getMatchdetails().getHighlights().stream()
+						.filter(e -> e.getPlayerId() == redCarded.getPlayerId() && MatchEvent.redCardME.contains(e.getMatchEventID()))
+						.sorted(Comparator.comparing(MatchEvent::getMinute))
+						.findAny();
+				events.ifPresent(matchEvent -> removeMatchAppearance(player, matchEvent.getMinute()));
 			}
 		}
 
