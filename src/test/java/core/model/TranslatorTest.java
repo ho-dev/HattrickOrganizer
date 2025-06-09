@@ -30,7 +30,7 @@ class TranslatorTest {
             "Galego",
             "Georgian",
             "German",
-            "Greeklish",
+            "Greek",
             "Hangul(Korean)",
             "Hebrew",
             "Hrvatski(Croatian)",
