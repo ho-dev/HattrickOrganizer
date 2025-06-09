@@ -1,7 +1,5 @@
 package core.util;
 
-import core.model.UserParameter;
-
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -9,7 +7,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.zone.ZoneRules;
-import java.time.format.FormatStyle;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -49,15 +46,6 @@ public class DateTimeUtils {
 	}
 
 	/**
-	 Format a datetime with HO! language interface
-	 */
-	public static String Format(Date date, String format) {
-		Locale locale = Languages.lookup(UserParameter.instance().sprachDatei).getLocale();
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format, locale);
-		return simpleDateFormat.format(date);
-	}
-
-	/**
 	 * Converts a {@link Timestamp}, presumably stored as CET/CEST in the database (Hattrick default),
 	 * and converts into an {@link Instant}.
 	 *
@@ -71,19 +59,6 @@ public class DateTimeUtils {
 
 		// Add current offset for time in default timezone (Europe/Stockholm), and parse as an Instant.
 		return Instant.parse(str + rules.getOffset(LocalDateTime.now()));
-	}
-
-  /**
-	 Format a datetime with HO! language interface
-	 */
-	public static String FormatLongDate(Timestamp ts) {
-
-		Locale locale = Languages.lookup(UserParameter.instance().sprachDatei).getLocale();
-
-		DateTimeFormatter FORMATTER = DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG);
-		FORMATTER.withLocale(locale);
-
-		return ts.toLocalDateTime().format(FORMATTER);
 	}
 
 	/**
