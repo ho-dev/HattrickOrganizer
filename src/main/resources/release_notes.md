@@ -15,6 +15,7 @@
 ### Player Analysis
 
 ### Series
+* Fix error in series table if more than one team replacements happened during one season (#2290)
 
 ### Lineup
 
