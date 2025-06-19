@@ -19,6 +19,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import static core.file.xml.XMLManager.*;
+
 public class XMLWorldDetailsParser {
 
 	/**
@@ -51,12 +53,10 @@ public class XMLWorldDetailsParser {
 			for (int i = 0; i < list.getLength(); i++) {
 				root = (Element) list.item(i);
 				WorldDetailLeague tmp = new WorldDetailLeague();
-				ele = (Element) root.getElementsByTagName("LeagueID").item(0);
-				tmp.setLeagueId(Integer.parseInt(XMLManager.getFirstChildNodeValue(ele)));
-				ele = (Element) root.getElementsByTagName("EnglishName").item(0);
-				tmp.setCountryName(XMLManager.getFirstChildNodeValue(ele));
-				ele = (Element) root.getElementsByTagName("ActiveTeams").item(0);
-				tmp.setActiveUsers(Integer.parseInt(XMLManager.getFirstChildNodeValue(ele)));
+
+				tmp.setLeagueId(xmlIntValue(root, "LeagueID", -1));
+				tmp.setCountryName( xmlValue(root, "EnglishName"));
+				tmp.setActiveUsers(xmlIntValue(root, "ActiveTeams", -1));
 
 				root = (Element) root.getElementsByTagName("Country").item(0);
 				ele = (Element) root.getElementsByTagName("CountryID").item(0);
@@ -65,6 +65,12 @@ public class XMLWorldDetailsParser {
 				} else {
 					tmp.setCountryId(tmp.getLeagueId());
 				}
+				tmp.setCountryCode(xmlValue(root, "CountryCode"));
+				tmp.setCurrencyName(xmlValue(root, "CurrencyName"));
+				tmp.setCurrencyRate(xmlValue(root, "CurrencyRate"));
+				tmp.setDateFormat(xmlValue(root, "DateFormat"));
+				tmp.setTimeFormat(xmlValue(root, "TimeFormat"));
+
 				detailsList.add(tmp);
 			}
 		} catch (Exception e) {

@@ -26,7 +26,7 @@ public class StatisticQuery {
 
 	public static double[][] getSpielerDaten4Statistik(int spielerId, int anzahlHRF) {
 		final int anzahlSpalten = 17;
-		final float faktor = core.model.UserParameter.instance().FXrate;
+		final float faktor = core.model.UserParameter.instance().currencyRate;
 
 		double[][] returnWerte = new double[0][0];
 		final Vector<double[]> vWerte = new Vector<>();
@@ -218,7 +218,7 @@ public class StatisticQuery {
 	}
 
 	public static double[][] getDataForTeamStatisticsPanel(int nbHRF, String group) {
-		final float factor = core.model.UserParameter.instance().FXrate;
+		final float factor = core.model.UserParameter.instance().currencyRate;
 		double[][] returnValues = new double[0][0];
 		final Vector<double[]> values = new Vector<>();
 		final int nbColumns = 29;
@@ -393,7 +393,7 @@ public class StatisticQuery {
 	public static double[][] getDataForFinancesStatisticsPanel(int iNumberWeeks) {
 
 		final int iNumberColumns = 18;
-		final float fxRate = core.model.UserParameter.instance().FXrate;
+		final float fxRate = core.model.UserParameter.instance().currencyRate;
 		double[][] returnValues;
 		Vector<double[]> values = new Vector<>();
 		var from = HODateTime.now().minus(iNumberWeeks * 7, ChronoUnit.DAYS);

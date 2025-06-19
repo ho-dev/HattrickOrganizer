@@ -1,12 +1,36 @@
 package core.model;
 
 import core.db.AbstractTable;
+import core.net.MyConnector;
+import core.net.OnlineWorker;
+
+import java.math.BigDecimal;
 
 public class WorldDetailLeague  extends AbstractTable.Storable {
 	private int leagueId;
 	private int countryId;
 	private String countryName;
 	private int activeUsers;
+
+	//	CurrencyName : String
+	//	The name of the currency in this country.
+	private String currencyName;
+
+	//	CurrencyRate : Decimal
+	//	Decimal value specifying the relative currency rate to SEK (swedish krona).
+	private Double currencyRate;
+
+	//	CountryCode : String
+	//	The country code for this country.
+	private String countryCode;
+
+	//	DateFormat : String
+	//	The date format for users of this country using ISO_8601
+	private String dateFormat;
+
+	//	TimeFormat : String
+	//  The time format for users of this country using ISO_8601
+	private String timeFormat;
 
 	public static WorldDetailLeague[] allLeagues = {
 			new WorldDetailLeague(1,1,"Sweden"),
@@ -166,9 +190,7 @@ public class WorldDetailLeague  extends AbstractTable.Storable {
 			new WorldDetailLeague(1000,1000,"International")
 	};
 	
-	public WorldDetailLeague(){
-		
-	}
+	public WorldDetailLeague(){}
 
 	public WorldDetailLeague(int leagueId, int countryId, String countryName){
 		this.leagueId = leagueId;
@@ -205,4 +227,46 @@ public class WorldDetailLeague  extends AbstractTable.Storable {
 	public String toString(){
 		return getCountryName();
 	}
+
+	public boolean isOK() {return getCurrencyRate() != null;}
+
+    public String getCurrencyName() {
+        return currencyName;
+    }
+
+	public void setCurrencyName(String currencyName) {
+        this.currencyName = currencyName;
+    }
+
+    public Double getCurrencyRate() {
+        return currencyRate;
+    }
+
+    public void setCurrencyRate(String currencyRate) {
+        this.currencyRate = currencyRate;
+    }
+
+    public String getCountryCode() {
+        return countryCode;
+    }
+
+    public void setCountryCode(String countryCode) {
+        this.countryCode = countryCode;
+    }
+
+    public String getDateFormat() {
+        return dateFormat;
+    }
+
+    public void setDateFormat(String dateFormat) {
+        this.dateFormat = dateFormat;
+    }
+
+    public String getTimeFormat() {
+        return timeFormat;
+    }
+
+    public void setTimeFormat(String timeFormat) {
+        this.timeFormat = timeFormat;
+    }
 }

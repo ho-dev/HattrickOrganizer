@@ -7,6 +7,7 @@ import core.gui.theme.ThemeManager;
 import core.model.TranslationFacility;
 import core.model.Translator;
 import core.model.UserParameter;
+import core.model.WorldDetailsManager;
 import core.util.DateTimeUtils;
 import core.util.HOLogger;
 
@@ -20,6 +21,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -39,6 +41,7 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
     private ComboBoxPanel m_jcbSkin;
     private ComboBoxPanel m_jcbLanguage;
     private ComboBoxPanel m_jcbTimeZone;
+    private ComboBoxPanel currencyNameComboBox;
     private JCheckBox m_jchShowSkillNumericalValue;
     private SliderPanel m_jslFontSize;
     private SliderPanel m_jslAlternativePositionsTolerance;
@@ -58,6 +61,7 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
         UserParameter.temp().promotionManagerTest = m_jcbPromotionStatusTest.isSelected();
 
         if (itemEvent.getStateChange() == java.awt.event.ItemEvent.SELECTED) {
+            core.model.UserParameter.temp().currencyName = ((String)this.currencyNameComboBox.getSelectedItem());
             core.model.UserParameter.temp().TimeZoneDifference = ((CBItem) m_jcbTimeZone.getSelectedItem()).getId();
             core.model.UserParameter.temp().nbDecimals = ((CBItem) m_jcbNbDecimals.getSelectedItem()).getId();
             core.model.UserParameter.temp().sprachDatei = ((String) m_jcbLanguage.getSelectedItem());
@@ -71,6 +75,10 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
         if (core.model.UserParameter.temp().zahlenFuerSkill != core.model.UserParameter.instance().zahlenFuerSkill)
             OptionManager.instance().setReInitNeeded();
         if (!core.model.UserParameter.temp().skin.equals(core.model.UserParameter.instance().skin)) {
+            OptionManager.instance().setRestartNeeded();
+        }
+        if(!UserParameter.temp().currencyName.equals(UserParameter.instance().currencyName)){
+            UserParameter.temp().currencyRate = WorldDetailsManager.instance().getCurrencyRate(UserParameter.temp().currencyName);
             OptionManager.instance().setRestartNeeded();
         }
     }
@@ -124,6 +132,13 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
         m_jcbLanguage.setSelectedItem(core.model.UserParameter.temp().sprachDatei);
         m_jcbLanguage.addItemListener(this);
         add(m_jcbLanguage);
+
+        // Currency selection
+        Set<String> currencyNames = WorldDetailsManager.instance().getAllCurrencyNames();
+        this.currencyNameComboBox = new ComboBoxPanel(TranslationFacility.tr("options.misc.currency"), currencyNames.toArray(), width);
+        this.currencyNameComboBox.setSelectedItem(UserParameter.temp().currencyName);
+        this.currencyNameComboBox.addItemListener(this);
+        add(this.currencyNameComboBox);
 
         // TimeZone selection =========================================================
         CBItem[] allZoneIdsAndItsOffSet = getAllZoneIdsAndItsOffSet();

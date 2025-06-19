@@ -2483,7 +2483,7 @@ public class Player extends AbstractTable.Storable {
      * @param trainerSkill 4..8
      * @return HOCurrency
      */
-    public HOCurrency calculateCoachConversionCosts(int trainerSkill){
+    public AmountOfMoney calculateCoachConversionCosts(int trainerSkill){
         var experience = this.getSkill(EXPERIENCE);
         if ( experience >= trainerSkill && trainerSkill >= 4 && trainerSkill < 9){
             if ( trainerSkill >= 5){
@@ -2494,10 +2494,10 @@ public class Player extends AbstractTable.Storable {
                     case 8 -> 7.11;
                     default -> throw new IllegalStateException("Unexpected value: " + trainerSkill);
                 };
-                return new HOCurrency((int)(47_500_000 * a / (experience-1)));
+                return new AmountOfMoney((int)(47_500_000 * a / (experience-1)));
             }
             else {
-                return new HOCurrency(100_000);
+                return new AmountOfMoney(100_000);
             }
         }
         return null;

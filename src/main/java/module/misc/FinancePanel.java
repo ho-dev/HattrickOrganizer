@@ -61,7 +61,7 @@ final class FinancePanel extends JPanel {
         final Economy finances = HOVerwaltung.instance().getModel().getEconomy();
         if (finances == null) return;
 
-        final float factor = core.model.UserParameter.instance().FXrate;
+        final float factor = core.model.UserParameter.instance().currencyRate;
 
         if (currentFinance) {
             cashFundsLabel.setSpecialNumber((finances.getCash() / factor)

@@ -223,7 +223,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
     private int parseCurrencyValue(String text) {
         var price = parseCurrency(text);
         if (price != null) {
-            return (int) (price * UserParameter.instance().FXrate);
+            return (int) (price * UserParameter.instance().currencyRate);
         }
         return 0;
     }
@@ -296,8 +296,8 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
         clSpinnerModel.setValue(clScoutEntry.getDeadline());
         jtfPlayerID.setText(String.valueOf(clScoutEntry.getPlayerID()));
         jtfName.setText(clScoutEntry.getName());
-        jtfPrice.setText(formatCurrency(clScoutEntry.getPrice() / UserParameter.instance().FXrate));
-        jtfWage.setText(formatCurrency(clScoutEntry.getbaseWage() / UserParameter.instance().FXrate));
+        jtfPrice.setText(formatCurrency(clScoutEntry.getPrice() / UserParameter.instance().currencyRate));
+        jtfWage.setText(formatCurrency(clScoutEntry.getbaseWage() / UserParameter.instance().currencyRate));
         jtfAge.setText(clScoutEntry.getAlter() + "." + clScoutEntry.getAgeDays());
         jtfTSI.setText(String.valueOf(clScoutEntry.getTSI()));
         jtaNotes.setText(clScoutEntry.getInfo());
@@ -465,8 +465,8 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
                 jtfName.setText(player.getPlayerName());
                 jtfAge.setText(player.getAge() + "." + player.getAgeDays());
 
-                jtfPrice.setText(formatCurrency(player.getPrice() / UserParameter.instance().FXrate));
-                jtfWage.setText(formatCurrency(player.getBaseWage() / UserParameter.instance().FXrate));
+                jtfPrice.setText(formatCurrency(player.getPrice() / UserParameter.instance().currencyRate));
+                jtfWage.setText(formatCurrency(player.getBaseWage() / UserParameter.instance().currencyRate));
                 jtfTSI.setText(String.valueOf(player.getTSI()));
                 jtaNotes.setText(player.getInfo());
 

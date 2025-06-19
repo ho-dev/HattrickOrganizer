@@ -5,6 +5,7 @@ import core.file.xml.XMLManager;
 import core.file.xml.XMLWorldDetailsParser;
 import core.net.MyConnector;
 import core.util.HOLogger;
+import groovyjarjarantlr4.v4.runtime.misc.OrderedHashSet;
 
 import java.util.*;
 
@@ -29,6 +30,9 @@ public class WorldDetailsManager {
 
 	private void initialize() {
 		leagues = DBManager.instance().getAllWorldDetailLeagues();
+		if (leagues.isEmpty()) {
+			leagues = Arrays.stream(WorldDetailLeague.allLeagues).toList();
+		}
 		leagueMap.clear();
 		countryMap.clear();
 		totalUsers = 0;
@@ -64,12 +68,33 @@ public class WorldDetailsManager {
 			initialize();
 		}
 		var ret = countryMap.get(countryId);
-		if (ret == null) {
+		if (ret == null || !ret.isOK()) {
 			ret = downloadWorldDetailLeague(countryId);
 			DBManager.instance().storeWorldDetailLeague(ret);
 			initialize();
 		}
 		return ret;
+	}
+
+	public Set<String> getAllCurrencyNames(){
+		var ret = new OrderedHashSet<String>();
+		for (var s : this.leagues){
+			if (!s.isOK()){
+				s = downloadWorldDetailLeague(s.getCountryId());
+			}
+			ret.add(s.getCurrencyName());
+		}
+		return ret;
+	}
+
+	public float getCurrencyRate(String currencyName) {
+		try {
+			for (var s : this.leagues) {
+				if (s.isOK() && s.getCurrencyName().equals(currencyName)) return Float.parseFloat(s.getCurrencyRate());
+			}
+		} catch (NumberFormatException ignnored) {
+		}
+		return 1;
 	}
 
 	/**

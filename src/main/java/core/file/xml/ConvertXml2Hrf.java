@@ -62,7 +62,8 @@ public class ConvertXml2Hrf {
 		var teamInfoList = XMLTeamDetailsParser.getTeamInfoFromString(teamDetails);
 		var usersPremierTeamInfo = teamInfoList.stream().filter(TeamInfo::isPrimaryTeam).findFirst().get();
 		var usersPremierTeamId = usersPremierTeamInfo.getTeamId();
-		if (teamId <= 0 || youthTeamId == null) {
+		var initTeamId = teamId <=0;
+		if (initTeamId || youthTeamId == null) {
 			// We have no team selected or the youth team information is never downloaded before
 			if (teamInfoList.size() == 1) {
 				// user has only one single team
@@ -93,6 +94,10 @@ public class ConvertXml2Hrf {
 				}
 			} else {
 				return null;
+			}
+
+			if (initTeamId){
+				// TODO: Initialize currency setting according to team's locale
 			}
 		}
 

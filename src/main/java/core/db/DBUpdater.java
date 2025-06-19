@@ -81,6 +81,8 @@ final class DBUpdater {
 					case 800:
 						updateDBv900(DBVersion);
 					case 900:
+						updateDBv1000(DBVersion);
+					case 1000:
 				}
 
 			} catch (Exception e) {
@@ -89,6 +91,17 @@ final class DBUpdater {
 		} else {
 			HOLogger.instance().log(getClass(), "No DB update necessary.");
 		}
+	}
+
+	private void updateDBv1000(int dbVersion) throws  SQLException{
+		var worldDetailsTable  = dbManager.getTable(WorldDetailsTable.TABLENAME);
+		if ( worldDetailsTable.tryAddColumn("COUNTRY_CODE", "VARCHAR(128)") ) {
+			worldDetailsTable.tryAddColumn("CURRENCY_NAME", "VARCHAR(128)");
+			worldDetailsTable.tryAddColumn("CURRENCY_RATE", "VARCHAR(128)");
+			worldDetailsTable.tryAddColumn("DATE_FORMAT", "VARCHAR(128)");
+			worldDetailsTable.tryAddColumn("TIME_FORMAT", "VARCHAR(128)");
+		}
+		updateDBVersion(dbVersion, 1000);
 	}
 
 	private void updateDBv900(int dbVersion) throws SQLException {

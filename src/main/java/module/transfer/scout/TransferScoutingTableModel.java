@@ -405,7 +405,7 @@ public class TransferScoutingTableModel extends HOTableModel {
                 new TransferScoutTableColumn(id++, "ls.player.wage") {
                     @Override
                     public IHOTableEntry getTableEntry(ScoutEintrag scouting) {
-                        return new ColorLabelEntry(Helper.formatCurrency(scouting.getbaseWage() / UserParameter.instance().FXrate),
+                        return new ColorLabelEntry(Helper.formatCurrency(scouting.getbaseWage() / UserParameter.instance().currencyRate),
                                 ColorLabelEntry.FG_STANDARD,
                                 ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
                     }

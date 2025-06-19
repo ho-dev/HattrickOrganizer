@@ -52,10 +52,10 @@ open class HOConfigurationParameter(
 
     /**
      * Set the value.
-     * ParameterChanged is the to true, if new value different to previous value
+     * ParameterChanged is set to true, if new value different to previous value
      * @param value New value
      */
-    fun setValue(value: String) {
+    fun setValue(value: String?) {
         if (value != this.value) {
             this.value = value
             parameters.setProperty(key, value)

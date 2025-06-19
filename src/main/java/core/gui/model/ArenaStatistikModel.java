@@ -63,7 +63,7 @@ public class ArenaStatistikModel {
 
 
     public ArenaStatistikModel() {
-        currencyFactor = core.model.UserParameter.instance().FXrate;
+        currencyFactor = core.model.UserParameter.instance().currencyRate;
     }
 
     /**
