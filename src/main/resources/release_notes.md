@@ -9,6 +9,7 @@
 
 ### Squad
 * Fix training progress of red carded players (#2286)
+* Fix error in training progress of position swaps (#2292)
 
 ### Team Analyzer
 
@@ -33,9 +34,9 @@
 
 ## Translations
 
-Reports by Contributors - May 11, 2025 - June 08, 2025
+Reports by Contributors - May 11, 2025 - June 21, 2025
 
-* Kristaps 39
+* Kristaps 42
 * Lidegang 2
 
-Total 41
+Total 44

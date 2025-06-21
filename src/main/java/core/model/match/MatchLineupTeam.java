@@ -609,8 +609,8 @@ public class MatchLineupTeam extends AbstractTable.Storable {
 		}
 
 		// Red carded players
-		for ( var redCarded : this.lineup.getRedCardedPositions()){
-			if ( redCarded.getStartPosition() > 0 ) {
+		for (var redCarded : this.lineup.getRedCardedPositions()) {
+			if (redCarded.getStartPosition() > 0) {
 				var player = this.getPlayerByID(redCarded.getPlayerId(), true);
 				var events = this.getMatchdetails().getHighlights().stream()
 						.filter(e -> e.getPlayerId() == redCarded.getPlayerId() && MatchEvent.redCardME.contains(e.getMatchEventID()))
@@ -624,8 +624,7 @@ public class MatchLineupTeam extends AbstractTable.Storable {
 		for (var app : lastMatchAppearances.entrySet()) {
 			var player = app.getValue().player;
 			if (player != null) {
-				addPlayersMinutesInSector(player.getPlayerId(),
-						app.getValue().getSector(),
+				addPlayersMinutesInSector(player.getPlayerId(), MatchRoleID.getSector(app.getKey()),
 						getMatchEndMinute(player.getPlayerId()) - app.getValue().minute);
 			}
 		}
@@ -664,12 +663,12 @@ public class MatchLineupTeam extends AbstractTable.Storable {
 				}
 			}
 			case POSITION_SWAP -> {
+				var leavingRole = removeMatchAppearance(leavingPlayer, substitution.getMatchMinuteCriteria());
 				var player = this.getPlayerByID(substitution.getObjectPlayerID(), true);
 				if ( player != null ){
 					var playerRole = removeMatchAppearance(player, substitution.getMatchMinuteCriteria());
 					lastMatchAppearances.put(playerRole, new MatchAppearance(leavingPlayer, substitution.getMatchMinuteCriteria()));
 				}
-				var leavingRole = removeMatchAppearance(leavingPlayer, substitution.getMatchMinuteCriteria());
 				lastMatchAppearances.put(leavingRole, new MatchAppearance(player, substitution.getMatchMinuteCriteria()));
 			}
 		}
@@ -743,7 +742,6 @@ public class MatchLineupTeam extends AbstractTable.Storable {
 		public int getPlayerId() {
 			return player.getPlayerId();
 		}
-		public MatchRoleID.Sector getSector() {return player.getSector();}
 	}
 
 	public int getTrainingMinutesInAcceptedSectors(int playerId, List<MatchRoleID.Sector> accepted){
