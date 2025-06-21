@@ -89,10 +89,10 @@ public class TrainingPerPlayer  {
 		double ret = 0;
 
 		if (skill != PlayerSkill.STAMINA) {
-			var wt = WeeklyTrainingType.instance(this._TrainingWeek.getTrainingType());
-			boolean isTrainedSkill = wt != null && wt.isTraining(skill);
+			var weeklyTrainingType = WeeklyTrainingType.instance(this._TrainingWeek.getTrainingType());
+			boolean isTrainedSkill = weeklyTrainingType != null && weeklyTrainingType.isTraining(skill);
 			if (isTrainedSkill) {
-				ret += wt.calculateSkillIncreaseOfTrainingWeek(skillValue, this);
+				ret += weeklyTrainingType.calculateSkillIncreaseOfTrainingWeek(skillValue, this);
 			}
 			/* Time to perform skill drop */
 			if (SkillDrops.instance().isActive()) {
