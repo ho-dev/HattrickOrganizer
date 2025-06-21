@@ -742,7 +742,6 @@ public class MatchLineupTeam extends AbstractTable.Storable {
 		public int getPlayerId() {
 			return player.getPlayerId();
 		}
-		public MatchRoleID.Sector getSector() {return player.getSector();}
 	}
 
 	public int getTrainingMinutesInAcceptedSectors(int playerId, List<MatchRoleID.Sector> accepted){
