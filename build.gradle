@@ -177,6 +177,7 @@ poeditor {
     trans.add type:'properties', lang: 'gl',      file: "${projectDir}/src/main/resources/language/Galego.properties"    // Galician
     trans.add type:'properties', lang: 'nl-be',   file: "${projectDir}/src/main/resources/language/Vlaams.properties"    // Flemish
     trans.add type:'properties', lang: 'es-ar',   file: "${projectDir}/src/main/resources/language/Spanish(AR).properties"    // Argentina
+    trans.add type:'properties', lang: 'et',      file: "${projectDir}/src/main/resources/language/Estonian.properties"
 }
 
 

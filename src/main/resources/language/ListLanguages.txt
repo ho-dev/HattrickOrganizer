@@ -4,6 +4,7 @@ Chinese
 Czech
 Danish
 English
+Estonian
 Finnish
 French
 Galego
