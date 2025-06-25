@@ -1,6 +1,7 @@
 package module.opponentspy;
 
 import core.model.player.IMatchRoleID;
+import core.util.AmountOfMoney;
 import module.opponentspy.CalcVariables.Skill;
 
 import java.util.ArrayList;
@@ -69,7 +70,7 @@ class SkillAdjuster {
 	private boolean areWeSatisfied(CalcVariables calcPlayer) {
 		
 		double tsiError = (0.0 + calcPlayer.tsi - calcPlayer.calculatedTSI)/calcPlayer.tsi;
-		double wageError = (0.0 + calcPlayer.wage - calcPlayer.calculatedWage)/calcPlayer.wage;
+		double wageError = (0.0 + calcPlayer.wage.getSwedishKrona() - calcPlayer.calculatedWage.getSwedishKrona())/calcPlayer.wage.getSwedishKrona();
 		
 		return (Math.abs(tsiError) < TSI_ERROR_LIMIT && Math.abs(wageError) < WAGE_ERROR_LIMIT);
 	}
@@ -77,7 +78,7 @@ class SkillAdjuster {
 	private boolean needMoreMainSkill(CalcVariables calcPlayer) {
 	
 		double tsiError = (0.0 + calcPlayer.tsi - calcPlayer.calculatedTSI)/calcPlayer.tsi;
-		double wageError = (0.0 + calcPlayer.wage - calcPlayer.calculatedWage)/calcPlayer.wage;
+		double wageError = (0.0 + calcPlayer.wage.getSwedishKrona() - calcPlayer.calculatedWage.getSwedishKrona())/calcPlayer.wage.getSwedishKrona();
 		
 		
 		// Only if we need more wage and Tsi is at the limit
@@ -87,7 +88,7 @@ class SkillAdjuster {
 	
 	private boolean needMoreSecondarySkills(CalcVariables calcPlayer) {
 		double tsiError = (0.0 + calcPlayer.tsi - calcPlayer.calculatedTSI)/calcPlayer.tsi;
-		double wageError = (0.0 + calcPlayer.wage - calcPlayer.calculatedWage)/calcPlayer.wage;
+		double wageError = (0.0 + calcPlayer.wage.getSwedishKrona() - calcPlayer.calculatedWage.getSwedishKrona())/calcPlayer.wage.getSwedishKrona();
 		
 		
 		// Only if we need more TSI and Wage is at the limit
@@ -103,10 +104,10 @@ class SkillAdjuster {
 		calculateWageAndTSI(calcPlayer);
 		
 		if ((calcPlayer.calculatedTSI < calcPlayer.tsi)
-				&& (calcPlayer.calculatedWage < calcPlayer.wage))
+				&& (calcPlayer.calculatedWage.getSwedishKrona() < calcPlayer.wage.getSwedishKrona()))
 			direction = Direction.Up;
 		else if ((calcPlayer.calculatedTSI > calcPlayer.tsi)
-				&& (calcPlayer.calculatedWage > calcPlayer.wage))
+				&& (calcPlayer.calculatedWage.getSwedishKrona() > calcPlayer.wage.getSwedishKrona()))
 			direction = Direction.Down;
 	
 			
@@ -144,15 +145,15 @@ class SkillAdjuster {
 			Direction direction) {
 		
 		if (direction == Direction.Up) {
-			if ( calcPlayer.calculatedTSI <= 0 || calcPlayer.calculatedWage <= 0){
+			if ( calcPlayer.calculatedTSI <= 0 || calcPlayer.calculatedWage.getSwedishKrona() <= 0){
 				return true;	// Cancel, because of problems with too old players
 			}
 			if ((calcPlayer.calculatedTSI >= calcPlayer.tsi)
-					|| (calcPlayer.calculatedWage >= calcPlayer.wage))
+					|| (calcPlayer.calculatedWage.getSwedishKrona() >= calcPlayer.wage.getSwedishKrona()))
 				return true;
 		} else {
 			if ((calcPlayer.calculatedTSI <= calcPlayer.tsi)
-					|| (calcPlayer.calculatedWage <= calcPlayer.wage))
+					|| (calcPlayer.calculatedWage.getSwedishKrona() <= calcPlayer.wage.getSwedishKrona()))
 				return  true;
 		}
 
@@ -232,7 +233,7 @@ class SkillAdjuster {
 		return calcPlayer.calculatedTSI;
 	}
 
-	protected int calculateWage(CalcVariables calcPlayer) {
+	protected AmountOfMoney calculateWage(CalcVariables calcPlayer) {
 		return calculateWage(calcPlayer, 0);
 	}
 
@@ -244,7 +245,7 @@ class SkillAdjuster {
 		return 1 - ageWageDrop;
 	}
 	
-	protected int calculateWage(CalcVariables calcPlayer, double skillDelta) {
+	protected AmountOfMoney calculateWage(CalcVariables calcPlayer, double skillDelta) {
 
 		List<Double> wageElements = new ArrayList<>();
 		
@@ -285,7 +286,7 @@ class SkillAdjuster {
 
 		if ( wage < 2500) wage = 2500;
 
-		calcPlayer.calculatedWage = (int)wage;
+		calcPlayer.calculatedWage = new AmountOfMoney( (long)(wage + .5));
 		return calcPlayer.calculatedWage;
 	}
 }

@@ -2,6 +2,7 @@ package module.teamAnalyzer.vo;
 
 import core.db.AbstractTable;
 import core.file.xml.SafeInsertMap;
+import core.util.AmountOfMoney;
 import core.util.HODateTime;
 import core.util.HOLogger;
 import lombok.Getter;
@@ -43,7 +44,7 @@ public class PlayerInfo extends AbstractTable.Storable {
     @Setter
     int teamId;
     @Setter
-    int salary; // Money in SEK
+    AmountOfMoney salary; // Money in SEK
     @Setter
     int stamina;
     @Setter
@@ -61,7 +62,7 @@ public class PlayerInfo extends AbstractTable.Storable {
         this.motherClubBonus = Boolean.parseBoolean(i.get("MotherClubBonus"));
         this.name = i.get("FirstName") + " " + i.get("LastName");
         this.playerId = Integer.parseInt(i.get("PlayerID"));
-        this.salary = Integer.parseInt(i.get("Salary"));
+        this.salary = new AmountOfMoney(Integer.parseInt(i.get("Salary")));
         this.specialEvent = Integer.parseInt(i.get("Specialty"));
         this.stamina = Integer.parseInt(i.get("StaminaSkill"));
         this.status = 0;

@@ -221,7 +221,8 @@ public class RecapPanelTableModel extends HOTableModel {
                 new RecapUserColumn("ls.team.sumsalary", 50) {
                     @Override
                     public IHOTableEntry getTableEntry(TeamLineup lineup) {
-                        return createIntegerTableEntry(CurrencyUtils.convertCurrency(lineup.getSalarySum()), MatchesColumnModel.getColor4Matchtyp(lineup.getMatchType()), true);
+//                        return createIntegerTableEntry(lineup.getSalarySum().toLocaleString(), MatchesColumnModel.getColor4Matchtyp(lineup.getMatchType()), true);
+                        return new ColorLabelEntry(lineup.getSalarySum().toLocaleString(), ColorLabelEntry.FG_STANDARD, MatchesColumnModel.getColor4Matchtyp(lineup.getMatchType()), SwingConstants.RIGHT);
                     }
                 },
                 new RecapUserColumn("ls.team.numhomegrown", 50) {

@@ -4,6 +4,7 @@ import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
+import core.util.AmountOfMoney;
 import core.util.Helper;
 import org.jetbrains.annotations.NotNull;
 import java.awt.Color;
@@ -140,6 +141,18 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
         setHorizontalAlignment(SwingConstants.RIGHT);
         createComponent();
         setValueAsText(newNumber, bg_color, currencyformat, false, decimalPlaces, false);
+    }
+
+    /**
+     * Colour Label to present value of money with background colour, decimal places are only for
+     * non-currency interest
+     */
+    public ColorLabelEntry(AmountOfMoney amount, Color bg_color) {
+        setHorizontalAlignment(SwingConstants.RIGHT);
+        createComponent();
+        setText(amount.toLocaleString());
+        m_clBGColor = bg_color;
+        updateComponent();
     }
 
     /**

@@ -69,33 +69,26 @@ public class WorldDetailsManager {
 		}
 		var ret = countryMap.get(countryId);
 		if (ret == null || !ret.isOK()) {
-			ret = downloadWorldDetailLeague(countryId);
-			DBManager.instance().storeWorldDetailLeague(ret);
+			var downloaded = downloadWorldDetailLeague(countryId);
+			if ( ret != null){
+				downloaded.setIsStored(ret.isStored());
+			}
+			DBManager.instance().storeWorldDetailLeague(downloaded);
 			initialize();
+			ret = downloaded;
 		}
 		return ret;
 	}
 
-	public Set<String> getAllCurrencyNames(){
-		var ret = new OrderedHashSet<String>();
-		for (var s : this.leagues){
-			if (!s.isOK()){
-				s = downloadWorldDetailLeague(s.getCountryId());
-			}
-			ret.add(s.getCurrencyName());
-		}
-		return ret;
-	}
-
-	public float getCurrencyRate(String currencyName) {
-		try {
-			for (var s : this.leagues) {
-				if (s.isOK() && s.getCurrencyName().equals(currencyName)) return Float.parseFloat(s.getCurrencyRate());
-			}
-		} catch (NumberFormatException ignnored) {
-		}
-		return 1;
-	}
+//	public float getCurrencyRate(String currencyName) {
+//		try {
+//			for (var s : this.leagues) {
+//				if (s.isOK() && s.getCurrencyName().equals(currencyName)) return Float.parseFloat(s.getCurrencyRate());
+//			}
+//		} catch (NumberFormatException ignnored) {
+//		}
+//		return 1;
+//	}
 
 	/**
 	 * Download missing world detail information

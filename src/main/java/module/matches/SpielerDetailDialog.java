@@ -259,8 +259,8 @@ final class SpielerDetailDialog extends JDialog {
 
 		if (m_clVergleichsPlayer == null) {
 			String bonus = "";
-			int gehalt = (int) (m_clPlayer.getWage() / core.model.UserParameter.instance().currencyRate);
-			String gehalttext = NumberFormat.getCurrencyInstance().format(gehalt);
+			var gehalt = m_clPlayer.getWage();
+			String gehalttext = gehalt.toLocaleString();
 
 			if (m_clPlayer.getBonus() > 0) {
 				bonus = " (" + m_clPlayer.getBonus() + "% "
@@ -307,10 +307,9 @@ final class SpielerDetailDialog extends JDialog {
 			}
 		} else {
 			String bonus = "";
-			int gehalt = (int) (m_clPlayer.getWage() / core.model.UserParameter.instance().currencyRate);
-			int gehalt2 = (int) (m_clVergleichsPlayer.getWage() / core.model.UserParameter
-					.instance().currencyRate);
-			String gehalttext = NumberFormat.getCurrencyInstance().format(gehalt);
+			var gehalt = m_clPlayer.getWage();
+			var gehalt2 = m_clVergleichsPlayer.getWage();
+			String gehalttext = gehalt.toLocaleString();
 
 			if (m_clPlayer.getBonus() > 0) {
 				bonus = " (" + m_clPlayer.getBonus() + "% "
@@ -318,7 +317,7 @@ final class SpielerDetailDialog extends JDialog {
 			}
 
 			m_jpGehalt.getLeft().setText(gehalttext + bonus);
-			m_jpGehalt.getRight().setSpecialNumber((gehalt2 - gehalt), true);
+			m_jpGehalt.getRight().setSpecialNumber((gehalt2.toLocale() - gehalt.toLocale()), true);
 			m_jpMartwert.getLeft().setText(m_clPlayer.getTsi() + "");
 			m_jpMartwert.getRight().setSpecialNumber(
 					(m_clVergleichsPlayer.getTsi() - m_clPlayer.getTsi()), false);

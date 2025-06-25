@@ -641,10 +641,10 @@ final public class UserColumnFactory {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
                 final String bonus = "";
-                final int gehalt = (int) (player.getWage() / core.model.UserParameter.instance().currencyRate);
-                final String gehalttext = Helper.getNumberFormat(true, 0).format(gehalt);
+                final var gehalt = player.getWage();
+                final String gehalttext = gehalt.toLocaleString();
                 if (playerCompare == null) {
-                    return new DoubleLabelEntries(new ColorLabelEntry(gehalt,
+                    return new DoubleLabelEntries(new ColorLabelEntry(gehalt.getSwedishKrona(),
                             gehalttext + bonus,
                             ColorLabelEntry.FG_STANDARD,
                             ColorLabelEntry.BG_STANDARD,
@@ -655,14 +655,13 @@ final public class UserColumnFactory {
                                     SwingConstants.RIGHT));
                 }
 
-                final int gehalt2 = (int) (playerCompare.getWage() / core.model.UserParameter
-                        .instance().currencyRate);
-                return new DoubleLabelEntries(new ColorLabelEntry(gehalt,
+                final var gehalt2 = playerCompare.getWage();
+                return new DoubleLabelEntries(new ColorLabelEntry(gehalt.getSwedishKrona(),
                         gehalttext + bonus,
                         ColorLabelEntry.FG_STANDARD,
                         ColorLabelEntry.BG_STANDARD,
                         SwingConstants.RIGHT),
-                        new ColorLabelEntry(gehalt - gehalt2,
+                        new ColorLabelEntry(gehalt.toLocale() - gehalt2.toLocale(),
                                 ColorLabelEntry.BG_STANDARD,
                                 true, false, 0));
             }
@@ -974,7 +973,7 @@ final public class UserColumnFactory {
     private static IHOTableEntry getTrainerTransferEntry(Player player, int i) {
         var costs = player.calculateCoachConversionCosts(i);
         var string = "";
-        var swedishKrona = 0;
+        var swedishKrona = 0L;
         if (costs != null){
             string = costs.toLocaleString();
             swedishKrona = costs.getSwedishKrona();

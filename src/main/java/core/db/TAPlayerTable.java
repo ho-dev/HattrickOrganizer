@@ -1,5 +1,6 @@
 package core.db;
 
+import core.util.AmountOfMoney;
 import module.teamAnalyzer.manager.PlayerDataManager;
 import module.teamAnalyzer.vo.PlayerInfo;
 import java.sql.Types;
@@ -32,7 +33,7 @@ final class TAPlayerTable extends AbstractTable {
 				ColumnDescriptor.Builder.newInstance().setColumnName("FORM").setGetter((p) -> ((PlayerInfo) p).getForm()).setSetter((p, v) -> ((PlayerInfo) p).setForm((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("AGE").setGetter((p) -> ((PlayerInfo) p).getAge()).setSetter((p, v) -> ((PlayerInfo) p).setAge((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("EXPERIENCE").setGetter((p) -> ((PlayerInfo) p).getExperience()).setSetter((p, v) -> ((PlayerInfo) p).setExperience((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("SALARY").setGetter((p) -> ((PlayerInfo) p).getSalary()).setSetter((p, v) -> ((PlayerInfo) p).setSalary((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("SALARY").setGetter((p) -> ((PlayerInfo) p).getSalary()).setSetter((p, v) -> ((PlayerInfo) p).setSalary(new AmountOfMoney((Integer) v))).setType(Types.INTEGER).isNullable(true).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("STAMINA").setGetter((p) -> ((PlayerInfo) p).getStamina()).setSetter((p, v) -> ((PlayerInfo) p).setStamina((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("MOTHERCLUBBONUS").setGetter((p) -> ((PlayerInfo) p).isMotherClubBonus()).setSetter((p, v) -> ((PlayerInfo) p).setMotherClubBonus((Boolean) v)).setType(Types.BOOLEAN).isNullable(true).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("LOYALTY").setGetter((p) -> ((PlayerInfo) p).getLoyalty()).setSetter((p, v) -> ((PlayerInfo) p).setLoyalty((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),

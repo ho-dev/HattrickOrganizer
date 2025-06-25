@@ -355,7 +355,7 @@ public final class UserParameter extends Configuration {
 
     // Youth training
     public double youthtrainingFactorPrimary = 1.0;
-    public double youthtrainingFactorSecondary = 0.66;
+    public double youthtrainingFactorSecondary = 2.0/3.0;
 
     public int lineupOrientationSetting = GOALKEEPER_AT_TOP;
     public int lineupPositionNamesSetting = POSITIONNAMES_SHORT;

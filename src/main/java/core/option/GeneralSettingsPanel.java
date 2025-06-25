@@ -8,6 +8,7 @@ import core.model.TranslationFacility;
 import core.model.Translator;
 import core.model.UserParameter;
 import core.model.WorldDetailsManager;
+import core.util.AmountOfMoney;
 import core.util.DateTimeUtils;
 import core.util.HOLogger;
 
@@ -77,10 +78,10 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
         if (!core.model.UserParameter.temp().skin.equals(core.model.UserParameter.instance().skin)) {
             OptionManager.instance().setRestartNeeded();
         }
-        if(!UserParameter.temp().currencyName.equals(UserParameter.instance().currencyName)){
-            UserParameter.temp().currencyRate = WorldDetailsManager.instance().getCurrencyRate(UserParameter.temp().currencyName);
-            OptionManager.instance().setRestartNeeded();
-        }
+//        if(!UserParameter.temp().currencyName.equals(UserParameter.instance().currencyName)){
+//            UserParameter.temp().currencyRate = WorldDetailsManager.instance().getCurrencyRate(UserParameter.temp().currencyName);
+//            OptionManager.instance().setRestartNeeded();
+//        }
     }
 
     @Override
@@ -134,9 +135,9 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
         add(m_jcbLanguage);
 
         // Currency selection
-        Set<String> currencyNames = WorldDetailsManager.instance().getAllCurrencyNames();
+        Set<String> currencyNames = AmountOfMoney.Companion.getCurrencyCodes();
         this.currencyNameComboBox = new ComboBoxPanel(TranslationFacility.tr("options.misc.currency"), currencyNames.toArray(), width);
-        this.currencyNameComboBox.setSelectedItem(UserParameter.temp().currencyName);
+        this.currencyNameComboBox.setSelectedItem(AmountOfMoney.Companion.getSelectedCurrencyCode());
         this.currencyNameComboBox.addItemListener(this);
         add(this.currencyNameComboBox);
 

@@ -159,7 +159,7 @@ public class Player extends AbstractTable.Storable {
     /**
      * Gehalt
      */
-    private int wage = 1;
+    private AmountOfMoney wage = new AmountOfMoney(1);
 
     /**
      * Gelbe Karten
@@ -374,7 +374,7 @@ public class Player extends AbstractTable.Storable {
         homeGrown = properties.getBoolean("homegr", false);
         loyalty = properties.getInt("loy", 0);
         leadership = properties.getInt("led", 0);
-        wage = properties.getInt("sal", 0);
+        wage = new AmountOfMoney(properties.getInt("sal", 0));
         nationalityId = properties.getInt("countryid", 0);
         tsi = properties.getInt("mkt", 0);
 
@@ -411,7 +411,7 @@ public class Player extends AbstractTable.Storable {
         this.coachSkill = properties.getInt("trainerskilllevel", 0);
         if (this.coachSkill > 0) {
             this.coachSkill += 3;    // trainer level 5 is an excellent (8) trainer
-            wage = properties.getInt("cost", 0);
+            wage = new AmountOfMoney(properties.getInt("cost", 0));
             contractDate = properties.getProperty("contractdate");
         }
 
@@ -712,11 +712,11 @@ public class Player extends AbstractTable.Storable {
         return leadership;
     }
 
-    public void setWage(int m_iGehalt) {
+    public void setWage(AmountOfMoney m_iGehalt) {
         this.wage = m_iGehalt;
     }
 
-    public int getWage() {
+    public AmountOfMoney getWage() {
         return wage;
     }
 

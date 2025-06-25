@@ -2,13 +2,13 @@ package module.opponentspy;
 
 import core.constants.player.PlayerSpeciality;
 import core.model.player.IMatchRoleID;
-
+import core.util.AmountOfMoney;
 
 
 public class CalcPlayerBaseProvider {
 
-	public CalcVariables getCalcPlayerBase(int age, int wage, int tsi,
-			double form, double stamina, int spec, int role, int injury_status) {
+	public CalcVariables getCalcPlayerBase(int age, AmountOfMoney wage, int tsi,
+										   double form, double stamina, int spec, int role, int injury_status) {
 
 		CalcVariables calcPlayer = new CalcVariables();
 

@@ -85,7 +85,7 @@ public class Helper {
 	 * Currency formatter
 	 * Matches country of user's premier team
 	 */
-	public static NumberFormat CURRENCYFORMAT = CurrencyUtils.getLeagueCurrencyFormater(HOVerwaltung.instance().getModel().getLeagueIdPremierTeam());
+//	public static NumberFormat CURRENCYFORMAT = CurrencyUtils.getLeagueCurrencyFormater(HOVerwaltung.instance().getModel().getLeagueIdPremierTeam());
 
 	/**
 	 * Integer format
@@ -313,25 +313,11 @@ public class Helper {
 	/**
 	 * Returns a NumberFormat based on the parameters
 	 */
-	public static NumberFormat getNumberFormat(boolean currencyformat, int nbDecimals) {
-		NumberFormat numFormat;
-		if (currencyformat) {
-			numFormat = Helper.CURRENCYFORMAT;
-		} else {
-			numFormat = NumberFormat.getNumberInstance();
-		}
+	public static NumberFormat getNumberFormat(int nbDecimals) {
+		NumberFormat numFormat = NumberFormat.getNumberInstance();
 		numFormat.setMinimumFractionDigits(nbDecimals);
 		numFormat.setMaximumFractionDigits(nbDecimals);
 		return numFormat;
-	}
-
-	/**
-	 * Format value as currency string
-	 * @param v value
-	 * @return String
-	 */
-	public static String formatCurrency(float v) {
-		return Helper.getNumberFormat(true, 0).format(v);
 	}
 
 	/**

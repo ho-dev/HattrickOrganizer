@@ -2,6 +2,7 @@ package module.opponentspy;
 
 
 import core.constants.player.PlayerSkill;
+import core.util.AmountOfMoney;
 
 
 public class OppPlayerSkillEstimator {
@@ -14,7 +15,7 @@ public class OppPlayerSkillEstimator {
 		skillAdjuster = new SkillAdjuster();
 	}
 
-	public OpponentPlayer calcPlayer(int age, int wage, int tsi, double form, double stamina, int spec, int role, int injury_status) {
+	public OpponentPlayer calcPlayer(int age, AmountOfMoney wage, int tsi, double form, double stamina, int spec, int role, int injury_status) {
        			
     	CalcVariables calcPlayer = calcPlayerBaseProvider.getCalcPlayerBase(age, wage, tsi, form, stamina, spec, role, injury_status);
         skillAdjuster.AdjustPlayer(calcPlayer);

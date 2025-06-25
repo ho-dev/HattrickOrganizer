@@ -208,8 +208,8 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         }
         Helper.setComboBoxFromID(m_jcbUserBestPosition, m_clPlayer.getUserPosFlag());
         m_jcbUserBestPosition.addItemListener(this);
-        final int salary = (int) (m_clPlayer.getWage() / core.model.UserParameter.instance().currencyRate);
-        final String salarytext = Helper.getNumberFormat(true, 0).format(salary);
+        final var salary = m_clPlayer.getWage();
+        final String salarytext = salary.toLocaleString();
         final String tsitext = Helper.getNumberFormat(false, 0).format(m_clPlayer.getTsi());
         if (m_clComparisonPlayer == null) {
             m_jllWage.getLeft().setText(salarytext);
@@ -232,9 +232,9 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
 
         }
         else {
-            final int previousSalary = (int) (m_clComparisonPlayer.getWage() / core.model.UserParameter.instance().currencyRate);
+            final var previousSalary =m_clComparisonPlayer.getWage();
             m_jllWage.getLeft().setText(salarytext);
-            m_jllWage.getRight().setSpecialNumber(salary - previousSalary, true);
+            m_jllWage.getRight().setSpecialNumber(salary.toLocale() - previousSalary.toLocale(), true);
             m_jllTSI.getLeft().setText(tsitext);
             m_jllTSI.getRight().setSpecialNumber(m_clPlayer.getTsi() - m_clComparisonPlayer.getTsi(), false);
             m_jclFormChange.setGraphicalChangeValue(m_clPlayer.getForm()

@@ -65,7 +65,7 @@ public class TransferScoutingTableModel extends HOTableModel {
                 new TransferScoutTableColumn(id++, "scout_price") {
                     @Override
                     public IHOTableEntry getTableEntry(ScoutEintrag scouting) {
-                        return new ColorLabelEntry(CurrencyUtils.convertCurrency(scouting.getPrice()), ColorLabelEntry.BG_STANDARD, true, 0);
+                        return new ColorLabelEntry(scouting.getPrice(), ColorLabelEntry.BG_STANDARD);
                     }
                 },
                 new TransferScoutTableColumn(id++, "Ablaufdatum") {
@@ -405,7 +405,7 @@ public class TransferScoutingTableModel extends HOTableModel {
                 new TransferScoutTableColumn(id++, "ls.player.wage") {
                     @Override
                     public IHOTableEntry getTableEntry(ScoutEintrag scouting) {
-                        return new ColorLabelEntry(Helper.formatCurrency(scouting.getbaseWage() / UserParameter.instance().currencyRate),
+                        return new ColorLabelEntry(scouting.getbaseWage().toLocaleString(),
                                 ColorLabelEntry.FG_STANDARD,
                                 ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
                     }

@@ -243,7 +243,10 @@ public class WorldDetailLeague  extends AbstractTable.Storable {
     }
 
     public void setCurrencyRate(String currencyRate) {
-        this.currencyRate = currencyRate;
+		try {
+			this.currencyRate = Double.parseDouble(currencyRate);
+		}
+		catch (NumberFormatException ignored){}
     }
 
     public String getCountryCode() {

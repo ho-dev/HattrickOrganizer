@@ -1,6 +1,7 @@
 package module.teamAnalyzer.vo;
 
 import core.db.AbstractTable;
+import core.util.AmountOfMoney;
 import core.util.HODateTime;
 
 public class SquadInfo extends AbstractTable.Storable {
@@ -18,7 +19,7 @@ public class SquadInfo extends AbstractTable.Storable {
     private int redCards = 0;
     private int transferListedCount = 0;
     private int tSISum=0;
-    private int salarySum=0; // Money in SEK
+    private AmountOfMoney salarySum= new AmountOfMoney(0); // Money in SEK
     private int playerCount=0;
     private int homegrownCount =0;
 
@@ -137,15 +138,15 @@ public class SquadInfo extends AbstractTable.Storable {
         this.tSISum = tSISum;
     }
 
-    public int getSalarySum() {
+    public AmountOfMoney getSalarySum() {
         return salarySum;
     }
 
-    public void addSalary(int v){
-        salarySum+= v;
+    public void addSalary(AmountOfMoney v){
+        salarySum.addAmount(v);
     }
 
-    public void setSalarySum(int salarySum) {
+    public void setSalarySum(AmountOfMoney salarySum) {
         this.salarySum = salarySum;
     }
 

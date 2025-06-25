@@ -15,6 +15,7 @@ import core.model.UserParameter;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.module.IModule;
+import core.util.AmountOfMoney;
 import core.util.HODateTime;
 import core.util.HOLogger;
 import core.util.Helper;
@@ -217,15 +218,16 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
     /**
      * Parse a currency value given in player description text
      * if a value can be parsed it is converted to swedish currency (standard money currency in HO)
+     *
      * @param text String, that's parsed
      * @return int, currency in swedish krone, 0 if no value can be parsed from string
      */
-    private int parseCurrencyValue(String text) {
+    private AmountOfMoney parseCurrencyValue(String text) {
         var price = parseCurrency(text);
         if (price != null) {
-            return (int) (price * UserParameter.instance().currencyRate);
+            return AmountOfMoney.Companion.fromLocale(price);
         }
-        return 0;
+        return new AmountOfMoney(0);
     }
 
     /**
@@ -296,8 +298,8 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
         clSpinnerModel.setValue(clScoutEntry.getDeadline());
         jtfPlayerID.setText(String.valueOf(clScoutEntry.getPlayerID()));
         jtfName.setText(clScoutEntry.getName());
-        jtfPrice.setText(formatCurrency(clScoutEntry.getPrice() / UserParameter.instance().currencyRate));
-        jtfWage.setText(formatCurrency(clScoutEntry.getbaseWage() / UserParameter.instance().currencyRate));
+        jtfPrice.setText(clScoutEntry.getPrice().toLocaleString());
+        jtfWage.setText(clScoutEntry.getbaseWage().toLocaleString());
         jtfAge.setText(clScoutEntry.getAlter() + "." + clScoutEntry.getAgeDays());
         jtfTSI.setText(String.valueOf(clScoutEntry.getTSI()));
         jtaNotes.setText(clScoutEntry.getInfo());

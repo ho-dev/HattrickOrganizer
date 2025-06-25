@@ -10,6 +10,7 @@ import core.model.match.MatchKurzInfo;
 import core.model.player.Player;
 import core.model.player.PlayerCategory;
 import core.model.player.TrainerType;
+import core.util.AmountOfMoney;
 import core.util.HODateTime;
 import module.youth.YouthPlayer;
 import org.w3c.dom.Document;
@@ -439,7 +440,7 @@ public class XMLPlayersParser {
 //        LeagueID : unsigned Integer
 //        LeagueID for the league of the team owning the player.
 
-        player.setWage(xmlIntValue(root, "Salary"));
+        player.setWage(new AmountOfMoney(xmlIntValue(root, "Salary")));
 
 //        IsAbroad : Boolean*
 //                The abroad status of the player, given as an integer. true for beeing in home country, false for beeing in a team abroad. The container is empty If the player has no owner.
