@@ -34,9 +34,10 @@
 
 ## Translations
 
-Reports by Contributors - May 11, 2025 - June 21, 2025
+Reports by Contributors - May 11, 2025 - June 25, 2025
 
+* Adrian 246
 * Kristaps 42
 * Lidegang 2
 
-Total 44
+Total 290
