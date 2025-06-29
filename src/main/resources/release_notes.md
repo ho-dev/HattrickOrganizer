@@ -5,8 +5,7 @@
 
 ### Database
 
-### Squad
-
+### Player overview
 
 ### Team Analyzer
 
