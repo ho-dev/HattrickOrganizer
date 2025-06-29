@@ -317,9 +317,7 @@ public class ArenaStatistikTableModel extends AbstractTableModel {
 				colIndex++;
 
 			    //Total Income
-				m_clData[i][colIndex] = new ColorLabelEntry(match.getTotalIncome(), Helper.getNumberFormat(true, 0).format(match.getTotalIncome()),
-						ColorLabelEntry.FG_STANDARD, background,
-						SwingConstants.LEFT);
+				m_clData[i][colIndex] = new ColorLabelEntry(match.getTotalIncome(),  background);
 				colIndex++;
 
 			    //Terraces
@@ -332,13 +330,12 @@ public class ArenaStatistikTableModel extends AbstractTableModel {
 				colIndex++;
 
 				//Terrace Income
-				m_clData[i][colIndex] = new ColorLabelEntry(match.getTerracesIncome(), Helper.getNumberFormat(true, 0).format(match.getTerracesIncome()),
-						ColorLabelEntry.FG_STANDARD, background,
-						SwingConstants.LEFT);
+				m_clData[i][colIndex] = new ColorLabelEntry(match.getTerracesIncome(),
+						ColorLabelEntry.FG_STANDARD);
 				colIndex++;
 
 			    //Basic seats
-			    m_clData[i][colIndex] = new ColorLabelEntry(match.getSoldBasics() + " / " + match.getMaxBasic() + "",
+			    m_clData[i][colIndex] = new ColorLabelEntry(match.getSoldBasics() + " / " + match.getMaxBasic(),
 			                                          ColorLabelEntry.FG_STANDARD, background,
 			                                          SwingConstants.CENTER);
 				colIndex++;
@@ -347,13 +344,11 @@ public class ArenaStatistikTableModel extends AbstractTableModel {
 				colIndex++;
 
 				//Basic Seat Income
-				m_clData[i][colIndex] = new ColorLabelEntry(match.getBasicSeatIncome(), Helper.getNumberFormat(true, 0).format(match.getBasicSeatIncome()),
-						ColorLabelEntry.FG_STANDARD, background,
-						SwingConstants.LEFT);
+				m_clData[i][colIndex] = new ColorLabelEntry(match.getBasicSeatIncome(), background);
 				colIndex++;
 
 			    //Seats under the roof
-			    m_clData[i][colIndex] = new ColorLabelEntry(match.getSoldRoof() + " / " + match.getMaxRoof() + "",
+			    m_clData[i][colIndex] = new ColorLabelEntry(match.getSoldRoof() + " / " + match.getMaxRoof(),
 			                                          ColorLabelEntry.FG_STANDARD, background,
 			                                          SwingConstants.CENTER);
 				colIndex++;
@@ -362,13 +357,11 @@ public class ArenaStatistikTableModel extends AbstractTableModel {
 				colIndex++;
 
 				//Seats under the roof Income
-				m_clData[i][colIndex] = new ColorLabelEntry(match.getSeatRoofIncome(), Helper.getNumberFormat(true, 0).format(match.getSeatRoofIncome()),
-						ColorLabelEntry.FG_STANDARD, background,
-						SwingConstants.LEFT);
+				m_clData[i][colIndex] = new ColorLabelEntry(match.getSeatRoofIncome(), background);
 				colIndex++;
 
 			    //VIP seats
-			    m_clData[i][colIndex] = new ColorLabelEntry(match.getSoldVip() + " / " + match.getMaxVip() + "",
+			    m_clData[i][colIndex] = new ColorLabelEntry(match.getSoldVip() + " / " + match.getMaxVip(),
 			                                          ColorLabelEntry.FG_STANDARD, background,
 			                                          SwingConstants.CENTER);
 				colIndex++;
@@ -377,9 +370,7 @@ public class ArenaStatistikTableModel extends AbstractTableModel {
 				colIndex++;
 
 				//SVIP seats Income
-				m_clData[i][colIndex] = new ColorLabelEntry(match.getVipIncome(), Helper.getNumberFormat(true, 0).format(match.getVipIncome()),
-						ColorLabelEntry.FG_STANDARD, background,
-						SwingConstants.LEFT);
+				m_clData[i][colIndex] = new ColorLabelEntry(match.getVipIncome(), background);
 				colIndex++;
 
 			    // fan count
@@ -394,7 +385,7 @@ public class ArenaStatistikTableModel extends AbstractTableModel {
 			        fanzuwachs = ((match.getFans() - m_clMatches[i + 1].getFans()) * 604800000f) / diff;
 			    }
 
-			    m_clData[i][colIndex] = new ColorLabelEntry(fanzuwachs, background, false,false,0);
+			    m_clData[i][colIndex] = new ColorLabelEntry(fanzuwachs, background, false,0);
 				colIndex++;
 
 			    //Quotione  Zuschauer/Fans

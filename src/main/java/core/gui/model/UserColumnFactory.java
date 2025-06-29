@@ -656,20 +656,19 @@ final public class UserColumnFactory {
                 }
 
                 final var gehalt2 = playerCompare.getWage();
+                final var diff = gehalt.minus(gehalt2);
                 return new DoubleLabelEntries(new ColorLabelEntry(gehalt.getSwedishKrona(),
                         gehalttext + bonus,
                         ColorLabelEntry.FG_STANDARD,
                         ColorLabelEntry.BG_STANDARD,
                         SwingConstants.RIGHT),
-                        new ColorLabelEntry(gehalt.toLocale() - gehalt2.toLocale(),
-                                ColorLabelEntry.BG_STANDARD,
-                                true, false, 0));
+                        new ColorLabelEntry(diff, ColorLabelEntry.BG_STANDARD));
             }
         };
         playerAdditionalArray[8] = new PlayerColumn(430, "ls.player.tsi", 0) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
-                final String text = Helper.getNumberFormat(false, 0).format(player.getTsi());
+                final String text = Helper.getNumberFormat( 0).format(player.getTsi());
                 if (playerCompare == null) {
                     return new DoubleLabelEntries(new ColorLabelEntry(player
                             .getTsi(),
@@ -692,7 +691,7 @@ final public class UserColumnFactory {
                         SwingConstants.RIGHT),
                         new ColorLabelEntry(player.getTsi()
                                 - playerCompare.getTsi(), ColorLabelEntry.BG_STANDARD,
-                                false, false, 0));
+                                false,  0));
             }
 
             @Override
@@ -760,7 +759,7 @@ final public class UserColumnFactory {
                         SwingConstants.RIGHT),
                         new ColorLabelEntry((float) (0),
                                 ColorLabelEntry.BG_STANDARD,
-                                true, false, 0)
+                                true,  0)
                 );
             }
         };

@@ -21,6 +21,7 @@ import core.model.misc.Economy;
 import core.model.misc.Verein;
 import core.model.player.Player;
 import core.training.FuturePlayerSkillTraining;
+import core.util.AmountOfMoney;
 import core.util.HODateTime;
 import module.matches.MatchLocation;
 import module.nthrf.NtTeamDetails;
@@ -1454,7 +1455,7 @@ public class DBManager implements PersistenceManager {
 		return MatchesOverviewQuery.getGoalsByActionType(ownTeam, iMatchType, matchLocation);
 	}
 
-	public long getSumTransferPrices(int teamID, boolean isSold) {
+	public AmountOfMoney getSumTransferPrices(int teamID, boolean isSold) {
 		return ((TransferTable) getTable(TransferTable.TABLENAME))
 				.getTransferIncomeSum(teamID, isSold);
 	}

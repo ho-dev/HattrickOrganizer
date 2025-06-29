@@ -6,6 +6,7 @@ import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
+import core.util.AmountOfMoney;
 import core.util.HOLogger;
 import core.util.Helper;
 import core.util.chart.HODoublePieChart;
@@ -20,6 +21,7 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.ItemEvent;
 import java.text.NumberFormat;
 import java.util.Arrays;
+import java.util.Objects;
 
 import static core.gui.theme.HOColorName.*;
 
@@ -240,7 +242,8 @@ public class FinancesStatisticsPanel extends LazyImagePanel {
 
 
 		// initialize Development Chart
-		String currencySymbol = Helper.getNumberFormat(true, 0).getCurrency().getSymbol();
+//		String currencySymbol = Helper.getNumberFormat(true, 0).getCurrency().getSymbol();
+		var currencySymbol = Objects.requireNonNull(AmountOfMoney.Companion.getCurrency()).getSymbol();
 		c_jpDevelopmentChart = new HOLinesChart(true, null, null, "#,##0 " + currencySymbol, "#,##0 " + currencySymbol, true);
 		c_jpBalanceChart = new HOLinesChart(true, null, null, "#,##0 " + currencySymbol, "#,##0 " + currencySymbol, true);
 		c_jpRevenueAndExpensesChart = new HODoublePieChart(true);

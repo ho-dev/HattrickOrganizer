@@ -6,6 +6,7 @@
  */
 package tool.arenasizer;
 
+import core.util.AmountOfMoney;
 import core.util.Helper;
 
 import java.math.BigDecimal;
@@ -14,23 +15,23 @@ import java.math.RoundingMode;
 
 public class ArenaSizer {
 
-	public static final float ADMISSION_PRICE_TERRACES = 70f;
-	public static final float ADMISSION_PRICE_BASICS = 100f;
-	public static final float ADMISSION_PRICE_ROOF = 190f;
-	public static final float ADMISSION_PRICE_VIP = 350f;
+	public static final AmountOfMoney ADMISSION_PRICE_TERRACES = new AmountOfMoney( 70);
+	public static final AmountOfMoney ADMISSION_PRICE_BASICS = new AmountOfMoney(100);
+	public static final AmountOfMoney ADMISSION_PRICE_ROOF = new AmountOfMoney(190);
+	public static final AmountOfMoney ADMISSION_PRICE_VIP = new AmountOfMoney(350);
 
-	private static final float MAINTENANCE_TERRACES = 5f;
-	private static final float MAINTENANCE_BASICS = 7f;
-	private static final float MAINTENANCE_ROOF = 10f;
-	private static final float MAINTENANCE_VIP = 25f;
+	private static final AmountOfMoney MAINTENANCE_TERRACES = new AmountOfMoney(5);
+	private static final AmountOfMoney MAINTENANCE_BASICS = new AmountOfMoney(7);
+	private static final AmountOfMoney MAINTENANCE_ROOF = new AmountOfMoney(10);
+	private static final AmountOfMoney MAINTENANCE_VIP = new AmountOfMoney(25);
 
 	//CREATE
-	private static float STEH_AUSBAU = 450f;
-	private static float SITZ_AUSBAU = 750f;
-	private static float DACH_AUSBAU = 900f;
-	private static float LOGEN_AUSBAU = 3000f;
-	private static float ABRISS = 60f;
-	private static float FIXKOSTEN = 100000f;
+	private static AmountOfMoney STEH_AUSBAU = new AmountOfMoney(450);
+	private static AmountOfMoney SITZ_AUSBAU = new AmountOfMoney(750);
+	private static AmountOfMoney DACH_AUSBAU = new AmountOfMoney(900);
+	private static AmountOfMoney LOGEN_AUSBAU = new AmountOfMoney(3000);
+	private static AmountOfMoney ABRISS = new AmountOfMoney(60);
+	private static AmountOfMoney FIXKOSTEN = new AmountOfMoney(100000);
 
 	static final BigDecimal TERRACES_PERCENT = new BigDecimal(0.60).setScale(3, RoundingMode.HALF_DOWN);
 	static final BigDecimal BASICS_PERCENT = new BigDecimal(0.235).setScale(3, RoundingMode.HALF_DOWN);

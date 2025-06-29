@@ -1,6 +1,7 @@
 package core.db;
 
 import core.model.HOVerwaltung;
+import core.util.AmountOfMoney;
 import core.util.HODateTime;
 import core.util.HOLogger;
 import module.transfer.PlayerTransfer;
@@ -164,19 +165,19 @@ public class TransferTable extends AbstractTable {
 
     private final String transferIncomeSumSql = "SELECT SUM(PRICE) FROM " + getTableName() + " WHERE SELLERID=?";
     private final String transferCostSumSql = "SELECT SUM(PRICE) FROM " + getTableName() + " WHERE BUYERID=?";
-    public long getTransferIncomeSum(int teamId, boolean isSold) {
+    public AmountOfMoney getTransferIncomeSum(int teamId, boolean isSold) {
         var statement = isSold? transferIncomeSumSql : transferCostSumSql;
 
         try (var rs = this.connectionManager.executePreparedQuery(statement, teamId)) {
             if (rs != null) {
                 rs.next();
-                return rs.getLong(1);
+                return new AmountOfMoney(rs.getLong(1));
             }
         }
         catch (SQLException sqlException){
             HOLogger.instance().error(getClass(), sqlException);
         }
-        return 0;
+        return new AmountOfMoney(0);
     }
 
     public List<PlayerTransfer> getTeamTransfers(int teamId, boolean isSold) {

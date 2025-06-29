@@ -143,7 +143,7 @@ public class SquadInfo extends AbstractTable.Storable {
     }
 
     public void addSalary(AmountOfMoney v){
-        salarySum.addAmount(v);
+        salarySum.add(v);
     }
 
     public void setSalarySum(AmountOfMoney salarySum) {

@@ -210,7 +210,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         m_jcbUserBestPosition.addItemListener(this);
         final var salary = m_clPlayer.getWage();
         final String salarytext = salary.toLocaleString();
-        final String tsitext = Helper.getNumberFormat(false, 0).format(m_clPlayer.getTsi());
+        final String tsitext = Helper.getNumberFormat( 0).format(m_clPlayer.getTsi());
         if (m_clComparisonPlayer == null) {
             m_jllWage.getLeft().setText(salarytext);
             m_jllWage.getRight().clear();
@@ -292,7 +292,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         var bestPosition = m_clPlayer.getCalculatedBestPosition();
         m_jlBestPosition.setText(MatchRoleID.getNameForPosition(bestPosition)
                 + " ("
-                + Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals).format(
+                + Helper.getNumberFormat( core.model.UserParameter.instance().nbDecimals).format(
                 m_clPlayer.getIdealPositionRating())
                 + ")");
 
@@ -917,7 +917,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
             if (allPo.getPosition() == IMatchRoleID.FORWARD_DEF_TECH) continue;
             text = new StringBuilder(MatchRoleID.getNameForPosition(allPo.getPosition())
                     + " ("
-                    + Helper.getNumberFormat(false, 2).format(
+                    + Helper.getNumberFormat( 2).format(
                     m_clPlayer.getPositionRating(allPo.getPosition()))
                     + ")");
             for (byte altPos : altPositions) {

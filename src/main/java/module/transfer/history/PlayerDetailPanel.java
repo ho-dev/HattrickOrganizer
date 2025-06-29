@@ -10,6 +10,7 @@ import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.player.Player;
+import core.util.AmountOfMoney;
 import core.util.HODateTime;
 import core.util.Helper;
 import module.transfer.PlayerRetriever;
@@ -310,7 +311,7 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
             }
 
             final List<PlayerTransfer> transfers = DBManager.instance().getTransfers(this.playerId, true);
-            int valIncome = 0;
+            var valIncome = new AmountOfMoney( 0);
             HODateTime soldDate = null;
             final int teamid = HOVerwaltung.instance().getModel().getBasics().getTeamId();
             for (final PlayerTransfer transfer : transfers) {
@@ -329,7 +330,7 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
                 }
             }
 
-            income.setText(core.util.Helper.getNumberFormat(true, 0).format(convertCurrency(valIncome)));
+            income.setText(valIncome);
             lengthOfStayInTeam.setText("");
             sumOfWage.setText("");
             if (arrivalDate != null) {

@@ -216,7 +216,7 @@ public class TransferScoutingTableModel extends HOTableModel {
                     public IHOTableEntry getTableEntry(ScoutEintrag scouting) {
                         return new ColorLabelEntry(
                                 scouting.getPlayer().getMatchAverageRating(keeper, NORMAL),
-                                ColorLabelEntry.BG_PLAYERSPOSITIONVALUES, false,
+                                ColorLabelEntry.BG_PLAYERSPOSITIONVALUES,
                                 core.model.UserParameter.instance().nbDecimals);
                     }
                 },
@@ -225,7 +225,7 @@ public class TransferScoutingTableModel extends HOTableModel {
                     public IHOTableEntry getTableEntry(ScoutEintrag scouting) {
                         return new ColorLabelEntry(
                                 scouting.getPlayer().getMatchAverageRating(leftCentralDefender, NORMAL),
-                                ColorLabelEntry.BG_PLAYERSPOSITIONVALUES, false,
+                                ColorLabelEntry.BG_PLAYERSPOSITIONVALUES,
                                 core.model.UserParameter.instance().nbDecimals);
                     }
                 },
@@ -235,7 +235,6 @@ public class TransferScoutingTableModel extends HOTableModel {
                         return new ColorLabelEntry(
                                 scouting.getPlayer().getMatchAverageRating(leftCentralDefender, TOWARDS_WING),
                                 ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
-                                false,
                                 core.model.UserParameter.instance().nbDecimals);
                     }
                 },
@@ -245,7 +244,6 @@ public class TransferScoutingTableModel extends HOTableModel {
                         return new ColorLabelEntry(
                                 scouting.getPlayer().getMatchAverageRating(leftCentralDefender, OFFENSIVE),
                                 ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
-                                false,
                                 core.model.UserParameter.instance().nbDecimals);
                     }
                 },
@@ -254,7 +252,7 @@ public class TransferScoutingTableModel extends HOTableModel {
                     public IHOTableEntry getTableEntry(ScoutEintrag scouting) {
                         return new ColorLabelEntry(
                                 scouting.getPlayer().getMatchAverageRating(leftBack, NORMAL),
-                                ColorLabelEntry.BG_PLAYERSPOSITIONVALUES, false,
+                                ColorLabelEntry.BG_PLAYERSPOSITIONVALUES,
                                 core.model.UserParameter.instance().nbDecimals);
                     }
                 },
@@ -264,7 +262,6 @@ public class TransferScoutingTableModel extends HOTableModel {
                         return new ColorLabelEntry(
                                 scouting.getPlayer().getMatchAverageRating(leftBack, TOWARDS_MIDDLE),
                                 ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
-                                false,
                                 core.model.UserParameter.instance().nbDecimals);
                     }
                 },
@@ -274,7 +271,6 @@ public class TransferScoutingTableModel extends HOTableModel {
                         return new ColorLabelEntry(
                                 scouting.getPlayer().getMatchAverageRating(leftBack, OFFENSIVE),
                                 ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
-                                false,
                                 core.model.UserParameter.instance().nbDecimals);
                     }
                 },
@@ -284,7 +280,6 @@ public class TransferScoutingTableModel extends HOTableModel {
                         return new ColorLabelEntry(
                                 scouting.getPlayer().getMatchAverageRating(leftBack, DEFENSIVE),
                                 ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
-                                false,
                                 core.model.UserParameter.instance().nbDecimals);
                     }
                 },
@@ -293,7 +288,7 @@ public class TransferScoutingTableModel extends HOTableModel {
                     public IHOTableEntry getTableEntry(ScoutEintrag scouting) {
                         return new ColorLabelEntry(
                                 scouting.getPlayer().getMatchAverageRating(leftInnerMidfield, NORMAL),
-                                ColorLabelEntry.BG_PLAYERSPOSITIONVALUES, false,
+                                ColorLabelEntry.BG_PLAYERSPOSITIONVALUES,
                                 core.model.UserParameter.instance().nbDecimals);
                     }
                 },
@@ -303,7 +298,6 @@ public class TransferScoutingTableModel extends HOTableModel {
                         return new ColorLabelEntry(
                                 scouting.getPlayer().getMatchAverageRating(leftInnerMidfield, TOWARDS_WING),
                                 ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
-                                false,
                                 core.model.UserParameter.instance().nbDecimals);
                     }
                 },
@@ -313,7 +307,6 @@ public class TransferScoutingTableModel extends HOTableModel {
                         return new ColorLabelEntry(
                                 scouting.getPlayer().getMatchAverageRating(leftInnerMidfield, OFFENSIVE),
                                 ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
-                                false,
                                 core.model.UserParameter.instance().nbDecimals);
                     }
                 },
@@ -323,7 +316,6 @@ public class TransferScoutingTableModel extends HOTableModel {
                         return new ColorLabelEntry(
                                 scouting.getPlayer().getMatchAverageRating(leftInnerMidfield, DEFENSIVE),
                                 ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
-                                false,
                                 core.model.UserParameter.instance().nbDecimals);
                     }
                 },
@@ -332,7 +324,7 @@ public class TransferScoutingTableModel extends HOTableModel {
                     public IHOTableEntry getTableEntry(ScoutEintrag scouting) {
                         return new ColorLabelEntry(
                                 scouting.getPlayer().getMatchAverageRating(leftWinger, NORMAL),
-                                ColorLabelEntry.BG_PLAYERSPOSITIONVALUES, false,
+                                ColorLabelEntry.BG_PLAYERSPOSITIONVALUES,
                                 core.model.UserParameter.instance().nbDecimals);
                     }
                 },
@@ -342,7 +334,6 @@ public class TransferScoutingTableModel extends HOTableModel {
                         return new ColorLabelEntry(
                                 scouting.getPlayer().getMatchAverageRating(leftWinger, TOWARDS_MIDDLE),
                                 ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
-                                false,
                                 core.model.UserParameter.instance().nbDecimals);
                     }
                 },
@@ -352,7 +343,6 @@ public class TransferScoutingTableModel extends HOTableModel {
                         return new ColorLabelEntry(
                                 scouting.getPlayer().getMatchAverageRating(leftWinger, OFFENSIVE),
                                 ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
-                                false,
                                 core.model.UserParameter.instance().nbDecimals);
                     }
                 },
@@ -362,7 +352,6 @@ public class TransferScoutingTableModel extends HOTableModel {
                         return new ColorLabelEntry(
                                 scouting.getPlayer().getMatchAverageRating(leftWinger, DEFENSIVE),
                                 ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
-                                false,
                                 core.model.UserParameter.instance().nbDecimals);
                     }
                 },
@@ -371,7 +360,7 @@ public class TransferScoutingTableModel extends HOTableModel {
                     public IHOTableEntry getTableEntry(ScoutEintrag scouting) {
                         return new ColorLabelEntry(
                                 scouting.getPlayer().getMatchAverageRating(leftForward, NORMAL),
-                                ColorLabelEntry.BG_PLAYERSPOSITIONVALUES, false,
+                                ColorLabelEntry.BG_PLAYERSPOSITIONVALUES,
                                 core.model.UserParameter.instance().nbDecimals);
                     }
                 },
@@ -381,7 +370,6 @@ public class TransferScoutingTableModel extends HOTableModel {
                         return new ColorLabelEntry(
                                 scouting.getPlayer().getMatchAverageRating(leftForward, DEFENSIVE),
                                 ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
-                                false,
                                 core.model.UserParameter.instance().nbDecimals);
                     }
                 },
@@ -391,7 +379,6 @@ public class TransferScoutingTableModel extends HOTableModel {
                         return new ColorLabelEntry(
                                 scouting.getPlayer().getMatchAverageRating(leftForward, TOWARDS_WING),
                                 ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES,
-                                false,
                                 core.model.UserParameter.instance().nbDecimals);
                     }
                 }, new TransferScoutTableColumn(id++, "Notizen") {

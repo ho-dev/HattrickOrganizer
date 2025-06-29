@@ -320,26 +320,26 @@ public class Helper {
 		return numFormat;
 	}
 
-	/**
-	 * Parse currency value from string.
-	 * If value could not be parsed with currency formal an number format is tried.
-	 * @param v String to parse from
-	 * @return Integer, null on parse error
-	 */
-	public static Integer parseCurrency(String v) {
-		try {
-			return Helper.getNumberFormat(true, 0).parse(v).intValue();
-		} catch (Exception ignored) {
-			try {
-				return Helper.getNumberFormat(false, 0).parse(v).intValue();
-			}
-			catch ( Exception ex) {
-				HOLogger.instance().error(Helper.class, "error parsing currency " + ex);
-				return null;
-			}
-		}
-	}
-
+//	/**
+//	 * Parse currency value from string.
+//	 * If value could not be parsed with currency formal an number format is tried.
+//	 * @param v String to parse from
+//	 * @return Integer, null on parse error
+//	 */
+//	public static Integer parseCurrency(String v) {
+//		try {
+//			return Helper.getNumberFormat(true, 0).parse(v).intValue();
+//		} catch (Exception ignored) {
+//			try {
+//				return Helper.getNumberFormat(false, 0).parse(v).intValue();
+//			}
+//			catch ( Exception ex) {
+//				HOLogger.instance().error(Helper.class, "error parsing currency " + ex);
+//				return null;
+//			}
+//		}
+//	}
+//
 
 	/**
 	 * Decrypt string

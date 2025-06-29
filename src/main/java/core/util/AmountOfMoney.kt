@@ -50,7 +50,7 @@ class AmountOfMoney(var swedishKrona: Long) {
             return null
         }
 
-        var currencyFormatter = getNumberFormat(currencyCode.getValue())
+        public var currencyFormatter = getNumberFormat(currencyCode.getValue())
 
         /**
          * Parse currency value from string.
@@ -58,15 +58,21 @@ class AmountOfMoney(var swedishKrona: Long) {
          * @param v String to parse from
          * @return Integer, null on parse error
          */
-        fun parseCurrency(v: String?): AmountOfMoney? {
+        fun parse(v: String?): AmountOfMoney? {
+            var amount: Double? = 0.0
             try {
-                return AmountOfMoney((currencyFormatter.parse(v).toDouble() * getExchangeRate()).toLong())
-            } catch (ex: Exception) {
-                HOLogger.instance().error(Helper::class.java, "error parsing currency " + ex)
-                return null
+                amount = currencyFormatter?.parse(v)?.toDouble()
+            } catch (ignored: Exception) {
+                try {
+                    amount = Helper.getNumberFormat(0).parse(v).toDouble()
+                }
+                catch (ex: Exception) {
+                    HOLogger.instance().error(Helper::class.java, "error parsing currency " + ex)
+                    return null
+                }
             }
+            return AmountOfMoney((amount?.plus(0.5))?.toLong() ?:0 )
         }
-
 
         private fun getNumberFormat(currencyCode: String?) : NumberFormat? {
             if (currencyCode != null) {
@@ -171,7 +177,22 @@ class AmountOfMoney(var swedishKrona: Long) {
         return currencyFormatter?.format(this.toLocale()) ?: this.toLocale().toString()
     }
 
-    fun addAmount(amountOfMoney: AmountOfMoney) {
+    fun add(amountOfMoney: AmountOfMoney) {
         this.swedishKrona += amountOfMoney.swedishKrona
     }
+
+    fun subtract(amountOfMoney: AmountOfMoney) {
+        this.swedishKrona -= amountOfMoney.swedishKrona
+    }
+
+    fun plus(amount: AmountOfMoney): AmountOfMoney {
+        return AmountOfMoney(this.swedishKrona + amount.swedishKrona)
+    }
+    fun minus(amount: AmountOfMoney): AmountOfMoney {
+        return AmountOfMoney(this.swedishKrona - amount.swedishKrona)
+    }
+
+    fun times(factor: Double): AmountOfMoney { return AmountOfMoney((this.swedishKrona*factor).toLong()) }
+    fun divide(divisor: Double) : AmountOfMoney { return AmountOfMoney((this.swedishKrona/divisor).toLong())}
+    fun equals(other: AmountOfMoney) : Boolean { return this.swedishKrona.equals(other.swedishKrona)}
 }

@@ -86,7 +86,7 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
         if ((integerNumber == 0) && (Math.abs(number) > 0.005d) && withText) {
             // Yes, we want negative numbers too
             final double zahl2 = integerNumber + number;
-            setValueAsText(zahl2, background, false, false,
+            setValueAsText(zahl2, background, false,
                     core.model.UserParameter.instance().nbDecimals, true);
         }
     }
@@ -125,22 +125,22 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
     /**
      * Colour label to represent changes of background colour
      */
-    public ColorLabelEntry(float newNumber, Color bg_color, boolean currencyformat,
+    public ColorLabelEntry(float newNumber, Color bg_color,
                            boolean invertColour, int decimalPlaces) {
         setHorizontalAlignment(SwingConstants.RIGHT);
         createComponent();
-        setValueAsText(newNumber, bg_color, currencyformat, invertColour, decimalPlaces, true);
+        setValueAsText(newNumber, bg_color, invertColour, decimalPlaces, true);
     }
 
     /**
      * Colour Label to present value of money with background colour, decimal places are only for
      * non-currency interest
      */
-    public ColorLabelEntry(double newNumber, Color bg_color, boolean currencyformat,
+    public ColorLabelEntry(double newNumber, Color bg_color,
                            int decimalPlaces) {
         setHorizontalAlignment(SwingConstants.RIGHT);
         createComponent();
-        setValueAsText(newNumber, bg_color, currencyformat, false, decimalPlaces, false);
+        setValueAsText(newNumber, bg_color,  false, decimalPlaces, false);
     }
 
     /**
@@ -148,6 +148,7 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
      * non-currency interest
      */
     public ColorLabelEntry(AmountOfMoney amount, Color bg_color) {
+        this.number = amount.getSwedishKrona();
         setHorizontalAlignment(SwingConstants.RIGHT);
         createComponent();
         setText(amount.toLocaleString());
@@ -158,12 +159,12 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
     /**
      * Helper method to format the value of 'number' and instance fields accordingly.
      */
-    private void setValueAsText(double newNumber, Color bg_color, boolean currencyformat,
+    private void setValueAsText(double newNumber, Color bg_color,
                                 boolean invertColour, int decimalPlaces, boolean colorAndSign) {
         this.number = newNumber;
 
         setText((number > 0 && colorAndSign ? "+" : "") +
-                Helper.getNumberFormat(currencyformat, decimalPlaces).format(number));
+                Helper.getNumberFormat(decimalPlaces).format(number));
 
         if (colorAndSign) {
             if (number > 0 && !invertColour || number < 0 && invertColour) {
@@ -244,7 +245,7 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
      * @param number Double
      */
     private void setGraphicalChangeValue(double number) {
-        setValueAsText(number, null, false, false,
+        setValueAsText(number, null, false,
                 core.model.UserParameter.instance().nbDecimals,
                 true);
     }
@@ -308,7 +309,7 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
     }
 
     public final void setSpecialNumber(int number, boolean currencyformat, boolean showZero) {
-        setValueAsText(number, null, currencyformat, false, 0, true);
+        setValueAsText(number, null, currencyformat,  0, true);
         if (number == 0 && !showZero) {
             setText("");
             updateComponent();
@@ -316,14 +317,14 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
     }
 
     public final void setSpecialNumber(float number, boolean currencyformat) {
-        setValueAsText(number, null, currencyformat, false,
+        setValueAsText(number, null, currencyformat,
                 core.model.UserParameter.instance().nbDecimals,
                 true);
     }
 
     public final void setSpecialNumber(float number, boolean currencyformat, boolean showDecimal) {
         var nbDec = showDecimal ? core.model.UserParameter.instance().nbDecimals : 0;
-        setValueAsText(number, null, currencyformat, false, nbDec, true);
+        setValueAsText(number, null, currencyformat,  nbDec, true);
     }
 
     public final double getNumber() {

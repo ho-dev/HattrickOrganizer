@@ -5,6 +5,7 @@ import core.db.DBManager;
 import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
+import core.util.AmountOfMoney;
 import core.util.HODateTime;
 import core.util.HOLogger;
 import core.util.Helper;
@@ -34,8 +35,8 @@ public class PlayerTransfer extends AbstractTable.Storable {
     public static final int REBOUGHT = 0;
 
     public static Integer teamId;
-    public static Long totalSumOfBuys;
-    public static Long totalSumOfSales;
+    public static AmountOfMoney totalSumOfBuys;
+    public static AmountOfMoney totalSumOfSales;
     public static Long numberOfBuys;
     public static Long numberOfSales;
     public static HODateTime activatedDate;
@@ -64,7 +65,7 @@ public class PlayerTransfer extends AbstractTable.Storable {
     private int playerId;
 
     /** Transfer price */
-    private int price = 0;
+    private AmountOfMoney price = new AmountOfMoney(0);
 
     /** Season */
     private int season;
@@ -78,8 +79,8 @@ public class PlayerTransfer extends AbstractTable.Storable {
     /** TSI value of the player at transfer date */
     private int tsi = 0;
     
-    private Integer motherClubFee;
-    private Integer previousClubFee;
+    private AmountOfMoney motherClubFee;
+    private AmountOfMoney previousClubFee;
 
     public void setType(int type) {
         this.type = type;
@@ -130,12 +131,12 @@ public class PlayerTransfer extends AbstractTable.Storable {
                 if (inDB == null || transfer.getPrice() != inDB.getPrice() || inDB.getPlayerId()==0) {
                     updatePlayerTransfer(transfer);
                     var priceCorrection = transfer.getPrice();
-                    if (inDB != null) priceCorrection -= inDB.getPrice();
-                    if (transfer.buyerid == teamId) bought += priceCorrection;
-                    else sold += priceCorrection;
+                    if (inDB != null) priceCorrection.subtract(inDB.getPrice());
+                    if (transfer.buyerid == teamId) bought.add(priceCorrection);
+                    else sold.add(priceCorrection);
                 }
             }
-        } while (sold != PlayerTransfer.totalSumOfSales || bought != PlayerTransfer.totalSumOfBuys);
+        } while (!sold.equals(PlayerTransfer.totalSumOfSales) || !bought.equals(PlayerTransfer.totalSumOfBuys));
     }
 
     /**
@@ -153,7 +154,7 @@ public class PlayerTransfer extends AbstractTable.Storable {
      * If not available, the value is calculated.
      * @return int
      */
-    public int getMotherClubFee(){
+    public AmountOfMoney getMotherClubFee(){
         if ( this.motherClubFee == null) {
             var teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
             this.motherClubFee = calcMotherClubFee(teamId);
@@ -185,7 +186,7 @@ public class PlayerTransfer extends AbstractTable.Storable {
      * It is calculated, if not available yet.
      * @return int The income in locale currency
      */
-    public int getPreviousClubFee(){
+    public AmountOfMoney getPreviousClubFee(){
         if ( this.previousClubFee == null) {
             var teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
             this.previousClubFee = calcPreviousClubFee(teamId);
@@ -203,7 +204,7 @@ public class PlayerTransfer extends AbstractTable.Storable {
      * @param teamId Team ID
      * @return Income in locale currency
      */
-    private int calcPreviousClubFee(int teamId) {
+    private AmountOfMoney calcPreviousClubFee(int teamId) {
         var player = getPlayerInfo();
         if (player != null) {
             var matchCount = player.getCurrentTeamMatches();
@@ -232,11 +233,11 @@ public class PlayerTransfer extends AbstractTable.Storable {
                         case 7, 8, 9 -> 0.025;
                         default -> min(0.04, 0.025 + matchCount / 10 * 0.005);
                     };
-                    return (int) (percentage * getPrice());
+                    return getPrice().times(percentage);
                 }
             }
         }
-        return 0;
+        return new AmountOfMoney(0);
     }
 
     /**
@@ -500,7 +501,7 @@ public class PlayerTransfer extends AbstractTable.Storable {
      * Hattrick currency (swedish crone)
      * @param price Transfer price.
      */
-    public final void setPrice(Integer price) {
+    public final void setPrice(AmountOfMoney price) {
         if ( price != null ) this.price = price;
     }
 
@@ -509,7 +510,7 @@ public class PlayerTransfer extends AbstractTable.Storable {
      *
      * @return Transfer price in Hattrick currency (swedish crone)
      */
-    public final int getPrice() {
+    public final AmountOfMoney getPrice() {
         return price;
     }
 

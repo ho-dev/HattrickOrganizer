@@ -26,9 +26,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import static core.model.player.IMatchRoleID.*;
-import static core.util.Helper.formatCurrency;
-import static core.util.Helper.parseCurrency;
-
 
 /**
  * A player can be created and modified here.
@@ -87,8 +84,8 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
     private final JTextArea jtaNotes = new JTextArea();
     private final JTextField jtfAge = new JTextField("17.0");
     private final JTextField jtfTSI = new JTextField("1000");
-    private final JTextField jtfPrice = new JTextField(formatCurrency(0));
-    private final JTextField jtfWage = new JTextField(formatCurrency(0));
+    private final JTextField jtfPrice = new JTextField(new AmountOfMoney(0).toLocaleString());
+    private final JTextField jtfWage = new JTextField(new AmountOfMoney(0).toLocaleString());
     private ScoutEintrag clScoutEntry;
     private final JTextField jtfName = new JTextField();
     private final SpinnerDateModel clSpinnerModel = new SpinnerDateModel(new Date(), null, null, Calendar.MINUTE);
@@ -188,7 +185,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
             tempPlayer.setLeadership(((CBItem)jcbLeadership.getSelectedItem()).getId());
             tempPlayer.setHomeGrown(jchHomegrown.isSelected());
             tempPlayer.setHrfDate(HODateTime.now());
-            tempPlayer.setWage(parseCurrencyValue(jtfWage.getText()));
+            tempPlayer.setWage(AmountOfMoney.Companion.parse(jtfWage.getText()));
             HOVerwaltung.instance().getModel().addPlayer(tempPlayer);
             RefreshManager.instance().doReInit();
             HOMainFrame.instance().showTab(IModule.PLAYEROVERVIEW);
@@ -198,14 +195,14 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
 		}
     	else {
             clScoutEntry.setPlayerID(Integer.parseInt(jtfPlayerID.getText()));
-            clScoutEntry.setPrice(parseCurrencyValue(jtfPrice.getText()));
+            clScoutEntry.setPrice(AmountOfMoney.Companion.parse(jtfPrice.getText()));
             clScoutEntry.setAlter(Integer.parseInt(jtfAge.getText().replaceFirst("\\..*", "")));
             clScoutEntry.setAgeDays(Integer.parseInt(jtfAge.getText().replaceFirst(".*\\.", "")));
             clScoutEntry.setTSI(Integer.parseInt(jtfTSI.getText()));
             clScoutEntry.setName(jtfName.getText());
             clScoutEntry.setInfo(jtaNotes.getText());
             clScoutEntry.setDeadline(new java.sql.Timestamp(clSpinnerModel.getDate().getTime()));
-            clScoutEntry.setbaseWage(parseCurrencyValue(jtfWage.getText()));
+            clScoutEntry.setbaseWage(AmountOfMoney.Companion.parse(jtfWage.getText()));
             if (actionEvent.getSource().equals(jbAdd)) {
                 clOwner.addScoutEintrag(clScoutEntry);
             } else if (actionEvent.getSource().equals(jbRemove)) {
@@ -215,20 +212,20 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
         checkFields();
     }
 
-    /**
-     * Parse a currency value given in player description text
-     * if a value can be parsed it is converted to swedish currency (standard money currency in HO)
-     *
-     * @param text String, that's parsed
-     * @return int, currency in swedish krone, 0 if no value can be parsed from string
-     */
-    private AmountOfMoney parseCurrencyValue(String text) {
-        var price = parseCurrency(text);
-        if (price != null) {
-            return AmountOfMoney.Companion.fromLocale(price);
-        }
-        return new AmountOfMoney(0);
-    }
+//    /**
+//     * Parse a currency value given in player description text
+//     * if a value can be parsed it is converted to swedish currency (standard money currency in HO)
+//     *
+//     * @param text String, that's parsed
+//     * @return int, currency in swedish krone, 0 if no value can be parsed from string
+//     */
+//    private AmountOfMoney parseCurrencyValue(String text) {
+//        var price = parseCurrency(text);
+//        if (price != null) {
+//            return AmountOfMoney.Companion.fromLocale(price);
+//        }
+//        return new AmountOfMoney(0);
+//    }
 
     /**
      * Fired when panel receives focus
@@ -246,7 +243,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
     public final void focusLost(FocusEvent focusEvent) {
         if (!Helper.parseInt(HOMainFrame.instance(), jtfTSI, false)
             || !Helper.parseInt(HOMainFrame.instance(), jtfPlayerID, false)
-            || Helper.parseCurrency( jtfPrice.getText()) == null) {
+            || AmountOfMoney.Companion.parse( jtfPrice.getText()) == null) {
             return;
         }
         checkFields();
@@ -371,43 +368,43 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
         var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
         byte bIdealPosition = tempPlayer.getIdealPosition();
         jpBestPosition.setText(String.format("%s (%.2f)", MatchRoleID.getNameForPosition(bIdealPosition), tempPlayer.getIdealPositionRating()));
-        jpRatingKeeper.getLeft().setText(Helper.getNumberFormat(false, UserParameter.instance().nbDecimals)
+        jpRatingKeeper.getLeft().setText(Helper.getNumberFormat( UserParameter.instance().nbDecimals)
                 .format(ratingPredictionModel.getPlayerMatchAverageRating(tempPlayer, IMatchRoleID.keeper, NORMAL)));
-        jpRatingDefender.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
+        jpRatingDefender.getLeft().setText(Helper.getNumberFormat( core.model.UserParameter.instance().nbDecimals)
                 .format(ratingPredictionModel.getPlayerMatchAverageRating(tempPlayer, IMatchRoleID.leftCentralDefender, NORMAL)));
-        jpRatingDefenderTowardsWing.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
+        jpRatingDefenderTowardsWing.getLeft().setText(Helper.getNumberFormat( core.model.UserParameter.instance().nbDecimals)
                 .format(ratingPredictionModel.getPlayerMatchAverageRating(tempPlayer, IMatchRoleID.leftCentralDefender, TOWARDS_WING)));
-        jpRatingDefenderOffensive.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
+        jpRatingDefenderOffensive.getLeft().setText(Helper.getNumberFormat( core.model.UserParameter.instance().nbDecimals)
                 .format(ratingPredictionModel.getPlayerMatchAverageRating(tempPlayer, IMatchRoleID.leftCentralDefender, OFFENSIVE)));
-        jpRatingWingback.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
+        jpRatingWingback.getLeft().setText(Helper.getNumberFormat( core.model.UserParameter.instance().nbDecimals)
                 .format(ratingPredictionModel.getPlayerMatchAverageRating(tempPlayer, leftBack, NORMAL)));
-        jpRatingWingbackTowardsMiddle.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
+        jpRatingWingbackTowardsMiddle.getLeft().setText(Helper.getNumberFormat( core.model.UserParameter.instance().nbDecimals)
                 .format(ratingPredictionModel.getPlayerMatchAverageRating(tempPlayer, leftBack, TOWARDS_MIDDLE)));
-        jpRatingWingbackOffensive.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
+        jpRatingWingbackOffensive.getLeft().setText(Helper.getNumberFormat( core.model.UserParameter.instance().nbDecimals)
                 .format(ratingPredictionModel.getPlayerMatchAverageRating(tempPlayer, leftBack, OFFENSIVE)));
-        jpRatingWingbackDefensive.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
+        jpRatingWingbackDefensive.getLeft().setText(Helper.getNumberFormat( core.model.UserParameter.instance().nbDecimals)
                 .format(ratingPredictionModel.getPlayerMatchAverageRating(tempPlayer, leftBack, DEFENSIVE)));
-        jpRatingMidfielder.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
+        jpRatingMidfielder.getLeft().setText(Helper.getNumberFormat( core.model.UserParameter.instance().nbDecimals)
                 .format(ratingPredictionModel.getPlayerMatchAverageRating(tempPlayer, leftInnerMidfield, NORMAL)));
-        jpRatingMidfielderTowardsWing.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
+        jpRatingMidfielderTowardsWing.getLeft().setText(Helper.getNumberFormat( core.model.UserParameter.instance().nbDecimals)
                 .format(ratingPredictionModel.getPlayerMatchAverageRating(tempPlayer, leftInnerMidfield, TOWARDS_WING)));
-        jpRatingMidfielderOffensive.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
+        jpRatingMidfielderOffensive.getLeft().setText(Helper.getNumberFormat( core.model.UserParameter.instance().nbDecimals)
                 .format(ratingPredictionModel.getPlayerMatchAverageRating(tempPlayer, leftInnerMidfield, OFFENSIVE)));
-        jpRatingMidfielderDefensive.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
+        jpRatingMidfielderDefensive.getLeft().setText(Helper.getNumberFormat( core.model.UserParameter.instance().nbDecimals)
                 .format(ratingPredictionModel.getPlayerMatchAverageRating(tempPlayer, leftInnerMidfield, DEFENSIVE)));
-        jpRatingWinger.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
+        jpRatingWinger.getLeft().setText(Helper.getNumberFormat( core.model.UserParameter.instance().nbDecimals)
                 .format(ratingPredictionModel.getPlayerMatchAverageRating(tempPlayer, leftWinger, NORMAL)));
-        jpRatingWingerTowardsMiddle.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
+        jpRatingWingerTowardsMiddle.getLeft().setText(Helper.getNumberFormat( core.model.UserParameter.instance().nbDecimals)
                 .format(ratingPredictionModel.getPlayerMatchAverageRating(tempPlayer, leftWinger, TOWARDS_MIDDLE)));
-        jpRatingWingerOffensive.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
+        jpRatingWingerOffensive.getLeft().setText(Helper.getNumberFormat( core.model.UserParameter.instance().nbDecimals)
                 .format(ratingPredictionModel.getPlayerMatchAverageRating(tempPlayer, leftWinger, OFFENSIVE)));
-        jpRatingWingerDefensive.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
+        jpRatingWingerDefensive.getLeft().setText(Helper.getNumberFormat( core.model.UserParameter.instance().nbDecimals)
                 .format(ratingPredictionModel.getPlayerMatchAverageRating(tempPlayer, leftWinger, DEFENSIVE)));
-        jpRatingForward.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
+        jpRatingForward.getLeft().setText(Helper.getNumberFormat( core.model.UserParameter.instance().nbDecimals)
                 .format(ratingPredictionModel.getPlayerMatchAverageRating(tempPlayer, leftForward, NORMAL)));
-        jpRatingForwardTowardsWing.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
+        jpRatingForwardTowardsWing.getLeft().setText(Helper.getNumberFormat( core.model.UserParameter.instance().nbDecimals)
                 .format(ratingPredictionModel.getPlayerMatchAverageRating(tempPlayer, leftForward, TOWARDS_WING)));
-        jpRatingForwardDefensive.getLeft().setText(Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
+        jpRatingForwardDefensive.getLeft().setText(Helper.getNumberFormat( core.model.UserParameter.instance().nbDecimals)
                 .format(ratingPredictionModel.getPlayerMatchAverageRating(tempPlayer, leftForward, DEFENSIVE)));
         clScoutEntry.setSpeciality(((CBItem) jcbSpeciality.getSelectedItem()).getId());
         clScoutEntry.setErfahrung(((CBItem) jcbExperience.getSelectedItem()).getId());
@@ -467,8 +464,8 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
                 jtfName.setText(player.getPlayerName());
                 jtfAge.setText(player.getAge() + "." + player.getAgeDays());
 
-                jtfPrice.setText(formatCurrency(player.getPrice() / UserParameter.instance().currencyRate));
-                jtfWage.setText(formatCurrency(player.getBaseWage() / UserParameter.instance().currencyRate));
+                jtfPrice.setText(player.getPrice().toLocaleString());
+                jtfWage.setText(player.getBaseWage().toLocaleString());
                 jtfTSI.setText(String.valueOf(player.getTSI()));
                 jtaNotes.setText(player.getInfo());
 
