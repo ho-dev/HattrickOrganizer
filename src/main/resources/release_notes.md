@@ -7,9 +7,10 @@
 ### Database
 * Fix init of xtra data table (#2284)
 
-### Squad
+### Player overview
 * Fix training progress of red carded players (#2286)
 * Fix error in training progress of position swaps (#2292)
+* Fix array index out of bound exception in player overview (#2294)
 
 ### Team Analyzer
 
