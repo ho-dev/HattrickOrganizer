@@ -139,7 +139,7 @@ abstract class HOTableModel protected constructor(
         if (column > -1 && column < columns.size) {
             return columns[column].isEditable
         }
-        return false;
+        return false
     }
 
     /**
