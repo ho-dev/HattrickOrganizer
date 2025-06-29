@@ -49,14 +49,11 @@ public class ArenaSizer {
 
 	//~ Methods ------------------------------------------------------------------------------------
 
-	final int calcMaxIncome(Stadium arena) {
-		int income = 0;
-
-		income += ((arena.getTerraces() * ADMISSION_PRICE_TERRACES) / currencyFactor);
-		income += ((arena.getBasicSeating() * ADMISSION_PRICE_BASICS) / currencyFactor);
-		income += ((arena.getUnderRoofSeating() * ADMISSION_PRICE_ROOF) / currencyFactor);
-		income += ((arena.getVipBox() * ADMISSION_PRICE_VIP) / currencyFactor);
-
+	final AmountOfMoney calcMaxIncome(Stadium arena) {
+		var income = ADMISSION_PRICE_TERRACES.times(arena.getTerraces());
+		income.add(ADMISSION_PRICE_BASICS.times(arena.getBasicSeating()));
+		income.add(ADMISSION_PRICE_ROOF.times(arena.getUnderRoofSeating()));
+		income.add(ADMISSION_PRICE_VIP.times(arena.getVipBox()));
 		return income;
 	}
 
@@ -94,49 +91,46 @@ public class ArenaSizer {
 		return tmp;
 	}
 
-	final int calcConstructionCosts(float steh, float sitz, float dach, float logen) {
-		float kosten = FIXKOSTEN / currencyFactor;
+	final AmountOfMoney calcConstructionCosts(float steh, float sitz, float dach, float logen) {
+		var kosten = FIXKOSTEN;
 
 		if (steh > 0) {
-			kosten += ((steh * STEH_AUSBAU) / currencyFactor);
+			kosten.add(STEH_AUSBAU.times(steh));
 		} else {
-			kosten -= ((steh * ABRISS) / currencyFactor);
+			kosten.subtract(ABRISS.times(steh));
 		}
 
 		if (sitz > 0) {
-			kosten += ((sitz * SITZ_AUSBAU) / currencyFactor);
+			kosten.add(SITZ_AUSBAU.times(sitz));
 		} else {
-			kosten -= ((sitz * ABRISS) / currencyFactor);
+			kosten.subtract(ABRISS.times(sitz));
 		}
 
 		if (dach > 0) {
-			kosten += ((dach * DACH_AUSBAU) / currencyFactor);
+			kosten.add(DACH_AUSBAU.times(dach));
 		} else {
-			kosten -= ((dach * ABRISS) / currencyFactor);
+			kosten.subtract(ABRISS.times(dach));
 		}
 
 		if (logen > 0) {
-			kosten += ((logen * LOGEN_AUSBAU) / currencyFactor);
+			kosten.add(LOGEN_AUSBAU.times(logen));
 		} else {
-			kosten -= ((logen * ABRISS) / currencyFactor);
+			kosten.subtract(ABRISS.times(logen));
 		}
 
-		return (int) kosten;
+		return  kosten;
 	}
 
 	final int calcDistribution(float arenaSize, float percent) {
 		return (int) ((arenaSize / 100.0f) * percent);
 	}
 
-	final float calcMaintenance(Stadium arena) {
-		float costs = 0.0f;
-
-		costs += ((arena.getTerraces() * MAINTENANCE_TERRACES) / currencyFactor);
-		costs += ((arena.getBasicSeating() * MAINTENANCE_BASICS) / currencyFactor);
-		costs += ((arena.getUnderRoofSeating() * MAINTENANCE_ROOF) / currencyFactor);
-		costs += ((arena.getVipBox() * MAINTENANCE_VIP) / currencyFactor);
-
-		return Helper.round(costs, 1);
+	final AmountOfMoney calcMaintenance(Stadium arena) {
+		var costs = MAINTENANCE_TERRACES.times(arena.getTerraces());
+		costs.add(MAINTENANCE_BASICS.times(arena.getBasicSeating()));
+		costs.add(MAINTENANCE_ROOF.times(arena.getUnderRoofSeating()));
+		costs.add(MAINTENANCE_VIP.times(arena.getVipBox()));;
+		return costs;
 	}
 
 }

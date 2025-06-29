@@ -16,6 +16,7 @@ import core.model.match.*;
 import core.model.player.PlayerAvatar;
 import core.model.player.TrainerStatus;
 import core.net.OnlineWorker;
+import core.util.AmountOfMoney;
 import core.util.HODateTime;
 import core.util.Helper;
 import core.module.config.ModuleConfig;
@@ -151,14 +152,14 @@ public class ConvertXml2Hrf {
 		if (areTransfersMissing(economyDataMap)) {
 			HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.transfers"), progressIncrement);
 			PlayerTransfer.downloadMissingTransfers(teamId);
-			var commission = Integer.parseInt(economyDataMap.get("IncomeSoldPlayersCommission"));
-			var lastCommission = Integer.parseInt(economyDataMap.get("LastIncomeSoldPlayersCommission"));
-			if (commission > 0 || lastCommission > 0) {
+			var commission = new AmountOfMoney(Integer.parseInt(economyDataMap.get("IncomeSoldPlayersCommission")));
+			var lastCommission = new AmountOfMoney(Integer.parseInt(economyDataMap.get("LastIncomeSoldPlayersCommission")));
+			if (commission.getSwedishKrona() > 0 || lastCommission.getSwedishKrona() > 0) {
 				var soldPlayers = DBManager.instance().loadTeamTransfers(teamId, true);
-				if (commission > 0) {
+				if (commission.getSwedishKrona() > 0) {
 					PlayerTransfer.downloadMissingTransferCommissions(soldPlayers, commission, HODateTime.now().toHTWeek());
 				}
-				if (lastCommission > 0) {
+				if (lastCommission.getSwedishKrona() > 0) {
 					PlayerTransfer.downloadMissingTransferCommissions(soldPlayers, commission, HODateTime.now().minus(7, ChronoUnit.DAYS).toHTWeek());
 				}
 			}

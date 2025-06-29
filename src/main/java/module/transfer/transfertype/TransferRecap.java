@@ -60,7 +60,7 @@ class TransferRecap {
         final TransferTypeRecap recap = getRecap(TransferType.FIRED_PLAYER);
 
         if (element.getType() == PlayerTransfer.BUY) {
-            recap.addOperation(-element.getPrice());
+            recap.addOperation(element.getPrice().times(-1));
         } else {
             recap.addOperation(element.getPrice());
         }

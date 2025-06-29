@@ -166,19 +166,19 @@ public class PlayerTransfer extends AbstractTable.Storable {
      * Set the mother club fee
      * @param motherClubFee Integer
      */
-    public void setMotherClubFee(Integer motherClubFee) {
+    public void setMotherClubFee(AmountOfMoney motherClubFee) {
         this.motherClubFee = motherClubFee;
     }
 
     /**
      * Calculate the mother club fee
      * @param teamId Team id
-     * @return int
+     * @return AmountOfMoney
      */
-    private int calcMotherClubFee(int teamId){
+    private AmountOfMoney calcMotherClubFee(int teamId){
         var player = getPlayerInfo();
-        if (player != null && player.isHomeGrown() && this.sellerid != teamId) return (int)(this.price * .02);    // 2%
-        return 0;
+        if (player != null && player.isHomeGrown() && this.sellerid != teamId) return this.price .times(.02);    // 2%
+        return new AmountOfMoney((0));
     }
 
     /**
@@ -194,7 +194,7 @@ public class PlayerTransfer extends AbstractTable.Storable {
         return this.previousClubFee;
     }
 
-    public void setPreviousClubFee(Integer motherClubFee) {
+    public void setPreviousClubFee(AmountOfMoney motherClubFee) {
         this.previousClubFee = motherClubFee;
     }
 
@@ -251,10 +251,10 @@ public class PlayerTransfer extends AbstractTable.Storable {
      * @param commission  Commission income of the week from economy download
      * @param htweek HT week of that commission income
      */
-    public static void downloadMissingTransferCommissions(List<PlayerTransfer> soldPlayers, int commission, HODateTime.HTWeek htweek) {
+    public static void downloadMissingTransferCommissions(List<PlayerTransfer> soldPlayers, AmountOfMoney commission, HODateTime.HTWeek htweek) {
         var startWeek = HODateTime.fromHTWeek(htweek);
         var sum = DBManager.instance().getSumTransferCommissions(startWeek);
-        if(sum != commission){
+        if(!sum.equals( commission)){
             for (var player : soldPlayers){
                 var transfers = XMLParser.getAllPlayerTransfers(player.getPlayerId());
                 for (var transfer : transfers){
@@ -262,9 +262,9 @@ public class PlayerTransfer extends AbstractTable.Storable {
                     if (inDB == null){
                         DBManager.instance().storePlayerTransfer(transfer);
                         if (!transfer.getDate().isBefore(startWeek) && !transfer.getDate().isAfter(startWeek.plus(7, ChronoUnit.DAYS))) {
-                            sum += transfer.getMotherClubFee();
-                            sum += transfer.getPreviousClubFee();
-                            if (sum >= commission) return;
+                            sum.add(transfer.getMotherClubFee());
+                            sum.add(transfer.getPreviousClubFee());
+                            if (sum.getSwedishKrona() >= commission.getSwedishKrona()) return;
                         }
                     }
                 }

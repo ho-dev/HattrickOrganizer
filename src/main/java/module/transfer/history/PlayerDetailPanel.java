@@ -316,21 +316,21 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
             final int teamid = HOVerwaltung.instance().getModel().getBasics().getTeamId();
             for (final PlayerTransfer transfer : transfers) {
                 if (transfer.getBuyerid() == teamid) {
-                    valIncome -= transfer.getPrice();
+                    valIncome.subtract(transfer.getPrice());
                     if (arrivalDate == null || transfer.getDate().isAfter(arrivalDate)) {
                         arrivalDate = transfer.getDate();
                     }
                 }
 
                 if (transfer.getSellerid() == teamid) {
-                    valIncome += transfer.getPrice();
+                    valIncome.add(transfer.getPrice());
                     if (soldDate == null || transfer.getDate().isAfter(soldDate)) {
                         soldDate = transfer.getDate();
                     }
                 }
             }
 
-            income.setText(valIncome);
+            income.setText(valIncome.toLocaleString());
             lengthOfStayInTeam.setText("");
             sumOfWage.setText("");
             if (arrivalDate != null) {
@@ -349,8 +349,8 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
                     lengthOfStayInTeam.setText(activeDuration.toString());
                 }
                 var sum = this.player.getSumOfWage(arrivalDate, to);
-                sumOfWage.setText(Helper.getNumberFormat(true, 0).format(convertCurrency(sum)));
-                totalCostOfOwnership.setText(Helper.getNumberFormat(true, 0).format(convertCurrency(sum - valIncome)));
+                sumOfWage.setText(sum.toLocaleString());
+                totalCostOfOwnership.setText(sum.minus(valIncome).toLocaleString());
             }
 
             refreshPlayerTable(transfers);

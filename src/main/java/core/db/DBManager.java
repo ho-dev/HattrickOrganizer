@@ -1499,7 +1499,7 @@ public class DBManager implements PersistenceManager {
 		return ret;
 	}
 
-	public int getSumTransferCommissions(HODateTime startWeek) {
+	public AmountOfMoney getSumTransferCommissions(HODateTime startWeek) {
 		return ((TransferTable) getTable(TransferTable.TABLENAME))
 				.getSumTransferCommissions(startWeek);
 	}
@@ -2376,7 +2376,7 @@ public class DBManager implements PersistenceManager {
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME)).loadLatestTSIInjured(playerId);
 	}
 
-	public Map<Integer, Integer> loadWageHistory(int playerId) {
+	public Map<Integer, AmountOfMoney> loadWageHistory(int playerId) {
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME)).loadWageHistory(playerId);
 	}
 

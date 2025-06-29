@@ -290,12 +290,12 @@ final class SpielerTable extends AbstractTable {
 		return "";
 	}
 
-	public Map<Integer, Integer> loadWageHistory(int playerId) {
-		Map<Integer, Integer> ret = new HashMap<>();
+	public Map<Integer, AmountOfMoney> loadWageHistory(int playerId) {
+		Map<Integer, AmountOfMoney> ret = new HashMap<>();
 		String loadWageHistorySql = "select age, max(gehalt) from spieler where spielerid=? group by age";
 		try (ResultSet rs = connectionManager.executePreparedQuery(loadWageHistorySql, playerId)) {
 			while (rs != null && rs.next()) {
-				ret.put(rs.getInt(1), rs.getInt(2));
+				ret.put(rs.getInt(1), new AmountOfMoney(rs.getInt(2)));
 			}
 		} catch (SQLException e) {
 			HOLogger.instance().error(SpielerTable.class, "Error retrieving TSI: " + e);

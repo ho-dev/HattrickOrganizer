@@ -6,6 +6,7 @@ import core.gui.comp.panel.ImagePanel;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.player.Player;
+import core.util.AmountOfMoney;
 import core.util.CurrencyUtils;
 import module.training.ui.comp.DividerListener;
 import module.transfer.PlayerRetriever;
@@ -189,7 +190,7 @@ public class TransferTypePane extends JSplitPane implements ListSelectionListene
         this.sidePanel.add(income, c);
 
         int row = 2;
-        int totalIncome = 0;
+        var totalIncome = new AmountOfMoney(0);
 
         for (int i = -1; i < TransferType.NUMBER; i++) {
             final TransferTypeRecap ttc = recap.getRecap(i);
@@ -216,7 +217,7 @@ public class TransferTypePane extends JSplitPane implements ListSelectionListene
                 c.hAlign = TableLayoutConstants.RIGHT;
                 this.sidePanel.add(new JLabel(FORMAT.format(ttc.getNetIncome())), c);
 
-                totalIncome += ttc.getNetIncome();
+                totalIncome.add( ttc.getNetIncome());
             }
         }
 

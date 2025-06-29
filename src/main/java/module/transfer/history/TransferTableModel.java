@@ -110,7 +110,7 @@ public class TransferTableModel extends HOTableModel {
                 new TransferTableColumn(id++,"Price") {
                     @Override
                     public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
-                        return new ColorLabelEntry(CurrencyUtils.convertCurrency(transfer.getPrice()), ColorLabelEntry.BG_STANDARD, true, 0);
+                        return new ColorLabelEntry(transfer.getPrice(), ColorLabelEntry.BG_STANDARD);
                     }
                 },
                 new TransferTableColumn(id++,"ls.player.tsi") {

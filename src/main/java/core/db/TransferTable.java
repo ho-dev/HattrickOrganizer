@@ -32,10 +32,10 @@ public class TransferTable extends AbstractTable {
                 ColumnDescriptor.Builder.newInstance().setColumnName("buyername").setGetter((p) -> ((PlayerTransfer) p).getBuyerName()).setSetter((p, v) -> ((PlayerTransfer) p).setBuyerName((String) v)).setType(Types.VARCHAR).setLength(256).isNullable(true).build(),
                 ColumnDescriptor.Builder.newInstance().setColumnName("sellerid").setGetter((p) -> ((PlayerTransfer) p).getSellerid()).setSetter((p, v) -> ((PlayerTransfer) p).setSellerid((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
                 ColumnDescriptor.Builder.newInstance().setColumnName("sellername").setGetter((p) -> ((PlayerTransfer) p).getSellerName()).setSetter((p, v) -> ((PlayerTransfer) p).setSellerName((String) v)).setType(Types.VARCHAR).setLength(256).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("price").setGetter((p) -> ((PlayerTransfer) p).getPrice()).setSetter((p, v) -> ((PlayerTransfer) p).setPrice((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("price").setGetter((p) -> ((PlayerTransfer) p).getPrice().getSwedishKrona()).setSetter((p, v) -> ((PlayerTransfer) p).setPrice(new AmountOfMoney((Integer) v))).setType(Types.INTEGER).isNullable(true).build(),
                 ColumnDescriptor.Builder.newInstance().setColumnName("tsi").setGetter((p) -> ((PlayerTransfer) p).getTsi()).setSetter((p, v) -> ((PlayerTransfer) p).setTsi((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("motherclubfee").setGetter((p) -> ((PlayerTransfer) p).getMotherClubFee()).setSetter((p, v) -> ((PlayerTransfer) p).setMotherClubFee((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("previousclubcommission").setGetter((p) -> ((PlayerTransfer) p).getPreviousClubFee()).setSetter((p, v) -> ((PlayerTransfer) p).setPreviousClubFee((Integer) v)).setType(Types.INTEGER).isNullable(true).build()
+                ColumnDescriptor.Builder.newInstance().setColumnName("motherclubfee").setGetter((p) -> ((PlayerTransfer) p).getMotherClubFee().getSwedishKrona()).setSetter((p, v) -> ((PlayerTransfer) p).setMotherClubFee(new AmountOfMoney((Integer) v))).setType(Types.INTEGER).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("previousclubcommission").setGetter((p) -> ((PlayerTransfer) p).getPreviousClubFee().getSwedishKrona()).setSetter((p, v) -> ((PlayerTransfer) p).setPreviousClubFee(new AmountOfMoney((Integer) v))).setType(Types.INTEGER).isNullable(true).build()
         };
 	}
 
@@ -194,20 +194,20 @@ public class TransferTable extends AbstractTable {
 
     private final String getSumTransferCommissionsSql = "SELECT SUM(motherclubfee+previousclubcommission) FROM " + getTableName() + " WHERE date>=? AND date<?";
 
-    public int getSumTransferCommissions(HODateTime startOfWeek) {
+    public AmountOfMoney getSumTransferCommissions(HODateTime startOfWeek) {
         var from = startOfWeek.toDbTimestamp();
         var to = startOfWeek.plus(7, ChronoUnit.DAYS).toDbTimestamp();
 
         try (var rs = this.connectionManager.executePreparedQuery(getSumTransferCommissionsSql, from, to)) {
             if (rs != null) {
                 rs.next();
-                return rs.getInt(1);
+                return new AmountOfMoney(rs.getInt(1));
             }
         }
         catch (SQLException sqlException){
             HOLogger.instance().error(getClass(), sqlException);
         }
-        return 0;
+        return new AmountOfMoney(0);
     }
 
     private final String getTransfersSinceSql = createSelectStatement(" WHERE Date >= ?");

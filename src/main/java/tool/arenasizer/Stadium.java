@@ -1,6 +1,7 @@
 package tool.arenasizer;
 
 import core.db.AbstractTable;
+import core.util.AmountOfMoney;
 import core.util.HODateTime;
 import core.util.HOLogger;
 import lombok.Getter;
@@ -77,7 +78,7 @@ public class Stadium extends AbstractTable.Storable {
 	/**
 	 * Cost of Expansion
 	 */
-	private int expansionCosts;
+	private AmountOfMoney expansionCosts;
 
 	/**
 	 * Rebuilt date
@@ -110,7 +111,7 @@ public class Stadium extends AbstractTable.Storable {
 		vipBoxUnderConstruction = NumberUtils.toInt(properties.getProperty("expandingvip"), 0);
 		underConstruction = NumberUtils.toInt(properties.getProperty("isexpanding"), 0) > 0;
 		if (underConstruction) {
-			expansionCosts = NumberUtils.toInt(properties.getProperty("expandcost"), 0);
+			expansionCosts = AmountOfMoney.Companion.parse(properties.getProperty("expandcost"));
 		}
 		rebuiltDate = getArenaDate(properties, "rebuiltdate");
 		expansionDate = getArenaDate(properties, "expansiondate");

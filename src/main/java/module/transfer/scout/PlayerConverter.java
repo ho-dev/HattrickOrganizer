@@ -3,6 +3,7 @@ package module.transfer.scout;
 import core.constants.player.PlayerSpeciality;
 import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
+import core.util.AmountOfMoney;
 import core.util.HODateTime;
 import core.util.HOLogger;
 
@@ -563,7 +564,7 @@ Mindestgebot: [money]0[/money]
      * @param row String containing money pattern
      * @return Integer, null when no money pattern is given
      */
-    private Integer scanMoney(String row) {
+    private AmountOfMoney scanMoney(String row) {
         var sc = new Scanner(row);
         // Player Name
         sc.useDelimiter("\\[money\\]");
@@ -572,10 +573,10 @@ Mindestgebot: [money]0[/money]
         sc.close();
         sc = new Scanner(txtTmp.toString());
         sc.useDelimiter("\\[/money\\]");
-        Integer ret = null;
+        AmountOfMoney ret = null;
         if ( sc.hasNextBigInteger()){
             txtTmp = new StringBuilder(sc.next());
-            ret = Integer.parseInt(txtTmp.toString());
+            ret = AmountOfMoney.Companion.parse(txtTmp.toString());
         }
         sc.close();
         return ret;
@@ -1179,15 +1180,18 @@ Mindestgebot: [money]0[/money]
 	    player.setSetPieces(skillvalues.get((Integer) (foundskills.get(12)).get(2)));
     }
 
-    public static int getPrice(String bid, String curbid) {
-    	int price = 0;
+    public static AmountOfMoney getPrice(String bid, String curbid) {
     	try {
-    		price = Integer.parseInt(bid);
-    		if (!curbid.isEmpty() && Integer.parseInt(curbid) >= Integer.parseInt(bid)) {
-    			price = Integer.parseInt(curbid);
-    		}
+    		var price = AmountOfMoney.Companion.parse(bid);
+            if (!curbid.isEmpty()){
+                var currentBid = AmountOfMoney.Companion.parse(curbid);
+                if (currentBid != null && price != null && currentBid.getSwedishKrona()>=price.getSwedishKrona()){
+                    price = currentBid;
+                }
+            }
+            return price;
     	} catch (Exception e) { /* nothing */ }
-    	return price;
+    	return new AmountOfMoney(0);
     }
 
     public static String getDeadlineString(String tmp) {

@@ -242,13 +242,10 @@ public class RecapPanelTableModel extends HOTableModel {
         return Double.POSITIVE_INFINITY;
     }
     private IHOTableEntry createIntegerTableEntry(Integer ival, Color color4Matchtyp) {
-        return createIntegerTableEntry(ival, color4Matchtyp, false);
-    }
-    private IHOTableEntry createIntegerTableEntry(Integer ival, Color color4Matchtyp, boolean isCurrency) {
         double dval;
         String text;
         if ( ival != null){
-            text = Helper.getNumberFormat(isCurrency, 0).format(ival);
+            text = Helper.getNumberFormat( 0).format(ival);
             dval = (double) ival;
         }
         else {

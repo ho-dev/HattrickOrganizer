@@ -868,23 +868,23 @@ public class Player extends AbstractTable.Storable {
         return 0;
     }
 
-    private Map<Integer, Integer> wagesHistory = null; // age->wage
+    private Map<Integer, AmountOfMoney> wagesHistory = null; // age->wage
 
-    private Integer getWageAtAge(int age) {
+    private AmountOfMoney getWageAtAge(int age) {
         if (wagesHistory == null) {
             wagesHistory = DBManager.instance().loadWageHistory(this.getPlayerId());
         }
         return wagesHistory.get(age);
     }
 
-    public int getSumOfWage(HODateTime from, HODateTime to) {
+    public AmountOfMoney getSumOfWage(HODateTime from, HODateTime to) {
         var economyDate = HOVerwaltung.instance().getModel().getXtraDaten().getEconomyDate();
         while (!economyDate.isBefore(to)) economyDate = economyDate.plusDaysAtSameLocalTime(-7);
-        var sum = 0;
+        var sum = new AmountOfMoney(0);
         while (economyDate.isAfter(from)) {
             var wageAtDate = getWageAtAge(this.getAgeAtDate(economyDate).seasons);
             if (wageAtDate != null) {
-                sum += wageAtDate;
+                sum.add( wageAtDate);
             }
             economyDate = economyDate.plusDaysAtSameLocalTime(-7);
         }
