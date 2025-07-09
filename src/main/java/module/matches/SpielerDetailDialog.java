@@ -317,7 +317,7 @@ final class SpielerDetailDialog extends JDialog {
 			}
 
 			m_jpGehalt.getLeft().setText(gehalttext + bonus);
-			m_jpGehalt.getRight().setSpecialNumber((gehalt2.toLocale() - gehalt.toLocale()), true);
+			m_jpGehalt.getRight().setSpecialNumber(gehalt2.minus(gehalt).toLocale().floatValue(), true);
 			m_jpMartwert.getLeft().setText(m_clPlayer.getTsi() + "");
 			m_jpMartwert.getRight().setSpecialNumber(
 					(m_clVergleichsPlayer.getTsi() - m_clPlayer.getTsi()), false);

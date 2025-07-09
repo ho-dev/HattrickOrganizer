@@ -6,6 +6,7 @@ package module.transfer.transfertype;
 import module.transfer.PlayerTransfer;
 import module.transfer.TransferType;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -60,7 +61,7 @@ class TransferRecap {
         final TransferTypeRecap recap = getRecap(TransferType.FIRED_PLAYER);
 
         if (element.getType() == PlayerTransfer.BUY) {
-            recap.addOperation(element.getPrice().times(-1));
+            recap.addOperation(element.getPrice().times(BigDecimal.valueOf(-1)));
         } else {
             recap.addOperation(element.getPrice());
         }

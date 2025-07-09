@@ -2,9 +2,10 @@ package module.transfer.history;
 
 import core.util.AmountOfMoney;
 import module.transfer.PlayerTransfer;
+
+import java.math.BigDecimal;
 import java.util.List;
 
-import static core.util.CurrencyUtils.convertCurrency;
 
 /**
  * Value Object representing totals information for a selection of transfers.
@@ -14,12 +15,12 @@ import static core.util.CurrencyUtils.convertCurrency;
 class TransferTotals {
     //~ Instance fields ----------------------------------------------------------------------------
 
-    private int number_buy;
-    private int number_sell;
-    private AmountOfMoney total_buy_price;
-    private int total_buy_tsi;
-    private AmountOfMoney total_sell_price;
-    private int total_sell_tsi;
+    private int number_buy = 0;
+    private int number_sell = 0;
+    private AmountOfMoney total_buy_price = new AmountOfMoney(0);
+    private int total_buy_tsi = 0;
+    private AmountOfMoney total_sell_price= new AmountOfMoney(0);;
+    private int total_sell_tsi = 0;
 
     //~ Methods ------------------------------------------------------------------------------------
 
@@ -79,7 +80,7 @@ class TransferTotals {
      */
     final AmountOfMoney getBuyPriceAvg() {
         if (number_buy > 0) {
-            return total_buy_price.divide(number_buy);
+            return total_buy_price.divide(BigDecimal.valueOf(number_buy));
         } else {
             return new AmountOfMoney(0);
         }
@@ -123,7 +124,7 @@ class TransferTotals {
      */
     final AmountOfMoney getSellPriceAvg() {
         if (number_sell > 0) {
-            return total_sell_price.divide(number_sell);
+            return total_sell_price.divide(BigDecimal.valueOf(number_sell));
         } else {
             return new AmountOfMoney(0);
         }

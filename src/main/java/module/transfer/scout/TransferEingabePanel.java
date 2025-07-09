@@ -295,8 +295,8 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
         clSpinnerModel.setValue(clScoutEntry.getDeadline());
         jtfPlayerID.setText(String.valueOf(clScoutEntry.getPlayerID()));
         jtfName.setText(clScoutEntry.getName());
-        jtfPrice.setText(clScoutEntry.getPrice().toLocaleString());
-        jtfWage.setText(clScoutEntry.getbaseWage().toLocaleString());
+        jtfPrice.setText(clScoutEntry.getPrice() != null? clScoutEntry.getPrice().toLocaleString(): "");
+        jtfWage.setText(clScoutEntry.getbaseWage() != null?  clScoutEntry.getbaseWage().toLocaleString():"");
         jtfAge.setText(clScoutEntry.getAlter() + "." + clScoutEntry.getAgeDays());
         jtfTSI.setText(String.valueOf(clScoutEntry.getTSI()));
         jtaNotes.setText(clScoutEntry.getInfo());

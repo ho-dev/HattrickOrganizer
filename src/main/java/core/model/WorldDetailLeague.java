@@ -1,10 +1,15 @@
 package core.model;
 
 import core.db.AbstractTable;
+import core.file.xml.XMLWorldDetailsParser;
 import core.net.MyConnector;
 import core.net.OnlineWorker;
 
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.util.Map;
+
+import static core.file.xml.XMLManager.xmlValue;
 
 public class WorldDetailLeague  extends AbstractTable.Storable {
 	private int leagueId;
@@ -230,7 +235,23 @@ public class WorldDetailLeague  extends AbstractTable.Storable {
 
 	public boolean isOK() {return getCurrencyRate() != null;}
 
-    public String getCurrencyName() {
+	private void init() {
+        try {
+            var worldDataMap = XMLWorldDetailsParser.parseWorldDetailsFromString(
+                    MyConnector.instance().getWorldDetails(this.leagueId), String.valueOf( this.leagueId));
+			this.countryCode = worldDataMap.get("CountryCode");
+			this.currencyName = worldDataMap.get("CurrencyName");
+			this.currencyRate = Double.valueOf(worldDataMap.get( "CurrencyRate"));
+			this.dateFormat = worldDataMap.get( "DateFormat");
+			this.timeFormat = worldDataMap.get( "TimeFormat");
+		} catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+		return;
+    }
+
+	public String getCurrencyName() {
+		if ( currencyName == null ) init();
         return currencyName;
     }
 
@@ -239,6 +260,7 @@ public class WorldDetailLeague  extends AbstractTable.Storable {
     }
 
     public Double getCurrencyRate() {
+		if ( currencyRate == null) init();
         return currencyRate;
     }
 
@@ -250,6 +272,7 @@ public class WorldDetailLeague  extends AbstractTable.Storable {
     }
 
     public String getCountryCode() {
+		if ( countryCode == null) init();
         return countryCode;
     }
 
@@ -258,6 +281,7 @@ public class WorldDetailLeague  extends AbstractTable.Storable {
     }
 
     public String getDateFormat() {
+		if ( dateFormat == null) init();
         return dateFormat;
     }
 
@@ -266,6 +290,7 @@ public class WorldDetailLeague  extends AbstractTable.Storable {
     }
 
     public String getTimeFormat() {
+		if ( timeFormat==null) init();
         return timeFormat;
     }
 

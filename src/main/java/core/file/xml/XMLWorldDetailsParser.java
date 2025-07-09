@@ -6,6 +6,7 @@
  */
 package core.file.xml;
 
+import com.install4j.runtime.installer.helper.XmlHelper;
 import core.model.HOVerwaltung;
 import core.model.WorldDetailLeague;
 import core.util.HODateTime;
@@ -166,11 +167,17 @@ public class XMLWorldDetailsParser {
 					root = (Element) root.getElementsByTagName("Country").item(0);
 					ele = (Element) root.getElementsByTagName("CountryID").item(0);
 					map.put("CountryID", (XMLManager.getFirstChildNodeValue(ele)));
-					
+
 					// Remove for ugly second team fix
-					
-					ele = (Element) root.getElementsByTagName("CurrencyRate").item(0);
-					map.put("CurrencyRate", (XMLManager.getFirstChildNodeValue(ele)));
+
+//					ele = (Element) root.getElementsByTagName("CurrencyRate").item(0);
+//					map.put("CurrencyRate", (XMLManager.getFirstChildNodeValue(ele)));
+
+					XMLManager.xmlValue2Hash(map, root, "CountryCode");
+					XMLManager.xmlValue2Hash(map, root, "CurrencyName");
+					XMLManager.xmlValue2Hash(map, root, "CurrencyRate");
+					XMLManager.xmlValue2Hash(map, root, "DateFormat");
+					XMLManager.xmlValue2Hash(map, root, "TimeFormat");
 
 					// fertig
 					break;

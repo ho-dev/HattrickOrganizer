@@ -27,7 +27,7 @@ class TransferredPlayer {
     private int experience = 0;
     private int experienceSkillups = 0;
     private final int playerId;
-    private AmountOfMoney income;
+    private final AmountOfMoney income = new AmountOfMoney(0);
     private int leadership = 0;
     private int skillups = 0;
     private int startWeek;

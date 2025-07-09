@@ -7,8 +7,6 @@
 package tool.arenasizer;
 
 import core.util.AmountOfMoney;
-import core.util.Helper;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -26,34 +24,30 @@ public class ArenaSizer {
 	private static final AmountOfMoney MAINTENANCE_VIP = new AmountOfMoney(25);
 
 	//CREATE
-	private static AmountOfMoney STEH_AUSBAU = new AmountOfMoney(450);
-	private static AmountOfMoney SITZ_AUSBAU = new AmountOfMoney(750);
-	private static AmountOfMoney DACH_AUSBAU = new AmountOfMoney(900);
-	private static AmountOfMoney LOGEN_AUSBAU = new AmountOfMoney(3000);
-	private static AmountOfMoney ABRISS = new AmountOfMoney(60);
-	private static AmountOfMoney FIXKOSTEN = new AmountOfMoney(100000);
+	private static final AmountOfMoney STEH_AUSBAU = new AmountOfMoney(450);
+	private static final AmountOfMoney SITZ_AUSBAU = new AmountOfMoney(750);
+	private static final AmountOfMoney DACH_AUSBAU = new AmountOfMoney(900);
+	private static final AmountOfMoney LOGEN_AUSBAU = new AmountOfMoney(3000);
+	private static final AmountOfMoney ABRISS = new AmountOfMoney(60);
+	private static final AmountOfMoney FIXKOSTEN = new AmountOfMoney(100000);
 
-	static final BigDecimal TERRACES_PERCENT = new BigDecimal(0.60).setScale(3, RoundingMode.HALF_DOWN);
-	static final BigDecimal BASICS_PERCENT = new BigDecimal(0.235).setScale(3, RoundingMode.HALF_DOWN);
-	static final BigDecimal ROOF_PERCENT = new BigDecimal(0.14).setScale(3, RoundingMode.HALF_DOWN);
-	static final BigDecimal VIP_PERCENT = new BigDecimal(0.025).setScale(3, RoundingMode.HALF_DOWN);
+	static final BigDecimal TERRACES_PERCENT = new BigDecimal("0.60").setScale(3, RoundingMode.HALF_DOWN);
+	static final BigDecimal BASICS_PERCENT = new BigDecimal("0.235").setScale(3, RoundingMode.HALF_DOWN);
+	static final BigDecimal ROOF_PERCENT = new BigDecimal("0.14").setScale(3, RoundingMode.HALF_DOWN);
+	static final BigDecimal VIP_PERCENT = new BigDecimal("0.025").setScale(3, RoundingMode.HALF_DOWN);
 
 	//SUPPORTER-DISTRIBUTION
 	static final Integer SUPPORTER_NORMAL = 20;
 
-	float currencyFactor = core.model.UserParameter.instance().currencyRate;
-
-	ArenaSizer() {
-
-	}
+	ArenaSizer() {}
 
 	//~ Methods ------------------------------------------------------------------------------------
 
 	final AmountOfMoney calcMaxIncome(Stadium arena) {
-		var income = ADMISSION_PRICE_TERRACES.times(arena.getTerraces());
-		income.add(ADMISSION_PRICE_BASICS.times(arena.getBasicSeating()));
-		income.add(ADMISSION_PRICE_ROOF.times(arena.getUnderRoofSeating()));
-		income.add(ADMISSION_PRICE_VIP.times(arena.getVipBox()));
+		var income = ADMISSION_PRICE_TERRACES.times(BigDecimal.valueOf(arena.getTerraces()));
+		income.add(ADMISSION_PRICE_BASICS.times(BigDecimal.valueOf(arena.getBasicSeating())));
+		income.add(ADMISSION_PRICE_ROOF.times(BigDecimal.valueOf(arena.getUnderRoofSeating())));
+		income.add(ADMISSION_PRICE_VIP.times(BigDecimal.valueOf(arena.getVipBox())));
 		return income;
 	}
 
@@ -95,41 +89,37 @@ public class ArenaSizer {
 		var kosten = FIXKOSTEN;
 
 		if (steh > 0) {
-			kosten.add(STEH_AUSBAU.times(steh));
+			kosten.add(STEH_AUSBAU.times(BigDecimal.valueOf(steh)));
 		} else {
-			kosten.subtract(ABRISS.times(steh));
+			kosten.subtract(ABRISS.times(BigDecimal.valueOf(steh)));
 		}
 
 		if (sitz > 0) {
-			kosten.add(SITZ_AUSBAU.times(sitz));
+			kosten.add(SITZ_AUSBAU.times(BigDecimal.valueOf(sitz)));
 		} else {
-			kosten.subtract(ABRISS.times(sitz));
+			kosten.subtract(ABRISS.times(BigDecimal.valueOf(sitz)));
 		}
 
 		if (dach > 0) {
-			kosten.add(DACH_AUSBAU.times(dach));
+			kosten.add(DACH_AUSBAU.times(BigDecimal.valueOf(dach)));
 		} else {
-			kosten.subtract(ABRISS.times(dach));
+			kosten.subtract(ABRISS.times(BigDecimal.valueOf(dach)));
 		}
 
 		if (logen > 0) {
-			kosten.add(LOGEN_AUSBAU.times(logen));
+			kosten.add(LOGEN_AUSBAU.times(BigDecimal.valueOf(logen)));
 		} else {
-			kosten.subtract(ABRISS.times(logen));
+			kosten.subtract(ABRISS.times(BigDecimal.valueOf(logen)));
 		}
 
 		return  kosten;
 	}
 
-	final int calcDistribution(float arenaSize, float percent) {
-		return (int) ((arenaSize / 100.0f) * percent);
-	}
-
 	final AmountOfMoney calcMaintenance(Stadium arena) {
-		var costs = MAINTENANCE_TERRACES.times(arena.getTerraces());
-		costs.add(MAINTENANCE_BASICS.times(arena.getBasicSeating()));
-		costs.add(MAINTENANCE_ROOF.times(arena.getUnderRoofSeating()));
-		costs.add(MAINTENANCE_VIP.times(arena.getVipBox()));;
+		var costs = MAINTENANCE_TERRACES.times(BigDecimal.valueOf(arena.getTerraces()));
+		costs.add(MAINTENANCE_BASICS.times(BigDecimal.valueOf(arena.getBasicSeating())));
+		costs.add(MAINTENANCE_ROOF.times(BigDecimal.valueOf(arena.getUnderRoofSeating())));
+		costs.add(MAINTENANCE_VIP.times(BigDecimal.valueOf(arena.getVipBox())));
 		return costs;
 	}
 

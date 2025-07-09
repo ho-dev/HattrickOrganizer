@@ -22,7 +22,7 @@ buildscript {
 plugins {
     id "java"
     id "groovy"
-    id "org.jetbrains.kotlin.jvm" version "2.1.20"
+    id "org.jetbrains.kotlin.jvm" version "2.2.0"
     id "application"
     id "org.kordamp.gradle.markdown" version "2.2.0"
     id "com.github.breadmoirai.github-release" version "2.5.2"

@@ -8,7 +8,6 @@ import core.gui.model.UserColumnController;
 import core.gui.theme.ImageUtilities;
 import core.model.TranslationFacility;
 import core.model.player.Player;
-import core.util.CurrencyUtils;
 import core.util.HODateTime;
 import module.transfer.PlayerTransfer;
 import javax.swing.*;

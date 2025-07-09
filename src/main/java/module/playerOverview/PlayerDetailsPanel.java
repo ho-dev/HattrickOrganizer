@@ -234,7 +234,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         else {
             final var previousSalary =m_clComparisonPlayer.getWage();
             m_jllWage.getLeft().setText(salarytext);
-            m_jllWage.getRight().setSpecialNumber(salary.toLocale() - previousSalary.toLocale(), true);
+            m_jllWage.getRight().setSpecialNumber(salary.minus(previousSalary).toLocale().floatValue(), true);
             m_jllTSI.getLeft().setText(tsitext);
             m_jllTSI.getRight().setSpecialNumber(m_clPlayer.getTsi() - m_clComparisonPlayer.getTsi(), false);
             m_jclFormChange.setGraphicalChangeValue(m_clPlayer.getForm()

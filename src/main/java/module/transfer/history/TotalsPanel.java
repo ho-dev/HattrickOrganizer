@@ -5,7 +5,6 @@ package module.transfer.history;
 import core.gui.comp.panel.ImagePanel;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
-import core.util.AmountOfMoney;
 import module.transfer.ui.layout.TableLayout;
 
 import javax.swing.*;

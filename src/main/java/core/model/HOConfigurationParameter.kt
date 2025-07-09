@@ -33,12 +33,12 @@ open class HOConfigurationParameter(
      */
     init {
         this.value = parameters.getProperty(key)
-        if (value == null) {
-            value = DBManager.instance().loadHOConfigurationParameter(key)
-            if (value == null) {
-                value = defaultValue
+        if (this.value == null) {
+            this.value = DBManager.instance().loadHOConfigurationParameter(key)
+            if (this.value == null) {
+                this.value = defaultValue
             }
-            parameters.setProperty(key, value)
+            if ( this.value != null ) parameters.setProperty(key, this.value)
         }
     }
 

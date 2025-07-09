@@ -7,6 +7,8 @@ import core.util.AmountOfMoney;
 import core.util.HODateTime;
 import tool.arenasizer.ArenaSizer;
 
+import java.math.BigDecimal;
+
 
 /**
  * Hält die Daten für ein Spiel für die Arenastatistik
@@ -384,19 +386,19 @@ public class ArenaStatistikModel {
     }
 
     public AmountOfMoney getTerracesIncome() {
-        return  ArenaSizer.ADMISSION_PRICE_TERRACES.times(getSoldTerraces()).times(getMatchTypeFactor());
+        return  ArenaSizer.ADMISSION_PRICE_TERRACES.times(BigDecimal.valueOf(getSoldTerraces())).times(BigDecimal.valueOf(getMatchTypeFactor()));
     }
 
     public AmountOfMoney getBasicSeatIncome() {
-        return  ArenaSizer.ADMISSION_PRICE_BASICS.times(getSoldBasics()).times(getMatchTypeFactor());
+        return  ArenaSizer.ADMISSION_PRICE_BASICS.times(BigDecimal.valueOf(getSoldBasics())).times(BigDecimal.valueOf(getMatchTypeFactor()));
     }
 
     public AmountOfMoney getSeatRoofIncome() {
-        return ArenaSizer.ADMISSION_PRICE_ROOF.times(getSoldRoof()).times(getMatchTypeFactor());
+        return ArenaSizer.ADMISSION_PRICE_ROOF.times(BigDecimal.valueOf(getSoldRoof())).times(BigDecimal.valueOf(getMatchTypeFactor()));
     }
 
     public AmountOfMoney getVipIncome() {
-        return ArenaSizer.ADMISSION_PRICE_VIP.times(getSoldVip()).times(getMatchTypeFactor());
+        return ArenaSizer.ADMISSION_PRICE_VIP.times(BigDecimal.valueOf(getSoldVip())).times(BigDecimal.valueOf(getMatchTypeFactor()));
     }
 
     public AmountOfMoney getTotalIncome() {

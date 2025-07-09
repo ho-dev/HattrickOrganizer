@@ -14,6 +14,7 @@ import tool.updater.TableModel;
 import javax.swing.*;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
+import java.math.BigDecimal;
 
 
 /**
@@ -21,16 +22,10 @@ import java.awt.*;
  */
 final class ArenaPanel extends JPanel {
 
-	private static final long serialVersionUID = -3049319214078126491L;
-
-	//~ Instance fields ----------------------------------------------------------------------------
-
-	private ArenaSizer m_clArenaSizer = new ArenaSizer();
-	private JTable m_jtArena = new JTable();
-
-	//Teststadium
+	private final ArenaSizer m_clArenaSizer = new ArenaSizer();
+	private final JTable m_jtArena = new JTable();
 	private Stadium m_clStadium;
-	private String[] UEBERSCHRIFT = {"", TranslationFacility.tr("Aktuell"), TranslationFacility.tr("Maximal"),
+	private final String[] UEBERSCHRIFT = {"", TranslationFacility.tr("Aktuell"), TranslationFacility.tr("Maximal"),
 		TranslationFacility.tr("Durchschnitt"), TranslationFacility.tr("Minimal")};
 	private Stadium[] m_clStadien;
 	private IHOTableEntry[][] values;
@@ -73,8 +68,7 @@ final class ArenaPanel extends JPanel {
 					values[i][j] = createDoppelLabelEntry(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
 				else if (i == 4)
 					values[i][j] = createDoppelLabelEntry(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
-				else if (i > 4)
-					values[i][j] = createDoppelLabelEntry(ColorLabelEntry.BG_SINGLEPLAYERVALUES);
+				else values[i][j] = createDoppelLabelEntry(ColorLabelEntry.BG_SINGLEPLAYERVALUES);
 			}
 
 		}
@@ -92,8 +86,8 @@ final class ArenaPanel extends JPanel {
 	/**
 	 * create a new DoppelLabelEntry with default values
 	 *
-	 * @param background
-	 * @return
+	 * @param background Color
+	 * @return DoubleLabelEntries
 	 */
 	private DoubleLabelEntries createDoppelLabelEntry(Color background) {
 		return new DoubleLabelEntries(new ColorLabelEntry("",
@@ -127,8 +121,8 @@ final class ArenaPanel extends JPanel {
 			((DoubleLabelEntries) values[4][1]).getRight().setSpecialNumber(m_clStadium.getTotalSize() - stadium.getTotalSize(), false);
 			((DoubleLabelEntries) values[5][1]).getLeft().setText(m_clArenaSizer.calcMaxIncome(m_clStadium).toLocaleString());
 			((DoubleLabelEntries) values[5][1]).getRight().setText(m_clArenaSizer.calcMaxIncome(m_clStadium).minus(m_clArenaSizer.calcMaxIncome(stadium)).toLocaleString());
-			((DoubleLabelEntries) values[6][1]).getLeft().setText(m_clArenaSizer.calcMaintenance(m_clStadium).times(-1).toLocaleString());
-			((DoubleLabelEntries) values[6][1]).getRight().setText(m_clArenaSizer.calcMaintenance(m_clStadium).minus(m_clArenaSizer.calcMaintenance(stadium)).times(-1).toLocaleString());
+			((DoubleLabelEntries) values[6][1]).getLeft().setText(m_clArenaSizer.calcMaintenance(m_clStadium).times(BigDecimal.valueOf(-1)).toLocaleString());
+			((DoubleLabelEntries) values[6][1]).getRight().setText(m_clArenaSizer.calcMaintenance(m_clStadium).minus(m_clArenaSizer.calcMaintenance(stadium)).times(BigDecimal.valueOf(-1)).toLocaleString());
 			((DoubleLabelEntries) values[7][1]).getLeft().setText(m_clArenaSizer.calcMaxIncome(m_clStadium).minus(m_clArenaSizer.calcMaintenance(m_clStadium)).toLocaleString());
 			((DoubleLabelEntries) values[7][1]).getRight().setText(
 					m_clArenaSizer.calcMaxIncome(m_clStadium)
@@ -156,14 +150,14 @@ final class ArenaPanel extends JPanel {
 				((DoubleLabelEntries) values[4][i]).getRight().setSpecialNumber(m_clStadien[i - 2].getTotalSize() - m_clStadium.getTotalSize(), false);
 				((DoubleLabelEntries) values[5][i]).getLeft().setText(m_clArenaSizer.calcMaxIncome(m_clStadien[i - 2]).toLocaleString());
 				((DoubleLabelEntries) values[5][i]).getRight().setText(m_clArenaSizer.calcMaxIncome(m_clStadien[i - 2]).minus(m_clArenaSizer.calcMaxIncome(m_clStadium)).toLocaleString());
-				((DoubleLabelEntries) values[6][i]).getLeft().setText(m_clArenaSizer.calcMaintenance(m_clStadien[i - 2]).times(-1).toLocaleString());
-				((DoubleLabelEntries) values[6][i]).getRight().setText(m_clArenaSizer.calcMaintenance(m_clStadien[i - 2]).minus(m_clArenaSizer.calcMaintenance(m_clStadium)).times(-1).toLocaleString());
+				((DoubleLabelEntries) values[6][i]).getLeft().setText(m_clArenaSizer.calcMaintenance(m_clStadien[i - 2]).times(BigDecimal.valueOf(-1)).toLocaleString());
+				((DoubleLabelEntries) values[6][i]).getRight().setText(m_clArenaSizer.calcMaintenance(m_clStadien[i - 2]).minus(m_clArenaSizer.calcMaintenance(m_clStadium)).times(BigDecimal.valueOf(-1)).toLocaleString());
 				((DoubleLabelEntries) values[7][i]).getLeft().setText(m_clArenaSizer.calcMaxIncome(m_clStadien[i - 2]).minus(m_clArenaSizer.calcMaintenance(m_clStadien[i - 2])).toLocaleString());
 				((DoubleLabelEntries) values[7][i]).getRight().setText(m_clArenaSizer.calcMaxIncome(m_clStadien[i - 2])
 						.minus(m_clArenaSizer.calcMaintenance(m_clStadien[i - 2]))
 						.minus(m_clArenaSizer.calcMaxIncome(m_clStadium))
 						.minus(m_clArenaSizer.calcMaintenance(m_clStadium)).toLocaleString());
-				((DoubleLabelEntries) values[8][i]).getLeft().setText(m_clStadien[i - 2].getExpansionCosts().times(-1).toLocaleString());
+				((DoubleLabelEntries) values[8][i]).getLeft().setText(m_clStadien[i - 2].getExpansionCosts().times(BigDecimal.valueOf(-1)).toLocaleString());
 			}
 
 			m_jtArena.setModel(new TableModel(values, UEBERSCHRIFT));

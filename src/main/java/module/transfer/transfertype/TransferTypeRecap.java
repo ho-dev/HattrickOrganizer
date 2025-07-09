@@ -12,7 +12,7 @@ class TransferTypeRecap {
     //~ Instance fields ----------------------------------------------------------------------------
 
     /** Net Income of all the transfers of this type */
-    private AmountOfMoney netIncome;
+    private final AmountOfMoney netIncome = new AmountOfMoney(0);
 
     /** Number of transfers of this type */
     private int number;

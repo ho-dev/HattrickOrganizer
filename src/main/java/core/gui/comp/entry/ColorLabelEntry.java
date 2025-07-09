@@ -148,11 +148,17 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
      * non-currency interest
      */
     public ColorLabelEntry(AmountOfMoney amount, Color bg_color) {
-        this.number = amount.getSwedishKrona();
-        setHorizontalAlignment(SwingConstants.RIGHT);
-        createComponent();
-        setText(amount.toLocaleString());
+        if (amount != null){
+            this.number = amount.getSwedishKrona().doubleValue();
+            setHorizontalAlignment(SwingConstants.RIGHT);
+            setText(amount.toLocaleString());
+        }
+        else {
+            this.number = 0;
+            setText("");
+        }
         m_clBGColor = bg_color;
+        createComponent();
         updateComponent();
     }
 

@@ -12,7 +12,6 @@ import core.model.UserParameter;
 import core.model.player.Player;
 import core.util.AmountOfMoney;
 import core.util.HODateTime;
-import core.util.Helper;
 import module.transfer.PlayerRetriever;
 import module.transfer.PlayerTransfer;
 import module.transfer.XMLParser;
@@ -25,7 +24,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.Vector;
-import static core.util.CurrencyUtils.convertCurrency;
 
 /**
  * Panel for showing detailed information on a player.

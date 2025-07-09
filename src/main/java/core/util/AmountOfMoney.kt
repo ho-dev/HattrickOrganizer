@@ -2,20 +2,24 @@ package core.util
 
 import core.file.xml.XMLTeamDetailsParser
 import core.model.HOConfigurationParameter
+import core.model.HOVerwaltung
 import core.model.WorldDetailLeague
 import core.net.MyConnector
+import java.math.BigDecimal
 import java.text.NumberFormat
 import java.util.*
 
-class AmountOfMoney(var swedishKrona: Long) {
+class AmountOfMoney(var swedishKrona: BigDecimal) {
+    constructor(swedishKrona: Long) : this(BigDecimal.valueOf(swedishKrona))
 
     companion object {
 
-        private var currencyCodes : Set<String>? = null
-        var currencyCode = HOConfigurationParameter("CurrencyCode", null)
-        private var currency : Currency? = null
+        private var currencyCodes: Set<String>? = null
+        private var currencyCode = HOConfigurationParameter("CurrencyCode", null)
+        private var currency: Currency? = null
+        private var currencyFormatter: NumberFormat? = null
 
-        public fun getCurrencyCodes() : Set<String> {
+        fun getCurrencyCodes(): Set<String> {
             if (currencyCodes == null) {
                 currencyCodes = emptySet()
                 for (worldDetails in WorldDetailLeague.allLeagues) {
@@ -29,28 +33,41 @@ class AmountOfMoney(var swedishKrona: Long) {
             return currencyCodes!!
         }
 
-        public fun getCurrency() : Currency?{
-            if ( currency == null){
-                currency = getCurrency(currencyCode.getValue())
-            }
-            return currency
-        }
-
-        private fun getCurrency(value: WorldDetailLeague) : Currency? {
+        private fun getCurrency(worldDetailLeague: WorldDetailLeague): Currency? {
             for (_currency in Currency.getAvailableCurrencies()) {
-                if (_currency.symbol.equals(value.currencyName)) {
+                if (_currency.symbol.equals(worldDetailLeague.currencyName)) {
                     return _currency;
                 }
             }
             return null;
         }
 
-        private fun getCurrency(currencyCode: String?) : Currency?{
-            if ( currencyCode != null) return Currency.getInstance(currencyCode)
-            return null
+        fun getCurrencyCode(): String {
+            if (currencyCode.getValue() == null) {
+                var countryId = HOVerwaltung.instance().model.xtraDaten.countryId
+                for (worldDetails in WorldDetailLeague.allLeagues) {
+                    if (worldDetails.countryId.equals(countryId)) {
+                        for (_currency in Currency.getAvailableCurrencies()) {
+                            if (_currency.symbol.equals(worldDetails.currencyName)) {
+                                currencyCode.setValue( _currency?.currencyCode)
+                                return currencyCode.getValue()!!
+                            }
+                        }
+                    }
+                }
+                currencyCode.setValue(NumberFormat.getCurrencyInstance().currency.currencyCode)
+            }
+            return currencyCode.getValue()!!
         }
 
-        public var currencyFormatter = getNumberFormat(currencyCode.getValue())
+        fun getCurrency(): Currency? {
+            if ( this.currency == null) {
+                var code = this.getCurrencyCode()
+                if (code != null) this.currency = Currency.getInstance(code)
+            }
+            return this.currency
+        }
+
 
         /**
          * Parse currency value from string.
@@ -59,122 +76,97 @@ class AmountOfMoney(var swedishKrona: Long) {
          * @return Integer, null on parse error
          */
         fun parse(v: String?): AmountOfMoney? {
-            var amount: Double? = 0.0
+            var amount: Number? = null
             try {
-                amount = currencyFormatter?.parse(v)?.toDouble()
+                amount = currencyFormatter?.parse(v)
             } catch (ignored: Exception) {
                 try {
-                    amount = Helper.getNumberFormat(0).parse(v).toDouble()
-                }
-                catch (ex: Exception) {
+                    amount = Helper.getNumberFormat(0).parse(v)
+                } catch (ex: Exception) {
                     HOLogger.instance().error(Helper::class.java, "error parsing currency " + ex)
                     return null
                 }
             }
-            return AmountOfMoney((amount?.plus(0.5))?.toLong() ?:0 )
+            return AmountOfMoney(BigDecimal(amount?.toDouble() ?: 0.0))
         }
 
-        private fun getNumberFormat(currencyCode: String?) : NumberFormat? {
-            if (currencyCode != null) {
+        private fun getCurrencyFormatter(): NumberFormat {
+            if (this.currencyFormatter == null) {
+                var currencyCode = getCurrencyCode()
                 for (locale in NumberFormat.getAvailableLocales()) {
                     var ret = NumberFormat.getCurrencyInstance(locale);
-                    if (ret.currency.currencyCode.equals(currencyCode)) return ret
-                }
-            }
-            return null
-        }
-
-        var exchangeRate :  Double? = null
-
-        private fun getExchangeRate(): Double {
-            if ( exchangeRate == null) {
-                if (currencyCode.getValue() == null) {
-                    val teamProperties = MyConnector.instance().getTeamDetails(-1)
-                    val teamInfoList = XMLTeamDetailsParser.getTeamInfoFromString(teamProperties)
-                    for (info in teamInfoList) {
-                        if (info.isPrimaryTeam) {
-                            val countryId = info.countryId.toInt()
-                            for (worldDetails in WorldDetailLeague.allLeagues) {
-                                if (worldDetails.countryId.equals(countryId)) {
-                                    exchangeRate = worldDetails.currencyRate
-                                    initCurrency(worldDetails.currencyName)
-                                    break
-                                }
-                            }
-                            break
-                        }
+                    if (ret.currency.currencyCode.equals(currencyCode)) {
+                        this.currencyFormatter = ret
+                        return ret
                     }
                 }
+                this.currencyFormatter = NumberFormat.getCurrencyInstance()
+            }
+            return this.currencyFormatter!!
+        }
 
-                if (currency == null) {
-                    currency = getCurrency(currencyCode.getValue())
-                }
+        private var exchangeRate: BigDecimal? = null
 
-                if ( currency != null) {
-                    currencyFormatter = getNumberFormat(currency!!.currencyCode)
+        private fun getExchangeRate(): BigDecimal {
+            if (exchangeRate == null) {
+                var curr = getCurrency();
+                if (curr != null) {
                     for (worldDetails in WorldDetailLeague.allLeagues) {
                         if (worldDetails.currencyName.equals(currency!!.symbol)) {
-                            exchangeRate = worldDetails.currencyRate
+                            exchangeRate = BigDecimal(worldDetails.currencyRate)
                             break;
                         }
 
                     }
                 }
-
-                if ( exchangeRate == null) exchangeRate = 1.0
-
+                if (exchangeRate == null) exchangeRate = BigDecimal(1)
             }
-            return exchangeRate!!.toDouble()
+            return exchangeRate!!
         }
 
-        private fun initCurrency(currencySymbol: String) {
-            for (_currency in Currency.getAvailableCurrencies()) {
-                if (_currency.symbol.equals(currencySymbol)) {
-                    currency = _currency
-                    currencyCode.setValue(currency?.currencyCode)
-                    currencyFormatter = getNumberFormat(currency?.currencyCode)
-                    break
-                }
+        fun setCurrencyCode(inCurrencyCode: String) {
+            if (!inCurrencyCode.equals(this.currencyCode.getValue())) {
+                currencyCode.setValue(inCurrencyCode)
+                currency = null
+                currencyFormatter = null
+                exchangeRate = null
             }
-        }
-
-        public fun setCurrencyCode(inCurrencyCode: String){
-            currencyCode.setValue(inCurrencyCode)
-            currency = Currency.getInstance(currencyCode.getValue())
-            currencyFormatter = getNumberFormat(currencyCode.getValue())
-            exchangeRate = null
         }
 
         fun getSelectedCurrencyCode(): String? {
             var cur = getCurrency()
-            if (cur!=null){
+            if (cur != null) {
                 return getCurrencyInfo(cur)
             }
             return null
         }
 
         private fun getCurrencyInfo(cur: Currency?): String? {
-            if ( cur != null) {
+            if (cur != null) {
                 return cur.currencyCode + ": " + cur.displayName + " (" + cur.symbol + ")"
             }
             return null
         }
 
-        public fun fromLocale(amount : Long) : AmountOfMoney{
-            return AmountOfMoney((amount * getExchangeRate()).toLong());
+        public fun fromLocale(amount: BigDecimal): AmountOfMoney {
+            return AmountOfMoney(amount.times(getExchangeRate()))
         }
+
     }
 
     /**
-     * Rounding to the smallest monetary unit in hattrick, which are 100 swedish krona
-     * and converting to the local currency
+     * Convert to the local currency
      */
-    fun toLocale(): Long {
-        return ((swedishKrona/100.0 + 0.5).toLong() * 100 / getExchangeRate()).toLong()
+    fun toLocale(): BigDecimal {
+        return this.swedishKrona / getExchangeRate();
     }
 
-    fun toLocaleString(): String {
-        return currencyFormatter?.format(this.toLocale()) ?: this.toLocale().toString()
+    @JvmOverloads
+    fun toLocaleString( decimals : Int = 0): String {
+        var formatter =  getCurrencyFormatter()
+        formatter.maximumFractionDigits=decimals
+        formatter.minimumFractionDigits=decimals
+        return formatter.format(this.toLocale())
     }
 
     fun add(amountOfMoney: AmountOfMoney) {
@@ -188,11 +180,32 @@ class AmountOfMoney(var swedishKrona: Long) {
     fun plus(amount: AmountOfMoney): AmountOfMoney {
         return AmountOfMoney(this.swedishKrona + amount.swedishKrona)
     }
+
     fun minus(amount: AmountOfMoney): AmountOfMoney {
         return AmountOfMoney(this.swedishKrona - amount.swedishKrona)
     }
 
-    fun times(factor: Double): AmountOfMoney { return AmountOfMoney((this.swedishKrona*factor).toLong()) }
-    fun divide(divisor: Double) : AmountOfMoney { return AmountOfMoney((this.swedishKrona/divisor).toLong())}
-    fun equals(other: AmountOfMoney) : Boolean { return this.swedishKrona.equals(other.swedishKrona)}
+    fun times(factor: BigDecimal): AmountOfMoney {
+        return AmountOfMoney(this.swedishKrona.times(factor))
+    }
+
+    fun divide(divisor: BigDecimal): AmountOfMoney {
+        return AmountOfMoney(this.swedishKrona.divide(divisor))
+    }
+
+    fun divide(divisor: AmountOfMoney): BigDecimal {
+        return this.swedishKrona.divide(divisor.swedishKrona)
+    }
+
+    fun equals(other: AmountOfMoney): Boolean {
+        return this.swedishKrona.equals(other.swedishKrona)
+    }
+
+    fun isGreaterThan(i: AmountOfMoney): Boolean {
+        return this.swedishKrona.compareTo(i.swedishKrona) == 1
+    }
+
+    fun isLessThan(i: AmountOfMoney): Boolean {
+        return this.swedishKrona.compareTo(i.swedishKrona) == -1
+    }
 }

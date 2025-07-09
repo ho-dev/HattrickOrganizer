@@ -1,5 +1,6 @@
 package core.db;
 
+import core.util.AmountOfMoney;
 import core.util.HODateTime;
 import core.util.HOLogger;
 import java.sql.ResultSet;
@@ -227,7 +228,8 @@ public abstract class AbstractTable {
 							case Types.TIME, Types.DATE, Types.TIMESTAMP_WITH_TIMEZONE, Types.TIME_WITH_TIMEZONE, Types.TIMESTAMP -> getHODateTime(rs, c.getColumnName());
 							case Types.BOOLEAN -> getBoolean(rs,c.getColumnName());
 							case Types.DOUBLE -> getDouble(rs, c.getColumnName());
-							case Types.DECIMAL, Types.FLOAT, Types.REAL -> getFloat(rs, c.getColumnName());
+							case Types.DECIMAL -> getAmountOfMoney(rs, c.getColumnName());
+							case Types.FLOAT, Types.REAL -> getFloat(rs, c.getColumnName());
 							default -> throw new IllegalStateException("Unexpected value: " + c.getType());
 						};
 						c.setter.accept(object, value);
@@ -246,6 +248,14 @@ public abstract class AbstractTable {
 			HOLogger.instance().error(getClass(), stringBuilder.toString());
 		}
 		return ret;
+	}
+
+	private AmountOfMoney getAmountOfMoney(ResultSet rs, String columnName) throws SQLException {
+		var ret = rs.getBigDecimal(columnName);
+		if ( rs.wasNull()){
+			return null;
+		}
+		return new AmountOfMoney(ret);
 	}
 
 	/**
@@ -558,6 +568,20 @@ public abstract class AbstractTable {
 		return false;
 	}
 
+	private boolean columnHasDataType(String columnName, String typeName) throws SQLException {
+		String sql = "SELECT TYPE_NAME FROM INFORMATION_SCHEMA.SYSTEM_COLUMNS WHERE TABLE_NAME = '"
+				+ getTableName().toUpperCase()
+				+ "' AND COLUMN_NAME = '"
+				+ columnName.toUpperCase()
+				+ "' AND TYPE_NAME = '"
+				+ typeName.toUpperCase()
+				+ "'";
+		try (ResultSet rs = connectionManager.executeQuery(sql)) {
+			if (rs != null) return rs.next();
+		}
+		return false;
+
+	}
 	private boolean columnExistsInTable(String columnName) throws SQLException {
 		String sql = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.SYSTEM_COLUMNS WHERE TABLE_NAME = '"
 				+ getTableName().toUpperCase()
@@ -618,6 +642,12 @@ public abstract class AbstractTable {
 			if (rs != null) return rs.next();
 		}
 		return false;
+	}
+
+	public void tryChangeColumnDataType(String columnName , String fromType, String toType) throws SQLException {
+		if ( columnHasDataType(columnName, fromType)){
+			tryChangeColumn(columnName, toType);
+		}
 	}
 
 	public static class Storable {

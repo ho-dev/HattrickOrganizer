@@ -101,6 +101,17 @@ final class DBUpdater {
 			worldDetailsTable.tryAddColumn("DATE_FORMAT", "VARCHAR(128)");
 			worldDetailsTable.tryAddColumn("TIME_FORMAT", "VARCHAR(128)");
 		}
+
+		var playerTable = dbManager.getTable(SpielerTable.TABLENAME);
+		playerTable.tryChangeColumnDataType("GEHALT", "INTEGER", "DECIMAL");
+
+		var scoutTable = dbManager.getTable(ScoutTable.TABLENAME);
+		scoutTable.tryChangeColumnDataType("PRICE","INTEGER", "DECIMAL");
+
+		var transferTable = dbManager.getTable(TransferTable.TABLENAME);
+		transferTable.tryChangeColumnDataType("PRICE", "INTEGER", "DECIMAL");
+		transferTable.tryChangeColumnDataType("MOTHERCLUBFEE", "INTEGER", "DECIMAL");
+
 		updateDBVersion(dbVersion, 1000);
 	}
 

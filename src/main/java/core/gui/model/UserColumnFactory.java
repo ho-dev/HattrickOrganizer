@@ -644,11 +644,8 @@ final public class UserColumnFactory {
                 final var gehalt = player.getWage();
                 final String gehalttext = gehalt.toLocaleString();
                 if (playerCompare == null) {
-                    return new DoubleLabelEntries(new ColorLabelEntry(gehalt.getSwedishKrona(),
-                            gehalttext + bonus,
-                            ColorLabelEntry.FG_STANDARD,
-                            ColorLabelEntry.BG_STANDARD,
-                            SwingConstants.RIGHT),
+                    return new DoubleLabelEntries(new ColorLabelEntry(gehalt,
+                            ColorLabelEntry.BG_STANDARD),
                             new ColorLabelEntry("",
                                     ColorLabelEntry.FG_STANDARD,
                                     ColorLabelEntry.BG_STANDARD,
@@ -657,11 +654,8 @@ final public class UserColumnFactory {
 
                 final var gehalt2 = playerCompare.getWage();
                 final var diff = gehalt.minus(gehalt2);
-                return new DoubleLabelEntries(new ColorLabelEntry(gehalt.getSwedishKrona(),
-                        gehalttext + bonus,
-                        ColorLabelEntry.FG_STANDARD,
-                        ColorLabelEntry.BG_STANDARD,
-                        SwingConstants.RIGHT),
+                return new DoubleLabelEntries(new ColorLabelEntry(gehalt,
+                        ColorLabelEntry.BG_STANDARD),
                         new ColorLabelEntry(diff, ColorLabelEntry.BG_STANDARD));
             }
         };
@@ -971,12 +965,6 @@ final public class UserColumnFactory {
 
     private static IHOTableEntry getTrainerTransferEntry(Player player, int i) {
         var costs = player.calculateCoachConversionCosts(i);
-        var string = "";
-        var swedishKrona = 0L;
-        if (costs != null){
-            string = costs.toLocaleString();
-            swedishKrona = costs.getSwedishKrona();
-        }
-        return new ColorLabelEntry(swedishKrona, string, ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
+        return new ColorLabelEntry(costs, ColorLabelEntry.BG_STANDARD);
     }
 }

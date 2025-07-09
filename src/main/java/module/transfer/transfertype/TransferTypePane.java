@@ -245,7 +245,7 @@ public class TransferTypePane extends JSplitPane implements ListSelectionListene
         c.col1 = 3;
         c.col2 = c.col1;
         c.hAlign = TableLayoutConstants.RIGHT;
-        this.sidePanel.add(new JLabel(FORMAT.format(totalIncome)), c);
+        this.sidePanel.add(new JLabel(totalIncome.toLocaleString()), c);
 
         final DefaultTableSorter sorter = (DefaultTableSorter) transferTable.getModel();
         sorter.setTableModel(new TransferTypeTableModel(transferred));

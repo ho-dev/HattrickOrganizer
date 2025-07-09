@@ -1185,7 +1185,7 @@ Mindestgebot: [money]0[/money]
     		var price = AmountOfMoney.Companion.parse(bid);
             if (!curbid.isEmpty()){
                 var currentBid = AmountOfMoney.Companion.parse(curbid);
-                if (currentBid != null && price != null && currentBid.getSwedishKrona()>=price.getSwedishKrona()){
+                if (currentBid != null && price != null && !currentBid.isLessThan(price)){
                     price = currentBid;
                 }
             }

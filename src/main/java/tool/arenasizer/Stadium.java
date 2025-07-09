@@ -156,4 +156,17 @@ public class Stadium extends AbstractTable.Storable {
 	public Optional<Integer> getFutureVipBoxes() {
 		return isUnderConstruction() ? Optional.of(getVipBox() + getVipBoxUnderConstruction()) : Optional.empty();
 	}
+
+	public void setExpansionCosts(AmountOfMoney v){
+		this.expansionCosts = v;
+	}
+
+	public void setExpansionCosts(Integer v){
+		if ( v != null){
+			this.expansionCosts = new AmountOfMoney(v.longValue());
+		}
+		else {
+			this.expansionCosts = null;
+		}
+	}
 }

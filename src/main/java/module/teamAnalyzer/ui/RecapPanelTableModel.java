@@ -12,7 +12,6 @@ import core.gui.theme.ThemeManager;
 import core.model.TranslationFacility;
 import core.model.enums.MatchType;
 import core.model.match.Matchdetails;
-import core.util.CurrencyUtils;
 import core.util.Helper;
 import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.report.TeamReport;
@@ -333,8 +332,10 @@ public class RecapPanelTableModel extends HOTableModel {
     public TeamLineup getTeamMatchReport(int minSelectionIndex) {
         if ( teamReport != null){
             var table = getTable();
-            var modelIndex = table.convertRowIndexToModel(minSelectionIndex);
-            return teamReport.getTeamMatchReport(modelIndex);
+            if ( table != null) {
+                var modelIndex = table.convertRowIndexToModel(minSelectionIndex);
+                return teamReport.getTeamMatchReport(modelIndex);
+            }
         }
         return null;
     }

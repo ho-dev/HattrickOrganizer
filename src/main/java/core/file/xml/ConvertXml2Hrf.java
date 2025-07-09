@@ -38,6 +38,8 @@ import static core.net.OnlineWorker.*;
  */
 public class ConvertXml2Hrf {
 
+	private static List<TeamInfo> teamInfoList;
+
 	/**
 	 * Utility class - private constructor enforces noninstantiability.
 	 */
@@ -152,14 +154,15 @@ public class ConvertXml2Hrf {
 		if (areTransfersMissing(economyDataMap)) {
 			HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.transfers"), progressIncrement);
 			PlayerTransfer.downloadMissingTransfers(teamId);
-			var commission = new AmountOfMoney(Integer.parseInt(economyDataMap.get("IncomeSoldPlayersCommission")));
+			var commission = new AmountOfMoney( Integer.parseInt(economyDataMap.get("IncomeSoldPlayersCommission")));
 			var lastCommission = new AmountOfMoney(Integer.parseInt(economyDataMap.get("LastIncomeSoldPlayersCommission")));
-			if (commission.getSwedishKrona() > 0 || lastCommission.getSwedishKrona() > 0) {
+			var noMoney = new AmountOfMoney(0);
+			if (commission.isGreaterThan(noMoney) || lastCommission.isGreaterThan( noMoney)) {
 				var soldPlayers = DBManager.instance().loadTeamTransfers(teamId, true);
-				if (commission.getSwedishKrona() > 0) {
+				if (commission.isGreaterThan( noMoney)) {
 					PlayerTransfer.downloadMissingTransferCommissions(soldPlayers, commission, HODateTime.now().toHTWeek());
 				}
-				if (lastCommission.getSwedishKrona() > 0) {
+				if (lastCommission.isGreaterThan( noMoney)) {
 					PlayerTransfer.downloadMissingTransferCommissions(soldPlayers, commission, HODateTime.now().minus(7, ChronoUnit.DAYS).toHTWeek());
 				}
 			}
@@ -278,15 +281,15 @@ public class ConvertXml2Hrf {
 				var previousWeek = HODateTime.now().minus(7, ChronoUnit.DAYS).toHTWeek();
 				var transfers = DBManager.instance().getTransfersSince(HODateTime.fromHTWeek(previousWeek).toDbTimestamp());
 				if (income > 0) {
-					var storedIncome = transfers.stream().filter(i -> i.getSellerid() == teamId).mapToLong(i->i.getPrice().getSwedishKrona()).sum();
+					var storedIncome = transfers.stream().filter(i -> i.getSellerid() == teamId).mapToLong(i->i.getPrice().getSwedishKrona().longValue()).sum();
 					if (storedIncome != income) return true;
 				}
 				if (costs > 0) {
-					var storedCosts = transfers.stream().filter(i -> i.getBuyerid() == teamId).mapToLong(i->i.getPrice().getSwedishKrona()).sum();
+					var storedCosts = transfers.stream().filter(i -> i.getBuyerid() == teamId).mapToLong(i->i.getPrice().getSwedishKrona().longValue()).sum();
 					if (storedCosts != costs) return true;
 				}
 				if (commission > 0) {
-					var storedCommission = transfers.stream().mapToLong(i -> i.getMotherClubFee().getSwedishKrona() + i.getPreviousClubFee().getSwedishKrona()).sum();
+					var storedCommission = transfers.stream().mapToLong(i -> i.getMotherClubFee().getSwedishKrona().longValue() + i.getPreviousClubFee().getSwedishKrona().longValue()).sum();
 					if (storedCommission != commission) return true;
 				}
 			}

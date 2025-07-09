@@ -10,6 +10,7 @@ import core.util.HODateTime;
 import core.util.HOLogger;
 import core.util.Helper;
 
+import java.math.BigDecimal;
 import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.List;
@@ -177,7 +178,7 @@ public class PlayerTransfer extends AbstractTable.Storable {
      */
     private AmountOfMoney calcMotherClubFee(int teamId){
         var player = getPlayerInfo();
-        if (player != null && player.isHomeGrown() && this.sellerid != teamId) return this.price .times(.02);    // 2%
+        if (player != null && player.isHomeGrown() && this.sellerid != teamId) return this.price.times( BigDecimal.valueOf(.02));    // 2%
         return new AmountOfMoney((0));
     }
 
@@ -233,7 +234,7 @@ public class PlayerTransfer extends AbstractTable.Storable {
                         case 7, 8, 9 -> 0.025;
                         default -> min(0.04, 0.025 + matchCount / 10 * 0.005);
                     };
-                    return getPrice().times(percentage);
+                    return getPrice().times(BigDecimal.valueOf(percentage));
                 }
             }
         }
@@ -264,7 +265,7 @@ public class PlayerTransfer extends AbstractTable.Storable {
                         if (!transfer.getDate().isBefore(startWeek) && !transfer.getDate().isAfter(startWeek.plus(7, ChronoUnit.DAYS))) {
                             sum.add(transfer.getMotherClubFee());
                             sum.add(transfer.getPreviousClubFee());
-                            if (sum.getSwedishKrona() >= commission.getSwedishKrona()) return;
+                            if (!sum.isLessThan(commission)) return;
                         }
                     }
                 }
