@@ -17,9 +17,9 @@ class TransferTotals {
 
     private int number_buy = 0;
     private int number_sell = 0;
-    private AmountOfMoney total_buy_price = new AmountOfMoney(0);
+    private final AmountOfMoney total_buy_price = new AmountOfMoney(0);
     private int total_buy_tsi = 0;
-    private AmountOfMoney total_sell_price= new AmountOfMoney(0);;
+    private final AmountOfMoney total_sell_price= new AmountOfMoney(0);
     private int total_sell_tsi = 0;
 
     //~ Methods ------------------------------------------------------------------------------------

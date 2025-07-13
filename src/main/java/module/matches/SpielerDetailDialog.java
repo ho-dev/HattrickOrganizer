@@ -27,7 +27,6 @@ import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.Serial;
-import java.text.NumberFormat;
 
 /**
  * Zeigt Details zu einem Player zu einer Zeit an

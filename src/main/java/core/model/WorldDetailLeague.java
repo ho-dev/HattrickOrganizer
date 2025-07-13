@@ -3,13 +3,7 @@ package core.model;
 import core.db.AbstractTable;
 import core.file.xml.XMLWorldDetailsParser;
 import core.net.MyConnector;
-import core.net.OnlineWorker;
-
 import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.Map;
-
-import static core.file.xml.XMLManager.xmlValue;
 
 public class WorldDetailLeague  extends AbstractTable.Storable {
 	private int leagueId;
@@ -247,8 +241,7 @@ public class WorldDetailLeague  extends AbstractTable.Storable {
 		} catch (IOException e) {
             throw new RuntimeException(e);
         }
-		return;
-    }
+	}
 
 	public String getCurrencyName() {
 		if ( currencyName == null ) init();

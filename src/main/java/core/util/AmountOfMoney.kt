@@ -1,10 +1,8 @@
 package core.util
 
-import core.file.xml.XMLTeamDetailsParser
 import core.model.HOConfigurationParameter
 import core.model.HOVerwaltung
 import core.model.WorldDetailLeague
-import core.net.MyConnector
 import java.math.BigDecimal
 import java.text.NumberFormat
 import java.util.*
@@ -23,9 +21,9 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
             if (currencyCodes == null) {
                 currencyCodes = emptySet()
                 for (worldDetails in WorldDetailLeague.allLeagues) {
-                    var currency = getCurrency(worldDetails)
+                    val currency = getCurrency(worldDetails)
                     if (currency != null) {
-                        var currencyInfo = getCurrencyInfo(currency)
+                        val currencyInfo = getCurrencyInfo(currency)
                         currencyCodes?.plus(currencyInfo)
                     }
                 }
@@ -36,15 +34,15 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
         private fun getCurrency(worldDetailLeague: WorldDetailLeague): Currency? {
             for (_currency in Currency.getAvailableCurrencies()) {
                 if (_currency.symbol.equals(worldDetailLeague.currencyName)) {
-                    return _currency;
+                    return _currency
                 }
             }
-            return null;
+            return null
         }
 
         fun getCurrencyCode(): String {
             if (currencyCode.getValue() == null) {
-                var countryId = HOVerwaltung.instance().model.xtraDaten.countryId
+                val countryId = HOVerwaltung.instance().model.xtraDaten.countryId
                 for (worldDetails in WorldDetailLeague.allLeagues) {
                     if (worldDetails.countryId.equals(countryId)) {
                         for (_currency in Currency.getAvailableCurrencies()) {
@@ -62,8 +60,8 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
 
         fun getCurrency(): Currency? {
             if ( this.currency == null) {
-                var code = this.getCurrencyCode()
-                if (code != null) this.currency = Currency.getInstance(code)
+                val code = this.getCurrencyCode()
+                this.currency = Currency.getInstance(code)
             }
             return this.currency
         }
@@ -76,10 +74,10 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
          * @return Integer, null on parse error
          */
         fun parse(v: String?): AmountOfMoney? {
-            var amount: Number? = null
+            var amount: Number?
             try {
                 amount = currencyFormatter?.parse(v)
-            } catch (ignored: Exception) {
+            } catch (_: Exception) {
                 try {
                     amount = Helper.getNumberFormat(0).parse(v)
                 } catch (ex: Exception) {
@@ -92,9 +90,9 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
 
         private fun getCurrencyFormatter(): NumberFormat {
             if (this.currencyFormatter == null) {
-                var currencyCode = getCurrencyCode()
+                val currencyCode = getCurrencyCode()
                 for (locale in NumberFormat.getAvailableLocales()) {
-                    var ret = NumberFormat.getCurrencyInstance(locale);
+                    val ret = NumberFormat.getCurrencyInstance(locale)
                     if (ret.currency.currencyCode.equals(currencyCode)) {
                         this.currencyFormatter = ret
                         return ret
@@ -109,12 +107,12 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
 
         private fun getExchangeRate(): BigDecimal {
             if (exchangeRate == null) {
-                var curr = getCurrency();
+                val curr = getCurrency()
                 if (curr != null) {
                     for (worldDetails in WorldDetailLeague.allLeagues) {
                         if (worldDetails.currencyName.equals(currency!!.symbol)) {
                             exchangeRate = BigDecimal(worldDetails.currencyRate)
-                            break;
+                            break
                         }
 
                     }
@@ -134,7 +132,7 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
         }
 
         fun getSelectedCurrencyCode(): String? {
-            var cur = getCurrency()
+            val cur = getCurrency()
             if (cur != null) {
                 return getCurrencyInfo(cur)
             }
@@ -148,7 +146,7 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
             return null
         }
 
-        public fun fromLocale(amount: BigDecimal): AmountOfMoney {
+        fun fromLocale(amount: BigDecimal): AmountOfMoney {
             return AmountOfMoney(amount.times(getExchangeRate()))
         }
 
@@ -158,12 +156,12 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
      * Convert to the local currency
      */
     fun toLocale(): BigDecimal {
-        return this.swedishKrona / getExchangeRate();
+        return this.swedishKrona / getExchangeRate()
     }
 
     @JvmOverloads
     fun toLocaleString( decimals : Int = 0): String {
-        var formatter =  getCurrencyFormatter()
+        val formatter =  getCurrencyFormatter()
         formatter.maximumFractionDigits=decimals
         formatter.minimumFractionDigits=decimals
         return formatter.format(this.toLocale())

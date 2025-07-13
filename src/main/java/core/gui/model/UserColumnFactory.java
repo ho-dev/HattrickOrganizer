@@ -642,7 +642,6 @@ final public class UserColumnFactory {
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
                 final String bonus = "";
                 final var gehalt = player.getWage();
-                final String gehalttext = gehalt.toLocaleString();
                 if (playerCompare == null) {
                     return new DoubleLabelEntries(new ColorLabelEntry(gehalt,
                             ColorLabelEntry.BG_STANDARD),

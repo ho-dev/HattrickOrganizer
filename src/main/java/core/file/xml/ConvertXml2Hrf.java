@@ -38,8 +38,6 @@ import static core.net.OnlineWorker.*;
  */
 public class ConvertXml2Hrf {
 
-	private static List<TeamInfo> teamInfoList;
-
 	/**
 	 * Utility class - private constructor enforces noninstantiability.
 	 */
@@ -290,7 +288,7 @@ public class ConvertXml2Hrf {
 				}
 				if (commission > 0) {
 					var storedCommission = transfers.stream().mapToLong(i -> i.getMotherClubFee().getSwedishKrona().longValue() + i.getPreviousClubFee().getSwedishKrona().longValue()).sum();
-					if (storedCommission != commission) return true;
+                    return storedCommission != commission;
 				}
 			}
 		}

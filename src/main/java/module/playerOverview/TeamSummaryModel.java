@@ -1,6 +1,5 @@
 package module.playerOverview;
 
-import core.model.UserParameter;
 import core.model.player.Player;
 import core.util.AmountOfMoney;
 

@@ -142,18 +142,13 @@ class SkillAdjuster {
 			if (calcPlayer.calculatedTSI <= 0 || !calcPlayer.calculatedWage.isGreaterThan(new AmountOfMoney(0))) {
 				return true;    // Cancel, because of problems with too old players
 			}
-			if (calcPlayer.calculatedTSI >= calcPlayer.tsi || !calcPlayer.calculatedWage.isLessThan(calcPlayer.wage))
-				return true;
+            return calcPlayer.calculatedTSI >= calcPlayer.tsi || !calcPlayer.calculatedWage.isLessThan(calcPlayer.wage);
 		} else {
-			if (calcPlayer.calculatedTSI <= calcPlayer.tsi || !calcPlayer.calculatedWage.isGreaterThan( calcPlayer.wage))
-				return true;
+            return calcPlayer.calculatedTSI <= calcPlayer.tsi || !calcPlayer.calculatedWage.isGreaterThan(calcPlayer.wage);
 		}
-
-		return false;
-	}
+    }
 	
 	protected void calculateWageAndTSI(CalcVariables calcPlayer) {
-		
     	calculateTSI(calcPlayer);
 		calculateWage(calcPlayer);	
 	}
@@ -183,8 +178,8 @@ class SkillAdjuster {
 		 
 	}
 	
-	protected int calculateTSI(CalcVariables calcPlayer) {
-		return calculateTSI(calcPlayer, 0);
+	protected void calculateTSI(CalcVariables calcPlayer) {
+		calculateTSI(calcPlayer, 0);
 	}
 	
 	protected int calculateTSI(CalcVariables calcPlayer, double skillDelta) {
@@ -225,8 +220,8 @@ class SkillAdjuster {
 		return calcPlayer.calculatedTSI;
 	}
 
-	protected AmountOfMoney calculateWage(CalcVariables calcPlayer) {
-		return calculateWage(calcPlayer, 0);
+	protected void calculateWage(CalcVariables calcPlayer) {
+		calculateWage(calcPlayer, 0);
 	}
 
 	private double getAgeWageDropMultiplier (int age){
