@@ -118,7 +118,7 @@ class TransferTotals {
     }
 
     /**
-     * Gets the average price for SELL transfers
+     * Gets the average price for sale transfers
      *
      * @return Average price
      */
@@ -131,7 +131,7 @@ class TransferTotals {
     }
 
     /**
-     * Gets the total price for SELL transfers
+     * Gets the total price for sale transfers
      *
      * @return Total price
      */
@@ -140,7 +140,7 @@ class TransferTotals {
     }
 
     /**
-     * Gets the average TSI value for SELL transfers
+     * Gets the average TSI value for sale transfers
      *
      * @return Average TSI value
      */

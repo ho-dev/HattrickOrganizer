@@ -35,7 +35,7 @@ public class TransferTable extends AbstractTable {
                 ColumnDescriptor.Builder.newInstance().setColumnName("price").setGetter((p) -> ((PlayerTransfer) p).getPrice().getSwedishKrona()).setSetter((p, v) -> ((PlayerTransfer) p).setPrice((AmountOfMoney) v)).setType(Types.DECIMAL).isNullable(true).build(),
                 ColumnDescriptor.Builder.newInstance().setColumnName("tsi").setGetter((p) -> ((PlayerTransfer) p).getTsi()).setSetter((p, v) -> ((PlayerTransfer) p).setTsi((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
                 ColumnDescriptor.Builder.newInstance().setColumnName("motherclubfee").setGetter((p) -> ((PlayerTransfer) p).getMotherClubFee().getSwedishKrona()).setSetter((p, v) -> ((PlayerTransfer) p).setMotherClubFee((AmountOfMoney) v)).setType(Types.DECIMAL).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("previousclubcommission").setGetter((p) -> ((PlayerTransfer) p).getPreviousClubFee().getSwedishKrona()).setSetter((p, v) -> ((PlayerTransfer) p).setPreviousClubFee(new AmountOfMoney((Integer) v))).setType(Types.INTEGER).isNullable(true).build()
+                ColumnDescriptor.Builder.newInstance().setColumnName("previousclubcommission").setGetter((p) -> ((PlayerTransfer) p).getPreviousClubFee().getSwedishKrona()).setSetter((p, v) -> ((PlayerTransfer) p).setPreviousClubFee((AmountOfMoney) v)).setType(Types.DECIMAL).isNullable(true).build()
         };
 	}
 
