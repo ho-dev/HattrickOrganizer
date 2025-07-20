@@ -103,25 +103,26 @@ final class DBUpdater {
 		}
 
 		var playerTable = dbManager.getTable(SpielerTable.TABLENAME);
-		playerTable.tryChangeColumnDataType("GEHALT", "INTEGER", "DECIMAL");
+		if ( playerTable.tryChangeColumnDataType("GEHALT", "INTEGER", "DECIMAL") ) {
 
-		var scoutTable = dbManager.getTable(ScoutTable.TABLENAME);
-		scoutTable.tryChangeColumnDataType("PRICE","INTEGER", "DECIMAL");
-		scoutTable.tryChangeColumnDataType("baseWage","INTEGER", "DECIMAL");
+			var scoutTable = dbManager.getTable(ScoutTable.TABLENAME);
+			scoutTable.tryChangeColumnDataType("PRICE", "INTEGER", "DECIMAL");
+			scoutTable.tryChangeColumnDataType("baseWage", "INTEGER", "DECIMAL");
 
-		var transferTable = dbManager.getTable(TransferTable.TABLENAME);
-		transferTable.tryChangeColumnDataType("PRICE", "INTEGER", "DECIMAL");
-		transferTable.tryChangeColumnDataType("MOTHERCLUBFEE", "INTEGER", "DECIMAL");
-		transferTable.tryChangeColumnDataType("previousclubcommission", "INTEGER", "DECIMAL");
+			var transferTable = dbManager.getTable(TransferTable.TABLENAME);
+			transferTable.tryChangeColumnDataType("PRICE", "INTEGER", "DECIMAL");
+			transferTable.tryChangeColumnDataType("MOTHERCLUBFEE", "INTEGER", "DECIMAL");
+			transferTable.tryChangeColumnDataType("previousclubcommission", "INTEGER", "DECIMAL");
 
-		var squadInfoTable = dbManager.getTable(SquadInfoTable.TABLENAME);
-		squadInfoTable.tryChangeColumnDataType("SALARY", "INTEGER", "DECIMAL");
+			var squadInfoTable = dbManager.getTable(SquadInfoTable.TABLENAME);
+			squadInfoTable.tryChangeColumnDataType("SALARY", "INTEGER", "DECIMAL");
 
-		var taPlayerTable = dbManager.getTable(TAPlayerTable.TABLENAME);
-		taPlayerTable.tryChangeColumnDataType("SALARY", "INTEGER", "DECIMAL");
+			var taPlayerTable = dbManager.getTable(TAPlayerTable.TABLENAME);
+			taPlayerTable.tryChangeColumnDataType("SALARY", "INTEGER", "DECIMAL");
 
-		var stadiumTable = dbManager.getTable(StadionTable.TABLENAME);
-		stadiumTable.tryChangeColumnDataType("AusbauKosten", "INTEGER", "DECIMAL");
+			var stadiumTable = dbManager.getTable(StadionTable.TABLENAME);
+			stadiumTable.tryChangeColumnDataType("AusbauKosten", "INTEGER", "DECIMAL");
+		}
 
 		updateDBVersion(dbVersion, 1000);
 	}
@@ -711,7 +712,6 @@ final class DBUpdater {
 			HOLogger.instance().error(getClass(), "updateDBv400:  Faktoren table could not be reset");
 			throwables.printStackTrace();
 		}
-
 
 		resetUserColumns();
 

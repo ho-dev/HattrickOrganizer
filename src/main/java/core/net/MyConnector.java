@@ -31,6 +31,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.logging.Logger;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
@@ -596,6 +597,7 @@ public class MyConnector {
 	 * Get a web page using a URLconnection.
 	 */
 	private String getCHPPWebFile(String surl) {
+		HOLogger.instance().info(this.getClass(), "getCHPPWebFile " + surl);
 		String returnString = "";
 		OAuthDialog authDialog = null;
 		Response response = null;

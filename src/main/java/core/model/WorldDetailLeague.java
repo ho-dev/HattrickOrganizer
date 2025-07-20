@@ -227,7 +227,7 @@ public class WorldDetailLeague  extends AbstractTable.Storable {
 		return getCountryName();
 	}
 
-	public boolean isOK() {return getCurrencyRate() != null;}
+	public boolean isComplete() {return this.currencyRate != null;}
 
 	private void init() {
         try {
@@ -235,7 +235,10 @@ public class WorldDetailLeague  extends AbstractTable.Storable {
                     MyConnector.instance().getWorldDetails(this.leagueId), String.valueOf( this.leagueId));
 			this.countryCode = worldDataMap.get("CountryCode");
 			this.currencyName = worldDataMap.get("CurrencyName");
-			this.currencyRate = Double.valueOf(worldDataMap.get( "CurrencyRate"));
+			var currencyRateString = worldDataMap.get( "CurrencyRate");
+			if (!currencyRateString.isEmpty()) {
+				this.currencyRate = Double.valueOf(currencyRateString.replace(',', '.'));
+			}
 			this.dateFormat = worldDataMap.get( "DateFormat");
 			this.timeFormat = worldDataMap.get( "TimeFormat");
 		} catch (IOException e) {
@@ -244,7 +247,7 @@ public class WorldDetailLeague  extends AbstractTable.Storable {
 	}
 
 	public String getCurrencyName() {
-		if ( currencyName == null ) init();
+		if ( currencyName == null  || currencyName.isEmpty()) init();
         return currencyName;
     }
 

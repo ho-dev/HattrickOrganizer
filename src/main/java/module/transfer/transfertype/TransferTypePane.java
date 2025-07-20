@@ -21,11 +21,7 @@ import module.transfer.ui.sorter.DefaultTableSorter;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
@@ -209,13 +205,13 @@ public class TransferTypePane extends JSplitPane implements ListSelectionListene
                 c.col1 = 2;
                 c.col2 = c.col1;
                 c.hAlign = TableLayoutConstants.CENTER;
-                this.sidePanel.add(new JLabel(CurrencyUtils.CURRENCYSYMBOL),
+                this.sidePanel.add(new JLabel(Objects.requireNonNull(AmountOfMoney.Companion.getCurrency()).getSymbol()),
                         c);
 
                 c.col1 = 3;
                 c.col2 = c.col1;
                 c.hAlign = TableLayoutConstants.RIGHT;
-                this.sidePanel.add(new JLabel(FORMAT.format(ttc.getNetIncome())), c);
+                this.sidePanel.add(new JLabel(ttc.getNetIncome().toLocaleString()), c);
 
                 totalIncome.add( ttc.getNetIncome());
             }

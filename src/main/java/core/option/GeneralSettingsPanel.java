@@ -136,7 +136,7 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
 
         // Currency selection
         Set<String> currencyNames = AmountOfMoney.Companion.getCurrencyCodes();
-        this.currencyNameComboBox = new ComboBoxPanel(TranslationFacility.tr("options.misc.currency"), currencyNames.toArray(), width);
+        this.currencyNameComboBox = new ComboBoxPanel(TranslationFacility.tr("options.misc.currency"), currencyNames.stream().sorted().toArray(), width);
         this.currencyNameComboBox.setSelectedItem(AmountOfMoney.Companion.getSelectedCurrencyCode());
         this.currencyNameComboBox.addItemListener(this);
         add(this.currencyNameComboBox);

@@ -3,6 +3,7 @@ package core.util
 import core.model.HOConfigurationParameter
 import core.model.HOVerwaltung
 import core.model.WorldDetailLeague
+import core.model.WorldDetailsManager
 import java.math.BigDecimal
 import java.text.NumberFormat
 import java.util.*
@@ -12,19 +13,20 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
 
     companion object {
 
-        private var currencyCodes: Set<String>? = null
+        private var currencyCodes = HashSet<String>()
         private var currencyCode = HOConfigurationParameter("CurrencyCode", null)
         private var currency: Currency? = null
         private var currencyFormatter: NumberFormat? = null
 
         fun getCurrencyCodes(): Set<String> {
-            if (currencyCodes == null) {
-                currencyCodes = emptySet()
-                for (worldDetails in WorldDetailLeague.allLeagues) {
+            if (currencyCodes.isEmpty()) {
+                for (worldDetails in WorldDetailsManager.instance().leagues) {
                     val currency = getCurrency(worldDetails)
                     if (currency != null) {
                         val currencyInfo = getCurrencyInfo(currency)
-                        currencyCodes?.plus(currencyInfo)
+                        if ( currencyInfo != null) {
+                            currencyCodes.add(currencyInfo)
+                        }
                     }
                 }
             }
@@ -33,24 +35,33 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
 
         private fun getCurrency(worldDetailLeague: WorldDetailLeague): Currency? {
             for (_currency in Currency.getAvailableCurrencies()) {
-                if (_currency.symbol.equals(worldDetailLeague.currencyName)) {
+                val symbol = _currency.symbol;
+                if (symbol.equals(worldDetailLeague.currencyName)) {
                     return _currency
                 }
             }
+            for (isoCountry in Locale.getISOCountries()){
+                var locale = Locale("en", isoCountry)
+                if (locale.country.equals(worldDetailLeague.countryCode)){
+                    return Currency.getInstance(locale)
+                }
+            }
+
             return null
+        }
+
+        fun getWorldDetailsLeague() : WorldDetailLeague{
+            val countryId = HOVerwaltung.instance().model.xtraDaten.countryId
+            return WorldDetailsManager.instance().getWorldDetailLeagueByCountryId(countryId)
         }
 
         fun getCurrencyCode(): String {
             if (currencyCode.getValue() == null) {
-                val countryId = HOVerwaltung.instance().model.xtraDaten.countryId
-                for (worldDetails in WorldDetailLeague.allLeagues) {
-                    if (worldDetails.countryId.equals(countryId)) {
-                        for (_currency in Currency.getAvailableCurrencies()) {
-                            if (_currency.symbol.equals(worldDetails.currencyName)) {
-                                currencyCode.setValue( _currency?.currencyCode)
-                                return currencyCode.getValue()!!
-                            }
-                        }
+                val worldDetailLeague = getWorldDetailsLeague()
+                for (_currency in Currency.getAvailableCurrencies()) {
+                    if (_currency.symbol.equals(worldDetailLeague.currencyName)) {
+                        currencyCode.setValue(_currency?.currencyCode)
+                        return currencyCode.getValue()!!
                     }
                 }
                 currencyCode.setValue(NumberFormat.getCurrencyInstance().currency.currencyCode)
@@ -109,13 +120,11 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
             if (exchangeRate == null) {
                 val curr = getCurrency()
                 if (curr != null) {
-                    for (worldDetails in WorldDetailLeague.allLeagues) {
-                        if (worldDetails.currencyName.equals(currency!!.symbol)) {
-                            exchangeRate = BigDecimal(worldDetails.currencyRate)
-                            break
-                        }
-
+                    var worldDetailLeague = getWorldDetailsLeague()
+                    if (!worldDetailLeague.currencyName.equals(curr.symbol)){
+                        worldDetailLeague = WorldDetailsManager.instance().getWorldDetailsByCurrencySymbol(curr.symbol)
                     }
+                    exchangeRate = BigDecimal.valueOf(worldDetailLeague.currencyRate)
                 }
                 if (exchangeRate == null) exchangeRate = BigDecimal(1)
             }
@@ -188,7 +197,13 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
     }
 
     fun divide(divisor: BigDecimal): AmountOfMoney {
-        return AmountOfMoney(this.swedishKrona.divide(divisor))
+        try {
+            var amount = this.swedishKrona.divide(divisor)
+            return AmountOfMoney(amount)
+        }catch (_ : Exception){
+            var d = this.swedishKrona.toDouble() / divisor.toDouble()
+            return AmountOfMoney(BigDecimal.valueOf(d))
+        }
     }
 
     fun divide(divisor: AmountOfMoney): BigDecimal {
