@@ -133,13 +133,19 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
             return exchangeRate!!
         }
 
-        fun setCurrencyCode(inCurrencyCode: String) {
-            if (!inCurrencyCode.equals(this.currencyCode.getValue())) {
-                currencyCode.setValue(inCurrencyCode)
+        fun setCurrencyCode(inCurrencyCode: String) : Boolean {
+            var code = inCurrencyCode
+            if ( code.contains(":")){
+                code = inCurrencyCode.substringBefore(":")
+            }
+            if (!code.equals(this.currencyCode.getValue())) {
+                currencyCode.setValue(code)
                 currency = null
                 currencyFormatter = null
                 exchangeRate = null
+                return true
             }
+            return false
         }
 
         fun getSelectedCurrencyCode(): String? {

@@ -61,7 +61,9 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
         UserParameter.temp().promotionManagerTest = m_jcbPromotionStatusTest.isSelected();
 
         if (itemEvent.getStateChange() == java.awt.event.ItemEvent.SELECTED) {
-            core.model.UserParameter.temp().currencyName = ((String)this.currencyNameComboBox.getSelectedItem());
+            if ( AmountOfMoney.Companion.setCurrencyCode((String)this.currencyNameComboBox.getSelectedItem()) ) {
+                OptionManager.instance().setReInitNeeded();
+            }
             core.model.UserParameter.temp().TimeZoneDifference = ((CBItem) m_jcbTimeZone.getSelectedItem()).getId();
             core.model.UserParameter.temp().nbDecimals = ((CBItem) m_jcbNbDecimals.getSelectedItem()).getId();
             core.model.UserParameter.temp().sprachDatei = ((String) m_jcbLanguage.getSelectedItem());
@@ -77,10 +79,6 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
         if (!core.model.UserParameter.temp().skin.equals(core.model.UserParameter.instance().skin)) {
             OptionManager.instance().setRestartNeeded();
         }
-//        if(!UserParameter.temp().currencyName.equals(UserParameter.instance().currencyName)){
-//            UserParameter.temp().currencyRate = WorldDetailsManager.instance().getCurrencyRate(UserParameter.temp().currencyName);
-//            OptionManager.instance().setRestartNeeded();
-//        }
     }
 
     @Override
