@@ -21,27 +21,29 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
         fun getCurrencyCodes(): Set<String> {
             if (currencyCodes.isEmpty()) {
                 for (worldDetails in WorldDetailsManager.instance().leagues) {
-                    val currency = getCurrency(worldDetails)
-                    if (currency != null) {
-                        val currencyInfo = getCurrencyInfo(currency)
-                        if ( currencyInfo != null) {
-                            currencyCodes.add(currencyInfo)
+                    if (worldDetails.countryId < 1000) {
+                        val currency = getCurrency(worldDetails)
+                        if (currency != null) {
+                            val currencyInfo = getCurrencyInfo(currency)
+                            if (currencyInfo != null) {
+                                currencyCodes.add(currencyInfo)
+                            }
                         }
                     }
                 }
             }
-            return currencyCodes!!
+            return currencyCodes
         }
 
         private fun getCurrency(worldDetailLeague: WorldDetailLeague): Currency? {
             for (_currency in Currency.getAvailableCurrencies()) {
-                val symbol = _currency.symbol;
+                val symbol = _currency.symbol
                 if (symbol.equals(worldDetailLeague.currencyName)) {
                     return _currency
                 }
             }
             for (isoCountry in Locale.getISOCountries()){
-                var locale = Locale("en", isoCountry)
+                val locale = Locale("en", isoCountry)
                 if (locale.country.equals(worldDetailLeague.countryCode)){
                     return Currency.getInstance(locale)
                 }
@@ -198,10 +200,10 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
 
     fun divide(divisor: BigDecimal): AmountOfMoney {
         try {
-            var amount = this.swedishKrona.divide(divisor)
+            val amount = this.swedishKrona.divide(divisor)
             return AmountOfMoney(amount)
         }catch (_ : Exception){
-            var d = this.swedishKrona.toDouble() / divisor.toDouble()
+            val d = this.swedishKrona.toDouble() / divisor.toDouble()
             return AmountOfMoney(BigDecimal.valueOf(d))
         }
     }

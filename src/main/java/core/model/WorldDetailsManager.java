@@ -100,6 +100,9 @@ public class WorldDetailsManager {
 	}
 
 	public final List<WorldDetailLeague> getLeagues() {
+		for (var worldDetails : this.leagues){
+			if (!worldDetails.isComplete() && worldDetails.getLeagueId() < 1000) getWorldDetailLeagueByCountryId(worldDetails.getCountryId());
+		}
 		return leagues;
 	}
 

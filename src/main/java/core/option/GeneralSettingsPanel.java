@@ -7,7 +7,6 @@ import core.gui.theme.ThemeManager;
 import core.model.TranslationFacility;
 import core.model.Translator;
 import core.model.UserParameter;
-import core.model.WorldDetailsManager;
 import core.util.AmountOfMoney;
 import core.util.DateTimeUtils;
 import core.util.HOLogger;
