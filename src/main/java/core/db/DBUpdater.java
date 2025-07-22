@@ -94,6 +94,8 @@ final class DBUpdater {
 	}
 
 	private void updateDBv1000(int dbVersion) throws  SQLException{
+
+		// Add all available file infos to the world details table, especially the currency information
 		var worldDetailsTable  = dbManager.getTable(WorldDetailsTable.TABLENAME);
 		if ( worldDetailsTable.tryAddColumn("COUNTRY_CODE", "VARCHAR(128)") ) {
 			worldDetailsTable.tryAddColumn("CURRENCY_NAME", "VARCHAR(128)");
@@ -102,6 +104,7 @@ final class DBUpdater {
 			worldDetailsTable.tryAddColumn("TIME_FORMAT", "VARCHAR(128)");
 		}
 
+		// Change all amount of money columns to big decimal type
 		var playerTable = dbManager.getTable(SpielerTable.TABLENAME);
 		if ( playerTable.tryChangeColumnDataType("GEHALT", "INTEGER", "DECIMAL") ) {
 

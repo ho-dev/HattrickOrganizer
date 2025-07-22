@@ -8,16 +8,46 @@ import java.math.BigDecimal
 import java.text.NumberFormat
 import java.util.*
 
+/**
+ * Amounts of money are stored in swedish krona and displayed in players' locale
+ */
 class AmountOfMoney(var swedishKrona: BigDecimal) {
     constructor(swedishKrona: Long) : this(BigDecimal.valueOf(swedishKrona))
 
+    /**
+     * The companion object handles the aspects of currency and formatting settings
+     */
     companion object {
 
+        /**
+         * List of available currency codes
+         */
         private var currencyCodes = HashSet<String>()
+
+        /**
+         * The currency code setting
+         */
         private var currencyCode = HOConfigurationParameter("CurrencyCode", null)
+
+        /**
+         * The selected currency
+         */
         private var currency: Currency? = null
+
+        /**
+         * Currency formatter
+         */
         private var currencyFormatter: NumberFormat? = null
 
+        /**
+         * Exchange rate between swedish krona and selected currency
+         */
+        private var exchangeRate: BigDecimal? = null
+
+        /**
+         * Get the list of currency code infos from the list of leagues in world detail file
+         * Hattrick international is removed from the list.
+         */
         fun getCurrencyCodes(): Set<String> {
             if (currencyCodes.isEmpty()) {
                 for (worldDetails in WorldDetailsManager.instance().leagues) {
@@ -35,6 +65,11 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
             return currencyCodes
         }
 
+        /**
+         * Get the currency object belonging to the given world details league
+         * First search goes through the available currencies trying to find a match between leagues currency name an currency's symbol.
+         * If no match is found the list of ISO countries is search for a match of country code.
+         */
         private fun getCurrency(worldDetailLeague: WorldDetailLeague): Currency? {
             for (_currency in Currency.getAvailableCurrencies()) {
                 val symbol = _currency.symbol
@@ -52,11 +87,18 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
             return null
         }
 
+        /**
+         * Get the league of current team
+         */
         fun getWorldDetailsLeague() : WorldDetailLeague{
             val countryId = HOVerwaltung.instance().model.xtraDaten.countryId
             return WorldDetailsManager.instance().getWorldDetailLeagueByCountryId(countryId)
         }
 
+        /**
+         * Get the currency code setting.
+         * If not initialized before, the currency code is examined from the league of the current team.
+         */
         fun getCurrencyCode(): String {
             if (currencyCode.getValue() == null) {
                 val worldDetailLeague = getWorldDetailsLeague()
@@ -71,6 +113,10 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
             return currencyCode.getValue()!!
         }
 
+        /**
+         * Get the currency object setting
+         * If not initialized before, the currency is examined from the league of the current team.
+         */
         fun getCurrency(): Currency? {
             if ( this.currency == null) {
                 val code = this.getCurrencyCode()
@@ -101,6 +147,9 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
             return AmountOfMoney(BigDecimal(amount?.toDouble() ?: 0.0))
         }
 
+        /**
+         * Get the currency formatter object
+         */
         private fun getCurrencyFormatter(): NumberFormat {
             if (this.currencyFormatter == null) {
                 val currencyCode = getCurrencyCode()
@@ -116,8 +165,9 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
             return this.currencyFormatter!!
         }
 
-        private var exchangeRate: BigDecimal? = null
-
+        /**
+         * Get the exchange rate between internal swedish krona value and currency setting
+         */
         private fun getExchangeRate(): BigDecimal {
             if (exchangeRate == null) {
                 val curr = getCurrency()
@@ -133,6 +183,10 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
             return exchangeRate!!
         }
 
+        /**
+         * Set currency code.
+         * All other currency settings are resetted if the new value differs from the current value.
+         */
         fun setCurrencyCode(inCurrencyCode: String) : Boolean {
             var code = inCurrencyCode
             if ( code.contains(":")){
@@ -148,6 +202,9 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
             return false
         }
 
+        /**
+         * Get a display string of the current currency code setting.
+         */
         fun getSelectedCurrencyCode(): String? {
             val cur = getCurrency()
             if (cur != null) {
@@ -156,6 +213,9 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
             return null
         }
 
+        /**
+         * Format the currency display string, containing the code, display name and the symbol
+         */
         private fun getCurrencyInfo(cur: Currency?): String? {
             if (cur != null) {
                 return cur.currencyCode + ": " + cur.displayName + " (" + cur.symbol + ")"
@@ -163,6 +223,9 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
             return null
         }
 
+        /**
+         * Transform a locale amount to the internal one
+         */
         fun fromLocale(amount: BigDecimal): AmountOfMoney {
             return AmountOfMoney(amount.times(getExchangeRate()))
         }
@@ -176,6 +239,9 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
         return this.swedishKrona / getExchangeRate()
     }
 
+    /**
+     * Format the amount to a locale display string
+     */
     @JvmOverloads
     fun toLocaleString( decimals : Int = 0): String {
         val formatter =  getCurrencyFormatter()
@@ -184,26 +250,44 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
         return formatter.format(this.toLocale())
     }
 
+    /**
+     * Add an amount to the current value
+     */
     fun add(amountOfMoney: AmountOfMoney) {
         this.swedishKrona += amountOfMoney.swedishKrona
     }
 
+    /**
+     * Subtract an amount from the current value
+     */
     fun subtract(amountOfMoney: AmountOfMoney) {
         this.swedishKrona -= amountOfMoney.swedishKrona
     }
 
+    /**
+     * Return the sum of 2 amounts.
+     */
     fun plus(amount: AmountOfMoney): AmountOfMoney {
         return AmountOfMoney(this.swedishKrona + amount.swedishKrona)
     }
 
+    /**
+     * Return the difference of 2 amounts.
+     */
     fun minus(amount: AmountOfMoney): AmountOfMoney {
         return AmountOfMoney(this.swedishKrona - amount.swedishKrona)
     }
 
+    /**
+     * Return the product of 2 amounts.
+     */
     fun times(factor: BigDecimal): AmountOfMoney {
         return AmountOfMoney(this.swedishKrona.times(factor))
     }
 
+    /**
+     * Return the division of 2 amounts
+     */
     fun divide(divisor: BigDecimal): AmountOfMoney {
         try {
             val amount = this.swedishKrona.divide(divisor)
@@ -218,14 +302,23 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
         return this.swedishKrona.divide(divisor.swedishKrona)
     }
 
+    /**
+     * Returns true if the given amounts are equal
+     */
     fun equals(other: AmountOfMoney): Boolean {
         return this.swedishKrona.equals(other.swedishKrona)
     }
 
+    /**
+     * Returns true if the current amount is greater than the given one.
+     */
     fun isGreaterThan(i: AmountOfMoney): Boolean {
         return this.swedishKrona.compareTo(i.swedishKrona) == 1
     }
 
+    /**
+     * Returns true if the current amount is less than the given one
+     */
     fun isLessThan(i: AmountOfMoney): Boolean {
         return this.swedishKrona.compareTo(i.swedishKrona) == -1
     }

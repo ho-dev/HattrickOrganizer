@@ -61,9 +61,7 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
         UserParameter.temp().promotionManagerTest = m_jcbPromotionStatusTest.isSelected();
 
         if (itemEvent.getStateChange() == java.awt.event.ItemEvent.SELECTED) {
-            if ( AmountOfMoney.Companion.setCurrencyCode((String)this.currencyNameComboBox.getSelectedItem()) ) {
-                OptionManager.instance().setReInitNeeded();
-            }
+            UserParameter.temp().currencyName = (String)this.currencyNameComboBox.getSelectedItem();
             core.model.UserParameter.temp().TimeZoneDifference = ((CBItem) m_jcbTimeZone.getSelectedItem()).getId();
             core.model.UserParameter.temp().nbDecimals = ((CBItem) m_jcbNbDecimals.getSelectedItem()).getId();
             core.model.UserParameter.temp().sprachDatei = ((String) m_jcbLanguage.getSelectedItem());
