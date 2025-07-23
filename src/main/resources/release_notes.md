@@ -12,30 +12,12 @@
 * Fix error in training progress of position swaps (#2292)
 * Fix array index out of bound exception in player overview (#2294)
 
-### Team Analyzer
-
-### Player Analysis
-
 ### Series
 * Fix error in series table if more than one team replacements happened during one season (#2290)
 
-### Lineup
-
-### Team spirit forecast
-
-### Transfer
-
-### International Friendlies
-
-### Youth
-
-### Option setting
-
-### Misc
-
 ## Translations
 
-Reports by Contributors - May 11, 2025 - June 25, 2025
+Reports by Contributors - May 11, 2025 - July 27, 2025
 
 * Adrian 246
 * Kristaps 42
