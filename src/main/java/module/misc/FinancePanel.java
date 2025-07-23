@@ -44,7 +44,7 @@ final class FinancePanel extends JPanel {
     private final ColorLabelEntry attendanceLabel = new ColorLabelEntry("");
     private final ColorLabelEntry profitLossLabel = new ColorLabelEntry("");
     private final ColorLabelEntry cashFundsLabel = new ColorLabelEntry("");
-    private boolean currentFinance;
+    private final boolean currentFinance;
 
     final GridBagLayout layout = new GridBagLayout();
     final GridBagConstraints constraints = new GridBagConstraints();

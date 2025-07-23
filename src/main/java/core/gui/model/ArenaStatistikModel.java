@@ -154,15 +154,6 @@ public class ArenaStatistikModel {
     }
 
     /**
-     * Getter for property m_sHeimName.
-     *
-     * @return Value of property m_sHeimName.
-     */
-    public final String getHeimName() {
-        return m_sHeimName;
-    }
-
-    /**
      * Setter for property m_iHeimTore.
      *
      * @param m_iHeimTore New value of property m_iHeimTore.
