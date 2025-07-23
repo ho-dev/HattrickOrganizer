@@ -168,7 +168,7 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
         /**
          * Get the exchange rate between internal swedish krona value and currency setting
          */
-        private fun getExchangeRate(): BigDecimal {
+         fun getExchangeRate(): BigDecimal {
             if (exchangeRate == null) {
                 val curr = getCurrency()
                 if (curr != null) {

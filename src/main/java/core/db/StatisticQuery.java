@@ -5,6 +5,7 @@ import core.gui.model.ArenaStatistikTableModel;
 import core.model.HOVerwaltung;
 import core.model.enums.MatchType;
 import core.model.match.MatchKurzInfo;
+import core.util.AmountOfMoney;
 import core.util.HODateTime;
 import core.util.HOLogger;
 
@@ -26,7 +27,7 @@ public class StatisticQuery {
 
 	public static double[][] getSpielerDaten4Statistik(int spielerId, int anzahlHRF) {
 		final int anzahlSpalten = 17;
-		final float faktor = core.model.UserParameter.instance().currencyRate;
+		var exchangeRate = AmountOfMoney.Companion.getExchangeRate().doubleValue();
 
 		double[][] returnWerte = new double[0][0];
 		final Vector<double[]> vWerte = new Vector<>();
@@ -42,7 +43,7 @@ public class StatisticQuery {
 					final double[] tempwerte = new double[anzahlSpalten];
 					//faktor;
 					tempwerte[0] = rs.getDouble("Marktwert");
-					tempwerte[1] = rs.getDouble("Gehalt") / faktor;
+					tempwerte[1] = rs.getDouble("Gehalt") / exchangeRate;
 					tempwerte[2] = rs.getDouble("Fuehrung");
 					tempwerte[3] = rs.getDouble("Erfahrung") + rs.getDouble("SubExperience");
 					tempwerte[4] = rs.getDouble("Form") + rs.getDouble("SubForm");
@@ -218,7 +219,7 @@ public class StatisticQuery {
 	}
 
 	public static double[][] getDataForTeamStatisticsPanel(int nbHRF, String group) {
-		final float factor = core.model.UserParameter.instance().currencyRate;
+		var exchangeRate = AmountOfMoney.Companion.getExchangeRate().doubleValue();
 		double[][] returnValues = new double[0][0];
 		final Vector<double[]> values = new Vector<>();
 		final int nbColumns = 29;
@@ -264,7 +265,7 @@ public class StatisticQuery {
 					if (rs.getTimestamp("Datum").before(DBManager.TSIDATE)) {
 						thisHRFvalues[12] /= 1000d;
 					}
-					thisHRFvalues[13] = rs.getDouble("Gehalt") / factor; // Wage
+					thisHRFvalues[13] = rs.getDouble("Gehalt") / exchangeRate; // Wage
 					//Initialisation
 					if (lastHRFID == -1) {
 						//Reset HRFID, necessary, if last record was -1
@@ -393,7 +394,7 @@ public class StatisticQuery {
 	public static double[][] getDataForFinancesStatisticsPanel(int iNumberWeeks) {
 
 		final int iNumberColumns = 18;
-		final float fxRate = core.model.UserParameter.instance().currencyRate;
+		var exchangeRate = AmountOfMoney.Companion.getExchangeRate().doubleValue();
 		double[][] returnValues;
 		Vector<double[]> values = new Vector<>();
 		var from = HODateTime.now().minus(iNumberWeeks * 7, ChronoUnit.DAYS);
@@ -403,23 +404,23 @@ public class StatisticQuery {
 			double[] tempValues;
 			while (rs.next()) {
 				tempValues = new double[iNumberColumns];
-				tempValues[0] = rs.getDouble("Cash") / fxRate;
-				tempValues[1] = rs.getDouble("IncomeSponsors") / fxRate;
-				tempValues[2] = rs.getDouble("CostsPlayers") / fxRate;
-				tempValues[3] = rs.getDouble("IncomeSum") / fxRate;
-				tempValues[4] = rs.getDouble("CostsSum") / fxRate;
+				tempValues[0] = rs.getDouble("Cash") / exchangeRate;
+				tempValues[1] = rs.getDouble("IncomeSponsors") / exchangeRate;
+				tempValues[2] = rs.getDouble("CostsPlayers") / exchangeRate;
+				tempValues[3] = rs.getDouble("IncomeSum") / exchangeRate;
+				tempValues[4] = rs.getDouble("CostsSum") / exchangeRate;
 				tempValues[5] = tempValues[4] - tempValues[3];
-				tempValues[6] = tempValues[3] - ((rs.getDouble("IncomeSoldPlayers") + rs.getDouble("IncomeSoldPlayersCommission")) / fxRate);
-				tempValues[7] = tempValues[4] - (rs.getDouble("CostsBoughtPlayers") / fxRate);
+				tempValues[6] = tempValues[3] - ((rs.getDouble("IncomeSoldPlayers") + rs.getDouble("IncomeSoldPlayersCommission")) / exchangeRate);
+				tempValues[7] = tempValues[4] - (rs.getDouble("CostsBoughtPlayers") / exchangeRate);
 				tempValues[8] = tempValues[7] - tempValues[6];
-				tempValues[9] = rs.getDouble("IncomeSpectators") / fxRate;
-				tempValues[10] = rs.getDouble("IncomeSoldPlayers") / fxRate;
-				tempValues[11] = rs.getDouble("IncomeSoldPlayersCommission") / fxRate;
-				tempValues[12] = rs.getDouble("IncomeSum") / fxRate - (tempValues[10] + tempValues[11] + tempValues[1] + tempValues[9]); // Income Other
-				tempValues[13] = rs.getDouble("CostsArena") / fxRate;
-				tempValues[14] = rs.getDouble("CostsBoughtPlayers") / fxRate;
-				tempValues[15] = rs.getDouble("CostsStaff") / fxRate;
-				tempValues[16] = rs.getDouble("CostsSum") / fxRate - (tempValues[2] + tempValues[13] + tempValues[14] + tempValues[15]); // Costs Other
+				tempValues[9] = rs.getDouble("IncomeSpectators") / exchangeRate;
+				tempValues[10] = rs.getDouble("IncomeSoldPlayers") / exchangeRate;
+				tempValues[11] = rs.getDouble("IncomeSoldPlayersCommission") / exchangeRate;
+				tempValues[12] = rs.getDouble("IncomeSum") / exchangeRate - (tempValues[10] + tempValues[11] + tempValues[1] + tempValues[9]); // Income Other
+				tempValues[13] = rs.getDouble("CostsArena") / exchangeRate;
+				tempValues[14] = rs.getDouble("CostsBoughtPlayers") / exchangeRate;
+				tempValues[15] = rs.getDouble("CostsStaff") / exchangeRate;
+				tempValues[16] = rs.getDouble("CostsSum") / exchangeRate - (tempValues[2] + tempValues[13] + tempValues[14] + tempValues[15]); // Costs Other
 				tempValues[17] = rs.getTimestamp("FetchedDate").getTime(); // TODO: convert to String: HT Season - HTWeek
 
 				//save values

@@ -54,21 +54,6 @@ public class ArenaStatistikModel {
     private int maxRoof;
     private int maxVip;
 
-//    private float currencyFactor;
-//    private AmountOfMoney terracesIncome;
-//    private AmountOfMoney basicSeatIncome;
-//    private AmountOfMoney seatRoofIncome;
-//    private AmountOfMoney vipIncome;
-//    private AmountOfMoney totalIncome;
-//    private AmountOfMoney matchTypeFactor;
-
-    //~ Methods ------------------------------------------------------------------------------------
-
-
-//    public ArenaStatistikModel() {
-//        currencyFactor = core.model.UserParameter.instance().currencyRate;
-//    }
-
     /**
      * Setter for property m_iArenaGroesse.
      *

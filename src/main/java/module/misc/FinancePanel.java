@@ -5,6 +5,7 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.misc.Economy;
+import core.util.AmountOfMoney;
 
 import java.awt.Component;
 import java.awt.Font;
@@ -61,7 +62,7 @@ final class FinancePanel extends JPanel {
         final Economy finances = HOVerwaltung.instance().getModel().getEconomy();
         if (finances == null) return;
 
-        final float factor = core.model.UserParameter.instance().currencyRate;
+        var factor = AmountOfMoney.Companion.getExchangeRate().floatValue();
 
         if (currentFinance) {
             cashFundsLabel.setSpecialNumber((finances.getCash() / factor)

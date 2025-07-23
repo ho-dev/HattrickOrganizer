@@ -242,7 +242,6 @@ public class FinancesStatisticsPanel extends LazyImagePanel {
 
 
 		// initialize Development Chart
-//		String currencySymbol = Helper.getNumberFormat(true, 0).getCurrency().getSymbol();
 		var currencySymbol = Objects.requireNonNull(AmountOfMoney.Companion.getCurrency()).getSymbol();
 		c_jpDevelopmentChart = new HOLinesChart(true, null, null, "#,##0 " + currencySymbol, "#,##0 " + currencySymbol, true);
 		c_jpBalanceChart = new HOLinesChart(true, null, null, "#,##0 " + currencySymbol, "#,##0 " + currencySymbol, true);

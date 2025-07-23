@@ -212,21 +212,6 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
         checkFields();
     }
 
-//    /**
-//     * Parse a currency value given in player description text
-//     * if a value can be parsed it is converted to swedish currency (standard money currency in HO)
-//     *
-//     * @param text String, that's parsed
-//     * @return int, currency in swedish krone, 0 if no value can be parsed from string
-//     */
-//    private AmountOfMoney parseCurrencyValue(String text) {
-//        var price = parseCurrency(text);
-//        if (price != null) {
-//            return AmountOfMoney.Companion.fromLocale(price);
-//        }
-//        return new AmountOfMoney(0);
-//    }
-
     /**
      * Fired when panel receives focus
      *
@@ -561,14 +546,12 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
     private String getFieldsTextList(List<String> fields){
         StringBuilder errorFieldsTxt = new StringBuilder();
         if (!fields.isEmpty()){
-            //errorFieldsTxt = " (";
             for (int i=0;i<fields.size();i++) {
                 if(i>=1) {
                     errorFieldsTxt.append(", ");
                 }
                 errorFieldsTxt.append(fields.get(i));
             }
-            // errorFieldsTxt += ")";
         }
         return errorFieldsTxt.toString();
     }
