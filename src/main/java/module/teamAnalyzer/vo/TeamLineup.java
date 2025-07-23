@@ -6,6 +6,7 @@ import core.model.match.IMatchType;
 import core.prediction.engine.TeamData;
 import core.prediction.engine.TeamRatings;
 import core.specialevents.SpecialEventsPredictionManager;
+import core.util.AmountOfMoney;
 import module.nthrf.NtTeamDetails;
 
 import java.util.Collections;
@@ -313,7 +314,7 @@ public class TeamLineup {
         return null;
     }
 
-    public Integer getSalarySum() {
+    public AmountOfMoney getSalarySum() {
         if ( this.squadInfo != null) return squadInfo.getSalarySum();
         return null;
     }

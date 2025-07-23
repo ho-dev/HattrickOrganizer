@@ -221,7 +221,8 @@ public final class UserParameter extends Configuration {
 
     //Sonstiges
     //currency factor
-    public float FXrate = 1f;
+    public String currencyName = "";
+    public float currencyRate = 1f;
     //Timezone
     public int TimeZoneDifference;
     public boolean TRAINING_SHOW_SKILLDROPS = true;
@@ -354,7 +355,7 @@ public final class UserParameter extends Configuration {
 
     // Youth training
     public double youthtrainingFactorPrimary = 1.0;
-    public double youthtrainingFactorSecondary = 0.66;
+    public double youthtrainingFactorSecondary = 2.0/3.0;
 
     public int lineupOrientationSetting = GOALKEEPER_AT_TOP;
     public int lineupPositionNamesSetting = POSITIONNAMES_SHORT;
@@ -556,7 +557,7 @@ public final class UserParameter extends Configuration {
         map.put("updateCheck", String.valueOf(updateCheck));
         map.put("zahlenFuerSkill", String.valueOf(zahlenFuerSkill));
         map.put("TrainingPredictionShowSkillDrops", String.valueOf(TRAINING_SHOW_SKILLDROPS));
-        map.put("faktorGeld", String.valueOf(FXrate));
+        map.put("faktorGeld", String.valueOf(currencyRate));
         map.put("TimeZoneDifference", String.valueOf(TimeZoneDifference));
         map.put("nbDecimals", String.valueOf(nbDecimals));
         map.put("aufstellungsAssistentPanel_reihenfolge", String.valueOf(aufstellungsAssistentPanel_reihenfolge));
@@ -794,7 +795,7 @@ public final class UserParameter extends Configuration {
 //        TRAINING_OFFSET_INTENSITY = getFloatValue(values, "IntensitaetFaktor");
         TRAINING_SHOW_SKILLDROPS = getBooleanValue(values, "TrainingPredictionShowSkillDrops");
 //        TrainerFaktor = getFloatValue(values, "TrainerFaktor");
-        FXrate = getFloatValue(values, "faktorGeld");
+        currencyRate = getFloatValue(values, "faktorGeld");
 //        zellenbreitenFaktor = getFloatValue(values, "zellenbreitenFaktor");
 //        TRAINING_OFFSET_SCORING = getFloatValue(values, "DAUER_CHANCENVERWERTUNG");
 //        TRAINING_OFFSET_WINGER = getFloatValue(values, "DAUER_FLUEGELSPIEL");

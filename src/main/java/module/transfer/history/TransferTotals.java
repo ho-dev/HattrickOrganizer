@@ -1,9 +1,11 @@
 package module.transfer.history;
 
+import core.util.AmountOfMoney;
 import module.transfer.PlayerTransfer;
+
+import java.math.BigDecimal;
 import java.util.List;
 
-import static core.util.CurrencyUtils.convertCurrency;
 
 /**
  * Value Object representing totals information for a selection of transfers.
@@ -13,12 +15,12 @@ import static core.util.CurrencyUtils.convertCurrency;
 class TransferTotals {
     //~ Instance fields ----------------------------------------------------------------------------
 
-    private int number_buy;
-    private int number_sell;
-    private int total_buy_price;
-    private int total_buy_tsi;
-    private int total_sell_price;
-    private int total_sell_tsi;
+    private int number_buy = 0;
+    private int number_sell = 0;
+    private final AmountOfMoney total_buy_price = new AmountOfMoney(0);
+    private int total_buy_tsi = 0;
+    private final AmountOfMoney total_sell_price= new AmountOfMoney(0);
+    private int total_sell_tsi = 0;
 
     //~ Methods ------------------------------------------------------------------------------------
 
@@ -32,21 +34,21 @@ class TransferTotals {
     static TransferTotals calculateTotals(List<PlayerTransfer> transfers) {
         final TransferTotals totals = new TransferTotals();
         for (final PlayerTransfer transfer : transfers) {
-            var price = convertCurrency(transfer.getPrice());
+            var price = transfer.getPrice();
             if (transfer.getType() == PlayerTransfer.BUY) {
                 totals.number_buy++;
-                totals.total_buy_price += price;
+                totals.total_buy_price.add(price);
                 totals.total_buy_tsi += transfer.getTsi();
             } else if (transfer.getType() == PlayerTransfer.SELL) {
                 totals.number_sell++;
-                totals.total_sell_price += price;
+                totals.total_sell_price.add(price);
                 totals.total_sell_tsi += transfer.getTsi();
             } else {
                 totals.number_sell++;
-                totals.total_sell_price += price;
+                totals.total_sell_price.add(price);
                 totals.total_sell_tsi += transfer.getTsi();
                 totals.number_buy++;
-                totals.total_buy_price += price;
+                totals.total_buy_price.add(price);
                 totals.total_buy_tsi += transfer.getTsi();
             }
         }
@@ -76,11 +78,11 @@ class TransferTotals {
      *
      * @return Average price
      */
-    final double getBuyPriceAvg() {
+    final AmountOfMoney getBuyPriceAvg() {
         if (number_buy > 0) {
-            return (double) total_buy_price / number_buy;
+            return total_buy_price.divide(BigDecimal.valueOf(number_buy));
         } else {
-            return 0;
+            return new AmountOfMoney(0);
         }
     }
 
@@ -89,7 +91,7 @@ class TransferTotals {
      *
      * @return Total price
      */
-    final int getBuyPriceTotal() {
+    final AmountOfMoney getBuyPriceTotal() {
         return total_buy_price;
     }
 
@@ -116,29 +118,29 @@ class TransferTotals {
     }
 
     /**
-     * Gets the average price for SELL transfers
+     * Gets the average price for sale transfers
      *
      * @return Average price
      */
-    final double getSellPriceAvg() {
+    final AmountOfMoney getSellPriceAvg() {
         if (number_sell > 0) {
-            return (double) total_sell_price / number_sell;
+            return total_sell_price.divide(BigDecimal.valueOf(number_sell));
         } else {
-            return 0;
+            return new AmountOfMoney(0);
         }
     }
 
     /**
-     * Gets the total price for SELL transfers
+     * Gets the total price for sale transfers
      *
      * @return Total price
      */
-    final int getSellPriceTotal() {
+    final AmountOfMoney getSellPriceTotal() {
         return total_sell_price;
     }
 
     /**
-     * Gets the average TSI value for SELL transfers
+     * Gets the average TSI value for sale transfers
      *
      * @return Average TSI value
      */

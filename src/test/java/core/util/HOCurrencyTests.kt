@@ -15,15 +15,15 @@ class HOCurrencyTests {
         hov.model = HOModel(1)
         hov.model.xtraDaten = XtraData()
         hov.model.xtraDaten.countryId = 3
-        UserParameter.instance().FXrate = 10f
+        UserParameter.instance().currencyRate = 10f
 
-        val c = HOCurrency(10)
+        val c = AmountOfMoney(10)
         Assertions.assertEquals(0, c.toLocale())
 
-        val e = HOCurrency(50)
+        val e = AmountOfMoney(50)
         Assertions.assertEquals(10, e.toLocale())
 
-        val d = HOCurrency(c.swedishKrona + 90)
+        val d = AmountOfMoney(c.swedishKrona + 90)
         val nbsp = "\u00A0"
         Assertions.assertEquals("10" + nbsp + "€", d.toLocaleString())
     }

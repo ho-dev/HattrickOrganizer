@@ -5,6 +5,7 @@ import core.constants.player.PlayerSkill;
 import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
+import core.util.AmountOfMoney;
 import module.transfer.PlayerTransfer;
 import module.transfer.TransferType;
 
@@ -26,7 +27,7 @@ class TransferredPlayer {
     private int experience = 0;
     private int experienceSkillups = 0;
     private final int playerId;
-    private int income;
+    private final AmountOfMoney income = new AmountOfMoney(0);
     private int leadership = 0;
     private int skillups = 0;
     private int startWeek;
@@ -78,7 +79,7 @@ class TransferredPlayer {
      *
      * @return income in euro
      */
-    final int getIncome() {
+    final AmountOfMoney getIncome() {
         return income;
     }
 
@@ -146,14 +147,14 @@ class TransferredPlayer {
 
         if (transfer.getBuyerid() == teamid) {
             bought = true;
-            income -= transfer.getPrice();
+            income.subtract(transfer.getPrice());
             startWeek = transfer.getWeek() + (transfer.getSeason() * 16);
             return;
         }
 
         if (transfer.getSellerid() == teamid) {
             sold = true;
-            income += transfer.getPrice();
+            income.add(transfer.getPrice());
             endWeek = transfer.getWeek() + (transfer.getSeason() * 16);
         }
     }

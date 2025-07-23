@@ -2,13 +2,11 @@ package core.model;
 
 import core.file.FileLoader;
 import core.util.HOLogger;
-import core.util.Languages;
 import core.util.UTF8Control;
 
 import java.io.InputStream;
 import java.text.MessageFormat;
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
@@ -25,12 +23,12 @@ public class Translator {
 
     private final String language;
     private final ResourceBundle resourceBundle;
-    private final Locale locale;
+//    private final Locale locale;
 
-    public Translator(String language, ResourceBundle resourceBundle, Locale locale) {
+    public Translator(String language, ResourceBundle resourceBundle) {
         this.language = language;
         this.resourceBundle = resourceBundle;
-        this.locale = locale;
+//        this.locale = locale;
     }
 
     public static String[] getSupportedLanguages() {
@@ -61,7 +59,7 @@ public class Translator {
     }
 
     public static Translator load(String language) {
-        return new Translator(language, getResourceBundle(language), Languages.lookup(language).getLocale());
+        return new Translator(language, getResourceBundle(language));
     }
 
     private static ResourceBundle getResourceBundle(String language) {
@@ -86,9 +84,9 @@ public class Translator {
         return this.resourceBundle;
     }
 
-    public Locale getLocale() {
-        return this.locale;
-    }
+//    public Locale getLocale() {
+//        return this.locale;
+//    }
 
     /**
      * Returns the String connected to the active language file or connected to the english language file. Returns !key!
@@ -148,7 +146,7 @@ public class Translator {
         String str = translate(key);
 
         MessageFormat formatter = new MessageFormat("");
-        formatter.setLocale(locale);
+//        formatter.setLocale(locale);
         formatter.applyPattern(str);
 
         return formatter.format(values);

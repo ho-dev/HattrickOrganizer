@@ -1,14 +1,12 @@
 package core.model;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.stream.Stream;
 
@@ -30,7 +28,7 @@ class TranslatorTest {
             "Galego",
             "Georgian",
             "German",
-            "Greeklish",
+            "Greek",
             "Hangul(Korean)",
             "Hebrew",
             "Hrvatski(Croatian)",
@@ -150,19 +148,19 @@ class TranslatorTest {
         assertThat(translator.getResourceBundle()).isNotNull();
     }
 
-    @ParameterizedTest
-    @MethodSource("whitelist")
-    void getLocale(String language) {
-        // given
-        final var translator = Translator.load(language);
-
-        // when-then
-        if (StringUtils.endsWithIgnoreCase(language, "FRENCH")) {
-            assertThat(translator.getLocale()).isEqualTo(Locale.FRENCH);
-        } else {
-            assertThat(translator.getLocale()).isEqualTo(Locale.ENGLISH);
-        }
-    }
+//    @ParameterizedTest
+//    @MethodSource("whitelist")
+//    void getLocale(String language) {
+//        // given
+//        final var translator = Translator.load(language);
+//
+//        // when-then
+//        if (StringUtils.endsWithIgnoreCase(language, "FRENCH")) {
+//            assertThat(translator.getLocale()).isEqualTo(Locale.FRENCH);
+//        } else {
+//            assertThat(translator.getLocale()).isEqualTo(Locale.ENGLISH);
+//        }
+//    }
 
     private static Stream<Arguments> translate() {
         return Stream.of(

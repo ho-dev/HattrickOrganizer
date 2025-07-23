@@ -67,10 +67,10 @@ public class TeamSummaryPanel extends ImagePanel implements ChangeListener, Refr
 
             String value;
             if (numDecimals == 0) {
-                value = Helper.getNumberFormat(false, numDecimals)
+                value = Helper.getNumberFormat( numDecimals)
                         .format(Helper.round(val.intValue(), numDecimals));
             } else {
-                value = Helper.getNumberFormat(false, numDecimals)
+                value = Helper.getNumberFormat( numDecimals)
                         .format(Helper.round(val.floatValue(), numDecimals));
             }
             if (val.floatValue() > 0.0) {
@@ -110,42 +110,41 @@ public class TeamSummaryPanel extends ImagePanel implements ChangeListener, Refr
         setComparisonField(comparisonStats.numPlayers, numPlayerLabel, 0);
 
         JLabel averageAgeLeftLabel = new JLabel();
-        averageAgeLeftLabel.setText(Helper.getNumberFormat(false, 1)
+        averageAgeLeftLabel.setText(Helper.getNumberFormat( 1)
                 .format(Helper.round(stats.averageAge, 1)));
         averageAgeLabel.setLeftLabel(averageAgeLeftLabel);
 
         setComparisonField(comparisonStats.averageAge, averageAgeLabel, 2);
 
         JLabel averageSalaryLeftLabel = new JLabel();
-        averageSalaryLeftLabel.setText(Helper.getNumberFormat(true, 2)
-                .format(Helper.round(stats.averageSalary, 2)));
+        averageSalaryLeftLabel.setText(stats.averageSalary.toLocaleString());
         averageSalaryLabel.setLeftLabel(averageSalaryLeftLabel);
 
-        setComparisonField(comparisonStats.averageSalary, averageSalaryLabel, 0);
+        setComparisonField(comparisonStats.averageSalary.toLocale(), averageSalaryLabel, 0);
 
         JLabel totalTsiLeftLabel = new JLabel();
-        totalTsiLeftLabel.setText(Helper.getNumberFormat(false, 0)
+        totalTsiLeftLabel.setText(Helper.getNumberFormat( 0)
                 .format(Helper.round(stats.totalTsi, 0)));
         totalTsiLabel.setLeftLabel(totalTsiLeftLabel);
 
         setComparisonField(comparisonStats.totalTsi, totalTsiLabel, 0);
 
         JLabel averageTsiLeftLabel = new JLabel();
-        averageTsiLeftLabel.setText(Helper.getNumberFormat(false, UserParameter.instance().nbDecimals)
+        averageTsiLeftLabel.setText(Helper.getNumberFormat( UserParameter.instance().nbDecimals)
                 .format(Helper.round(stats.averageTsi, 2)));
         averageTsiLabel.setLeftLabel(averageTsiLeftLabel);
 
         setComparisonField(comparisonStats.averageTsi, averageTsiLabel, 0);
 
         JLabel averageStaminaLeftLabel = new JLabel();
-        averageStaminaLeftLabel.setText(Helper.getNumberFormat(false, UserParameter.instance().nbDecimals)
+        averageStaminaLeftLabel.setText(Helper.getNumberFormat( UserParameter.instance().nbDecimals)
                 .format(Helper.round(stats.averageStamina, 2)));
         averageStaminaLabel.setLeftLabel(averageStaminaLeftLabel);
 
         setComparisonField(comparisonStats.averageStamina, averageStaminaLabel, 2);
 
         JLabel averageFormLeftLabel = new JLabel();
-        averageFormLeftLabel.setText(Helper.getNumberFormat(false, UserParameter.instance().nbDecimals)
+        averageFormLeftLabel.setText(Helper.getNumberFormat( UserParameter.instance().nbDecimals)
                 .format(Helper.round(stats.averageForm, 2)));
         averageFormLabel.setLeftLabel(averageFormLeftLabel);
 

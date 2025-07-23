@@ -95,13 +95,14 @@ class TotalsPanel extends JPanel {
      * @param sellTot Total value for SELL transfers.
      * @param sellAvg Average value for SELL transfers.
      */
-    public final void setValues(int buyTot, double buyAvg, int sellTot, double sellAvg) {
-        buyTotPrice.setText(FORMAT.format(buyTot));
-        buyAvgPrice.setText(FORMAT.format(buyAvg));
-        sellTotPrice.setText(FORMAT.format(sellTot));
-        sellAvgPrice.setText(FORMAT.format(sellAvg));
 
-        final int diffTot = sellTot - buyTot;
-        diffTotPrice.setText(FORMAT.format(diffTot));
+    public final void setValues(String buyTot, String buyAvg, String sellTot, String sellAvg, String diffTot) {
+        buyTotPrice.setText(buyTot);
+        buyAvgPrice.setText(buyAvg);
+        sellTotPrice.setText(sellTot);
+        sellAvgPrice.setText(sellAvg);
+
+        diffTotPrice.setText(diffTot);
     }
+
 }

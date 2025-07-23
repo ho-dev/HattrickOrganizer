@@ -6,56 +6,48 @@
  */
 package tool.arenasizer;
 
-import core.util.Helper;
-
+import core.util.AmountOfMoney;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
 
 public class ArenaSizer {
 
-	public static final float ADMISSION_PRICE_TERRACES = 70f;
-	public static final float ADMISSION_PRICE_BASICS = 100f;
-	public static final float ADMISSION_PRICE_ROOF = 190f;
-	public static final float ADMISSION_PRICE_VIP = 350f;
+	public static final AmountOfMoney ADMISSION_PRICE_TERRACES = new AmountOfMoney( 70);
+	public static final AmountOfMoney ADMISSION_PRICE_BASICS = new AmountOfMoney(100);
+	public static final AmountOfMoney ADMISSION_PRICE_ROOF = new AmountOfMoney(190);
+	public static final AmountOfMoney ADMISSION_PRICE_VIP = new AmountOfMoney(350);
 
-	private static final float MAINTENANCE_TERRACES = 5f;
-	private static final float MAINTENANCE_BASICS = 7f;
-	private static final float MAINTENANCE_ROOF = 10f;
-	private static final float MAINTENANCE_VIP = 25f;
+	private static final AmountOfMoney MAINTENANCE_TERRACES = new AmountOfMoney(5);
+	private static final AmountOfMoney MAINTENANCE_BASICS = new AmountOfMoney(7);
+	private static final AmountOfMoney MAINTENANCE_ROOF = new AmountOfMoney(10);
+	private static final AmountOfMoney MAINTENANCE_VIP = new AmountOfMoney(25);
 
 	//CREATE
-	private static float STEH_AUSBAU = 450f;
-	private static float SITZ_AUSBAU = 750f;
-	private static float DACH_AUSBAU = 900f;
-	private static float LOGEN_AUSBAU = 3000f;
-	private static float ABRISS = 60f;
-	private static float FIXKOSTEN = 100000f;
+	private static final AmountOfMoney STEH_AUSBAU = new AmountOfMoney(450);
+	private static final AmountOfMoney SITZ_AUSBAU = new AmountOfMoney(750);
+	private static final AmountOfMoney DACH_AUSBAU = new AmountOfMoney(900);
+	private static final AmountOfMoney LOGEN_AUSBAU = new AmountOfMoney(3000);
+	private static final AmountOfMoney ABRISS = new AmountOfMoney(60);
+	private static final AmountOfMoney FIXKOSTEN = new AmountOfMoney(100000);
 
-	static final BigDecimal TERRACES_PERCENT = new BigDecimal(0.60).setScale(3, RoundingMode.HALF_DOWN);
-	static final BigDecimal BASICS_PERCENT = new BigDecimal(0.235).setScale(3, RoundingMode.HALF_DOWN);
-	static final BigDecimal ROOF_PERCENT = new BigDecimal(0.14).setScale(3, RoundingMode.HALF_DOWN);
-	static final BigDecimal VIP_PERCENT = new BigDecimal(0.025).setScale(3, RoundingMode.HALF_DOWN);
+	static final BigDecimal TERRACES_PERCENT = new BigDecimal("0.60").setScale(3, RoundingMode.HALF_DOWN);
+	static final BigDecimal BASICS_PERCENT = new BigDecimal("0.235").setScale(3, RoundingMode.HALF_DOWN);
+	static final BigDecimal ROOF_PERCENT = new BigDecimal("0.14").setScale(3, RoundingMode.HALF_DOWN);
+	static final BigDecimal VIP_PERCENT = new BigDecimal("0.025").setScale(3, RoundingMode.HALF_DOWN);
 
 	//SUPPORTER-DISTRIBUTION
 	static final Integer SUPPORTER_NORMAL = 20;
 
-	float currencyFactor = core.model.UserParameter.instance().FXrate;
-
-	ArenaSizer() {
-
-	}
+	ArenaSizer() {}
 
 	//~ Methods ------------------------------------------------------------------------------------
 
-	final int calcMaxIncome(Stadium arena) {
-		int income = 0;
-
-		income += ((arena.getTerraces() * ADMISSION_PRICE_TERRACES) / currencyFactor);
-		income += ((arena.getBasicSeating() * ADMISSION_PRICE_BASICS) / currencyFactor);
-		income += ((arena.getUnderRoofSeating() * ADMISSION_PRICE_ROOF) / currencyFactor);
-		income += ((arena.getVipBox() * ADMISSION_PRICE_VIP) / currencyFactor);
-
+	final AmountOfMoney calcMaxIncome(Stadium arena) {
+		var income = ADMISSION_PRICE_TERRACES.times(BigDecimal.valueOf(arena.getTerraces()));
+		income.add(ADMISSION_PRICE_BASICS.times(BigDecimal.valueOf(arena.getBasicSeating())));
+		income.add(ADMISSION_PRICE_ROOF.times(BigDecimal.valueOf(arena.getUnderRoofSeating())));
+		income.add(ADMISSION_PRICE_VIP.times(BigDecimal.valueOf(arena.getVipBox())));
 		return income;
 	}
 
@@ -93,49 +85,42 @@ public class ArenaSizer {
 		return tmp;
 	}
 
-	final int calcConstructionCosts(float steh, float sitz, float dach, float logen) {
-		float kosten = FIXKOSTEN / currencyFactor;
+	final AmountOfMoney calcConstructionCosts(float steh, float sitz, float dach, float logen) {
+		var kosten = FIXKOSTEN;
 
 		if (steh > 0) {
-			kosten += ((steh * STEH_AUSBAU) / currencyFactor);
+			kosten.add(STEH_AUSBAU.times(BigDecimal.valueOf(steh)));
 		} else {
-			kosten -= ((steh * ABRISS) / currencyFactor);
+			kosten.subtract(ABRISS.times(BigDecimal.valueOf(steh)));
 		}
 
 		if (sitz > 0) {
-			kosten += ((sitz * SITZ_AUSBAU) / currencyFactor);
+			kosten.add(SITZ_AUSBAU.times(BigDecimal.valueOf(sitz)));
 		} else {
-			kosten -= ((sitz * ABRISS) / currencyFactor);
+			kosten.subtract(ABRISS.times(BigDecimal.valueOf(sitz)));
 		}
 
 		if (dach > 0) {
-			kosten += ((dach * DACH_AUSBAU) / currencyFactor);
+			kosten.add(DACH_AUSBAU.times(BigDecimal.valueOf(dach)));
 		} else {
-			kosten -= ((dach * ABRISS) / currencyFactor);
+			kosten.subtract(ABRISS.times(BigDecimal.valueOf(dach)));
 		}
 
 		if (logen > 0) {
-			kosten += ((logen * LOGEN_AUSBAU) / currencyFactor);
+			kosten.add(LOGEN_AUSBAU.times(BigDecimal.valueOf(logen)));
 		} else {
-			kosten -= ((logen * ABRISS) / currencyFactor);
+			kosten.subtract(ABRISS.times(BigDecimal.valueOf(logen)));
 		}
 
-		return (int) kosten;
+		return  kosten;
 	}
 
-	final int calcDistribution(float arenaSize, float percent) {
-		return (int) ((arenaSize / 100.0f) * percent);
-	}
-
-	final float calcMaintenance(Stadium arena) {
-		float costs = 0.0f;
-
-		costs += ((arena.getTerraces() * MAINTENANCE_TERRACES) / currencyFactor);
-		costs += ((arena.getBasicSeating() * MAINTENANCE_BASICS) / currencyFactor);
-		costs += ((arena.getUnderRoofSeating() * MAINTENANCE_ROOF) / currencyFactor);
-		costs += ((arena.getVipBox() * MAINTENANCE_VIP) / currencyFactor);
-
-		return Helper.round(costs, 1);
+	final AmountOfMoney calcMaintenance(Stadium arena) {
+		var costs = MAINTENANCE_TERRACES.times(BigDecimal.valueOf(arena.getTerraces()));
+		costs.add(MAINTENANCE_BASICS.times(BigDecimal.valueOf(arena.getBasicSeating())));
+		costs.add(MAINTENANCE_ROOF.times(BigDecimal.valueOf(arena.getUnderRoofSeating())));
+		costs.add(MAINTENANCE_VIP.times(BigDecimal.valueOf(arena.getVipBox())));
+		return costs;
 	}
 
 }

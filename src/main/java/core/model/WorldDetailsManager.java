@@ -29,6 +29,9 @@ public class WorldDetailsManager {
 
 	private void initialize() {
 		leagues = DBManager.instance().getAllWorldDetailLeagues();
+		if (leagues.isEmpty()) {
+			leagues = Arrays.stream(WorldDetailLeague.allLeagues).toList();
+		}
 		leagueMap.clear();
 		countryMap.clear();
 		totalUsers = 0;
@@ -64,16 +67,20 @@ public class WorldDetailsManager {
 			initialize();
 		}
 		var ret = countryMap.get(countryId);
-		if (ret == null) {
-			ret = downloadWorldDetailLeague(countryId);
-			DBManager.instance().storeWorldDetailLeague(ret);
+		if (ret == null || !ret.isComplete()) {
+			var downloaded = downloadWorldDetailLeague(countryId);
+			if ( ret != null){
+				downloaded.setIsStored(ret.isStored());
+			}
+			DBManager.instance().storeWorldDetailLeague(downloaded);
 			initialize();
+			ret = downloaded;
 		}
 		return ret;
 	}
 
 	/**
-	 * Download missing world detail information
+	 * Download world detail information
 	 * @param countryId Country Id
 	 * @return WorldDetailLeague
 	 */
@@ -93,8 +100,22 @@ public class WorldDetailsManager {
 	}
 
 	public final List<WorldDetailLeague> getLeagues() {
+		for (var worldDetails : this.leagues){
+			if (!worldDetails.isComplete() && worldDetails.getLeagueId() < 1000) getWorldDetailLeagueByCountryId(worldDetails.getCountryId());
+		}
 		return leagues;
 	}
+
+	public WorldDetailLeague getWorldDetailsByCurrencySymbol(String currencySymbol){
+		for (var worldDetails : this.leagues){
+			if (!worldDetails.isComplete()) worldDetails = getWorldDetailLeagueByCountryId(worldDetails.getCountryId());
+			if ( worldDetails.getCurrencyName().equals(currencySymbol)) {
+				return worldDetails;
+			}
+		}
+		return null;
+	}
+
 
 	public final int getTotalUsers() {
 		return totalUsers;

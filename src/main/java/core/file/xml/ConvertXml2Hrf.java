@@ -16,6 +16,7 @@ import core.model.match.*;
 import core.model.player.PlayerAvatar;
 import core.model.player.TrainerStatus;
 import core.net.OnlineWorker;
+import core.util.AmountOfMoney;
 import core.util.HODateTime;
 import core.util.Helper;
 import core.module.config.ModuleConfig;
@@ -62,7 +63,8 @@ public class ConvertXml2Hrf {
 		var teamInfoList = XMLTeamDetailsParser.getTeamInfoFromString(teamDetails);
 		var usersPremierTeamInfo = teamInfoList.stream().filter(TeamInfo::isPrimaryTeam).findFirst().get();
 		var usersPremierTeamId = usersPremierTeamInfo.getTeamId();
-		if (teamId <= 0 || youthTeamId == null) {
+		var initTeamId = teamId <=0;
+		if (initTeamId || youthTeamId == null) {
 			// We have no team selected or the youth team information is never downloaded before
 			if (teamInfoList.size() == 1) {
 				// user has only one single team
@@ -93,6 +95,10 @@ public class ConvertXml2Hrf {
 				}
 			} else {
 				return null;
+			}
+
+			if (initTeamId){
+				// TODO: Initialize currency setting according to team's locale
 			}
 		}
 
@@ -146,14 +152,15 @@ public class ConvertXml2Hrf {
 		if (areTransfersMissing(economyDataMap)) {
 			HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.transfers"), progressIncrement);
 			PlayerTransfer.downloadMissingTransfers(teamId);
-			var commission = Integer.parseInt(economyDataMap.get("IncomeSoldPlayersCommission"));
-			var lastCommission = Integer.parseInt(economyDataMap.get("LastIncomeSoldPlayersCommission"));
-			if (commission > 0 || lastCommission > 0) {
+			var commission = new AmountOfMoney( Integer.parseInt(economyDataMap.get("IncomeSoldPlayersCommission")));
+			var lastCommission = new AmountOfMoney(Integer.parseInt(economyDataMap.get("LastIncomeSoldPlayersCommission")));
+			var noMoney = new AmountOfMoney(0);
+			if (commission.isGreaterThan(noMoney) || lastCommission.isGreaterThan( noMoney)) {
 				var soldPlayers = DBManager.instance().loadTeamTransfers(teamId, true);
-				if (commission > 0) {
+				if (commission.isGreaterThan( noMoney)) {
 					PlayerTransfer.downloadMissingTransferCommissions(soldPlayers, commission, HODateTime.now().toHTWeek());
 				}
-				if (lastCommission > 0) {
+				if (lastCommission.isGreaterThan( noMoney)) {
 					PlayerTransfer.downloadMissingTransferCommissions(soldPlayers, commission, HODateTime.now().minus(7, ChronoUnit.DAYS).toHTWeek());
 				}
 			}
@@ -272,16 +279,16 @@ public class ConvertXml2Hrf {
 				var previousWeek = HODateTime.now().minus(7, ChronoUnit.DAYS).toHTWeek();
 				var transfers = DBManager.instance().getTransfersSince(HODateTime.fromHTWeek(previousWeek).toDbTimestamp());
 				if (income > 0) {
-					var storedIncome = transfers.stream().filter(i -> i.getSellerid() == teamId).mapToInt(PlayerTransfer::getPrice).sum();
+					var storedIncome = transfers.stream().filter(i -> i.getSellerid() == teamId).mapToLong(i->i.getPrice().getSwedishKrona().longValue()).sum();
 					if (storedIncome != income) return true;
 				}
 				if (costs > 0) {
-					var storedCosts = transfers.stream().filter(i -> i.getBuyerid() == teamId).mapToInt(PlayerTransfer::getPrice).sum();
+					var storedCosts = transfers.stream().filter(i -> i.getBuyerid() == teamId).mapToLong(i->i.getPrice().getSwedishKrona().longValue()).sum();
 					if (storedCosts != costs) return true;
 				}
 				if (commission > 0) {
-					var storedCommission = transfers.stream().mapToInt(i -> i.getMotherClubFee() + i.getPreviousClubFee()).sum();
-					if (storedCommission != commission) return true;
+					var storedCommission = transfers.stream().mapToLong(i -> i.getMotherClubFee().getSwedishKrona().longValue() + i.getPreviousClubFee().getSwedishKrona().longValue()).sum();
+                    return storedCommission != commission;
 				}
 			}
 		}

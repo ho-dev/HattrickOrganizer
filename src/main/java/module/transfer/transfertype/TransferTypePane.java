@@ -6,6 +6,7 @@ import core.gui.comp.panel.ImagePanel;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.player.Player;
+import core.util.AmountOfMoney;
 import core.util.CurrencyUtils;
 import module.training.ui.comp.DividerListener;
 import module.transfer.PlayerRetriever;
@@ -20,11 +21,7 @@ import module.transfer.ui.sorter.DefaultTableSorter;
 import java.awt.BorderLayout;
 import java.awt.Font;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
+import java.util.*;
 import javax.swing.BorderFactory;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JComboBox;
@@ -189,7 +186,7 @@ public class TransferTypePane extends JSplitPane implements ListSelectionListene
         this.sidePanel.add(income, c);
 
         int row = 2;
-        int totalIncome = 0;
+        var totalIncome = new AmountOfMoney(0);
 
         for (int i = -1; i < TransferType.NUMBER; i++) {
             final TransferTypeRecap ttc = recap.getRecap(i);
@@ -208,15 +205,15 @@ public class TransferTypePane extends JSplitPane implements ListSelectionListene
                 c.col1 = 2;
                 c.col2 = c.col1;
                 c.hAlign = TableLayoutConstants.CENTER;
-                this.sidePanel.add(new JLabel(CurrencyUtils.CURRENCYSYMBOL),
+                this.sidePanel.add(new JLabel(Objects.requireNonNull(AmountOfMoney.Companion.getCurrency()).getSymbol()),
                         c);
 
                 c.col1 = 3;
                 c.col2 = c.col1;
                 c.hAlign = TableLayoutConstants.RIGHT;
-                this.sidePanel.add(new JLabel(FORMAT.format(ttc.getNetIncome())), c);
+                this.sidePanel.add(new JLabel(ttc.getNetIncome().toLocaleString()), c);
 
-                totalIncome += ttc.getNetIncome();
+                totalIncome.add( ttc.getNetIncome());
             }
         }
 
@@ -244,7 +241,7 @@ public class TransferTypePane extends JSplitPane implements ListSelectionListene
         c.col1 = 3;
         c.col2 = c.col1;
         c.hAlign = TableLayoutConstants.RIGHT;
-        this.sidePanel.add(new JLabel(FORMAT.format(totalIncome)), c);
+        this.sidePanel.add(new JLabel(totalIncome.toLocaleString()), c);
 
         final DefaultTableSorter sorter = (DefaultTableSorter) transferTable.getModel();
         sorter.setTableModel(new TransferTypeTableModel(transferred));

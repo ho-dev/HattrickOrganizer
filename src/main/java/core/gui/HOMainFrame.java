@@ -604,7 +604,7 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 			float faktorgeld = (float) xtra.getCurrencyRate();
 
 			if (faktorgeld > -1) {
-				UserParameter.instance().FXrate = faktorgeld;
+				UserParameter.instance().currencyRate = faktorgeld;
 			}
 		} catch (Exception e) {
 			HOLogger.instance().log(HOMainFrame.class, "Currency changed failed! " + e.getMessage());

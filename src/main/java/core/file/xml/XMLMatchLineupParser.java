@@ -157,7 +157,8 @@ public class XMLMatchLineupParser {
 			// rating nur für leute die gespielt haben
 			if ((roleID >= IMatchRoleID.startLineup)
 					&& (roleID < IMatchRoleID.startReserves)
-					|| ((roleID >= IMatchRoleID.FirstPlayerReplaced) && (roleID <= IMatchRoleID.ThirdPlayerReplaced))) {
+					|| ((roleID >= IMatchRoleID.FirstPlayerReplaced) && (roleID <= IMatchRoleID.ThirdPlayerReplaced))
+					|| ((roleID >= IMatchRoleID.redCardedPlayer1) && (roleID <= IMatchRoleID.redCardedPlayer3))) {
 				tmp = (Element) ele.getElementsByTagName("RatingStars").item(0);
 				if ( tmp != null) {
 					rating = Double

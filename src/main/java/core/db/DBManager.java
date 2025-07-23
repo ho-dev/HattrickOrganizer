@@ -21,6 +21,7 @@ import core.model.misc.Economy;
 import core.model.misc.Verein;
 import core.model.player.Player;
 import core.training.FuturePlayerSkillTraining;
+import core.util.AmountOfMoney;
 import core.util.HODateTime;
 import module.matches.MatchLocation;
 import module.nthrf.NtTeamDetails;
@@ -57,13 +58,13 @@ import java.util.stream.Collectors;
 public class DBManager implements PersistenceManager {
 
 	/** database versions */
-	private static final int DBVersion = 900; // HO 9.0 version
+	private static final int DBVersion = 1000; // HO 10.0 version
 	/**
 	 * Previous db version is used by development versions to ensure that db upgrade will rerun on each
 	 * new installed preliminary version
 	 */
-	private static final int previousDBVersion = 800;
-	private static final double DBConfigVersion = 9d; // HO 8.0 version
+	private static final int previousDBVersion = 900;
+	private static final double DBConfigVersion = 10d; // HO 10.0 version
 
 	/** 2004-06-14 11:00:00.0 */
 	public static Timestamp TSIDATE = new Timestamp(1087203600000L);
@@ -1454,7 +1455,7 @@ public class DBManager implements PersistenceManager {
 		return MatchesOverviewQuery.getGoalsByActionType(ownTeam, iMatchType, matchLocation);
 	}
 
-	public long getSumTransferPrices(int teamID, boolean isSold) {
+	public AmountOfMoney getSumTransferPrices(int teamID, boolean isSold) {
 		return ((TransferTable) getTable(TransferTable.TABLENAME))
 				.getTransferIncomeSum(teamID, isSold);
 	}
@@ -1498,7 +1499,7 @@ public class DBManager implements PersistenceManager {
 		return ret;
 	}
 
-	public int getSumTransferCommissions(HODateTime startWeek) {
+	public AmountOfMoney getSumTransferCommissions(HODateTime startWeek) {
 		return ((TransferTable) getTable(TransferTable.TABLENAME))
 				.getSumTransferCommissions(startWeek);
 	}
@@ -2375,7 +2376,7 @@ public class DBManager implements PersistenceManager {
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME)).loadLatestTSIInjured(playerId);
 	}
 
-	public Map<Integer, Integer> loadWageHistory(int playerId) {
+	public Map<Integer, AmountOfMoney> loadWageHistory(int playerId) {
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME)).loadWageHistory(playerId);
 	}
 

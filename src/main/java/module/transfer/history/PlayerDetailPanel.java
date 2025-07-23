@@ -10,8 +10,8 @@ import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.player.Player;
+import core.util.AmountOfMoney;
 import core.util.HODateTime;
-import core.util.Helper;
 import module.transfer.PlayerRetriever;
 import module.transfer.PlayerTransfer;
 import module.transfer.XMLParser;
@@ -24,7 +24,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.Vector;
-import static core.util.CurrencyUtils.convertCurrency;
 
 /**
  * Panel for showing detailed information on a player.
@@ -310,26 +309,26 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
             }
 
             final List<PlayerTransfer> transfers = DBManager.instance().getTransfers(this.playerId, true);
-            int valIncome = 0;
+            var valIncome = new AmountOfMoney( 0);
             HODateTime soldDate = null;
             final int teamid = HOVerwaltung.instance().getModel().getBasics().getTeamId();
             for (final PlayerTransfer transfer : transfers) {
                 if (transfer.getBuyerid() == teamid) {
-                    valIncome -= transfer.getPrice();
+                    valIncome.subtract(transfer.getPrice());
                     if (arrivalDate == null || transfer.getDate().isAfter(arrivalDate)) {
                         arrivalDate = transfer.getDate();
                     }
                 }
 
                 if (transfer.getSellerid() == teamid) {
-                    valIncome += transfer.getPrice();
+                    valIncome.add(transfer.getPrice());
                     if (soldDate == null || transfer.getDate().isAfter(soldDate)) {
                         soldDate = transfer.getDate();
                     }
                 }
             }
 
-            income.setText(core.util.Helper.getNumberFormat(true, 0).format(convertCurrency(valIncome)));
+            income.setText(valIncome.toLocaleString());
             lengthOfStayInTeam.setText("");
             sumOfWage.setText("");
             if (arrivalDate != null) {
@@ -348,8 +347,8 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
                     lengthOfStayInTeam.setText(activeDuration.toString());
                 }
                 var sum = this.player.getSumOfWage(arrivalDate, to);
-                sumOfWage.setText(Helper.getNumberFormat(true, 0).format(convertCurrency(sum)));
-                totalCostOfOwnership.setText(Helper.getNumberFormat(true, 0).format(convertCurrency(sum - valIncome)));
+                sumOfWage.setText(sum.toLocaleString());
+                totalCostOfOwnership.setText(sum.minus(valIncome).toLocaleString());
             }
 
             refreshPlayerTable(transfers);

@@ -1,5 +1,6 @@
 package core.db;
 
+import core.util.AmountOfMoney;
 import core.util.HODateTime;
 import module.teamAnalyzer.vo.SquadInfo;
 
@@ -28,7 +29,7 @@ public class SquadInfoTable extends AbstractTable {
                 ColumnDescriptor.Builder.newInstance().setColumnName("SUSPENDED").setGetter((p) -> ((SquadInfo) p).getRedCards()).setSetter((p, v) -> ((SquadInfo) p).setRedCards((int) v)).setType(Types.INTEGER).isNullable(false).build(),
                 ColumnDescriptor.Builder.newInstance().setColumnName("TRANSFERLISTED").setGetter((p) -> ((SquadInfo) p).getTransferListedCount()).setSetter((p, v) -> ((SquadInfo) p).setTransferListedCount((int) v)).setType(Types.INTEGER).isNullable(false).build(),
                 ColumnDescriptor.Builder.newInstance().setColumnName("TSISUM").setGetter((p) -> ((SquadInfo) p).gettSISum()).setSetter((p, v) -> ((SquadInfo) p).settSISum((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("SALARY").setGetter((p) -> ((SquadInfo) p).getSalarySum()).setSetter((p, v) -> ((SquadInfo) p).setSalarySum((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("SALARY").setGetter((p) -> ((SquadInfo) p).getSalarySum().getSwedishKrona()).setSetter((p, v) -> ((SquadInfo) p).setSalarySum((AmountOfMoney) v)).setType(Types.DECIMAL).isNullable(false).build(),
                 ColumnDescriptor.Builder.newInstance().setColumnName("PLAYER").setGetter((p) -> ((SquadInfo) p).getPlayerCount()).setSetter((p, v) -> ((SquadInfo) p).setPlayerCount((int) v)).setType(Types.INTEGER).isNullable(false).build(),
                 ColumnDescriptor.Builder.newInstance().setColumnName("MOTHERCLUB").setGetter((p) -> ((SquadInfo) p).getHomegrownCount()).setSetter((p, v) -> ((SquadInfo) p).setHomegrownCount((int) v)).setType(Types.INTEGER).isNullable(false).build()
         };

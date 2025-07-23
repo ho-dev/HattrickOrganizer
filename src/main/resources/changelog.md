@@ -1,4 +1,5 @@
 # Changelist HO! 9.0
+
 ## Some numbers
 * 164 commits
 * 676 files changed, 13655 insertions(+), 13991 deletions(-)
@@ -92,19 +93,20 @@
 
 ## Translations
 
-Reports by Contributors - June 23, 2024 - May 01, 2025
+Reports by Contributors - June 23, 2024 - May 11, 2025
 
 * Kristaps 322
-* sich 224
+* sich 225
 * Lidegang 179
 * Tavaro 175
-* wsbrenk 97
+* wsbrenk 99
+* \_KOHb\_ 49
 * Moorhuhninho 25
 * Sebastian Reddig 12
 * Achilles 10
 * Billy Dikkanen 10
 
-Total 1036
+Total 1106
 
 # Changelist HO! 8.1
 ## Some numbers
@@ -114,9 +116,25 @@ Total 1036
   * 5 wsbrenk
   * 1 Sebastian Reddig
   * 1 Sébastien Le Callonnec
-
+  * 
 ## Highlights
 * Bug fixes
+
+## [Detailed Changelog](https://github.com/ho-dev/HattrickOrganizer/issues?q=milestone%3A8.1)
+
+### Squad
+* Fix skill tester rating prediction (#2092)
+
+### Youth
+* Fix sql error when youth scout comment is too long for the database column (#2094)
+* Fix exception on examining youth player substitutions (#2097)
+
+### Translations
+Reports by Contributors - June 23, 2024 - July 20, 2024
+
+* Sebastian Reddig 9
+
+* Total 9
 
 # Changelist HO! 8.0
 

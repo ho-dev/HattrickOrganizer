@@ -78,6 +78,7 @@ public class MatchRoleID extends AbstractTable.Storable implements java.io.Seria
 	public boolean isBackupsMatchRoleId(){ return m_iId>=substGK2 && m_iId<= substXT2;}
 	public boolean isPenaltyTakerMatchRoleId(){ return m_iId>=penaltyTaker1 && m_iId<=penaltyTaker11;}
 	public boolean isReplacedMatchRoleId() { return m_iId>=FirstPlayerReplaced && m_iId<=ThirdPlayerReplaced; }
+	public boolean isRedCardedMatchRoleId() { return m_iId>=redCardedPlayer1 && m_iId<=redCardedPlayer3; }
 
 	// It is much safer to have "empty" as 0, as it appears temp-players may
 	// get ID -1 - Blaghaid
@@ -146,9 +147,12 @@ public class MatchRoleID extends AbstractTable.Storable implements java.io.Seria
             case FORWARD, FORWARD_TOWING, FORWARD_DEF -> {
                 return rightForward;
             }
-            case SUBSTITUTED1, SUBSTITUTED2, SUBSTITUTED3 -> {
-                return FirstPlayerReplaced;
-            }
+			case SUBSTITUTED1, SUBSTITUTED2, SUBSTITUTED3 -> {
+				return FirstPlayerReplaced;
+			}
+			case REDCARDED1, REDCARDED2, REDCARDED3 -> {
+				return redCardedPlayer1;
+			}
             default -> {
                 HOLogger.instance().log(MatchRoleID.class, "Position not recognized: " + posId);
                 return FirstPlayerReplaced;
@@ -184,6 +188,7 @@ public class MatchRoleID extends AbstractTable.Storable implements java.io.Seria
 			case FORWARD_TOWING -> TranslationFacility.tr("ls.player.position_short.forwardtowardswing");
 			case FORWARD_DEF -> TranslationFacility.tr("ls.player.position_short.forwarddefensive");
 			case SUBSTITUTED1, SUBSTITUTED2, SUBSTITUTED3 -> TranslationFacility.tr("Ausgewechselt");
+			case REDCARDED1, REDCARDED2, REDCARDED3 -> TranslationFacility.tr("ls.player.position.short.red_carded");
 			default -> TranslationFacility.tr("Unbestimmt");
 		};
 	}
@@ -216,6 +221,7 @@ public class MatchRoleID extends AbstractTable.Storable implements java.io.Seria
 			case FORWARD_TOWING -> TranslationFacility.tr("ls.player.position.forwardtowardswing");
 			case EXTRA -> TranslationFacility.tr("ls.player.position.extra_substitute");
 			case SUBSTITUTED1, SUBSTITUTED2, SUBSTITUTED3 -> TranslationFacility.tr("Ausgewechselt");
+			case REDCARDED1, REDCARDED2, REDCARDED3 -> TranslationFacility.tr("ls.player.position.red_carded");
 			case UNSELECTABLE -> TranslationFacility.tr("Unselectable");
 			default -> TranslationFacility.tr("ls.player.position.no_override");
 		};

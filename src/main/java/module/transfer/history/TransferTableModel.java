@@ -8,7 +8,6 @@ import core.gui.model.UserColumnController;
 import core.gui.theme.ImageUtilities;
 import core.model.TranslationFacility;
 import core.model.player.Player;
-import core.util.CurrencyUtils;
 import core.util.HODateTime;
 import module.transfer.PlayerTransfer;
 import javax.swing.*;
@@ -110,7 +109,7 @@ public class TransferTableModel extends HOTableModel {
                 new TransferTableColumn(id++,"Price") {
                     @Override
                     public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
-                        return new ColorLabelEntry(CurrencyUtils.convertCurrency(transfer.getPrice()), ColorLabelEntry.BG_STANDARD, true, 0);
+                        return new ColorLabelEntry(transfer.getPrice(), ColorLabelEntry.BG_STANDARD);
                     }
                 },
                 new TransferTableColumn(id++,"ls.player.tsi") {

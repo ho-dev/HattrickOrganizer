@@ -1,5 +1,6 @@
 package core.db;
 
+import core.util.AmountOfMoney;
 import core.util.HODateTime;
 import module.transfer.scout.ScoutEintrag;
 import java.sql.Types;
@@ -35,12 +36,12 @@ final class ScoutTable extends AbstractTable {
 				ColumnDescriptor.Builder.newInstance().setColumnName("Torschuss").setGetter((o) -> ((ScoutEintrag) o).getTorschuss()).setSetter((o, v) -> ((ScoutEintrag) o).setTorschuss((int) v)).setType(Types.INTEGER).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("Passpiel").setGetter((o) -> ((ScoutEintrag) o).getPasspiel()).setSetter((o, v) -> ((ScoutEintrag) o).setPasspiel((int) v)).setType(Types.INTEGER).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("Standards").setGetter((o) -> ((ScoutEintrag) o).getStandards()).setSetter((o, v) -> ((ScoutEintrag) o).setStandards((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("Price").setGetter((o) -> ((ScoutEintrag) o).getPrice()).setSetter((o, v) -> ((ScoutEintrag) o).setPrice((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Price").setGetter((o) -> ((ScoutEintrag) o).getPrice().getSwedishKrona()).setSetter((o, v) -> ((ScoutEintrag) o).setPrice((AmountOfMoney) v)).setType(Types.DECIMAL).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("Deadline").setGetter((o) -> ((ScoutEintrag) o).getDeadline()).setSetter((o, v) -> ((ScoutEintrag) o).setDeadline(((HODateTime) v).toDbTimestamp())).setType(Types.TIMESTAMP).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("Wecker").setGetter((o) -> ((ScoutEintrag) o).isWecker()).setSetter((o, v) -> ((ScoutEintrag) o).setWecker((boolean) v)).setType(Types.BOOLEAN).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("AgeDays").setGetter((o) -> ((ScoutEintrag) o).getAgeDays()).setSetter((o, v) -> ((ScoutEintrag) o).setAgeDays((int) v)).setType(Types.INTEGER).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("Agreeability").setGetter((o) -> ((ScoutEintrag) o).getAgreeability()).setSetter((o, v) -> ((ScoutEintrag) o).setAgreeability((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("baseWage").setGetter((o) -> ((ScoutEintrag) o).getbaseWage()).setSetter((o, v) -> ((ScoutEintrag) o).setbaseWage((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("baseWage").setGetter((o) -> ((ScoutEintrag) o).getbaseWage().getSwedishKrona()).setSetter((o, v) -> ((ScoutEintrag) o).setbaseWage((AmountOfMoney) v)).setType(Types.DECIMAL).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("Nationality").setGetter((o) -> ((ScoutEintrag) o).getNationality()).setSetter((o, v) -> ((ScoutEintrag) o).setNationality((int) v)).setType(Types.INTEGER).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("Leadership").setGetter((o) -> ((ScoutEintrag) o).getLeadership()).setSetter((o, v) -> ((ScoutEintrag) o).setLeadership((int) v)).setType(Types.INTEGER).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("Loyalty").setGetter((o) -> ((ScoutEintrag) o).getLoyalty()).setSetter((o, v) -> ((ScoutEintrag) o).setLoyalty((int) v)).setType(Types.INTEGER).isNullable(false).build(),

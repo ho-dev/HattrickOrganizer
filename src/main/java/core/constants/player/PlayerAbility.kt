@@ -110,13 +110,13 @@ object PlayerAbility {
         if (showNumbers) {
             rating += if (isMatch) {
                 val s = (" ("
-                        + Helper.getNumberFormat(false, nbDecimal)
+                        + Helper.getNumberFormat( nbDecimal)
                     .format(Helper.round(tmpRatingValue + getValue4Sublevel(sublevel), 2))
                         + ")")
                 s
             } else {
                 (" ("
-                        + Helper.getNumberFormat(false, nbDecimal)
+                        + Helper.getNumberFormat( nbDecimal)
                     .format(Helper.round(ratingValue, nbDecimal)) + ")")
             }
         }

@@ -5,6 +5,7 @@ import core.model.enums.MatchType;
 import core.model.player.Player;
 import core.model.player.PlayerCategory;
 import core.model.player.TrainerType;
+import core.util.AmountOfMoney;
 import core.util.HODateTime;
 import core.util.HOLogger;
 import java.sql.ResultSet;
@@ -62,7 +63,7 @@ final class SpielerTable extends AbstractTable {
 				ColumnDescriptor.Builder.newInstance().setColumnName("iAgressivitaet").setGetter((p) -> ((Player) p).getAggressivity()).setSetter((p, v) -> ((Player) p).setAggressivity((int) v)).setType(Types.INTEGER).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("Fuehrung").setGetter((p) -> ((Player) p).getLeadership()).setSetter((p, v) -> ((Player) p).setLeadership((int) v)).setType(Types.INTEGER).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("Erfahrung").setGetter((p) -> ((Player) p).getExperience()).setSetter((p, v) -> ((Player) p).setExperience((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("Gehalt").setGetter((p) -> ((Player) p).getWage()).setSetter((p, v) -> ((Player) p).setWage((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Gehalt").setGetter((p) -> ((Player) p).getWage().getSwedishKrona()).setSetter((p, v) -> ((Player) p).setWage((AmountOfMoney) v)).setType(Types.DECIMAL).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("Land").setGetter((p) -> ((Player) p).getNationalityId()).setSetter((p, v) -> ((Player) p).setNationalityId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("Marktwert").setGetter((p) -> ((Player) p).getTsi()).setSetter((p, v) -> ((Player) p).setTsi((int) v)).setType(Types.INTEGER).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("Verletzt").setGetter((p) -> ((Player) p).getInjuryWeeks()).setSetter((p, v) -> ((Player) p).setInjuryWeeks((int) v)).setType(Types.INTEGER).isNullable(false).build(),
@@ -289,12 +290,12 @@ final class SpielerTable extends AbstractTable {
 		return "";
 	}
 
-	public Map<Integer, Integer> loadWageHistory(int playerId) {
-		Map<Integer, Integer> ret = new HashMap<>();
+	public Map<Integer, AmountOfMoney> loadWageHistory(int playerId) {
+		Map<Integer, AmountOfMoney> ret = new HashMap<>();
 		String loadWageHistorySql = "select age, max(gehalt) from spieler where spielerid=? group by age";
 		try (ResultSet rs = connectionManager.executePreparedQuery(loadWageHistorySql, playerId)) {
 			while (rs != null && rs.next()) {
-				ret.put(rs.getInt(1), rs.getInt(2));
+				ret.put(rs.getInt(1), new AmountOfMoney(rs.getInt(2)));
 			}
 		} catch (SQLException e) {
 			HOLogger.instance().error(SpielerTable.class, "Error retrieving TSI: " + e);

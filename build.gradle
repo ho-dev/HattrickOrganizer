@@ -22,7 +22,7 @@ buildscript {
 plugins {
     id "java"
     id "groovy"
-    id "org.jetbrains.kotlin.jvm" version "2.1.20"
+    id "org.jetbrains.kotlin.jvm" version "2.2.0"
     id "application"
     id "org.kordamp.gradle.markdown" version "2.2.0"
     id "com.github.breadmoirai.github-release" version "2.5.2"
@@ -149,7 +149,7 @@ poeditor {
     trans.add type:'properties', lang: 'fi',      file: "${projectDir}/src/main/resources/language/Finnish.properties"
     trans.add type:'properties', lang: 'fr',      file: "${projectDir}/src/main/resources/language/French.properties"
     trans.add type:'properties', lang: 'de',      file: "${projectDir}/src/main/resources/language/German.properties"
-    trans.add type:'properties', lang: 'el',      file: "${projectDir}/src/main/resources/language/Greeklish.properties"
+    trans.add type:'properties', lang: 'el',      file: "${projectDir}/src/main/resources/language/Greek.properties"
     trans.add type:'properties', lang: 'he',      file: "${projectDir}/src/main/resources/language/Hebrew.properties" //Hebrew
     trans.add type:'properties', lang: 'hu',      file: "${projectDir}/src/main/resources/language/Magyar.properties"  //Hungarian
     trans.add type:'properties', lang: 'it',      file: "${projectDir}/src/main/resources/language/Italiano.properties"
@@ -177,6 +177,7 @@ poeditor {
     trans.add type:'properties', lang: 'gl',      file: "${projectDir}/src/main/resources/language/Galego.properties"    // Galician
     trans.add type:'properties', lang: 'nl-be',   file: "${projectDir}/src/main/resources/language/Vlaams.properties"    // Flemish
     trans.add type:'properties', lang: 'es-ar',   file: "${projectDir}/src/main/resources/language/Spanish(AR).properties"    // Argentina
+    trans.add type:'properties', lang: 'et',      file: "${projectDir}/src/main/resources/language/Estonian.properties"
 }
 
 

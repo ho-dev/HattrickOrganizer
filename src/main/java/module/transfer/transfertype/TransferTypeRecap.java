@@ -1,6 +1,8 @@
 // %1126721331041:hoplugins.transfers.vo%
 package module.transfer.transfertype;
 
+import core.util.AmountOfMoney;
+
 /**
  * Recap Information about a single Transfer Type
  *
@@ -10,7 +12,7 @@ class TransferTypeRecap {
     //~ Instance fields ----------------------------------------------------------------------------
 
     /** Net Income of all the transfers of this type */
-    private int netIncome;
+    private final AmountOfMoney netIncome = new AmountOfMoney(0);
 
     /** Number of transfers of this type */
     private int number;
@@ -22,7 +24,7 @@ class TransferTypeRecap {
      *
      * @return total gain or loss by transfers of this type
      */
-    final int getNetIncome() {
+    final AmountOfMoney getNetIncome() {
         return netIncome;
     }
 
@@ -40,8 +42,8 @@ class TransferTypeRecap {
      *
      * @param income income of the transfer
      */
-    final void addOperation(int income) {
+    final void addOperation(AmountOfMoney income) {
         number++;
-        netIncome = netIncome + income;
+        netIncome.add( income);
     }
 }

@@ -1,7 +1,5 @@
 package core.util;
 
-import core.model.UserParameter;
-
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.time.Instant;
@@ -9,7 +7,6 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.zone.ZoneRules;
-import java.time.format.FormatStyle;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -49,15 +46,6 @@ public class DateTimeUtils {
 	}
 
 	/**
-	 Format a datetime with HO! language interface
-	 */
-	public static String Format(Date date, String format) {
-		Locale locale = Languages.lookup(UserParameter.instance().sprachDatei).getLocale();
-		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(format, locale);
-		return simpleDateFormat.format(date);
-	}
-
-	/**
 	 * Converts a {@link Timestamp}, presumably stored as CET/CEST in the database (Hattrick default),
 	 * and converts into an {@link Instant}.
 	 *
@@ -71,80 +59,6 @@ public class DateTimeUtils {
 
 		// Add current offset for time in default timezone (Europe/Stockholm), and parse as an Instant.
 		return Instant.parse(str + rules.getOffset(LocalDateTime.now()));
-	}
-
-  /**
-	 Format a datetime with HO! language interface
-	 */
-	public static String FormatLongDate(Timestamp ts) {
-
-		Locale locale = Languages.lookup(UserParameter.instance().sprachDatei).getLocale();
-
-		DateTimeFormatter FORMATTER = DateTimeFormatter.ofLocalizedDate(FormatStyle.LONG);
-		FORMATTER.withLocale(locale);
-
-		return ts.toLocalDateTime().format(FORMATTER);
-	}
-
-	/**
-        converts a Date into a SQL timestamp
-	 */
-	public static String DateToSQLtimeStamp(Date date) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		return "TIMESTAMP '" + sdf.format(date) + "'";
-	}
-
-	/**
-	 converts an Instant into a SQL timestamp with the instant suppose to represent time in HT timeZone
-	 */
-	public static String InstantToSQLtimeStamp(Instant instant) {
-		return cl_Formatter.format(instant);
-	}
-
-
-	/**
-	 * return the zoneID from the hashCode
-	 */
-	public static ZoneId fromHash(int _hashCode){
-		getAvailableZoneIds();
-		for (var toto:cl_availableZoneIds.keySet()){
-			if(toto.hashCode() == _hashCode){
-				return ZoneId.of(toto);
-			}
-		}
-		HOLogger.instance().error(DateTimeUtils.class, "ZoneID could not be identified from hashValue");
-		return null;
-	}
-
-	/**
-	 * Creates a new <code>Date</code> based on the given date with the time set
-	 * to its minimum value. The returned date will represent a day at its the
-	 * very first millisecond (00:00:00.000).
-	 * 
-	 * @param date
-	 *            The date to set the time to its minimum.
-	 * @return A new <code>Date</code> object based on the given date, with the
-	 *         time set to its minimum.
-	 */
-	public static Date getDateWithMinTime(Date date) {
-		GregorianCalendar cal = new GregorianCalendar();
-		cal.setTime(date);
-		setMinTime(cal);
-		return cal.getTime();
-	}
-
-	/**
-	 * Sets the calendar's time values to their minimum. This will be the very
-	 * first millisecond of a day (00:00:00.000).
-	 * 
-	 * @param cal
-	 *            The calendar to zero the time.
-	 */
-	private static void setMinTime(Calendar cal) {
-		cal.set(GregorianCalendar.HOUR_OF_DAY, cal.getMinimum(Calendar.HOUR_OF_DAY));
-		cal.set(GregorianCalendar.MINUTE, cal.getMinimum(Calendar.MINUTE));
-		cal.set(GregorianCalendar.SECOND, cal.getMinimum(Calendar.SECOND));
-		cal.set(GregorianCalendar.MILLISECOND, cal.getMinimum(Calendar.MILLISECOND));
 	}
 
 	/**

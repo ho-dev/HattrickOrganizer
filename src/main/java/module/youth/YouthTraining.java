@@ -64,6 +64,7 @@ public class YouthTraining extends AbstractTable.Storable {
         var allActivePlayers = new Vector<MatchLineupPosition>();
         allActivePlayers.addAll(lineup.getFieldPositions());
         allActivePlayers.addAll(lineup.getReplacedPositions());
+        allActivePlayers.addAll(lineup.getRedCardedPositions());
         for (var matchRoleId : allActivePlayers) {
             recalcSkills(matchRoleId.getPlayerId());
         }

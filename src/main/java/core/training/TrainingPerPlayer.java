@@ -89,10 +89,10 @@ public class TrainingPerPlayer  {
 		double ret = 0;
 
 		if (skill != PlayerSkill.STAMINA) {
-			var wt = WeeklyTrainingType.instance(this._TrainingWeek.getTrainingType());
-			boolean isTrainedSkill = wt != null && wt.isTraining(skill);
+			var weeklyTrainingType = WeeklyTrainingType.instance(this._TrainingWeek.getTrainingType());
+			boolean isTrainedSkill = weeklyTrainingType != null && weeklyTrainingType.isTraining(skill);
 			if (isTrainedSkill) {
-				ret += wt.calculateSkillIncreaseOfTrainingWeek(skillValue, this);
+				ret += weeklyTrainingType.calculateSkillIncreaseOfTrainingWeek(skillValue, this);
 			}
 			/* Time to perform skill drop */
 			if (SkillDrops.instance().isActive()) {
@@ -160,9 +160,8 @@ public class TrainingPerPlayer  {
 		var kAge = 7.0 * k / 30.;
 
 		var L = kAge + skillLevel;
-		var S = stamina;
 
-		var ret = 0.;
+        var ret = 0.;
 		if (L <= 7.0) {
 		/*
 			At L=7.0 and below
@@ -174,7 +173,7 @@ public class TrainingPerPlayer  {
 			o = -0.301
 			p = 2.826
 		 */
-			ret = (-1.05 * S * S + 2.1 * S) * (0.00013 * L * L * L + 0.0048 * L * L - 0.301 * L + 2.826) - 0.21;
+			ret = (-1.05 * stamina * stamina + 2.1 * stamina) * (0.00013 * L * L * L + 0.0048 * L * L - 0.301 * L + 2.826) - 0.21;
 		} else if (L < 7.56) {
 			/*
 				At L between 7.0 and 7.56:
@@ -185,7 +184,7 @@ public class TrainingPerPlayer  {
 				g = -0.0178
 				h = -0.554
 			 */
-			ret = -1.05 * S * S + 2.1 * S - 0.00772 * L * L * L + 0.0636 * L * L - 0.0178 * L - 0.554;
+			ret = -1.05 * stamina * stamina + 2.1 * stamina - 0.00772 * L * L * L + 0.0636 * L * L - 0.0178 * L - 0.554;
 		} else {
 			/*
 				At L=7.56 and above:
@@ -200,11 +199,11 @@ public class TrainingPerPlayer  {
 				d = -0.0185
 			 */
 
-			ret = -1.05 * S * S + 2.1 * S - 0.0016 * L * L * L - 0.00544 * L * L + 0.0013 * L - 0.0185;
+			ret = -1.05 * stamina * stamina + 2.1 * stamina - 0.0016 * L * L * L - 0.00544 * L * L + 0.0013 * L - 0.0185;
 		}
 
 		// Tmax = -2.1S^2 + 4.2S - 0.21
-		var Tmax = -2.1 * S * S + 4.2 * S - 0.21;
+		var Tmax = -2.1 * stamina * stamina + 4.2 * stamina - 0.21;
 		if (ret > Tmax) {
 			ret = Tmax;
 		}

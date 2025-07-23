@@ -1,5 +1,6 @@
 package core.file.xml;
 
+import core.util.AmountOfMoney;
 import core.util.HOLogger;
 
 import java.io.File;
@@ -83,6 +84,10 @@ public class XMLManager {
 
     public static int xmlIntValue(Element ele, String xmlKey) {
         return xmlIntValue(ele,xmlKey,0);
+    }
+
+    public static AmountOfMoney xmlAmountOfMoneyValue(Element ele, String xmlKey) {
+        return new AmountOfMoney(xmlIntValue(ele,xmlKey,0));
     }
 
     public static int xmlIntValue(Element ele, String xmlKey, int def) {

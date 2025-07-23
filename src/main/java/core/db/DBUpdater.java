@@ -81,6 +81,8 @@ final class DBUpdater {
 					case 800:
 						updateDBv900(DBVersion);
 					case 900:
+						updateDBv1000(DBVersion);
+					case 1000:
 				}
 
 			} catch (Exception e) {
@@ -89,6 +91,43 @@ final class DBUpdater {
 		} else {
 			HOLogger.instance().log(getClass(), "No DB update necessary.");
 		}
+	}
+
+	private void updateDBv1000(int dbVersion) throws  SQLException{
+
+		// Add all available file infos to the world details table, especially the currency information
+		var worldDetailsTable  = dbManager.getTable(WorldDetailsTable.TABLENAME);
+		if ( worldDetailsTable.tryAddColumn("COUNTRY_CODE", "VARCHAR(128)") ) {
+			worldDetailsTable.tryAddColumn("CURRENCY_NAME", "VARCHAR(128)");
+			worldDetailsTable.tryAddColumn("CURRENCY_RATE", "VARCHAR(128)");
+			worldDetailsTable.tryAddColumn("DATE_FORMAT", "VARCHAR(128)");
+			worldDetailsTable.tryAddColumn("TIME_FORMAT", "VARCHAR(128)");
+		}
+
+		// Change all amount of money columns to big decimal type
+		var playerTable = dbManager.getTable(SpielerTable.TABLENAME);
+		if ( playerTable.tryChangeColumnDataType("GEHALT", "INTEGER", "DECIMAL") ) {
+
+			var scoutTable = dbManager.getTable(ScoutTable.TABLENAME);
+			scoutTable.tryChangeColumnDataType("PRICE", "INTEGER", "DECIMAL");
+			scoutTable.tryChangeColumnDataType("baseWage", "INTEGER", "DECIMAL");
+
+			var transferTable = dbManager.getTable(TransferTable.TABLENAME);
+			transferTable.tryChangeColumnDataType("PRICE", "INTEGER", "DECIMAL");
+			transferTable.tryChangeColumnDataType("MOTHERCLUBFEE", "INTEGER", "DECIMAL");
+			transferTable.tryChangeColumnDataType("previousclubcommission", "INTEGER", "DECIMAL");
+
+			var squadInfoTable = dbManager.getTable(SquadInfoTable.TABLENAME);
+			squadInfoTable.tryChangeColumnDataType("SALARY", "INTEGER", "DECIMAL");
+
+			var taPlayerTable = dbManager.getTable(TAPlayerTable.TABLENAME);
+			taPlayerTable.tryChangeColumnDataType("SALARY", "INTEGER", "DECIMAL");
+
+			var stadiumTable = dbManager.getTable(StadionTable.TABLENAME);
+			stadiumTable.tryChangeColumnDataType("AusbauKosten", "INTEGER", "DECIMAL");
+		}
+
+		updateDBVersion(dbVersion, 1000);
 	}
 
 	private void updateDBv900(int dbVersion) throws SQLException {
@@ -676,7 +715,6 @@ final class DBUpdater {
 			HOLogger.instance().error(getClass(), "updateDBv400:  Faktoren table could not be reset");
 			throwables.printStackTrace();
 		}
-
 
 		resetUserColumns();
 

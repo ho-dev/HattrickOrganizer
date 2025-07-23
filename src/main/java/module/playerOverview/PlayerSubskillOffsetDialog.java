@@ -190,7 +190,7 @@ final class PlayerSubskillOffsetDialog extends JDialog implements ActionListener
 	}
 
 	public void refresh(){
-		var numberFormat = Helper.getNumberFormat(false, 0);
+		var numberFormat = Helper.getNumberFormat( 0);
 		this.tsi.setValue(numberFormat.format( calculateTSI()) + " / " + numberFormat.format(m_clPlayer.getTsi()));
 	}
 

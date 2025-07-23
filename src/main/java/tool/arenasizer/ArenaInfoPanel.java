@@ -51,7 +51,7 @@ public class ArenaInfoPanel extends JPanel {
 		final Stadium stadium = HOVerwaltung.instance().getModel().getStadium();
 
 		final String notAvailableString = TranslationFacility.tr("ls.general_label.not_available_abbreviation");
-		final var numberformat = Helper.getNumberFormat(false, 0);
+		final var numberformat = Helper.getNumberFormat( 0);
 
 		// Current Capacity
 		currentCapacityPanel.labelCountTerraces.setText(numberformat.format(stadium.getTerraces()));

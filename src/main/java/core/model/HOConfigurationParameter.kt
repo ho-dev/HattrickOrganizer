@@ -33,12 +33,12 @@ open class HOConfigurationParameter(
      */
     init {
         this.value = parameters.getProperty(key)
-        if (value == null) {
-            value = DBManager.instance().loadHOConfigurationParameter(key)
-            if (value == null) {
-                value = defaultValue
+        if (this.value == null) {
+            this.value = DBManager.instance().loadHOConfigurationParameter(key)
+            if (this.value == null) {
+                this.value = defaultValue
             }
-            parameters.setProperty(key, value)
+            if ( this.value != null ) parameters.setProperty(key, this.value)
         }
     }
 
@@ -52,10 +52,10 @@ open class HOConfigurationParameter(
 
     /**
      * Set the value.
-     * ParameterChanged is the to true, if new value different to previous value
+     * ParameterChanged is set to true, if new value different to previous value
      * @param value New value
      */
-    fun setValue(value: String) {
+    fun setValue(value: String?) {
         if (value != this.value) {
             this.value = value
             parameters.setProperty(key, value)
