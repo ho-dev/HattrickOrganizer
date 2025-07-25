@@ -5,17 +5,17 @@ import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.IHOTableCellEntry;
 import core.gui.comp.table.HOTableModel;
 import core.gui.model.UserColumnController;
-import core.model.TranslationFacility;
-import core.model.player.Player;
+import core.model.HOVerwaltung;
+import core.model.UserParameter;
 import core.model.player.SkillChange;
-import core.training.FutureTrainingManager;
-import core.training.TrainingPreviewPlayers;
+import core.util.Helper;
 import module.training.PlayerSkillChange;
+import module.training.Skills;
 import module.training.ui.TrainingLegendPanel;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import java.io.Serial;
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -28,16 +28,12 @@ public class SkillupTableModel extends HOTableModel {
 	public SkillupTableModel(UserColumnController.@NotNull ColumnModelId id) {
 		super(id, "TrainingSkillUps");
 		columns = new ArrayList<>(List.of(
-
-				//             case 0 -> TranslationFacility.tr("ls.player.skill");
-				//            case 1 -> TranslationFacility.tr("Week");
-				//            case 2 -> TranslationFacility.tr("Season");
-				//            case 3 -> TranslationFacility.tr("ls.player.age");
-
 				new TrainingColumn("ls.player.skill", 150) {
 					@Override
 					public IHOTableCellEntry getTableEntry(PlayerSkillChange entry) {
-                        var ret = new ColorLabelEntry(entry.getSkillChange().getType().toInt(), entry.getSkillChange().getType().getLanguageString(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+						var skillChange = entry.getSkillChange();
+						var text = skillChange.getType().getLanguageString() + ":  " + PlayerAbility.getNameForSkill(skillChange.getValue(), true);
+						var ret = new ColorLabelEntry(entry.getSkillChange().getType().toInt(), text, getForegroundColor(entry), ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
 						ret.setToolTipText(entry.getSkillChange().getDate().toLocaleDateTime());
 						ret.setIcon(TrainingLegendPanel.getSkillupTypeIcon(entry.getSkillChange().getType(), entry.getSkillChange().getChange()));
 						return ret;
@@ -48,7 +44,7 @@ public class SkillupTableModel extends HOTableModel {
 					public IHOTableCellEntry getTableEntry(PlayerSkillChange entry) {
 						var date = entry.getSkillChange().getDate();
 						var htWeek = date.toHTWeek();
-                        var ret = new ColorLabelEntry(htWeek.sinceOrigin(), String.valueOf(htWeek.week), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        var ret = new ColorLabelEntry(htWeek.sinceOrigin(), String.valueOf(htWeek.week), getForegroundColor(entry), ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
 						ret.setToolTipText(entry.getSkillChange().getDate().toLocaleDateTime());
 						return ret;
 					}
@@ -58,7 +54,7 @@ public class SkillupTableModel extends HOTableModel {
 					public IHOTableCellEntry getTableEntry(PlayerSkillChange entry) {
 						var date = entry.getSkillChange().getDate();
 						var htWeek = date.toHTWeek();
-						var ret = new ColorLabelEntry(htWeek.sinceOrigin(), String.valueOf(htWeek.season), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+						var ret = new ColorLabelEntry(htWeek.sinceOrigin(), String.valueOf(htWeek.season), getForegroundColor(entry), ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
 						ret.setToolTipText(entry.getSkillChange().getDate().toLocaleDateTime());
 						return ret;
 
@@ -69,7 +65,7 @@ public class SkillupTableModel extends HOTableModel {
 					public IHOTableCellEntry getTableEntry(PlayerSkillChange entry) {
 						var date = entry.getSkillChange().getDate();
 						var htWeek = date.toHTWeek();
-						var ret = new ColorLabelEntry(htWeek.sinceOrigin(), entry.getPlayer().getAgeWithDaysAsString(date), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+						var ret = new ColorLabelEntry(htWeek.sinceOrigin(), entry.getPlayer().getAgeWithDaysAsString(date), getForegroundColor(entry), ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
 						ret.setToolTipText(entry.getSkillChange().getDate().toLocaleDateTime());
 						return ret;
 
@@ -78,9 +74,16 @@ public class SkillupTableModel extends HOTableModel {
 		)).toArray(new TrainingColumn[0]);
 	}
 
+	private Color getForegroundColor(PlayerSkillChange entry) {
+		if (entry.getSkillChange().getDate().isAfter(HOVerwaltung.instance().getModel().getBasics().getDatum()) ) {
+			return Skills.getSkillColor(entry.getSkillChange().getType());
+		}
+		return Color.BLACK;
+	}
+
 	public void setTrainingModel(TrainingModel data) {
 		this.trainingModel = data;
-		fireTableDataChanged();
+		initData();
 	}
 
 	public SkillChange getSkillup(int row) {
@@ -111,6 +114,5 @@ public class SkillupTableModel extends HOTableModel {
 			rownum++;
 		}
 		fireTableDataChanged();
-
 	}
 }

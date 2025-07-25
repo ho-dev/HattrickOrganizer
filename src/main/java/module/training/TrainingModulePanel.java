@@ -73,7 +73,8 @@ public class TrainingModulePanel extends LazyPanel {
 		add(mainPanel, BorderLayout.CENTER);
 	}
 
-	public void storeUserSettings(){
-		this.trainingProgressPanel.storeUserSettings();
+	public void storeUserSettings() {
+		if (this.trainingProgressPanel != null)
+			this.trainingProgressPanel.storeUserSettings();
 	}
 }

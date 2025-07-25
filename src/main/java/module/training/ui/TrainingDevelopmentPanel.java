@@ -55,13 +55,9 @@ public class TrainingDevelopmentPanel extends LazyPanel {
 	 * Populate the table
 	 */
 	private void loadFromModel() {
-//		List<SkillChange> skillups = new ArrayList<>();
-//		if (this.model.getActivePlayer() != null) {
-//			this.title.setText(Helper.getTranslation("ls.module.training.training_development")+ " " + this.model.getActivePlayer().getFullName());
-//			skillups.addAll(this.model.getSkillupManager().getTrainedSkillups());
-//			skillups.addAll(this.model.getFutureTrainingManager().getFutureSkillups());
-//			Collections.reverse(skillups);
-//		}
+		if (this.model.getActivePlayer() != null) {
+			this.title.setText(Helper.getTranslation("ls.module.training.training_development")+ " " + this.model.getActivePlayer().getFullName());
+		}
 		((SkillupTableModel) this.table.getModel()).setTrainingModel(this.model);
 	}
 
@@ -85,15 +81,15 @@ public class TrainingDevelopmentPanel extends LazyPanel {
 	 */
 	private void initComponents() {
 		table = new FixedColumnsTable(UserColumnController.instance().getSkillupTableModel());
-		table.setDefaultRenderer(Object.class, new SkillupTableRenderer());
+//		table.setDefaultRenderer(Object.class, new SkillupTableRenderer());
 
 //		setColumnWidth(1, 50);
 //		setColumnWidth(2, 50);
 
-		JScrollPane scrollPane = new JScrollPane(table);
-		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-
+//		JScrollPane scrollPane = new JScrollPane(table.getContainerComponent());
+//		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+//		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+//
 		JPanel headerPanel = new ImagePanel();
 		headerPanel.setOpaque(false);
 
@@ -104,6 +100,6 @@ public class TrainingDevelopmentPanel extends LazyPanel {
 
 		setLayout(new BorderLayout());
 		add(headerPanel, BorderLayout.NORTH);
-		add(scrollPane, BorderLayout.CENTER);
+		add(table.getContainerComponent(), BorderLayout.CENTER);
 	}
 }
