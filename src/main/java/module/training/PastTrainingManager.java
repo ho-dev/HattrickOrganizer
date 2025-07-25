@@ -51,7 +51,7 @@ public class PastTrainingManager {
 				if (skill == PlayerSkill.KEEPER || skill == PlayerSkill.DEFENDING
 						|| skill == PlayerSkill.WINGER || skill == PlayerSkill.PLAYMAKING
 						|| skill == PlayerSkill.SCORING || skill == PlayerSkill.PASSING
-						|| skill == PlayerSkill.SETPIECES) {
+						|| skill == PlayerSkill.SETPIECES || skill == PlayerSkill.EXPERIENCE) {
 					trainSkillups.add(element);
 				}
 

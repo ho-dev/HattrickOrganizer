@@ -30,7 +30,7 @@ import java.util.List;
  */
 public class TrainingProgressTableModel extends HOTableModel {
 
-    private static final int COL_PLAYER_ID = 11;
+    private static final int COL_PLAYER_ID = 12;
     private TrainingModel model;
 
     /**
@@ -112,6 +112,13 @@ public class TrainingProgressTableModel extends HOTableModel {
                     @Override
                     public IHOTableCellEntry getTableEntry(TrainingEntry entry) {
                         return createIcon(entry.getPlayer(), PlayerSkill.STAMINA);
+                    }
+                },
+                new TrainingColumn("ls.player.experience", 70) {
+                    @Override
+                    public IHOTableCellEntry getTableEntry(TrainingEntry entry) {
+                        var experienceTotal = 28.571;
+                        return new VerticalIndicator(Helper.round(experienceTotal * entry.getPlayer().getSub4Skill(PlayerSkill.EXPERIENCE), 3), experienceTotal);
                     }
                 },
                 new TrainingColumn("ls.player.id", 0) {

@@ -4,21 +4,13 @@ import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyPanel;
 import core.gui.comp.table.FixedColumnsTable;
 import core.gui.model.UserColumnController;
-import core.model.player.SkillChange;
 import core.util.Helper;
 import module.training.ui.model.SkillupTableModel;
 import module.training.ui.model.TrainingModel;
-import module.training.ui.renderer.SkillupTableRenderer;
 import java.awt.BorderLayout;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
-
 
 public class TrainingDevelopmentPanel extends LazyPanel {
 
