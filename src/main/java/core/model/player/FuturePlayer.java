@@ -14,6 +14,16 @@ public class FuturePlayer {
 	private double attack;
 	private double cross;
 	private double goalkeeping;
+
+	public double getExperience() {
+		return experience;
+	}
+
+	public void setExperience(double experience) {
+		this.experience = experience;
+	}
+
+	private double experience;
 	private int playerId;
 	
 	public int getAge() {

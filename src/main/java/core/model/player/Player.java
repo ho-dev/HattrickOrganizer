@@ -16,6 +16,7 @@ import core.training.*;
 import core.util.*;
 
 import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 import static core.constants.player.PlayerSkill.*;
@@ -1891,7 +1892,7 @@ public class Player extends AbstractTable.Storable {
      * Get the training priority of a hattrick week. If user training plan is given for the week this user selection is
      * returned. If no user plan is available, the training priority is determined by the player's best position.
      *
-     * @param wt           used to get priority depending from the player's best position.
+     * @param wt           used to get priority depending on the player's best position.
      * @param trainingDate the training week
      * @return the training priority
      */
@@ -2390,6 +2391,33 @@ public class Player extends AbstractTable.Storable {
             }
         }
         return skillChanges;
+    }
+
+    /**
+     * Get the experience increment average over the last 16 weeks
+     */
+    private Double experienceIncrementPerWeek;
+    public double getExperienceIncrementPerWeek(){
+        if (experienceIncrementPerWeek==null){
+            Player previousPlayer = null;
+            HODateTime start = HOVerwaltung.instance().getModel().getBasics().getDatum().minus(16*7, ChronoUnit.DAYS);
+            for (var p : DBManager.instance().loadPlayerHistory(this.getPlayerId())) {
+                if (previousPlayer == null || p.getHrfDate().isBefore(start) ) {
+                    previousPlayer = p;
+                }
+            }
+
+            if ( previousPlayer != null){
+                double expererienceIncremant = this.getSkill(EXPERIENCE) - previousPlayer.getSkill(EXPERIENCE);
+                HODateTime.HODuration duration = HODateTime.HODuration.between(previousPlayer.getHrfDate(), this.getHrfDate());
+                experienceIncrementPerWeek = expererienceIncremant / duration.toDouble() / 16;
+            }
+            else {
+                // some minimal increment if no information is available
+                experienceIncrementPerWeek = 0.005;
+            }
+        }
+        return experienceIncrementPerWeek;
     }
 
     /**

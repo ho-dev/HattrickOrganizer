@@ -54,34 +54,10 @@ public class TrainingDevelopmentPanel extends LazyPanel {
 	}
 
 	/**
-	 * Resize the column
-	 * 
-	 * @param col
-	 *            column to resize
-	 * @param width
-	 *            new width
-	 */
-//	private void setColumnWidth(int col, int width) {
-//		table.getTableHeader().getColumnModel().getColumn(col).setWidth(width);
-//		table.getTableHeader().getColumnModel().getColumn(col).setPreferredWidth(width);
-//		table.getTableHeader().getColumnModel().getColumn(col).setMaxWidth(200);
-//		table.getTableHeader().getColumnModel().getColumn(col).setMinWidth(0);
-//	}
-
-	/**
 	 * Initialize the object layout
 	 */
 	private void initComponents() {
 		table = new FixedColumnsTable(UserColumnController.instance().getSkillupTableModel());
-//		table.setDefaultRenderer(Object.class, new SkillupTableRenderer());
-
-//		setColumnWidth(1, 50);
-//		setColumnWidth(2, 50);
-
-//		JScrollPane scrollPane = new JScrollPane(table.getContainerComponent());
-//		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-//		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-//
 		JPanel headerPanel = new ImagePanel();
 		headerPanel.setOpaque(false);
 
