@@ -58,6 +58,9 @@ public class SkillupTableModel extends AbstractTableModel {
 	}
 
 	public SkillChange getSkillup(int row) {
-		return this.data.get(row);
+		if ( data != null && row > - 1 && row < data.size() ) {
+			return this.data.get(row);
+		}
+		return null;
 	}
 }
