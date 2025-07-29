@@ -180,8 +180,8 @@ public class MatchLineupTeam extends AbstractTable.Storable {
 	 * 
 	 * @return The object matching the criteria, or null if none found
 	 */
-	public final MatchLineupPosition getPlayerByID(int playerId, boolean includeReplacedPlayers) {
-		return this.lineup.getPositionByPlayerId(playerId, includeReplacedPlayers);
+	public final MatchLineupPosition getPlayerByID(int playerId, boolean includeRemovedPlayers) {
+		return this.lineup.getPositionByPlayerId(playerId, includeRemovedPlayers);
 	}
 	public final MatchLineupPosition getPlayerByID(Integer playerId) {
 		if ( playerId != null ) {
@@ -564,18 +564,17 @@ public class MatchLineupTeam extends AbstractTable.Storable {
 
 	private HashMap<Integer, HashMap<MatchRoleID.Sector, Integer>> playersMinutesInSector;
 
-	private void addPlayersMinutesInSector(int playerId, MatchRoleID.Sector sector, int minutes){
+	private void addPlayersMinutesInSector(int playerId, MatchRoleID.Sector sector, int minutes) {
 		if (playersMinutesInSector == null) {
 			playersMinutesInSector = new HashMap<>();
 		}
 
 		var minutesInSector = playersMinutesInSector.get(playerId);
-		if ( minutesInSector == null){
+		if (minutesInSector == null) {
 			minutesInSector = new HashMap<>();
 			minutesInSector.put(sector, minutes);
 			playersMinutesInSector.put(playerId, minutesInSector);
-		}
-		else {
+		} else {
 			minutesInSector.merge(sector, minutes, Integer::sum);
 		}
 	}
@@ -590,8 +589,9 @@ public class MatchLineupTeam extends AbstractTable.Storable {
 		// get the starting positions
 		var allActivePlayers = new Vector<MatchLineupPosition>();
 		allActivePlayers.addAll(this.lineup.getFieldPositions());
-		// add start positions of replaced players
+		// add start positions of removed players
 		allActivePlayers.addAll(this.lineup.getReplacedPositions());
+		allActivePlayers.addAll(this.lineup.getRedCardedPositions());
 		for (var iMatchRole : allActivePlayers) {
 			if (iMatchRole.getStartPosition() >= 0) {
 				lastMatchAppearances.put(iMatchRole.getStartPosition(), new MatchAppearance(iMatchRole, 0));
@@ -608,12 +608,23 @@ public class MatchLineupTeam extends AbstractTable.Storable {
 			}
 		}
 
+		// Red carded players
+		for (var redCarded : this.lineup.getRedCardedPositions()) {
+			if (redCarded.getStartPosition() > 0) {
+				var player = this.getPlayerByID(redCarded.getPlayerId(), true);
+				var events = this.getMatchdetails().getHighlights().stream()
+						.filter(e -> e.getPlayerId() == redCarded.getPlayerId() && MatchEvent.redCardME.contains(e.getMatchEventID()))
+						.sorted(Comparator.comparing(MatchEvent::getMinute))
+						.findAny();
+				events.ifPresent(matchEvent -> removeMatchAppearance(player, matchEvent.getMinute()));
+			}
+		}
+
 		// examine last minutes
 		for (var app : lastMatchAppearances.entrySet()) {
 			var player = app.getValue().player;
 			if (player != null) {
-				addPlayersMinutesInSector(player.getPlayerId(),
-						app.getValue().getSector(),
+				addPlayersMinutesInSector(player.getPlayerId(), MatchRoleID.getSector(app.getKey()),
 						getMatchEndMinute(player.getPlayerId()) - app.getValue().minute);
 			}
 		}
@@ -652,12 +663,12 @@ public class MatchLineupTeam extends AbstractTable.Storable {
 				}
 			}
 			case POSITION_SWAP -> {
+				var leavingRole = removeMatchAppearance(leavingPlayer, substitution.getMatchMinuteCriteria());
 				var player = this.getPlayerByID(substitution.getObjectPlayerID(), true);
 				if ( player != null ){
 					var playerRole = removeMatchAppearance(player, substitution.getMatchMinuteCriteria());
 					lastMatchAppearances.put(playerRole, new MatchAppearance(leavingPlayer, substitution.getMatchMinuteCriteria()));
 				}
-				var leavingRole = removeMatchAppearance(leavingPlayer, substitution.getMatchMinuteCriteria());
 				lastMatchAppearances.put(leavingRole, new MatchAppearance(player, substitution.getMatchMinuteCriteria()));
 			}
 		}
@@ -731,7 +742,6 @@ public class MatchLineupTeam extends AbstractTable.Storable {
 		public int getPlayerId() {
 			return player.getPlayerId();
 		}
-		public MatchRoleID.Sector getSector() {return player.getSector();}
 	}
 
 	public int getTrainingMinutesInAcceptedSectors(int playerId, List<MatchRoleID.Sector> accepted){
