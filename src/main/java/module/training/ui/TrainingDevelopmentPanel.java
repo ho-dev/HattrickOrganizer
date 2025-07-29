@@ -58,6 +58,7 @@ public class TrainingDevelopmentPanel extends LazyPanel {
 	 */
 	private void initComponents() {
 		table = new FixedColumnsTable(UserColumnController.instance().getSkillupTableModel());
+		table.getTableHeader().setReorderingAllowed(false);
 		JPanel headerPanel = new ImagePanel();
 		headerPanel.setOpaque(false);
 

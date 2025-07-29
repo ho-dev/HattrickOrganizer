@@ -100,10 +100,10 @@ public class OutputPanel extends LazyImagePanel {
     private void addListeners() {
         var playerIdColumnModelIndex = this.trainingProgressTableModel.getPlayerIdColumn().getIndex();
         this.trainingProgressTable.getSelectionModel().addListSelectionListener(new PlayerSelectionListener(this.trainingModel, this.trainingProgressTable, playerIdColumnModelIndex));
-        this.trainingProgressTable.getSelectionModel().addListSelectionListener(e -> {
-            var index = trainingProgressTable.getSelectedRow();
-            trainingProgressTable.getSelectionModel().setSelectionInterval(index, index);
-        });
+//        this.trainingProgressTable.getSelectionModel().addListSelectionListener(e -> {
+//            var index = trainingProgressTable.getSelectedRow();
+//            trainingProgressTable.getSelectionModel().setSelectionInterval(index, index);
+//        });
 //        this.fixedOutputTable.getSelectionModel().addListSelectionListener(e -> {
 //            var index = fixedOutputTable.getSelectedRow();
 //            outputTable.getSelectionModel().setSelectionInterval(index, index);
@@ -142,7 +142,7 @@ public class OutputPanel extends LazyImagePanel {
             var playerIdColumnModelIndex = this.trainingProgressTableModel.getPlayerIdColumn().getIndex();
             var playerIdColumnViewIndex = this.trainingProgressTable.convertColumnIndexToView(playerIdColumnModelIndex);
             for (int i = 0; i < this.trainingProgressTable.getRowCount(); i++) {
-                String val = ((ColorLabelEntry) trainingProgressTable.getValueAt(i, playerIdColumnViewIndex)).getText();
+                String val = ((ColorLabelEntry) trainingProgressTable.getValueAt(i, playerIdColumnViewIndex-trainingProgressTable.getFixedColumnsCount())).getText();
                 int id = Integer.parseInt(val);
                 if (player.getPlayerId() == id) {
                     this.trainingProgressTable.setRowSelectionInterval(i, i);

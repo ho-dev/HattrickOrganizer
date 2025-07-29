@@ -85,10 +85,6 @@ public abstract class UserColumn {
 		return id;
 	}
 
-//	public void setId(int v){
-//		this.id = v;
-//	}
-	
 	/**
 	 * returns the language dependency tooltip of the column
 	 * @return String

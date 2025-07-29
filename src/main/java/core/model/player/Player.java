@@ -2399,18 +2399,22 @@ public class Player extends AbstractTable.Storable {
     private Double experienceIncrementPerWeek;
     public double getExperienceIncrementPerWeek(){
         if (experienceIncrementPerWeek==null){
+            // Look for player status maximal 16 weeks ago
             Player previousPlayer = null;
             HODateTime start = HOVerwaltung.instance().getModel().getBasics().getDatum().minus(16*7, ChronoUnit.DAYS);
             for (var p : DBManager.instance().loadPlayerHistory(this.getPlayerId())) {
                 if (previousPlayer == null || p.getHrfDate().isBefore(start) ) {
                     previousPlayer = p;
                 }
+                else if (p.getHrfDate().isAfter(start)){
+                    break;
+                }
             }
 
             if ( previousPlayer != null){
-                double expererienceIncremant = this.getSkill(EXPERIENCE) - previousPlayer.getSkill(EXPERIENCE);
+                double experienceIncrement = this.getSkill(EXPERIENCE) - previousPlayer.getSkill(EXPERIENCE);
                 HODateTime.HODuration duration = HODateTime.HODuration.between(previousPlayer.getHrfDate(), this.getHrfDate());
-                experienceIncrementPerWeek = expererienceIncremant / duration.toDouble() / 16;
+                experienceIncrementPerWeek = experienceIncrement / duration.toDouble() / 16;
             }
             else {
                 // some minimal increment if no information is available

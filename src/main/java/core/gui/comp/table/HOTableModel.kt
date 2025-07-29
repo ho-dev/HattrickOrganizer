@@ -53,6 +53,8 @@ abstract class HOTableModel protected constructor(
     @JvmField
 	protected var m_clData: Array<Array<Any?>>? = null
 
+
+    // TODO: Check if a list of tables is necessary (See SpielerMatchesTable, which uses two instances of same table model type)
     /** Table component  */
     protected var tables: MutableList<JTable> = ArrayList()
 

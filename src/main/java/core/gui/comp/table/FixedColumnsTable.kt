@@ -238,4 +238,5 @@ open class FixedColumnsTable @JvmOverloads constructor(
         }
         return null
     }
+
 }
