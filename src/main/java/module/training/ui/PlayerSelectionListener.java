@@ -16,7 +16,7 @@ import javax.swing.event.ListSelectionListener;
 
 public class PlayerSelectionListener implements ListSelectionListener {
 	private final JTable table;
-	private int playerIdColumnModelIndex = 0;
+	private final int playerIdColumnModelIndex;
 	private final TrainingModel model;
 
 	public PlayerSelectionListener(TrainingModel model, JTable table, int col) {

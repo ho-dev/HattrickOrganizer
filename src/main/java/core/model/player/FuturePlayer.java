@@ -114,7 +114,7 @@ public class FuturePlayer {
 	 */
 	@Override
 	public String toString() {
-        String buffer = "FuturePlayer[" +
+        return "FuturePlayer[" +
                 "passing = " + passing +
                 ", playmaking = " + playmaking +
                 ", stamina = " + stamina +
@@ -126,7 +126,6 @@ public class FuturePlayer {
                 ", cross = " + cross +
                 ", goalkeeping = " + goalkeeping +
                 "]";
-		return buffer;
 	}
 	
 	public int getPlayerId() {
