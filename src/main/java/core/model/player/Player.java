@@ -1750,18 +1750,18 @@ public class Player extends AbstractTable.Storable {
      */
     public TrainingPerPlayer calculateWeeklyTraining(TrainingPerWeek train) {
         final int playerID = this.getPlayerId();
-        TrainingPerPlayer ret = new TrainingPerPlayer(this);
-        ret.setTrainingWeek(train);
+        TrainingPerPlayer trainingPerPlayer = new TrainingPerPlayer(this);
+        trainingPerPlayer.setTrainingWeek(train);
         if (train == null || train.getTrainingType() < 0) {
-            return ret;
+            return trainingPerPlayer;
         }
 
-        WeeklyTrainingType wt = WeeklyTrainingType.instance(train.getTrainingType());
-        if (wt != null) {
+        WeeklyTrainingType weeklyTrainingType = WeeklyTrainingType.instance(train.getTrainingType());
+        if (weeklyTrainingType != null) {
             try {
                 var matches = train.getMatches();
                 int myID = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-                TrainingWeekPlayer tp = new TrainingWeekPlayer(this);
+                TrainingWeekPlayer trainingWeekPlayer = new TrainingWeekPlayer(this);
                 for (var match : matches) {
                     var details = match.getMatchdetails();
                     if (details != null) {
@@ -1771,14 +1771,14 @@ public class Player extends AbstractTable.Storable {
                             MatchType type = mlt.getMatchType();
                             boolean walkoverWin = details.isWalkoverMatchWin(myID);
                             if (type != MatchType.MASTERS) { // MASTERS counts only for experience
-                                tp.addFullTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, wt.getFullTrainingSectors(), walkoverWin));
-                                tp.addBonusTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, wt.getBonusTrainingSectors(), walkoverWin));
-                                tp.addPartlyTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, wt.getPartlyTrainingSectors(), walkoverWin));
-                                tp.addOsmosisTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, wt.getOsmosisTrainingSectors(), walkoverWin));
+                                trainingWeekPlayer.addFullTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, weeklyTrainingType.getFullTrainingSectors(), walkoverWin));
+                                trainingWeekPlayer.addBonusTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, weeklyTrainingType.getBonusTrainingSectors(), walkoverWin));
+                                trainingWeekPlayer.addPartlyTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, weeklyTrainingType.getPartlyTrainingSectors(), walkoverWin));
+                                trainingWeekPlayer.addOsmosisTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, weeklyTrainingType.getOsmosisTrainingSectors(), walkoverWin));
                             }
                             var minutes = mlt.getTrainingMinutesPlayedInSectors(playerID, null, walkoverWin);
-                            tp.addPlayedMinutes(minutes);
-                            ret.addExperience(match.getExperienceIncrease(min(90, minutes)));
+                            trainingWeekPlayer.addPlayedMinutes(minutes);
+                            trainingPerPlayer.addExperience(match.getExperienceIncrease(min(90, minutes)));
                         } else {
                             HOLogger.instance().error(getClass(), "no lineup found in match " + match.getMatchSchedule().toLocaleDateTime() +
                                     " " + match.getHomeTeamName() + " - " + match.getGuestTeamName()
@@ -1786,7 +1786,7 @@ public class Player extends AbstractTable.Storable {
                         }
                     }
                 }
-                TrainingPoints trp = new TrainingPoints(wt, tp);
+                TrainingPoints trainingPoints = new TrainingPoints(weeklyTrainingType, trainingWeekPlayer);
 
                 // get experience increase of national team matches
                 var id = this.getNationalTeamId();
@@ -1797,16 +1797,16 @@ public class Player extends AbstractTable.Storable {
                         MatchLineupTeam mlt = DBManager.instance().loadMatchLineupTeam(match.getMatchType().getId(), match.getMatchID(), this.getNationalTeamId());
                         var minutes = mlt.getTrainingMinutesPlayedInSectors(playerID, null, false);
                         if (minutes > 0) {
-                            ret.addExperience(match.getExperienceIncrease(min(90, minutes)));
+                            trainingPerPlayer.addExperience(match.getExperienceIncrease(min(90, minutes)));
                         }
                     }
                 }
-                ret.setTrainingPair(trp);
+                trainingPerPlayer.setTrainingPair(trainingPoints);
             } catch (Exception e) {
                 HOLogger.instance().log(getClass(), e);
             }
         }
-        return ret;
+        return trainingPerPlayer;
     }
 
     /**
