@@ -85,8 +85,8 @@ public class SkillupTableModel extends HOTableModel {
 	}
 
 	public SkillChange getSkillup(int row) {
-		if ( data != null && row > - 1 && row < data.size() ) {
-			return this.data.get(row);
+		if ( this.skillChanges != null && row > - 1 && row < this.skillChanges.size() ) {
+			return this.skillChanges.get(row).getSkillChange();
 		}
 		return null;
 	}

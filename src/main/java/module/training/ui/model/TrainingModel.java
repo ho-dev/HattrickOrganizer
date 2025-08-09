@@ -18,7 +18,6 @@ import java.util.List;
 
 public class TrainingModel implements PropertyChangeListener {
 
-
 	private Player activePlayer;
 	private List<TrainingPerWeek> futureTrainings;
 	private PastTrainingManager skillupManager;

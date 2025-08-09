@@ -3,16 +3,20 @@ package module.training.ui;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyPanel;
 import core.gui.comp.table.FixedColumnsTable;
+import core.gui.comp.table.PlayersTable;
 import core.gui.model.UserColumnController;
+import core.model.player.Player;
 import core.util.Helper;
 import module.training.ui.model.SkillupTableModel;
 import module.training.ui.model.TrainingModel;
 import java.awt.BorderLayout;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
-public class TrainingDevelopmentPanel extends LazyPanel {
+public class TrainingDevelopmentPanel extends LazyPanel implements PropertyChangeListener {
 
 	private FixedColumnsTable table;
 	private final TrainingModel model;
@@ -40,7 +44,9 @@ public class TrainingDevelopmentPanel extends LazyPanel {
 	}
 
 	private void addListeners() {
-		this.model.addModelChangeListener(change -> setNeedsRefresh(true));
+//		this.model.addModelChangeListener(change -> setNeedsRefresh(true));
+
+		PlayersTable.Companion.addPropertyChangeListener(this);
 	}
 
 	/**
@@ -58,7 +64,7 @@ public class TrainingDevelopmentPanel extends LazyPanel {
 	 */
 	private void initComponents() {
 		table = new FixedColumnsTable(UserColumnController.instance().getSkillupTableModel());
-		table.getTableHeader().setReorderingAllowed(false);
+//		table.getTableHeader().setReorderingAllowed(false);
 		JPanel headerPanel = new ImagePanel();
 		headerPanel.setOpaque(false);
 
@@ -70,5 +76,14 @@ public class TrainingDevelopmentPanel extends LazyPanel {
 		setLayout(new BorderLayout());
 		add(headerPanel, BorderLayout.NORTH);
 		add(table.getContainerComponent(), BorderLayout.CENTER);
+	}
+
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		if ( evt.getPropertyName().equals("SelectedPlayer") ) {
+			var newSelection = (Player) evt.getNewValue();
+			this.model.setActivePlayer(newSelection);
+			loadFromModel();
+		}
 	}
 }

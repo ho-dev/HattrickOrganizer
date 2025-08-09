@@ -51,7 +51,6 @@ public class TrainingModulePanel extends LazyPanel {
 		setLayout(new BorderLayout());
 
 		var trainingDevelopmentPanel = new TrainingDevelopmentPanel(this.model);
-
 		JSplitPane bottomPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, trainingDevelopmentPanel,
 				new JScrollPane(new PlayerDetailPanel(this.model)));
 		UserParameter.instance().training_bottomSplitPane.init(bottomPanel);

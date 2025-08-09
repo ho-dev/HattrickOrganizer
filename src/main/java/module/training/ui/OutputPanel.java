@@ -6,6 +6,7 @@ import core.gui.comp.NumericDocument;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.panel.LazyImagePanel;
 import core.gui.comp.table.FixedColumnsTable;
+import core.gui.comp.table.PlayersTable;
 import core.gui.model.UserColumnController;
 import core.model.TranslationFacility;
 import core.model.enums.MatchType;
@@ -23,6 +24,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeListener;
 
 /**
  * The Panel where the main training table is shown ("Training").
@@ -32,7 +34,7 @@ import java.awt.event.MouseEvent;
 public class OutputPanel extends LazyImagePanel {
 
     private final TrainingProgressTableModel trainingProgressTableModel;
-    private FixedColumnsTable trainingProgressTable;
+    private PlayersTable trainingProgressTable;
     private JButton importButton;
     private JButton calculateButton;
     private final TrainingModel trainingModel;
@@ -98,8 +100,8 @@ public class OutputPanel extends LazyImagePanel {
     }
 
     private void addListeners() {
-        var playerIdColumnModelIndex = this.trainingProgressTableModel.getPlayerIdColumn().getIndex();
-        this.trainingProgressTable.getSelectionModel().addListSelectionListener(new PlayerSelectionListener(this.trainingModel, this.trainingProgressTable, playerIdColumnModelIndex));
+//        var playerIdColumnModelIndex = this.trainingProgressTableModel.getPlayerIdColumn().getIndex();
+//        this.trainingProgressTable.getSelectionModel().addListSelectionListener(new PlayerSelectionListener(this.trainingModel, this.trainingProgressTable, playerIdColumnModelIndex));
 //        this.trainingProgressTable.getSelectionModel().addListSelectionListener(e -> {
 //            var index = trainingProgressTable.getSelectedRow();
 //            trainingProgressTable.getSelectionModel().setSelectionInterval(index, index);
@@ -159,7 +161,7 @@ public class OutputPanel extends LazyImagePanel {
         setLayout(new BorderLayout());
 
         this.trainingProgressTableModel.setModel(this.trainingModel);
-        this.trainingProgressTable = new FixedColumnsTable(this.trainingProgressTableModel);
+        this.trainingProgressTable = new PlayersTable(this.trainingProgressTableModel);
         this.trainingProgressTable.setDefaultRenderer(Object.class, new OutputTableRenderer(false));
 
 //        fixedOutputTable = new OutputTable(UserColumnController.instance().getTrainingProgressTableModel());

@@ -35,7 +35,7 @@ public class TrainingRecapTable extends JScrollPane {
     static final int fixedColumns = 5;
     private final FutureTrainingPrioPopup trainingPrioPopUp;
     private final JTable fixed;
-    private final JTable scroll;
+    private final JTable scrollTable;
 
     private final TrainingModel trainingModel;
 
@@ -52,7 +52,7 @@ public class TrainingRecapTable extends JScrollPane {
         columns.add("Speed");
         columns.add(TranslationFacility.tr("ls.player.id"));
 
-        var actualWeek = HOVerwaltung.instance().getModel().getBasics().getHattrickWeek(); //.getSpieltag();
+        var actualWeek = HOVerwaltung.instance().getModel().getBasics().getHattrickWeek();
 
         // We are in the middle where season has not been updated!
         try {
@@ -86,10 +86,10 @@ public class TrainingRecapTable extends JScrollPane {
     }
 
     public void refresh() {
-        deleteRows(scroll);
+        deleteRows(scrollTable);
         deleteRows(fixed);
         var rows = createRows();
-        var model = (DefaultTableModel)scroll.getModel();
+        var model = (DefaultTableModel) scrollTable.getModel();
         for (var row: rows) {
             model.addRow(row);
         }
@@ -177,22 +177,20 @@ public class TrainingRecapTable extends JScrollPane {
                 }
             }
             
-            if (isSelected) {
-                return this;
-            }
+            if (!isSelected) {
+                int speed = Integer.parseInt((String) table.getValueAt(row, 3));
+                Color bg_color;
+                // Speed range is 16 to 125
+                if (speed > (125 + 50) / 2) {
+                    bg_color = ThemeManager.getColor(HOColorName.PLAYER_SKILL_SPECIAL_BG);
+                } else if (speed > (50 + 16) / 2) {
+                    bg_color = ThemeManager.getColor(HOColorName.PLAYER_SKILL_BG);
+                } else {
+                    bg_color = ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
+                }
 
-            int speed = Integer.parseInt((String) table.getValueAt(row, 3));
-            Color bg_color;
-            // Speed range is 16 to 125
-            if (speed > (125 + 50) / 2) {
-                bg_color = ThemeManager.getColor(HOColorName.PLAYER_SKILL_SPECIAL_BG);
-            } else if (speed > (50 + 16) / 2) {
-                bg_color = ThemeManager.getColor(HOColorName.PLAYER_SKILL_BG);
-            } else {
-                bg_color = ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
+                setBackground(bg_color);
             }
-
-            setBackground(bg_color);
             return this;
         }
     }
@@ -216,23 +214,23 @@ public class TrainingRecapTable extends JScrollPane {
 
         this.setViewportView(table);
 
-        scroll = table;
-        fixed = new JTable(scroll.getModel());
+        scrollTable = table;
+        fixed = new JTable(scrollTable.getModel());
         fixed.setFocusable(false);
-        fixed.setSelectionModel(scroll.getSelectionModel());
+        fixed.setSelectionModel(scrollTable.getSelectionModel());
         fixed.getTableHeader().setReorderingAllowed(false);
         fixed.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE); //$NON-NLS-1$
-        scroll.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE); //$NON-NLS-1$
+        scrollTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE); //$NON-NLS-1$
 
         //  Remove the fixed columns from the main table
         for (int i = 0; i < fixedColumns; i++) {
-            TableColumnModel _columnModel = scroll.getColumnModel();
+            TableColumnModel _columnModel = scrollTable.getColumnModel();
 
             _columnModel.removeColumn(_columnModel.getColumn(0));
         }
 
-        scroll.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        fixed.setSelectionModel(scroll.getSelectionModel());
+        scrollTable.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        fixed.setSelectionModel(scrollTable.getSelectionModel());
 
         //  Remove the non-fixed columns from the fixed table
         while (fixed.getColumnCount() > fixedColumns) {
@@ -263,22 +261,21 @@ public class TrainingRecapTable extends JScrollPane {
         setRowHeaderView(fixed);
 
         fixed.setDefaultRenderer(Object.class, new FixedTrainingRecapRenderer());
-        scroll.setDefaultRenderer(Object.class, new TrainingRecapRenderer(this.trainingModel));
+        scrollTable.setDefaultRenderer(Object.class, new TrainingRecapRenderer(this.trainingModel));
 //        // Required for darklaf, see https://github.com/weisJ/darklaf/issues/164
 //        scroll.setDefaultRenderer(String.class, new TrainingRecapRenderer(this.trainingModel));
 
         setCorner(ScrollPaneConstants.UPPER_LEFT_CORNER, fixed.getTableHeader());
 
         // Hide the last column
-        JTable scrollTable = getScrollTable();
-        int lastSTCol = scrollTable.getColumnCount() - 1;
+        int lastSTCol = fixed.getColumnCount() - 1;
         scrollTable.getTableHeader().getColumnModel().getColumn(lastSTCol).setPreferredWidth(0);
         scrollTable.getTableHeader().getColumnModel().getColumn(lastSTCol).setMinWidth(0);
         scrollTable.getTableHeader().getColumnModel().getColumn(lastSTCol).setMaxWidth(0);
 
         JTable lockedTable = getLockedTable();
         lockedTable.getSelectionModel().addListSelectionListener(
-                new PlayerSelectionListener(this.trainingModel, scrollTable, lastSTCol));
+                new PlayerSelectionListener(this.trainingModel, fixed, lastSTCol));
         getScrollTable().getTableHeader().setReorderingAllowed(false);
         trainingPrioPopUp = new FutureTrainingPrioPopup(panel, model);
         table.addMouseListener(new MouseAdapter() {
@@ -311,6 +308,6 @@ public class TrainingRecapTable extends JScrollPane {
      * @return Jtable
      */
     public JTable getScrollTable() {
-        return scroll;
+        return scrollTable;
     }
 }

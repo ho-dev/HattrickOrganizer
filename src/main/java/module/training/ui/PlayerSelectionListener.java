@@ -26,20 +26,21 @@ public class PlayerSelectionListener implements ListSelectionListener {
 	}
 
 	private boolean isPlayerSelectionChanging = false;
+
 	@Override
 	public void valueChanged(ListSelectionEvent e) {
 		if (!e.getValueIsAdjusting()) {
-			if ( !isPlayerSelectionChanging) {
+			if (!isPlayerSelectionChanging) {
 				isPlayerSelectionChanging = true;
 				int selectedRow = table.getSelectedRow();
 				if (selectedRow >= 0) {
 					var colViewIndex = table.convertColumnIndexToView(playerIdColumnModelIndex);
-					if (this.table instanceof FixedColumnsTable fixedColumnsTable){
-						if ( colViewIndex >= fixedColumnsTable.getFixedColumnsCount()){
+					if (this.table instanceof FixedColumnsTable fixedColumnsTable) {
+						if (colViewIndex >= fixedColumnsTable.getFixedColumnsCount()) {
 							colViewIndex -= fixedColumnsTable.getFixedColumnsCount();
 						}
 					}
-					if ( colViewIndex >= 0 && colViewIndex < table.getColumnCount()) {
+					if (colViewIndex >= 0 && colViewIndex < table.getColumnCount()) {
 						var entry = table.getValueAt(selectedRow, colViewIndex);
 						String playerId;
 						if (entry instanceof ColorLabelEntry colorLabelEntry) {
