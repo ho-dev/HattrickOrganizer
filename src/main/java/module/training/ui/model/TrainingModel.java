@@ -43,7 +43,7 @@ public class TrainingModel implements PropertyChangeListener {
 			this.activePlayer = player;
 			this.skillupManager = null;
 			resetFutureTrainings_();
-			fireModelChanged(ModelChange.ACTIVE_PLAYER);
+//			fireModelChanged(ModelChange.ACTIVE_PLAYER);
 		}
 	}
 

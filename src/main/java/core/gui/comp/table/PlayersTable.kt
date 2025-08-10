@@ -2,6 +2,7 @@ package core.gui.comp.table
 
 import core.model.HOVerwaltung
 import core.model.player.Player
+import java.beans.PropertyChangeEvent
 import java.beans.PropertyChangeListener
 import java.beans.PropertyChangeSupport
 import javax.swing.event.ListSelectionEvent
@@ -9,11 +10,9 @@ import javax.swing.event.ListSelectionListener
 
 
 class PlayersTable @JvmOverloads constructor(tableModel: HOTableModel, fixedColumnsCount: Int = 1) :
-    FixedColumnsTable(tableModel, fixedColumnsCount) {
+    FixedColumnsTable(tableModel, fixedColumnsCount), PropertyChangeListener {
 
         companion object {
-
-            var registeredPlayersTables : List<PlayersTable> = mutableListOf<PlayersTable>()
 
             private val propertyChangeSupport : PropertyChangeSupport = PropertyChangeSupport(this)
 
@@ -38,21 +37,24 @@ class PlayersTable @JvmOverloads constructor(tableModel: HOTableModel, fixedColu
 
     init {
         this.addListSelectionListener(ListSelectionListener { e: ListSelectionEvent? ->
-            if (!e!!.getValueIsAdjusting() && enableListSelectionListener) {
+            if (enableListSelectionListener) {
                 val selectedRow = this.getSelectedRow()
                 if (selectedRow != -1) {
                     val modelIndex = this.convertRowIndexToModel(selectedRow)
                     if (modelIndex >= 0 && modelIndex < players.size) {
                         var oldSelection = selectedPlayer;
                         selectedPlayer = players.get(modelIndex)
-                        for ( table in registeredPlayersTables){
-                            table.selectPlayer(selectedPlayer, false)
+                        if (oldSelection != selectedPlayer) {
+                            firePropertyChanged(oldSelection, selectedPlayer)
                         }
-                        firePropertyChanged(oldSelection, selectedPlayer)
                     }
+                }
+                else if ( selectedPlayer != null){
+                    firePropertyChanged(selectedPlayer,null )
                 }
             }
         })
+        Companion.addPropertyChangeListener(this)
     }
 
     private var enableListSelectionListener : Boolean = true
@@ -65,5 +67,9 @@ class PlayersTable @JvmOverloads constructor(tableModel: HOTableModel, fixedColu
             this.setRowSelectionInterval(viewIndex, viewIndex)
             enableListSelectionListener = true
         }
+    }
+
+    override fun propertyChange(evt: PropertyChangeEvent?) {
+        selectPlayer(evt?.newValue as Player?, false)
     }
 }
