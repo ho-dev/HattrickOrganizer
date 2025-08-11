@@ -14,6 +14,8 @@
 
 ## Translations
 
-Reports by Contributors - July 27, 2025 - August 09, 2025
+Reports by Contributors - July 27, 2025 - August 11, 2025
 
-Total 0
+* Kristaps 83
+
+Total 83
