@@ -55,12 +55,12 @@ public class ConvertXml2Hrf {
 
 		String teamDetails = mc.getTeamDetails(-1);
 
-		if (teamDetails == null) {
+		if (teamDetails == null || teamDetails.isEmpty()) {
 			return null;
 		}
 
 		var teamInfoList = XMLTeamDetailsParser.getTeamInfoFromString(teamDetails);
-		var usersPremierTeamInfo = teamInfoList.stream().filter(TeamInfo::isPrimaryTeam).findFirst().get();
+		var usersPremierTeamInfo = teamInfoList.stream().filter(TeamInfo::isPrimaryTeam).findFirst().orElse(teamInfoList.stream().findFirst().orElseThrow());
 		var usersPremierTeamId = usersPremierTeamInfo.getTeamId();
 		if (teamId <= 0 || youthTeamId == null) {
 			// We have no team selected or the youth team information is never downloaded before
