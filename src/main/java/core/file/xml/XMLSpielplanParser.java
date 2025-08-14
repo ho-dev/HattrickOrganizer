@@ -76,7 +76,7 @@ public class XMLSpielplanParser {
 		NodeList list;
 
 		if (doc == null) {
-			return plan;
+			return null;
 		}
 
 		// Tabelle erstellen
