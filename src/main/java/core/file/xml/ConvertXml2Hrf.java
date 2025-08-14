@@ -281,7 +281,7 @@ public class ConvertXml2Hrf {
 				}
 				if (commission > 0) {
 					var storedCommission = transfers.stream().mapToInt(i -> i.getMotherClubFee() + i.getPreviousClubFee()).sum();
-					if (storedCommission != commission) return true;
+                    return storedCommission != commission;
 				}
 			}
 		}
