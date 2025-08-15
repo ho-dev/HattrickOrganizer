@@ -324,7 +324,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
             var r = tempPlayer.getIdealPositionRating();
             var idealPosition = tempPlayer.getIdealPosition();
             m_jpBestPos.setText(MatchRoleID.getNameForPosition(idealPosition)
-                    + " (" + Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals)
+                    + " (" + Helper.getNumberFormat( core.model.UserParameter.instance().nbDecimals)
                     .format(r) + ")");
 
             for (int i = 0; i < playerPositionValues.length; i++) {
@@ -347,7 +347,7 @@ final class SpielerTrainingsSimulatorPanel extends ImagePanel
         var nbDecimals = core.model.UserParameter.instance().nbDecimals;
 //        var leftLabelText = Helper.getNumberFormat(false, nbDecimals).format(tmpRelativeValue) + "%  " +
 //                Helper.getNumberFormat(false, nbDecimals).format(tmpAbsoluteValue);
-        var leftLabelText = Helper.getNumberFormat(false, nbDecimals).format(tmpAbsoluteValue);
+        var leftLabelText = Helper.getNumberFormat( nbDecimals).format(tmpAbsoluteValue);
         labelEntry.getLeft().setText(leftLabelText);
 
         var alternativePosition = tempPlayer.getAlternativeBestPositions();

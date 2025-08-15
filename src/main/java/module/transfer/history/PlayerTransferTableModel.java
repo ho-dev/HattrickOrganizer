@@ -7,7 +7,6 @@ import core.gui.comp.table.HOTableModel;
 import core.gui.comp.table.UserColumn;
 import core.gui.model.UserColumnController;
 import core.gui.theme.ImageUtilities;
-import core.util.CurrencyUtils;
 import core.util.HODateTime;
 import module.transfer.PlayerTransfer;
 import java.util.ArrayList;
@@ -71,7 +70,7 @@ public class PlayerTransferTableModel extends HOTableModel {
                 new TransferTableColumn(id++,"Price") {
                     @Override
                     public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
-                        return new ColorLabelEntry(CurrencyUtils.convertCurrency(transfer.getPrice()), ColorLabelEntry.BG_STANDARD, true, 0);
+                        return new ColorLabelEntry(transfer.getPrice(), ColorLabelEntry.BG_STANDARD);
                     }
                 },
                 new TransferTableColumn(id++,"ls.player.tsi") {
@@ -101,13 +100,13 @@ public class PlayerTransferTableModel extends HOTableModel {
                 new TransferTableColumn(id++,"ls.transfer.motherclubfee") {
                     @Override
                     public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
-                        return new ColorLabelEntry(CurrencyUtils.convertCurrency(transfer.getMotherClubFee()), ColorLabelEntry.BG_STANDARD, true, 0);
+                        return new ColorLabelEntry(transfer.getMotherClubFee(), ColorLabelEntry.BG_STANDARD);
                     }
                 },
                 new TransferTableColumn(id++,"ls.transfer.previousclubfee") {
                     @Override
                     public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
-                        return new ColorLabelEntry(CurrencyUtils.convertCurrency(transfer.getPreviousClubFee()), ColorLabelEntry.BG_STANDARD, true, 0);
+                        return new ColorLabelEntry(transfer.getPreviousClubFee(), ColorLabelEntry.BG_STANDARD);
                     }
                 }
         )).toArray(new TransferTableColumn[0]);

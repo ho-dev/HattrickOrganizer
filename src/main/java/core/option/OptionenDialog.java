@@ -8,6 +8,7 @@ import core.model.UserParameter;
 import core.module.ModuleConfigPanel;
 import core.module.ModuleManager;
 import core.module.config.ModuleConfig;
+import core.util.AmountOfMoney;
 import core.util.Helper;
 import core.util.Updater;
 
@@ -140,17 +141,20 @@ public class OptionenDialog extends JDialog {
 
 		Dimension size = HOMainFrame.instance().getToolkit().getScreenSize();
 		if (size.width > this.getSize().width) {
-			// Mittig positionieren
+			// Center position
 			setLocation((size.width / 2) - (this.getSize().width / 2), (size.height / 2)
 					- (getSize().height / 2));
 		}
-
-//		setResizable(false);
 	}
 
 	private void save() {
 		// Store user colors before theme setting in user parameters might change
 		userColorsPanel.storeChangedColorSettings();
+
+		// Store currency setting
+		if ( AmountOfMoney.Companion.setCurrencyCode(UserParameter.temp().currencyName) ) {
+			OptionManager.instance().setReInitNeeded();
+		}
 
 		UserParameter.saveTempParameter();
 		ModuleConfig.instance().save();

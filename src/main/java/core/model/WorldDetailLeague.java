@@ -1,12 +1,35 @@
 package core.model;
 
 import core.db.AbstractTable;
+import core.file.xml.XMLWorldDetailsParser;
+import core.net.MyConnector;
+import java.io.IOException;
 
 public class WorldDetailLeague  extends AbstractTable.Storable {
 	private int leagueId;
 	private int countryId;
 	private String countryName;
 	private int activeUsers;
+
+	//	CurrencyName : String
+	//	The name of the currency in this country.
+	private String currencyName;
+
+	//	CurrencyRate : Decimal
+	//	Decimal value specifying the relative currency rate to SEK (swedish krona).
+	private Double currencyRate;
+
+	//	CountryCode : String
+	//	The country code for this country.
+	private String countryCode;
+
+	//	DateFormat : String
+	//	The date format for users of this country using ISO_8601
+	private String dateFormat;
+
+	//	TimeFormat : String
+	//  The time format for users of this country using ISO_8601
+	private String timeFormat;
 
 	public static WorldDetailLeague[] allLeagues = {
 			new WorldDetailLeague(1,1,"Sweden"),
@@ -166,9 +189,7 @@ public class WorldDetailLeague  extends AbstractTable.Storable {
 			new WorldDetailLeague(1000,1000,"International")
 	};
 	
-	public WorldDetailLeague(){
-		
-	}
+	public WorldDetailLeague(){}
 
 	public WorldDetailLeague(int leagueId, int countryId, String countryName){
 		this.leagueId = leagueId;
@@ -205,4 +226,71 @@ public class WorldDetailLeague  extends AbstractTable.Storable {
 	public String toString(){
 		return getCountryName();
 	}
+
+	public boolean isComplete() {return this.currencyRate != null;}
+
+	private void init() {
+        try {
+            var worldDataMap = XMLWorldDetailsParser.parseWorldDetailsFromString(
+                    MyConnector.instance().getWorldDetails(this.leagueId), String.valueOf( this.leagueId));
+			this.countryCode = worldDataMap.get("CountryCode");
+			this.currencyName = worldDataMap.get("CurrencyName");
+			var currencyRateString = worldDataMap.get( "CurrencyRate");
+			if (!currencyRateString.isEmpty()) {
+				this.currencyRate = Double.valueOf(currencyRateString.replace(',', '.'));
+			}
+			this.dateFormat = worldDataMap.get( "DateFormat");
+			this.timeFormat = worldDataMap.get( "TimeFormat");
+		} catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+	}
+
+	public String getCurrencyName() {
+		if ( currencyName == null  || currencyName.isEmpty()) init();
+        return currencyName;
+    }
+
+	public void setCurrencyName(String currencyName) {
+        this.currencyName = currencyName;
+    }
+
+    public Double getCurrencyRate() {
+		if ( currencyRate == null) init();
+        return currencyRate;
+    }
+
+    public void setCurrencyRate(String currencyRate) {
+		try {
+			this.currencyRate = Double.parseDouble(currencyRate);
+		}
+		catch (NumberFormatException ignored){}
+    }
+
+    public String getCountryCode() {
+		if ( countryCode == null) init();
+        return countryCode;
+    }
+
+    public void setCountryCode(String countryCode) {
+        this.countryCode = countryCode;
+    }
+
+    public String getDateFormat() {
+		if ( dateFormat == null) init();
+        return dateFormat;
+    }
+
+    public void setDateFormat(String dateFormat) {
+        this.dateFormat = dateFormat;
+    }
+
+    public String getTimeFormat() {
+		if ( timeFormat==null) init();
+        return timeFormat;
+    }
+
+    public void setTimeFormat(String timeFormat) {
+        this.timeFormat = timeFormat;
+    }
 }

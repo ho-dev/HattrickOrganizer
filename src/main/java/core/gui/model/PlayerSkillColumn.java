@@ -57,7 +57,7 @@ public class PlayerSkillColumn extends PlayerColumn {
 	public  IHOTableEntry getSkillValue(Player player) {
 		var value = player.getValue4Skill(skill);
 		if (skill == PlayerSkill.LEADERSHIP || skill == PlayerSkill.LOYALTY) {
-			return new ColorLabelEntry(value, background, false, 0);
+			return new ColorLabelEntry(value, background, 0);
 		}
 		return new SkillEntry(value + player.getSub4Skill(skill),
 				ColorLabelEntry.FG_STANDARD, background);

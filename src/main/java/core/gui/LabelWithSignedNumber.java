@@ -26,7 +26,7 @@ public class LabelWithSignedNumber extends JLabel {
     }
 
     public void setNumber(Integer number) {
-        final var numberformat = Helper.getNumberFormat(false, 0);
+        final var numberformat = Helper.getNumberFormat( 0);
         if (number != null) {
             setForeground(getColor(number));
             setText(formatNumberWithSign(numberformat, number));

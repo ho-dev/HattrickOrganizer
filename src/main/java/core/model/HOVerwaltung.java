@@ -18,7 +18,7 @@ import java.util.ResourceBundle;
 public class HOVerwaltung {
 
 
-	/** singelton */
+	/** singleton */
 	protected static HOVerwaltung m_clInstance;
 
 	/** das Model */

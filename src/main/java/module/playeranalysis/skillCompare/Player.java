@@ -3,6 +3,7 @@ package module.playeranalysis.skillCompare;
 import core.constants.player.PlayerSkill;
 import core.model.HOVerwaltung;
 import core.model.player.IMatchRoleID;
+import core.util.AmountOfMoney;
 
 import static core.model.player.IMatchRoleID.KEEPER;
 import static core.model.player.IMatchRoleID.UNKNOWN;
@@ -25,7 +26,7 @@ public class Player
 	private String m_LastName;
 	private int m_Age;
 	private int m_ID;
-	private int m_Wages;
+	private AmountOfMoney m_Wages;
 	private int m_TSI;
 	private int m_Nationality;
 	private int m_Leadership;
@@ -505,10 +506,10 @@ public class Player
 		if ( val != m_Leadership ) m_PlayerChangedSkills = null;
 		m_Leadership = val;
 	}
-	public int getWages() {
+	public AmountOfMoney getWages() {
 		return m_Wages;
 	}
-	public void setWages(int val) {
+	public void setWages(AmountOfMoney val) {
 		m_Wages = val;
 	}
 	public String getGroup() {

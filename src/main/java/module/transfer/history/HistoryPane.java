@@ -216,13 +216,17 @@ public class HistoryPane extends JSplitPane {
         }
 
         final TransferTotals totals = TransferTotals.calculateTotals(transfers);
-        pricePanel.setValues(totals.getBuyPriceTotal(), totals.getBuyPriceAvg(),
-                             totals.getSellPriceTotal(), totals.getSellPriceAvg());
+        var sellTotal = totals.getSellPriceTotal();
+        var buyTotal = totals.getBuyPriceTotal();
+        pricePanel.setValues(buyTotal.toLocaleString(), totals.getBuyPriceAvg().toLocaleString(),
+                             sellTotal.toLocaleString(), totals.getSellPriceAvg().toLocaleString(), sellTotal.minus(buyTotal).toLocaleString());
         amountTransfers.setText(Integer.toString(totals.getAmountSell() + totals.getAmountBuy()));
         amountTransfersIn.setText(Integer.toString(totals.getAmountBuy()));
         amountTransfersOut.setText(Integer.toString(totals.getAmountSell()));
-        tsiPanel.setValues(totals.getBuyTsiTotal(), totals.getBuyTsiAvg(),
-                           totals.getSellTsiTotal(), totals.getSellTsiAvg());
+        var sellTsiTotal = totals.getSellTsiTotal();
+        var buyTsiTotal = totals.getBuyTsiTotal();
+        tsiPanel.setValues(String.valueOf(buyTsiTotal), String.valueOf((int)totals.getBuyTsiAvg()),
+                           String.valueOf(sellTsiTotal), String.valueOf((int)totals.getSellTsiAvg()), String.valueOf(sellTsiTotal-buyTsiTotal));
         pricePanel.revalidate();
 
         transferPane.refresh(transfers);

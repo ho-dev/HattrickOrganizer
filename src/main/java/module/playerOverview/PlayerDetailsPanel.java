@@ -208,9 +208,9 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         }
         Helper.setComboBoxFromID(m_jcbUserBestPosition, m_clPlayer.getUserPosFlag());
         m_jcbUserBestPosition.addItemListener(this);
-        final int salary = (int) (m_clPlayer.getWage() / core.model.UserParameter.instance().FXrate);
-        final String salarytext = Helper.getNumberFormat(true, 0).format(salary);
-        final String tsitext = Helper.getNumberFormat(false, 0).format(m_clPlayer.getTsi());
+        final var salary = m_clPlayer.getWage();
+        final String salarytext = salary.toLocaleString();
+        final String tsitext = Helper.getNumberFormat( 0).format(m_clPlayer.getTsi());
         if (m_clComparisonPlayer == null) {
             m_jllWage.getLeft().setText(salarytext);
             m_jllWage.getRight().clear();
@@ -232,9 +232,9 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
 
         }
         else {
-            final int previousSalary = (int) (m_clComparisonPlayer.getWage() / core.model.UserParameter.instance().FXrate);
+            final var previousSalary =m_clComparisonPlayer.getWage();
             m_jllWage.getLeft().setText(salarytext);
-            m_jllWage.getRight().setSpecialNumber(salary - previousSalary, true);
+            m_jllWage.getRight().setSpecialNumber(salary.minus(previousSalary).toLocale().floatValue(), true);
             m_jllTSI.getLeft().setText(tsitext);
             m_jllTSI.getRight().setSpecialNumber(m_clPlayer.getTsi() - m_clComparisonPlayer.getTsi(), false);
             m_jclFormChange.setGraphicalChangeValue(m_clPlayer.getForm()
@@ -292,7 +292,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         var bestPosition = m_clPlayer.getCalculatedBestPosition();
         m_jlBestPosition.setText(MatchRoleID.getNameForPosition(bestPosition)
                 + " ("
-                + Helper.getNumberFormat(false, core.model.UserParameter.instance().nbDecimals).format(
+                + Helper.getNumberFormat( core.model.UserParameter.instance().nbDecimals).format(
                 m_clPlayer.getIdealPositionRating())
                 + ")");
 
@@ -917,7 +917,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
             if (allPo.getPosition() == IMatchRoleID.FORWARD_DEF_TECH) continue;
             text = new StringBuilder(MatchRoleID.getNameForPosition(allPo.getPosition())
                     + " ("
-                    + Helper.getNumberFormat(false, 2).format(
+                    + Helper.getNumberFormat( 2).format(
                     m_clPlayer.getPositionRating(allPo.getPosition()))
                     + ")");
             for (byte altPos : altPositions) {

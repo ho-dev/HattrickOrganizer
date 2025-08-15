@@ -4,12 +4,13 @@ Chinese
 Czech
 Danish
 English
+Estonian
 Finnish
 French
 Galego
 Georgian
 German
-Greeklish
+Greek
 Hangul(Korean)
 Hebrew
 Hrvatski(Croatian)

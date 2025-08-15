@@ -237,7 +237,7 @@ public class SpecialEventsPredictionManager {
                 if (player == null) {
                     PlayerInfo latestPlayerInfo = PlayerDataManager.getLatestPlayerInfo(playerPerformance.getSpielerId());
                     int age = latestPlayerInfo.getAge();
-                    int wage = latestPlayerInfo.getSalary();
+                    var wage = latestPlayerInfo.getSalary();
                     int tsi = latestPlayerInfo.getTsi();
                     double form = latestPlayerInfo.getForm();
                     double stamina = latestPlayerInfo.getStamina();

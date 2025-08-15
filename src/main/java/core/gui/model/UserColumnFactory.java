@@ -641,36 +641,27 @@ final public class UserColumnFactory {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
                 final String bonus = "";
-                final int gehalt = (int) (player.getWage() / core.model.UserParameter.instance().FXrate);
-                final String gehalttext = Helper.getNumberFormat(true, 0).format(gehalt);
+                final var gehalt = player.getWage();
                 if (playerCompare == null) {
                     return new DoubleLabelEntries(new ColorLabelEntry(gehalt,
-                            gehalttext + bonus,
-                            ColorLabelEntry.FG_STANDARD,
-                            ColorLabelEntry.BG_STANDARD,
-                            SwingConstants.RIGHT),
+                            ColorLabelEntry.BG_STANDARD),
                             new ColorLabelEntry("",
                                     ColorLabelEntry.FG_STANDARD,
                                     ColorLabelEntry.BG_STANDARD,
                                     SwingConstants.RIGHT));
                 }
 
-                final int gehalt2 = (int) (playerCompare.getWage() / core.model.UserParameter
-                        .instance().FXrate);
+                final var gehalt2 = playerCompare.getWage();
+                final var diff = gehalt.minus(gehalt2);
                 return new DoubleLabelEntries(new ColorLabelEntry(gehalt,
-                        gehalttext + bonus,
-                        ColorLabelEntry.FG_STANDARD,
-                        ColorLabelEntry.BG_STANDARD,
-                        SwingConstants.RIGHT),
-                        new ColorLabelEntry(gehalt - gehalt2,
-                                ColorLabelEntry.BG_STANDARD,
-                                true, false, 0));
+                        ColorLabelEntry.BG_STANDARD),
+                        new ColorLabelEntry(diff, ColorLabelEntry.BG_STANDARD));
             }
         };
         playerAdditionalArray[8] = new PlayerColumn(430, "ls.player.tsi", 0) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
-                final String text = Helper.getNumberFormat(false, 0).format(player.getTsi());
+                final String text = Helper.getNumberFormat( 0).format(player.getTsi());
                 if (playerCompare == null) {
                     return new DoubleLabelEntries(new ColorLabelEntry(player
                             .getTsi(),
@@ -693,7 +684,7 @@ final public class UserColumnFactory {
                         SwingConstants.RIGHT),
                         new ColorLabelEntry(player.getTsi()
                                 - playerCompare.getTsi(), ColorLabelEntry.BG_STANDARD,
-                                false, false, 0));
+                                false,  0));
             }
 
             @Override
@@ -761,7 +752,7 @@ final public class UserColumnFactory {
                         SwingConstants.RIGHT),
                         new ColorLabelEntry((float) (0),
                                 ColorLabelEntry.BG_STANDARD,
-                                true, false, 0)
+                                true,  0)
                 );
             }
         };
@@ -973,12 +964,6 @@ final public class UserColumnFactory {
 
     private static IHOTableEntry getTrainerTransferEntry(Player player, int i) {
         var costs = player.calculateCoachConversionCosts(i);
-        var string = "";
-        var swedishKrona = 0;
-        if (costs != null){
-            string = costs.toLocaleString();
-            swedishKrona = costs.getSwedishKrona();
-        }
-        return new ColorLabelEntry(swedishKrona, string, ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
+        return new ColorLabelEntry(costs, ColorLabelEntry.BG_STANDARD);
     }
 }

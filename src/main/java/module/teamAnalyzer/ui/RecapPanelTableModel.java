@@ -12,7 +12,6 @@ import core.gui.theme.ThemeManager;
 import core.model.TranslationFacility;
 import core.model.enums.MatchType;
 import core.model.match.Matchdetails;
-import core.util.CurrencyUtils;
 import core.util.Helper;
 import module.teamAnalyzer.SystemManager;
 import module.teamAnalyzer.report.TeamReport;
@@ -221,7 +220,7 @@ public class RecapPanelTableModel extends HOTableModel {
                 new RecapUserColumn("ls.team.sumsalary", 50) {
                     @Override
                     public IHOTableEntry getTableEntry(TeamLineup lineup) {
-                        return createIntegerTableEntry(CurrencyUtils.convertCurrency(lineup.getSalarySum()), MatchesColumnModel.getColor4Matchtyp(lineup.getMatchType()), true);
+                        return new ColorLabelEntry(lineup.getSalarySum().toLocaleString(), ColorLabelEntry.FG_STANDARD, MatchesColumnModel.getColor4Matchtyp(lineup.getMatchType()), SwingConstants.RIGHT);
                     }
                 },
                 new RecapUserColumn("ls.team.numhomegrown", 50) {
@@ -241,13 +240,10 @@ public class RecapPanelTableModel extends HOTableModel {
         return Double.POSITIVE_INFINITY;
     }
     private IHOTableEntry createIntegerTableEntry(Integer ival, Color color4Matchtyp) {
-        return createIntegerTableEntry(ival, color4Matchtyp, false);
-    }
-    private IHOTableEntry createIntegerTableEntry(Integer ival, Color color4Matchtyp, boolean isCurrency) {
         double dval;
         String text;
         if ( ival != null){
-            text = Helper.getNumberFormat(isCurrency, 0).format(ival);
+            text = Helper.getNumberFormat( 0).format(ival);
             dval = (double) ival;
         }
         else {
@@ -335,8 +331,10 @@ public class RecapPanelTableModel extends HOTableModel {
     public TeamLineup getTeamMatchReport(int minSelectionIndex) {
         if ( teamReport != null){
             var table = getTable();
-            var modelIndex = table.convertRowIndexToModel(minSelectionIndex);
-            return teamReport.getTeamMatchReport(modelIndex);
+            if ( table != null) {
+                var modelIndex = table.convertRowIndexToModel(minSelectionIndex);
+                return teamReport.getTeamMatchReport(modelIndex);
+            }
         }
         return null;
     }

@@ -7,6 +7,7 @@ import core.file.xml.XMLManager;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
 import core.net.MyConnector;
+import core.util.AmountOfMoney;
 import core.util.HODateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -101,7 +102,7 @@ public final class XMLParser {
                             playerTransfer.setSellerid(XMLManager.xmlIntValue(seller, "SellerTeamID")); //$NON-NLS-1$
                             playerTransfer.setSellerName(XMLManager.xmlValue(seller, "SellerTeamName")); //$NON-NLS-1$
 
-                            playerTransfer.setPrice(XMLManager.xmlIntValue(transfer, "Price")); //$NON-NLS-1$
+                            playerTransfer.setPrice(new AmountOfMoney(XMLManager.xmlIntValue(transfer, "Price"))); //$NON-NLS-1$
                             playerTransfer.setTsi(XMLManager.xmlIntValue(transfer, "TSI")); //$NON-NLS-1$
                         }
                         transferList.add(playerTransfer);
@@ -175,8 +176,8 @@ public final class XMLParser {
 
         // Stats
         var stats = (Element) root.getElementsByTagName("Stats").item(0);
-        PlayerTransfer.totalSumOfBuys = XMLManager.xmlLongValue(stats, "TotalSumOfBuys");
-        PlayerTransfer.totalSumOfSales = XMLManager.xmlLongValue(stats, "TotalSumOfSales");
+        PlayerTransfer.totalSumOfBuys = XMLManager.xmlAmountOfMoneyValue(stats, "TotalSumOfBuys");
+        PlayerTransfer.totalSumOfSales = XMLManager.xmlAmountOfMoneyValue(stats, "TotalSumOfSales");
         PlayerTransfer.numberOfBuys = XMLManager.xmlLongValue(stats, "NumberOfBuys");
         PlayerTransfer.numberOfSales = XMLManager.xmlLongValue(stats, "NumberOfSales");
 
@@ -222,7 +223,7 @@ public final class XMLParser {
                             playerTranfer.setSellerid(XMLManager.xmlIntValue(seller, "SellerTeamID")); //$NON-NLS-1$
                             playerTranfer.setSellerName(XMLManager.xmlValue(seller, "SellerTeamName")); //$NON-NLS-1$
 
-                            playerTranfer.setPrice(XMLManager.xmlIntValue(transfer, "Price")); //$NON-NLS-1$
+                            playerTranfer.setPrice(XMLManager.xmlAmountOfMoneyValue(transfer, "Price")); //$NON-NLS-1$
                             playerTranfer.setTsi(XMLManager.xmlIntValue(transfer, "TSI")); //$NON-NLS-1$
                             var transferType = XMLManager.xmlValue(transfer, "TransferType"); //$NON-NLS-1$
                             if ( transferType.equals("S")){

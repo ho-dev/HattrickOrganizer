@@ -1,6 +1,7 @@
 package module.transfer.scout;
 
 import core.db.AbstractTable;
+import core.util.AmountOfMoney;
 
 public class ScoutEintrag extends AbstractTable.Storable {
     //~ Instance fields ----------------------------------------------------------------------------
@@ -73,7 +74,7 @@ public class ScoutEintrag extends AbstractTable.Storable {
     /**
      * Price
      */
-    protected int m_iPrice;
+    protected AmountOfMoney m_iPrice;
 
     /**
      * Speciality
@@ -108,7 +109,7 @@ public class ScoutEintrag extends AbstractTable.Storable {
     protected int m_iLoyalty = 0;
     protected boolean m_bHomegrown = false;
     protected int m_iAgreeability = 0;
-    protected int m_ibaseWage = 2500;
+    protected AmountOfMoney m_ibaseWage = new AmountOfMoney(2500);
     protected int m_iNationality = 0;
     protected int m_iLeadership = 0;
     private core.model.player.Player player;
@@ -353,11 +354,11 @@ public class ScoutEintrag extends AbstractTable.Storable {
         return m_iPlayerID;
     }
 
-    public final void setPrice(int m_iPrice) {
+    public final void setPrice(AmountOfMoney m_iPrice) {
         this.m_iPrice = m_iPrice;
     }
 
-    public final int getPrice() {
+    public final AmountOfMoney getPrice() {
         return m_iPrice;
     }
 
@@ -518,7 +519,7 @@ public class ScoutEintrag extends AbstractTable.Storable {
      *
      * @param m_ibaseWage New value of property m_ibaseWage.
      */
-    public final void setbaseWage(int m_ibaseWage) {
+    public final void setbaseWage(AmountOfMoney m_ibaseWage) {
         this.m_ibaseWage = m_ibaseWage;
     }
 
@@ -527,7 +528,7 @@ public class ScoutEintrag extends AbstractTable.Storable {
      *
      * @return Value of property m_ibaseWage.
      */
-    public final Integer getbaseWage() {
+    public final AmountOfMoney getbaseWage() {
         return m_ibaseWage;
     }
 

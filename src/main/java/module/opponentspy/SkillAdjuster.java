@@ -1,8 +1,11 @@
 package module.opponentspy;
 
 import core.model.player.IMatchRoleID;
+import core.util.AmountOfMoney;
 import module.opponentspy.CalcVariables.Skill;
+import org.jetbrains.annotations.NotNull;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -69,30 +72,26 @@ class SkillAdjuster {
 	private boolean areWeSatisfied(CalcVariables calcPlayer) {
 		
 		double tsiError = (0.0 + calcPlayer.tsi - calcPlayer.calculatedTSI)/calcPlayer.tsi;
-		double wageError = (0.0 + calcPlayer.wage - calcPlayer.calculatedWage)/calcPlayer.wage;
+		@NotNull BigDecimal wageError = calcPlayer.wage.minus(calcPlayer.calculatedWage).divide(calcPlayer.wage);
 		
-		return (Math.abs(tsiError) < TSI_ERROR_LIMIT && Math.abs(wageError) < WAGE_ERROR_LIMIT);
+		return (Math.abs(tsiError) < TSI_ERROR_LIMIT && Math.abs(wageError.doubleValue()) < WAGE_ERROR_LIMIT);
 	}
 	
 	private boolean needMoreMainSkill(CalcVariables calcPlayer) {
 	
 		double tsiError = (0.0 + calcPlayer.tsi - calcPlayer.calculatedTSI)/calcPlayer.tsi;
-		double wageError = (0.0 + calcPlayer.wage - calcPlayer.calculatedWage)/calcPlayer.wage;
-		
-		
+		@NotNull BigDecimal wageError = calcPlayer.wage.minus( calcPlayer.calculatedWage).divide(calcPlayer.wage);
+
 		// Only if we need more wage and Tsi is at the limit
-		 
-		return (wageError > WAGE_ERROR_LIMIT && Math.abs(tsiError) < TSI_ERROR_LIMIT);
+		return (wageError.doubleValue() > WAGE_ERROR_LIMIT && Math.abs(tsiError) < TSI_ERROR_LIMIT);
 	}
 	
 	private boolean needMoreSecondarySkills(CalcVariables calcPlayer) {
 		double tsiError = (0.0 + calcPlayer.tsi - calcPlayer.calculatedTSI)/calcPlayer.tsi;
-		double wageError = (0.0 + calcPlayer.wage - calcPlayer.calculatedWage)/calcPlayer.wage;
-		
-		
+		@NotNull BigDecimal wageError = calcPlayer.wage.minus( calcPlayer.calculatedWage).divide(calcPlayer.wage);
+
 		// Only if we need more TSI and Wage is at the limit
-		 
-		return (tsiError > TSI_ERROR_LIMIT && Math.abs(wageError) < WAGE_ERROR_LIMIT);
+		return (tsiError > TSI_ERROR_LIMIT && Math.abs(wageError.doubleValue()) < WAGE_ERROR_LIMIT);
 	
 	}
 	
@@ -102,19 +101,15 @@ class SkillAdjuster {
 	
 		calculateWageAndTSI(calcPlayer);
 		
-		if ((calcPlayer.calculatedTSI < calcPlayer.tsi)
-				&& (calcPlayer.calculatedWage < calcPlayer.wage))
+		if (calcPlayer.calculatedTSI < calcPlayer.tsi && calcPlayer.calculatedWage.isLessThan(calcPlayer.wage))
 			direction = Direction.Up;
-		else if ((calcPlayer.calculatedTSI > calcPlayer.tsi)
-				&& (calcPlayer.calculatedWage > calcPlayer.wage))
+		else if (calcPlayer.calculatedTSI > calcPlayer.tsi && calcPlayer.calculatedWage.isGreaterThan(calcPlayer.wage))
 			direction = Direction.Down;
-	
 			
 		while (!isDoneCalculating(calcPlayer, direction)) {
 			if ( !adjustAllSkillsOnce(calcPlayer, direction) ) break;	// no adjustments anymore
 			calculateWageAndTSI(calcPlayer);
 		}
-		
 	}
 
 	private boolean adjustAllSkillsOnce(CalcVariables calcPlayer, Direction direction) {
@@ -142,25 +137,18 @@ class SkillAdjuster {
 
 	private boolean isDoneCalculating(CalcVariables calcPlayer,
 			Direction direction) {
-		
-		if (direction == Direction.Up) {
-			if ( calcPlayer.calculatedTSI <= 0 || calcPlayer.calculatedWage <= 0){
-				return true;	// Cancel, because of problems with too old players
-			}
-			if ((calcPlayer.calculatedTSI >= calcPlayer.tsi)
-					|| (calcPlayer.calculatedWage >= calcPlayer.wage))
-				return true;
-		} else {
-			if ((calcPlayer.calculatedTSI <= calcPlayer.tsi)
-					|| (calcPlayer.calculatedWage <= calcPlayer.wage))
-				return  true;
-		}
 
-		return false;
-	}
+		if (direction == Direction.Up) {
+			if (calcPlayer.calculatedTSI <= 0 || !calcPlayer.calculatedWage.isGreaterThan(new AmountOfMoney(0))) {
+				return true;    // Cancel, because of problems with too old players
+			}
+            return calcPlayer.calculatedTSI >= calcPlayer.tsi || !calcPlayer.calculatedWage.isLessThan(calcPlayer.wage);
+		} else {
+            return calcPlayer.calculatedTSI <= calcPlayer.tsi || !calcPlayer.calculatedWage.isGreaterThan(calcPlayer.wage);
+		}
+    }
 	
 	protected void calculateWageAndTSI(CalcVariables calcPlayer) {
-		
     	calculateTSI(calcPlayer);
 		calculateWage(calcPlayer);	
 	}
@@ -190,8 +178,8 @@ class SkillAdjuster {
 		 
 	}
 	
-	protected int calculateTSI(CalcVariables calcPlayer) {
-		return calculateTSI(calcPlayer, 0);
+	protected void calculateTSI(CalcVariables calcPlayer) {
+		calculateTSI(calcPlayer, 0);
 	}
 	
 	protected int calculateTSI(CalcVariables calcPlayer, double skillDelta) {
@@ -232,8 +220,8 @@ class SkillAdjuster {
 		return calcPlayer.calculatedTSI;
 	}
 
-	protected int calculateWage(CalcVariables calcPlayer) {
-		return calculateWage(calcPlayer, 0);
+	protected void calculateWage(CalcVariables calcPlayer) {
+		calculateWage(calcPlayer, 0);
 	}
 
 	private double getAgeWageDropMultiplier (int age){
@@ -244,7 +232,7 @@ class SkillAdjuster {
 		return 1 - ageWageDrop;
 	}
 	
-	protected int calculateWage(CalcVariables calcPlayer, double skillDelta) {
+	protected AmountOfMoney calculateWage(CalcVariables calcPlayer, double skillDelta) {
 
 		List<Double> wageElements = new ArrayList<>();
 		
@@ -285,7 +273,7 @@ class SkillAdjuster {
 
 		if ( wage < 2500) wage = 2500;
 
-		calcPlayer.calculatedWage = (int)wage;
+		calcPlayer.calculatedWage = new AmountOfMoney( (long)(wage + .5));
 		return calcPlayer.calculatedWage;
 	}
 }

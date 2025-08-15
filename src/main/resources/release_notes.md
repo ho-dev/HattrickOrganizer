@@ -5,8 +5,7 @@
 
 ### Database
 
-### Squad
-
+### Player overview
 
 ### Team Analyzer
 
@@ -15,7 +14,6 @@
 
 
 ### Series
-
 
 ### Lineup
 
@@ -30,6 +28,7 @@
 ### Youth
 
 ### Option setting
+* Add option to select currency setting (#2288)
 
 ### Misc
 

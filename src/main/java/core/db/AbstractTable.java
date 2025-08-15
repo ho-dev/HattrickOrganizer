@@ -1,5 +1,6 @@
 package core.db;
 
+import core.util.AmountOfMoney;
 import core.util.HODateTime;
 import core.util.HOLogger;
 import java.sql.ResultSet;
@@ -227,7 +228,8 @@ public abstract class AbstractTable {
 							case Types.TIME, Types.DATE, Types.TIMESTAMP_WITH_TIMEZONE, Types.TIME_WITH_TIMEZONE, Types.TIMESTAMP -> getHODateTime(rs, c.getColumnName());
 							case Types.BOOLEAN -> getBoolean(rs,c.getColumnName());
 							case Types.DOUBLE -> getDouble(rs, c.getColumnName());
-							case Types.DECIMAL, Types.FLOAT, Types.REAL -> getFloat(rs, c.getColumnName());
+							case Types.DECIMAL -> getAmountOfMoney(rs, c.getColumnName());
+							case Types.FLOAT, Types.REAL -> getFloat(rs, c.getColumnName());
 							default -> throw new IllegalStateException("Unexpected value: " + c.getType());
 						};
 						c.setter.accept(object, value);
@@ -246,6 +248,14 @@ public abstract class AbstractTable {
 			HOLogger.instance().error(getClass(), stringBuilder.toString());
 		}
 		return ret;
+	}
+
+	private AmountOfMoney getAmountOfMoney(ResultSet rs, String columnName) throws SQLException {
+		var ret = rs.getBigDecimal(columnName);
+		if ( rs.wasNull()){
+			return null;
+		}
+		return new AmountOfMoney(ret);
 	}
 
 	/**
@@ -528,8 +538,8 @@ public abstract class AbstractTable {
 	/**
 	 * Drop the current table
 	 */
-	protected void tryDropTable() {
-		connectionManager.executeUpdate("DROP TABLE IF EXISTS " + getTableName());
+	protected boolean tryDropTable() {
+		return 0 < connectionManager.executeUpdate("DROP TABLE IF EXISTS " + getTableName());
 	}
 
 	/**
@@ -558,6 +568,20 @@ public abstract class AbstractTable {
 		return false;
 	}
 
+	private boolean columnHasDataType(String columnName, String typeName) throws SQLException {
+		String sql = "SELECT TYPE_NAME FROM INFORMATION_SCHEMA.SYSTEM_COLUMNS WHERE TABLE_NAME = '"
+				+ getTableName().toUpperCase()
+				+ "' AND COLUMN_NAME = '"
+				+ columnName.toUpperCase()
+				+ "' AND TYPE_NAME = '"
+				+ typeName.toUpperCase()
+				+ "'";
+		try (ResultSet rs = connectionManager.executeQuery(sql)) {
+			if (rs != null) return rs.next();
+		}
+		return false;
+
+	}
 	private boolean columnExistsInTable(String columnName) throws SQLException {
 		String sql = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.SYSTEM_COLUMNS WHERE TABLE_NAME = '"
 				+ getTableName().toUpperCase()
@@ -570,18 +594,22 @@ public abstract class AbstractTable {
 		return false;
 	}
 
-	public void tryChangeColumn(String columnName, String type_not_null) throws SQLException {
+	public boolean tryChangeColumn(String columnName, String type_not_null) throws SQLException {
 		if (columnExistsInTable(columnName)) {
 			String sql = "ALTER TABLE " + getTableName() + " ALTER COLUMN " + columnName + " SET " + type_not_null;
 			connectionManager.executeUpdate(sql);
+			return true;
 		}
+		return false;
 	}
 
-	public void tryRenameColumn(String from, String to) throws SQLException {
+	public boolean tryRenameColumn(String from, String to) throws SQLException {
 		if (columnExistsInTable(from)) {
 			String sql = "ALTER TABLE " + getTableName() + " ALTER COLUMN " + from + " RENAME TO " + to;
 			connectionManager.executeUpdate(sql);
+			return true;
 		}
+		return false;
 	}
 
 	public boolean tryDeleteColumn(String columnName) throws SQLException {
@@ -597,18 +625,20 @@ public abstract class AbstractTable {
 		connectionManager.executeUpdate("ALTER TABLE " + tableName + " ADD PRIMARY KEY (" + columns + ")");
 	}
 
-	public void tryDropPrimaryKey() throws SQLException {
+	public boolean tryDropPrimaryKey() throws SQLException {
 		if (primaryKeyExists()) {
 			connectionManager.executeUpdate("ALTER TABLE " + getTableName() + " DROP PRIMARY KEY");
+			return true;
 		}
+		return false;
 	}
 
-	public void tryDropIndex(String index) {
-		connectionManager.executeUpdate("DROP INDEX " + index + " IF EXISTS");
+	public boolean tryDropIndex(String index) {
+		return 0<connectionManager.executeUpdate("DROP INDEX " + index + " IF EXISTS");
 	}
 
-	public void tryAddIndex(String indexName, String columns) {
-		connectionManager.executeUpdate("CREATE INDEX IF NOT EXISTS " + indexName + " ON " + tableName + " (" + columns + ")");
+	public boolean tryAddIndex(String indexName, String columns) {
+		return 0 < connectionManager.executeUpdate("CREATE INDEX IF NOT EXISTS " + indexName + " ON " + tableName + " (" + columns + ")");
 	}
 
 	public boolean primaryKeyExists() throws SQLException {
@@ -616,6 +646,14 @@ public abstract class AbstractTable {
 				+ getTableName().toUpperCase() + "'";
 		try (ResultSet rs = connectionManager.executeQuery(sql)) {
 			if (rs != null) return rs.next();
+		}
+		return false;
+	}
+
+	public boolean tryChangeColumnDataType(String columnName , String fromType, String toType) throws SQLException {
+		if ( columnHasDataType(columnName, fromType)){
+			tryChangeColumn(columnName, toType);
+			return true;
 		}
 		return false;
 	}

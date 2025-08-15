@@ -3,8 +3,11 @@ package core.gui.model;
 
 import core.model.enums.MatchType;
 import core.model.match.IMatchType;
+import core.util.AmountOfMoney;
 import core.util.HODateTime;
 import tool.arenasizer.ArenaSizer;
+
+import java.math.BigDecimal;
 
 
 /**
@@ -50,21 +53,6 @@ public class ArenaStatistikModel {
     private int maxBasic;
     private int maxRoof;
     private int maxVip;
-
-    private float currencyFactor;
-    private float terracesIncome;
-    private float basicSeatIncome;
-    private float seatRoofIncome;
-    private float vipIncome;
-    private float totalIncome;
-    private float matchTypeFactor;
-
-    //~ Methods ------------------------------------------------------------------------------------
-
-
-    public ArenaStatistikModel() {
-        currencyFactor = core.model.UserParameter.instance().FXrate;
-    }
 
     /**
      * Setter for property m_iArenaGroesse.
@@ -163,15 +151,6 @@ public class ArenaStatistikModel {
      */
     public final void setHeimName(String m_sHeimName) {
         this.m_sHeimName = m_sHeimName;
-    }
-
-    /**
-     * Getter for property m_sHeimName.
-     *
-     * @return Value of property m_sHeimName.
-     */
-    public final String getHeimName() {
-        return m_sHeimName;
     }
 
     /**
@@ -382,29 +361,24 @@ public class ArenaStatistikModel {
         this.maxVip = maxVip;
     }
 
-    public float getTerracesIncome() {
-        terracesIncome = getSoldTerraces() * (getMatchTypeFactor() * ArenaSizer.ADMISSION_PRICE_TERRACES / currencyFactor);
-        return terracesIncome;
+    public AmountOfMoney getTerracesIncome() {
+        return  ArenaSizer.ADMISSION_PRICE_TERRACES.times(BigDecimal.valueOf(getSoldTerraces())).times(BigDecimal.valueOf(getMatchTypeFactor()));
     }
 
-    public float getBasicSeatIncome() {
-        basicSeatIncome = getSoldBasics() * (getMatchTypeFactor() * ArenaSizer.ADMISSION_PRICE_BASICS / currencyFactor);
-        return basicSeatIncome;
+    public AmountOfMoney getBasicSeatIncome() {
+        return  ArenaSizer.ADMISSION_PRICE_BASICS.times(BigDecimal.valueOf(getSoldBasics())).times(BigDecimal.valueOf(getMatchTypeFactor()));
     }
 
-    public float getSeatRoofIncome() {
-        seatRoofIncome = getSoldRoof() * (getMatchTypeFactor() * ArenaSizer.ADMISSION_PRICE_ROOF / currencyFactor);
-        return seatRoofIncome;
+    public AmountOfMoney getSeatRoofIncome() {
+        return ArenaSizer.ADMISSION_PRICE_ROOF.times(BigDecimal.valueOf(getSoldRoof())).times(BigDecimal.valueOf(getMatchTypeFactor()));
     }
 
-    public float getVipIncome() {
-        vipIncome = getSoldVip() * (getMatchTypeFactor() * ArenaSizer.ADMISSION_PRICE_VIP / currencyFactor);
-        return vipIncome;
+    public AmountOfMoney getVipIncome() {
+        return ArenaSizer.ADMISSION_PRICE_VIP.times(BigDecimal.valueOf(getSoldVip())).times(BigDecimal.valueOf(getMatchTypeFactor()));
     }
 
-    public float getTotalIncome() {
-        totalIncome = getTerracesIncome() + getBasicSeatIncome() + getSeatRoofIncome() + getVipIncome();
-        return totalIncome;
+    public AmountOfMoney getTotalIncome() {
+        return getTerracesIncome().plus(getBasicSeatIncome()).plus(getSeatRoofIncome()).plus(getVipIncome());
     }
 
     /*
@@ -414,13 +388,12 @@ public class ArenaStatistikModel {
             Friendlies and qualifiers: Income is split evenly
     */
     public float getMatchTypeFactor() {
-        switch (MatchType.getById(m_mtMatchTyp.getMatchTypeId())) {
-            case LEAGUE -> matchTypeFactor = 1;
-            case CUP -> matchTypeFactor = (float) 2 / 3;
-            case FRIENDLYCUPRULES, INTFRIENDLYCUPRULES, FRIENDLYNORMAL, INTFRIENDLYNORMAL, MASTERS, QUALIFICATION -> matchTypeFactor = (float) 1 / 2;
-            default -> matchTypeFactor = 0;
-        }
-        return matchTypeFactor;
+        return switch (MatchType.getById(m_mtMatchTyp.getMatchTypeId())) {
+            case LEAGUE ->  1;
+            case CUP ->  (float) 2 / 3;
+            case FRIENDLYCUPRULES, INTFRIENDLYCUPRULES, FRIENDLYNORMAL, INTFRIENDLYNORMAL, MASTERS, QUALIFICATION ->  (float) 1 / 2;
+            default -> 0;
+        };
     }
 
     //--------------------------------------------------------------

@@ -3,7 +3,6 @@ package core.util;
 import core.constants.player.PlayerAbility;
 import core.datatype.CBItem;
 import core.datatype.ComboItem;
-import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.player.IMatchRoleID;
@@ -80,13 +79,6 @@ public class Helper {
 			new CBItem(MatchRoleID.getNameForPosition(IMatchRoleID.FORWARD_DEF_TECH), IMatchRoleID.FORWARD_DEF_TECH),
 			new CBItem(MatchRoleID.getNameForPosition(IMatchRoleID.FORWARD_TOWING), IMatchRoleID.FORWARD_TOWING)};
 
-
-	/**
-	 * Currency formatter
-	 * Matches country of user's premier team
-	 */
-	public static NumberFormat CURRENCYFORMAT = CurrencyUtils.getLeagueCurrencyFormater(HOVerwaltung.instance().getModel().getLeagueIdPremierTeam());
-
 	/**
 	 * Integer format
 	 * used by parser in parseFloat
@@ -135,7 +127,7 @@ public class Helper {
 					buffer.append(text.charAt(i));
 				} else { // Komma gefunden
 					// buffer ist nicht leer
-					if (!buffer.toString().trim().equals("")) {
+					if (!buffer.toString().trim().isEmpty()) {
 						tempzahlen[index] = Integer.parseInt(buffer.toString().trim());
 
 						/*
@@ -153,17 +145,9 @@ public class Helper {
 				}
 			}
 
-			if (!buffer.toString().trim().equals("")) {
+			if (!buffer.toString().trim().isEmpty()) {
 				// Es folgt am Ende kein , mehr ->
 				tempzahlen[index] = Integer.parseInt(buffer.toString().trim());
-
-				/*
-				 * if ( !negativErlaubt && tempzahlen[index] < 0 ) { //message =
-				 * "Keinen negativen Werte erlaubt!"; throw new
-				 * NumberFormatException(); } //Groesser als Maximalwert if (
-				 * tempzahlen[index] > maxValue ) { //message =
-				 * "Ein Wert ist zu hoch!"; throw new NumberFormatException(); }
-				 */
 				index++;
 			}
 
@@ -220,7 +204,7 @@ public class Helper {
 			field.setText(String.valueOf(temp));
 			return true;
 		} catch (NumberFormatException nfe) {
-			if (message.equals("")) {
+			if (message.isEmpty()) {
 				message = TranslationFacility.tr("keineZahl");
 			}
 
@@ -272,88 +256,14 @@ public class Helper {
 	}
 
 	/**
-	 * Sort a two dimensional in array
-	 * @param toSort array
-	 * @param spaltenindex column index
-	 * @return array
-	 */
-	public static int[][] sortintArray(int[][] toSort, int spaltenindex) {
-		try {
-			if ((toSort == null) || (toSort.length == 0) || (toSort[0].length == 0)) {
-				return null;
-			}
-
-			final int[][] ergebnis = new int[toSort.length][toSort[0].length];
-			final int[] sortSpalte = new int[toSort.length];
-
-			// find sort column
-			for (int i = 0; i < toSort.length; i++) {
-				sortSpalte[i] = toSort[i][spaltenindex];
-			}
-
-			Arrays.sort(sortSpalte);
-
-			// scan all entries, search value in toSort and copy the value to the result
-			for (int i = 0; i < toSort.length; i++) {
-				for (int[] ints : toSort) {
-					if (sortSpalte[i] == ints[spaltenindex]) {
-						System.arraycopy(ints, 0, ergebnis[i], 0, ints.length);
-						break;
-					}
-				}
-			}
-
-			return ergebnis;
-		} catch (Exception e) {
-			HOLogger.instance().log(Helper.class, "Helper.sortintArray:  " + e);
-			return null;
-		}
-	}
-
-	/**
 	 * Returns a NumberFormat based on the parameters
 	 */
-	public static NumberFormat getNumberFormat(boolean currencyformat, int nbDecimals) {
-		NumberFormat numFormat;
-		if (currencyformat) {
-			numFormat = Helper.CURRENCYFORMAT;
-		} else {
-			numFormat = NumberFormat.getNumberInstance();
-		}
+	public static NumberFormat getNumberFormat(int nbDecimals) {
+		NumberFormat numFormat = NumberFormat.getNumberInstance();
 		numFormat.setMinimumFractionDigits(nbDecimals);
 		numFormat.setMaximumFractionDigits(nbDecimals);
 		return numFormat;
 	}
-
-	/**
-	 * Format value as currency string
-	 * @param v value
-	 * @return String
-	 */
-	public static String formatCurrency(float v) {
-		return Helper.getNumberFormat(true, 0).format(v);
-	}
-
-	/**
-	 * Parse currency value from string.
-	 * If value could not be parsed with currency formal an number format is tried.
-	 * @param v String to parse from
-	 * @return Integer, null on parse error
-	 */
-	public static Integer parseCurrency(String v) {
-		try {
-			return Helper.getNumberFormat(true, 0).parse(v).intValue();
-		} catch (Exception ignored) {
-			try {
-				return Helper.getNumberFormat(false, 0).parse(v).intValue();
-			}
-			catch ( Exception ex) {
-				HOLogger.instance().error(Helper.class, "error parsing currency " + ex);
-				return null;
-			}
-		}
-	}
-
 
 	/**
 	 * Decrypt string

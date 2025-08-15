@@ -129,14 +129,17 @@ abstract class HOTableModel protected constructor(
      * @return Object
      */
     override fun getValueAt(row: Int, column: Int): Any? {
-        if (m_clData != null && m_clData!!.size > row) {
+        if (m_clData != null && m_clData!!.size > row && row > -1 && column > -1 && column < m_clData!![row].size ) {
             return m_clData!![row][column]
         }
         return null
     }
 
     override fun isCellEditable(row: Int, column: Int): Boolean {
-        return columns[column].isEditable
+        if (column > -1 && column < columns.size) {
+            return columns[column].isEditable
+        }
+        return false
     }
 
     /**
@@ -168,10 +171,9 @@ abstract class HOTableModel protected constructor(
      * @return String
      */
     override fun getColumnName(columnIndex: Int): String? {
-        if (displayedColumnCount > columnIndex) {
+        if (displayedColumnCount > columnIndex && columnIndex > -1) {
             return getDisplayedColumns()[columnIndex].getColumnName()
         }
-
         return null
     }
 
@@ -182,7 +184,9 @@ abstract class HOTableModel protected constructor(
      * @param column  column of cell
      */
     override fun setValueAt(value: Any, row: Int, column: Int) {
-        m_clData!![row][column] = value
+        if (m_clData != null && m_clData!!.size > row && row > -1 && column > -1 && column < m_clData!![row].size ) {
+            m_clData!![row][column] = value
+        }
         for (table in tables) {
             fireTableCellUpdated(table.convertRowIndexToView(row), table.convertColumnIndexToView(column))
         }

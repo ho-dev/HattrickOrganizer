@@ -13,6 +13,7 @@ import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.training.TrainingManager;
+import core.util.AmountOfMoney;
 import core.util.ExceptionHandler;
 import core.util.HOLogger;
 import core.util.OSUtils;
@@ -208,7 +209,7 @@ public class HO {
 			var xtra = HOVerwaltung.instance().getModel().getXtraDaten();
 			if (xtra != null) {
 				float fxRate = (float) xtra.getCurrencyRate();
-				if (fxRate > -1) UserParameter.instance().FXrate = fxRate;
+				if (fxRate > -1) UserParameter.instance().currencyRate = fxRate;
 			}
 		}
 		// Upgrade database configuration

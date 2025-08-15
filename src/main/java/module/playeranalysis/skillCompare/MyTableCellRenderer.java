@@ -10,6 +10,7 @@ import core.gui.theme.ThemeManager;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.player.MatchRoleID;
+import core.util.AmountOfMoney;
 import core.util.Helper;
 
 import javax.swing.*;
@@ -243,7 +244,8 @@ class MyTableCellRenderer  implements TableCellRenderer{
 			label.validate();
 		}
 		else if(table.getColumnName(column).equals(TranslationFacility.tr("ls.player.wage")))	{
-			label.setText(Helper.getNumberFormat(true, 0).format(value));
+			var amount = (AmountOfMoney)value;
+			label.setText(amount.toLocaleString());
 
 			label.setHorizontalAlignment(SwingConstants.RIGHT);
 			label.setBackground(table.getBackground());

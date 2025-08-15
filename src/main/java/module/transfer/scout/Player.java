@@ -1,6 +1,7 @@
 // %3800124443:de.hattrickorganizer.gui.transferscout%
 package module.transfer.scout;
 import core.model.TranslationFacility;
+import core.util.AmountOfMoney;
 import core.util.HODateTime;
 
 /**
@@ -25,7 +26,7 @@ public class Player {
     private int passing;
     private int playMaking;
     private int playerId;
-    private int price;
+    private AmountOfMoney price;
     private int setPieces;
     private int speciality;
     private int stamina;
@@ -35,7 +36,7 @@ public class Player {
     private boolean homegrown;
     private String booked = null;
     private int agreeability;
-    private int baseWage;
+    private AmountOfMoney baseWage;
     private int nationality;
 
     //~ Constructors -------------------------------------------------------------------------------
@@ -326,7 +327,7 @@ public class Player {
      *
      * @param i Set price to i
      */
-    public final void setPrice(int i) {
+    public final void setPrice(AmountOfMoney i) {
         price = i;
     }
 
@@ -335,7 +336,7 @@ public class Player {
      *
      * @return Returns price
      */
-    public final int getPrice() {
+    public final AmountOfMoney getPrice() {
         return price;
     }
 
@@ -452,7 +453,7 @@ public class Player {
      *
      * @param i Set baseWage to i
      */
-    public final void setBaseWage(int i) {
+    public final void setBaseWage(AmountOfMoney i) {
         baseWage = i;
     }
 
@@ -461,7 +462,7 @@ public class Player {
      *
      * @return Returns baseWage
      */
-    public final int getBaseWage() {
+    public final AmountOfMoney getBaseWage() {
         return baseWage;
     }
 

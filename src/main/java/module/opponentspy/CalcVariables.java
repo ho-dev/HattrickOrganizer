@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import core.constants.player.PlayerSkill;
+import core.util.AmountOfMoney;
 
 public class CalcVariables {
 
@@ -13,7 +14,7 @@ public class CalcVariables {
 	public double form;
 	public double stamina;
 	public int tsi;
-	public int wage;
+	public AmountOfMoney wage;
 	public boolean isPlayingAbroad;
 	public int role;
 	public int specialty;
@@ -29,7 +30,7 @@ public class CalcVariables {
 	private final List<Skill> skills;
 	
 	public int 		calculatedTSI;
-	public int		calculatedWage;
+	public AmountOfMoney		calculatedWage;
 	public int 		goalkeeperCalculatedWage;
 
 	public CalcVariables() {

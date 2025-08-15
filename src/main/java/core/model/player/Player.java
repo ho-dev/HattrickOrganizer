@@ -159,7 +159,7 @@ public class Player extends AbstractTable.Storable {
     /**
      * Gehalt
      */
-    private int wage = 1;
+    private AmountOfMoney wage = new AmountOfMoney(1);
 
     /**
      * Gelbe Karten
@@ -374,7 +374,7 @@ public class Player extends AbstractTable.Storable {
         homeGrown = properties.getBoolean("homegr", false);
         loyalty = properties.getInt("loy", 0);
         leadership = properties.getInt("led", 0);
-        wage = properties.getInt("sal", 0);
+        wage = new AmountOfMoney(properties.getInt("sal", 0));
         nationalityId = properties.getInt("countryid", 0);
         tsi = properties.getInt("mkt", 0);
 
@@ -411,7 +411,7 @@ public class Player extends AbstractTable.Storable {
         this.coachSkill = properties.getInt("trainerskilllevel", 0);
         if (this.coachSkill > 0) {
             this.coachSkill += 3;    // trainer level 5 is an excellent (8) trainer
-            wage = properties.getInt("cost", 0);
+            wage = new AmountOfMoney(properties.getInt("cost", 0));
             contractDate = properties.getProperty("contractdate");
         }
 
@@ -712,11 +712,11 @@ public class Player extends AbstractTable.Storable {
         return leadership;
     }
 
-    public void setWage(int m_iGehalt) {
+    public void setWage(AmountOfMoney m_iGehalt) {
         this.wage = m_iGehalt;
     }
 
-    public int getWage() {
+    public AmountOfMoney getWage() {
         return wage;
     }
 
@@ -868,23 +868,23 @@ public class Player extends AbstractTable.Storable {
         return 0;
     }
 
-    private Map<Integer, Integer> wagesHistory = null; // age->wage
+    private Map<Integer, AmountOfMoney> wagesHistory = null; // age->wage
 
-    private Integer getWageAtAge(int age) {
+    private AmountOfMoney getWageAtAge(int age) {
         if (wagesHistory == null) {
             wagesHistory = DBManager.instance().loadWageHistory(this.getPlayerId());
         }
         return wagesHistory.get(age);
     }
 
-    public int getSumOfWage(HODateTime from, HODateTime to) {
+    public AmountOfMoney getSumOfWage(HODateTime from, HODateTime to) {
         var economyDate = HOVerwaltung.instance().getModel().getXtraDaten().getEconomyDate();
         while (!economyDate.isBefore(to)) economyDate = economyDate.plusDaysAtSameLocalTime(-7);
-        var sum = 0;
+        var sum = new AmountOfMoney(0);
         while (economyDate.isAfter(from)) {
             var wageAtDate = getWageAtAge(this.getAgeAtDate(economyDate).seasons);
             if (wageAtDate != null) {
-                sum += wageAtDate;
+                sum.add( wageAtDate);
             }
             economyDate = economyDate.plusDaysAtSameLocalTime(-7);
         }
@@ -1749,18 +1749,18 @@ public class Player extends AbstractTable.Storable {
      */
     public TrainingPerPlayer calculateWeeklyTraining(TrainingPerWeek train) {
         final int playerID = this.getPlayerId();
-        TrainingPerPlayer ret = new TrainingPerPlayer(this);
-        ret.setTrainingWeek(train);
+        TrainingPerPlayer trainingPerPlayer = new TrainingPerPlayer(this);
+        trainingPerPlayer.setTrainingWeek(train);
         if (train == null || train.getTrainingType() < 0) {
-            return ret;
+            return trainingPerPlayer;
         }
 
-        WeeklyTrainingType wt = WeeklyTrainingType.instance(train.getTrainingType());
-        if (wt != null) {
+        WeeklyTrainingType weeklyTrainingType = WeeklyTrainingType.instance(train.getTrainingType());
+        if (weeklyTrainingType != null) {
             try {
                 var matches = train.getMatches();
                 int myID = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-                TrainingWeekPlayer tp = new TrainingWeekPlayer(this);
+                TrainingWeekPlayer trainingWeekPlayer = new TrainingWeekPlayer(this);
                 for (var match : matches) {
                     var details = match.getMatchdetails();
                     if (details != null) {
@@ -1770,14 +1770,14 @@ public class Player extends AbstractTable.Storable {
                             MatchType type = mlt.getMatchType();
                             boolean walkoverWin = details.isWalkoverMatchWin(myID);
                             if (type != MatchType.MASTERS) { // MASTERS counts only for experience
-                                tp.addFullTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, wt.getFullTrainingSectors(), walkoverWin));
-                                tp.addBonusTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, wt.getBonusTrainingSectors(), walkoverWin));
-                                tp.addPartlyTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, wt.getPartlyTrainingSectors(), walkoverWin));
-                                tp.addOsmosisTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, wt.getOsmosisTrainingSectors(), walkoverWin));
+                                trainingWeekPlayer.addFullTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, weeklyTrainingType.getFullTrainingSectors(), walkoverWin));
+                                trainingWeekPlayer.addBonusTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, weeklyTrainingType.getBonusTrainingSectors(), walkoverWin));
+                                trainingWeekPlayer.addPartlyTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, weeklyTrainingType.getPartlyTrainingSectors(), walkoverWin));
+                                trainingWeekPlayer.addOsmosisTrainingMinutes(mlt.getTrainingMinutesPlayedInSectors(playerID, weeklyTrainingType.getOsmosisTrainingSectors(), walkoverWin));
                             }
                             var minutes = mlt.getTrainingMinutesPlayedInSectors(playerID, null, walkoverWin);
-                            tp.addPlayedMinutes(minutes);
-                            ret.addExperience(match.getExperienceIncrease(min(90, minutes)));
+                            trainingWeekPlayer.addPlayedMinutes(minutes);
+                            trainingPerPlayer.addExperience(match.getExperienceIncrease(min(90, minutes)));
                         } else {
                             HOLogger.instance().error(getClass(), "no lineup found in match " + match.getMatchSchedule().toLocaleDateTime() +
                                     " " + match.getHomeTeamName() + " - " + match.getGuestTeamName()
@@ -1785,7 +1785,7 @@ public class Player extends AbstractTable.Storable {
                         }
                     }
                 }
-                TrainingPoints trp = new TrainingPoints(wt, tp);
+                TrainingPoints trainingPoints = new TrainingPoints(weeklyTrainingType, trainingWeekPlayer);
 
                 // get experience increase of national team matches
                 var id = this.getNationalTeamId();
@@ -1796,16 +1796,16 @@ public class Player extends AbstractTable.Storable {
                         MatchLineupTeam mlt = DBManager.instance().loadMatchLineupTeam(match.getMatchType().getId(), match.getMatchID(), this.getNationalTeamId());
                         var minutes = mlt.getTrainingMinutesPlayedInSectors(playerID, null, false);
                         if (minutes > 0) {
-                            ret.addExperience(match.getExperienceIncrease(min(90, minutes)));
+                            trainingPerPlayer.addExperience(match.getExperienceIncrease(min(90, minutes)));
                         }
                     }
                 }
-                ret.setTrainingPair(trp);
+                trainingPerPlayer.setTrainingPair(trainingPoints);
             } catch (Exception e) {
                 HOLogger.instance().log(getClass(), e);
             }
         }
-        return ret;
+        return trainingPerPlayer;
     }
 
     /**
@@ -2483,7 +2483,7 @@ public class Player extends AbstractTable.Storable {
      * @param trainerSkill 4..8
      * @return HOCurrency
      */
-    public HOCurrency calculateCoachConversionCosts(int trainerSkill){
+    public AmountOfMoney calculateCoachConversionCosts(int trainerSkill){
         var experience = this.getSkill(EXPERIENCE);
         if ( experience >= trainerSkill && trainerSkill >= 4 && trainerSkill < 9){
             if ( trainerSkill >= 5){
@@ -2494,10 +2494,10 @@ public class Player extends AbstractTable.Storable {
                     case 8 -> 7.11;
                     default -> throw new IllegalStateException("Unexpected value: " + trainerSkill);
                 };
-                return new HOCurrency((int)(47_500_000 * a / (experience-1)));
+                return new AmountOfMoney((int)(47_500_000 * a / (experience-1)));
             }
             else {
-                return new HOCurrency(100_000);
+                return new AmountOfMoney(100_000);
             }
         }
         return null;

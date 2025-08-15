@@ -140,7 +140,7 @@ public class CsvPlayerExport {
 						String.valueOf(curPlayer.getAge()),
 						String.valueOf(curPlayer.getAgeDays()),
 						String.valueOf(curPlayer.getTsi()),
-						String.valueOf((int) (curPlayer.getWage() / HOVerwaltung.instance().getModel().getXtraDaten().getCurrencyRate())),
+						String.valueOf(curPlayer.getWage().toLocale()),
 						String.valueOf(curPlayer.getTotalCards()),
 						// empty field for a healthy player (injury == -1), +0 for bruised, +N for injured and +∞ for unrecoverable
 						(curPlayer.getInjuryWeeks() < 0) ? "" : "+" + (curPlayer.getInjuryWeeks() > 9 ? "∞" : curPlayer.getInjuryWeeks()),
