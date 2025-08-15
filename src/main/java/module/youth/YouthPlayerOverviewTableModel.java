@@ -1,7 +1,7 @@
 package module.youth;
 
 import core.gui.comp.entry.ColorLabelEntry;
-import core.gui.comp.entry.IHOTableEntry;
+import core.gui.comp.entry.IHOTableCellEntry;
 import core.gui.comp.table.HOTableModel;
 import core.gui.comp.table.UserColumn;
 import core.gui.model.UserColumnController;
@@ -37,7 +37,7 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
         var tmp = new ArrayList<>(List.of(
                 new YouthPlayerColumn("ls.player.name") {
                     @Override
-                    public IHOTableEntry getTableEntry(YouthPlayer player) {
+                    public IHOTableCellEntry getTableEntry(YouthPlayer player) {
                         return new ColorLabelEntry(player.getFullName(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
 
@@ -48,31 +48,31 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
                 },
                 new YouthPlayerColumn("ls.player.age") {
                     @Override
-                    public IHOTableEntry getTableEntry(YouthPlayer player) {
+                    public IHOTableCellEntry getTableEntry(YouthPlayer player) {
                         return new ColorLabelEntry(player.getAgeYears() * 112 + player.getAgeDays(), Player.getAgeWithDaysAsString(player.getAgeYears(), player.getAgeDays(), HODateTime.now()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
                 new YouthPlayerColumn("ls.youth.player.arrival") {
                     @Override
-                    public IHOTableEntry getTableEntry(YouthPlayer player) {
+                    public IHOTableCellEntry getTableEntry(YouthPlayer player) {
                         return new ColorLabelEntry(HODateTime.toEpochSecond(player.getArrivalDate()), HODateTime.toLocaleDateTime(player.getArrivalDate()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
                 new YouthPlayerColumn("ls.youth.player.lastmatchdate") {
                     @Override
-                    public IHOTableEntry getTableEntry(YouthPlayer player) {
+                    public IHOTableCellEntry getTableEntry(YouthPlayer player) {
                         return new ColorLabelEntry(HODateTime.toEpochSecond(player.getYouthMatchDate()), HODateTime.toLocaleDateTime(player.getYouthMatchDate()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
                 new YouthPlayerColumn("ls.youth.player.canBePromotedIn") {
                     @Override
-                    public IHOTableEntry getTableEntry(YouthPlayer player) {
+                    public IHOTableCellEntry getTableEntry(YouthPlayer player) {
                         return new ColorLabelEntry(player.getCanBePromotedIn(), player.getCanBePromotedInAtDate(HODateTime.now()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
                     }
                 },
                 new YouthPlayerColumn("ls.youth.player.Specialty") {
                     @Override
-                    public IHOTableEntry getTableEntry(YouthPlayer player) {
+                    public IHOTableCellEntry getTableEntry(YouthPlayer player) {
                         var specialty = player.getSpecialtyString();
                         var ret = new ColorLabelEntry(specialty, ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                         if (!specialty.isEmpty()) {
@@ -83,7 +83,7 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
                 },
                 new YouthPlayerColumn("ls.youth.player.potential") {
                     @Override
-                    public IHOTableEntry getTableEntry(YouthPlayer player) {
+                    public IHOTableCellEntry getTableEntry(YouthPlayer player) {
                         var score = player.getPotential();
                         Color backgroundColor;
                         if (score >= 30) {
@@ -100,25 +100,25 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
                 },
                 new YouthPlayerColumn("ls.youth.player.average") {
                     @Override
-                    public IHOTableEntry getTableEntry(YouthPlayer player) {
+                    public IHOTableCellEntry getTableEntry(YouthPlayer player) {
                         return new ColorLabelEntry(player.getMinimumOverallSkillsLevel(), player.getOverallSkillsLevelAsString(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
                     }
                 },
                 new YouthPlayerColumn("ls.youth.player.matchcount") {
                     @Override
-                    public IHOTableEntry getTableEntry(YouthPlayer player) {
+                    public IHOTableCellEntry getTableEntry(YouthPlayer player) {
                         return new ColorLabelEntry(player.getMatchCount(), "" + player.getMatchCount(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
                     }
                 },
                 new YouthPlayerColumn("ls.youth.player.trainingsum") {
                     @Override
-                    public IHOTableEntry getTableEntry(YouthPlayer player) {
+                    public IHOTableCellEntry getTableEntry(YouthPlayer player) {
                         return new ColorLabelEntry(player.getTrainedSkillSum(), String.format("%.2f", player.getTrainedSkillSum()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
                     }
                 },
                 new YouthPlayerColumn("ls.youth.player.trainingprogress") {
                     @Override
-                    public IHOTableEntry getTableEntry(YouthPlayer player) {
+                    public IHOTableCellEntry getTableEntry(YouthPlayer player) {
                         return new ColorLabelEntry(player.getProgressLastMatch(), String.format("%.2f", player.getProgressLastMatch()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
                     }
                 }
@@ -128,7 +128,7 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
             var skillName = getSkillName(skillId);
             tmp.add(new YouthPlayerColumn("ls.youth.player." + skillName, 130) {
                 @Override
-                public IHOTableEntry getTableEntry(YouthPlayer player) {
+                public IHOTableCellEntry getTableEntry(YouthPlayer player) {
                     return new YouthSkillInfoColumn(player.getSkillInfo(skillId));
                 }
             });
@@ -136,31 +136,31 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
 
         tmp.add(new YouthPlayerColumn("ls.player.shirtnumber.short", "ls.player.shirtnumber", 10) {
             @Override
-            public IHOTableEntry getTableEntry(YouthPlayer player) {
+            public IHOTableCellEntry getTableEntry(YouthPlayer player) {
                 return new ColorLabelEntry(getPlayerNumberAsInt(player), player.getPlayerNumber(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
             }
         });
         tmp.add(new YouthPlayerColumn("ls.player.category") {
             @Override
-            public IHOTableEntry getTableEntry(YouthPlayer player) {
+            public IHOTableCellEntry getTableEntry(YouthPlayer player) {
                 return new ColorLabelEntry(getPlayerCategoryAsInt(player), player.getPlayerCategory().toString(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
             }
         });
         tmp.add(new YouthPlayerColumn("ls.player.ownernotes") {
             @Override
-            public IHOTableEntry getTableEntry(YouthPlayer player) {
+            public IHOTableCellEntry getTableEntry(YouthPlayer player) {
                 return new ColorLabelEntry(player.getOwnerNotes(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
             }
         });
         tmp.add(new YouthPlayerColumn("ls.player.statement") {
             @Override
-            public IHOTableEntry getTableEntry(YouthPlayer player) {
+            public IHOTableCellEntry getTableEntry(YouthPlayer player) {
                 return new ColorLabelEntry(player.getStatement(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
             }
         });
         tmp.add(new YouthPlayerColumn("ls.player.injurystatus") {
             @Override
-            public IHOTableEntry getTableEntry(YouthPlayer player) {
+            public IHOTableCellEntry getTableEntry(YouthPlayer player) {
                 var ret = new ColorLabelEntry(player.getInjuryLevel(), getInjuryLevelAsString(player.getInjuryLevel()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
                 ret.setIcon(getInjuryLevelIcon(player.getInjuryLevel()));
                 return ret;
@@ -168,25 +168,25 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
         });
         tmp.add(new YouthPlayerColumn("ls.player.career_goals") {
             @Override
-            public IHOTableEntry getTableEntry(YouthPlayer player) {
+            public IHOTableCellEntry getTableEntry(YouthPlayer player) {
                 return new ColorLabelEntry(player.getCareerGoals(), String.valueOf(player.getCareerGoals()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
             }
         });
         tmp.add(new YouthPlayerColumn("ls.player.season_series_goals") {
             @Override
-            public IHOTableEntry getTableEntry(YouthPlayer player) {
+            public IHOTableCellEntry getTableEntry(YouthPlayer player) {
                 return new ColorLabelEntry(player.getLeagueGoals(), String.valueOf(player.getLeagueGoals()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
             }
         });
         tmp.add(new YouthPlayerColumn("ls.player.hattricks") {
             @Override
-            public IHOTableEntry getTableEntry(YouthPlayer player) {
+            public IHOTableCellEntry getTableEntry(YouthPlayer player) {
                 return new ColorLabelEntry(player.getCareerHattricks(), String.valueOf(player.getCareerHattricks()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
             }
         });
         tmp.add(new YouthPlayerColumn("ls.player.ratemyacademyscore", "ls.player.ratemyacademyscore.tooltip", 60) {
             @Override
-            public IHOTableEntry getTableEntry(YouthPlayer player) {
+            public IHOTableCellEntry getTableEntry(YouthPlayer player) {
                 var score = player.calculateRateMyAcademyScore();
                 Color backgroundColor;
                 if (score >= 3000) {

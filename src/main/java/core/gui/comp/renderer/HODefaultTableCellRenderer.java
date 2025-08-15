@@ -1,7 +1,7 @@
 package core.gui.comp.renderer;
 
 import core.gui.comp.entry.ColorLabelEntry;
-import core.gui.comp.entry.IHOTableEntry;
+import core.gui.comp.entry.IHOTableCellEntry;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 
@@ -28,8 +28,8 @@ public class HODefaultTableCellRenderer implements javax.swing.table.TableCellRe
                                                             int row,
                                                             int column)
     {
-        if (value instanceof IHOTableEntry) {
-            final JComponent component = ((IHOTableEntry) value).getComponent(isSelected);
+        if (value instanceof IHOTableCellEntry) {
+            final JComponent component = ((IHOTableCellEntry) value).getComponent(isSelected);
             if (isSelected) {
                 component.setOpaque(true);
             }

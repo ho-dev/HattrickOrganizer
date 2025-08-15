@@ -3,7 +3,7 @@ package tool.arenasizer;
 
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.DoubleLabelEntries;
-import core.gui.comp.entry.IHOTableEntry;
+import core.gui.comp.entry.IHOTableCellEntry;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
@@ -28,7 +28,7 @@ final class ArenaPanel extends JPanel {
 	private final String[] UEBERSCHRIFT = {"", TranslationFacility.tr("Aktuell"), TranslationFacility.tr("Maximal"),
 		TranslationFacility.tr("Durchschnitt"), TranslationFacility.tr("Minimal")};
 	private Stadium[] m_clStadien;
-	private IHOTableEntry[][] values;
+	private IHOTableCellEntry[][] values;
 
 	//~ Constructors -------------------------------------------------------------------------------
 
@@ -52,7 +52,7 @@ final class ArenaPanel extends JPanel {
 
 	private void initTabelle() {
 		//Tablewerte setzen
-		values = new IHOTableEntry[9][5];
+		values = new IHOTableCellEntry[9][5];
 
 		String[] columnText = {"ls.club.arena.terraces", "ls.club.arena.basicseating", "ls.club.arena.seatsunderroof", "ls.club.arena.seatsinvipboxes", "Gesamt", "Einnahmen", "Unterhalt", "Gewinn", "Baukosten"};
 		for (int i = 0; i < columnText.length; i++) {

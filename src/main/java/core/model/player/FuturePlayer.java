@@ -14,6 +14,16 @@ public class FuturePlayer {
 	private double attack;
 	private double cross;
 	private double goalkeeping;
+
+	public double getExperience() {
+		return experience;
+	}
+
+	public void setExperience(double experience) {
+		this.experience = experience;
+	}
+
+	private double experience;
 	private int playerId;
 	
 	public int getAge() {
@@ -104,20 +114,18 @@ public class FuturePlayer {
 	 */
 	@Override
 	public String toString() {
-		StringBuilder buffer = new StringBuilder();
-		buffer.append("FuturePlayer[");
-		buffer.append("passing = "+passing);
-		buffer.append(", playmaking = "+playmaking);
-		buffer.append(", stamina = "+stamina);
-		buffer.append(", form = "+form);
-		buffer.append(", setpieces = "+setpieces);
-		buffer.append(", age = "+age);
-		buffer.append(", defense = "+defense);
-		buffer.append(", attack = "+attack);
-		buffer.append(", cross = "+cross);
-		buffer.append(", goalkeeping = "+goalkeeping);
-		buffer.append("]");
-		return buffer.toString();
+        return "FuturePlayer[" +
+                "passing = " + passing +
+                ", playmaking = " + playmaking +
+                ", stamina = " + stamina +
+                ", form = " + form +
+                ", setpieces = " + setpieces +
+                ", age = " + age +
+                ", defense = " + defense +
+                ", attack = " + attack +
+                ", cross = " + cross +
+                ", goalkeeping = " + goalkeeping +
+                "]";
 	}
 	
 	public int getPlayerId() {

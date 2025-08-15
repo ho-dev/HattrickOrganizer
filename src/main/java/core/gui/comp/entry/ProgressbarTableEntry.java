@@ -229,7 +229,7 @@ public class ProgressbarTableEntry extends AbstractHOTableEntry {
     /**
      * Implement compareTo() for sorting.
      */
-	public final int compareTo(@NotNull IHOTableEntry o) {
+	public final int compareTo(@NotNull IHOTableCellEntry o) {
         if (o instanceof ProgressbarTableEntry) {
             final ProgressbarTableEntry entry = (ProgressbarTableEntry) o;
 

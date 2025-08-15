@@ -21,10 +21,12 @@ import javax.swing.JTabbedPane;
 public class TrainingModulePanel extends LazyPanel {
 
 	private TrainingModel model;
+	private OutputPanel trainingProgressPanel;
 
 	@Override
 	protected void initialize() {
 		this.model = new TrainingModel();
+		this.trainingProgressPanel = new OutputPanel(this.model);
 		initComponents();
 		registerRefreshable(true);
 	}
@@ -49,13 +51,12 @@ public class TrainingModulePanel extends LazyPanel {
 		setLayout(new BorderLayout());
 
 		var trainingDevelopmentPanel = new TrainingDevelopmentPanel(this.model);
-
 		JSplitPane bottomPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, trainingDevelopmentPanel,
 				new JScrollPane(new PlayerDetailPanel(this.model)));
 		UserParameter.instance().training_bottomSplitPane.init(bottomPanel);
 
 		JTabbedPane tabbedPane = new JTabbedPane();
-		tabbedPane.addTab(Helper.getTranslation("Training"), new OutputPanel(this.model));
+		tabbedPane.addTab(Helper.getTranslation("Training"), this.trainingProgressPanel);
 		tabbedPane.addTab(Helper.getTranslation("MainPanel.Prediction"), new TrainingPredictionPanel(this.model));
 		tabbedPane.addTab(Helper.getTranslation("MainPanel.Analyzer"), new AnalyzerPanel(this.model));
 		tabbedPane.addTab(Helper.getTranslation("MainPanel.Effect"), new EffectPanel());
@@ -71,4 +72,8 @@ public class TrainingModulePanel extends LazyPanel {
 		add(mainPanel, BorderLayout.CENTER);
 	}
 
+	public void storeUserSettings() {
+		if (this.trainingProgressPanel != null)
+			this.trainingProgressPanel.storeUserSettings();
+	}
 }

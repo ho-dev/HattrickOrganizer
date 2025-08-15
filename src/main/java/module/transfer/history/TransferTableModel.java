@@ -1,7 +1,7 @@
 package module.transfer.history;
 
 import core.gui.comp.entry.ColorLabelEntry;
-import core.gui.comp.entry.IHOTableEntry;
+import core.gui.comp.entry.IHOTableCellEntry;
 import core.gui.comp.table.HOTableModel;
 import core.gui.comp.table.UserColumn;
 import core.gui.model.UserColumnController;
@@ -34,25 +34,25 @@ public class TransferTableModel extends HOTableModel {
         columns = new ArrayList<>(List.of(
                 new TransferTableColumn(id++,"Datum") {
                     @Override
-                    public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
+                    public IHOTableCellEntry getTableEntry(PlayerTransfer transfer) {
                         return new ColorLabelEntry(HODateTime.toEpochSecond(transfer.getDate()), transfer.getDate().toLocaleDateTime(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
                 new TransferTableColumn(id++,"Season") {
                     @Override
-                    public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
+                    public IHOTableCellEntry getTableEntry(PlayerTransfer transfer) {
                         return new ColorLabelEntry(transfer.getSeason(), "" + transfer.getSeason(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
                 new TransferTableColumn(id++,"Week") {
                     @Override
-                    public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
+                    public IHOTableCellEntry getTableEntry(PlayerTransfer transfer) {
                         return new ColorLabelEntry(transfer.getWeek(), "" + transfer.getWeek(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
                 new TransferTableColumn(id++,"Spieler") {
                     @Override
-                    public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
+                    public IHOTableCellEntry getTableEntry(PlayerTransfer transfer) {
                         String text;
                         if ((transfer.getPlayerName() != null) && (!transfer.getPlayerName().isEmpty())) {
                             text = transfer.getPlayerName();
@@ -65,7 +65,7 @@ public class TransferTableModel extends HOTableModel {
                 },
                 new TransferTableColumn(id++,"ls.player.age") {
                     @Override
-                    public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
+                    public IHOTableCellEntry getTableEntry(PlayerTransfer transfer) {
                         String text = "";
                         double sortValue = -1;
                         if ((transfer.getPlayerName() != null) && (!transfer.getPlayerName().isEmpty())) {
@@ -83,7 +83,7 @@ public class TransferTableModel extends HOTableModel {
                 },
                 new TransferTableColumn(id++,"Type") {
                     @Override
-                    public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
+                    public IHOTableCellEntry getTableEntry(PlayerTransfer transfer) {
                         var ret = new ColorLabelEntry(transfer.getType(), "", ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                         if (transfer.getType() == PlayerTransfer.BUY){
                             ret.setIcon(ImageUtilities.getTransferInIcon());
@@ -96,7 +96,7 @@ public class TransferTableModel extends HOTableModel {
                 },
                 new TransferTableColumn(id++,"FromTo") {
                     @Override
-                    public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
+                    public IHOTableCellEntry getTableEntry(PlayerTransfer transfer) {
                         String text;
                         if (transfer.getType() == PlayerTransfer.BUY) {
                             text = transfer.getSellerName();
@@ -108,134 +108,134 @@ public class TransferTableModel extends HOTableModel {
                 },
                 new TransferTableColumn(id++,"Price") {
                     @Override
-                    public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
+                    public IHOTableCellEntry getTableEntry(PlayerTransfer transfer) {
                         return new ColorLabelEntry(transfer.getPrice(), ColorLabelEntry.BG_STANDARD);
                     }
                 },
                 new TransferTableColumn(id++,"ls.player.tsi") {
                     @Override
-                    public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
+                    public IHOTableCellEntry getTableEntry(PlayerTransfer transfer) {
                         return new ColorLabelEntry(transfer.getTsi(), String.valueOf(transfer.getTsi()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
                     }
                 },
                 new TransferTableColumn(id++,"ls.player.short_leadership") {
                     @Override
-                    public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
+                    public IHOTableCellEntry getTableEntry(PlayerTransfer transfer) {
                         return getPlayerInfoTableEntry(transfer);
                     }
 
                     @Override
-                    public IHOTableEntry getTableEntry(Player playerInfo) {
+                    public IHOTableCellEntry getTableEntry(Player playerInfo) {
                         return createPlayerInfoLabelEntry(playerInfo.getLeadership(), ColorLabelEntry.BG_PLAYERSPECIALVALUES);
                     }
                 },
                 new TransferTableColumn(id++,"ls.player.short_experience") {
                     @Override
-                    public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
+                    public IHOTableCellEntry getTableEntry(PlayerTransfer transfer) {
                         return getPlayerInfoTableEntry(transfer);
                     }
 
                     @Override
-                    public IHOTableEntry getTableEntry(Player playerInfo) {
+                    public IHOTableCellEntry getTableEntry(Player playerInfo) {
                         return createPlayerInfoLabelEntry(playerInfo.getExperience(), ColorLabelEntry.BG_PLAYERSPECIALVALUES);
                     }
                 },
                 new TransferTableColumn(id++,"ls.player.short_form") {
                     @Override
-                    public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
+                    public IHOTableCellEntry getTableEntry(PlayerTransfer transfer) {
                         return getPlayerInfoTableEntry(transfer);
                     }
 
                     @Override
-                    public IHOTableEntry getTableEntry(Player playerInfo) {
+                    public IHOTableCellEntry getTableEntry(Player playerInfo) {
                         return createPlayerInfoLabelEntry(playerInfo.getForm(), ColorLabelEntry.BG_PLAYERSPECIALVALUES);
                     }
                 },
                 new TransferTableColumn(id++,"ls.player.skill_short.stamina") {
                     @Override
-                    public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
+                    public IHOTableCellEntry getTableEntry(PlayerTransfer transfer) {
                         return getPlayerInfoTableEntry(transfer);
                     }
 
                     @Override
-                    public IHOTableEntry getTableEntry(Player playerInfo) {
+                    public IHOTableCellEntry getTableEntry(Player playerInfo) {
                         return createPlayerInfoLabelEntry(playerInfo.getStamina(), ColorLabelEntry.BG_SINGLEPLAYERVALUES);
                     }
                 },
                 new TransferTableColumn(id++,"ls.player.skill_short.keeper") {
                     @Override
-                    public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
+                    public IHOTableCellEntry getTableEntry(PlayerTransfer transfer) {
                         return getPlayerInfoTableEntry(transfer);
                     }
 
                     @Override
-                    public IHOTableEntry getTableEntry(Player playerInfo) {
+                    public IHOTableCellEntry getTableEntry(Player playerInfo) {
                         return createPlayerInfoLabelEntry(playerInfo.getGoalkeeperSkill(), ColorLabelEntry.BG_SINGLEPLAYERVALUES);
                     }
                 },
                 new TransferTableColumn(id++,"ls.player.skill_short.defending") {
                     @Override
-                    public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
+                    public IHOTableCellEntry getTableEntry(PlayerTransfer transfer) {
                         return getPlayerInfoTableEntry(transfer);
                     }
 
                     @Override
-                    public IHOTableEntry getTableEntry(Player playerInfo) {
+                    public IHOTableCellEntry getTableEntry(Player playerInfo) {
                         return createPlayerInfoLabelEntry(playerInfo.getDefendingSkill(), ColorLabelEntry.BG_SINGLEPLAYERVALUES);
                     }
                 },
                 new TransferTableColumn(id++,"ls.player.skill_short.playmaking") {
                     @Override
-                    public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
+                    public IHOTableCellEntry getTableEntry(PlayerTransfer transfer) {
                         return getPlayerInfoTableEntry(transfer);
                     }
 
                     @Override
-                    public IHOTableEntry getTableEntry(Player playerInfo) {
+                    public IHOTableCellEntry getTableEntry(Player playerInfo) {
                         return createPlayerInfoLabelEntry(playerInfo.getPlaymakingSkill(), ColorLabelEntry.BG_SINGLEPLAYERVALUES);
                     }
                 },
                 new TransferTableColumn(id++,"ls.player.skill_short.passing") {
                     @Override
-                    public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
+                    public IHOTableCellEntry getTableEntry(PlayerTransfer transfer) {
                         return getPlayerInfoTableEntry(transfer);
                     }
 
                     @Override
-                    public IHOTableEntry getTableEntry(Player playerInfo) {
+                    public IHOTableCellEntry getTableEntry(Player playerInfo) {
                         return createPlayerInfoLabelEntry(playerInfo.getPassingSkill(), ColorLabelEntry.BG_SINGLEPLAYERVALUES);
                     }
                 },
                 new TransferTableColumn(id++,"ls.player.skill_short.winger") {
                     @Override
-                    public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
+                    public IHOTableCellEntry getTableEntry(PlayerTransfer transfer) {
                         return getPlayerInfoTableEntry(transfer);
                     }
 
                     @Override
-                    public IHOTableEntry getTableEntry(Player playerInfo) {
+                    public IHOTableCellEntry getTableEntry(Player playerInfo) {
                         return createPlayerInfoLabelEntry(playerInfo.getWingerSkill(), ColorLabelEntry.BG_SINGLEPLAYERVALUES);
                     }
                 },
                 new TransferTableColumn(id++,"ls.player.skill_short.scoring") {
                     @Override
-                    public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
+                    public IHOTableCellEntry getTableEntry(PlayerTransfer transfer) {
                         return getPlayerInfoTableEntry(transfer);
                     }
 
                     @Override
-                    public IHOTableEntry getTableEntry(Player playerInfo) {
+                    public IHOTableCellEntry getTableEntry(Player playerInfo) {
                         return createPlayerInfoLabelEntry(playerInfo.getScoringSkill(), ColorLabelEntry.BG_SINGLEPLAYERVALUES);
                     }
                 },
                 new TransferTableColumn(id++,"ls.player.skill_short.setpieces") {
                     @Override
-                    public IHOTableEntry getTableEntry(PlayerTransfer transfer) {
+                    public IHOTableCellEntry getTableEntry(PlayerTransfer transfer) {
                         return getPlayerInfoTableEntry(transfer);
                     }
 
                     @Override
-                    public IHOTableEntry getTableEntry(Player playerInfo) {
+                    public IHOTableCellEntry getTableEntry(Player playerInfo) {
                         return  createPlayerInfoLabelEntry(playerInfo.getSetPiecesSkill(), ColorLabelEntry.BG_SINGLEPLAYERVALUES);
                     }
                 }

@@ -5,6 +5,8 @@ import core.gui.comp.table.HOTableModel;
 import module.matches.statistics.MatchesOverviewColumnModel;
 import module.specialEvents.SpecialEventsTableModel;
 import module.teamAnalyzer.ui.RecapPanelTableModel;
+import module.training.ui.TrainingProgressTableModel;
+import module.training.ui.model.SkillupTableModel;
 import module.transfer.history.PlayerTransferTableModel;
 import module.transfer.history.TransferTableModel;
 import module.transfer.scout.TransferScoutingTableModel;
@@ -37,7 +39,9 @@ public final class UserColumnController {
 		TEAMTRANSFER(11),
 		PLAYERTRANSFER(12),
 		SPECIALEVENTS(13),
-		TRANSFERSCOUT(14);
+		TRANSFERSCOUT(14),
+		TRAININGPROGRESS(15),
+		SKILLUP(16);
 
 		private final int value;
 		ColumnModelId(int value){this.value=value;}
@@ -77,6 +81,9 @@ public final class UserColumnController {
 
 	private SpecialEventsTableModel specialEventsTableModel;
 
+	private TrainingProgressTableModel trainingProgressTableModel;
+	private SkillupTableModel skillupTableModel;
+
 	/**
 	 * constructor
 	 *
@@ -114,6 +121,22 @@ public final class UserColumnController {
 		dbManager.loadHOColumModel(getPlayerTransferTableModel());
 		dbManager.loadHOColumModel(getTransferScoutingTableModel());
 		dbManager.loadHOColumModel(getSpecialEventsTableModel());
+		dbManager.loadHOColumModel(getTrainingProgressTableModel());
+		dbManager.loadHOColumModel(getSkillupTableModel());
+	}
+
+	public TrainingProgressTableModel getTrainingProgressTableModel() {
+		if ( this.trainingProgressTableModel == null){
+			this.trainingProgressTableModel = new TrainingProgressTableModel(ColumnModelId.TRAININGPROGRESS);
+		}
+		return this.trainingProgressTableModel;
+	}
+
+	public SkillupTableModel getSkillupTableModel () {
+		if ( this.skillupTableModel == null){
+			this.skillupTableModel = new SkillupTableModel(ColumnModelId.SKILLUP );
+		}
+		return this.skillupTableModel;
 	}
 
 	public SpecialEventsTableModel getSpecialEventsTableModel() {
@@ -186,7 +209,9 @@ public final class UserColumnController {
 		v.add(getTeamAnalyzerRecapModel());
 		v.add(getYouthPlayerOverviewColumnModel());
 		v.add(getYouthPlayerDetailsColumnModel());
-		// MatchesOverView1Model should not add in this vector, because columns should not be edit
+		v.add(getTrainingProgressTableModel());
+		v.add(getSkillupTableModel());
+		// MatchesOverView1Model should not add in this vector, because columns should not be edited
 		return v;
 	}
 
