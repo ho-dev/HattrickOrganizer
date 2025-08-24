@@ -9,11 +9,8 @@ import core.file.xml.*;
 import core.gui.HOMainFrame;
 import core.gui.InfoPanel;
 import core.gui.theme.ThemeManager;
-import core.model.HOModel;
-import core.model.HOVerwaltung;
+import core.model.*;
 import core.model.Tournament.TournamentDetails;
-import core.model.TranslationFacility;
-import core.model.UserParameter;
 import core.model.enums.MatchType;
 import core.model.enums.MatchTypeExtended;
 import core.model.match.*;
@@ -1315,4 +1312,12 @@ public class OnlineWorker {
 		return seriesDetailsCache.get(seriesId);
 	}
 
+	public static List<WorldDetailLeague> downloadWorldDetails() {
+		try {
+			var worldDetails = MyConnector.instance().getWorldDetails(0);
+			return XMLWorldDetailsParser.parseDetails(XMLManager.parseString(worldDetails));
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
 }

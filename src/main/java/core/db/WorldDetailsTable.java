@@ -51,10 +51,12 @@ class WorldDetailsTable extends AbstractTable {
 		return ret;
 	}
 	
-	@Override
-	protected void insertDefaultValues(){
-		for ( var league : WorldDetailLeague.allLeagues){
-			storeWorldDetailsLeague(league);
-		}
-	}
+//	@Override
+//	protected void insertDefaultValues(){
+//		if ( WorldDetailLeague.allLeagues != null) {
+//			for (var league : WorldDetailLeague.allLeagues) {
+//				storeWorldDetailsLeague(league);
+//			}
+//		}
+//	}
 }

@@ -8,10 +8,7 @@ import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
 import core.gui.comp.CheckBoxTree.CheckBoxTree;
 import core.gui.comp.panel.ImagePanel;
-import core.model.HOModel;
-import core.model.HOVerwaltung;
-import core.model.TranslationFacility;
-import core.model.UserParameter;
+import core.model.*;
 import core.model.enums.MatchType;
 import core.model.match.MatchKurzInfo;
 import core.model.player.Player;
@@ -375,6 +372,13 @@ public class DownloadDialog extends JDialog implements ActionListener {
 				}
 				HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.fixtures"), progressIncrement);
 				downloadOldFixtures(teamId, selection);
+			}
+
+			if (WorldDetailLeague.checkWorldDetailsDownload()) {
+				HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.world_details"), progressIncrement);
+				var allLeagues = OnlineWorker.downloadWorldDetails();
+				DBManager.instance().storeWorldDetailLeagues(allLeagues);
+				WorldDetailsManager.instance().refresh();
 			}
 		}
 

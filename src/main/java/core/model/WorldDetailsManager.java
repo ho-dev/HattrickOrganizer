@@ -30,7 +30,7 @@ public class WorldDetailsManager {
 	private void initialize() {
 		leagues = DBManager.instance().getAllWorldDetailLeagues();
 		if (leagues.isEmpty()) {
-			leagues = Arrays.stream(WorldDetailLeague.allLeagues).toList();
+			leagues = WorldDetailLeague.allLeagues;
 		}
 		leagueMap.clear();
 		countryMap.clear();
