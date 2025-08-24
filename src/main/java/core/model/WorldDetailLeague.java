@@ -7,7 +7,7 @@ import java.util.List;
 
 public class WorldDetailLeague  extends AbstractTable.Storable {
 
-	private static HOConfigurationParameter latestDownload = new HOConfigurationParameter("LatestWorldDetailsDownload", null);
+	private static final HOConfigurationParameter latestDownload = new HOConfigurationParameter("LatestWorldDetailsDownload", null);
 
 	private int leagueId;
 	private int countryId;
@@ -35,7 +35,8 @@ public class WorldDetailLeague  extends AbstractTable.Storable {
 	private String timeFormat;
 
 	public static List<WorldDetailLeague> allLeagues;
-//	= {
+
+	//	= {
 //			new WorldDetailLeague(1,1,"Sweden"),
 //			new WorldDetailLeague(2,2,"England"),
 //			new WorldDetailLeague(3,3,"Germany"),
@@ -193,9 +194,10 @@ public class WorldDetailLeague  extends AbstractTable.Storable {
 //			new WorldDetailLeague(1000,1000,"International")
 //	};
 //
-	public WorldDetailLeague(){}
+	public WorldDetailLeague() {
+	}
 
-	public WorldDetailLeague(int leagueId, int countryId, String countryName){
+	public WorldDetailLeague(int leagueId, int countryId, String countryName) {
 		this.leagueId = leagueId;
 		this.countryId = countryId;
 		this.countryName = countryName;
@@ -204,50 +206,60 @@ public class WorldDetailLeague  extends AbstractTable.Storable {
 	/**
 	 * Check if world details should be downloaded
 	 * World details never changes during a hattrick season, so the download only should be downloaded once per season
+	 *
 	 * @return boolean, True if world details were not downloaded before or only during a previous season.
-	 * 					False if world details were already downloaded during the current season
+	 * False if world details were already downloaded during the current season
 	 */
 	public static boolean checkWorldDetailsDownload() {
 		var model = HOVerwaltung.instance().getModel();
-		if ( model == null) return false; // Without model do NOT download world Details
-		if ( latestDownload.getValue() != null){
+		if (model == null) return false; // Without model do NOT download world Details
+		if (latestDownload.getValue() != null) {
 			var latestDownloadSeason = HODateTime.fromHT(latestDownload.getValue()).toHTWeek().season;
 			return HODateTime.now().toHTWeek().season > latestDownloadSeason;
 		}
 		return true;
 	}
-	
+
 	public final int getLeagueId() {
 		return leagueId;
 	}
+
 	public final void setLeagueId(int leagueId) {
 		this.leagueId = leagueId;
 	}
+
 	public final int getCountryId() {
 		return countryId;
 	}
+
 	public final void setCountryId(int countryId) {
 		this.countryId = countryId;
 	}
+
 	public final String getCountryName() {
 		return countryName;
 	}
+
 	public final void setCountryName(String countryName) {
 		this.countryName = countryName;
 	}
+
 	public final int getActiveUsers() {
 		return activeUsers;
 	}
+
 	public final void setActiveUsers(int activeUsers) {
 		this.activeUsers = activeUsers;
 	}
 
 	@Override
-	public String toString(){
+	public String toString() {
 		return getCountryName();
 	}
 
-	public boolean isComplete() {return this.currencyRate != null;}
+	public boolean isComplete() {
+		return this.currencyRate != null;
+	}
 
 //	private static void init() {
 //		try {
@@ -263,64 +275,57 @@ public class WorldDetailLeague  extends AbstractTable.Storable {
 //	}
 
 	public String getCurrencyName() {
-//		if ( currencyName == null  || currencyName.isEmpty()) init();
-        return currencyName;
-    }
+		return currencyName;
+	}
 
 	public void setCurrencyName(String currencyName) {
-        this.currencyName = currencyName;
-    }
+		this.currencyName = currencyName;
+	}
 
-    public Double getCurrencyRate() {
-//		if ( currencyRate == null) init();
-        return currencyRate;
-    }
+	public Double getCurrencyRate() {
+		return currencyRate;
+	}
 
-    public void setCurrencyRate(String currencyRate) {
+	public void setCurrencyRate(String currencyRate) {
 		try {
 			this.currencyRate = Double.parseDouble(currencyRate);
+		} catch (NumberFormatException ignored) {
 		}
-		catch (NumberFormatException ignored){}
-    }
+	}
 
-    public String getCountryCode() {
-//		if ( countryCode == null) init();
-        return countryCode;
-    }
+	public String getCountryCode() {
+		return countryCode;
+	}
 
-    public void setCountryCode(String countryCode) {
-        this.countryCode = countryCode;
-    }
+	public void setCountryCode(String countryCode) {
+		this.countryCode = countryCode;
+	}
 
-    public String getDateFormat() {
-//		if ( dateFormat == null) init();
-        return dateFormat;
-    }
+	public String getDateFormat() {
+		return dateFormat;
+	}
 
-    public void setDateFormat(String dateFormat) {
-        this.dateFormat = dateFormat;
-    }
+	public void setDateFormat(String dateFormat) {
+		this.dateFormat = dateFormat;
+	}
 
-    public String getTimeFormat() {
-//		if ( timeFormat==null) init();
-        return timeFormat;
-    }
+	public String getTimeFormat() {
+		return timeFormat;
+	}
 
-    public void setTimeFormat(String timeFormat) {
-        this.timeFormat = timeFormat;
-    }
+	public void setTimeFormat(String timeFormat) {
+		this.timeFormat = timeFormat;
+	}
 
 	/**
 	 * Get the league of user's premier team
 	 */
 	public static WorldDetailLeague getWorldDetailsLeagueOfPremierTeam() {
 		var xtraData = HOVerwaltung.instance().getModel().getXtraDaten();
-		if ( xtraData != null){
+		if (xtraData != null) {
 			var countryId = xtraData.getCountryId();
 			return WorldDetailsManager.instance().getWorldDetailLeagueByCountryId(countryId);
 		}
 		return null;
 	}
-
-
 }

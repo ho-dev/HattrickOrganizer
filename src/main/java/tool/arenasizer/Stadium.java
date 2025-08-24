@@ -162,15 +162,6 @@ public class Stadium extends AbstractTable.Storable {
 		this.expansionCosts = v;
 	}
 
-	public void setExpansionCosts(Integer v){
-		if ( v != null){
-			this.expansionCosts = new AmountOfMoney(v.longValue());
-		}
-		else {
-			this.expansionCosts = null;
-		}
-	}
-
 	public BigDecimal getExpansionCostsInSwedishKrona() {
 		if ( this.expansionCosts != null) return this.expansionCosts.getSwedishKrona();
 		return null;
