@@ -379,6 +379,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 				var allLeagues = OnlineWorker.downloadWorldDetails();
 				DBManager.instance().storeWorldDetailLeagues(allLeagues);
 				WorldDetailsManager.instance().refresh();
+				WorldDetailLeague.setLatestDownloadNow();
 			}
 		}
 

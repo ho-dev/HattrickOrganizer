@@ -220,6 +220,10 @@ public class WorldDetailLeague  extends AbstractTable.Storable {
 		return true;
 	}
 
+	public static void setLatestDownloadNow(){
+		latestDownload.setValue(HODateTime.now().toHT());
+	}
+
 	public final int getLeagueId() {
 		return leagueId;
 	}
