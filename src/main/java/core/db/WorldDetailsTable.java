@@ -4,18 +4,14 @@ import core.model.WorldDetailLeague;
 import java.sql.Types;
 import java.util.List;
 
-// 				tmp.setCurrencyName(xmlValue(root, "CurrencyName"));
-//				tmp.setCurrencyRate(xmlValue(root, "CurrencyRate"));
-//				tmp.setDateFormat(xmlValue(root, "DateFormat"));
-//				tmp.setTimeFormat(xmlValue(root, "TimeFormat"));
-
 class WorldDetailsTable extends AbstractTable {
 
 	static final String TABLENAME = "HT_WORLDDETAILS";
-	
-	WorldDetailsTable(ConnectionManager adapter){
-		super(TABLENAME,adapter);
+
+	WorldDetailsTable(ConnectionManager adapter) {
+		super(TABLENAME, adapter);
 	}
+
 	@Override
 	protected void initColumns() {
 		columns = new ColumnDescriptor[]{
@@ -36,25 +32,18 @@ class WorldDetailsTable extends AbstractTable {
 		return createSelectStatement("");
 	}
 
-	void storeWorldDetailsLeague(WorldDetailLeague league){
-		if(league == null)
+	void storeWorldDetailsLeague(WorldDetailLeague league) {
+		if (league == null)
 			return;
 		store(league);
 	}
 
-	List<WorldDetailLeague> getAllWorldDetailLeagues(){
+	List<WorldDetailLeague> getAllWorldDetailLeagues() {
 		var ret = load(WorldDetailLeague.class);
 		if (ret.isEmpty()) {
 			insertDefaultValues();
 			ret = load(WorldDetailLeague.class);
 		}
 		return ret;
-	}
-	
-	@Override
-	protected void insertDefaultValues(){
-		for ( var league : WorldDetailLeague.allLeagues){
-			storeWorldDetailsLeague(league);
-		}
 	}
 }

@@ -96,10 +96,6 @@ public class ConvertXml2Hrf {
 			} else {
 				return null;
 			}
-
-			if (initTeamId){
-				// TODO: Initialize currency setting according to team's locale
-			}
 		}
 
 		Map<String, String> teamdetailsDataMap = XMLTeamDetailsParser.parseTeamdetailsFromString(teamDetails, teamId);
