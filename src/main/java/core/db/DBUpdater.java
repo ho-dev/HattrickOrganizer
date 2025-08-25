@@ -124,7 +124,7 @@ final class DBUpdater {
 			taPlayerTable.tryChangeColumnDataType("SALARY", "INTEGER", "DECIMAL");
 
 			var stadiumTable = dbManager.getTable(StadionTable.TABLENAME);
-			stadiumTable.tryChangeColumnDataType("AusbauKosten", "INTEGER", "DECIMAL NULL");
+			stadiumTable.tryChangeColumnDataType("AusbauKosten", "INTEGER", "DECIMAL");
 
 		}
 		var stadiumTable = dbManager.getTable(StadionTable.TABLENAME);
