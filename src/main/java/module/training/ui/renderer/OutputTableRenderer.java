@@ -14,9 +14,7 @@ import javax.swing.table.DefaultTableCellRenderer;
  * TableCellRenderer for the training results table in the Training tab.
  */
 public class OutputTableRenderer extends DefaultTableCellRenderer {
-    //~ Methods ------------------------------------------------------------------------------------
-
-    private boolean isFixed;
+    private final boolean isFixed;
 
     private static final Color TABLE_BG = ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
     private static final Color SELECTION_BG = ThemeManager.getColor(HOColorName.TABLE_SELECTION_BG);
@@ -29,7 +27,6 @@ public class OutputTableRenderer extends DefaultTableCellRenderer {
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
                                                    boolean hasFocus, int row, int column) {
-
 
         Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
                 row, column);
@@ -79,19 +76,15 @@ public class OutputTableRenderer extends DefaultTableCellRenderer {
                 }
 
             }
-        } else if (column < 12) {
-            VerticalIndicator vi = (VerticalIndicator) value;
-
+        } else if (value instanceof VerticalIndicator vi) {
             if (isSelected) {
                 vi.setBackground(SELECTION_BG);
             } else {
                 vi.setBackground(TABLE_BG.brighter());
             }
             vi.setOpaque(true);
-
             return vi;
         }
-
         return cell;
     }
 }
