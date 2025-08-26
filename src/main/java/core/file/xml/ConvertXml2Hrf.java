@@ -56,12 +56,12 @@ public class ConvertXml2Hrf {
 
 		String teamDetails = mc.getTeamDetails(-1);
 
-		if (teamDetails == null) {
+		if (teamDetails == null || teamDetails.isEmpty()) {
 			return null;
 		}
 
 		var teamInfoList = XMLTeamDetailsParser.getTeamInfoFromString(teamDetails);
-		var usersPremierTeamInfo = teamInfoList.stream().filter(TeamInfo::isPrimaryTeam).findFirst().get();
+		var usersPremierTeamInfo = teamInfoList.stream().filter(TeamInfo::isPrimaryTeam).findFirst().orElse(teamInfoList.stream().findFirst().orElseThrow());
 		var usersPremierTeamId = usersPremierTeamInfo.getTeamId();
 		var initTeamId = teamId <=0;
 		if (initTeamId || youthTeamId == null) {
@@ -95,10 +95,6 @@ public class ConvertXml2Hrf {
 				}
 			} else {
 				return null;
-			}
-
-			if (initTeamId){
-				// TODO: Initialize currency setting according to team's locale
 			}
 		}
 

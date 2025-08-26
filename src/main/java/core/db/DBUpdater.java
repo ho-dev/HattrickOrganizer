@@ -125,7 +125,10 @@ final class DBUpdater {
 
 			var stadiumTable = dbManager.getTable(StadionTable.TABLENAME);
 			stadiumTable.tryChangeColumnDataType("AusbauKosten", "INTEGER", "DECIMAL");
+
 		}
+		var stadiumTable = dbManager.getTable(StadionTable.TABLENAME);
+		stadiumTable.tryChangeColumn("AusbauKosten", "NULL");
 
 		updateDBVersion(dbVersion, 1000);
 	}

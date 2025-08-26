@@ -15,9 +15,7 @@ import javax.swing.table.DefaultTableCellRenderer;
  * TableCellRenderer for the training results table in the Training tab.
  */
 public class OutputTableRenderer extends DefaultTableCellRenderer {
-    //~ Methods ------------------------------------------------------------------------------------
-
-    private boolean isFixed;
+    private final boolean isFixed;
 
     private static final Color TABLE_BG = ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
     private static final Color SELECTION_BG = ThemeManager.getColor(HOColorName.TABLE_SELECTION_BG);
@@ -73,7 +71,6 @@ public class OutputTableRenderer extends DefaultTableCellRenderer {
             vi.setOpaque(true);
             return vi;
         }
-
         return cell;
     }
 }

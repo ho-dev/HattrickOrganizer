@@ -1,7 +1,6 @@
 package core.util
 
 import core.model.HOConfigurationParameter
-import core.model.HOVerwaltung
 import core.model.WorldDetailLeague
 import core.model.WorldDetailsManager
 import java.math.BigDecimal
@@ -26,6 +25,8 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
 
         /**
          * The currency code setting
+         * It is set either by the first download with the currency code of the premier team
+         * or by editing the currency settings in the options dialog.
          */
         private var currencyCode = HOConfigurationParameter("CurrencyCode", null)
 
@@ -88,24 +89,18 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
         }
 
         /**
-         * Get the league of current team
-         */
-        fun getWorldDetailsLeague() : WorldDetailLeague{
-            val countryId = HOVerwaltung.instance().model.xtraDaten.countryId
-            return WorldDetailsManager.instance().getWorldDetailLeagueByCountryId(countryId)
-        }
-
-        /**
          * Get the currency code setting.
          * If not initialized before, the currency code is examined from the league of the current team.
          */
         fun getCurrencyCode(): String {
             if (currencyCode.getValue() == null) {
-                val worldDetailLeague = getWorldDetailsLeague()
-                for (_currency in Currency.getAvailableCurrencies()) {
-                    if (_currency.symbol.equals(worldDetailLeague.currencyName)) {
-                        currencyCode.setValue(_currency?.currencyCode)
-                        return currencyCode.getValue()!!
+                val worldDetailLeague = WorldDetailLeague.getWorldDetailsLeagueOfPremierTeam()
+                if (worldDetailLeague != null) {
+                    for (_currency in Currency.getAvailableCurrencies()) {
+                        if (_currency.symbol.equals(worldDetailLeague.currencyName)) {
+                            currencyCode.setValue(_currency?.currencyCode)
+                            return currencyCode.getValue()!!
+                        }
                     }
                 }
                 currencyCode.setValue(NumberFormat.getCurrencyInstance().currency.currencyCode)
@@ -172,13 +167,16 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
             if (exchangeRate == null) {
                 val curr = getCurrency()
                 if (curr != null) {
-                    var worldDetailLeague = getWorldDetailsLeague()
-                    if (!worldDetailLeague.currencyName.equals(curr.symbol)){
-                        worldDetailLeague = WorldDetailsManager.instance().getWorldDetailsByCurrencySymbol(curr.symbol)
+                    var worldDetailLeague = WorldDetailLeague.getWorldDetailsLeagueOfPremierTeam()
+                    if ( worldDetailLeague != null) {
+                        if (!worldDetailLeague.currencyName.equals(curr.symbol)) {
+                            worldDetailLeague =
+                                WorldDetailsManager.instance().getWorldDetailsByCurrencySymbol(curr.symbol)
+                        }
+                        exchangeRate = BigDecimal.valueOf(worldDetailLeague.currencyRate)
                     }
-                    exchangeRate = BigDecimal.valueOf(worldDetailLeague.currencyRate)
                 }
-                if (exchangeRate == null) exchangeRate = BigDecimal(1)
+                if (exchangeRate == null) return BigDecimal(1)
             }
             return exchangeRate!!
         }
