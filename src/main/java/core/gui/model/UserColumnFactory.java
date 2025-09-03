@@ -640,7 +640,6 @@ final public class UserColumnFactory {
         playerAdditionalArray[7] = new PlayerColumn(421, "ls.player.wage", 100) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
-                final String bonus = "";
                 final var gehalt = player.getWage();
                 if (playerCompare == null) {
                     return new DoubleLabelEntries(new ColorLabelEntry(gehalt,

@@ -13,10 +13,7 @@ import module.teamAnalyzer.manager.PlayerDataManager;
 import module.teamAnalyzer.vo.MatchDetail;
 import module.teamAnalyzer.vo.PlayerInfo;
 import module.teamAnalyzer.vo.PlayerPerformance;
-
 import java.util.*;
-
-import static java.lang.Math.min;
 
 public class SpecialEventsPredictionManager {
 
@@ -29,8 +26,8 @@ public class SpecialEventsPredictionManager {
 
     public static class Analyse {
         private List<SpecialEventsPrediction> specialEventsPredictions;
-        private Lineup lineup;
-        private Lineup opponentLineup;
+        private final Lineup lineup;
+        private final Lineup opponentLineup;
         private final HashMap<Integer, Player> playerInLineup;
         private final HashMap<Integer, Player> opponentPlayerInLineup;
         private Double opponentRatingIndirectSetPiecesDef;
