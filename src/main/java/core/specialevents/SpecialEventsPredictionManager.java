@@ -255,24 +255,24 @@ public class SpecialEventsPredictionManager {
                     player.setForm((int) form);
                     player.setSpecialty(spec);
 
-                    String pInfo = String.format(
-                            "Name=%s, Age=%d, TSI=%d, Wage=%d, Form=%d, Stamina=%d, Experience=%d, GK=%d, DEF=%d, WI=%d, PM=%d , PS=%d, SC=%d, SP=%d, Status=%s",
-                            player.getFullName(),
-                            player.getAge(),
-                            player.getTsi(),
-                            player.getWage(),
-                            player.getForm(),
-                            player.getStamina(),
-                            player.getExperience(),
-                            player.getGoalkeeperSkill(),
-                            player.getDefendingSkill(),
-                            player.getWingerSkill(),
-                            player.getPlaymakingSkill(),
-                            player.getPassingSkill(),
-                            player.getScoringSkill(),
-                            player.getSetPiecesSkill(),
-                            playerPerformance.getStatusAsText()
-                    );
+//                    String pInfo = String.format(
+//                            "Name=%s, Age=%d, TSI=%d, Wage=%s, Form=%d, Stamina=%d, Experience=%d, GK=%d, DEF=%d, WI=%d, PM=%d , PS=%d, SC=%d, SP=%d, Status=%s",
+//                            player.getFullName(),
+//                            player.getAge(),
+//                            player.getTsi(),
+//                            player.getWage().toLocaleString(),
+//                            player.getForm(),
+//                            player.getStamina(),
+//                            player.getExperience(),
+//                            player.getGoalkeeperSkill(),
+//                            player.getDefendingSkill(),
+//                            player.getWingerSkill(),
+//                            player.getPlaymakingSkill(),
+//                            player.getPassingSkill(),
+//                            player.getScoringSkill(),
+//                            player.getSetPiecesSkill(),
+//                            playerPerformance.getStatusAsText()
+//                    );
 //                    HOLogger.instance().debug(getClass(), pInfo);
 
                     this.opponentPlayerInLineup.put(playerPerformance.getSpielerId(), player);
