@@ -13,10 +13,7 @@ import module.teamAnalyzer.manager.PlayerDataManager;
 import module.teamAnalyzer.vo.MatchDetail;
 import module.teamAnalyzer.vo.PlayerInfo;
 import module.teamAnalyzer.vo.PlayerPerformance;
-
 import java.util.*;
-
-import static java.lang.Math.min;
 
 public class SpecialEventsPredictionManager {
 
@@ -29,8 +26,8 @@ public class SpecialEventsPredictionManager {
 
     public static class Analyse {
         private List<SpecialEventsPrediction> specialEventsPredictions;
-        private Lineup lineup;
-        private Lineup opponentLineup;
+        private final Lineup lineup;
+        private final Lineup opponentLineup;
         private final HashMap<Integer, Player> playerInLineup;
         private final HashMap<Integer, Player> opponentPlayerInLineup;
         private Double opponentRatingIndirectSetPiecesDef;
@@ -60,10 +57,6 @@ public class SpecialEventsPredictionManager {
 
         public Lineup getLineup() {
             return lineup;
-        }
-
-        public Lineup getOpponentLineup() {
-            return opponentLineup;
         }
 
         public Player getPlayer(int playerId) {
@@ -255,24 +248,24 @@ public class SpecialEventsPredictionManager {
                     player.setForm((int) form);
                     player.setSpecialty(spec);
 
-                    String pInfo = String.format(
-                            "Name=%s, Age=%d, TSI=%d, Wage=%d, Form=%d, Stamina=%d, Experience=%d, GK=%d, DEF=%d, WI=%d, PM=%d , PS=%d, SC=%d, SP=%d, Status=%s",
-                            player.getFullName(),
-                            player.getAge(),
-                            player.getTsi(),
-                            player.getWage(),
-                            player.getForm(),
-                            player.getStamina(),
-                            player.getExperience(),
-                            player.getGoalkeeperSkill(),
-                            player.getDefendingSkill(),
-                            player.getWingerSkill(),
-                            player.getPlaymakingSkill(),
-                            player.getPassingSkill(),
-                            player.getScoringSkill(),
-                            player.getSetPiecesSkill(),
-                            playerPerformance.getStatusAsText()
-                    );
+//                    String pInfo = String.format(
+//                            "Name=%s, Age=%d, TSI=%d, Wage=%s, Form=%d, Stamina=%d, Experience=%d, GK=%d, DEF=%d, WI=%d, PM=%d , PS=%d, SC=%d, SP=%d, Status=%s",
+//                            player.getFullName(),
+//                            player.getAge(),
+//                            player.getTsi(),
+//                            player.getWage().toLocaleString(),
+//                            player.getForm(),
+//                            player.getStamina(),
+//                            player.getExperience(),
+//                            player.getGoalkeeperSkill(),
+//                            player.getDefendingSkill(),
+//                            player.getWingerSkill(),
+//                            player.getPlaymakingSkill(),
+//                            player.getPassingSkill(),
+//                            player.getScoringSkill(),
+//                            player.getSetPiecesSkill(),
+//                            playerPerformance.getStatusAsText()
+//                    );
 //                    HOLogger.instance().debug(getClass(), pInfo);
 
                     this.opponentPlayerInLineup.put(playerPerformance.getSpielerId(), player);

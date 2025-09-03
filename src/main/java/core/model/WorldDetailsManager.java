@@ -69,12 +69,14 @@ public class WorldDetailsManager {
 		var ret = countryMap.get(countryId);
 		if (ret == null || !ret.isComplete()) {
 			var downloaded = downloadWorldDetailLeague(countryId);
-			if ( ret != null){
-				downloaded.setIsStored(ret.isStored());
+			if (downloaded != null) {
+				if (ret != null) {
+					downloaded.setIsStored(ret.isStored());
+				}
+				DBManager.instance().storeWorldDetailLeague(downloaded);
+				initialize();
+				ret = downloaded;
 			}
-			DBManager.instance().storeWorldDetailLeague(downloaded);
-			initialize();
-			ret = downloaded;
 		}
 		return ret;
 	}

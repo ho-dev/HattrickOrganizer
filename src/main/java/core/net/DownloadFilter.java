@@ -47,10 +47,17 @@ public class DownloadFilter extends DefaultMutableTreeNode {
 
     private void fillOldFixturesList(DefaultMutableTreeNode previousSeriesData) {
         final int currentSeason = hov.getModel().getBasics().getSeason();
+        int firstSeason;
         var activationDate = hov.getModel().getBasics().getActivationDate();
-        var htWeek = activationDate.toLocaleHTWeek();
+        if ( activationDate != null){
+            var htWeek = activationDate.toLocaleHTWeek();
+            firstSeason = htWeek.season;
+        }
+        else {
+            firstSeason = 0;
+        }
         var seasons = DBManager.instance().getAllSpielplaene(false);
-        for (int i = currentSeason; i >= htWeek.season; i--) {
+        for (int i = currentSeason; i >= firstSeason; i--) {
             int finalI = i;
             var season = seasons.stream().filter(f -> f.getSaison() == finalI).findFirst();
             var itemText = new StringBuilder(TranslationFacility.tr("Season")).append(" ").append(i);

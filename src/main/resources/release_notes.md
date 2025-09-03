@@ -10,7 +10,8 @@
 ### Team Analyzer
 
 
-### Player Analysis
+### Download 
+* Fix null pointer exception in nt team download (#2314)
 
 
 ### Series
@@ -34,7 +35,8 @@
 
 ## Translations
 
-Reports by Contributors - May 11, 2025 - May 18, 2025
+Reports by Contributors - Aug 14, 2025 - Sep 03, 2025
 
+* murko 8
 
-Total 0
+Total 8
