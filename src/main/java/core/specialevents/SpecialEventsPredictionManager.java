@@ -59,10 +59,6 @@ public class SpecialEventsPredictionManager {
             return lineup;
         }
 
-        public Lineup getOpponentLineup() {
-            return opponentLineup;
-        }
-
         public Player getPlayer(int playerId) {
             return this.playerInLineup.get(playerId);
         }
