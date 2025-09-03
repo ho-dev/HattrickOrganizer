@@ -4,6 +4,8 @@ import core.model.HOConfigurationParameter
 import core.model.WorldDetailLeague
 import core.model.WorldDetailsManager
 import java.math.BigDecimal
+import java.math.BigDecimal.ROUND_HALF_UP
+import java.math.RoundingMode
 import java.text.NumberFormat
 import java.util.*
 
@@ -11,7 +13,7 @@ import java.util.*
  * Amounts of money are stored in swedish krona and displayed in players' locale
  */
 class AmountOfMoney(var swedishKrona: BigDecimal) {
-    constructor(swedishKrona: Long) : this(BigDecimal.valueOf(swedishKrona))
+    constructor(swedishKrona: Long) : this(BigDecimal.valueOf(swedishKrona, 0))
 
     /**
      * The companion object handles the aspects of currency and formatting settings
@@ -288,7 +290,7 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
      */
     fun divide(divisor: BigDecimal): AmountOfMoney {
         try {
-            val amount = this.swedishKrona.divide(divisor)
+            val amount = this.swedishKrona.divide(divisor, RoundingMode.HALF_UP)
             return AmountOfMoney(amount)
         }catch (_ : Exception){
             val d = this.swedishKrona.toDouble() / divisor.toDouble()
@@ -297,7 +299,7 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
     }
 
     fun divide(divisor: AmountOfMoney): BigDecimal {
-        return this.swedishKrona.divide(divisor.swedishKrona)
+        return this.swedishKrona.divide(divisor.swedishKrona, 2, RoundingMode.HALF_UP)
     }
 
     /**

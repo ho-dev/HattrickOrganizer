@@ -640,7 +640,6 @@ final public class UserColumnFactory {
         playerAdditionalArray[7] = new PlayerColumn(421, "ls.player.wage", 100) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
-                final String bonus = "";
                 final var gehalt = player.getWage();
                 if (playerCompare == null) {
                     return new DoubleLabelEntries(new ColorLabelEntry(gehalt,
@@ -851,7 +850,7 @@ final public class UserColumnFactory {
         playerAdditionalArray[19] = new PlayerColumn(893, "ls.player.motherclub.name", 50) {
             @Override
             public IHOTableEntry getTableEntry(Player player, Player playerCompare) {
-                return new ColorLabelEntry(player.getOrDownloadMotherClubName(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                return new ColorLabelEntry(player.getMotherClubName(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
             }
         };
 

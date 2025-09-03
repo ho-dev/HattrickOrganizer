@@ -1959,7 +1959,7 @@ public class Player extends AbstractTable.Storable {
     public String getBestPositionInfo() {
         return MatchRoleID.getNameForPosition(getIdealPosition())
                 + " ("
-                + getIdealPositionRating()
+                + String.format("%.2f", getIdealPositionRating())
                 + ")";
     }
 
