@@ -4,7 +4,6 @@ import core.model.HOConfigurationParameter
 import core.model.WorldDetailLeague
 import core.model.WorldDetailsManager
 import java.math.BigDecimal
-import java.math.BigDecimal.ROUND_HALF_UP
 import java.math.RoundingMode
 import java.text.NumberFormat
 import java.util.*
