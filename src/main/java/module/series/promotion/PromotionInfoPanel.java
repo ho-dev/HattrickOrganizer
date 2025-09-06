@@ -24,6 +24,7 @@ import static core.gui.theme.ThemeManager.getColor;
 
 /**
  * Panel displaying the main details about Promotion / Demotion status.
+ *  TODO: Decide whether this should be removed or reactivated
  */
 public class PromotionInfoPanel extends ImagePanel {
 

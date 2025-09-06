@@ -95,7 +95,7 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
          * If not initialized before, the currency code is examined from the league of the current team.
          */
         fun getCurrencyCode(): String {
-            if (currencyCode.getValue() == null) {
+            if (currencyCode.getValue() == null || currencyCode.getValue()?.isEmpty() == true) {
                 val worldDetailLeague = WorldDetailLeague.getWorldDetailsLeagueOfPremierTeam()
                 if (worldDetailLeague != null) {
                     for (_currency in Currency.getAvailableCurrencies()) {

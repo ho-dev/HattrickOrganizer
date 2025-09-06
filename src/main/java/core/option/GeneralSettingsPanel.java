@@ -45,7 +45,7 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
     private JCheckBox m_jchShowSkillNumericalValue;
     private SliderPanel m_jslFontSize;
     private SliderPanel m_jslAlternativePositionsTolerance;
-    private JCheckBox m_jcbPromotionStatusTest;
+//    private JCheckBox m_jcbPromotionStatusTest;
 
     /**
      * Creates a new SonstigeOptionenPanel object.
@@ -58,7 +58,7 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
     public void itemStateChanged(ItemEvent itemEvent) {
         // No  Selected Event!
         core.model.UserParameter.temp().zahlenFuerSkill = m_jchShowSkillNumericalValue.isSelected();
-        UserParameter.temp().promotionManagerTest = m_jcbPromotionStatusTest.isSelected();
+//        UserParameter.temp().promotionManagerTest = m_jcbPromotionStatusTest.isSelected();
 
         if (itemEvent.getStateChange() == java.awt.event.ItemEvent.SELECTED) {
             UserParameter.temp().currencyName = (String)this.currencyNameComboBox.getSelectedItem();
@@ -69,8 +69,7 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
             core.model.UserParameter.temp().skin = ((String) m_jcbSkin.getSelectedItem());
         }
         if (!core.model.UserParameter.temp().sprachDatei.equals(core.model.UserParameter.instance().sprachDatei)
-                || (core.model.UserParameter.temp().TimeZoneDifference != core.model.UserParameter.instance().TimeZoneDifference)
-                || (UserParameter.temp().promotionManagerTest != UserParameter.instance().promotionManagerTest))
+                || (core.model.UserParameter.temp().TimeZoneDifference != core.model.UserParameter.instance().TimeZoneDifference))
             OptionManager.instance().setRestartNeeded();
         if (core.model.UserParameter.temp().zahlenFuerSkill != core.model.UserParameter.instance().zahlenFuerSkill)
             OptionManager.instance().setReInitNeeded();
@@ -134,6 +133,8 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
         this.currencyNameComboBox = new ComboBoxPanel(TranslationFacility.tr("options.misc.currency"), currencyNames.stream().sorted().toArray(), width);
         this.currencyNameComboBox.setSelectedItem(AmountOfMoney.Companion.getSelectedCurrencyCode());
         this.currencyNameComboBox.addItemListener(this);
+        // When settings are changed the temp instance is used to set the currency setting. Init it here:
+        UserParameter.temp().currencyName = (String)this.currencyNameComboBox.getSelectedItem();
         add(this.currencyNameComboBox);
 
         // TimeZone selection =========================================================
@@ -188,11 +189,11 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
         m_jslAlternativePositionsTolerance.addChangeListener(this);
         add(m_jslAlternativePositionsTolerance);
 
-        m_jcbPromotionStatusTest = new JCheckBox(TranslationFacility.tr("PMStatusTest"));
-        m_jcbPromotionStatusTest.setOpaque(false);
-        m_jcbPromotionStatusTest.setSelected(UserParameter.temp().promotionManagerTest);
-        m_jcbPromotionStatusTest.addItemListener(this);
-        add(m_jcbPromotionStatusTest);
+//        m_jcbPromotionStatusTest = new JCheckBox(TranslationFacility.tr("PMStatusTest"));
+//        m_jcbPromotionStatusTest.setOpaque(false);
+//        m_jcbPromotionStatusTest.setSelected(UserParameter.temp().promotionManagerTest);
+//        m_jcbPromotionStatusTest.addItemListener(this);
+//        add(m_jcbPromotionStatusTest);
     }
 
     private static CBItem[] getAllZoneIdsAndItsOffSet() {
