@@ -34,6 +34,9 @@ public class TrainingRecapTable extends JScrollPane {
 
     static final int fixedColumns = 5;
     private final FutureTrainingPrioPopup trainingPrioPopUp;
+
+
+    // TODO: Replace this with FixedColumnTable
     private final JTable fixed;
     private final JTable scrollTable;
 
