@@ -4,7 +4,6 @@ import core.model.HOConfigurationParameter
 import core.model.WorldDetailLeague
 import core.model.WorldDetailsManager
 import java.math.BigDecimal
-import java.math.BigDecimal.ROUND_HALF_UP
 import java.math.RoundingMode
 import java.text.NumberFormat
 import java.util.*
@@ -95,7 +94,7 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
          * If not initialized before, the currency code is examined from the league of the current team.
          */
         fun getCurrencyCode(): String {
-            if (currencyCode.getValue() == null) {
+            if (currencyCode.getValue() == null || currencyCode.getValue()?.isEmpty() == true) {
                 val worldDetailLeague = WorldDetailLeague.getWorldDetailsLeagueOfPremierTeam()
                 if (worldDetailLeague != null) {
                     for (_currency in Currency.getAvailableCurrencies()) {
