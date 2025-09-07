@@ -152,7 +152,7 @@ public class OptionenDialog extends JDialog {
 		userColorsPanel.storeChangedColorSettings();
 
 		// Store currency setting
-		if ( AmountOfMoney.Companion.setCurrencyCode(UserParameter.temp().currencyName) ) {
+		if ( AmountOfMoney.Companion.setCurrencyCountry(UserParameter.temp().currencyName) ) {
 			OptionManager.instance().setReInitNeeded();
 		}
 

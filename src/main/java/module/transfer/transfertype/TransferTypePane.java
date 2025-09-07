@@ -199,14 +199,12 @@ public class TransferTypePane extends JSplitPane implements ListSelectionListene
                 c.col1 = 1;
                 c.col2 = c.col1;
                 c.hAlign = TableLayoutConstants.LEFT;
-                this.sidePanel.add(new JLabel(TransferType.getTransferDesc(i) + " ("
-                        + ttc.getNumber() + ")"), c);
+                this.sidePanel.add(new JLabel(TransferType.getTransferDesc(i) + " (" + ttc.getNumber() + ")"), c);
 
                 c.col1 = 2;
                 c.col2 = c.col1;
                 c.hAlign = TableLayoutConstants.CENTER;
-                this.sidePanel.add(new JLabel(Objects.requireNonNull(AmountOfMoney.Companion.getCurrency()).getSymbol()),
-                        c);
+                this.sidePanel.add(new JLabel(AmountOfMoney.Companion.getCurrencyName()), c);
 
                 c.col1 = 3;
                 c.col2 = c.col1;

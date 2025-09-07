@@ -54,7 +54,7 @@ public class WorldDetailLeague  extends AbstractTable.Storable {
 	 */
 	public static boolean checkWorldDetailsDownload() {
 		var model = HOVerwaltung.instance().getModel();
-		if (model == null) return false; // Without model do NOT download world Details
+		if (model == null) return false; // Without model do NOT download world details
 		if (allLeagues == null || allLeagues.isEmpty()) return true;
 		if (latestDownload.getValue() != null) {
 			var latestDownloadSeason = HODateTime.fromHT(latestDownload.getValue()).toHTWeek().season;
