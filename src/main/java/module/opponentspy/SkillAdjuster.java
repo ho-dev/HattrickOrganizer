@@ -23,6 +23,9 @@ class SkillAdjuster {
 	
 	
 	public void AdjustPlayer(CalcVariables calcPlayer) {
+
+        // Adjustment does not work without wage info
+        if ( calcPlayer.wage == null) return;
 		
 		// First, increase/decrease all skills until calculated TSI or Wage exceeds the real value.
 	
@@ -65,8 +68,6 @@ class SkillAdjuster {
 			}
 		}
 		
-		// TODO TEMP REMOVE
-		//System.out.println("RepeatCount: " + repeatCount);
 	}
 	
 	private boolean areWeSatisfied(CalcVariables calcPlayer) {
@@ -98,18 +99,20 @@ class SkillAdjuster {
 	private void adjustUntilLimit(CalcVariables calcPlayer) {
 
 		Direction direction = Direction.Unknown;
-	
-		calculateWageAndTSI(calcPlayer);
-		
-		if (calcPlayer.calculatedTSI < calcPlayer.tsi && calcPlayer.calculatedWage.isLessThan(calcPlayer.wage))
-			direction = Direction.Up;
-		else if (calcPlayer.calculatedTSI > calcPlayer.tsi && calcPlayer.calculatedWage.isGreaterThan(calcPlayer.wage))
-			direction = Direction.Down;
-			
-		while (!isDoneCalculating(calcPlayer, direction)) {
-			if ( !adjustAllSkillsOnce(calcPlayer, direction) ) break;	// no adjustments anymore
-			calculateWageAndTSI(calcPlayer);
-		}
+
+        if ( calcPlayer.wage != null) {
+            calculateWageAndTSI(calcPlayer);
+
+            if (calcPlayer.calculatedTSI < calcPlayer.tsi && calcPlayer.calculatedWage.isLessThan(calcPlayer.wage))
+                direction = Direction.Up;
+            else if (calcPlayer.calculatedTSI > calcPlayer.tsi && calcPlayer.calculatedWage.isGreaterThan(calcPlayer.wage))
+                direction = Direction.Down;
+
+            while (!isDoneCalculating(calcPlayer, direction)) {
+                if (!adjustAllSkillsOnce(calcPlayer, direction)) break;    // no adjustments anymore
+                calculateWageAndTSI(calcPlayer);
+            }
+        }
 	}
 
 	private boolean adjustAllSkillsOnce(CalcVariables calcPlayer, Direction direction) {
