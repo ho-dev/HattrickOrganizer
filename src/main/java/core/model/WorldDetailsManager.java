@@ -30,7 +30,10 @@ public class WorldDetailsManager {
 	private void initialize() {
 		leagues = DBManager.instance().getAllWorldDetailLeagues();
 		if (leagues.isEmpty()) {
-			leagues = WorldDetailLeague.allLeagues;
+			var allLeagues = WorldDetailLeague.allLeagues;
+            if (allLeagues != null){
+                leagues = allLeagues;
+            }
 		}
 		leagueMap.clear();
 		countryMap.clear();
@@ -107,17 +110,6 @@ public class WorldDetailsManager {
 		}
 		return leagues;
 	}
-
-	public WorldDetailLeague getWorldDetailsByCurrencySymbol(String currencySymbol){
-		for (var worldDetails : this.leagues){
-			if (!worldDetails.isComplete()) worldDetails = getWorldDetailLeagueByCountryId(worldDetails.getCountryId());
-			if ( worldDetails.getCurrencyName().equals(currencySymbol)) {
-				return worldDetails;
-			}
-		}
-		return null;
-	}
-
 
 	public final int getTotalUsers() {
 		return totalUsers;

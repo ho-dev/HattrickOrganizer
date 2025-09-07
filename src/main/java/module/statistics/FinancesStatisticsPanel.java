@@ -21,7 +21,6 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.ItemEvent;
 import java.text.NumberFormat;
 import java.util.Arrays;
-import java.util.Objects;
 
 import static core.gui.theme.HOColorName.*;
 
@@ -240,9 +239,8 @@ public class FinancesStatisticsPanel extends LazyImagePanel {
 		layout.setConstraints(panel2, constraints);
 		add(panel2);
 
-
 		// initialize Development Chart
-		var currencySymbol = Objects.requireNonNull(AmountOfMoney.Companion.getCurrency()).getSymbol();
+		var currencySymbol = AmountOfMoney.Companion.getCurrencyName();
 		c_jpDevelopmentChart = new HOLinesChart(true, null, null, "#,##0 " + currencySymbol, "#,##0 " + currencySymbol, true);
 		c_jpBalanceChart = new HOLinesChart(true, null, null, "#,##0 " + currencySymbol, "#,##0 " + currencySymbol, true);
 		c_jpRevenueAndExpensesChart = new HODoublePieChart(true);
