@@ -182,10 +182,6 @@ class SkillAdjuster {
 	}
 	
 	protected void calculateTSI(CalcVariables calcPlayer) {
-		calculateTSI(calcPlayer, 0);
-	}
-	
-	protected int calculateTSI(CalcVariables calcPlayer, double skillDelta) {
 		// Factor for TSI calculation depending on skill
 		double FACTOR_A = 0.985; // Playmaking,Scoring,Defending
 		double FACTOR_B = 0.700; // Wing
@@ -196,14 +192,14 @@ class SkillAdjuster {
 		double sqrtMultiplier = sqrtForm * sqrtStamina;
 		
 		double formfactorGK = (0.025 * calcPlayer.form) + 0.1;
-		double scaledSkillGK = 10 * (calcPlayer.getGoalkeeping() + skillDelta - 1);
+		double scaledSkillGK = 10 * (calcPlayer.getGoalkeeping() + (double) 0 - 1);
 		
 		double scaledSkillPowerGK = Math.pow(scaledSkillGK, 3.4);
-		double powerPlaymaking = Math.pow((calcPlayer.getPlaymaking() + skillDelta - 1), 3) * FACTOR_A;
-		double powerWing = Math.pow((calcPlayer.getWing() + skillDelta - 1), 3) * FACTOR_B;
-		double powerScoring = Math.pow((calcPlayer.getScoring() + skillDelta - 1), 3) * FACTOR_A;
-		double powerPassing = Math.pow((calcPlayer.getPassing() + skillDelta - 1), 3) * FACTOR_C;
-		double powerDefending = Math.pow((calcPlayer.getDefending() + skillDelta - 1), 3) * FACTOR_A;
+		double powerPlaymaking = Math.pow((calcPlayer.getPlaymaking() + (double) 0 - 1), 3) * FACTOR_A;
+		double powerWing = Math.pow((calcPlayer.getWing() + (double) 0 - 1), 3) * FACTOR_B;
+		double powerScoring = Math.pow((calcPlayer.getScoring() + (double) 0 - 1), 3) * FACTOR_A;
+		double powerPassing = Math.pow((calcPlayer.getPassing() + (double) 0 - 1), 3) * FACTOR_C;
+		double powerDefending = Math.pow((calcPlayer.getDefending() + (double) 0 - 1), 3) * FACTOR_A;
 		double powerTotalCalc = (powerPlaymaking + powerWing + powerScoring + powerPassing + powerDefending);
 		double powerTotal = Math.pow(powerTotalCalc,2)/1000;
 		
@@ -219,13 +215,8 @@ class SkillAdjuster {
 		if (calcPlayer.injuryStatus != -1) {
 			calcPlayer.calculatedTSI *= getInjuryTSIMultiplier(calcPlayer.injuryStatus);
 		}
-		
-		return calcPlayer.calculatedTSI;
-	}
 
-	protected void calculateWage(CalcVariables calcPlayer) {
-		calculateWage(calcPlayer, 0);
-	}
+    }
 
 	private double getAgeWageDropMultiplier (int age){
 
@@ -235,17 +226,17 @@ class SkillAdjuster {
 		return 1 - ageWageDrop;
 	}
 	
-	protected AmountOfMoney calculateWage(CalcVariables calcPlayer, double skillDelta) {
+	protected void calculateWage(CalcVariables calcPlayer) {
 
 		List<Double> wageElements = new ArrayList<>();
 		
-		wageElements.add(Math.pow((Math.max(calcPlayer.getDefending() + skillDelta, 1) - 1),6.4) * 0.000830);
-		wageElements.add(Math.pow((Math.max(calcPlayer.getPlaymaking() + skillDelta, 1) - 1),6.4) * 0.00104);
-		wageElements.add(Math.pow((Math.max(calcPlayer.getPassing() + skillDelta, 1) - 1),6.4) * 0.000595);
-		wageElements.add(Math.pow((Math.max(calcPlayer.getWing() + skillDelta, 1) - 1), 6.4) * 0.000525);
-		wageElements.add(Math.pow((Math.max(calcPlayer.getScoring() + skillDelta, 1) - 1),6.4) * 0.000935);
+		wageElements.add(Math.pow((Math.max(calcPlayer.getDefending() + (double) 0, 1) - 1),6.4) * 0.000830);
+		wageElements.add(Math.pow((Math.max(calcPlayer.getPlaymaking() + (double) 0, 1) - 1),6.4) * 0.00104);
+		wageElements.add(Math.pow((Math.max(calcPlayer.getPassing() + (double) 0, 1) - 1),6.4) * 0.000595);
+		wageElements.add(Math.pow((Math.max(calcPlayer.getWing() + (double) 0, 1) - 1), 6.4) * 0.000525);
+		wageElements.add(Math.pow((Math.max(calcPlayer.getScoring() + (double) 0, 1) - 1),6.4) * 0.000935);
 		
-		double goalkeeping = calcPlayer.getGoalkeeping() + skillDelta;
+		double goalkeeping = calcPlayer.getGoalkeeping() + (double) 0;
 		if (goalkeeping < 14.27697) {
 			wageElements.add(Math.max((((Math.exp((Math.max(goalkeeping, 1) - 1) * 0.352008)) * 130.8) + 84.18) - 250,0));
 		} else {
@@ -269,7 +260,7 @@ class SkillAdjuster {
 		
 		wage *= 10;  // euro to SEK conversion
 		
-		double setPieces = calcPlayer.getSetPieces() + skillDelta;
+		double setPieces = calcPlayer.getSetPieces() + (double) 0;
 		wage *= (1 + 0.0025*setPieces);
 		
 		wage *= getAgeWageDropMultiplier(calcPlayer.age);
@@ -277,6 +268,5 @@ class SkillAdjuster {
 		if ( wage < 2500) wage = 2500;
 
 		calcPlayer.calculatedWage = new AmountOfMoney( (long)(wage + .5));
-		return calcPlayer.calculatedWage;
-	}
+    }
 }
