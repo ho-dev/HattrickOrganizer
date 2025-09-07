@@ -192,14 +192,14 @@ class SkillAdjuster {
 		double sqrtMultiplier = sqrtForm * sqrtStamina;
 		
 		double formfactorGK = (0.025 * calcPlayer.form) + 0.1;
-		double scaledSkillGK = 10 * (calcPlayer.getGoalkeeping() + (double) 0 - 1);
+		double scaledSkillGK = 10 * (calcPlayer.getGoalkeeping()  - 1);
 		
 		double scaledSkillPowerGK = Math.pow(scaledSkillGK, 3.4);
-		double powerPlaymaking = Math.pow((calcPlayer.getPlaymaking() + (double) 0 - 1), 3) * FACTOR_A;
-		double powerWing = Math.pow((calcPlayer.getWing() + (double) 0 - 1), 3) * FACTOR_B;
-		double powerScoring = Math.pow((calcPlayer.getScoring() + (double) 0 - 1), 3) * FACTOR_A;
-		double powerPassing = Math.pow((calcPlayer.getPassing() + (double) 0 - 1), 3) * FACTOR_C;
-		double powerDefending = Math.pow((calcPlayer.getDefending() + (double) 0 - 1), 3) * FACTOR_A;
+		double powerPlaymaking = Math.pow((calcPlayer.getPlaymaking()  - 1), 3) * FACTOR_A;
+		double powerWing = Math.pow((calcPlayer.getWing()  - 1), 3) * FACTOR_B;
+		double powerScoring = Math.pow((calcPlayer.getScoring()  - 1), 3) * FACTOR_A;
+		double powerPassing = Math.pow((calcPlayer.getPassing()  - 1), 3) * FACTOR_C;
+		double powerDefending = Math.pow((calcPlayer.getDefending()  - 1), 3) * FACTOR_A;
 		double powerTotalCalc = (powerPlaymaking + powerWing + powerScoring + powerPassing + powerDefending);
 		double powerTotal = Math.pow(powerTotalCalc,2)/1000;
 		
@@ -230,13 +230,13 @@ class SkillAdjuster {
 
 		List<Double> wageElements = new ArrayList<>();
 		
-		wageElements.add(Math.pow((Math.max(calcPlayer.getDefending() + (double) 0, 1) - 1),6.4) * 0.000830);
-		wageElements.add(Math.pow((Math.max(calcPlayer.getPlaymaking() + (double) 0, 1) - 1),6.4) * 0.00104);
-		wageElements.add(Math.pow((Math.max(calcPlayer.getPassing() + (double) 0, 1) - 1),6.4) * 0.000595);
-		wageElements.add(Math.pow((Math.max(calcPlayer.getWing() + (double) 0, 1) - 1), 6.4) * 0.000525);
-		wageElements.add(Math.pow((Math.max(calcPlayer.getScoring() + (double) 0, 1) - 1),6.4) * 0.000935);
+		wageElements.add(Math.pow((Math.max(calcPlayer.getDefending(), 1) - 1),6.4) * 0.000830);
+		wageElements.add(Math.pow((Math.max(calcPlayer.getPlaymaking(), 1) - 1),6.4) * 0.00104);
+		wageElements.add(Math.pow((Math.max(calcPlayer.getPassing(), 1) - 1),6.4) * 0.000595);
+		wageElements.add(Math.pow((Math.max(calcPlayer.getWing(), 1) - 1), 6.4) * 0.000525);
+		wageElements.add(Math.pow((Math.max(calcPlayer.getScoring(), 1) - 1),6.4) * 0.000935);
 		
-		double goalkeeping = calcPlayer.getGoalkeeping() + (double) 0;
+		double goalkeeping = calcPlayer.getGoalkeeping();
 		if (goalkeeping < 14.27697) {
 			wageElements.add(Math.max((((Math.exp((Math.max(goalkeeping, 1) - 1) * 0.352008)) * 130.8) + 84.18) - 250,0));
 		} else {
@@ -260,7 +260,7 @@ class SkillAdjuster {
 		
 		wage *= 10;  // euro to SEK conversion
 		
-		double setPieces = calcPlayer.getSetPieces() + (double) 0;
+		double setPieces = calcPlayer.getSetPieces();
 		wage *= (1 + 0.0025*setPieces);
 		
 		wage *= getAgeWageDropMultiplier(calcPlayer.age);
