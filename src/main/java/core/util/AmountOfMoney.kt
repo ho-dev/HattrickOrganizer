@@ -1,5 +1,6 @@
 package core.util
 
+import core.model.HOConfigurationIntParameter
 import core.model.HOConfigurationParameter
 import core.model.WorldDetailLeague
 import core.model.WorldDetailsManager
@@ -20,21 +21,16 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
     companion object {
 
         /**
-         * List of available currency codes
+         * List of available currencies
          */
-        private var currencyCodes = HashSet<String>()
+        private var currencyInfo = HashSet<String>()
 
         /**
-         * The currency code setting
+         * The currency setting (country id)
          * It is set either by the first download with the currency code of the premier team
          * or by editing the currency settings in the options dialog.
          */
-        private var currencyCode = HOConfigurationParameter("CurrencyCode", null)
-
-        /**
-         * The selected currency
-         */
-        private var currency: Currency? = null
+        private var currencyCountryId = HOConfigurationIntParameter("CurrencyCountryId")
 
         /**
          * Currency formatter
@@ -47,80 +43,20 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
         private var exchangeRate: BigDecimal? = null
 
         /**
-         * Get the list of currency code infos from the list of leagues in world detail file
+         * Get the list of currency info from the list of leagues in world detail file
          * Hattrick international is removed from the list.
          */
-        fun getCurrencyCodes(): Set<String> {
-            if (currencyCodes.isEmpty()) {
+        fun getCurrencyInfo(): Set<String> {
+            if (currencyInfo.isEmpty()) {
                 for (worldDetails in WorldDetailsManager.instance().leagues) {
                     if (worldDetails.countryId < 1000) {
-                        val currency = getCurrency(worldDetails)
-                        if (currency != null) {
-                            val currencyInfo = getCurrencyInfo(currency)
-                            if (currencyInfo != null) {
-                                currencyCodes.add(currencyInfo)
-                            }
-                        }
+                        val info = getCurrencyInfo(worldDetails)
+                        if ( info != null ) currencyInfo.add(info)
                     }
                 }
             }
-            return currencyCodes
+            return currencyInfo
         }
-
-        /**
-         * Get the currency object belonging to the given world details league
-         * First search goes through the available currencies trying to find a match between leagues currency name an currency's symbol.
-         * If no match is found the list of ISO countries is search for a match of country code.
-         */
-        private fun getCurrency(worldDetailLeague: WorldDetailLeague): Currency? {
-            for (_currency in Currency.getAvailableCurrencies()) {
-                val symbol = _currency.symbol
-                if (symbol.equals(worldDetailLeague.currencyName)) {
-                    return _currency
-                }
-            }
-            for (isoCountry in Locale.getISOCountries()){
-                val locale = Locale("en", isoCountry)
-                if (locale.country.equals(worldDetailLeague.countryCode)){
-                    return Currency.getInstance(locale)
-                }
-            }
-
-            return null
-        }
-
-        /**
-         * Get the currency code setting.
-         * If not initialized before, the currency code is examined from the league of the current team.
-         */
-        fun getCurrencyCode(): String {
-            if (currencyCode.getValue() == null || currencyCode.getValue()?.isEmpty() == true) {
-                val worldDetailLeague = WorldDetailLeague.getWorldDetailsLeagueOfPremierTeam()
-                if (worldDetailLeague != null) {
-                    for (_currency in Currency.getAvailableCurrencies()) {
-                        if (_currency.symbol.equals(worldDetailLeague.currencyName)) {
-                            currencyCode.setValue(_currency?.currencyCode)
-                            return currencyCode.getValue()!!
-                        }
-                    }
-                }
-                currencyCode.setValue(NumberFormat.getCurrencyInstance().currency.currencyCode)
-            }
-            return currencyCode.getValue()!!
-        }
-
-        /**
-         * Get the currency object setting
-         * If not initialized before, the currency is examined from the league of the current team.
-         */
-        fun getCurrency(): Currency? {
-            if ( this.currency == null) {
-                val code = this.getCurrencyCode()
-                this.currency = Currency.getInstance(code)
-            }
-            return this.currency
-        }
-
 
         /**
          * Parse currency value from string.
@@ -148,12 +84,15 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
          */
         private fun getCurrencyFormatter(): NumberFormat {
             if (this.currencyFormatter == null) {
-                val currencyCode = getCurrencyCode()
-                for (locale in NumberFormat.getAvailableLocales()) {
-                    val ret = NumberFormat.getCurrencyInstance(locale)
-                    if (ret.currency.currencyCode.equals(currencyCode)) {
-                        this.currencyFormatter = ret
-                        return ret
+                val countryId = currencyCountryId.getIntValue()
+                if (countryId != null) {
+                    var worldDetailLeague = WorldDetailsManager.instance().getWorldDetailLeagueByCountryId(countryId)
+                    for (locale in NumberFormat.getAvailableLocales()) {
+                        val ret = NumberFormat.getCurrencyInstance(locale)
+                        if (ret.currency.getSymbol().equals(worldDetailLeague.currencyName) || locale.country.equals(worldDetailLeague.countryCode)) {
+                            this.currencyFormatter = ret
+                            return ret
+                        }
                     }
                 }
                 this.currencyFormatter = NumberFormat.getCurrencyInstance()
@@ -166,14 +105,17 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
          */
          fun getExchangeRate(): BigDecimal {
             if (exchangeRate == null) {
-                val curr = getCurrency()
-                if (curr != null) {
-                    var worldDetailLeague = WorldDetailLeague.getWorldDetailsLeagueOfPremierTeam()
+                var countryId = currencyCountryId.getIntValue()
+                if ( countryId == null){
+                    val worldDetailLeague = WorldDetailLeague.getWorldDetailsLeagueOfPremierTeam()
+                    if (worldDetailLeague != null){
+                        countryId = worldDetailLeague.countryId
+                        currencyCountryId.setIntValue(countryId)
+                    }
+                }
+                if (countryId != null) {
+                    var worldDetailLeague = WorldDetailsManager.instance().getWorldDetailLeagueByCountryId(countryId)
                     if ( worldDetailLeague != null) {
-                        if (!worldDetailLeague.currencyName.equals(curr.symbol)) {
-                            worldDetailLeague =
-                                WorldDetailsManager.instance().getWorldDetailsByCurrencySymbol(curr.symbol)
-                        }
                         exchangeRate = BigDecimal.valueOf(worldDetailLeague.currencyRate)
                     }
                 }
@@ -183,31 +125,31 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
         }
 
         /**
-         * Set currency code.
-         * All other currency settings are resetted if the new value differs from the current value.
+         * Set currency.
+         * All other currency settings are reset if the new value differs from the current value.
          */
-        fun setCurrencyCode(inCurrencyCode: String) : Boolean {
-            var code = inCurrencyCode
-            if ( code.contains(":")){
-                code = inCurrencyCode.substringBefore(":")
-            }
-            if (!code.equals(this.currencyCode.getValue())) {
-                currencyCode.setValue(code)
-                currency = null
-                currencyFormatter = null
-                exchangeRate = null
-                return true
+        fun setCurrencyCountry(inCurrencyInfo: String) : Boolean {
+            if ( inCurrencyInfo.contains("(")){
+                var countryCode = inCurrencyInfo.substringAfter("(").substringBefore(")")
+                for (country in WorldDetailsManager.instance().leagues){
+                    if ( country.countryCode.equals(countryCode)){
+                        currencyCountryId.setIntValue(country.countryId)
+                        currencyFormatter = null
+                        exchangeRate = null
+                        return true
+                    }
+                }
             }
             return false
         }
 
         /**
-         * Get a display string of the current currency code setting.
+         * Get a display string of the current currency setting.
          */
         fun getSelectedCurrencyCode(): String? {
-            val cur = getCurrency()
-            if (cur != null) {
-                return getCurrencyInfo(cur)
+            val worldDetailLeague = WorldDetailsManager.instance().getWorldDetailLeagueByCountryId(currencyCountryId.getIntValue())
+            if (worldDetailLeague != null) {
+                return getCurrencyInfo(worldDetailLeague)
             }
             return null
         }
@@ -215,11 +157,20 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
         /**
          * Format the currency display string, containing the code, display name and the symbol
          */
-        private fun getCurrencyInfo(cur: Currency?): String? {
-            if (cur != null) {
-                return cur.currencyCode + ": " + cur.displayName + " (" + cur.symbol + ")"
+        private fun getCurrencyInfo(worldDetails: WorldDetailLeague?): String? {
+            if (worldDetails != null) {
+                return worldDetails.countryName + " - " + worldDetails.currencyName + " (" + worldDetails.countryCode + ")"
             }
             return null
+        }
+
+        fun getCurrencyName() : String {
+            val worldDetailLeague = WorldDetailsManager.instance().getWorldDetailLeagueByCountryId(currencyCountryId.getIntValue())
+            if (worldDetailLeague != null) {
+                return worldDetailLeague.currencyName
+            }
+            return ""
+
         }
 
         /**

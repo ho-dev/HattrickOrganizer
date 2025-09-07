@@ -18,10 +18,8 @@ import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.time.ZoneId;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 
@@ -129,7 +127,7 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
         add(m_jcbLanguage);
 
         // Currency selection
-        Set<String> currencyNames = AmountOfMoney.Companion.getCurrencyCodes();
+        Set<String> currencyNames = AmountOfMoney.Companion.getCurrencyInfo();
         this.currencyNameComboBox = new ComboBoxPanel(TranslationFacility.tr("options.misc.currency"), currencyNames.stream().sorted().toArray(), width);
         this.currencyNameComboBox.setSelectedItem(AmountOfMoney.Companion.getSelectedCurrencyCode());
         this.currencyNameComboBox.addItemListener(this);
