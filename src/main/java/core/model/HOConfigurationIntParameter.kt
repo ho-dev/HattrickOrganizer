@@ -1,6 +1,5 @@
 package core.model
 
-import com.sun.jdi.IntegerValue
 
 /**
  * Configuration parameter of integer type
@@ -19,7 +18,7 @@ class HOConfigurationIntParameter : HOConfigurationParameter{
      * Constructor calls string constructor
      */
     init {
-        val stringVal = this.getValue();
+        val stringVal = this.getValue()
         if (stringVal != null && !stringVal.isEmpty()) this.intValue = Integer.valueOf(stringVal)
         else this.intValue = null
     }

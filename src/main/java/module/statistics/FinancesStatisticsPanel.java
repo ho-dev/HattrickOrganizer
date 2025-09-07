@@ -21,7 +21,6 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.ItemEvent;
 import java.text.NumberFormat;
 import java.util.Arrays;
-import java.util.Objects;
 
 import static core.gui.theme.HOColorName.*;
 

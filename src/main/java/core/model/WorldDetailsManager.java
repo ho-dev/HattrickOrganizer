@@ -111,17 +111,6 @@ public class WorldDetailsManager {
 		return leagues;
 	}
 
-	public WorldDetailLeague getWorldDetailsByCurrencySymbol(String currencySymbol){
-		for (var worldDetails : this.leagues){
-			if (!worldDetails.isComplete()) worldDetails = getWorldDetailLeagueByCountryId(worldDetails.getCountryId());
-			if ( worldDetails.getCurrencyName().equals(currencySymbol)) {
-				return worldDetails;
-			}
-		}
-		return null;
-	}
-
-
 	public final int getTotalUsers() {
 		return totalUsers;
 	}
