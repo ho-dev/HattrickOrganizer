@@ -1,9 +1,13 @@
 package module.training.ui.model;
 
+import core.model.enums.MatchType;
 import core.model.player.Player;
+import core.model.player.SkillChange;
 import core.training.FutureTrainingManager;
 import core.util.HODateTime;
 import module.training.PastTrainingManager;
+
+import java.util.List;
 
 public class TrainingEntry {
     private final FutureTrainingManager futureTrainingManager;
@@ -32,5 +36,9 @@ public class TrainingEntry {
                 HODateTime.now() :
                 this.futureTrainingManager.getFutureTrainings().get(0).getTrainingDate();
         return getPlayer().getTrainingPriorityInformation(firstTrainingDate);
+    }
+
+    public List<SkillChange> getFutureSkillups() {
+        return futureTrainingManager.getFutureSkillups();
     }
 }

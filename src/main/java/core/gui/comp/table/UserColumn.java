@@ -32,6 +32,8 @@ public abstract class UserColumn {
 	/** if a column is shown in the table. Only displayed columns are saved in db. **/
 	protected boolean display = false;
 
+    protected boolean translateColumnName = true;
+
 	/**
 	 * Sort order of the column
 	 */
@@ -74,8 +76,8 @@ public abstract class UserColumn {
 	 * @return String
 	 */
 	public final String getColumnName() {
-		return (columnName.equals("TSI") || columnName.equals(" ")) ? columnName: TranslationFacility.tr(columnName);
-	}
+        return (translateColumnName) ? TranslationFacility.tr(columnName) : columnName;
+    }
 	
 	/**
 	 * Return  id

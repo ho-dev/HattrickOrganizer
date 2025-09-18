@@ -25,7 +25,8 @@ public class TrainingPredictionPanel extends LazyImagePanel  {
     @Override
     protected void initialize() {
         initComponents();
-        addListeners();
+        update();
+//        addListeners();
     }
 
     private boolean isUpdating=false;
@@ -39,21 +40,21 @@ public class TrainingPredictionPanel extends LazyImagePanel  {
         }
     }
 
-    private void addListeners() {
-        RefreshManager.instance().registerRefreshable(() -> {
-            if (isShowing()) {
-                update();
-            }
-        });
-
-        this.model.addModelChangeListener(change -> {
-            if (change == ModelChange.ACTIVE_PLAYER) {
-                selectPlayerFromModel();
-            } else {
-                update();
-            }
-        });
-    }
+//    private void addListeners() {
+//        RefreshManager.instance().registerRefreshable(() -> {
+//            if (isShowing()) {
+//                update();
+//            }
+//        });
+//
+//        this.model.addModelChangeListener(change -> {
+//            if (change == ModelChange.ACTIVE_PLAYER) {
+//                selectPlayerFromModel();
+//            } else {
+//                update();
+//            }
+//        });
+//    }
 
     /**
      * Initialize the GUI
@@ -76,18 +77,18 @@ public class TrainingPredictionPanel extends LazyImagePanel  {
         add(recapTable, BorderLayout.CENTER);
     }
 
-    private void selectPlayerFromModel() {
-        this.recapTable.getLockedTable().clearSelection();
-        Player player = this.model.getActivePlayer();
-        if (player != null) {
-            for (int i = 0; i < this.recapTable.getLockedTable().getRowCount(); i++) {
-                String name = (String) this.recapTable.getLockedTable().getValueAt(i, 0);
-                if (player.getFullName().equals(name)) {
-                    int viewIndex = this.recapTable.getLockedTable().convertRowIndexToView(i);
-                    this.recapTable.getLockedTable().setRowSelectionInterval(viewIndex, viewIndex);
-                    break;
-                }
-            }
-        }
-    }
+//    private void selectPlayerFromModel() {
+//        this.recapTable.getLockedTable().clearSelection();
+//        Player player = this.model.getActivePlayer();
+//        if (player != null) {
+//            for (int i = 0; i < this.recapTable.getLockedTable().getRowCount(); i++) {
+//                String name = (String) this.recapTable.getLockedTable().getValueAt(i, 0);
+//                if (player.getFullName().equals(name)) {
+//                    int viewIndex = this.recapTable.getLockedTable().convertRowIndexToView(i);
+//                    this.recapTable.getLockedTable().setRowSelectionInterval(viewIndex, viewIndex);
+//                    break;
+//                }
+//            }
+//        }
+//    }
 }

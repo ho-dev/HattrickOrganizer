@@ -7,6 +7,7 @@ import module.specialEvents.SpecialEventsTableModel;
 import module.teamAnalyzer.ui.RecapPanelTableModel;
 import module.training.ui.TrainingProgressTableModel;
 import module.training.ui.model.SkillupTableModel;
+import module.training.ui.TrainingPredictionTableModel;
 import module.transfer.history.PlayerTransferTableModel;
 import module.transfer.history.TransferTableModel;
 import module.transfer.scout.TransferScoutingTableModel;
@@ -41,7 +42,8 @@ public final class UserColumnController {
 		SPECIALEVENTS(13),
 		TRANSFERSCOUT(14),
 		TRAININGPROGRESS(15),
-		SKILLUP(16);
+		SKILLUP(16),
+        TRAININGPREDICTION(17);
 
 		private final int value;
 		ColumnModelId(int value){this.value=value;}
@@ -83,6 +85,7 @@ public final class UserColumnController {
 
 	private TrainingProgressTableModel trainingProgressTableModel;
 	private SkillupTableModel skillupTableModel;
+    private TrainingPredictionTableModel trainingPredictionTableModel;
 
 	/**
 	 * constructor
@@ -125,14 +128,21 @@ public final class UserColumnController {
 		dbManager.loadHOColumModel(getSkillupTableModel());
 	}
 
-	public TrainingProgressTableModel getTrainingProgressTableModel() {
-		if ( this.trainingProgressTableModel == null){
-			this.trainingProgressTableModel = new TrainingProgressTableModel(ColumnModelId.TRAININGPROGRESS);
-		}
-		return this.trainingProgressTableModel;
-	}
+    public TrainingProgressTableModel getTrainingProgressTableModel() {
+        if ( this.trainingProgressTableModel == null){
+            this.trainingProgressTableModel = new TrainingProgressTableModel(ColumnModelId.TRAININGPROGRESS);
+        }
+        return this.trainingProgressTableModel;
+    }
 
-	public SkillupTableModel getSkillupTableModel () {
+    public TrainingPredictionTableModel getTrainingPredictionTableModel() {
+        if ( this.trainingPredictionTableModel == null){
+            this.trainingPredictionTableModel = new TrainingPredictionTableModel(ColumnModelId.TRAININGPREDICTION);
+        }
+        return this.trainingPredictionTableModel;
+    }
+
+    public SkillupTableModel getSkillupTableModel () {
 		if ( this.skillupTableModel == null){
 			this.skillupTableModel = new SkillupTableModel(ColumnModelId.SKILLUP );
 		}
