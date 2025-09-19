@@ -11,7 +11,7 @@ import javax.swing.*;
 public class TrainingProgressColumn extends UserColumn {
     static int nextId=0;
 
-    private HODateTime.HTWeek htWeek;
+    private final HODateTime.HTWeek htWeek;
     public TrainingProgressColumn(HODateTime.HTWeek htweek, int minWidth) {
         super(nextId++,htweek.season + " " + htweek.week);
         this.translateColumnName = false;

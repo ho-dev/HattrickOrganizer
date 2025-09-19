@@ -1,9 +1,7 @@
 package module.training.ui;
 
-import core.gui.RefreshManager;
 import core.gui.comp.panel.LazyImagePanel;
 import core.model.TranslationFacility;
-import core.model.player.Player;
 import module.training.ui.model.ModelChange;
 import module.training.ui.model.TrainingModel;
 

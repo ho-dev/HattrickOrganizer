@@ -1,6 +1,5 @@
 package module.training.ui.model;
 
-import core.model.enums.MatchType;
 import core.model.player.Player;
 import core.model.player.SkillChange;
 import core.training.FutureTrainingManager;
