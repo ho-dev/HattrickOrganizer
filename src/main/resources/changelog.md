@@ -1,3 +1,24 @@
+# Changelist HO! 9.2
+
+## Some numbers
+* 4 commits
++ 9 files changed, 61 insertions(+), 35 deletions(-)
+* Contributors:
+  + 4 wsbrenk
+
+## Highlights
+
+* Bug fixes
+
+## [Detailed Changelog](https://github.com/ho-dev/HattrickOrganizer/issues?q=milestone%3A9.2)
+
+### Training
+* Fix exception in training's player development table if no skill-ups exists (#2302)
+* Fix class cast exception in training progress table (#2304)
+
+### Download
+* Fix download exception when hattrick site is not reachable - handle connection timeout (#2307)
+
 # Changelist HO! 9.1
 
 ## Some numbers

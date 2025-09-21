@@ -2,21 +2,18 @@
 
 * Bug fixes
 
-## [Detailed Changelog](https://github.com/ho-dev/HattrickOrganizer/milestone/30)
+## [Detailed Changelog](https://github.com/ho-dev/HattrickOrganizer/milestone/31)
 
 ### Training
-* Fix exception in training's player development table if no skill-ups exists (#2302)
-* Fix class cast exception in training progress table (#2304)
+* Fix subskill calculation when set pieces takers are replaced (#2324)
 
-### Download
-* Fix download exception when hattrick site is not reachable - handle connection timeout (#2307)
-
-### Series
 
 ## Translations
 
-Reports by Contributors - July 27, 2025 - August 14, 2025
+Reports by Contributors - August 14, 2025 - September 21, 2025
 
-* Kristaps 84
+* mathias dufresne 19
+* Kristaps 12
+* murko 8
 
-Total 84
+Total 39
