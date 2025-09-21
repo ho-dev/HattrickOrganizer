@@ -653,7 +653,7 @@ public class MatchLineupTeam extends AbstractTable.Storable {
 				lastMatchAppearances.put((int) substitution.getRoleId(), new MatchAppearance(enteringplayer, substitution.getMatchMinuteCriteria()));
 				if (leavingPlayerIsSetPiecesTaker) {
 					// Find the new set pieces taker
-					var matchEvents = this.matchdetails.downloadHighlightsIfMissing().stream()
+					var matchEvents = this.getMatchdetails().downloadHighlightsIfMissing().stream()
 							.filter(i -> i.getMatchEventID() == MatchEvent.MatchEventID.NEW_SET_PIECES_TAKER &&
 									i.getMinute() == substitution.getMatchMinuteCriteria()).toList();
 					for (var event : matchEvents) {
