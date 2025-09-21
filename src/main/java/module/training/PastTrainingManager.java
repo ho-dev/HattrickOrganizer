@@ -16,9 +16,9 @@ import java.util.List;
 public class PastTrainingManager {
 
 	/** List of all skill up */
-	private List<SkillChange> allSkillups = new ArrayList<>();
+	private List<SkillChange> allSkillChanges = new ArrayList<>();
 	/** List of trained skill up */
-	private List<SkillChange> trainSkillups = new ArrayList<>();
+	private List<SkillChange> trainSkillChanges = new ArrayList<>();
 
 	/**
 	 * Calculates data for the player
@@ -30,8 +30,8 @@ public class PastTrainingManager {
 			return;
 		}
 
-		allSkillups = new ArrayList<>();
-		trainSkillups = new ArrayList<>();
+		allSkillChanges = new ArrayList<>();
+		trainSkillChanges = new ArrayList<>();
 
 		for (var skill : PlayerSkill.values()) {
 			// Skip Form ups
@@ -46,7 +46,7 @@ public class PastTrainingManager {
 				while (skillUpDate.isAfter(trainingDate)) trainingDate = trainingDate.plus(7, ChronoUnit.DAYS);
 				while (skillUpDate.isBefore(trainingDate)) trainingDate = trainingDate.minus(7, ChronoUnit.DAYS);
 				element.setDate(trainingDate);
-				allSkillups.add(element);
+				allSkillChanges.add(element);
 
 				if (skill == PlayerSkill.KEEPER
 						|| skill == PlayerSkill.DEFENDING
@@ -56,7 +56,7 @@ public class PastTrainingManager {
 						|| skill == PlayerSkill.PASSING
 						|| skill == PlayerSkill.SETPIECES
 						|| skill == PlayerSkill.EXPERIENCE) {
-					trainSkillups.add(element);
+                    trainSkillChanges.add(element);
 				}
 
 			}
@@ -64,8 +64,8 @@ public class PastTrainingManager {
 
 		var comp = new SkillChangeComparator();
 
-		allSkillups.sort(comp);
-		trainSkillups.sort(comp);
+		allSkillChanges.sort(comp);
+		trainSkillChanges.sort(comp);
 	}
 
 	/**
@@ -73,8 +73,8 @@ public class PastTrainingManager {
 	 * 
 	 * @return list of all skillups
 	 */
-	public List<SkillChange> getAllSkillups() {
-		return allSkillups;
+	public List<SkillChange> getAllSkillChanges() {
+		return allSkillChanges;
 	}
 
 	/**
@@ -83,8 +83,8 @@ public class PastTrainingManager {
 	 * 
 	 * @return list of trained skillups
 	 */
-	public List<SkillChange> getTrainedSkillups() {
-		return trainSkillups;
+	public List<SkillChange> getTrainedSkillChanges() {
+		return trainSkillChanges;
 	}
 	private static class SkillChangeComparator implements Comparator<SkillChange> {
 

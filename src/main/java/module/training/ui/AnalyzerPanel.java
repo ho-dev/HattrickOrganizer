@@ -204,7 +204,7 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
 
 		for (Player player : players) {
 			PastTrainingManager otm = new PastTrainingManager(player);
-			List<SkillChange> skillups = otm.getAllSkillups();
+			List<SkillChange> skillups = otm.getAllSkillChanges();
 
 			for (SkillChange skillup : skillups) {
 				var skillType = skillup.getType();

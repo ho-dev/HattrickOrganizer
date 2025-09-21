@@ -35,10 +35,7 @@
 
 ## Translations
 
-Reports by Contributors - Aug 14, 2025 - Sep 13, 2025
+Reports by Contributors - Sep 21, 2025 - Sep 21, 2025
 
-* mathias dufresne 19
-* Kristaps 12
-* murko 8
 
-Total 27
+Total 0
