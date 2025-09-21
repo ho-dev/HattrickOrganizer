@@ -32,7 +32,7 @@ plugins {
 }
 apply plugin: de.jansauer.poeditor.POEditorPlugin
 
-version = '9.2'
+version = '9.3'
 ext {
     // Development_stage (DEV:0  BETA:1  STABLE:2)
     development_stage = project.properties['DEV_STAGE'] as Integer ?: 0
@@ -361,9 +361,9 @@ tasks.register("pushmd")  {
         // list the contributors that don't want to be mentioned in release notes
         def contributorFilter = ["Che"]
 
-        def commitCount = callGit('git rev-list 9.1..HEAD --count')
-        def diff = callGit('git diff --shortstat 9.1..HEAD')
-        def contributors = filter(callGit('git shortlog -s -n 9.1..HEAD'), contributorFilter)
+        def commitCount = callGit('git rev-list 9.2..HEAD --count')
+        def diff = callGit('git diff --shortstat 9.2..HEAD')
+        def contributors = filter(callGit('git shortlog -s -n 9.2..HEAD'), contributorFilter)
         def latestCommit = callGit('git log -1 --pretty=format:"%s"')
 
         println("create release-notes")
