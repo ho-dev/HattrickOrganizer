@@ -50,10 +50,10 @@ public class EffectDAO {
     private static final String playersBasics =
             "SELECT * FROM SPIELER, BASICS WHERE trainer = 0 AND SPIELER.hrf_id = BASICS.hrf_id AND SPIELER.hrf_id = ?";
 
-            /**
-             * Calculates the training weeks and returns a list of TrainWeek instances. These value object
-             * contain the last hrf id before the training update and the first hrf id after the update.
-             */
+    /**
+     * Calculates the training weeks and returns a list of TrainWeek instances. These value object
+     * contain the last hrf id before the training update and the first hrf id after the update.
+     */
     public static void reload() {
         try {
             Map<String,List<SkillChange>> weeklySkillups = new HashMap<>();
@@ -66,13 +66,15 @@ public class EffectDAO {
 
             for (Player player : players) {
                 PastTrainingManager otm = new PastTrainingManager(player);
-                List<SkillChange> skillups = otm.getTrainedSkillups();
+                var skillChanges = otm.getTrainedSkillChanges();
 
-                for (SkillChange skillup : skillups) {
-                    String key = skillup.getHtSeason() + "-" + skillup.getHtWeek(); //$NON-NLS-1$
-                    List<SkillChange> collectedSkillups = weeklySkillups.computeIfAbsent(key, k -> new Vector<>());
+                for (SkillChange skillChange : skillChanges) {
+                    if ( skillChange.getChange() > 0) { // if it is a skill up (and not a down)
+                        String key = skillChange.getHtSeason() + "-" + skillChange.getHtWeek(); //$NON-NLS-1$
+                        List<SkillChange> collectedSkillups = weeklySkillups.computeIfAbsent(key, k -> new Vector<>());
 
-                    collectedSkillups.add(skillup);
+                        collectedSkillups.add(skillChange);
+                    }
                 }
             }
 

@@ -56,7 +56,7 @@ public class TrainingDevelopmentPanel extends LazyPanel {
 		List<SkillChange> skillups = new ArrayList<>();
 		if (this.model.getActivePlayer() != null) {
 			this.title.setText(Helper.getTranslation("ls.module.training.training_development")+ " " + this.model.getActivePlayer().getFullName());
-			skillups.addAll(this.model.getSkillupManager().getTrainedSkillups());
+			skillups.addAll(this.model.getSkillupManager().getTrainedSkillChanges());
 			skillups.addAll(this.model.getFutureTrainingManager().getFutureSkillups());
 			Collections.reverse(skillups);
 		}
