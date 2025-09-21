@@ -36,7 +36,7 @@ public class TrainingProgressColumn extends UserColumn {
 //    }
 
     public IHOTableCellEntry getTableEntry(TrainingEntry entry) {
-        var skillChange = entry.getFutureSkillups().stream().filter(s->s.getDate().toHTWeek() == this.htWeek).findAny();
+        var skillChange = entry.getFutureSkillups().stream().filter(s->s.getDate().toHTWeek().equals(this.htWeek)).findAny();
         String text = skillChange.map(change -> PlayerAbility.getNameForSkill(change.getValue(), false)).orElse("");
         return new ColorLabelEntry(text, ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
     }
