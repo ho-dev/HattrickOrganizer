@@ -35,9 +35,7 @@
 
 ## Translations
 
-Reports by Contributors - Aug 14, 2025 - Sep 07, 2025
+Reports by Contributors - Sep 21, 2025 - Sep 21, 2025
 
-* mathias dufresne 19
-* murko 8
 
-Total 27
+Total 0
