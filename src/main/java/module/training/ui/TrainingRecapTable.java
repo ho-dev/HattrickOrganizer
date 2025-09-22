@@ -108,7 +108,7 @@ public class TrainingRecapTable extends JScrollPane {
         for (Player player : players) {
             FutureTrainingManager ftm = new FutureTrainingManager(player,
                     this.trainingModel.getFutureTrainings());
-            var skillChanges = ftm.getFutureSkillups();
+            var skillChanges = ftm.getFutureSkillChanges();
 
             HashMap<String, SkillChange> maps = new HashMap<>();
             for (var s : skillChanges) {

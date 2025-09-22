@@ -157,7 +157,14 @@ final class ArenaPanel extends JPanel {
 				((DoubleLabelEntries) values[7][i]).getLeft().setSpecialNumber(m_clArenaSizer.calcMaxIncome(m_clStadien[i - 2]) - m_clArenaSizer.calcMaintenance(m_clStadien[i - 2]), true);
 				((DoubleLabelEntries) values[7][i]).getRight().setSpecialNumber((m_clArenaSizer.calcMaxIncome(m_clStadien[i - 2]) - m_clArenaSizer.calcMaintenance(m_clStadien[i - 2]))
 					- (m_clArenaSizer.calcMaxIncome(m_clStadium) - m_clArenaSizer.calcMaintenance(m_clStadium)), true);
-				((DoubleLabelEntries) values[8][i]).getLeft().setSpecialNumber(-m_clStadien[i - 2].getExpansionCosts(), true);
+                var expansionCosts = m_clStadien[i-2].getExpansionCosts();
+                var colorLabelEntry = ((DoubleLabelEntries) values[8][i]).getLeft();
+                if (expansionCosts != null) {
+                    colorLabelEntry.setSpecialNumber(-expansionCosts, true);
+                }
+                else {
+                    colorLabelEntry.setText("");
+                }
 			}
 
 			m_jtArena.setModel(new TableModel(values, UEBERSCHRIFT));

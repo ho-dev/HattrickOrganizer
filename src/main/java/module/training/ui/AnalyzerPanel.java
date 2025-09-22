@@ -48,8 +48,6 @@ import javax.swing.table.TableColumn;
  */
 public class AnalyzerPanel extends LazyPanel implements ActionListener {
 
-	@Serial
-	private static final long serialVersionUID = -2152169077412317532L;
 	private static final String CMD_SELECT_ALL = "selectAll";
 	private static final String CMD_CLEAR_ALL = "clearAll";
 	private ButtonModel oldPlayers;
@@ -204,12 +202,14 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
 
 		for (Player player : players) {
 			PastTrainingManager otm = new PastTrainingManager(player);
-			List<SkillChange> skillups = otm.getAllSkillChanges();
+			List<SkillChange> allSkillChanges = otm.getAllSkillChanges();
 
-			for (SkillChange skillup : skillups) {
-				var skillType = skillup.getType();
-                List<PlayerSkillChange> playerSkillChanges = skillupsByType.computeIfAbsent(skillType, k -> new ArrayList<>());
-				playerSkillChanges.add(new PlayerSkillChange(player, skillup));
+			for (SkillChange skillChange : allSkillChanges) {
+                if ( skillChange.getChange() > 0) {
+                    var skillType = skillChange.getType();
+                    List<PlayerSkillChange> playerSkillChanges = skillupsByType.computeIfAbsent(skillType, k -> new ArrayList<>());
+                    playerSkillChanges.add(new PlayerSkillChange(player, skillChange));
+                }
 			}
 		}
 
