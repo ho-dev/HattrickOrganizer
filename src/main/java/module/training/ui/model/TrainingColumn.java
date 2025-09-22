@@ -19,6 +19,6 @@ public class TrainingColumn extends UserColumn {
         this.setDisplay(true);
     }
 
-    public IHOTableCellEntry getTableEntry(TrainingEntry entry) {return null;}
+    public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {return null;}
     public IHOTableCellEntry getTableEntry(PlayerSkillChange entry) {return null;}
 }

@@ -2007,7 +2007,7 @@ public class Player extends AbstractTable.Storable {
 
 
     /**
-     * training priority information of the training panel
+     * Training priority information of the training panel
      *
      * @param nextWeek training priorities after this week will be considered
      * @return if there is one user selected priority, the name of the priority is returned

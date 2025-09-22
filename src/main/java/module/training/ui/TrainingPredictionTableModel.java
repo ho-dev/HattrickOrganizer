@@ -13,7 +13,7 @@ import core.model.player.MatchRoleID;
 import core.training.FutureTrainingManager;
 import core.training.TrainingPreviewPlayers;
 import module.training.ui.model.TrainingColumn;
-import module.training.ui.model.TrainingEntry;
+import module.training.ui.model.FutureTrainingEntry;
 import module.training.ui.model.TrainingModel;
 import module.training.ui.model.TrainingProgressColumn;
 
@@ -36,7 +36,7 @@ public class TrainingPredictionTableModel  extends HOTableModel {
             List<UserColumn> newColumns = new ArrayList<>(List.of(
                     new TrainingColumn("Spieler", 150) {
                         @Override
-                        public IHOTableCellEntry getTableEntry(TrainingEntry entry) {
+                        public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
                             var ret = new ColorLabelEntry(entry.getTrainingSpeed(), entry.getPlayer().getFullName(), ColorLabelEntry.FG_STANDARD, getBackgroundColor(entry), SwingConstants.LEFT);
                             ret.setIcon(TrainingPreviewPlayers.instance().getTrainPreviewPlayer(entry.getPlayer()).getIcon());
                             ret.setToolTipText(TrainingPreviewPlayers.instance().getTrainPreviewPlayer(entry.getPlayer()).getText());
@@ -50,27 +50,27 @@ public class TrainingPredictionTableModel  extends HOTableModel {
                     },
                     new TrainingColumn("ls.player.age", 60) {
                         @Override
-                        public IHOTableCellEntry getTableEntry(TrainingEntry entry) {
-                            return new ColorLabelEntry(entry.getPlayer().getAgeWithDaysAsString(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
+                            return new ColorLabelEntry(entry.getPlayer().getAgeWithDaysAsString(), ColorLabelEntry.FG_STANDARD, getBackgroundColor(entry), SwingConstants.LEFT);
                         }
                     },
                     new TrainingColumn("BestePosition", 140) {
                         @Override
-                        public IHOTableCellEntry getTableEntry(TrainingEntry entry) {
+                        public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
                             var pos = entry.getPlayer().getIdealPosition();
-                            return new ColorLabelEntry(String.format("%s (%.2f)", MatchRoleID.getNameForPosition(pos), entry.getPlayer().getIdealPositionRating()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                            return new ColorLabelEntry(String.format("%s (%.2f)", MatchRoleID.getNameForPosition(pos), entry.getPlayer().getIdealPositionRating()), ColorLabelEntry.FG_STANDARD, getBackgroundColor(entry), SwingConstants.LEFT);
                         }
                     },
                     new TrainingColumn("Speed", 140) {
                         @Override
-                        public IHOTableCellEntry getTableEntry(TrainingEntry entry) {
-                            return new ColorLabelEntry(String.valueOf((int)entry.getTrainingSpeed()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
+                            return new ColorLabelEntry(String.valueOf((int)entry.getTrainingSpeed()), ColorLabelEntry.FG_STANDARD, getBackgroundColor(entry), SwingConstants.LEFT);
                         }
                     },
                     new TrainingColumn("ls.player.id", 140) {
                         @Override
-                        public IHOTableCellEntry getTableEntry(TrainingEntry entry) {
-                            return new ColorLabelEntry(Integer.toString(entry.getPlayer().getPlayerId()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
+                            return new ColorLabelEntry(Integer.toString(entry.getPlayer().getPlayerId()), ColorLabelEntry.FG_STANDARD, getBackgroundColor(entry), SwingConstants.LEFT);
                         }
                         @Override
                         public boolean isHidden() {
@@ -100,7 +100,7 @@ public class TrainingPredictionTableModel  extends HOTableModel {
             this.columns = newColumns.toArray(new UserColumn[0]);
         }
 
-    private Color getBackgroundColor(TrainingEntry entry) {
+    private Color getBackgroundColor(FutureTrainingEntry entry) {
         int speed = (int)entry.getTrainingSpeed();
         // Speed range is 16 to 125
         if (speed > (125 + 50) / 2) {
@@ -118,7 +118,7 @@ public class TrainingPredictionTableModel  extends HOTableModel {
         int rownum = 0;
         for (var player : currentPlayers) {
             int column = 0;
-            var training = new TrainingEntry(new FutureTrainingManager(player, this.model.getFutureTrainings()));
+            var training = new FutureTrainingEntry(new FutureTrainingManager(player, this.model.getFutureTrainings()));
             for ( var col : getDisplayedColumns()){
                 if ( col instanceof  TrainingColumn trainingColumn) {
                     m_clData[rownum][column] = trainingColumn.getTableEntry(training);

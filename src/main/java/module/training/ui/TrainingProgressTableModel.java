@@ -14,7 +14,7 @@ import core.util.Helper;
 import module.training.Skills;
 import module.training.ui.comp.VerticalIndicator;
 import module.training.ui.model.TrainingColumn;
-import module.training.ui.model.TrainingEntry;
+import module.training.ui.model.FutureTrainingEntry;
 import module.training.ui.model.TrainingModel;
 
 import javax.swing.*;
@@ -43,7 +43,7 @@ public class TrainingProgressTableModel extends HOTableModel {
         columns = new ArrayList<>(List.of(
                 new TrainingColumn("Spieler", 150) {
                     @Override
-                    public IHOTableCellEntry getTableEntry(TrainingEntry entry) {
+                    public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
                         var ret = new ColorLabelEntry(entry.getTrainingSpeed(), entry.getPlayer().getFullName(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                         ret.setIcon(TrainingPreviewPlayers.instance().getTrainPreviewPlayer(entry.getPlayer()).getIcon());
                         return ret;
@@ -56,74 +56,74 @@ public class TrainingProgressTableModel extends HOTableModel {
                 },
                 new TrainingColumn("ls.player.age", 60) {
                     @Override
-                    public IHOTableCellEntry getTableEntry(TrainingEntry entry) {
+                    public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
                         return new ColorLabelEntry(entry.getPlayer().getAgeWithDaysAsString(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
                 new TrainingColumn("trainpre.priority", 140) {
                     @Override
-                    public IHOTableCellEntry getTableEntry(TrainingEntry entry) {
-                        return new ColorLabelEntry(entry.getTrainingPriority(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                    public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
+                        return new ColorLabelEntry(entry.getTrainingPriorityInformation(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
                 new TrainingColumn("ls.player.skill.keeper", 70) {
                     @Override
-                    public IHOTableCellEntry getTableEntry(TrainingEntry entry) {
+                    public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
                         return createIcon(entry.getPlayer(), PlayerSkill.KEEPER);
                     }
                 },
                 new TrainingColumn("ls.player.skill.defending", 70) {
                     @Override
-                    public IHOTableCellEntry getTableEntry(TrainingEntry entry) {
+                    public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
                         return createIcon(entry.getPlayer(), PlayerSkill.DEFENDING);
                     }
                 },
                 new TrainingColumn("ls.player.skill.playmaking", 70) {
                     @Override
-                    public IHOTableCellEntry getTableEntry(TrainingEntry entry) {
+                    public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
                         return createIcon(entry.getPlayer(), PlayerSkill.PLAYMAKING);
                     }
                 },
                 new TrainingColumn("ls.player.skill.passing", 70) {
                     @Override
-                    public IHOTableCellEntry getTableEntry(TrainingEntry entry) {
+                    public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
                         return createIcon(entry.getPlayer(), PlayerSkill.PASSING);
                     }
                 },
                 new TrainingColumn("ls.player.skill.winger", 70) {
                     @Override
-                    public IHOTableCellEntry getTableEntry(TrainingEntry entry) {
+                    public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
                         return createIcon(entry.getPlayer(), PlayerSkill.WINGER);
                     }
                 },
                 new TrainingColumn("ls.player.skill.scoring", 70) {
                     @Override
-                    public IHOTableCellEntry getTableEntry(TrainingEntry entry) {
+                    public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
                         return createIcon(entry.getPlayer(), PlayerSkill.SCORING);
                     }
                 },
                 new TrainingColumn("ls.player.skill.setpieces", 70) {
                     @Override
-                    public IHOTableCellEntry getTableEntry(TrainingEntry entry) {
+                    public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
                         return createIcon(entry.getPlayer(), PlayerSkill.SETPIECES);
                     }
                 },
                 new TrainingColumn("ls.player.skill.stamina", 70) {
                     @Override
-                    public IHOTableCellEntry getTableEntry(TrainingEntry entry) {
+                    public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
                         return createIcon(entry.getPlayer(), PlayerSkill.STAMINA);
                     }
                 },
                 new TrainingColumn("ls.player.experience", 70) {
                     @Override
-                    public IHOTableCellEntry getTableEntry(TrainingEntry entry) {
+                    public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
                         var experienceTotal = 28.571;
                         return new VerticalIndicator(Helper.round(experienceTotal * entry.getPlayer().getSub4Skill(PlayerSkill.EXPERIENCE), 3), experienceTotal);
                     }
                 },
                 new TrainingColumn("ls.player.id", 0) {
                     @Override
-                    public IHOTableCellEntry getTableEntry(TrainingEntry entry) {
+                    public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
                         return new ColorLabelEntry(entry.getPlayer().getPlayerId(), String.valueOf(entry.getPlayer().getPlayerId()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
 
@@ -190,7 +190,7 @@ public class TrainingProgressTableModel extends HOTableModel {
         int rownum = 0;
         for (var player : currentPlayers) {
             int column = 0;
-            var training = new TrainingEntry(new FutureTrainingManager(player, this.model.getFutureTrainings()));
+            var training = new FutureTrainingEntry(new FutureTrainingManager(player, this.model.getFutureTrainings()));
             for ( var col : getDisplayedColumns()){
                 m_clData[rownum][column] = ((TrainingColumn)col).getTableEntry(training);
                 column++;
