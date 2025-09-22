@@ -35,7 +35,7 @@
 
 ## Translations
 
-Reports by Contributors - Sep 21, 2025 - Sep 21, 2025
+Reports by Contributors - Sep 21, 2025 - Sep 22, 2025
 
 
 Total 0

@@ -23,7 +23,7 @@ public class FutureTrainingManager {
 	};
 	/** Actual Training sub */
 	public double[] actual = new double[SKILL_INDEX.length];
-		
+
 	/** Maximum training sub after future training */
 	public double[] finalSub = new double[SKILL_INDEX.length];
 
@@ -39,7 +39,7 @@ public class FutureTrainingManager {
 	}
 
 	private final List<TrainingPerWeek> futureTrainings;
-	private List<SkillChange> futureSkillups;
+	private List<SkillChange> futureSkillChanges;
 	private double trainingSpeed;
 
 	/**
@@ -50,19 +50,18 @@ public class FutureTrainingManager {
 	*/
 	public FutureTrainingManager(Player p, List<TrainingPerWeek> trainings) {
 		player = p;
-		futureSkillups = new ArrayList<>();
+		futureSkillChanges = new ArrayList<>();
 		futureTrainings = trainings;
 		previewPlayer(UserParameter.instance().futureWeeks);
 	}
 
 	public FuturePlayer previewPlayer(int numberOfWeeks) {
 
-		this.futureSkillups = new ArrayList<>();
+		this.futureSkillChanges = new ArrayList<>();
 
 		for (int i = 0; i < SKILL_INDEX.length; i++) {
 			// Sets the actual training levels
 			actual[i] = getOffset(SKILL_INDEX[i]);
-			// rest the other 4 arrays min and max level are equals to actual at beginning
 			finalSub[i] = actual[i];
 			finalSkill[i] = player.getSkill(SKILL_INDEX[i]);
 		}
@@ -154,7 +153,7 @@ public class FutureTrainingManager {
 								su.setValue(finalSkill[i]);
 								su.setDate(trainingDate);
 								su.setChange(change);
-								futureSkillups.add(su);
+								futureSkillChanges.add(su);
 							}
 						}
 					}
@@ -209,8 +208,8 @@ public class FutureTrainingManager {
 	*
 	* @return List of Skillups
 	*/
-	public List<SkillChange> getFutureSkillups() {
-		return futureSkillups;
+	public List<SkillChange> getFutureSkillChanges() {
+		return futureSkillChanges;
 	}
 
 	/**
