@@ -77,7 +77,7 @@ public class Stadium extends AbstractTable.Storable {
 	/**
 	 * Cost of Expansion
 	 */
-	private int expansionCosts;
+	private Integer expansionCosts;
 
 	/**
 	 * Rebuilt date
