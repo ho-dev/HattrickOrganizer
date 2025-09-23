@@ -92,7 +92,7 @@ public class TrainingPredictionTableModel  extends HOTableModel {
 
             for (int i = 0; i < UserParameter.instance().futureWeeks; i++) {
                 var htweek = actualWeek.toLocaleHTWeek();
-                var column = new TrainingProgressColumn(htweek, 60);
+                var column = new TrainingProgressColumn(htweek, i,60);
                 newColumns.add(column);
                 actualWeek = actualWeek.plus(7, ChronoUnit.DAYS);
             }

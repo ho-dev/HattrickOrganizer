@@ -2,6 +2,7 @@ package module.training.ui.model;
 
 import core.model.player.Player;
 import core.model.player.SkillChange;
+import core.training.FuturePlayerTraining;
 import core.training.FutureTrainingManager;
 import core.training.WeeklyTrainingType;
 import core.util.HODateTime;
@@ -38,30 +39,14 @@ public class FutureTrainingEntry {
         return getPlayer().getTrainingPriorityInformation(firstTrainingDate);
     }
 
-    public List<SkillChange> getFutureSkillups() {
-        return futureTrainingManager.getFutureSkillups();
+    public List<SkillChange> getFutureSkillChanges() {
+        return futureTrainingManager.getFutureSkillChanges();
     }
 
-    public int getTrainingPriority(HODateTime.HTWeek htWeek) {
-        var training = this.trainingModel.getFutureTrainings().get(column);
-        var	wt = WeeklyTrainingType.instance(training.getTrainingType());
-        var prio = player.getFuturePlayerTrainingPriority(wt, training.getTrainingDate());
-        if (prio != null) {
-            switch (prio) {
-                case FULL_TRAINING:
-                    this.setBackground(FULL_TRAINING_BG);
-                    break;
-                case PARTIAL_TRAINING:
-                    if (this.trainingModel.isPartialTrainingAvailable(new int [] {column})) {
-                        this.setBackground(PARTIAL_TRAINING_BG);
-                    }
-                    break;
-                case OSMOSIS_TRAINING:
-                    if ( this.trainingModel.isOsmosisTrainingAvailable(new int[]{column})){
-                        this.setBackground(OSMOSIS_TRAINING_BG);
-                    }
-                    break;
-            }
-        }
+    public FuturePlayerTraining.Priority getTrainingPriority(int trainingWeekIndex) {
+        var trainingPerWeek = futureTrainingManager.getFutureTrainings().get(trainingWeekIndex);
+        var	wt = WeeklyTrainingType.instance(trainingPerWeek.getTrainingType());
+        var player = futureTrainingManager.getPlayer();
+        return player.getFuturePlayerTrainingPriority(wt, trainingPerWeek.getTrainingDate());
     }
 }

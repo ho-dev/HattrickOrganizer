@@ -95,10 +95,10 @@ public class SkillupTableModel extends HOTableModel {
 	protected void initData() {
 		this.skillChanges = new ArrayList<>();
 		if (this.trainingModel.getActivePlayer() != null) {
-			for ( var skillUp : this.trainingModel.getSkillupManager().getTrainedSkillups()){
+			for ( var skillUp : this.trainingModel.getSkillupManager().getTrainedSkillChanges()){
 				skillChanges.add(new PlayerSkillChange(this.trainingModel.getActivePlayer(), skillUp));
 			}
-			for ( var skillUp : this.trainingModel.getFutureTrainingManager().getFutureSkillups()){
+			for ( var skillUp : this.trainingModel.getFutureTrainingManager().getFutureSkillChanges()){
 				skillChanges.add(new PlayerSkillChange(this.trainingModel.getActivePlayer(), skillUp));
 			}
 			Collections.reverse(skillChanges);
