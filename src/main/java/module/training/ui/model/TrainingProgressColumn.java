@@ -11,8 +11,6 @@ import core.util.HODateTime;
 import javax.swing.*;
 import java.awt.*;
 
-import static core.training.FuturePlayerTraining.Priority.*;
-
 public class TrainingProgressColumn extends UserColumn {
 
     private static final Color TABLE_BG = ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
