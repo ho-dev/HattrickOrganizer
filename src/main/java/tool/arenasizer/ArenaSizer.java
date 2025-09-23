@@ -86,33 +86,34 @@ public class ArenaSizer {
 	}
 
 	final AmountOfMoney calcConstructionCosts(float steh, float sitz, float dach, float logen) {
-		var kosten = FIXKOSTEN;
+        if ( steh == 0. && sitz == 0. && dach == 0. && logen == 0.) return new AmountOfMoney(0);
+		var expansionCosts = new AmountOfMoney(FIXKOSTEN.getSwedishKrona());
 
 		if (steh > 0) {
-			kosten.add(STEH_AUSBAU.times(BigDecimal.valueOf(steh)));
+			expansionCosts.add(STEH_AUSBAU.times(BigDecimal.valueOf(steh)));
 		} else {
-			kosten.subtract(ABRISS.times(BigDecimal.valueOf(steh)));
+			expansionCosts.subtract(ABRISS.times(BigDecimal.valueOf(steh)));
 		}
 
 		if (sitz > 0) {
-			kosten.add(SITZ_AUSBAU.times(BigDecimal.valueOf(sitz)));
+			expansionCosts.add(SITZ_AUSBAU.times(BigDecimal.valueOf(sitz)));
 		} else {
-			kosten.subtract(ABRISS.times(BigDecimal.valueOf(sitz)));
+			expansionCosts.subtract(ABRISS.times(BigDecimal.valueOf(sitz)));
 		}
 
 		if (dach > 0) {
-			kosten.add(DACH_AUSBAU.times(BigDecimal.valueOf(dach)));
+			expansionCosts.add(DACH_AUSBAU.times(BigDecimal.valueOf(dach)));
 		} else {
-			kosten.subtract(ABRISS.times(BigDecimal.valueOf(dach)));
+			expansionCosts.subtract(ABRISS.times(BigDecimal.valueOf(dach)));
 		}
 
 		if (logen > 0) {
-			kosten.add(LOGEN_AUSBAU.times(BigDecimal.valueOf(logen)));
+			expansionCosts.add(LOGEN_AUSBAU.times(BigDecimal.valueOf(logen)));
 		} else {
-			kosten.subtract(ABRISS.times(BigDecimal.valueOf(logen)));
+			expansionCosts.subtract(ABRISS.times(BigDecimal.valueOf(logen)));
 		}
 
-		return  kosten;
+		return  expansionCosts;
 	}
 
 	final AmountOfMoney calcMaintenance(Stadium arena) {
