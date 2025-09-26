@@ -57,12 +57,12 @@ import java.util.stream.Collectors;
 public class DBManager implements PersistenceManager {
 
 	/** database versions */
-	private static final int DBVersion = 900; // HO 9.0 version
+	private static final int DBVersion = 901; // HO 9.0 version
 	/**
 	 * Previous db version is used by development versions to ensure that db upgrade will rerun on each
 	 * new installed preliminary version
 	 */
-	private static final int previousDBVersion = 800;
+	private static final int previousDBVersion = 900;
 	private static final double DBConfigVersion = 9d; // HO 8.0 version
 
 	/** 2004-06-14 11:00:00.0 */
