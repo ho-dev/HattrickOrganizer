@@ -119,6 +119,11 @@ final class DBUpdater {
 			xtraDataTable.tryAddColumn("DAILYUPDATE" + i, "TIMESTAMP");
 		}
 
+        var stadionTable = dbManager.getTable(StadionTable.TABLENAME);
+        sql = "UPDATE " + StadionTable.TABLENAME + " SET AUSBAUKOSTEN=0 WHERE AUSBAUKOSTEN IS NULL";
+        connectionManager.executeUpdate(sql);
+        stadionTable.tryChangeColumn("AUSBAUKOSTEN", "NOT NULL");
+
 		updateDBVersion(dbVersion, 900);
 	}
 
