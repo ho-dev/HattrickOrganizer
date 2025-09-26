@@ -11,6 +11,8 @@ public final class ColumnDescriptor {
 
     private final String columnName;
     private final int type;
+
+
     private final int length;
     private final boolean nullable;
     private final boolean primaryKey;
@@ -117,6 +119,9 @@ public final class ColumnDescriptor {
     public int getType() {
         return type;
     }
+    public int getLength() {
+        return length;
+    }
 
     String getCreateString(DBInfo dbInfo) {
         StringBuilder sql = new StringBuilder(50);
@@ -137,6 +142,5 @@ public final class ColumnDescriptor {
             sql.append(" PRIMARY KEY");
         return sql.toString();
     }
-
 
 }
