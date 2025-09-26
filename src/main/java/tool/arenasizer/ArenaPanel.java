@@ -154,7 +154,7 @@ final class ArenaPanel extends JPanel {
 					- (m_clArenaSizer.calcMaxIncome(m_clStadium) - m_clArenaSizer.calcMaintenance(m_clStadium)), true);
                 var expansionCosts = m_clStadien[i-2].getExpansionCosts();
                 var colorLabelEntry = ((DoubleLabelEntries) values[8][i]).getLeft();
-                if (expansionCosts != null) {
+                if (expansionCosts != 0) {
                     colorLabelEntry.setSpecialNumber(-expansionCosts, true);
                 }
                 else {

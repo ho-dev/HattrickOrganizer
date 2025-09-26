@@ -79,8 +79,10 @@ final class DBUpdater {
 						updateDBv500(DBVersion);
 						updateDBv800(DBVersion);
 					case 800:
-						updateDBv900(DBVersion);
-					case 900:
+                        updateDBv900(DBVersion);
+                    case 900:
+                        updateDBv901(DBVersion);
+                    case 901:
 				}
 
 			} catch (Exception e) {
@@ -91,36 +93,45 @@ final class DBUpdater {
 		}
 	}
 
-	private void updateDBv900(int dbVersion) throws SQLException {
-		var matchDetailsTable = dbManager.getTable(MatchDetailsTable.TABLENAME);
-		matchDetailsTable.tryChangeColumn("Matchreport", "VARCHAR(40000)");
+    private void updateDBv901(int dbVersion) throws SQLException {
 
-		var youthScoutCommentTable = dbManager.getTable(YouthScoutCommentTable.TABLENAME);
-		youthScoutCommentTable.tryChangeColumn("Text", "VARCHAR(1024)");
+        var stadionTable = dbManager.getTable(StadionTable.TABLENAME);
+        var sql = "UPDATE " + StadionTable.TABLENAME + " SET AUSBAUKOSTEN=0 WHERE AUSBAUKOSTEN IS NULL";
+        connectionManager.executeUpdate(sql);
+        stadionTable.tryChangeColumn("AUSBAUKOSTEN", "NOT NULL");
 
-		var playerTable = dbManager.getTable(SpielerTable.TABLENAME);
-		playerTable.tryAddColumn("SubForm", "FLOAT DEFAULT 0");
+        updateDBVersion(dbVersion, 901);
+    }
 
-		var arenaTable = dbManager.getTable(StadionTable.TABLENAME);
-		arenaTable.tryAddColumn("REBUILT_DATE", "TIMESTAMP");
-		arenaTable.tryAddColumn("EXPANSION_DATE", "TIMESTAMP");
+    private void updateDBv900(int dbVersion) throws SQLException {
+        var matchDetailsTable = dbManager.getTable(MatchDetailsTable.TABLENAME);
+        matchDetailsTable.tryChangeColumn("Matchreport", "VARCHAR(40000)");
 
-		var userColumnTable = (UserColumnsTable)dbManager.getTable(UserColumnsTable.TABLENAME);
-		userColumnTable.tryAddColumn("SORT_ORDER", "VARCHAR(32)");
-		userColumnTable.tryAddColumn("SORT_PRIORITY", "INTEGER");
+        var youthScoutCommentTable = dbManager.getTable(YouthScoutCommentTable.TABLENAME);
+        youthScoutCommentTable.tryChangeColumn("Text", "VARCHAR(1024)");
 
-		String sql = "UPDATE " + UserColumnsTable.TABLENAME + " SET COLUMN_WIDTH=80 WHERE COLUMN_ID IN (2001,3001) AND COLUMN_WIDTH=0";
-		connectionManager.executeUpdate(sql);
-		sql = "UPDATE " + UserColumnsTable.TABLENAME + " SET MODELL_INDEX=63 WHERE COLUMN_ID=3510";
-		connectionManager.executeUpdate(sql);
+        var playerTable = dbManager.getTable(SpielerTable.TABLENAME);
+        playerTable.tryAddColumn("SubForm", "FLOAT DEFAULT 0");
 
-		var xtraDataTable = dbManager.getTable(XtraDataTable.TABLENAME);
-		for ( int i=1; i<6; i++) {
-			xtraDataTable.tryAddColumn("DAILYUPDATE" + i, "TIMESTAMP");
-		}
+        var arenaTable = dbManager.getTable(StadionTable.TABLENAME);
+        arenaTable.tryAddColumn("REBUILT_DATE", "TIMESTAMP");
+        arenaTable.tryAddColumn("EXPANSION_DATE", "TIMESTAMP");
 
-		updateDBVersion(dbVersion, 900);
-	}
+        var userColumnTable = (UserColumnsTable)dbManager.getTable(UserColumnsTable.TABLENAME);
+        userColumnTable.tryAddColumn("SORT_ORDER", "VARCHAR(32)");
+        userColumnTable.tryAddColumn("SORT_PRIORITY", "INTEGER");
+
+        String sql = "UPDATE " + UserColumnsTable.TABLENAME + " SET COLUMN_WIDTH=80 WHERE COLUMN_ID IN (2001,3001) AND COLUMN_WIDTH=0";
+        connectionManager.executeUpdate(sql);
+        sql = "UPDATE " + UserColumnsTable.TABLENAME + " SET MODELL_INDEX=63 WHERE COLUMN_ID=3510";
+        connectionManager.executeUpdate(sql);
+
+        var xtraDataTable = dbManager.getTable(XtraDataTable.TABLENAME);
+        for ( int i=1; i<6; i++) {
+            xtraDataTable.tryAddColumn("DAILYUPDATE" + i, "TIMESTAMP");
+        }
+        updateDBVersion(dbVersion, 900);
+    }
 
 	private void updateDBv800(int dbVersion) throws SQLException {
         assert dbManager.getConnectionManager() != null;

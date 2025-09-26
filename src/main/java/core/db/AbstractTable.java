@@ -558,7 +558,7 @@ public abstract class AbstractTable {
 		return false;
 	}
 
-	private boolean columnExistsInTable(String columnName) throws SQLException {
+	public boolean columnExistsInTable(String columnName) throws SQLException {
 		String sql = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.SYSTEM_COLUMNS WHERE TABLE_NAME = '"
 				+ getTableName().toUpperCase()
 				+ "' AND COLUMN_NAME = '"

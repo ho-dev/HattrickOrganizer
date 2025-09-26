@@ -94,6 +94,7 @@ public class ArenaSizer {
 	}
 
 	final int calcConstructionCosts(float steh, float sitz, float dach, float logen) {
+        if ( steh==0 && sitz == 0 && dach == 0 && logen == 0) return 0;
 		float kosten = FIXKOSTEN / currencyFactor;
 
 		if (steh > 0) {
