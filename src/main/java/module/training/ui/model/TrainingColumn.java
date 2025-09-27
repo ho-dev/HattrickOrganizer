@@ -8,15 +8,19 @@ public class TrainingColumn extends UserColumn {
     static int nextId=0;
 
     public TrainingColumn(String name, int minWidth){
-        this(name,name,minWidth);
+        this(nextId++,name,name,minWidth);
     }
 
-    public TrainingColumn(String name, String tooltip, int minWidth){
-        super(nextId++,name,tooltip);
+    public TrainingColumn(int id, String name, String tooltip, int minWidth){
+        super(id,name,tooltip);
         this.index= this.getId();
         this.minWidth = minWidth;
         preferredWidth = minWidth;
         this.setDisplay(true);
+    }
+
+    public TrainingColumn(int id, String name, int minWidth) {
+        this(id, name, name, minWidth);
     }
 
     public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {return null;}

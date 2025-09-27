@@ -28,77 +28,76 @@ public class TrainingPredictionTableModel  extends HOTableModel {
 
     private TrainingModel model;
 
-        /**
-         * Constructor
-         */
-        public TrainingPredictionTableModel(UserColumnController.ColumnModelId columnModelId) {
-            super(columnModelId, "TrainingPrediction");
-            List<UserColumn> newColumns = new ArrayList<>(List.of(
-                    new TrainingColumn("Spieler", 150) {
-                        @Override
-                        public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
-                            var ret = new ColorLabelEntry(entry.getTrainingSpeed(), entry.getPlayer().getFullName(), ColorLabelEntry.FG_STANDARD, getBackgroundColor(entry), SwingConstants.LEFT);
-                            ret.setIcon(TrainingPreviewPlayers.instance().getTrainPreviewPlayer(entry.getPlayer()).getIcon());
-                            ret.setToolTipText(TrainingPreviewPlayers.instance().getTrainPreviewPlayer(entry.getPlayer()).getText());
-                            return ret;
-                        }
-
-                        @Override
-                        public boolean canBeDisabled() {
-                            return false;
-                        }
-                    },
-                    new TrainingColumn("ls.player.age", 60) {
-                        @Override
-                        public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
-                            return new ColorLabelEntry(entry.getPlayer().getAgeWithDaysAsString(), ColorLabelEntry.FG_STANDARD, getBackgroundColor(entry), SwingConstants.LEFT);
-                        }
-                    },
-                    new TrainingColumn("BestePosition", 140) {
-                        @Override
-                        public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
-                            var pos = entry.getPlayer().getIdealPosition();
-                            return new ColorLabelEntry(String.format("%s (%.2f)", MatchRoleID.getNameForPosition(pos), entry.getPlayer().getIdealPositionRating()), ColorLabelEntry.FG_STANDARD, getBackgroundColor(entry), SwingConstants.LEFT);
-                        }
-                    },
-                    new TrainingColumn("Speed", 140) {
-                        @Override
-                        public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
-                            return new ColorLabelEntry(String.valueOf((int)entry.getTrainingSpeed()), ColorLabelEntry.FG_STANDARD, getBackgroundColor(entry), SwingConstants.LEFT);
-                        }
-                    },
-                    new TrainingColumn("ls.player.id", 140) {
-                        @Override
-                        public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
-                            return new ColorLabelEntry(Integer.toString(entry.getPlayer().getPlayerId()), ColorLabelEntry.FG_STANDARD, getBackgroundColor(entry), SwingConstants.LEFT);
-                        }
-                        @Override
-                        public boolean isHidden() {
-                            return true;
-                        }
+    static int nextColumnId = 0;
+    public TrainingPredictionTableModel(UserColumnController.ColumnModelId columnModelId) {
+        super(columnModelId, "TrainingPrediction");
+        List<UserColumn> newColumns = new ArrayList<>(List.of(
+                new TrainingColumn(nextColumnId++, "Spieler", 150) {
+                    @Override
+                    public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
+                        var ret = new ColorLabelEntry(entry.getTrainingSpeed(), entry.getPlayer().getFullName(), ColorLabelEntry.FG_STANDARD, getBackgroundColor(entry), SwingConstants.LEFT);
+                        ret.setIcon(TrainingPreviewPlayers.instance().getTrainPreviewPlayer(entry.getPlayer()).getIcon());
+                        ret.setToolTipText(TrainingPreviewPlayers.instance().getTrainPreviewPlayer(entry.getPlayer()).getText());
+                        return ret;
                     }
-            ));
-            var actualWeek = HOVerwaltung.instance().getModel().getBasics().getHattrickWeek();
 
-            // We are in the middle where season has not been updated!
-            try {
-                if (HOVerwaltung.instance().getModel().getXtraDaten().getNextTrainingDate()
-                        .isAfter(HOVerwaltung.instance().getModel().getXtraDaten().getSeriesMatchDate())) {
-                    actualWeek = actualWeek.plus(7, ChronoUnit.DAYS);
+                    @Override
+                    public boolean canBeDisabled() {
+                        return false;
+                    }
+                },
+                new TrainingColumn(nextColumnId++,"ls.player.age", 60) {
+                    @Override
+                    public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
+                        return new ColorLabelEntry(entry.getPlayer().getAgeWithDaysAsString(), ColorLabelEntry.FG_STANDARD, getBackgroundColor(entry), SwingConstants.LEFT);
+                    }
+                },
+                new TrainingColumn(nextColumnId++,"BestePosition", 140) {
+                    @Override
+                    public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
+                        var pos = entry.getPlayer().getIdealPosition();
+                        return new ColorLabelEntry(String.format("%s (%.2f)", MatchRoleID.getNameForPosition(pos), entry.getPlayer().getIdealPositionRating()), ColorLabelEntry.FG_STANDARD, getBackgroundColor(entry), SwingConstants.LEFT);
+                    }
+                },
+                new TrainingColumn(nextColumnId++,"Speed", 140) {
+                    @Override
+                    public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
+                        return new ColorLabelEntry(String.valueOf((int) entry.getTrainingSpeed()), ColorLabelEntry.FG_STANDARD, getBackgroundColor(entry), SwingConstants.LEFT);
+                    }
+                },
+                new TrainingColumn(nextColumnId++,"ls.player.id", 140) {
+                    @Override
+                    public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
+                        return new ColorLabelEntry(Integer.toString(entry.getPlayer().getPlayerId()), ColorLabelEntry.FG_STANDARD, getBackgroundColor(entry), SwingConstants.LEFT);
+                    }
+
+                    @Override
+                    public boolean isHidden() {
+                        return true;
+                    }
                 }
-            } catch (Exception e1) {
-                // Null when first time HO is launched
-            }
+        ));
+        var actualWeek = HOVerwaltung.instance().getModel().getBasics().getHattrickWeek();
 
-            for (int i = 0; i < UserParameter.instance().futureWeeks; i++) {
-                var htweek = actualWeek.toLocaleHTWeek();
-                var column = new TrainingProgressColumn(htweek, i,60);
-                newColumns.add(column);
+        // We are in the middle where season has not been updated!
+        try {
+            if (HOVerwaltung.instance().getModel().getXtraDaten().getNextTrainingDate()
+                    .isAfter(HOVerwaltung.instance().getModel().getXtraDaten().getSeriesMatchDate())) {
                 actualWeek = actualWeek.plus(7, ChronoUnit.DAYS);
             }
-
-            this.columns = newColumns.toArray(new UserColumn[0]);
+        } catch (Exception e1) {
+            // Null when first time HO is launched
         }
+
+        for (int i = 0; i < UserParameter.instance().futureWeeks; i++) {
+            var htweek = actualWeek.toLocaleHTWeek();
+            var column = new TrainingProgressColumn(nextColumnId++,htweek, i, 60);
+            newColumns.add(column);
+            actualWeek = actualWeek.plus(7, ChronoUnit.DAYS);
+        }
+
+        this.columns = newColumns.toArray(new UserColumn[0]);
+    }
 
     private Color getBackgroundColor(FutureTrainingEntry entry) {
         int speed = (int)entry.getTrainingSpeed();

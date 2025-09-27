@@ -12,14 +12,8 @@ import java.util.List;
 
 public class FutureTrainingEntry {
     private final FutureTrainingManager futureTrainingManager;
-//    private final PastTrainingManager pastTrainingManager;
 
     public FutureTrainingEntry(FutureTrainingManager futureTrainingManager){
-//        this.pastTrainingManager=null;
-        this.futureTrainingManager=futureTrainingManager;
-    }
-    public FutureTrainingEntry(PastTrainingManager pastTrainingManager, FutureTrainingManager futureTrainingManager){
-//        this.pastTrainingManager=pastTrainingManager;
         this.futureTrainingManager=futureTrainingManager;
     }
 

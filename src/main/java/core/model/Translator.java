@@ -23,12 +23,10 @@ public class Translator {
 
     private final String language;
     private final ResourceBundle resourceBundle;
-//    private final Locale locale;
 
     public Translator(String language, ResourceBundle resourceBundle) {
         this.language = language;
         this.resourceBundle = resourceBundle;
-//        this.locale = locale;
     }
 
     public static String[] getSupportedLanguages() {
@@ -84,10 +82,6 @@ public class Translator {
         return this.resourceBundle;
     }
 
-//    public Locale getLocale() {
-//        return this.locale;
-//    }
-
     /**
      * Returns the String connected to the active language file or connected to the english language file. Returns !key!
      * if the key can not be found.
@@ -97,6 +91,7 @@ public class Translator {
      * @return String connected to the key or !key! if nothing can be found in language files
      */
     public String translate(String key) {
+        if (key.isBlank()) return "";
         String temp = null;
         try {
             if (resourceBundle != null) {
@@ -146,7 +141,6 @@ public class Translator {
         String str = translate(key);
 
         MessageFormat formatter = new MessageFormat("");
-//        formatter.setLocale(locale);
         formatter.applyPattern(str);
 
         return formatter.format(values);

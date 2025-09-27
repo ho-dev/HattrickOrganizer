@@ -33,6 +33,7 @@ public abstract class UserColumn {
 	protected boolean display = false;
 
     protected boolean translateColumnName = true;
+    protected boolean translateColumnTooltip = true;
 
 	/**
 	 * Sort order of the column
@@ -45,7 +46,7 @@ public abstract class UserColumn {
 	 */
 	Integer sortPriority;
 
-	/**
+    /**
 	 * Constructor of an user column
 	 * @param id  column identifier has to be unique in one table
 	 * @param name Column name is displayed in the column header
@@ -76,7 +77,7 @@ public abstract class UserColumn {
 	 * @return String
 	 */
 	public final String getColumnName() {
-        return (translateColumnName) ? TranslationFacility.tr(columnName) : columnName;
+        return translateColumnName ? TranslationFacility.tr(columnName) : columnName;
     }
 	
 	/**
@@ -92,7 +93,7 @@ public abstract class UserColumn {
 	 * @return String
 	 */
 	public final String getTooltip() {
-		return (columnName.equals("TSI") || tooltip.equals(" "))?tooltip: TranslationFacility.tr(tooltip);
+		return (this.translateColumnTooltip)?TranslationFacility.tr(tooltip):tooltip;
 	}
 	
 	/**

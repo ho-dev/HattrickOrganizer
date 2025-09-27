@@ -7,6 +7,7 @@ import core.gui.comp.table.UserColumn;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.util.HODateTime;
+import module.training.ui.TrainingLegendPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,16 +21,14 @@ public class TrainingProgressColumn extends UserColumn {
     private static final Color FULL_TRAINING_BG = ThemeManager.getColor(HOColorName.TRAINING_FULL_BG);
     private static final Color PARTIAL_TRAINING_BG = ThemeManager.getColor(HOColorName.TRAINING_PARTIAL_BG);
     private static final Color OSMOSIS_TRAINING_BG = ThemeManager.getColor(HOColorName.TRAINING_OSMOSIS_BG);
-
-    static int nextId=0;
-
     private final HODateTime.HTWeek htWeek;
     private final int trainingWeekIndex;
 
-    public TrainingProgressColumn(HODateTime.HTWeek htweek, int trainingWeekIndex, int minWidth) {
-        super(nextId++,htweek.season + " " + htweek.week);
+    public TrainingProgressColumn(int id, HODateTime.HTWeek htweek, int trainingWeekIndex, int minWidth) {
+        super(id,htweek.season + " " + htweek.week);
         this.trainingWeekIndex = trainingWeekIndex;
         this.translateColumnName = false;
+        this.translateColumnTooltip = false;
         this.htWeek = htweek;
         this.index= this.getId();
         this.minWidth = minWidth;
@@ -38,22 +37,18 @@ public class TrainingProgressColumn extends UserColumn {
 
     }
 
-//    public TrainingColumn(String name, int minWidth){
-//        this(name,name,minWidth);
-//    }
-//
-//    public TrainingColumn(String name, String tooltip, int minWidth){
-//        super(nextId++,name,tooltip);
-//        this.index= this.getId();
-//        this.minWidth = minWidth;
-//        preferredWidth = minWidth;
-//        this.setDisplay(true);
-//    }
-
     public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
         var skillChange = entry.getFutureSkillChanges().stream().filter(s->s.getDate().toHTWeek().equals(this.htWeek)).findAny();
-        String text = skillChange.map(change -> PlayerAbility.getNameForSkill(change.getValue(), false)).orElse("");
-        return new ColorLabelEntry(text, ColorLabelEntry.FG_STANDARD, getBackgroundColor(entry), SwingConstants.LEFT);
+        if (skillChange.isPresent()){
+            var text = PlayerAbility.getNameForSkill(skillChange.get().getValue(), false) + String.format(" (%.2f)", skillChange.get().getValue());
+            var icon = TrainingLegendPanel.getSkillupTypeIcon(skillChange.get().getType(), skillChange.get().getChange());
+            var colorLabelEntry =  new ColorLabelEntry(text, ColorLabelEntry.FG_STANDARD, getBackgroundColor(entry), SwingConstants.LEFT);
+            var tooltip = skillChange.get().getType().getLanguageString() + ": " + text;
+            colorLabelEntry.setIcon(icon);
+            colorLabelEntry.setToolTipText(tooltip);
+            return colorLabelEntry;
+        }
+        return new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, getBackgroundColor(entry), SwingConstants.LEFT);
     }
 
     private Color getBackgroundColor(FutureTrainingEntry entry) {
@@ -71,6 +66,4 @@ public class TrainingProgressColumn extends UserColumn {
         }
         return ColorLabelEntry.BG_STANDARD;
     }
-
-
 }
