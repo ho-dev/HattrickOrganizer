@@ -21,6 +21,10 @@ public class ColorLabelEntry extends JLabel implements IHOTableCellEntry {
     public static final Color BG_PLAYERSPOSITIONVALUES = ThemeManager.getColor(HOColorName.PLAYER_POS_BG);
     public static final Color BG_PLAYERSSUBPOSITIONVALUES = ThemeManager.getColor(HOColorName.PLAYER_SUBPOS_BG);
 
+    public void setBackgroundColor(Color m_clBGColor) {
+        this.m_clBGColor = m_clBGColor;
+    }
+
     //~ Instance fields ----------------------------------------------------------------------------
     private Color m_clBGColor = ColorLabelEntry.BG_STANDARD;
     private Color m_clFGColor = ColorLabelEntry.FG_STANDARD;

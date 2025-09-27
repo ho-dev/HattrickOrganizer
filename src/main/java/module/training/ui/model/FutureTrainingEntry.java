@@ -6,7 +6,6 @@ import core.training.FuturePlayerTraining;
 import core.training.FutureTrainingManager;
 import core.training.WeeklyTrainingType;
 import core.util.HODateTime;
-import module.training.PastTrainingManager;
 
 import java.util.List;
 

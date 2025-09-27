@@ -6,11 +6,13 @@ import core.gui.comp.entry.IHOTableCellEntry;
 import core.gui.comp.table.UserColumn;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
+import core.model.TranslationFacility;
 import core.util.HODateTime;
 import module.training.ui.TrainingLegendPanel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.time.temporal.ChronoUnit;
 
 public class TrainingProgressColumn extends UserColumn {
 
@@ -38,17 +40,41 @@ public class TrainingProgressColumn extends UserColumn {
     }
 
     public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
+        var colorLabelEntry =  new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, getBackgroundColor(entry), SwingConstants.LEFT);
         var skillChange = entry.getFutureSkillChanges().stream().filter(s->s.getDate().toHTWeek().equals(this.htWeek)).findAny();
         if (skillChange.isPresent()){
             var text = PlayerAbility.getNameForSkill(skillChange.get().getValue(), false) + String.format(" (%.2f)", skillChange.get().getValue());
             var icon = TrainingLegendPanel.getSkillupTypeIcon(skillChange.get().getType(), skillChange.get().getChange());
-            var colorLabelEntry =  new ColorLabelEntry(text, ColorLabelEntry.FG_STANDARD, getBackgroundColor(entry), SwingConstants.LEFT);
             var tooltip = skillChange.get().getType().getLanguageString() + ": " + text;
             colorLabelEntry.setIcon(icon);
             colorLabelEntry.setToolTipText(tooltip);
-            return colorLabelEntry;
+            colorLabelEntry.setText(text);
         }
-        return new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, getBackgroundColor(entry), SwingConstants.LEFT);
+
+        // Check if player has birthday
+        // every row is an additional week
+        var dateWeekBegin = HODateTime.fromHTWeek(this.htWeek);
+        int playerAge = (int)entry.getPlayer().getDoubleAgeFromDate(dateWeekBegin);
+        int playerAgeUpcomingWeek = (int)entry.getPlayer().getDoubleAgeFromDate(dateWeekBegin.plus(7, ChronoUnit.DAYS));
+
+        // Birthday in this week! Set BG color
+        if (playerAge < playerAgeUpcomingWeek) {
+            String ageText =  TranslationFacility.tr("ls.player.age.birthday")
+                    + " (" + playerAgeUpcomingWeek + " "
+                    +  TranslationFacility.tr("ls.player.age.years")
+                    + ")";
+
+            var text = colorLabelEntry.getToolTipText();
+            if (text == null || text.isEmpty()) {
+                colorLabelEntry.setText(ageText);
+                colorLabelEntry.setToolTipText(ageText);
+            } else {
+                colorLabelEntry.setToolTipText( "<html>" + colorLabelEntry.getToolTipText() + "<br>" + ageText + "</html>");
+            }
+            colorLabelEntry.setBackgroundColor(BIRTHDAY_BG);
+        }
+
+        return colorLabelEntry;
     }
 
     private Color getBackgroundColor(FutureTrainingEntry entry) {
