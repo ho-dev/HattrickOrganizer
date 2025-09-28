@@ -58,23 +58,6 @@ public class TrainingPredictionTableModel  extends HOTableModel {
                         var pos = entry.getPlayer().getIdealPosition();
                         return new ColorLabelEntry(String.format("%s (%.2f)", MatchRoleID.getNameForPosition(pos), entry.getPlayer().getIdealPositionRating()), ColorLabelEntry.FG_STANDARD, getBackgroundColor(entry), SwingConstants.LEFT);
                     }
-                },
-                new TrainingColumn(nextColumnId++,"Speed", 140) {
-                    @Override
-                    public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
-                        return new ColorLabelEntry(String.valueOf((int) entry.getTrainingSpeed()), ColorLabelEntry.FG_STANDARD, getBackgroundColor(entry), SwingConstants.LEFT);
-                    }
-                },
-                new TrainingColumn(nextColumnId++,"ls.player.id", 140) {
-                    @Override
-                    public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
-                        return new ColorLabelEntry(Integer.toString(entry.getPlayer().getPlayerId()), ColorLabelEntry.FG_STANDARD, getBackgroundColor(entry), SwingConstants.LEFT);
-                    }
-
-                    @Override
-                    public boolean isHidden() {
-                        return true;
-                    }
                 }
         ));
         var actualWeek = HOVerwaltung.instance().getModel().getBasics().getHattrickWeek();

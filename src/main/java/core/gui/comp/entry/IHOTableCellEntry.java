@@ -48,4 +48,5 @@ public interface IHOTableCellEntry extends Comparable<IHOTableCellEntry> {
      * You don´t have to use this method at all, but it is recommended.
      */
     void updateComponent();
+
 }

@@ -24,43 +24,41 @@ public class TrainingRecapTable extends JScrollPane {
 //    private final JTable fixed;
 //    private final JTable scrollTable;
 
-    private final TrainingModel trainingModel;
-
-    /**
-     * Get Columns name
-     *
-     * @return List of string
-     */
-    Vector<String> getColumns() {
-        var columns = new Vector<String>();
-        columns.add(TranslationFacility.tr("Spieler"));
-        columns.add(TranslationFacility.tr("ls.player.age"));
-        columns.add(TranslationFacility.tr("BestePosition"));
-        columns.add("Speed");
-        columns.add(TranslationFacility.tr("ls.player.id"));
-
-        var actualWeek = HOVerwaltung.instance().getModel().getBasics().getHattrickWeek();
-
-        // We are in the middle where season has not been updated!
-        try {
-            if (HOVerwaltung.instance().getModel().getXtraDaten().getNextTrainingDate()
-                    .isAfter(HOVerwaltung.instance().getModel().getXtraDaten().getSeriesMatchDate())) {
-                actualWeek = actualWeek.plus(7, ChronoUnit.DAYS);
-            }
-        } catch (Exception e1) {
-            // Null when first time HO is launched
-        }
-
-        for (int i = 0; i < UserParameter.instance().futureWeeks; i++) {
-            var htweek = actualWeek.toLocaleHTWeek();
-            columns.add(htweek.season + " " + htweek.week);
-            actualWeek = actualWeek.plus(7, ChronoUnit.DAYS);
-        }
-
-        columns.add(TranslationFacility.tr("ls.player.id"));
-        return columns;
-    }
-
+//    /**
+//     * Get Columns name
+//     *
+//     * @return List of string
+//     */
+//    Vector<String> getColumns() {
+//        var columns = new Vector<String>();
+//        columns.add(TranslationFacility.tr("Spieler"));
+//        columns.add(TranslationFacility.tr("ls.player.age"));
+//        columns.add(TranslationFacility.tr("BestePosition"));
+//        columns.add("Speed");
+//        columns.add(TranslationFacility.tr("ls.player.id"));
+//
+//        var actualWeek = HOVerwaltung.instance().getModel().getBasics().getHattrickWeek();
+//
+//        // We are in the middle where season has not been updated!
+//        try {
+//            if (HOVerwaltung.instance().getModel().getXtraDaten().getNextTrainingDate()
+//                    .isAfter(HOVerwaltung.instance().getModel().getXtraDaten().getSeriesMatchDate())) {
+//                actualWeek = actualWeek.plus(7, ChronoUnit.DAYS);
+//            }
+//        } catch (Exception e1) {
+//            // Null when first time HO is launched
+//        }
+//
+//        for (int i = 0; i < UserParameter.instance().futureWeeks; i++) {
+//            var htweek = actualWeek.toLocaleHTWeek();
+//            columns.add(htweek.season + " " + htweek.week);
+//            actualWeek = actualWeek.plus(7, ChronoUnit.DAYS);
+//        }
+//
+//        columns.add(TranslationFacility.tr("ls.player.id"));
+//        return columns;
+//    }
+//
 //    TableModel createTableModel() {
 //        Vector<String> columns = getColumns();
 //        var rows = createRows();
@@ -184,7 +182,6 @@ public class TrainingRecapTable extends JScrollPane {
      * @param model         training model
      */
     public TrainingRecapTable(LazyImagePanel panel, TrainingModel model) {
-        trainingModel = model;
 
 //        var table = new JTable(createTableModel());
 //        table.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -198,8 +195,8 @@ public class TrainingRecapTable extends JScrollPane {
 //        this.setViewportView(table);
 
         var tableModel = UserColumnController.instance().getTrainingPredictionTableModel();
-        tableModel.setTrainingModel(this.trainingModel);
-        this.trainingPredictionTable = new PlayersTable(tableModel, 5);
+        tableModel.setTrainingModel(model);
+        this.trainingPredictionTable = new PlayersTable(tableModel, 3);
         this.setViewportView(this.trainingPredictionTable.getContainerComponent());
         this.trainingPredictionTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 //        scrollTable = table;

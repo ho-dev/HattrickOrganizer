@@ -38,6 +38,8 @@ public class TrainingProgressColumn extends UserColumn {
 
     public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
         var colorLabelEntry =  new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, getBackgroundColor(entry), SwingConstants.LEFT);
+        colorLabelEntry.disableSelectionBackgroundColor(true);
+
         var skillChange = entry.getFutureSkillChanges().stream().filter(s->s.getDate().toHTWeek().equals(this.htWeek)).findAny();
         if (skillChange.isPresent()){
             var text = PlayerAbility.getNameForSkill(skillChange.get().getValue(), false) + String.format(" (%.2f)", skillChange.get().getValue());

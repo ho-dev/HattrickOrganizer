@@ -20,6 +20,7 @@ public class ColorLabelEntry extends JLabel implements IHOTableCellEntry {
     public static final Color BG_SINGLEPLAYERVALUES = ThemeManager.getColor(HOColorName.PLAYER_SKILL_BG);
     public static final Color BG_PLAYERSPOSITIONVALUES = ThemeManager.getColor(HOColorName.PLAYER_POS_BG);
     public static final Color BG_PLAYERSSUBPOSITIONVALUES = ThemeManager.getColor(HOColorName.PLAYER_SUBPOS_BG);
+    private boolean isSelectionBackgroundColorDisabled = false;
 
     public void setBackgroundColor(Color m_clBGColor) {
         this.m_clBGColor = m_clBGColor;
@@ -201,7 +202,7 @@ public class ColorLabelEntry extends JLabel implements IHOTableCellEntry {
     @Override
     public final JComponent getComponent(boolean isSelected) {
 
-        if (isSelected) {
+        if (isSelected && !isSelectionBackgroundColorDisabled) {
             setBackground(HODefaultTableCellRenderer.SELECTION_BG);
 
         } else {
@@ -397,5 +398,9 @@ public class ColorLabelEntry extends JLabel implements IHOTableCellEntry {
     public void setBold(boolean bold) {
         int style = (bold) ? Font.BOLD : Font.PLAIN;
         setFont(getFont().deriveFont(style));
+    }
+
+    public void disableSelectionBackgroundColor(boolean b) {
+        this.isSelectionBackgroundColorDisabled = b;
     }
 }

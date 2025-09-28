@@ -24,7 +24,7 @@ class PlayersTable @JvmOverloads constructor(tableModel: HOTableModel, fixedColu
             }
 
             fun firePropertyChanged(oldSelection: Player?, newSelection: Player?){
-                propertyChangeSupport.firePropertyChange("SelectedPlayer", oldSelection, newSelection);
+                propertyChangeSupport.firePropertyChange("SelectedPlayer", oldSelection, newSelection)
             }
 
             var selectedPlayer: Player? = null
@@ -34,24 +34,23 @@ class PlayersTable @JvmOverloads constructor(tableModel: HOTableModel, fixedColu
     var players: MutableList<Player?> = HOVerwaltung.instance().getModel().getCurrentPlayers()
 
     init {
-        this.addListSelectionListener(ListSelectionListener { e: ListSelectionEvent? ->
+        this.addListSelectionListener { e: ListSelectionEvent? ->
             if (enableListSelectionListener) {
                 val selectedRow = this.getSelectedRow()
                 if (selectedRow != -1) {
                     val modelIndex = this.convertRowIndexToModel(selectedRow)
                     if (modelIndex >= 0 && modelIndex < players.size) {
-                        var oldSelection = selectedPlayer;
+                        var oldSelection = selectedPlayer
                         selectedPlayer = players.get(modelIndex)
                         if (oldSelection != selectedPlayer) {
                             firePropertyChanged(oldSelection, selectedPlayer)
                         }
                     }
-                }
-                else if ( selectedPlayer != null){
-                    firePropertyChanged(selectedPlayer,null )
+                } else if (selectedPlayer != null) {
+                    firePropertyChanged(selectedPlayer, null)
                 }
             }
-        })
+        }
         Companion.addPropertyChangeListener(this)
     }
 
