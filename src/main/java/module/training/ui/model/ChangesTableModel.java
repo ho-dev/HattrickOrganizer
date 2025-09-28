@@ -3,9 +3,7 @@ package module.training.ui.model;
 import core.constants.player.PlayerAbility;
 import core.model.TranslationFacility;
 import module.training.PlayerSkillChange;
-
 import javax.swing.table.AbstractTableModel;
-import java.io.Serial;
 import java.util.List;
 
 /**
@@ -16,8 +14,6 @@ import java.util.List;
 public class ChangesTableModel extends AbstractTableModel {
 
 	public static final int COL_PLAYER_ID = 6;
-	@Serial
-	private static final long serialVersionUID = -9082549798814304017L;
 	private final List<PlayerSkillChange> values;
 	private final String[] colNames = new String[7];
 

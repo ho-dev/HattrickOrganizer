@@ -6,7 +6,6 @@ import java.beans.PropertyChangeEvent
 import java.beans.PropertyChangeListener
 import java.beans.PropertyChangeSupport
 import javax.swing.event.ListSelectionEvent
-import javax.swing.event.ListSelectionListener
 
 class PlayersTable @JvmOverloads constructor(tableModel: HOTableModel, fixedColumnsCount: Int = 1) :
     FixedColumnsTable(tableModel, fixedColumnsCount), PropertyChangeListener {
@@ -34,7 +33,7 @@ class PlayersTable @JvmOverloads constructor(tableModel: HOTableModel, fixedColu
     var players: MutableList<Player?> = HOVerwaltung.instance().getModel().getCurrentPlayers()
 
     init {
-        this.addListSelectionListener { e: ListSelectionEvent? ->
+        this.addListSelectionListener { _: ListSelectionEvent? ->
             if (enableListSelectionListener) {
                 val selectedRow = this.getSelectedRow()
                 if (selectedRow != -1) {

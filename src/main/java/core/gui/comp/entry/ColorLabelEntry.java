@@ -400,6 +400,13 @@ public class ColorLabelEntry extends JLabel implements IHOTableCellEntry {
         setFont(getFont().deriveFont(style));
     }
 
+    /**
+     * Disable the selection background color.
+     * Is used in method getComponent to select the cell's background color.
+     * @param b boolean.
+     *         If true the selected cell will use the normal background color.
+     *         If not, the selection background color is used.
+     */
     public void disableSelectionBackgroundColor(boolean b) {
         this.isSelectionBackgroundColorDisabled = b;
     }

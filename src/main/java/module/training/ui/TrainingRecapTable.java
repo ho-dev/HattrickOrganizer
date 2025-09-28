@@ -3,17 +3,10 @@ package module.training.ui;
 import core.gui.comp.panel.LazyImagePanel;
 import core.gui.comp.table.PlayersTable;
 import core.gui.model.UserColumnController;
-import core.model.HOVerwaltung;
-import core.model.TranslationFacility;
-import core.model.UserParameter;
 import module.training.ui.model.TrainingModel;
-
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.time.temporal.ChronoUnit;
-import java.util.Vector;
-
 
 public class TrainingRecapTable extends JScrollPane {
 
