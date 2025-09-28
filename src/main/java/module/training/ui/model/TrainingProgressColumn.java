@@ -16,9 +16,6 @@ import java.time.temporal.ChronoUnit;
 
 public class TrainingProgressColumn extends UserColumn {
 
-    private static final Color TABLE_BG = ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
-    private static final Color SELECTION_BG = ThemeManager.getColor(HOColorName.TABLE_SELECTION_BG);
-    private static final Color TABLE_FG = ThemeManager.getColor(HOColorName.TABLEENTRY_FG);
     private static final Color BIRTHDAY_BG = ThemeManager.getColor(HOColorName.TRAINING_BIRTHDAY_BG);
     private static final Color FULL_TRAINING_BG = ThemeManager.getColor(HOColorName.TRAINING_FULL_BG);
     private static final Color PARTIAL_TRAINING_BG = ThemeManager.getColor(HOColorName.TRAINING_PARTIAL_BG);
@@ -57,7 +54,7 @@ public class TrainingProgressColumn extends UserColumn {
         int playerAge = (int)entry.getPlayer().getDoubleAgeFromDate(dateWeekBegin);
         int playerAgeUpcomingWeek = (int)entry.getPlayer().getDoubleAgeFromDate(dateWeekBegin.plus(7, ChronoUnit.DAYS));
 
-        // Birthday in this week! Set BG color
+        // Birthday in this week! Set background color
         if (playerAge < playerAgeUpcomingWeek) {
             String ageText =  TranslationFacility.tr("ls.player.age.birthday")
                     + " (" + playerAgeUpcomingWeek + " "

@@ -75,6 +75,7 @@ public class TrainingRecapTable extends JScrollPane {
     public void refresh() {
         var model = (TrainingPredictionTableModel)this.trainingPredictionTable.getModel();
         model.initData();
+        this.trainingPredictionTable.initSelection();
     }
 //
 //    private void deleteRows(JTable table) {

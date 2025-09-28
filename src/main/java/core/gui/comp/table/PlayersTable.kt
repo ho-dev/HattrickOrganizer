@@ -8,7 +8,6 @@ import java.beans.PropertyChangeSupport
 import javax.swing.event.ListSelectionEvent
 import javax.swing.event.ListSelectionListener
 
-
 class PlayersTable @JvmOverloads constructor(tableModel: HOTableModel, fixedColumnsCount: Int = 1) :
     FixedColumnsTable(tableModel, fixedColumnsCount), PropertyChangeListener {
 
@@ -28,12 +27,11 @@ class PlayersTable @JvmOverloads constructor(tableModel: HOTableModel, fixedColu
                 propertyChangeSupport.firePropertyChange("SelectedPlayer", oldSelection, newSelection);
             }
 
+            var selectedPlayer: Player? = null
+                private set
         }
 
     var players: MutableList<Player?> = HOVerwaltung.instance().getModel().getCurrentPlayers()
-
-    var selectedPlayer: Player? = null
-        private set
 
     init {
         this.addListSelectionListener(ListSelectionListener { e: ListSelectionEvent? ->
@@ -67,6 +65,14 @@ class PlayersTable @JvmOverloads constructor(tableModel: HOTableModel, fixedColu
             this.setRowSelectionInterval(viewIndex, viewIndex)
             enableListSelectionListener = true
         }
+    }
+
+    /**
+     * Initialize the selection to the player selected by earlier created players tables
+     * This function must only be called after the model's initData function was called.
+     */
+    fun initSelection(){
+        selectPlayer(selectedPlayer, false)
     }
 
     override fun propertyChange(evt: PropertyChangeEvent?) {
