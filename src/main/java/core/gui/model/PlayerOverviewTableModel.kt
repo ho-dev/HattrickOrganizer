@@ -93,7 +93,7 @@ class PlayerOverviewTableModel(id: ColumnModelId, name: String) : HOTableModel(i
 
     fun getRowIndexOfPlayer(playerId: Int): Int {
         val modelIndex = getPlayerIndex(playerId)
-        if (modelIndex > -1) {
+        if (modelIndex > -1 && modelIndex < this.rowCount) {
             return table!!.convertRowIndexToView(modelIndex)
         }
         return -1
@@ -102,7 +102,7 @@ class PlayerOverviewTableModel(id: ColumnModelId, name: String) : HOTableModel(i
     val selectedPlayer: Player?
         get() {
             val rowIndex = table!!.selectedRow
-            if (rowIndex >= 0) {
+            if (rowIndex >= 0 && rowIndex < this.rowCount) {
                 return players!![table!!.convertRowIndexToModel(rowIndex)]
             }
             return null
@@ -110,15 +110,15 @@ class PlayerOverviewTableModel(id: ColumnModelId, name: String) : HOTableModel(i
 
     fun selectPlayer(playerId: Int) {
         val row = getRowIndexOfPlayer(playerId)
-        if (row > -1) {
+        if (row > -1 && row < this.rowCount) {
             table!!.setRowSelectionInterval(row, row)
         }
     }
 
     fun getPlayerAtRow(tableRow: Int): Player? {
-        if (players != null && tableRow > -1 && tableRow < players!!.size) {
+        if (players != null && tableRow > -1 && tableRow < this.rowCount) {
             val modelIndex = table!!.convertRowIndexToModel(tableRow)
-            if (modelIndex < players!!.size) {
+            if (modelIndex > -1 && modelIndex < this.rowCount) {
                 return players!![modelIndex]
             }
         }
