@@ -6,6 +6,7 @@ import module.matches.statistics.MatchesOverviewColumnModel;
 import module.specialEvents.SpecialEventsTableModel;
 import module.teamAnalyzer.ui.RecapPanelTableModel;
 import module.training.ui.TrainingProgressTableModel;
+import module.training.ui.model.ChangesTableModel;
 import module.training.ui.model.SkillupTableModel;
 import module.training.ui.TrainingPredictionTableModel;
 import module.transfer.history.PlayerTransferTableModel;
@@ -26,7 +27,8 @@ import java.util.Vector;
  */
 public final class UserColumnController {
 
-	public enum ColumnModelId {
+
+    public enum ColumnModelId {
 		MATCHES(1),
 		PLAYEROVERVIEW(2),
 		LINEUP(3),
@@ -43,7 +45,8 @@ public final class UserColumnController {
 		TRANSFERSCOUT(14),
 		TRAININGPROGRESS(15),
 		SKILLUP(16),
-        TRAININGPREDICTION(17);
+        TRAININGPREDICTION(17),
+        TRAININGANALYSIS(18);
 
 		private final int value;
 		ColumnModelId(int value){this.value=value;}
@@ -67,9 +70,6 @@ public final class UserColumnController {
 	
 	/** model for player analysis **/
 	private final PlayerAnalysisModel[] playerAnalysisModels 		= new PlayerAnalysisModel[2];
-	
-	/** model for player analysis **/
-//	private PlayerAnalysisModel playerAnalysis2Model 		= null;
 
 	// Youth module
 	private YouthPlayerOverviewTableModel youthPlayerOverviewColumnModel;
@@ -86,6 +86,7 @@ public final class UserColumnController {
 	private TrainingProgressTableModel trainingProgressTableModel;
 	private SkillupTableModel skillupTableModel;
     private TrainingPredictionTableModel trainingPredictionTableModel;
+    private ChangesTableModel trainingAnalysisTableModel;
 
 	/**
 	 * constructor
@@ -125,8 +126,16 @@ public final class UserColumnController {
 		dbManager.loadHOColumModel(getTransferScoutingTableModel());
 		dbManager.loadHOColumModel(getSpecialEventsTableModel());
 		dbManager.loadHOColumModel(getTrainingProgressTableModel());
-		dbManager.loadHOColumModel(getSkillupTableModel());
+        dbManager.loadHOColumModel(getTrainingPlayerSkillChangesTableModel());
+        dbManager.loadHOColumModel(getTrainingAnalysisTableModel());
 	}
+
+    public ChangesTableModel getTrainingAnalysisTableModel() {
+        if ( this.trainingAnalysisTableModel == null){
+            this.trainingAnalysisTableModel = new ChangesTableModel(ColumnModelId.TRAININGANALYSIS);
+        }
+        return this.trainingAnalysisTableModel;
+    }
 
     public TrainingProgressTableModel getTrainingProgressTableModel() {
         if ( this.trainingProgressTableModel == null){
@@ -142,7 +151,7 @@ public final class UserColumnController {
         return this.trainingPredictionTableModel;
     }
 
-    public SkillupTableModel getSkillupTableModel () {
+    public SkillupTableModel getTrainingPlayerSkillChangesTableModel() {
 		if ( this.skillupTableModel == null){
 			this.skillupTableModel = new SkillupTableModel(ColumnModelId.SKILLUP );
 		}
@@ -220,7 +229,7 @@ public final class UserColumnController {
 		v.add(getYouthPlayerOverviewColumnModel());
 		v.add(getYouthPlayerDetailsColumnModel());
 		v.add(getTrainingProgressTableModel());
-		v.add(getSkillupTableModel());
+		v.add(getTrainingPlayerSkillChangesTableModel());
 		// MatchesOverView1Model should not add in this vector, because columns should not be edited
 		return v;
 	}

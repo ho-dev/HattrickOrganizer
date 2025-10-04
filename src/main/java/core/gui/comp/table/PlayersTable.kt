@@ -27,7 +27,7 @@ class PlayersTable @JvmOverloads constructor(tableModel: HOTableModel, fixedColu
             }
 
             var selectedPlayer: Player? = null
-                private set
+
         }
 
     var players: MutableList<Player?> = HOVerwaltung.instance().getModel().getCurrentPlayers()
@@ -76,4 +76,5 @@ class PlayersTable @JvmOverloads constructor(tableModel: HOTableModel, fixedColu
     override fun propertyChange(evt: PropertyChangeEvent?) {
         selectPlayer(evt?.newValue as Player?, false)
     }
+
 }

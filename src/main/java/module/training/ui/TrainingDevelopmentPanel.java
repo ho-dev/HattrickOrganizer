@@ -63,7 +63,7 @@ public class TrainingDevelopmentPanel extends LazyPanel implements PropertyChang
 	 * Initialize the object layout
 	 */
 	private void initComponents() {
-		table = new FixedColumnsTable(UserColumnController.instance().getSkillupTableModel());
+		table = new FixedColumnsTable(UserColumnController.instance().getTrainingPlayerSkillChangesTableModel());
 //		table.getTableHeader().setReorderingAllowed(false);
 		JPanel headerPanel = new ImagePanel();
 		headerPanel.setOpaque(false);

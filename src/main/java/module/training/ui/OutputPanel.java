@@ -64,7 +64,9 @@ public class OutputPanel extends LazyImagePanel {
 
     @Override
     protected void update() {
-        this.trainingProgressTableModel.initData();
+        var model = (TrainingProgressTableModel)this.trainingProgressTable.getModel();
+        model.initData();
+        this.trainingProgressTable.initSelection();
     }
 
     /**

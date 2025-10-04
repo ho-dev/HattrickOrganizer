@@ -75,6 +75,9 @@ public class TrainingPredictionPanel extends LazyImagePanel  {
         add(recapTable, BorderLayout.CENTER);
     }
 
+    public void storeUserSettings() {
+    }
+
 //    private void selectPlayerFromModel() {
 //        this.recapTable.getLockedTable().clearSelection();
 //        Player player = this.model.getActivePlayer();
