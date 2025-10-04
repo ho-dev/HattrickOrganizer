@@ -20,7 +20,6 @@ import java.util.List;
  */
 public class EffectPanel extends LazyPanel {
 
-	private static final long serialVersionUID = 6139712209582341384L;
 	private JTable effectTable;
 
 	@Override

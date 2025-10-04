@@ -5,7 +5,6 @@ import core.gui.RefreshManager;
 import core.gui.comp.NumericDocument;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.panel.LazyImagePanel;
-import core.gui.comp.table.FixedColumnsTable;
 import core.gui.comp.table.PlayersTable;
 import core.gui.model.UserColumnController;
 import core.model.TranslationFacility;
@@ -24,7 +23,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.beans.PropertyChangeListener;
 
 /**
  * The Panel where the main training table is shown ("Training").

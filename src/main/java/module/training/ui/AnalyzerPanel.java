@@ -163,9 +163,7 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
 
 	private void addListeners() {
 
-        PlayersTable.Companion.addPropertyChangeListener(evt -> {
-            selectPlayerFromModel();
-        });
+        PlayersTable.Companion.addPropertyChangeListener(evt -> selectPlayerFromModel());
 
 		this.oldPlayersCheckBox.addChangeListener(e -> updateFilterPanel());
 

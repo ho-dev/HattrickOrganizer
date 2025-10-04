@@ -5,19 +5,14 @@ import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.IHOTableCellEntry;
 import core.gui.comp.table.HOTableModel;
 import core.gui.model.UserColumnController;
-import core.model.TranslationFacility;
 import core.util.HODateTime;
 import module.training.PlayerSkillChange;
 import module.training.ui.TrainingLegendPanel;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import javax.swing.table.AbstractTableModel;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-
-import static java.awt.SystemColor.text;
 
 /**
  * TableModel representing skill changes for individual players.
