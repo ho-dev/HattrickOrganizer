@@ -15,8 +15,6 @@ import core.util.GUIUtils;
 import module.training.PastTrainingManager;
 import module.training.PlayerSkillChange;
 import module.training.ui.model.ChangesTableModel;
-import module.training.ui.model.TrainingModel;
-import org.intellij.lang.annotations.JdkConstants;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -48,16 +46,14 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
 	private final Map<PlayerSkill, ButtonModel> buttonModels = new HashMap<>();
 	private Map<PlayerSkill, List<PlayerSkillChange>> skillups;
 	private Map<PlayerSkill, List<PlayerSkillChange>> skillupsOld;
-	private final TrainingModel model;
     private ChangesTableModel tableModel;
 
     /**
 	 * Creates a new AnalyzerPanel object.
 	 */
-	public AnalyzerPanel(TrainingModel model) {
+	public AnalyzerPanel() {
 		super();
-		this.model = model;
-	}
+    }
 
 	/**
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
@@ -360,7 +356,6 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
                 var playerSkillChange = tblModel.getValues().get(i);
 				if (player.getPlayerId() == playerSkillChange.getPlayer().getPlayerId()) {
 					int viewIndex = this.changesTable.convertRowIndexToView(i);
-//					this.changesTable.getSelectionModel().addSelectionInterval(viewIndex, viewIndex);
                     this.changesTable.addRowSelectionInterval(viewIndex, viewIndex);
 				}
 			}

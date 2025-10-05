@@ -31,7 +31,7 @@ public class TrainingModulePanel extends LazyPanel {
 		this.model = new TrainingModel();
 		this.trainingProgressPanel = new OutputPanel(this.model);
         this.trainingPredictionPanel =  new TrainingPredictionPanel(this.model);
-        this.trainingAnalyzerPanel =  new AnalyzerPanel(this.model);
+        this.trainingAnalyzerPanel =  new AnalyzerPanel();
         this.trainingEffectPanel =  new EffectPanel();
         initComponents();
 		registerRefreshable(true);
