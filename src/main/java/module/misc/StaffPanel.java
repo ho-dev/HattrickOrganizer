@@ -6,6 +6,7 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.StaffMember;
+import core.model.StaffType;
 import core.model.TranslationFacility;
 import core.model.misc.Verein;
 
@@ -15,15 +16,7 @@ import java.util.List;
 
 import static core.util.Helper.getTranslation;
 
-
-/**
- * Zeigt die Vereininformationen an
- */
 final class StaffPanel extends JPanel {
-
-	private static final long serialVersionUID = 8873968321073527819L;
-
-	//~ Instance fields ----------------------------------------------------------------------------
 
 	private final ColorLabelEntry assistantCoachesLabel = new ColorLabelEntry("");
 	private final ColorLabelEntry doctorsLabel 			= new ColorLabelEntry("");
@@ -38,7 +31,7 @@ final class StaffPanel extends JPanel {
 	/**
 	 * Creates a new TrainerstabPanel object.
 	 */
-	protected StaffPanel() {
+    StaffPanel() {
 		initComponents();
 	}
 
@@ -81,6 +74,7 @@ final class StaffPanel extends JPanel {
 		if (!staff.isEmpty()) {
 			
 			for (StaffMember staffMember : staff) {
+                if (staffMember.getStaffType() == StaffType.NONE) continue; // ignore trainer
 
 				constraints.anchor = GridBagConstraints.WEST;
 				constraints.gridx = 0;
@@ -131,8 +125,6 @@ final class StaffPanel extends JPanel {
 		
 		label = new JLabel(TranslationFacility.tr("ls.club.staff.tacticalassistant"));
 		add(label,tacticalAssistantLabel.getComponent(false), nextYvalue);
-		nextYvalue++;
-		
 	}
 
 	private void add(JLabel label,Component comp, int y){

@@ -144,21 +144,34 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
     }
 
     /**
-     * Colour Label to present value of money with background colour, decimal places are only for
-     * non-currency interest
+     * Colour Label to present value of money with background colour.
      */
     public ColorLabelEntry(AmountOfMoney amount, Color bg_color) {
+        m_clBGColor = bg_color;
+        createComponent();
+        setAmountOfMoney(amount, false);
+    }
+
+    public void setAmountOfMoney (AmountOfMoney amount, boolean switchColor){
         if (amount != null){
             this.number = amount.getSwedishKrona().doubleValue();
             setHorizontalAlignment(SwingConstants.RIGHT);
+
+            if (switchColor) {
+                if (number > 0 ) {
+                    m_clFGColor = ThemeManager.getColor(HOColorName.TABLEENTRY_IMPROVEMENT_FG);
+                } else if (number == 0) {
+                    m_clFGColor = FG_STANDARD;
+                } else {
+                    m_clFGColor = ThemeManager.getColor(HOColorName.TABLEENTRY_DECLINE_FG);
+                }
+            }
             setText(amount.toLocaleString());
         }
         else {
             this.number = 0;
             setText("");
         }
-        m_clBGColor = bg_color;
-        createComponent();
         updateComponent();
     }
 
@@ -310,27 +323,27 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
         updateComponent();
     }
 
-    public void setSpecialNumber(int number, boolean currencyformat) {
-        setSpecialNumber(number, currencyformat, false);
+    public void setSpecialNumber(int number, boolean invertColour) {
+        setSpecialNumber(number, invertColour, false);
     }
 
-    public final void setSpecialNumber(int number, boolean currencyformat, boolean showZero) {
-        setValueAsText(number, null, currencyformat,  0, true);
+    public final void setSpecialNumber(int number, boolean invertColour, boolean showZero) {
+        setValueAsText(number, null, invertColour,  0, true);
         if (number == 0 && !showZero) {
             setText("");
             updateComponent();
         }
     }
 
-    public final void setSpecialNumber(float number, boolean currencyformat) {
-        setValueAsText(number, null, currencyformat,
+    public final void setSpecialNumber(float number, boolean invertColour) {
+        setValueAsText(number, null, invertColour,
                 core.model.UserParameter.instance().nbDecimals,
                 true);
     }
 
-    public final void setSpecialNumber(float number, boolean currencyformat, boolean showDecimal) {
+    public final void setSpecialNumber(float number, boolean invertColour, boolean showDecimal) {
         var nbDec = showDecimal ? core.model.UserParameter.instance().nbDecimals : 0;
-        setValueAsText(number, null, currencyformat,  nbDec, true);
+        setValueAsText(number, null, invertColour,  nbDec, true);
     }
 
     public final double getNumber() {
