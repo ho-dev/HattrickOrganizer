@@ -2,11 +2,13 @@ package core.db;
 
 import core.db.user.UserManager;
 import core.model.enums.DBDataSource;
+import core.model.misc.Economy;
 import core.util.HODateTime;
 import core.util.HOLogger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -96,6 +98,14 @@ final class DBUpdater {
 	}
 
 	private void updateDBv1000(int dbVersion) throws  SQLException{
+
+        var economyTable = dbManager.getTable(EconomyTable.TABLENAME);
+        for (var column : economyTable.getColumns()){
+            if ( column.getType() == Types.DECIMAL){
+                if (economyTable.columnHasDataType(column.getColumnName(), "DECIMAL")) break; // already done
+                economyTable.tryChangeColumnDataType(column.getColumnName(), "INTEGER", "DECIMAL");
+            }
+        }
 
 		// Add all available file infos to the world details table, especially the currency information
 		var worldDetailsTable  = dbManager.getTable(WorldDetailsTable.TABLENAME);
