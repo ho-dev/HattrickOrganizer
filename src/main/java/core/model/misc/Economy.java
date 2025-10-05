@@ -206,51 +206,28 @@ public class Economy extends AbstractTable.Storable {
     	if (date != null && date.isBefore(DATE_NEW_FANLEVELS)) {
     		return getNameForLevelSponsors(level);
     	}
-        switch (level) {
-            case LV_FANS_SENDING_LOVE_POEMS_TO_YOU:
-                return TranslationFacility.tr("ls.club.sponsors_fans.sendinglovepoemstoyou");
-
-            case LV_FANS_DANCING_IN_THE_STREETS:
-                return TranslationFacility.tr("ls.club.sponsors_fans.dancinginthestreets");
-
-            case LV_FANS_HIGH_ON_LIFE:
-                return TranslationFacility.tr("ls.club.sponsors_fans.highonlife");
-
-            case LV_FANS_DELIRIOUS:
-                return TranslationFacility.tr("ls.club.sponsors_fans.delirious");
-
-            case LV_FANS_SATISFIED:
-                return TranslationFacility.tr("ls.club.sponsors_fans.satisfied");
-
-            case LV_FANS_CONTENT:
-                return TranslationFacility.tr("ls.club.sponsors_fans.content");
-
-            case LV_FANS_CALM:
-                return TranslationFacility.tr("ls.club.sponsors_fans.calm");
-
-            case LV_FANS_DISAPPOINTED:
-                return TranslationFacility.tr("ls.club.fans.disappointed");
-                
-            case LV_FANS_IRRITATED:
-                return TranslationFacility.tr("ls.club.sponsors_fans.irritated");
-                
-            case LV_FANS_ANGRY:
-                return TranslationFacility.tr("ls.club.fans.angry");
-
-            case LV_FANS_FURIOUS:
-                return TranslationFacility.tr("ls.club.sponsors_fans.furious");
-
-            case LV_FANS_MURDEROUS:
-                return TranslationFacility.tr("ls.club.sponsors_fans.murderous");
-
-            default: {
+        return switch (level) {
+            case LV_FANS_SENDING_LOVE_POEMS_TO_YOU ->
+                    TranslationFacility.tr("ls.club.sponsors_fans.sendinglovepoemstoyou");
+            case LV_FANS_DANCING_IN_THE_STREETS -> TranslationFacility.tr("ls.club.sponsors_fans.dancinginthestreets");
+            case LV_FANS_HIGH_ON_LIFE -> TranslationFacility.tr("ls.club.sponsors_fans.highonlife");
+            case LV_FANS_DELIRIOUS -> TranslationFacility.tr("ls.club.sponsors_fans.delirious");
+            case LV_FANS_SATISFIED -> TranslationFacility.tr("ls.club.sponsors_fans.satisfied");
+            case LV_FANS_CONTENT -> TranslationFacility.tr("ls.club.sponsors_fans.content");
+            case LV_FANS_CALM -> TranslationFacility.tr("ls.club.sponsors_fans.calm");
+            case LV_FANS_DISAPPOINTED -> TranslationFacility.tr("ls.club.fans.disappointed");
+            case LV_FANS_IRRITATED -> TranslationFacility.tr("ls.club.sponsors_fans.irritated");
+            case LV_FANS_ANGRY -> TranslationFacility.tr("ls.club.fans.angry");
+            case LV_FANS_FURIOUS -> TranslationFacility.tr("ls.club.sponsors_fans.furious");
+            case LV_FANS_MURDEROUS -> TranslationFacility.tr("ls.club.sponsors_fans.murderous");
+            default -> {
                 if (level > LV_FANS_SENDING_LOVE_POEMS_TO_YOU) {
-                    return TranslationFacility.tr("ls.club.sponsors_fans.sendinglovepoemstoyou");
+                    yield TranslationFacility.tr("ls.club.sponsors_fans.sendinglovepoemstoyou");
                 }
 
-                return TranslationFacility.tr("Unbestimmt");
+                yield TranslationFacility.tr("Unbestimmt");
             }
-        }
+        };
     }
 
     /**
@@ -260,45 +237,27 @@ public class Economy extends AbstractTable.Storable {
      * @return the i18n'ed name for the level
      */
     public static String getNameForLevelSponsors(int level) {
-        switch (level) {
-            case LV_SPONSORS_SENDING_LOVE_POEMS_TO_YOU:
-                return TranslationFacility.tr("ls.club.sponsors_fans.sendinglovepoemstoyou");
-
-            case LV_SPONSORS_DANCING_IN_THE_STREETS:
-                return TranslationFacility.tr("ls.club.sponsors_fans.dancinginthestreets");
-
-            case LV_SPONSORS_HIGH_ON_LIFE:
-                return TranslationFacility.tr("ls.club.sponsors_fans.highonlife");
-
-            case LV_SPONSORS_DELIRIOUS:
-                return TranslationFacility.tr("ls.club.sponsors_fans.delirious");
-
-            case LV_SPONSORS_SATISFIED:
-                return TranslationFacility.tr("ls.club.sponsors_fans.satisfied");
-
-            case LV_SPONSORS_CONTENT:
-                return TranslationFacility.tr("ls.club.sponsors_fans.content");
-
-            case LV_SPONSORS_CALM:
-                return TranslationFacility.tr("ls.club.sponsors_fans.calm");
-
-            case LV_SPONSORS_IRRITATED:
-                return TranslationFacility.tr("ls.club.sponsors_fans.irritated");
-                
-            case LV_SPONSORS_FURIOUS:
-                return TranslationFacility.tr("ls.club.sponsors_fans.furious");
-
-            case LV_SPONSORS_MURDEROUS:
-                return TranslationFacility.tr("ls.club.sponsors_fans.murderous");
-
-            default: {
+        return switch (level) {
+            case LV_SPONSORS_SENDING_LOVE_POEMS_TO_YOU ->
+                    TranslationFacility.tr("ls.club.sponsors_fans.sendinglovepoemstoyou");
+            case LV_SPONSORS_DANCING_IN_THE_STREETS ->
+                    TranslationFacility.tr("ls.club.sponsors_fans.dancinginthestreets");
+            case LV_SPONSORS_HIGH_ON_LIFE -> TranslationFacility.tr("ls.club.sponsors_fans.highonlife");
+            case LV_SPONSORS_DELIRIOUS -> TranslationFacility.tr("ls.club.sponsors_fans.delirious");
+            case LV_SPONSORS_SATISFIED -> TranslationFacility.tr("ls.club.sponsors_fans.satisfied");
+            case LV_SPONSORS_CONTENT -> TranslationFacility.tr("ls.club.sponsors_fans.content");
+            case LV_SPONSORS_CALM -> TranslationFacility.tr("ls.club.sponsors_fans.calm");
+            case LV_SPONSORS_IRRITATED -> TranslationFacility.tr("ls.club.sponsors_fans.irritated");
+            case LV_SPONSORS_FURIOUS -> TranslationFacility.tr("ls.club.sponsors_fans.furious");
+            case LV_SPONSORS_MURDEROUS -> TranslationFacility.tr("ls.club.sponsors_fans.murderous");
+            default -> {
                 if (level > LV_SPONSORS_SENDING_LOVE_POEMS_TO_YOU) {
-                    return TranslationFacility.tr("ls.club.sponsors_fans.sendinglovepoemstoyou");
+                    yield TranslationFacility.tr("ls.club.sponsors_fans.sendinglovepoemstoyou");
                 }
 
-                return TranslationFacility.tr("Unbestimmt");
+                yield TranslationFacility.tr("Unbestimmt");
             }
-        }
+        };
     }
 
     public final void setIncomeSum(AmountOfMoney iIncomeSum) {

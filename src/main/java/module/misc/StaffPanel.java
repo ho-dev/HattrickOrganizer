@@ -31,7 +31,7 @@ final class StaffPanel extends JPanel {
 	/**
 	 * Creates a new TrainerstabPanel object.
 	 */
-	protected StaffPanel() {
+    StaffPanel() {
 		initComponents();
 	}
 
@@ -125,8 +125,6 @@ final class StaffPanel extends JPanel {
 		
 		label = new JLabel(TranslationFacility.tr("ls.club.staff.tacticalassistant"));
 		add(label,tacticalAssistantLabel.getComponent(false), nextYvalue);
-		nextYvalue++;
-		
 	}
 
 	private void add(JLabel label,Component comp, int y){

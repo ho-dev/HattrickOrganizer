@@ -61,9 +61,6 @@ final class FinancePanel extends JPanel {
     void setLabels() {
         final Economy finances = HOVerwaltung.instance().getModel().getEconomy();
         if (finances == null) return;
-
-        var factor = AmountOfMoney.Companion.getExchangeRate().floatValue();
-
         var nullAmountOfMoney = new AmountOfMoney(0);
         if (currentFinance) {
             cashFundsLabel.setAmountOfMoney(finances.getCash().plus(finances.getExpectedWeeksTotal()), true);
