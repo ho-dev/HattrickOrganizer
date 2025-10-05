@@ -153,6 +153,16 @@ open class FixedColumnsTable @JvmOverloads constructor(
     }
 
     /**
+     * Add row selection interval of both tables synchronously
+     * @param rowIndex0 one end of the interval
+     * @param rowIndex1 the other end of the interval
+     */
+    override fun addRowSelectionInterval(rowIndex0: Int, rowIndex1: Int) {
+        super.addRowSelectionInterval(rowIndex0, rowIndex1)
+        fixed?.addRowSelectionInterval(rowIndex0, rowIndex1)
+    }
+
+    /**
      * The provided renderer is set to both internal tables
      * @param columnClass  set the default cell renderer for this columnClass
      * @param renderer default cell renderer to be used for this columnClass
@@ -238,5 +248,6 @@ open class FixedColumnsTable @JvmOverloads constructor(
         }
         return null
     }
+
 
 }

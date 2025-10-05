@@ -16,6 +16,8 @@ import module.training.PastTrainingManager;
 import module.training.PlayerSkillChange;
 import module.training.ui.model.ChangesTableModel;
 import module.training.ui.model.TrainingModel;
+import org.intellij.lang.annotations.JdkConstants;
+
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -27,14 +29,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.swing.BorderFactory;
-import javax.swing.ButtonModel;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
+import javax.swing.*;
 
 /**
  * Shows a table of skillups, which can be filtered using the checkboxes on the
@@ -268,6 +263,7 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
 		skillPanel.setBorder(BorderFactory.createTitledBorder(TranslationFacility.tr("TAB_SKILL")));
 
 		this.changesTable = new FixedColumnsTable(this.tableModel,2);
+        this.changesTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		skillPanel.add(new JScrollPane(this.changesTable.getContainerComponent()), BorderLayout.CENTER);
 
 		this.oldPlayersCheckBox = new JCheckBox();
@@ -364,7 +360,8 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
                 var playerSkillChange = tblModel.getValues().get(i);
 				if (player.getPlayerId() == playerSkillChange.getPlayer().getPlayerId()) {
 					int viewIndex = this.changesTable.convertRowIndexToView(i);
-					this.changesTable.getSelectionModel().addSelectionInterval(viewIndex, viewIndex);
+//					this.changesTable.getSelectionModel().addSelectionInterval(viewIndex, viewIndex);
+                    this.changesTable.addRowSelectionInterval(viewIndex, viewIndex);
 				}
 			}
 		}

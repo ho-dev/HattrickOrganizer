@@ -44,7 +44,7 @@ public final class UserColumnController {
 		SPECIALEVENTS(13),
 		TRANSFERSCOUT(14),
 		TRAININGPROGRESS(15),
-		SKILLUP(16),
+		TRAININGPLAYSERSKILLCHANGE(16),
         TRAININGPREDICTION(17),
         TRAININGANALYSIS(18);
 
@@ -84,7 +84,7 @@ public final class UserColumnController {
 	private SpecialEventsTableModel specialEventsTableModel;
 
 	private TrainingProgressTableModel trainingProgressTableModel;
-	private SkillupTableModel skillupTableModel;
+	private SkillupTableModel trainingPlayerSkillChangeTableModel;
     private TrainingPredictionTableModel trainingPredictionTableModel;
     private ChangesTableModel trainingAnalysisTableModel;
 
@@ -152,10 +152,10 @@ public final class UserColumnController {
     }
 
     public SkillupTableModel getTrainingPlayerSkillChangesTableModel() {
-		if ( this.skillupTableModel == null){
-			this.skillupTableModel = new SkillupTableModel(ColumnModelId.SKILLUP );
+		if ( this.trainingPlayerSkillChangeTableModel == null){
+			this.trainingPlayerSkillChangeTableModel = new SkillupTableModel(ColumnModelId.TRAININGPLAYSERSKILLCHANGE);
 		}
-		return this.skillupTableModel;
+		return this.trainingPlayerSkillChangeTableModel;
 	}
 
 	public SpecialEventsTableModel getSpecialEventsTableModel() {
