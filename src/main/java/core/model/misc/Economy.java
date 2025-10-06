@@ -2,6 +2,7 @@ package core.model.misc;
 
 import core.db.AbstractTable;
 import core.model.TranslationFacility;
+import core.util.AmountOfMoney;
 import core.util.HODateTime;
 
 /**
@@ -39,45 +40,45 @@ public class Economy extends AbstractTable.Storable {
 
 
     //~ Instance fields ----------------------------------------------------------------------------
-    protected int m_iIncomeSum;
-    protected int m_iIncomeTemporary;
-    protected int m_iIncomeSponsors;
-    protected int m_iIncomeSponsorsBonus;
-    protected int m_iIncomeFinancial;
-    protected int m_iIncomeSpectators;
-    protected int m_iCash;
-    protected int m_iExpectedWeeksTotal;
-    protected int m_iCostsSum;
-    protected int m_iCostsYouth;
-    protected int m_iCostsTemporary;
-    protected int m_iCostsPlayers;
-    protected int m_iCostsArena;
-    protected int m_iCostsStaff;
-    protected int m_iCostsFinancial;
-    protected int m_iLastIncomeSum;
-    protected int m_iLastIncomeTemporary;
-    protected int m_iLastIncomeSponsors;
-    protected int m_iLastIncomeSponsorsBonus;
-    protected int m_iLastIncomeFinancial;
-    protected int m_iLastIncomeSpectators;
-    protected int m_iLastWeeksTotal;
-    protected int m_iLastCostsSum;
-    protected int m_iLastCostsYouth;
-    protected int m_iLastCostsTemporary;
-    protected int m_iLastCostsPlayers;
-    protected int m_iLastCostsArena;
-    protected int m_iLastCostsStaff;
-    protected int m_iLastCostsFinancial;
+    protected AmountOfMoney m_iIncomeSum;
+    protected AmountOfMoney m_iIncomeTemporary;
+    protected AmountOfMoney m_iIncomeSponsors;
+    protected AmountOfMoney m_iIncomeSponsorsBonus;
+    protected AmountOfMoney m_iIncomeFinancial;
+    protected AmountOfMoney m_iIncomeSpectators;
+    protected AmountOfMoney m_iCash;
+    protected AmountOfMoney m_iExpectedWeeksTotal;
+    protected AmountOfMoney m_iCostsSum;
+    protected AmountOfMoney m_iCostsYouth;
+    protected AmountOfMoney m_iCostsTemporary;
+    protected AmountOfMoney m_iCostsPlayers;
+    protected AmountOfMoney m_iCostsArena;
+    protected AmountOfMoney m_iCostsStaff;
+    protected AmountOfMoney m_iCostsFinancial;
+    protected AmountOfMoney m_iLastIncomeSum;
+    protected AmountOfMoney m_iLastIncomeTemporary;
+    protected AmountOfMoney m_iLastIncomeSponsors;
+    protected AmountOfMoney m_iLastIncomeSponsorsBonus;
+    protected AmountOfMoney m_iLastIncomeFinancial;
+    protected AmountOfMoney m_iLastIncomeSpectators;
+    protected AmountOfMoney m_iLastWeeksTotal;
+    protected AmountOfMoney m_iLastCostsSum;
+    protected AmountOfMoney m_iLastCostsYouth;
+    protected AmountOfMoney m_iLastCostsTemporary;
+    protected AmountOfMoney m_iLastCostsPlayers;
+    protected AmountOfMoney m_iLastCostsArena;
+    protected AmountOfMoney m_iLastCostsStaff;
+    protected AmountOfMoney m_iLastCostsFinancial;
     protected int m_iSponsorsPopularity;
-    protected  int m_iExpectedCash;
-    protected  int m_iIncomeSoldPlayers;
-    protected  int m_iIncomeSoldPlayersCommission;
-    protected  int m_iCostsBoughtPlayers;
-    protected  int m_iCostsArenaBuilding;
-    protected  int m_iLastIncomeSoldPlayers;
-    protected  int m_iLastIncomeSoldPlayersCommission;
-    protected  int m_iLastCostsBoughtPlayers;
-    protected  int m_iLastCostsArenaBuilding;
+    protected  AmountOfMoney m_iExpectedCash;
+    protected  AmountOfMoney m_iIncomeSoldPlayers;
+    protected  AmountOfMoney m_iIncomeSoldPlayersCommission;
+    protected  AmountOfMoney m_iCostsBoughtPlayers;
+    protected  AmountOfMoney m_iCostsArenaBuilding;
+    protected  AmountOfMoney m_iLastIncomeSoldPlayers;
+    protected  AmountOfMoney m_iLastIncomeSoldPlayersCommission;
+    protected  AmountOfMoney m_iLastCostsBoughtPlayers;
+    protected  AmountOfMoney m_iLastCostsArenaBuilding;
     protected int m_iSupportersPopularity;
     private int hrfId;
     private HODateTime fetchedDate;
@@ -89,88 +90,88 @@ public class Economy extends AbstractTable.Storable {
 
         // @see updateDBv500
         if (bBefore500) {
-            m_iCash = Integer.parseInt(properties.getProperty("cash", "0"));
-            m_iExpectedCash = 0;
+            m_iCash = AmountOfMoney.Companion.parse(properties.getProperty("cash", "0"));
+            m_iExpectedCash = new AmountOfMoney(0);
             m_iSponsorsPopularity = Integer.parseInt(properties.getProperty("sponsors", "0"));
             m_iSupportersPopularity = Integer.parseInt(properties.getProperty("supporters", "0"));
-            m_iIncomeSpectators = Integer.parseInt(properties.getProperty("incomepublik", "0"));
-            m_iIncomeSponsors = Integer.parseInt(properties.getProperty("incomesponsorer", "0"));
-            m_iIncomeSponsorsBonus = Integer.parseInt(properties.getProperty("incomesponsorsbonus", "0"));
-            m_iIncomeFinancial = Integer.parseInt(properties.getProperty("incomefinansiella", "0"));
-            m_iIncomeSoldPlayers = 0;
-            m_iIncomeSoldPlayersCommission = 0;
-            m_iIncomeTemporary = Integer.parseInt(properties.getProperty("incometillfalliga", "0"));
-            m_iIncomeSum = Integer.parseInt(properties.getProperty("incomesumma", "0"));
-            m_iCostsArena = Integer.parseInt(properties.getProperty("costsarena", "0"));
-            m_iCostsPlayers = Integer.parseInt(properties.getProperty("costsspelare", "0"));
-            m_iCostsFinancial = Integer.parseInt(properties.getProperty("costsrantor", "0"));
-            m_iCostsStaff = Integer.parseInt(properties.getProperty("costspersonal", "0"));
-            m_iCostsBoughtPlayers = 0;
-            m_iCostsArenaBuilding = 0;
-            m_iCostsTemporary = Integer.parseInt(properties.getProperty("coststillfalliga", "0"));
-            m_iCostsYouth = Integer.parseInt(properties.getProperty("costsjuniorverksamhet", "0"));
-            m_iCostsSum = Integer.parseInt(properties.getProperty("costssumma", "0"));
-            m_iExpectedWeeksTotal = Integer.parseInt(properties.getProperty("total", "0"));
-            m_iLastIncomeSpectators = Integer.parseInt(properties.getProperty("lastincomepublik", "0"));
-            m_iLastIncomeSponsors = Integer.parseInt(properties.getProperty("lastincomesponsorer", "0"));
-            m_iLastIncomeSponsorsBonus = Integer.parseInt(properties.getProperty("lastincomesponsorsbonus", "0"));
-            m_iLastIncomeFinancial = Integer.parseInt(properties.getProperty("lastincomefinansiella", "0"));
-            m_iLastIncomeSoldPlayers = 0;
-            m_iLastIncomeSoldPlayersCommission = 0;
-            m_iLastIncomeTemporary = Integer.parseInt(properties.getProperty("lastincometillfalliga",   "0"));
-            m_iLastIncomeSum = Integer.parseInt(properties.getProperty("lastincomesumma", "0"));
-            m_iLastCostsArena = Integer.parseInt(properties.getProperty("lastcostsarena", "0"));
-            m_iLastCostsPlayers = Integer.parseInt(properties.getProperty("lastcostsspelare", "0"));
-            m_iLastCostsFinancial = Integer.parseInt(properties.getProperty("lastcostsrantor", "0"));
-            m_iLastCostsStaff = Integer.parseInt(properties.getProperty("lastcostspersonal", "0"));
-            m_iLastCostsTemporary = Integer.parseInt(properties.getProperty("lastcoststillfalliga",  "0"));
-            m_iLastCostsYouth = Integer.parseInt(properties.getProperty("lastCostsjuniorverksamhet",  "0"));
-            m_iLastCostsSum = Integer.parseInt(properties.getProperty("lastcostssumma", "0"));
-            m_iLastWeeksTotal = Integer.parseInt(properties.getProperty("lasttotal", "0"));
-            m_iLastCostsBoughtPlayers = 0;
-            m_iLastCostsArenaBuilding = 0;
+            m_iIncomeSpectators = AmountOfMoney.Companion.parse(properties.getProperty("incomepublik", "0"));
+            m_iIncomeSponsors = AmountOfMoney.Companion.parse(properties.getProperty("incomesponsorer", "0"));
+            m_iIncomeSponsorsBonus = AmountOfMoney.Companion.parse(properties.getProperty("incomesponsorsbonus", "0"));
+            m_iIncomeFinancial = AmountOfMoney.Companion.parse(properties.getProperty("incomefinansiella", "0"));
+            m_iIncomeSoldPlayers = new AmountOfMoney(0);
+            m_iIncomeSoldPlayersCommission = new AmountOfMoney(0);
+            m_iIncomeTemporary = AmountOfMoney.Companion.parse(properties.getProperty("incometillfalliga", "0"));
+            m_iIncomeSum = AmountOfMoney.Companion.parse(properties.getProperty("incomesumma", "0"));
+            m_iCostsArena = AmountOfMoney.Companion.parse(properties.getProperty("costsarena", "0"));
+            m_iCostsPlayers = AmountOfMoney.Companion.parse(properties.getProperty("costsspelare", "0"));
+            m_iCostsFinancial = AmountOfMoney.Companion.parse(properties.getProperty("costsrantor", "0"));
+            m_iCostsStaff = AmountOfMoney.Companion.parse(properties.getProperty("costspersonal", "0"));
+            m_iCostsBoughtPlayers = new AmountOfMoney(0);
+            m_iCostsArenaBuilding = new AmountOfMoney(0);
+            m_iCostsTemporary = AmountOfMoney.Companion.parse(properties.getProperty("coststillfalliga", "0"));
+            m_iCostsYouth = AmountOfMoney.Companion.parse(properties.getProperty("costsjuniorverksamhet", "0"));
+            m_iCostsSum = AmountOfMoney.Companion.parse(properties.getProperty("costssumma", "0"));
+            m_iExpectedWeeksTotal =AmountOfMoney.Companion.parse(properties.getProperty("total", "0"));
+            m_iLastIncomeSpectators = AmountOfMoney.Companion.parse(properties.getProperty("lastincomepublik", "0"));
+            m_iLastIncomeSponsors = AmountOfMoney.Companion.parse(properties.getProperty("lastincomesponsorer", "0"));
+            m_iLastIncomeSponsorsBonus = AmountOfMoney.Companion.parse(properties.getProperty("lastincomesponsorsbonus", "0"));
+            m_iLastIncomeFinancial = AmountOfMoney.Companion.parse(properties.getProperty("lastincomefinansiella", "0"));
+            m_iLastIncomeSoldPlayers = new AmountOfMoney(0);
+            m_iLastIncomeSoldPlayersCommission = new AmountOfMoney(0);
+            m_iLastIncomeTemporary = AmountOfMoney.Companion.parse(properties.getProperty("lastincometillfalliga",   "0"));
+            m_iLastIncomeSum = AmountOfMoney.Companion.parse(properties.getProperty("lastincomesumma", "0"));
+            m_iLastCostsArena = AmountOfMoney.Companion.parse(properties.getProperty("lastcostsarena", "0"));
+            m_iLastCostsPlayers = AmountOfMoney.Companion.parse(properties.getProperty("lastcostsspelare", "0"));
+            m_iLastCostsFinancial = AmountOfMoney.Companion.parse(properties.getProperty("lastcostsrantor", "0"));
+            m_iLastCostsStaff = AmountOfMoney.Companion.parse(properties.getProperty("lastcostspersonal", "0"));
+            m_iLastCostsTemporary =AmountOfMoney.Companion.parse(properties.getProperty("lastcoststillfalliga",  "0"));
+            m_iLastCostsYouth = AmountOfMoney.Companion.parse(properties.getProperty("lastCostsjuniorverksamhet",  "0"));
+            m_iLastCostsSum =AmountOfMoney.Companion.parse(properties.getProperty("lastcostssumma", "0"));
+            m_iLastWeeksTotal =AmountOfMoney.Companion.parse(properties.getProperty("lasttotal", "0"));
+            m_iLastCostsBoughtPlayers = new AmountOfMoney(0);
+            m_iLastCostsArenaBuilding = new AmountOfMoney(0);
         }
         else{
-            m_iCash = Integer.parseInt(properties.getProperty("cash", "0"));
-            m_iExpectedCash = Integer.parseInt(properties.getProperty("expectedcash", "0"));
+            m_iCash = AmountOfMoney.Companion.parse(properties.getProperty("cash", "0"));
+            m_iExpectedCash = AmountOfMoney.Companion.parse(properties.getProperty("expectedcash", "0"));
             m_iSponsorsPopularity = Integer.parseInt(properties.getProperty("sponsorspopularity", "0"));
             m_iSupportersPopularity = Integer.parseInt(properties.getProperty("supporterspopularity", "0"));
-            m_iIncomeSpectators = Integer.parseInt(properties.getProperty("incomespectators", "0"));
-            m_iIncomeSponsors = Integer.parseInt(properties.getProperty("incomesponsors", "0"));
-            m_iIncomeSponsorsBonus = Integer.parseInt(properties.getProperty("incomesponsorsbonus", "0"));
-            m_iIncomeFinancial = Integer.parseInt(properties.getProperty("incomefinancial", "0"));
-            m_iIncomeSoldPlayers = Integer.parseInt(properties.getProperty("incomesoldplayers", "0"));
-            m_iIncomeSoldPlayersCommission = Integer.parseInt(properties.getProperty("incomesoldplayerscommission", "0"));
-            m_iIncomeTemporary = Integer.parseInt(properties.getProperty("incometemporary", "0"));
-            m_iIncomeSum = Integer.parseInt(properties.getProperty("incomesum", "0"));
-            m_iCostsArena = Integer.parseInt(properties.getProperty("costsarena", "0"));
-            m_iCostsPlayers = Integer.parseInt(properties.getProperty("costsplayers", "0"));
-            m_iCostsFinancial = Integer.parseInt(properties.getProperty("costsfinancial", "0"));
-            m_iCostsStaff = Integer.parseInt(properties.getProperty("costsstaff", "0"));
-            m_iCostsBoughtPlayers = Integer.parseInt(properties.getProperty("costsboughtplayers", "0"));
-            m_iCostsArenaBuilding = Integer.parseInt(properties.getProperty("costsarenabuilding", "0"));
-            m_iCostsTemporary = Integer.parseInt(properties.getProperty("coststemporary", "0"));
-            m_iCostsYouth = Integer.parseInt(properties.getProperty("costsyouth", "0"));
-            m_iCostsSum = Integer.parseInt(properties.getProperty("costssum", "0"));
-            m_iExpectedWeeksTotal = Integer.parseInt(properties.getProperty("expectedweekstotal", "0"));
-            m_iLastIncomeSpectators = Integer.parseInt(properties.getProperty("lastincomespectators", "0"));
-            m_iLastIncomeSponsors = Integer.parseInt(properties.getProperty("lastincomesponsors", "0"));
-            m_iLastIncomeSponsorsBonus = Integer.parseInt(properties.getProperty("lastincomesponsorsbonus", "0"));
-            m_iLastIncomeFinancial = Integer.parseInt(properties.getProperty("lastincomefinancial", "0"));
-            m_iLastIncomeSoldPlayers = Integer.parseInt(properties.getProperty("lastincomesoldplayers", "0"));
-            m_iLastIncomeSoldPlayersCommission = Integer.parseInt(properties.getProperty("lastincomesoldplayerscommission", "0"));
-            m_iLastIncomeTemporary = Integer.parseInt(properties.getProperty("lastincometemporary",   "0"));
-            m_iLastIncomeSum = Integer.parseInt(properties.getProperty("lastincomesum", "0"));
-            m_iLastCostsArena = Integer.parseInt(properties.getProperty("lastcostsarena", "0"));
-            m_iLastCostsPlayers = Integer.parseInt(properties.getProperty("lastcostsplayers", "0"));
-            m_iLastCostsFinancial = Integer.parseInt(properties.getProperty("lastcostsfinancial", "0"));
-            m_iLastCostsStaff = Integer.parseInt(properties.getProperty("lastcostsstaff", "0"));
-            m_iLastCostsTemporary = Integer.parseInt(properties.getProperty("lastcoststemporary",  "0"));
-            m_iLastCostsYouth = Integer.parseInt(properties.getProperty("lastcostsyouth",  "0"));
-            m_iLastCostsSum = Integer.parseInt(properties.getProperty("lastcostssum", "0"));
-            m_iLastWeeksTotal = Integer.parseInt(properties.getProperty("lastweekstotal", "0"));
-            m_iLastCostsBoughtPlayers = Integer.parseInt(properties.getProperty("lastcostsboughtplayers","0"));
-            m_iLastCostsArenaBuilding = Integer.parseInt(properties.getProperty("lastcostsarenabuilding","0"));
+            m_iIncomeSpectators = AmountOfMoney.Companion.parse(properties.getProperty("incomespectators", "0"));
+            m_iIncomeSponsors = AmountOfMoney.Companion.parse(properties.getProperty("incomesponsors", "0"));
+            m_iIncomeSponsorsBonus = AmountOfMoney.Companion.parse(properties.getProperty("incomesponsorsbonus", "0"));
+            m_iIncomeFinancial =AmountOfMoney.Companion.parse(properties.getProperty("incomefinancial", "0"));
+            m_iIncomeSoldPlayers = AmountOfMoney.Companion.parse(properties.getProperty("incomesoldplayers", "0"));
+            m_iIncomeSoldPlayersCommission = AmountOfMoney.Companion.parse(properties.getProperty("incomesoldplayerscommission", "0"));
+            m_iIncomeTemporary = AmountOfMoney.Companion.parse(properties.getProperty("incometemporary", "0"));
+            m_iIncomeSum = AmountOfMoney.Companion.parse(properties.getProperty("incomesum", "0"));
+            m_iCostsArena = AmountOfMoney.Companion.parse(properties.getProperty("costsarena", "0"));
+            m_iCostsPlayers = AmountOfMoney.Companion.parse(properties.getProperty("costsplayers", "0"));
+            m_iCostsFinancial = AmountOfMoney.Companion.parse(properties.getProperty("costsfinancial", "0"));
+            m_iCostsStaff = AmountOfMoney.Companion.parse(properties.getProperty("costsstaff", "0"));
+            m_iCostsBoughtPlayers = AmountOfMoney.Companion.parse(properties.getProperty("costsboughtplayers", "0"));
+            m_iCostsArenaBuilding = AmountOfMoney.Companion.parse(properties.getProperty("costsarenabuilding", "0"));
+            m_iCostsTemporary = AmountOfMoney.Companion.parse(properties.getProperty("coststemporary", "0"));
+            m_iCostsYouth = AmountOfMoney.Companion.parse(properties.getProperty("costsyouth", "0"));
+            m_iCostsSum = AmountOfMoney.Companion.parse(properties.getProperty("costssum", "0"));
+            m_iExpectedWeeksTotal = AmountOfMoney.Companion.parse(properties.getProperty("expectedweekstotal", "0"));
+            m_iLastIncomeSpectators = AmountOfMoney.Companion.parse(properties.getProperty("lastincomespectators", "0"));
+            m_iLastIncomeSponsors = AmountOfMoney.Companion.parse(properties.getProperty("lastincomesponsors", "0"));
+            m_iLastIncomeSponsorsBonus = AmountOfMoney.Companion.parse(properties.getProperty("lastincomesponsorsbonus", "0"));
+            m_iLastIncomeFinancial = AmountOfMoney.Companion.parse(properties.getProperty("lastincomefinancial", "0"));
+            m_iLastIncomeSoldPlayers = AmountOfMoney.Companion.parse(properties.getProperty("lastincomesoldplayers", "0"));
+            m_iLastIncomeSoldPlayersCommission = AmountOfMoney.Companion.parse(properties.getProperty("lastincomesoldplayerscommission", "0"));
+            m_iLastIncomeTemporary = AmountOfMoney.Companion.parse(properties.getProperty("lastincometemporary",   "0"));
+            m_iLastIncomeSum = AmountOfMoney.Companion.parse(properties.getProperty("lastincomesum", "0"));
+            m_iLastCostsArena = AmountOfMoney.Companion.parse(properties.getProperty("lastcostsarena", "0"));
+            m_iLastCostsPlayers = AmountOfMoney.Companion.parse(properties.getProperty("lastcostsplayers", "0"));
+            m_iLastCostsFinancial = AmountOfMoney.Companion.parse(properties.getProperty("lastcostsfinancial", "0"));
+            m_iLastCostsStaff = AmountOfMoney.Companion.parse(properties.getProperty("lastcostsstaff", "0"));
+            m_iLastCostsTemporary = AmountOfMoney.Companion.parse(properties.getProperty("lastcoststemporary",  "0"));
+            m_iLastCostsYouth = AmountOfMoney.Companion.parse(properties.getProperty("lastcostsyouth",  "0"));
+            m_iLastCostsSum = AmountOfMoney.Companion.parse(properties.getProperty("lastcostssum", "0"));
+            m_iLastWeeksTotal = AmountOfMoney.Companion.parse(properties.getProperty("lastweekstotal", "0"));
+            m_iLastCostsBoughtPlayers = AmountOfMoney.Companion.parse(properties.getProperty("lastcostsboughtplayers","0"));
+            m_iLastCostsArenaBuilding = AmountOfMoney.Companion.parse(properties.getProperty("lastcostsarenabuilding","0"));
         }
     }
 
@@ -205,51 +206,28 @@ public class Economy extends AbstractTable.Storable {
     	if (date != null && date.isBefore(DATE_NEW_FANLEVELS)) {
     		return getNameForLevelSponsors(level);
     	}
-        switch (level) {
-            case LV_FANS_SENDING_LOVE_POEMS_TO_YOU:
-                return TranslationFacility.tr("ls.club.sponsors_fans.sendinglovepoemstoyou");
-
-            case LV_FANS_DANCING_IN_THE_STREETS:
-                return TranslationFacility.tr("ls.club.sponsors_fans.dancinginthestreets");
-
-            case LV_FANS_HIGH_ON_LIFE:
-                return TranslationFacility.tr("ls.club.sponsors_fans.highonlife");
-
-            case LV_FANS_DELIRIOUS:
-                return TranslationFacility.tr("ls.club.sponsors_fans.delirious");
-
-            case LV_FANS_SATISFIED:
-                return TranslationFacility.tr("ls.club.sponsors_fans.satisfied");
-
-            case LV_FANS_CONTENT:
-                return TranslationFacility.tr("ls.club.sponsors_fans.content");
-
-            case LV_FANS_CALM:
-                return TranslationFacility.tr("ls.club.sponsors_fans.calm");
-
-            case LV_FANS_DISAPPOINTED:
-                return TranslationFacility.tr("ls.club.fans.disappointed");
-                
-            case LV_FANS_IRRITATED:
-                return TranslationFacility.tr("ls.club.sponsors_fans.irritated");
-                
-            case LV_FANS_ANGRY:
-                return TranslationFacility.tr("ls.club.fans.angry");
-
-            case LV_FANS_FURIOUS:
-                return TranslationFacility.tr("ls.club.sponsors_fans.furious");
-
-            case LV_FANS_MURDEROUS:
-                return TranslationFacility.tr("ls.club.sponsors_fans.murderous");
-
-            default: {
+        return switch (level) {
+            case LV_FANS_SENDING_LOVE_POEMS_TO_YOU ->
+                    TranslationFacility.tr("ls.club.sponsors_fans.sendinglovepoemstoyou");
+            case LV_FANS_DANCING_IN_THE_STREETS -> TranslationFacility.tr("ls.club.sponsors_fans.dancinginthestreets");
+            case LV_FANS_HIGH_ON_LIFE -> TranslationFacility.tr("ls.club.sponsors_fans.highonlife");
+            case LV_FANS_DELIRIOUS -> TranslationFacility.tr("ls.club.sponsors_fans.delirious");
+            case LV_FANS_SATISFIED -> TranslationFacility.tr("ls.club.sponsors_fans.satisfied");
+            case LV_FANS_CONTENT -> TranslationFacility.tr("ls.club.sponsors_fans.content");
+            case LV_FANS_CALM -> TranslationFacility.tr("ls.club.sponsors_fans.calm");
+            case LV_FANS_DISAPPOINTED -> TranslationFacility.tr("ls.club.fans.disappointed");
+            case LV_FANS_IRRITATED -> TranslationFacility.tr("ls.club.sponsors_fans.irritated");
+            case LV_FANS_ANGRY -> TranslationFacility.tr("ls.club.fans.angry");
+            case LV_FANS_FURIOUS -> TranslationFacility.tr("ls.club.sponsors_fans.furious");
+            case LV_FANS_MURDEROUS -> TranslationFacility.tr("ls.club.sponsors_fans.murderous");
+            default -> {
                 if (level > LV_FANS_SENDING_LOVE_POEMS_TO_YOU) {
-                    return TranslationFacility.tr("ls.club.sponsors_fans.sendinglovepoemstoyou");
+                    yield TranslationFacility.tr("ls.club.sponsors_fans.sendinglovepoemstoyou");
                 }
 
-                return TranslationFacility.tr("Unbestimmt");
+                yield TranslationFacility.tr("Unbestimmt");
             }
-        }
+        };
     }
 
     /**
@@ -259,186 +237,168 @@ public class Economy extends AbstractTable.Storable {
      * @return the i18n'ed name for the level
      */
     public static String getNameForLevelSponsors(int level) {
-        switch (level) {
-            case LV_SPONSORS_SENDING_LOVE_POEMS_TO_YOU:
-                return TranslationFacility.tr("ls.club.sponsors_fans.sendinglovepoemstoyou");
-
-            case LV_SPONSORS_DANCING_IN_THE_STREETS:
-                return TranslationFacility.tr("ls.club.sponsors_fans.dancinginthestreets");
-
-            case LV_SPONSORS_HIGH_ON_LIFE:
-                return TranslationFacility.tr("ls.club.sponsors_fans.highonlife");
-
-            case LV_SPONSORS_DELIRIOUS:
-                return TranslationFacility.tr("ls.club.sponsors_fans.delirious");
-
-            case LV_SPONSORS_SATISFIED:
-                return TranslationFacility.tr("ls.club.sponsors_fans.satisfied");
-
-            case LV_SPONSORS_CONTENT:
-                return TranslationFacility.tr("ls.club.sponsors_fans.content");
-
-            case LV_SPONSORS_CALM:
-                return TranslationFacility.tr("ls.club.sponsors_fans.calm");
-
-            case LV_SPONSORS_IRRITATED:
-                return TranslationFacility.tr("ls.club.sponsors_fans.irritated");
-                
-            case LV_SPONSORS_FURIOUS:
-                return TranslationFacility.tr("ls.club.sponsors_fans.furious");
-
-            case LV_SPONSORS_MURDEROUS:
-                return TranslationFacility.tr("ls.club.sponsors_fans.murderous");
-
-            default: {
+        return switch (level) {
+            case LV_SPONSORS_SENDING_LOVE_POEMS_TO_YOU ->
+                    TranslationFacility.tr("ls.club.sponsors_fans.sendinglovepoemstoyou");
+            case LV_SPONSORS_DANCING_IN_THE_STREETS ->
+                    TranslationFacility.tr("ls.club.sponsors_fans.dancinginthestreets");
+            case LV_SPONSORS_HIGH_ON_LIFE -> TranslationFacility.tr("ls.club.sponsors_fans.highonlife");
+            case LV_SPONSORS_DELIRIOUS -> TranslationFacility.tr("ls.club.sponsors_fans.delirious");
+            case LV_SPONSORS_SATISFIED -> TranslationFacility.tr("ls.club.sponsors_fans.satisfied");
+            case LV_SPONSORS_CONTENT -> TranslationFacility.tr("ls.club.sponsors_fans.content");
+            case LV_SPONSORS_CALM -> TranslationFacility.tr("ls.club.sponsors_fans.calm");
+            case LV_SPONSORS_IRRITATED -> TranslationFacility.tr("ls.club.sponsors_fans.irritated");
+            case LV_SPONSORS_FURIOUS -> TranslationFacility.tr("ls.club.sponsors_fans.furious");
+            case LV_SPONSORS_MURDEROUS -> TranslationFacility.tr("ls.club.sponsors_fans.murderous");
+            default -> {
                 if (level > LV_SPONSORS_SENDING_LOVE_POEMS_TO_YOU) {
-                    return TranslationFacility.tr("ls.club.sponsors_fans.sendinglovepoemstoyou");
+                    yield TranslationFacility.tr("ls.club.sponsors_fans.sendinglovepoemstoyou");
                 }
 
-                return TranslationFacility.tr("Unbestimmt");
+                yield TranslationFacility.tr("Unbestimmt");
             }
-        }
+        };
     }
 
-    public final void setIncomeSum(int iIncomeSum) {
+    public final void setIncomeSum(AmountOfMoney iIncomeSum) {
         this.m_iIncomeSum = iIncomeSum;
     }
 
-    public final int getIncomeSum() {return m_iIncomeSum;}
+    public final AmountOfMoney getIncomeSum() {return m_iIncomeSum;}
 
-    public final void setIncomeTemporary(int iIncomeTemporary) {
+    public final void setIncomeTemporary(AmountOfMoney iIncomeTemporary) {
         this.m_iIncomeTemporary = iIncomeTemporary;
     }
 
-    public final int getIncomeTemporary() {return m_iIncomeTemporary;}
+    public final AmountOfMoney getIncomeTemporary() {return m_iIncomeTemporary;}
 
-    public final void setIncomeSponsors(int iIncomeSponsors) {this.m_iIncomeSponsors = iIncomeSponsors; }
+    public final void setIncomeSponsors(AmountOfMoney iIncomeSponsors) {this.m_iIncomeSponsors = iIncomeSponsors; }
 
-    public final void setIncomeSponsorsBonus(int iIncomeSponsorsBonus) {this.m_iIncomeSponsorsBonus = iIncomeSponsorsBonus; }
+    public final void setIncomeSponsorsBonus(AmountOfMoney iIncomeSponsorsBonus) {this.m_iIncomeSponsorsBonus = iIncomeSponsorsBonus; }
 
-    public final int getIncomeSponsors() {return m_iIncomeSponsors;}
+    public final AmountOfMoney getIncomeSponsors() {return m_iIncomeSponsors;}
 
-    public final int getIncomeSponsorsBonus() {return m_iIncomeSponsorsBonus;}
+    public final AmountOfMoney getIncomeSponsorsBonus() {return m_iIncomeSponsorsBonus;}
 
-    public final void setIncomeFinancial(int iIncomeFinancial) {
+    public final void setIncomeFinancial(AmountOfMoney iIncomeFinancial) {
         this.m_iIncomeFinancial = iIncomeFinancial;
     }
 
-    public final int getIncomeFinancial() {return m_iIncomeFinancial;}
+    public final AmountOfMoney getIncomeFinancial() {return m_iIncomeFinancial;}
 
-    public final void setIncomeSpectators(int iIncomeSpectators) {this.m_iIncomeSpectators = iIncomeSpectators;}
+    public final void setIncomeSpectators(AmountOfMoney iIncomeSpectators) {this.m_iIncomeSpectators = iIncomeSpectators;}
 
-    public final int getIncomeSpectators() {return m_iIncomeSpectators;}
+    public final AmountOfMoney getIncomeSpectators() {return m_iIncomeSpectators;}
 
-    public final void setCash(int m_iCash) {
+    public final void setCash(AmountOfMoney m_iCash) {
         this.m_iCash = m_iCash;
     }
 
-    public final int getCash() {return m_iCash;}
+    public final AmountOfMoney getCash() {return m_iCash;}
 
-    public final void setExpectedWeeksTotal(int iExpectedWeeksTotal) {this.m_iExpectedWeeksTotal = iExpectedWeeksTotal;}
+    public final void setExpectedWeeksTotal(AmountOfMoney iExpectedWeeksTotal) {this.m_iExpectedWeeksTotal = iExpectedWeeksTotal;}
 
-    public final int getExpectedWeeksTotal() {return m_iExpectedWeeksTotal;}
+    public final AmountOfMoney getExpectedWeeksTotal() {return m_iExpectedWeeksTotal;}
 
-    public final void setCostsSum(int iCostsSum) {
+    public final void setCostsSum(AmountOfMoney iCostsSum) {
         this.m_iCostsSum = iCostsSum;
     }
 
-    public final int getCostsSum() {return m_iCostsSum;}
+    public final AmountOfMoney getCostsSum() {return m_iCostsSum;}
 
-    public final void setCostsYouth(int iCostsYouth) {
+    public final void setCostsYouth(AmountOfMoney iCostsYouth) {
         this.m_iCostsYouth = iCostsYouth;
     }
 
-    public final int getCostsYouth() {return m_iCostsYouth;}
+    public final AmountOfMoney getCostsYouth() {return m_iCostsYouth;}
 
-    public final void setCostsTemporary(int iCostsTemporary) {
+    public final void setCostsTemporary(AmountOfMoney iCostsTemporary) {
         this.m_iCostsTemporary = iCostsTemporary;
     }
 
-    public final int getCostsTemporary() {return m_iCostsTemporary;}
+    public final AmountOfMoney getCostsTemporary() {return m_iCostsTemporary;}
 
-    public final void setCostsPlayers(int iCostsPlayers) {
+    public final void setCostsPlayers(AmountOfMoney iCostsPlayers) {
         this.m_iCostsPlayers = iCostsPlayers;
     }
 
-    public final int getCostsPlayers() {return m_iCostsPlayers;}
+    public final AmountOfMoney getCostsPlayers() {return m_iCostsPlayers;}
 
-    public final void setCostsArena(int iCostsArena) {
+    public final void setCostsArena(AmountOfMoney iCostsArena) {
         this.m_iCostsArena = iCostsArena;
     }
 
-    public final int getCostsArena() {return m_iCostsArena;}
+    public final AmountOfMoney getCostsArena() {return m_iCostsArena;}
 
-    public final void setCostsStaff(int iCostsStaff) {
+    public final void setCostsStaff(AmountOfMoney iCostsStaff) {
         this.m_iCostsStaff = iCostsStaff;
     }
 
-    public final int getCostsStaff() {return m_iCostsStaff;}
+    public final AmountOfMoney getCostsStaff() {return m_iCostsStaff;}
 
-    public final void setCostsFinancial(int iCostsFinancial) {
+    public final void setCostsFinancial(AmountOfMoney iCostsFinancial) {
         this.m_iCostsFinancial = iCostsFinancial;
     }
 
-    public final int getCostsFinancial() {return m_iCostsFinancial;}
+    public final AmountOfMoney getCostsFinancial() {return m_iCostsFinancial;}
 
-    public final void setLastIncomeSum(int iLastIncomeSum) {this.m_iLastIncomeSum = iLastIncomeSum;}
+    public final void setLastIncomeSum(AmountOfMoney iLastIncomeSum) {this.m_iLastIncomeSum = iLastIncomeSum;}
 
-    public final int getLastIncomeSum() {return m_iLastIncomeSum;}
+    public final AmountOfMoney getLastIncomeSum() {return m_iLastIncomeSum;}
 
-    public final void setLastIncomeTemporary(int iLastIncomeTemporary) {this.m_iLastIncomeTemporary = iLastIncomeTemporary;}
+    public final void setLastIncomeTemporary(AmountOfMoney iLastIncomeTemporary) {this.m_iLastIncomeTemporary = iLastIncomeTemporary;}
 
-    public final int getLastIncomeTemporary() {return m_iLastIncomeTemporary;}
+    public final AmountOfMoney getLastIncomeTemporary() {return m_iLastIncomeTemporary;}
 
-    public final void setLastIncomeSponsors(int iLastIncomeSponsors) {this.m_iLastIncomeSponsors = iLastIncomeSponsors;}
+    public final void setLastIncomeSponsors(AmountOfMoney iLastIncomeSponsors) {this.m_iLastIncomeSponsors = iLastIncomeSponsors;}
 
-    public final void setLastIncomeSponsorsBonus(int iLastIncomeSponsorsBonus) {this.m_iLastIncomeSponsorsBonus = iLastIncomeSponsorsBonus;}
+    public final void setLastIncomeSponsorsBonus(AmountOfMoney iLastIncomeSponsorsBonus) {this.m_iLastIncomeSponsorsBonus = iLastIncomeSponsorsBonus;}
 
-    public final int getLastIncomeSponsors() {return m_iLastIncomeSponsors;}
+    public final AmountOfMoney getLastIncomeSponsors() {return m_iLastIncomeSponsors;}
 
-    public final int getLastIncomeSponsorsBonus() {return m_iLastIncomeSponsorsBonus;}
+    public final AmountOfMoney getLastIncomeSponsorsBonus() {return m_iLastIncomeSponsorsBonus;}
 
-    public final void setLastIncomeFinancial(int iLastIncomeFinancial) {this.m_iLastIncomeFinancial = iLastIncomeFinancial;}
+    public final void setLastIncomeFinancial(AmountOfMoney iLastIncomeFinancial) {this.m_iLastIncomeFinancial = iLastIncomeFinancial;}
 
-    public final int getLastIncomeFinancial() {return m_iLastIncomeFinancial;}
+    public final AmountOfMoney getLastIncomeFinancial() {return m_iLastIncomeFinancial;}
 
-    public final void setLastIncomeSpectators(int iLastIncomeSpectators) {this.m_iLastIncomeSpectators = iLastIncomeSpectators;}
+    public final void setLastIncomeSpectators(AmountOfMoney iLastIncomeSpectators) {this.m_iLastIncomeSpectators = iLastIncomeSpectators;}
 
-    public final int getLastIncomeSpectators() {return m_iLastIncomeSpectators;}
+    public final AmountOfMoney getLastIncomeSpectators() {return m_iLastIncomeSpectators;}
 
-    public final void setLastWeeksTotal(int iLastWeeksTotal) {this.m_iLastWeeksTotal = iLastWeeksTotal;}
+    public final void setLastWeeksTotal(AmountOfMoney iLastWeeksTotal) {this.m_iLastWeeksTotal = iLastWeeksTotal;}
 
-    public final int getLastWeeksTotal() {return m_iLastWeeksTotal;}
+    public final AmountOfMoney getLastWeeksTotal() {return m_iLastWeeksTotal;}
 
-    public final void setLastCostsSum(int iLastCostsSum) {
+    public final void setLastCostsSum(AmountOfMoney iLastCostsSum) {
         this.m_iLastCostsSum = iLastCostsSum;
     }
 
-    public final int getLastCostsSum() {return m_iLastCostsSum;}
+    public final AmountOfMoney getLastCostsSum() {return m_iLastCostsSum;}
 
-    public final void setLastCostsYouth(int iLastCostsYouth) {this.m_iLastCostsYouth = iLastCostsYouth;}
+    public final void setLastCostsYouth(AmountOfMoney iLastCostsYouth) {this.m_iLastCostsYouth = iLastCostsYouth;}
 
-    public final int getLastCostsYouth() {return m_iLastCostsYouth;}
+    public final AmountOfMoney getLastCostsYouth() {return m_iLastCostsYouth;}
 
-    public final void setLastCostsTemporary(int iLastCostsTemporary) {this.m_iLastCostsTemporary = iLastCostsTemporary;}
+    public final void setLastCostsTemporary(AmountOfMoney iLastCostsTemporary) {this.m_iLastCostsTemporary = iLastCostsTemporary;}
 
-    public final int getLastCostsTemporary() {return m_iLastCostsTemporary;}
+    public final AmountOfMoney getLastCostsTemporary() {return m_iLastCostsTemporary;}
 
-    public final void setLastCostsPlayers(int iLastCostsPlayers) {this.m_iLastCostsPlayers = iLastCostsPlayers;}
+    public final void setLastCostsPlayers(AmountOfMoney iLastCostsPlayers) {this.m_iLastCostsPlayers = iLastCostsPlayers;}
 
-    public final int getLastCostsPlayers() {return m_iLastCostsPlayers;}
+    public final AmountOfMoney getLastCostsPlayers() {return m_iLastCostsPlayers;}
 
-    public final void setLastCostsArena(int iLastCostsArena) {this.m_iLastCostsArena = iLastCostsArena;}
+    public final void setLastCostsArena(AmountOfMoney iLastCostsArena) {this.m_iLastCostsArena = iLastCostsArena;}
 
-    public final int getLastCostsArena() {return m_iLastCostsArena;}
+    public final AmountOfMoney getLastCostsArena() {return m_iLastCostsArena;}
 
-    public final void setLastCostsStaff(int iLastCostsStaff) {this.m_iLastCostsStaff = iLastCostsStaff;}
+    public final void setLastCostsStaff(AmountOfMoney iLastCostsStaff) {this.m_iLastCostsStaff = iLastCostsStaff;}
 
-    public final int getLastCostsStaff() {return m_iLastCostsStaff;}
+    public final AmountOfMoney getLastCostsStaff() {return m_iLastCostsStaff;}
 
-    public final void setLastCostsFinancial(int iLastCostsFinancial) {this.m_iLastCostsFinancial = iLastCostsFinancial;}
+    public final void setLastCostsFinancial(AmountOfMoney iLastCostsFinancial) {this.m_iLastCostsFinancial = iLastCostsFinancial;}
 
-    public final int getLastCostsFinancial() {return m_iLastCostsFinancial;}
+    public final AmountOfMoney getLastCostsFinancial() {return m_iLastCostsFinancial;}
 
     public final void setSponsorsPopularity(int iSponsorsPopularity) {this.m_iSponsorsPopularity = iSponsorsPopularity;}
 
@@ -452,63 +412,63 @@ public class Economy extends AbstractTable.Storable {
         return m_iSupportersPopularity;
     }
 
-    public final void setExpectedCash(int iExpectedCash) {
+    public final void setExpectedCash(AmountOfMoney iExpectedCash) {
         this.m_iExpectedCash = iExpectedCash;
     }
 
-    public final int getExpectedCash() {
+    public final AmountOfMoney getExpectedCash() {
         return m_iExpectedCash;
     }
 
-    public final void setIncomeSoldPlayers(int iIncomeSoldPlayers) {this.m_iIncomeSoldPlayers = iIncomeSoldPlayers;}
+    public final void setIncomeSoldPlayers(AmountOfMoney iIncomeSoldPlayers) {this.m_iIncomeSoldPlayers = iIncomeSoldPlayers;}
 
-    public final int getIncomeSoldPlayers() {
+    public final AmountOfMoney getIncomeSoldPlayers() {
         return m_iIncomeSoldPlayers;
     }
 
-    public final void setIncomeSoldPlayersCommission(int iIncomeSoldPlayersCommission) {this.m_iIncomeSoldPlayersCommission = iIncomeSoldPlayersCommission;}
+    public final void setIncomeSoldPlayersCommission(AmountOfMoney iIncomeSoldPlayersCommission) {this.m_iIncomeSoldPlayersCommission = iIncomeSoldPlayersCommission;}
 
-    public final int getIncomeSoldPlayersCommission() {
+    public final AmountOfMoney getIncomeSoldPlayersCommission() {
         return m_iIncomeSoldPlayersCommission;
     }
 
-    public final void setCostsBoughtPlayers(int iCostsBoughtPlayers) {this.m_iCostsBoughtPlayers = iCostsBoughtPlayers;}
+    public final void setCostsBoughtPlayers(AmountOfMoney iCostsBoughtPlayers) {this.m_iCostsBoughtPlayers = iCostsBoughtPlayers;}
 
-    public final int getCostsBoughtPlayers() {
+    public final AmountOfMoney getCostsBoughtPlayers() {
         return m_iCostsBoughtPlayers;
     }
 
-    public final void setCostsArenaBuilding(int iCostsArenaBuilding) {this.m_iCostsArenaBuilding = iCostsArenaBuilding;}
+    public final void setCostsArenaBuilding(AmountOfMoney iCostsArenaBuilding) {this.m_iCostsArenaBuilding = iCostsArenaBuilding;}
 
-    public final int getCostsArenaBuilding() {
+    public final AmountOfMoney getCostsArenaBuilding() {
         return m_iCostsArenaBuilding;
     }
 
-    public final void setLastIncomeSoldPlayers(int iLastIncomeSoldPlayers) {this.m_iLastIncomeSoldPlayers = iLastIncomeSoldPlayers;}
+    public final void setLastIncomeSoldPlayers(AmountOfMoney iLastIncomeSoldPlayers) {this.m_iLastIncomeSoldPlayers = iLastIncomeSoldPlayers;}
 
-    public final int getLastIncomeSoldPlayers() {return m_iLastIncomeSoldPlayers;}
+    public final AmountOfMoney getLastIncomeSoldPlayers() {return m_iLastIncomeSoldPlayers;}
 
-    public final void setLastIncomeSoldPlayersCommission(int iLastIncomeSoldPlayersCommission) {
+    public final void setLastIncomeSoldPlayersCommission(AmountOfMoney iLastIncomeSoldPlayersCommission) {
         this.m_iLastIncomeSoldPlayersCommission = iLastIncomeSoldPlayersCommission;
     }
 
-    public final int getLastIncomeSoldPlayersCommission() {
+    public final AmountOfMoney getLastIncomeSoldPlayersCommission() {
         return m_iLastIncomeSoldPlayersCommission;
     }
 
-    public final void setLastCostsBoughtPlayers(int iLastCostsBoughtPlayers) {
+    public final void setLastCostsBoughtPlayers(AmountOfMoney iLastCostsBoughtPlayers) {
         this.m_iLastCostsBoughtPlayers = iLastCostsBoughtPlayers;
     }
 
-    public final int getLastCostsBoughtPlayers() {
+    public final AmountOfMoney getLastCostsBoughtPlayers() {
         return m_iLastCostsBoughtPlayers;
     }
 
-    public final void setLastCostsArenaBuilding(int iLastCostsArenaBuilding) {
+    public final void setLastCostsArenaBuilding(AmountOfMoney iLastCostsArenaBuilding) {
         this.m_iLastCostsArenaBuilding = iLastCostsArenaBuilding;
     }
 
-    public final int getLastCostsArenaBuilding() {
+    public final AmountOfMoney getLastCostsArenaBuilding() {
         return m_iLastCostsArenaBuilding;
     }
 

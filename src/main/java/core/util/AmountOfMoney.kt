@@ -59,7 +59,7 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
 
         /**
          * Parse currency value from string.
-         * If value could not be parsed with currency formal an number format is tried.
+         * If value could not be parsed with currency format a number format is tried.
          * @param v String to parse from
          * @return Integer, null on parse error
          */

@@ -568,7 +568,7 @@ public abstract class AbstractTable {
 		return false;
 	}
 
-	private boolean columnHasDataType(String columnName, String typeName) throws SQLException {
+	public boolean columnHasDataType(String columnName, String typeName) throws SQLException {
 		String sql = "SELECT TYPE_NAME FROM INFORMATION_SCHEMA.SYSTEM_COLUMNS WHERE TABLE_NAME = '"
 				+ getTableName().toUpperCase()
 				+ "' AND COLUMN_NAME = '"
@@ -651,12 +651,12 @@ public abstract class AbstractTable {
 	}
 
 	public boolean tryChangeColumnDataType(String columnName , String fromType, String toType) throws SQLException {
-		if ( columnHasDataType(columnName, fromType)){
-			tryChangeColumn(columnName, toType);
-			return true;
-		}
-		return false;
-	}
+        if (columnHasDataType(columnName, fromType)) {
+            tryChangeColumn(columnName, toType);
+            return true;
+        }
+        return false;
+    }
 
 	public static class Storable {
 		private boolean isStored=false;

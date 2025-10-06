@@ -42,7 +42,8 @@ public class XMLStaffParser {
 		xmlValue2Hash(hash, trainer, "Cost");
 		xmlValue2Hash(hash, trainer, "CountryID");
 		xmlValue2Hash(hash, trainer, "TrainerType");
-		xmlValue2Hash(hash, trainer, "TrainerType", "StaffType");
+//		xmlValue2Hash(hash, trainer, "TrainerType", "StaffType");
+        hash.put("StaffType", "0");
 		xmlValue2Hash(hash, trainer, "Leadership");
 		xmlValue2Hash(hash, trainer, "TrainerSkillLevel");
 		xmlValue2Hash(hash, trainer, "TrainerSkillLevel", "StaffLevel");
