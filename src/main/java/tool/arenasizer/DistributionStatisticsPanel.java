@@ -3,7 +3,7 @@ package tool.arenasizer;
 import core.db.DBManager;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.DoubleLabelEntries;
-import core.gui.comp.entry.IHOTableEntry;
+import core.gui.comp.entry.IHOTableCellEntry;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.model.ArenaStatistikModel;
 import core.gui.theme.HOColorName;
@@ -56,7 +56,7 @@ class DistributionStatisticsPanel extends JPanel {
 					TranslationFacility.tr("Fans")+" ( )"};
 
 		ArenaStatistikModel[] matches=  DBManager.instance().getArenaStatistikModel(MatchesPanel.OWN_LEAGUE_GAMES).getMatches();
-		IHOTableEntry[][] value = new IHOTableEntry[matches.length][columnNames.length];
+		IHOTableCellEntry[][] value = new IHOTableCellEntry[matches.length][columnNames.length];
         for (int i = 0; i < matches.length; i++) {
         	 value[i][0] = new ColorLabelEntry(matches[i].getMatchID()+"",
                      ColorLabelEntry.FG_STANDARD,  ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);

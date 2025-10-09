@@ -7,16 +7,12 @@ import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.match.IMatchType;
 import core.util.HODateTime;
-import core.util.HOLogger;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class MatchDateTableEntry extends AbstractHOTableEntry {
 
@@ -92,7 +88,7 @@ public class MatchDateTableEntry extends AbstractHOTableEntry {
     }
 
     @Override
-    public int compareTo(@NotNull IHOTableEntry obj) {
+    public int compareTo(@NotNull IHOTableCellEntry obj) {
         if (matchDate == null) {
             return -1;
         }

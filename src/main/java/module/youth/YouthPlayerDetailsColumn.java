@@ -1,7 +1,7 @@
 package module.youth;
 
 import core.gui.comp.entry.ColorLabelEntry;
-import core.gui.comp.entry.IHOTableEntry;
+import core.gui.comp.entry.IHOTableCellEntry;
 import core.gui.comp.table.UserColumn;
 
 public class YouthPlayerDetailsColumn extends UserColumn {
@@ -20,7 +20,7 @@ public class YouthPlayerDetailsColumn extends UserColumn {
         this.setDisplay(true);
     }
 
-    public IHOTableEntry getTableEntry(YouthTrainingDevelopmentEntry youthTraining) {
+    public IHOTableCellEntry getTableEntry(YouthTrainingDevelopmentEntry youthTraining) {
         return new ColorLabelEntry(getValue(youthTraining), ColorLabelEntry.BG_STANDARD, false, 0);
     }
     public int getValue(YouthTrainingDevelopmentEntry youthTraining){

@@ -134,6 +134,7 @@ public class Skills {
                 case SCORING -> Color.RED;
                 case SETPIECES -> Color.CYAN.darker();
                 case STAMINA -> new Color(85, 26, 139);
+                case EXPERIENCE -> Color.GRAY;
                 default -> Color.BLACK;
             };
         }

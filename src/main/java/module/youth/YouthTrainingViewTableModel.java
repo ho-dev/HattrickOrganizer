@@ -2,7 +2,7 @@ package module.youth;
 
 import core.gui.HOMainFrame;
 import core.gui.comp.entry.ColorLabelEntry;
-import core.gui.comp.entry.IHOTableEntry;
+import core.gui.comp.entry.IHOTableCellEntry;
 import core.gui.comp.table.HOTableModel;
 import core.gui.model.UserColumnController;
 import core.model.HOVerwaltung;
@@ -31,25 +31,25 @@ public class YouthTrainingViewTableModel extends HOTableModel {
         return new YouthTrainingColumn[]{
                 new YouthTrainingColumn(0, "ls.youth.training.date", 200) {
                     @Override
-                    public IHOTableEntry getTableEntry(YouthTraining youthTraining) {
+                    public IHOTableCellEntry getTableEntry(YouthTraining youthTraining) {
                         return new ColorLabelEntry(HODateTime.toEpochSecond(youthTraining.getMatchDate()), HODateTime.toLocaleDateTime(youthTraining.getMatchDate()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
                 new YouthTrainingColumn(1, "ls.youth.training.hometeam") {
                     @Override
-                    public IHOTableEntry getTableEntry(YouthTraining youthTraining) {
+                    public IHOTableCellEntry getTableEntry(YouthTraining youthTraining) {
                         return new ColorLabelEntry(youthTraining.getHomeTeamName(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
                 new YouthTrainingColumn(2, "ls.youth.training.guestteam") {
                     @Override
-                    public IHOTableEntry getTableEntry(YouthTraining youthTraining) {
+                    public IHOTableCellEntry getTableEntry(YouthTraining youthTraining) {
                         return new ColorLabelEntry(youthTraining.getGuestTeamName(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
                 new YouthTrainingColumn(3, "ls.youth.training.primary", 200){
                     @Override
-                    public IHOTableEntry getTableEntry(YouthTraining youthTraining){
+                    public IHOTableCellEntry getTableEntry(YouthTraining youthTraining){
                         return new YouthTrainingTableEntry(youthTraining.getTraining(YouthTraining.Priority.Primary));
                     }
                     @Override
@@ -57,7 +57,7 @@ public class YouthTrainingViewTableModel extends HOTableModel {
                 },
                 new YouthTrainingColumn(4, "ls.youth.training.secondary", 200){
                     @Override
-                    public IHOTableEntry getTableEntry(YouthTraining youthTraining){
+                    public IHOTableCellEntry getTableEntry(YouthTraining youthTraining){
                         return new YouthTrainingTableEntry(youthTraining.getTraining(YouthTraining.Priority.Secondary));
                     }
                     public boolean isEditable() {return true;}
@@ -65,7 +65,7 @@ public class YouthTrainingViewTableModel extends HOTableModel {
 
                 new YouthTrainingColumn(99, "ls.training.id", 0) {
                     @Override
-                    public IHOTableEntry getTableEntry(YouthTraining youthTraining) {
+                    public IHOTableCellEntry getTableEntry(YouthTraining youthTraining) {
                         return new ColorLabelEntry(youthTraining.getYouthMatchId()+"", ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                     @Override

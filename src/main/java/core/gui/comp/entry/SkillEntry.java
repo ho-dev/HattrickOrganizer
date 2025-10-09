@@ -115,7 +115,7 @@ public class SkillEntry extends AbstractHOTableEntry {
     /**
      * Vergleich zum Sortieren
      */
-	public final int compareTo(@NotNull IHOTableEntry obj) {
+	public final int compareTo(@NotNull IHOTableCellEntry obj) {
         if (obj instanceof SkillEntry) {
             final SkillEntry entry = (SkillEntry) obj;
 

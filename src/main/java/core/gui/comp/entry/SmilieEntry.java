@@ -46,7 +46,7 @@ public class SmilieEntry extends DoubleLabelEntries {
     }
 
     @Override
-	public final int compareTo(@NotNull IHOTableEntry obj) {
+	public final int compareTo(@NotNull IHOTableCellEntry obj) {
         if (obj instanceof SmilieEntry entry) {
 
             if ((entry.getPlayer() != null) && (getPlayer() != null)) {

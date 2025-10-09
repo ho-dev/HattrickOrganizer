@@ -21,11 +21,19 @@ import javax.swing.JTabbedPane;
 public class TrainingModulePanel extends LazyPanel {
 
 	private TrainingModel model;
+	private OutputPanel trainingProgressPanel;
+    private TrainingPredictionPanel trainingPredictionPanel;
+    private AnalyzerPanel trainingAnalyzerPanel;
+    private EffectPanel trainingEffectPanel;
 
-	@Override
+    @Override
 	protected void initialize() {
 		this.model = new TrainingModel();
-		initComponents();
+		this.trainingProgressPanel = new OutputPanel(this.model);
+        this.trainingPredictionPanel =  new TrainingPredictionPanel(this.model);
+        this.trainingAnalyzerPanel =  new AnalyzerPanel(this.model);
+        this.trainingEffectPanel =  new EffectPanel();
+        initComponents();
 		registerRefreshable(true);
 	}
 
@@ -49,16 +57,15 @@ public class TrainingModulePanel extends LazyPanel {
 		setLayout(new BorderLayout());
 
 		var trainingDevelopmentPanel = new TrainingDevelopmentPanel(this.model);
-
 		JSplitPane bottomPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, trainingDevelopmentPanel,
 				new JScrollPane(new PlayerDetailPanel(this.model)));
 		UserParameter.instance().training_bottomSplitPane.init(bottomPanel);
 
 		JTabbedPane tabbedPane = new JTabbedPane();
-		tabbedPane.addTab(Helper.getTranslation("Training"), new OutputPanel(this.model));
-		tabbedPane.addTab(Helper.getTranslation("MainPanel.Prediction"), new TrainingPredictionPanel(this.model));
-		tabbedPane.addTab(Helper.getTranslation("MainPanel.Analyzer"), new AnalyzerPanel(this.model));
-		tabbedPane.addTab(Helper.getTranslation("MainPanel.Effect"), new EffectPanel());
+		tabbedPane.addTab(Helper.getTranslation("Training"), this.trainingProgressPanel);
+		tabbedPane.addTab(Helper.getTranslation("MainPanel.Prediction"), this.trainingPredictionPanel);
+		tabbedPane.addTab(Helper.getTranslation("MainPanel.Analyzer"), this.trainingAnalyzerPanel);
+		tabbedPane.addTab(Helper.getTranslation("MainPanel.Effect"), this.trainingEffectPanel);
 
 		JSplitPane splitPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT, tabbedPane, bottomPanel);
 		UserParameter.instance().training_mainSplitPane.init(splitPanel);
@@ -71,4 +78,14 @@ public class TrainingModulePanel extends LazyPanel {
 		add(mainPanel, BorderLayout.CENTER);
 	}
 
+	public void storeUserSettings() {
+        if (this.trainingProgressPanel != null)
+            this.trainingProgressPanel.storeUserSettings();
+        if (this.trainingAnalyzerPanel != null)
+            this.trainingAnalyzerPanel.storeUserSettings();
+        if (this.trainingPredictionPanel != null)
+            this.trainingPredictionPanel.storeUserSettings();
+        if (this.trainingEffectPanel != null)
+            this.trainingEffectPanel.storeUserSettings();
+	}
 }

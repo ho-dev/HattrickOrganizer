@@ -9,20 +9,20 @@ import org.jetbrains.annotations.NotNull;
  *
  * <p>To display the component, call {@link #getComponent(boolean)}</p>.
  */
-public interface IHOTableEntry extends Comparable<IHOTableEntry> {
+public interface IHOTableCellEntry extends Comparable<IHOTableCellEntry> {
 
 
     /**
      * This method returns the JComponent, which shall be shown in the Table. The component should
      * be created be createComponent and only the background should be changed according to the
-     * isSelected-Flag. Nevertheless you  can ignore the createComponent and updateComponent and
+     * isSelected-Flag. Nevertheless, you  can ignore the createComponent and updateComponent and
      * create a new one everytime getComponent is called, but that is much slower!
      */
     javax.swing.JComponent getComponent(boolean isSelected);
 
     /**
-     * Clear the Component and reset it to the defaultvalues You don´t have to use this method at
-     * all, but it is recommend.
+     * Clear the Component and reset it to the default values You don´t have to use this method at
+     * all, but it is recommended.
      */
     void clear();
 
@@ -30,22 +30,23 @@ public interface IHOTableEntry extends Comparable<IHOTableEntry> {
      * Useful to sort the table
      */
     @Override
-	int compareTo(@NotNull IHOTableEntry obj);
+	int compareTo(@NotNull IHOTableCellEntry obj);
 
     /**
      * Third sort the table
      */
-    int compareToThird(IHOTableEntry obj);
+    int compareToThird(IHOTableCellEntry obj);
     
     /**
      * Create the Component. Keep it in a variable, so the same Component can be returned by
-     * calling getComponent.  You don´t have to use this method at all, but it is recommend.
+     * calling getComponent.  You don´t have to use this method at all, but it is recommended.
      */
     void createComponent();
 
     /**
      * Update the Component which was created bei createComponent instead of creating a new one.
-     * You don´t have to use this method at all, but it is recommend.
+     * You don´t have to use this method at all, but it is recommended.
      */
     void updateComponent();
+
 }

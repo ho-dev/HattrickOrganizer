@@ -1,6 +1,6 @@
 package module.series;
 
-import core.gui.comp.entry.IHOTableEntry;
+import core.gui.comp.entry.IHOTableCellEntry;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.series.SerieTableEntry;
@@ -12,7 +12,7 @@ import java.awt.*;
 /**
  * Displays the form streak by drawing circles.  Only a max of 9 circles is drawn.
  */
-public class FormLabel extends JLabel implements IHOTableEntry {
+public class FormLabel extends JLabel implements IHOTableCellEntry {
 
     public static final Color FG_STANDARD = ThemeManager.getColor(HOColorName.TABLEENTRY_FG);
     public static final Color BG_STANDARD = ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
@@ -45,12 +45,12 @@ public class FormLabel extends JLabel implements IHOTableEntry {
     }
 
     @Override
-    public int compareTo(@NotNull IHOTableEntry obj) {
+    public int compareTo(@NotNull IHOTableCellEntry obj) {
         return 0;
     }
 
     @Override
-    public int compareToThird(IHOTableEntry obj) {
+    public int compareToThird(IHOTableCellEntry obj) {
         return 0;
     }
 

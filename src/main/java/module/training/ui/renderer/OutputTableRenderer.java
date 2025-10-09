@@ -1,10 +1,11 @@
 package module.training.ui.renderer;
 
+import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
+import module.training.ui.TrainingProgressTableModel;
 import module.training.ui.comp.PlayerNameCell;
 import module.training.ui.comp.VerticalIndicator;
-import module.training.ui.model.OutputTableModel;
 
 import java.awt.*;
 import javax.swing.*;
@@ -28,9 +29,9 @@ public class OutputTableRenderer extends DefaultTableCellRenderer {
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
                                                    boolean hasFocus, int row, int column) {
 
-        Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
-                row, column);
-        var tableModel = (OutputTableModel)table.getModel();
+
+        Component cell = super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+        var tableModel = (TrainingProgressTableModel)table.getModel();
 
         // Reset default values
         if (isSelected) {
@@ -40,20 +41,14 @@ public class OutputTableRenderer extends DefaultTableCellRenderer {
         }
         this.setForeground(TABLE_FG);
 
-        if (column < 2) {
+        if (value instanceof ColorLabelEntry colorLabelEntry) {
             if (isSelected) {
-                if (isFixed && column == 0) {
-                    PlayerNameCell pnc = (PlayerNameCell) value;
-                    pnc.setBackground(SELECTION_BG);
-                    return pnc;
-                } else {
-                    setBackground(SELECTION_BG);
-                    return this;
-                }
+                colorLabelEntry.setBackground(SELECTION_BG);
             } else {
                 var modelRow = table.convertRowIndexToModel(row);
-                var playerCol = (PlayerNameCell)tableModel.getValueAt(modelRow,0);
-                var speed = playerCol.getSpeed();
+                var playerCol = (ColorLabelEntry) tableModel.getValueAt(modelRow, 0);
+                assert playerCol != null;
+                var speed = playerCol.getNumber();
                 Color bgColor;
 
                 // Speed range is 16 to 125
@@ -64,18 +59,9 @@ public class OutputTableRenderer extends DefaultTableCellRenderer {
                 } else {
                     bgColor = ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
                 }
-
-                if (isFixed && column == 0) {
-                    PlayerNameCell pnc = (PlayerNameCell) value;
-                    // Reset default values
-                    pnc.setForeground(ThemeManager.getColor(HOColorName.TABLEENTRY_FG));
-                    pnc.setBackground(bgColor);
-                    return pnc;
-                } else {
-                    setBackground(bgColor);
-                }
-
+                colorLabelEntry.setBackground(bgColor);
             }
+            return colorLabelEntry;
         } else if (value instanceof VerticalIndicator vi) {
             if (isSelected) {
                 vi.setBackground(SELECTION_BG);

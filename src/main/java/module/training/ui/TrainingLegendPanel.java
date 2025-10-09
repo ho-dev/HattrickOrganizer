@@ -1,6 +1,3 @@
-/*
- * Created on 14.10.2005
- */
 package module.training.ui;
 
 import core.constants.player.PlayerSkill;
@@ -13,23 +10,16 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.FilteredImageSource;
 import java.awt.image.RGBImageFilter;
-import java.io.Serial;
 
 public class TrainingLegendPanel extends ImagePanel {
-    //~ Constructors -------------------------------------------------------------------------------
-	@Serial
-    private static final long serialVersionUID = 7019803928403346886L;
 
-	/**
-     * Default constructor.
-     */
     public TrainingLegendPanel() {
-        this.setLayout(new GridLayout(2, 5));
+        this.setLayout(new GridLayout(2, 6));
 
         JLabel title = new JLabel(TranslationFacility.tr("Legenda"), SwingConstants.LEFT); //$NON-NLS-1$
         this.add(title);
 
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 5; i++) {
             PlayerSkill skill = Skills.getSkillAtPosition(i);
             if ( skill != null) {
                 this.add(getSkillupLabel(skill.getLanguageString(), skill));
@@ -38,15 +28,15 @@ public class TrainingLegendPanel extends ImagePanel {
 
         this.add(new JLabel(""));
 
-        for (int i = 4; i < 8; i++) {
+        for (int i = 5; i < 10; i++) {
             PlayerSkill skill = Skills.getSkillAtPosition(i);
-            this.add(getSkillupLabel(skill.getLanguageString(), skill));
+            if ( skill != null) {
+                this.add(getSkillupLabel(skill.getLanguageString(), skill));
+            }
         }
 
         this.setBorder(BorderFactory.createEtchedBorder(0));
     }
-
-    //~ Methods ------------------------------------------------------------------------------------
 
     /**
      * Create a position colored label.
@@ -108,8 +98,6 @@ public class TrainingLegendPanel extends ImagePanel {
         return Toolkit.getDefaultToolkit().createImage(((filteredimagesource)));
     }
 
-    //~ Inner Classes ------------------------------------------------------------------------------
-
     /**
      * Color replacement filter class
      */
@@ -120,7 +108,6 @@ public class TrainingLegendPanel extends ImagePanel {
         int oldColor;
         int transparentColor = 0;
 
-        //~ Constructors ---------------------------------------------------------------------------
         /**
          * Creates a new ColorReplaceFilter object.
          */
@@ -134,7 +121,6 @@ public class TrainingLegendPanel extends ImagePanel {
             }
         }
 
-        //~ Methods --------------------------------------------------------------------------------
         @Override
 		public int filterRGB(int x, int y, int rgb) {
             if (transparency && ((rgb | 0xff000000) == transparentColor)) {
