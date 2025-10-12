@@ -26,8 +26,19 @@ class PlayersTable @JvmOverloads constructor(tableModel: HOTableModel, fixedColu
                 propertyChangeSupport.firePropertyChange("SelectedPlayer", oldSelection, newSelection)
             }
 
-            var selectedPlayer: Player? = null
+            private var selectedPlayer: Player? = null
 
+            fun setSelectedPlayer(player: Player?){
+                if ( player != selectedPlayer){
+                    val oldSelection = selectedPlayer
+                    selectedPlayer = player
+                    firePropertyChanged(oldSelection, player)
+                }
+            }
+
+            fun getSelectedPlayer() : Player?{
+                return selectedPlayer
+            }
         }
 
     var players: MutableList<Player?> = HOVerwaltung.instance().getModel().getCurrentPlayers()
@@ -39,14 +50,10 @@ class PlayersTable @JvmOverloads constructor(tableModel: HOTableModel, fixedColu
                 if (selectedRow != -1) {
                     val modelIndex = this.convertRowIndexToModel(selectedRow)
                     if (modelIndex >= 0 && modelIndex < players.size) {
-                        var oldSelection = selectedPlayer
-                        selectedPlayer = players.get(modelIndex)
-                        if (oldSelection != selectedPlayer) {
-                            firePropertyChanged(oldSelection, selectedPlayer)
-                        }
+                        setSelectedPlayer(players.get(modelIndex))
                     }
                 } else if (selectedPlayer != null) {
-                    firePropertyChanged(selectedPlayer, null)
+                    setSelectedPlayer(null)
                 }
             }
         }
