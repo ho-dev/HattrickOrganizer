@@ -8,6 +8,7 @@ import java.awt.event.KeyEvent;
 
 public final class TrainingModule extends DefaultModule {
 
+	private TrainingModulePanel trainingModulePanel;
 	public TrainingModule(){
 		super(true);
 	}
@@ -24,7 +25,8 @@ public final class TrainingModule extends DefaultModule {
 
 	@Override
 	public JPanel createTabPanel() {
-		return new TrainingModulePanel();
+		this.trainingModulePanel = new TrainingModulePanel();
+		return trainingModulePanel;
 	}
 
 	@Override
@@ -32,4 +34,9 @@ public final class TrainingModule extends DefaultModule {
 		return KeyStroke.getKeyStroke(KeyEvent.VK_F8, 0);
 	}
 
+	@Override
+	public void storeUserSettings()
+	{
+		if ( trainingModulePanel != null) trainingModulePanel.storeUserSettings();
+	}
 }

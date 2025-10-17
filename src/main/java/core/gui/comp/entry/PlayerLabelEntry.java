@@ -17,7 +17,7 @@ import java.util.Objects;
 
 import static core.gui.theme.HOIconName.*;
 
-public final class PlayerLabelEntry implements IHOTableEntry {
+public final class PlayerLabelEntry implements IHOTableCellEntry {
 
     private @Nullable Player m_clPlayer;
     private JComponent m_clComponent;
@@ -125,7 +125,7 @@ public final class PlayerLabelEntry implements IHOTableEntry {
         updateComponent();
     }
 
-    public int compareTo(@NotNull IHOTableEntry obj) {
+    public int compareTo(@NotNull IHOTableCellEntry obj) {
         if (obj instanceof PlayerLabelEntry entry) {
             return Objects.requireNonNull(m_clPlayer).getFullName().compareTo(Objects.requireNonNull(entry.getSpieler()).getFullName());
         }
@@ -133,7 +133,7 @@ public final class PlayerLabelEntry implements IHOTableEntry {
         return 0;
     }
 
-    public int compareToThird(IHOTableEntry obj) {
+    public int compareToThird(IHOTableCellEntry obj) {
         if (obj instanceof PlayerLabelEntry entry) {
             int num1 = TrainingPreviewPlayers.instance().getTrainPreviewPlayer(m_clPlayer).getSortIndex();
             int num2 = TrainingPreviewPlayers.instance().getTrainPreviewPlayer(entry.m_clPlayer).getSortIndex();

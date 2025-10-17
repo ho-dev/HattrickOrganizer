@@ -20,8 +20,8 @@ public class DoubleLabelEntries extends AbstractHOTableEntry {
     //~ Instance fields ----------------------------------------------------------------------------
 
     private DoubleLabel m_clComponent = new DoubleLabel();
-    private IHOTableEntry m_clLinks;
-    private IHOTableEntry m_clRechts;
+    private IHOTableCellEntry m_clLinks;
+    private IHOTableCellEntry m_clRechts;
 
     private LayoutManager layout;
 
@@ -53,11 +53,11 @@ public class DoubleLabelEntries extends AbstractHOTableEntry {
      * Creates a new DoubleLabelEntries object.
      *
      */
-    public DoubleLabelEntries(IHOTableEntry links, IHOTableEntry rechts) {
+    public DoubleLabelEntries(IHOTableCellEntry links, IHOTableCellEntry rechts) {
         this(links, rechts, null);
     }
 
-    public DoubleLabelEntries(IHOTableEntry links, IHOTableEntry rechts, LayoutManager layout) {
+    public DoubleLabelEntries(IHOTableCellEntry links, IHOTableCellEntry rechts, LayoutManager layout) {
         m_clLinks = links;
         m_clRechts = rechts;
         setLayoutManager(layout);
@@ -93,7 +93,7 @@ public class DoubleLabelEntries extends AbstractHOTableEntry {
         return m_clComponent;
     }
 
-    public final void setLabels(IHOTableEntry links, IHOTableEntry rechts) {
+    public final void setLabels(IHOTableCellEntry links, IHOTableCellEntry rechts) {
         m_clLinks = links;
         m_clRechts = rechts;
         updateComponent();
@@ -113,11 +113,11 @@ public class DoubleLabelEntries extends AbstractHOTableEntry {
         return (ColorLabelEntry) m_clRechts;
     }
 
-    public final IHOTableEntry getTableEntryLeft() {
+    public final IHOTableCellEntry getTableEntryLeft() {
         return m_clLinks;
     }
 
-    public final IHOTableEntry getTableEntryRight() {
+    public final IHOTableCellEntry getTableEntryRight() {
         return m_clRechts;
     }
 
@@ -126,7 +126,7 @@ public class DoubleLabelEntries extends AbstractHOTableEntry {
         m_clRechts.clear();
     }
 
-	public int compareTo(@NotNull IHOTableEntry obj) {
+	public int compareTo(@NotNull IHOTableCellEntry obj) {
         if (obj instanceof DoubleLabelEntries) {
             final DoubleLabelEntries entry = (DoubleLabelEntries) obj;
             return getTableEntryLeft().compareTo(entry.getTableEntryLeft());

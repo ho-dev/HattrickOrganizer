@@ -5,6 +5,10 @@ import core.gui.comp.table.HOTableModel;
 import module.matches.statistics.MatchesOverviewColumnModel;
 import module.specialEvents.SpecialEventsTableModel;
 import module.teamAnalyzer.ui.RecapPanelTableModel;
+import module.training.ui.TrainingProgressTableModel;
+import module.training.ui.model.ChangesTableModel;
+import module.training.ui.model.SkillupTableModel;
+import module.training.ui.TrainingPredictionTableModel;
 import module.transfer.history.PlayerTransferTableModel;
 import module.transfer.history.TransferTableModel;
 import module.transfer.scout.TransferScoutingTableModel;
@@ -23,7 +27,8 @@ import java.util.Vector;
  */
 public final class UserColumnController {
 
-	public enum ColumnModelId {
+
+    public enum ColumnModelId {
 		MATCHES(1),
 		PLAYEROVERVIEW(2),
 		LINEUP(3),
@@ -37,7 +42,11 @@ public final class UserColumnController {
 		TEAMTRANSFER(11),
 		PLAYERTRANSFER(12),
 		SPECIALEVENTS(13),
-		TRANSFERSCOUT(14);
+		TRANSFERSCOUT(14),
+		TRAININGPROGRESS(15),
+		TRAININGPLAYSERSKILLCHANGE(16),
+        TRAININGPREDICTION(17),
+        TRAININGANALYSIS(18);
 
 		private final int value;
 		ColumnModelId(int value){this.value=value;}
@@ -61,9 +70,6 @@ public final class UserColumnController {
 	
 	/** model for player analysis **/
 	private final PlayerAnalysisModel[] playerAnalysisModels 		= new PlayerAnalysisModel[2];
-	
-	/** model for player analysis **/
-//	private PlayerAnalysisModel playerAnalysis2Model 		= null;
 
 	// Youth module
 	private YouthPlayerOverviewTableModel youthPlayerOverviewColumnModel;
@@ -76,6 +82,11 @@ public final class UserColumnController {
 	private TransferScoutingTableModel transferScoutingTableModel;
 
 	private SpecialEventsTableModel specialEventsTableModel;
+
+	private TrainingProgressTableModel trainingProgressTableModel;
+	private SkillupTableModel trainingPlayerSkillChangeTableModel;
+    private TrainingPredictionTableModel trainingPredictionTableModel;
+    private ChangesTableModel trainingAnalysisTableModel;
 
 	/**
 	 * constructor
@@ -114,6 +125,38 @@ public final class UserColumnController {
 		dbManager.loadHOColumModel(getPlayerTransferTableModel());
 		dbManager.loadHOColumModel(getTransferScoutingTableModel());
 		dbManager.loadHOColumModel(getSpecialEventsTableModel());
+        dbManager.loadHOColumModel(getTrainingProgressTableModel());
+        dbManager.loadHOColumModel(getTrainingPredictionTableModel());
+        dbManager.loadHOColumModel(getTrainingPlayerSkillChangesTableModel());
+        dbManager.loadHOColumModel(getTrainingAnalysisTableModel());
+	}
+
+    public ChangesTableModel getTrainingAnalysisTableModel() {
+        if ( this.trainingAnalysisTableModel == null){
+            this.trainingAnalysisTableModel = new ChangesTableModel(ColumnModelId.TRAININGANALYSIS);
+        }
+        return this.trainingAnalysisTableModel;
+    }
+
+    public TrainingProgressTableModel getTrainingProgressTableModel() {
+        if ( this.trainingProgressTableModel == null){
+            this.trainingProgressTableModel = new TrainingProgressTableModel(ColumnModelId.TRAININGPROGRESS);
+        }
+        return this.trainingProgressTableModel;
+    }
+
+    public TrainingPredictionTableModel getTrainingPredictionTableModel() {
+        if ( this.trainingPredictionTableModel == null){
+            this.trainingPredictionTableModel = new TrainingPredictionTableModel(ColumnModelId.TRAININGPREDICTION);
+        }
+        return this.trainingPredictionTableModel;
+    }
+
+    public SkillupTableModel getTrainingPlayerSkillChangesTableModel() {
+		if ( this.trainingPlayerSkillChangeTableModel == null){
+			this.trainingPlayerSkillChangeTableModel = new SkillupTableModel(ColumnModelId.TRAININGPLAYSERSKILLCHANGE);
+		}
+		return this.trainingPlayerSkillChangeTableModel;
 	}
 
 	public SpecialEventsTableModel getSpecialEventsTableModel() {
@@ -186,7 +229,9 @@ public final class UserColumnController {
 		v.add(getTeamAnalyzerRecapModel());
 		v.add(getYouthPlayerOverviewColumnModel());
 		v.add(getYouthPlayerDetailsColumnModel());
-		// MatchesOverView1Model should not add in this vector, because columns should not be edit
+		v.add(getTrainingProgressTableModel());
+		v.add(getTrainingPlayerSkillChangesTableModel());
+		// MatchesOverView1Model should not add in this vector, because columns should not be edited
 		return v;
 	}
 

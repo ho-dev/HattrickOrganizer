@@ -10,15 +10,6 @@ import core.util.HOLogger;
 import java.util.*;
 
 public class FutureTrainingManager {
-	/** Actual Training sub */
-	public double[] actual = new double[8];
-		
-	/** Maximum training sub after future training */
-	public double[] finalSub = new double[8];
-
-	/** Number of skill ups with maximum training */
-	public double[] finalSkill = new double[8];
-
 	private static final PlayerSkill[] SKILL_INDEX = {
 			PlayerSkill.KEEPER,
 			PlayerSkill.PLAYMAKING,
@@ -27,11 +18,26 @@ public class FutureTrainingManager {
 			PlayerSkill.DEFENDING,
 			PlayerSkill.SCORING,
 			PlayerSkill.SETPIECES,
-			PlayerSkill.STAMINA
+			PlayerSkill.STAMINA,
+			PlayerSkill.EXPERIENCE
 	};
+	/** Actual Training sub */
+	public double[] actual = new double[SKILL_INDEX.length];
+
+	/** Maximum training sub after future training */
+	public double[] finalSub = new double[SKILL_INDEX.length];
+
+	/** Number of skill ups with maximum training */
+	public double[] finalSkill = new double[SKILL_INDEX.length];
+
 
 	/** Active player */
 	private final Player player;
+
+	public List<TrainingPerWeek> getFutureTrainings() {
+		return futureTrainings;
+	}
+
 	private final List<TrainingPerWeek> futureTrainings;
 	private List<SkillChange> futureSkillChanges;
 	private double trainingSpeed;
@@ -53,7 +59,8 @@ public class FutureTrainingManager {
 
 		this.futureSkillChanges = new ArrayList<>();
 
-		for (int i = 0; i < 8; i++) {
+		for (int i = 0; i < SKILL_INDEX.length; i++) {
+			// Sets the actual training levels
 			actual[i] = getOffset(SKILL_INDEX[i]);
 			finalSub[i] = actual[i];
 			finalSkill[i] = player.getSkill(SKILL_INDEX[i]);
@@ -86,7 +93,7 @@ public class FutureTrainingManager {
 
 					// process skill drops
 					int ageInYears = this.player.getAge() + (this.player.getAgeDays() + week * 7) / 112;
-					for (int i = 0; i < SKILL_INDEX.length; i++) {
+					for (int i = 0; i < SKILL_INDEX.length-2; i++) { // no drops for STAMINA and EXPERIENCE
 						var skill = SKILL_INDEX[i];
 						finalSub[i] -= SkillDrops.instance().getSkillDrop((int) finalSkill[i], ageInYears, skill,
 								trainingPriority != null &&
@@ -133,6 +140,9 @@ public class FutureTrainingManager {
 							finalSub[pos] += weeklyTrainingType.calculateSkillIncreaseOfTrainingWeek((int) finalSkill[pos], trainingPerPlayer);
 						}
 
+						// Add experience increment
+						finalSub[8] += this.player.getExperienceIncrementPerWeek();
+
 						for (int i = 0; i < SKILL_INDEX.length; i++) {
 							int change = checkSkillChange(i);
 							if (change != 0) {
@@ -167,6 +177,7 @@ public class FutureTrainingManager {
 		fp.setPassing(getFinalValue(PlayerSkill.PASSING));
 		fp.setPlaymaking(getFinalValue(PlayerSkill.PLAYMAKING));
 		fp.setSetpieces(getFinalValue(PlayerSkill.SETPIECES));
+		fp.setExperience(getFinalValue(PlayerSkill.EXPERIENCE));
 		fp.setAge(player.getAge()+(int)(Math.floor((player.getAgeDays()+7* weeksPassed)/112d)));
 		fp.setPlayerId(player.getPlayerId());
 		return fp;
@@ -204,9 +215,9 @@ public class FutureTrainingManager {
 	/**
 	 * Returns training speed multiplier for training prediction sorting
 	 */
-	public int getTrainingSpeed()
+	public double getTrainingSpeed()
 	{
-		return (int)(trainingSpeed * 100.0);
+		return trainingSpeed * 100.0;
 	}
 
 
@@ -264,6 +275,7 @@ public class FutureTrainingManager {
 			case SCORING -> 5;
 			case SETPIECES -> 6;
 			case STAMINA -> 7;
+			case EXPERIENCE -> 8;
 			default -> -1;
 		};
 

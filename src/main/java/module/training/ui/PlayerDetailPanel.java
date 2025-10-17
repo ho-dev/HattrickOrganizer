@@ -7,6 +7,7 @@ import core.gui.RefreshManager;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
+import core.gui.comp.table.PlayersTable;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.player.FuturePlayer;
@@ -24,6 +25,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.Serial;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -36,7 +39,7 @@ import static core.constants.player.PlayerSkill.STAMINA;
  *
  * @author <a href=mailto:draghetto@users.sourceforge.net>Massimiliano Amato</a>
  */
-public class PlayerDetailPanel extends LazyImagePanel {
+public class PlayerDetailPanel extends LazyImagePanel implements PropertyChangeListener {
 
     @Serial
     private static final long serialVersionUID = -6606934473344186243L;
@@ -73,7 +76,9 @@ public class PlayerDetailPanel extends LazyImagePanel {
     }
 
     private void addListeners() {
-        this.model.addModelChangeListener(change -> setNeedsRefresh(true));
+        PlayersTable.Companion.addPropertyChangeListener(this);
+
+//        this.model.addModelChangeListener(change -> setNeedsRefresh(true));
     }
 
     /**
@@ -341,6 +346,15 @@ public class PlayerDetailPanel extends LazyImagePanel {
         if(editingPlayer!= null && !notes.equals(editingPlayer.getNote())){
             editingPlayer.setNote(notes);
             RefreshManager.instance().doReInit();
+        }
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        if ( evt.getPropertyName().equals("SelectedPlayer") ) {
+            var newSelection = (Player) evt.getNewValue();
+            this.model.setActivePlayer(newSelection);
+            update();
         }
     }
 }

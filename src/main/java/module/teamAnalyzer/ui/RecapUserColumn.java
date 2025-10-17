@@ -1,7 +1,7 @@
 package module.teamAnalyzer.ui;
 
 import core.gui.comp.entry.ColorLabelEntry;
-import core.gui.comp.entry.IHOTableEntry;
+import core.gui.comp.entry.IHOTableCellEntry;
 import core.gui.comp.table.UserColumn;
 import module.teamAnalyzer.vo.TeamLineup;
 
@@ -18,7 +18,7 @@ class RecapUserColumn extends UserColumn {
         this.setDisplay(true);
     }
 
-    public IHOTableEntry getTableEntry(TeamLineup lineup) {
+    public IHOTableCellEntry getTableEntry(TeamLineup lineup) {
         return new ColorLabelEntry(lineup.getName(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
     }
 }

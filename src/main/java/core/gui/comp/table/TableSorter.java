@@ -1,11 +1,8 @@
 // %649934645:de.hattrickorganizer.gui.utils%
 package core.gui.comp.table;
 
-import core.gui.comp.entry.ColorLabelEntry;
-import core.gui.comp.entry.IHOTableEntry;
+import core.gui.comp.entry.IHOTableCellEntry;
 import core.gui.model.UserColumnFactory;
-import core.util.HOLogger;
-import module.transfer.scout.TransferScoutingTableModel;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -191,10 +188,10 @@ public class TableSorter extends TableMap {
             return 1;
         }
 
-        if (obj instanceof IHOTableEntry
-            && obj1 instanceof IHOTableEntry) {
-            final IHOTableEntry colorLabelentry1 = (IHOTableEntry) getModel().getValueAt(i, k);
-            final IHOTableEntry colorLabelentry2 = (IHOTableEntry) getModel().getValueAt(j, k);
+        if (obj instanceof IHOTableCellEntry
+            && obj1 instanceof IHOTableCellEntry) {
+            final IHOTableCellEntry colorLabelentry1 = (IHOTableCellEntry) getModel().getValueAt(i, k);
+            final IHOTableCellEntry colorLabelentry2 = (IHOTableCellEntry) getModel().getValueAt(j, k);
             return isThirdSort ?
                     colorLabelentry1.compareToThird(colorLabelentry2) :
                     colorLabelentry1.compareTo(colorLabelentry2);

@@ -51,7 +51,7 @@ public class TorLabelEntry extends AbstractHOTableEntry {
     }
 
 
-	public final int compareTo(@NotNull IHOTableEntry obj) {
+	public final int compareTo(@NotNull IHOTableCellEntry obj) {
         if (obj instanceof TorLabelEntry) {
             final TorLabelEntry entry = (TorLabelEntry) obj;
 

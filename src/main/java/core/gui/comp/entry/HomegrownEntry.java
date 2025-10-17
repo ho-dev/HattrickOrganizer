@@ -35,7 +35,7 @@ public class HomegrownEntry extends AbstractHOTableEntry{
 
 
 	@Override
-	public int compareTo(@NotNull IHOTableEntry obj) {
+	public int compareTo(@NotNull IHOTableCellEntry obj) {
 		if (obj instanceof HomegrownEntry) {
 			final HomegrownEntry entry = (HomegrownEntry) obj;
 

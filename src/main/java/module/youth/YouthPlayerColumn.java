@@ -1,7 +1,7 @@
 package module.youth;
 
 import core.gui.comp.entry.ColorLabelEntry;
-import core.gui.comp.entry.IHOTableEntry;
+import core.gui.comp.entry.IHOTableCellEntry;
 import core.gui.comp.table.UserColumn;
 import javax.swing.table.TableColumn;
 
@@ -25,7 +25,7 @@ public class YouthPlayerColumn extends UserColumn {
         this.setDisplay(true);
     }
 
-    public IHOTableEntry getTableEntry(YouthPlayer player) {
+    public IHOTableCellEntry getTableEntry(YouthPlayer player) {
         return new ColorLabelEntry(getValue(player), ColorLabelEntry.BG_STANDARD, false, 0);
     }
 

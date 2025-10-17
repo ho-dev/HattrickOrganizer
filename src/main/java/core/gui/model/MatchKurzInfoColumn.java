@@ -1,6 +1,6 @@
 package core.gui.model;
 
-import core.gui.comp.entry.IHOTableEntry;
+import core.gui.comp.entry.IHOTableCellEntry;
 import core.gui.comp.table.UserColumn;
 import core.model.match.MatchKurzInfo;
 import core.model.match.Matchdetails;
@@ -43,7 +43,7 @@ public class MatchKurzInfoColumn extends UserColumn {
 	 * @param match
 	 * @return
 	 */
-	public IHOTableEntry getTableEntry(MatchKurzInfo match){
+	public IHOTableCellEntry getTableEntry(MatchKurzInfo match){
 		return null;
 	}
 	
@@ -52,7 +52,7 @@ public class MatchKurzInfoColumn extends UserColumn {
 	 * @param match
 	 * @return
 	 */
-	public IHOTableEntry getTableEntry(MatchKurzInfo match, Matchdetails matchDetails) {
+	public IHOTableCellEntry getTableEntry(MatchKurzInfo match, Matchdetails matchDetails) {
 		return null;
 	}
 	
@@ -63,7 +63,7 @@ public class MatchKurzInfoColumn extends UserColumn {
 	 * @param spielerCBItem
 	 * @return
 	 */
-	public IHOTableEntry getTableEntry(PlayerMatchCBItem spielerCBItem){
+	public IHOTableCellEntry getTableEntry(PlayerMatchCBItem spielerCBItem){
 		return null;
 	}
 
