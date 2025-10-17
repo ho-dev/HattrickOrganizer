@@ -76,6 +76,7 @@ public class TrainingPredictionPanel extends LazyImagePanel  {
     }
 
     public void storeUserSettings() {
+        this.recapTable.storeUserSettings();
     }
 
 //    private void selectPlayerFromModel() {

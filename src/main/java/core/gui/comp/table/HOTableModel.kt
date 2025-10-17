@@ -378,8 +378,8 @@ abstract class HOTableModel protected constructor(
     private fun getRowOrderSettings(rowSorter: RowSorter<HOTableModel>) {
         // Restore row order setting
         val sortKeys = ArrayList<RowSorter.SortKey>()
-        val sortColumns = Arrays.stream(this.columns).filter { i: UserColumn -> i.sortPriority != null }.sorted(
-            Comparator.comparingInt { obj: UserColumn -> obj.getSortPriority() }).toList()
+        val sortColumns = Arrays.stream(this.columns).filter { i: UserColumn -> i.sortPriority != null }
+            .sorted(Comparator.comparingInt { obj: UserColumn -> obj.getSortPriority() }).toList()
         if (sortColumns.isNotEmpty()) {
             val userColumns = Arrays.stream(this.columns).toList()
             for (col in sortColumns) {

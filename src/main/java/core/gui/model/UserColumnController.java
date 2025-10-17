@@ -125,7 +125,8 @@ public final class UserColumnController {
 		dbManager.loadHOColumModel(getPlayerTransferTableModel());
 		dbManager.loadHOColumModel(getTransferScoutingTableModel());
 		dbManager.loadHOColumModel(getSpecialEventsTableModel());
-		dbManager.loadHOColumModel(getTrainingProgressTableModel());
+        dbManager.loadHOColumModel(getTrainingProgressTableModel());
+        dbManager.loadHOColumModel(getTrainingPredictionTableModel());
         dbManager.loadHOColumModel(getTrainingPlayerSkillChangesTableModel());
         dbManager.loadHOColumModel(getTrainingAnalysisTableModel());
 	}

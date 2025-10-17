@@ -14,6 +14,14 @@ public class TrainingRecapTable extends JScrollPane {
     private final FutureTrainingPrioPopup trainingPrioPopUp;
 
     private final PlayersTable trainingPredictionTable;
+
+    public void storeUserSettings(){
+        var tableModel = (TrainingPredictionTableModel)trainingPredictionTable.getModel();
+        if ( tableModel != null) {
+            tableModel.storeUserSettings();
+        }
+    }
+
 //    private final JTable fixed;
 //    private final JTable scrollTable;
 
