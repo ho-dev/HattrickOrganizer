@@ -45,6 +45,7 @@ public class TrainingProgressTableModel extends HOTableModel {
                     @Override
                     public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
                         var ret = new ColorLabelEntry(entry.getTrainingSpeed(), entry.getPlayer().getFullName(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        ret.setBorderWidth(0);
                         ret.setIcon(TrainingPreviewPlayers.instance().getTrainPreviewPlayer(entry.getPlayer()).getIcon());
                         return ret;
                     }

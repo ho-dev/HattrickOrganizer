@@ -38,6 +38,7 @@ public class TrainingProgressColumn extends UserColumn {
 
     public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
         var colorLabelEntry =  new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, getBackgroundColor(entry), SwingConstants.LEFT);
+        colorLabelEntry.setBorderWidth(0);
         colorLabelEntry.disableSelectionBackgroundColor(true);
 
         var skillChange = entry.getFutureSkillChanges().stream().filter(s->s.getDate().toHTWeek().equals(this.htWeek)).findAny();

@@ -35,14 +35,14 @@ public class ChangesTableModel extends HOTableModel {
                     @Override
                     public IHOTableCellEntry getTableEntry(PlayerSkillChange entry) {
                         var skillChange = entry.getSkillChange();
-                        return new ColorLabelEntry(HODateTime.toEpochSecond(skillChange.getDate()), String.valueOf(skillChange.getHtWeek()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT );
+                        return new ColorLabelEntry(HODateTime.toEpochSecond(skillChange.getDate()), String.valueOf(skillChange.getHtWeek()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT );
                     }
                 },
                 new TrainingColumn(nextColumnId++, "Season", 50) {
                     @Override
                     public IHOTableCellEntry getTableEntry(PlayerSkillChange entry) {
                         var skillChange = entry.getSkillChange();
-                        return new ColorLabelEntry(HODateTime.toEpochSecond(skillChange.getDate()), String.valueOf(skillChange.getHtSeason()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT );
+                        return new ColorLabelEntry(HODateTime.toEpochSecond(skillChange.getDate()), String.valueOf(skillChange.getHtSeason()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT );
                     }
                 },
                 new TrainingColumn(nextColumnId++, "Spieler", 100) {

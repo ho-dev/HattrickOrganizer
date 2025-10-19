@@ -36,6 +36,7 @@ public class TrainingPredictionTableModel  extends HOTableModel {
                     @Override
                     public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
                         var ret = new ColorLabelEntry(entry.getTrainingSpeed(), entry.getPlayer().getFullName(), ColorLabelEntry.FG_STANDARD, getBackgroundColor(entry), SwingConstants.LEFT);
+                        ret.setBorderWidth(0);
                         ret.setIcon(TrainingPreviewPlayers.instance().getTrainPreviewPlayer(entry.getPlayer()).getIcon());
                         ret.setToolTipText(TrainingPreviewPlayers.instance().getTrainPreviewPlayer(entry.getPlayer()).getText());
                         return ret;

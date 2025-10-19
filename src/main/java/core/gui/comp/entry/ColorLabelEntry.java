@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
 public class ColorLabelEntry extends JLabel implements IHOTableCellEntry {
 
@@ -59,7 +60,21 @@ public class ColorLabelEntry extends JLabel implements IHOTableCellEntry {
         number = sortIndex;
         m_clFGColor = foreground;
         m_clBGColor = background;
+        setBorderWidth(8);
         createComponent();
+    }
+
+    public void setBorderWidth(int width) {
+        var insets = this.getInsets();
+        this.setBorder(new EmptyBorder(insets.top,width,insets.bottom,width));//top,left,bottom,right
+    }
+    public void setLeftBorderWidth(int width) {
+        var insets = this.getInsets();
+        this.setBorder(new EmptyBorder(insets.top,width, insets.bottom,insets.right));//top,left,bottom,right
+    }
+    public void setRightBorderWidth(int width) {
+        var insets = this.getInsets();
+        this.setBorder(new EmptyBorder(insets.top,insets.left,insets.bottom,width));//top,left,bottom,right
     }
 
     /**

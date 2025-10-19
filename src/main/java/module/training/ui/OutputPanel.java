@@ -118,11 +118,11 @@ public class OutputPanel extends LazyImagePanel {
             TrainingManager.instance().recalcSubskills(true);
         });
 
-        this.trainingModel.addModelChangeListener(change -> {
-            if (change == ModelChange.ACTIVE_PLAYER) {
-                selectPlayerFromModel();
-            }
-        });
+//        this.trainingModel.addModelChangeListener(change -> {
+//            if (change == ModelChange.ACTIVE_PLAYER) {
+//                selectPlayerFromModel();
+//            }
+//        });
 
         this.trainingProgressTable.addMouseListener(new MouseAdapter() {
             @Override
