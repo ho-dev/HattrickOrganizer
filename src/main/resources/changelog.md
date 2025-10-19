@@ -19,6 +19,11 @@
 ### Download
 * Fix download exception when hattrick site is not reachable - handle connection timeout (#2307)
 
+### Translations
+Reports by Contributors - July 27, 2025 - August 14, 2025
+
+* Kristaps 84
+
 # Changelist HO! 9.1
 
 ## Some numbers
