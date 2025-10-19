@@ -119,6 +119,7 @@ open class FixedColumnsTable @JvmOverloads constructor(
             rightScrollBar.addAdjustmentListener(adjustmentListener)
             rightScrollPane.verticalScrollBar.model = fixedScrollPane.verticalScrollBar.model
             val splitPane = JSplitPane(JSplitPane.HORIZONTAL_SPLIT, fixedScrollPane, rightScrollPane)
+            splitPane.dividerSize = 2
             if (width == 0) width = 60
             this.dividerLocation = HOConfigurationIntParameter("TableDividerLocation_" + tableModel.id, width)
             splitPane.dividerLocation = dividerLocation?.getIntValue()!!
