@@ -19,6 +19,8 @@ final class ArenaPanel extends JPanel {
 
 	private final ArenaSizer m_clArenaSizer = new ArenaSizer();
 	private final JTable m_jtArena = new JTable();
+
+	//Teststadium
 	private Stadium m_clStadium;
 	private final String[] UEBERSCHRIFT = {"", TranslationFacility.tr("Aktuell"), TranslationFacility.tr("Maximal"),
 		TranslationFacility.tr("Durchschnitt"), TranslationFacility.tr("Minimal")};
