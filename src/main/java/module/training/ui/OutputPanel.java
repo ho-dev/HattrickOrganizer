@@ -15,7 +15,6 @@ import core.training.TrainingManager;
 import core.util.Helper;
 import core.util.HelperWrapper;
 import core.util.StringUtils;
-import module.training.ui.model.ModelChange;
 import module.training.ui.model.TrainingModel;
 import module.training.ui.renderer.OutputTableRenderer;
 
@@ -137,22 +136,22 @@ public class OutputPanel extends LazyImagePanel {
         });
     }
 
-    private void selectPlayerFromModel() {
-        this.trainingProgressTable.clearSelection();
-        Player player = this.trainingModel.getActivePlayer();
-        if (player != null) {
-            var playerIdColumnModelIndex = this.trainingProgressTableModel.getPlayerIdColumn().getIndex();
-            var playerIdColumnViewIndex = this.trainingProgressTable.convertColumnIndexToView(playerIdColumnModelIndex);
-            for (int i = 0; i < this.trainingProgressTable.getRowCount(); i++) {
-                String val = ((ColorLabelEntry) trainingProgressTable.getValueAt(i, playerIdColumnViewIndex-trainingProgressTable.getFixedColumnsCount())).getText();
-                int id = Integer.parseInt(val);
-                if (player.getPlayerId() == id) {
-                    this.trainingProgressTable.setRowSelectionInterval(i, i);
-                    break;
-                }
-            }
-        }
-    }
+//    private void selectPlayerFromModel() {
+//        this.trainingProgressTable.clearSelection();
+//        Player player = this.trainingModel.getActivePlayer();
+//        if (player != null) {
+//            var playerIdColumnModelIndex = this.trainingProgressTableModel.getPlayerIdColumn().getIndex();
+//            var playerIdColumnViewIndex = this.trainingProgressTable.convertColumnIndexToView(playerIdColumnModelIndex);
+//            for (int i = 0; i < this.trainingProgressTable.getRowCount(); i++) {
+//                String val = ((ColorLabelEntry) trainingProgressTable.getValueAt(i, playerIdColumnViewIndex-trainingProgressTable.getFixedColumnsCount())).getText();
+//                int id = Integer.parseInt(val);
+//                if (player.getPlayerId() == id) {
+//                    this.trainingProgressTable.setRowSelectionInterval(i, i);
+//                    break;
+//                }
+//            }
+//        }
+//    }
 
     /**
      * Initialize the object layout
