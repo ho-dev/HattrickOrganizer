@@ -11,7 +11,7 @@
 
 ## Translations
 
-Reports by Contributors - August 14, 2025 - September 21, 2025
+Reports by Contributors - August 14, 2025 - October 19, 2025
 
 * mathias dufresne 19
 * Kristaps 19
