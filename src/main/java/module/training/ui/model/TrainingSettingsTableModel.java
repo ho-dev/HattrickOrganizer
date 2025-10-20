@@ -1,17 +1,11 @@
 package module.training.ui.model;
 
-import core.datatype.CBItem;
-import core.db.DBManager;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.IHOTableCellEntry;
 import core.gui.comp.table.HOTableModel;
 import core.gui.model.UserColumnController;
-import core.model.enums.DBDataSource;
-import core.training.TrainingManager;
 import core.training.TrainingPerWeek;
 import core.util.HODateTime;
-import module.training.TrainingType;
-
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.*;
@@ -73,7 +67,7 @@ public class TrainingSettingsTableModel extends HOTableModel {
                         return new ColorLabelEntry(HODateTime.toEpochSecond(trainingDate), String.valueOf(trainingDate.toLocaleHTWeek().week), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
-                new TrainingColumn("s.team.trainingtype", 140) {
+                new TrainingColumn("ls.team.trainingtype", 140) {
                     @Override
                     public IHOTableCellEntry getTableEntry(TrainingPerWeek entry) {
                         return new ColorLabelEntry(core.constants.TrainingType.toString(entry.getTrainingType()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
@@ -100,7 +94,7 @@ public class TrainingSettingsTableModel extends HOTableModel {
                 new TrainingColumn("ls.module.statistics.club.assistant_trainers_level", 70) {
                     @Override
                     public IHOTableCellEntry getTableEntry(TrainingPerWeek entry) {
-                        return new ColorLabelEntry(entry.getTrainingAssistantsLevel(), String.valueOf(entry.getCoachLevel()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        return new ColorLabelEntry(entry.getTrainingAssistantsLevel(), String.valueOf(entry.getTrainingAssistantsLevel()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 }
         )).toArray(new TrainingColumn[0]);
@@ -166,7 +160,7 @@ public class TrainingSettingsTableModel extends HOTableModel {
      */
     public void setTrainingSettings(List<TrainingPerWeek> trainings) {
         setTrainingsPerWeek(trainings);
-        fireTableDataChanged();
+        initData();
     }
 
     @Override
