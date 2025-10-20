@@ -72,33 +72,42 @@ public class TrainingSettingsTableModel extends HOTableModel {
                     public IHOTableCellEntry getTableEntry(TrainingPerWeek entry) {
                         return new ColorLabelEntry(core.constants.TrainingType.toString(entry.getTrainingType()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
+                    @Override
+                    public boolean isEditable() {return true;}
                 },
                 new TrainingColumn("ls.team.trainingintensity", 70) {
                     @Override
                     public IHOTableCellEntry getTableEntry(TrainingPerWeek entry) {
                         return new ColorLabelEntry(entry.getTrainingIntensity(), String.valueOf(entry.getTrainingIntensity()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
+                    @Override
+                    public boolean isEditable() {return true;}
                 },
                 new TrainingColumn("ls.team.staminatrainingshare", 70) {
                     @Override
                     public IHOTableCellEntry getTableEntry(TrainingPerWeek entry) {
                         return new ColorLabelEntry(entry.getStaminaShare(), String.valueOf(entry.getStaminaShare()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
+                    @Override
+                    public boolean isEditable() {return true;}
                 },
                 new TrainingColumn("ls.team.coachingskill", 70) {
                     @Override
                     public IHOTableCellEntry getTableEntry(TrainingPerWeek entry) {
                         return new ColorLabelEntry(entry.getCoachLevel(), getCoachLevelDisplayText(entry.getCoachLevel()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
+                    @Override
+                    public boolean isEditable() {return true;}
                 },
                 new TrainingColumn("ls.module.statistics.club.assistant_trainers_level", 70) {
                     @Override
                     public IHOTableCellEntry getTableEntry(TrainingPerWeek entry) {
                         return new ColorLabelEntry(entry.getTrainingAssistantsLevel(), String.valueOf(entry.getTrainingAssistantsLevel()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
+                    @Override
+                    public boolean isEditable() {return true;}
                 }
         )).toArray(new TrainingColumn[0]);
-
     }
 
     private String getCoachLevelDisplayText(int coachSkillLevel) {
