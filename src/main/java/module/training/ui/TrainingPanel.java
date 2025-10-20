@@ -28,6 +28,7 @@ import java.awt.event.MouseEvent;
 import java.util.Map;
 
 import static core.gui.theme.HOIconName.TRAINING_ICON;
+import static javax.swing.ListSelectionModel.SINGLE_INTERVAL_SELECTION;
 import static module.lineup.LineupPanel.TITLE_FG;
 
 /**
@@ -266,14 +267,14 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 				return tip;
 			}
 
-		};
+        };
 
-		ListSelectionModel listSelectionModel = futureTrainingsTable.getSelectionModel();
+        futureTrainingsTable.setSelectionMode(SINGLE_INTERVAL_SELECTION);
+        ListSelectionModel listSelectionModel = futureTrainingsTable.getSelectionModel();
 		listSelectionModel.addListSelectionListener(e -> {
 			m_lsm= (ListSelectionModel)e.getSource();
 			m_jbEditSelectedFutureTrainings.setEnabled(!m_lsm.isSelectionEmpty());
 		});
-
 
 		JScrollPane lowerScrollPane = new JScrollPane(this.futureTrainingsTable.getContainerComponent());
 		lowerScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
