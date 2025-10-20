@@ -8,8 +8,8 @@ import core.model.enums.DBDataSource;
 import core.training.TrainingPerWeek;
 import core.util.HODateTime;
 import core.util.Helper;
-import module.training.ui.model.FutureTrainingsTableModel;
 import module.training.ui.model.TrainingModel;
+import module.training.ui.model.TrainingSettingsTableModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,7 +26,7 @@ import static module.lineup.LineupPanel.TITLE_FG;
  */
 public class FutureTrainingsEditionPanel extends JPanel {
 
-	private final FutureTrainingsTableModel m_FutureTrainingsTableModel;
+	private final TrainingSettingsTableModel trainingSettingsTableModel;
     private JComboBox m_jcbIntensity;
     private JComboBox m_jcbStaminaTrainingPart;
     private JComboBox m_jcbTrainingType;
@@ -36,10 +36,10 @@ public class FutureTrainingsEditionPanel extends JPanel {
     private final TrainingModel m_TrainingModel;
 
 
-    public FutureTrainingsEditionPanel(TrainingModel _TrainingModel, FutureTrainingsTableModel fm, ListSelectionModel lsm) {
+    public FutureTrainingsEditionPanel(TrainingModel _TrainingModel, TrainingSettingsTableModel fm, ListSelectionModel lsm) {
         setLayout(new BorderLayout());
         m_TrainingModel = _TrainingModel;
-        m_FutureTrainingsTableModel = fm;
+        trainingSettingsTableModel = fm;
         m_selectedTrainingDates = new HashSet<>();
         for (var i : lsm.getSelectedIndices()){
             TrainingPerWeek tpw = _TrainingModel.getFutureTrainings().get(i);
@@ -49,11 +49,11 @@ public class FutureTrainingsEditionPanel extends JPanel {
     }
 
 
-    public FutureTrainingsEditionPanel(TrainingModel _TrainingModel, FutureTrainingsTableModel fm) {
+    public FutureTrainingsEditionPanel(TrainingModel _TrainingModel, TrainingSettingsTableModel fm) {
         setLayout(new BorderLayout());
         m_selectedTrainingDates = null;
         m_TrainingModel = _TrainingModel;
-        m_FutureTrainingsTableModel = fm;
+        trainingSettingsTableModel = fm;
         initComponents();
     }
 
@@ -101,7 +101,7 @@ public class FutureTrainingsEditionPanel extends JPanel {
         }
 
         m_TrainingModel.updateFutureTrainings(futureTrainingsToSave);
-        m_FutureTrainingsTableModel.populate(m_TrainingModel.getFutureTrainings());
+        trainingSettingsTableModel.setTrainingSettings(m_TrainingModel.getFutureTrainings());
         RefreshManager.instance().doRefresh();
     }
 

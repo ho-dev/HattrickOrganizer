@@ -1,5 +1,7 @@
 package module.training.ui;
 
+import core.gui.model.UserColumnController;
+import core.gui.model.UserColumnFactory;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
@@ -12,9 +14,7 @@ import core.util.Helper;
 import module.training.ui.comp.FutureTrainingsEditionPanel;
 import module.training.ui.comp.TrainingComboBox;
 import module.training.ui.comp.trainingParametersEditor;
-import module.training.ui.model.FutureTrainingsTableModel;
 import module.training.ui.model.ModelChange;
-import module.training.ui.model.PastTrainingsTableModel;
 import module.training.ui.model.TrainingModel;
 import org.jetbrains.annotations.NotNull;
 
@@ -36,9 +36,9 @@ import static module.lineup.LineupPanel.TITLE_FG;
 public class TrainingPanel extends JPanel implements TrainingConstants {
 
 	/** Future trainings table model */
-	private FutureTrainingsTableModel futureTrainingsTableModel;
+//	private FutureTrainingsTableModel futureTrainingsTableModel;
 	/** Past trainings table model */
-	private PastTrainingsTableModel pastTrainingsTableModel;
+//	private PastTrainingsTableModel pastTrainingsTableModel;
 
 	private JTable futureTrainingsTable;
 	private JButton m_jbEditAllFutureTrainings;
@@ -67,8 +67,10 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 	 * Populate the table is called everytime a refresh command is issued
 	 */
 	public void reload() {
-		pastTrainingsTableModel.populate(TrainingManager.instance().getHistoricalTrainings());
-		futureTrainingsTableModel.populate(model.getFutureTrainings());
+        var pastTrainingsTableModel = UserColumnController.instance().getTrainingSettingsPastTableModel();
+        var futureTrainingsTableModel = UserColumnController.instance().getTrainingSettingsFutureTableModel();
+		pastTrainingsTableModel.setTrainingSettings(TrainingManager.instance().getHistoricalTrainings());
+		futureTrainingsTableModel.setTrainingSettings(model.getFutureTrainings());
 	}
 
 	private void addListeners() {
@@ -79,13 +81,14 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 
 		Object[] options = {Helper.getTranslation("ls.button.close")};
 
+        var futureTrainingsTableModel = UserColumnController.instance().getTrainingSettingsFutureTableModel();
+
 		m_jbEditSelectedFutureTrainings.addActionListener(arg0 -> {
 
 			TableCellEditor editor = futureTrainingsTable.getCellEditor();
 			if (editor != null) {
 				editor.stopCellEditing();
 			}
-
 
 			JOptionPane.showOptionDialog(getTopLevelAncestor(),
 					new FutureTrainingsEditionPanel(model, futureTrainingsTableModel, m_lsm),
@@ -135,8 +138,8 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 		uGbc.gridy = 0;
 		pastTrainingsPanel.add(pastTrainingsLabel, uGbc);
 
-		this.pastTrainingsTableModel = new PastTrainingsTableModel();
-		JTable pastTrainingsTable = new TrainingTable(this.pastTrainingsTableModel) {
+		var pastTrainingsTableModel = UserColumnController.instance().getTrainingSettingsPastTableModel();
+		JTable pastTrainingsTable = new TrainingTable(pastTrainingsTableModel) {
 
 			public Component prepareRenderer(
 					TableCellRenderer renderer, int row, int column) {
@@ -220,7 +223,8 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 		futureTrainingsPanel.add(this.m_jbEditAllFutureTrainings, lGbc);
 
 
-		futureTrainingsTableModel = new FutureTrainingsTableModel(this.model);
+//		futureTrainingsTableModel = new FutureTrainingsTableModel(this.model);
+        var futureTrainingsTableModel = UserColumnController.instance().getTrainingSettingsFutureTableModel();
 
 		futureTrainingsTable = new TrainingTable(futureTrainingsTableModel){
 

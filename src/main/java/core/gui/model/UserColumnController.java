@@ -9,6 +9,7 @@ import module.training.ui.TrainingProgressTableModel;
 import module.training.ui.model.ChangesTableModel;
 import module.training.ui.model.SkillupTableModel;
 import module.training.ui.TrainingPredictionTableModel;
+import module.training.ui.model.TrainingSettingsTableModel;
 import module.transfer.history.PlayerTransferTableModel;
 import module.transfer.history.TransferTableModel;
 import module.transfer.scout.TransferScoutingTableModel;
@@ -46,7 +47,9 @@ public final class UserColumnController {
 		TRAININGPROGRESS(15),
 		TRAININGPLAYSERSKILLCHANGE(16),
         TRAININGPREDICTION(17),
-        TRAININGANALYSIS(18);
+        TRAININGANALYSIS(18),
+        TRAININGSETTINGSFUTURE(19),
+        TRAININGSETTINGSPAST(20);
 
 		private final int value;
 		ColumnModelId(int value){this.value=value;}
@@ -87,6 +90,8 @@ public final class UserColumnController {
 	private SkillupTableModel trainingPlayerSkillChangeTableModel;
     private TrainingPredictionTableModel trainingPredictionTableModel;
     private ChangesTableModel trainingAnalysisTableModel;
+    private TrainingSettingsTableModel trainingSettingsFutureTableModel;
+    private TrainingSettingsTableModel trainingSettingsPastTableModel;
 
 	/**
 	 * constructor
@@ -129,7 +134,23 @@ public final class UserColumnController {
         dbManager.loadHOColumModel(getTrainingPredictionTableModel());
         dbManager.loadHOColumModel(getTrainingPlayerSkillChangesTableModel());
         dbManager.loadHOColumModel(getTrainingAnalysisTableModel());
+        dbManager.loadHOColumModel(getTrainingSettingsFutureTableModel());
+        dbManager.loadHOColumModel(getTrainingSettingsPastTableModel());
 	}
+
+    public TrainingSettingsTableModel getTrainingSettingsPastTableModel() {
+        if (this.trainingSettingsPastTableModel == null){
+            this.trainingSettingsPastTableModel = new TrainingSettingsTableModel(ColumnModelId.TRAININGSETTINGSPAST, "trainingSettings.past");
+        }
+        return this.trainingSettingsPastTableModel;
+    }
+
+    public TrainingSettingsTableModel getTrainingSettingsFutureTableModel() {
+        if (this.trainingSettingsFutureTableModel == null){
+            this.trainingSettingsFutureTableModel = new TrainingSettingsTableModel(ColumnModelId.TRAININGSETTINGSFUTURE, "trainingSettings.future");
+        }
+        return this.trainingSettingsFutureTableModel;
+    }
 
     public ChangesTableModel getTrainingAnalysisTableModel() {
         if ( this.trainingAnalysisTableModel == null){
@@ -231,6 +252,8 @@ public final class UserColumnController {
 		v.add(getYouthPlayerDetailsColumnModel());
 		v.add(getTrainingProgressTableModel());
 		v.add(getTrainingPlayerSkillChangesTableModel());
+        v.add(getTrainingSettingsPastTableModel());
+        v.add(getTrainingSettingsFutureTableModel());
 		// MatchesOverView1Model should not add in this vector, because columns should not be edited
 		return v;
 	}

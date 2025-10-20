@@ -2,6 +2,7 @@ package module.training.ui.model;
 
 import core.gui.comp.entry.IHOTableCellEntry;
 import core.gui.comp.table.UserColumn;
+import core.training.TrainingPerWeek;
 import module.training.PlayerSkillChange;
 
 public class TrainingColumn extends UserColumn {
@@ -23,6 +24,7 @@ public class TrainingColumn extends UserColumn {
         this(id, name, name, minWidth);
     }
 
+    public IHOTableCellEntry getTableEntry(TrainingPerWeek entry) {return null;}
     public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {return null;}
     public IHOTableCellEntry getTableEntry(PlayerSkillChange entry) {return null;}
 }

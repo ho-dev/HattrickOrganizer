@@ -5,6 +5,7 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.util.AmountOfMoney;
+import core.util.HODateTime;
 import core.util.Helper;
 import org.jetbrains.annotations.NotNull;
 import java.awt.Color;
@@ -170,6 +171,10 @@ public class ColorLabelEntry extends JLabel implements IHOTableCellEntry {
         m_clBGColor = bg_color;
         createComponent();
         setAmountOfMoney(amount, false);
+    }
+
+    public ColorLabelEntry(HODateTime date, Color foreground, Color background, int horizontalOrientation){
+        this(HODateTime.toEpochSecond(date), date.toLocaleDateTime(), foreground, background, horizontalOrientation);
     }
 
     public void setAmountOfMoney (AmountOfMoney amount, boolean switchColor){
