@@ -1,5 +1,6 @@
 package module.training.ui.model;
 
+import core.datatype.CBItem;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.IHOTableCellEntry;
 import core.gui.comp.table.HOTableModel;
@@ -16,6 +17,8 @@ import javax.swing.*;
 public class TrainingSettingsTableModel extends HOTableModel {
 
 	protected List<TrainingPerWeek> o_TrainingsPerWeek;
+
+    protected TrainingModel trainingModel;
 //    protected Object[][]o_Data;
 //    private final String[] o_ColumnNames;
 //    private final TrainingType o_trainingType;
@@ -117,6 +120,11 @@ public class TrainingSettingsTableModel extends HOTableModel {
     	this.o_TrainingsPerWeek = trainingsPerWeek;
     }
 
+    public void setTrainingModel(TrainingModel trainingModel) {
+        this.trainingModel = trainingModel;
+    }
+
+
 //    /**
 //     * Cells that are editable should be less than 2 seasons old (otherwise it could be misleading as they won't be considered in skill recalculation)
 //     * also first column is not editable
@@ -186,5 +194,44 @@ public class TrainingSettingsTableModel extends HOTableModel {
             rownum++;
         }
         fireTableDataChanged();
+    }
+
+    /**
+     * Move the table values to the model objects
+     * @param row       Model row index
+     * @param column    Model column index
+     * @return          Modified training settings entry
+     *                  or null if no value is changed
+     */
+    public TrainingPerWeek getEditedEntry(int row, int column) {
+        // Column index is from the not fixed table part
+        if ( row >= 0 && row < this.o_TrainingsPerWeek.size() && column >= 3 && column < 8){
+            var entry = this.o_TrainingsPerWeek.get(row);
+            var value = this.getValueAt(row, column);
+            if ( value != null) {
+                if ( value instanceof CBItem cbItem )
+                   entry.setTrainingType(cbItem.getId());
+                else {
+                    switch (column) {
+                        case 4:
+                            entry.setTrainingIntensity((int) value);
+                            break;
+                        case 5:
+                            entry.setStaminaShare((int) value);
+                            break;
+                        case 6:
+                            entry.setCoachLevel((int) value + 3);
+                            break;
+                        case 7:
+                            entry.setTrainingAssistantLevel((int) value);
+                            break;
+                        default:
+                            return null;
+                    }
+                }
+                return entry;
+            }
+        }
+        return null; // No value edited
     }
 }

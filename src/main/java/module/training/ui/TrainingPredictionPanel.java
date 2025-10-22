@@ -1,5 +1,6 @@
 package module.training.ui;
 
+import core.gui.RefreshManager;
 import core.gui.comp.panel.LazyImagePanel;
 import core.model.TranslationFacility;
 import module.training.ui.model.ModelChange;
@@ -24,7 +25,7 @@ public class TrainingPredictionPanel extends LazyImagePanel  {
     protected void initialize() {
         initComponents();
         update();
-//        addListeners();
+        addListeners();
     }
 
     private boolean isUpdating=false;
@@ -38,13 +39,13 @@ public class TrainingPredictionPanel extends LazyImagePanel  {
         }
     }
 
-//    private void addListeners() {
-//        RefreshManager.instance().registerRefreshable(() -> {
-//            if (isShowing()) {
-//                update();
-//            }
-//        });
-//
+    private void addListeners() {
+        RefreshManager.instance().registerRefreshable(() -> {
+            if (isShowing()) {
+                update();
+            }
+        });
+
 //        this.model.addModelChangeListener(change -> {
 //            if (change == ModelChange.ACTIVE_PLAYER) {
 //                selectPlayerFromModel();
@@ -52,7 +53,7 @@ public class TrainingPredictionPanel extends LazyImagePanel  {
 //                update();
 //            }
 //        });
-//    }
+    }
 
     /**
      * Initialize the GUI

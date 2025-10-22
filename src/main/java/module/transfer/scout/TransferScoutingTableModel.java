@@ -401,17 +401,19 @@ public class TransferScoutingTableModel extends HOTableModel {
 
     }
 
-    /**
-     * Returns false.  This is the default implementation for all cells.
-     *
-     * @param row the row being queried
-     * @param col the column being queried
-     * @return false
-     */
-    @Override
-    public final boolean isCellEditable(int row, int col) {
-        return false;
-    }
+//    /**
+//     * Returns false.  This is the default implementation for all cells.
+//     *
+//     * @param row the row being queried
+//     * @param col the column being queried
+//     * @return false
+//     */
+//
+//    // TODO: This should be the default in HOTableModel - override is not necessary
+//    @Override
+//    public final boolean isCellEditable(int row, int col) {
+//        return false;
+//    }
 
     @Override
     protected void initData() {

@@ -87,6 +87,7 @@ class PlayerOverviewTableModel(id: ColumnModelId, name: String) : HOTableModel(i
         assert(this.columns.size == columns.size)
     }
 
+    // TODO: table column model should control isEditable
     override fun isCellEditable(row: Int, column: Int): Boolean {
         return getValueAt(row, column) is Boolean
     }

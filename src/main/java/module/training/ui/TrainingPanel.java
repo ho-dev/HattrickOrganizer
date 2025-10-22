@@ -1,5 +1,7 @@
 package module.training.ui;
 
+import core.db.DBManager;
+import core.gui.RefreshManager;
 import core.gui.comp.table.FixedColumnsTable;
 import core.gui.model.UserColumnController;
 import core.gui.theme.HOColorName;
@@ -20,6 +22,7 @@ import module.training.ui.model.TrainingSettingsTableModel;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.event.TableModelEvent;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -36,12 +39,8 @@ import static module.lineup.LineupPanel.TITLE_FG;
  */
 public class TrainingPanel extends JPanel implements TrainingConstants {
 
-//	/** Future trainings table model */
-////	private FutureTrainingsTableModel futureTrainingsTableModel;
-//	/** Past trainings table model */
-////	private PastTrainingsTableModel pastTrainingsTableModel;
-
-	private TrainingSettingsTable futureTrainingsTable;
+private TrainingSettingsTable futureTrainingsTable;
+    private TrainingSettingsTable pastTrainingsTable;
 	private JButton m_jbEditAllFutureTrainings;
 	private JButton m_jbEditSelectedFutureTrainings;
 
@@ -83,6 +82,10 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 		Object[] options = {Helper.getTranslation("ls.button.close")};
 
         var futureTrainingsTableModel = UserColumnController.instance().getTrainingSettingsFutureTableModel();
+        futureTrainingsTableModel.addTableModelListener(this::saveFutureTrainingSetting);
+
+        var pastTrainingTableModel = UserColumnController.instance().getTrainingSettingsPastTableModel();
+        pastTrainingTableModel.addTableModelListener(this::savePastTrainingSetting);
 
 		m_jbEditSelectedFutureTrainings.addActionListener(arg0 -> {
 
@@ -122,7 +125,45 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 		});
 	}
 
-	/**
+    /**
+     * Save past training settings
+     * Model class is called to move the edited values to the model object
+     * If successful, the changed entry is stored in database.
+     * @param e TableModelEvent
+     */
+    private void savePastTrainingSetting(TableModelEvent e) {
+        if ( e.getColumn() > -1) {
+            var model = (TrainingSettingsTableModel) e.getSource();
+            var modelColumnIndex = this.pastTrainingsTable.convertColumnIndexToModel(e.getColumn());
+            var modelRowIndex = this.pastTrainingsTable.convertRowIndexToModel(e.getFirstRow());
+            var entry = model.getEditedEntry(modelRowIndex, modelColumnIndex);
+            if (entry != null) {
+                DBManager.instance().saveTraining(entry, entry.getTrainingDate());
+            }
+        }
+    }
+
+    /**
+     * Save future training settings
+     * Model class is called to move the edited values to the model object
+     * If successful, the changed entry is stored in database and the
+     * refresh is triggered to update for instance the training prediction table
+     * @param e TableModelEvent
+     */
+    private void saveFutureTrainingSetting(TableModelEvent e) {
+        if (e.getColumn() > -1) {
+            var model = (TrainingSettingsTableModel) e.getSource();
+            var modelColumnIndex = this.futureTrainingsTable.convertColumnIndexToModel(e.getColumn());
+            var modelRowIndex = this.futureTrainingsTable.convertRowIndexToModel(e.getFirstRow());
+            var entry = model.getEditedEntry(modelRowIndex, modelColumnIndex);
+            if (entry != null) {
+                this.model.saveFutureTraining(entry);
+                RefreshManager.instance().doRefresh();
+            }
+        }
+    }
+
+    /**
 	 * Initialize the object layout
 	 */
 	private void initComponents() {
@@ -140,7 +181,7 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 		pastTrainingsPanel.add(pastTrainingsLabel, uGbc);
 
 		var pastTrainingsTableModel = UserColumnController.instance().getTrainingSettingsPastTableModel();
-		var pastTrainingsTable = new TrainingSettingsTable(pastTrainingsTableModel) {
+		this.pastTrainingsTable = new TrainingSettingsTable(pastTrainingsTableModel) {
 
             public Component prepareRenderer(
                     TableCellRenderer renderer, int row, int column) {
@@ -222,6 +263,7 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 
 //		futureTrainingsTableModel = new FutureTrainingsTableModel(this.model);
         var futureTrainingsTableModel = UserColumnController.instance().getTrainingSettingsFutureTableModel();
+        futureTrainingsTableModel.setTrainingModel(this.model);
 
 		futureTrainingsTable = new TrainingSettingsTable(futureTrainingsTableModel){
 
@@ -298,42 +340,39 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 
 		public TrainingSettingsTable(TrainingSettingsTableModel arg0) {
 			super(arg0,3);
-			setComboBoxEditor();
-		}
-
-		/**
-		 * Initiates combo box and editor
-		 */
-		private void setComboBoxEditor() {
+//			setComboBoxEditor();
+//		}
+//
+//		/**
+//		 * Initiates combo box and editor
+//		 */
+//		private void setComboBoxEditor() {
 			// Sets the combo box for selecting the training type
 			var jcbTrainingEditor = new TrainingComboBox();
 			TableColumn trainingColumn = this.getTableColumn(3);
-			trainingColumn.setCellEditor(new DefaultCellEditor(jcbTrainingEditor));
-			trainingColumn.setPreferredWidth(120);
+            var cellEditor = new DefaultCellEditor(jcbTrainingEditor);
+            cellEditor.addCellEditorListener(this);
+			trainingColumn.setCellEditor(cellEditor);
 
 			// Sets the combo box for selecting the intensity
 			var jcbIntensityEditor = new TrainingParametersEditor(TrainingConstants.MIN_TRAINING_INTENSITY);
 			TableColumn trainingIntensityColumn =this.getTableColumn(4);
 			trainingIntensityColumn.setCellEditor(new DefaultCellEditor(jcbIntensityEditor));
-			trainingIntensityColumn.setPreferredWidth(50);
 
 			// Sets the combo box for selecting the staminaTrainingPart
 			var jcbStaminaEditor = new TrainingParametersEditor(TrainingConstants.MIN_STAMINA_SHARE);
 			TableColumn staminaColumn = this.getTableColumn(5);
 			staminaColumn.setCellEditor(new DefaultCellEditor(jcbStaminaEditor));
-			staminaColumn.setPreferredWidth(50);
 
 			// Sets the combo box for selecting the coach skill
 			var jcbCoachSkillEditor = new TrainingParametersEditor(TrainingConstants.MIN_COACH_SKILL, TrainingConstants.MAX_COACH_SKILL);
 			TableColumn coachSkillColumn = this.getTableColumn(6);
 			coachSkillColumn.setCellEditor(new DefaultCellEditor(jcbCoachSkillEditor));
-			coachSkillColumn.setPreferredWidth(50);
 
 			// Sets the combo box for selecting the Assistant Coach Total Level
-			var jcbAssitantsTotalLevelEditor = new TrainingParametersEditor(TrainingConstants.MIN_ASSISTANTS_COACH_LEVEL, TrainingConstants.MAX_ASSISTANTS_COACH_LEVEL);
-			TableColumn assitantsLevelColumn = this.getTableColumn(7);
-			assitantsLevelColumn.setCellEditor(new DefaultCellEditor(jcbAssitantsTotalLevelEditor));
-			assitantsLevelColumn.setPreferredWidth(50);
+			var assistantsTotalLevelEditor = new TrainingParametersEditor(TrainingConstants.MIN_ASSISTANTS_COACH_LEVEL, TrainingConstants.MAX_ASSISTANTS_COACH_LEVEL);
+			TableColumn assistantsTotalLevelColumn = this.getTableColumn(7);
+			assistantsTotalLevelColumn.setCellEditor(new DefaultCellEditor(assistantsTotalLevelEditor));
 		}
 	}
 }

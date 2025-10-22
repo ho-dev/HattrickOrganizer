@@ -18,9 +18,9 @@ public class TrainingComboBox extends JComboBox {
     /**
      * Creates a new TrainingComboBox object with an empty entry
      */
-    public TrainingComboBox(boolean emptyEntry) {
+    public TrainingComboBox(boolean addEmptyEntry) {
         super();
-        if(emptyEntry){
+        if(addEmptyEntry){
             addItem(null);
         }
         for(CBItem _trainingType:TrainingType.ITEMS){
