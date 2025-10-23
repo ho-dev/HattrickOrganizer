@@ -203,7 +203,7 @@ private TrainingSettingsTable futureTrainingsTable;
                 return c;
             }
 
-            public String getToolTipText(MouseEvent e) {
+            public String getToolTipText(@NotNull MouseEvent e) {
                 String tip = null;
                 java.awt.Point p = e.getPoint();
                 int rowIndex = rowAtPoint(p);
@@ -226,8 +226,9 @@ private TrainingSettingsTable futureTrainingsTable;
             }
         };
 
-		JScrollPane upperScrollPane = new JScrollPane(pastTrainingsTable.getContainerComponent());
-		upperScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        var upperScrollPane = pastTrainingsTable.getContainerComponent();
+//        JScrollPane upperScrollPane = new JScrollPane(pastTrainingsTable.getContainerComponent());
+//		upperScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		uGbc.gridy = 1;
 		uGbc.weightx = 1.0;
 		uGbc.weighty = 1.0;
@@ -318,8 +319,9 @@ private TrainingSettingsTable futureTrainingsTable;
 			m_jbEditSelectedFutureTrainings.setEnabled(!m_lsm.isSelectionEmpty());
 		});
 
-		JScrollPane lowerScrollPane = new JScrollPane(this.futureTrainingsTable.getContainerComponent());
-		lowerScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+        var lowerScrollPane = this.futureTrainingsTable.getContainerComponent();
+//        JScrollPane lowerScrollPane = new JScrollPane(this.futureTrainingsTable.getContainerComponent());
+//		lowerScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		lGbc.gridx = 0;
 		lGbc.gridy = 1;
 		lGbc.weighty = 1;

@@ -6,11 +6,7 @@ import core.gui.comp.entry.IHOTableCellEntry;
 import core.gui.comp.table.HOTableModel;
 import core.gui.comp.table.UserColumn;
 import core.gui.model.UserColumnController;
-import core.model.UserParameter;
 import core.model.player.MatchRoleID;
-import core.util.CurrencyUtils;
-import core.util.Helper;
-
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
