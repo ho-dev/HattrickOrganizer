@@ -10,7 +10,6 @@ import module.training.TrainWeekEffect;
 import module.training.ui.model.TrainingColumn;
 
 import javax.swing.*;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 
