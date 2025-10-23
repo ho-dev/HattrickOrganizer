@@ -7,6 +7,7 @@ import module.specialEvents.SpecialEventsTableModel;
 import module.teamAnalyzer.ui.RecapPanelTableModel;
 import module.training.ui.TrainingProgressTableModel;
 import module.training.ui.model.ChangesTableModel;
+import module.training.ui.EffectTableModel;
 import module.training.ui.model.SkillupTableModel;
 import module.training.ui.TrainingPredictionTableModel;
 import module.training.ui.model.TrainingSettingsTableModel;
@@ -28,7 +29,6 @@ import java.util.Vector;
  */
 public final class UserColumnController {
 
-
     public enum ColumnModelId {
 		MATCHES(1),
 		PLAYEROVERVIEW(2),
@@ -49,7 +49,8 @@ public final class UserColumnController {
         TRAININGPREDICTION(17),
         TRAININGANALYSIS(18),
         TRAININGSETTINGSFUTURE(19),
-        TRAININGSETTINGSPAST(20);
+        TRAININGSETTINGSPAST(20),
+        TRAININGEFFECT(21);
 
 		private final int value;
 		ColumnModelId(int value){this.value=value;}
@@ -92,6 +93,7 @@ public final class UserColumnController {
     private ChangesTableModel trainingAnalysisTableModel;
     private TrainingSettingsTableModel trainingSettingsFutureTableModel;
     private TrainingSettingsTableModel trainingSettingsPastTableModel;
+    private EffectTableModel effectTableModel;
 
 	/**
 	 * constructor
@@ -136,7 +138,16 @@ public final class UserColumnController {
         dbManager.loadHOColumModel(getTrainingAnalysisTableModel());
         dbManager.loadHOColumModel(getTrainingSettingsFutureTableModel());
         dbManager.loadHOColumModel(getTrainingSettingsPastTableModel());
+        dbManager.loadHOColumModel(getTrainingEffectTableModel());
 	}
+
+    public EffectTableModel getTrainingEffectTableModel() {
+        if ( this.effectTableModel == null){
+            this.effectTableModel = new EffectTableModel(ColumnModelId.TRAININGEFFECT);
+        }
+        return this.effectTableModel;
+    }
+
 
     public TrainingSettingsTableModel getTrainingSettingsPastTableModel() {
         if (this.trainingSettingsPastTableModel == null){
