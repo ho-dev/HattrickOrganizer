@@ -105,59 +105,13 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
             }
         }
 
-//		values.sort((sc1, sc2) -> {
-//            if (sc1.getSkillChange().getDate().isAfter(sc2.getSkillChange().getDate())) {
-//                return -1;
-//            } else if (sc1.getSkillChange().getDate().isBefore(sc2.getSkillChange().getDate())) {
-//                return 1;
-//            } else {
-//                if ((sc1.getPlayer().equals(sc2.getPlayer()))
-//                        && (sc1.getSkillChange().getType() == sc2.getSkillChange().getType())) {
-//                    if (sc1.getSkillChange().getValue() > sc2.getSkillChange().getValue()) {
-//                        return -1;
-//                    } else {
-//                        return 1;
-//                    }
-//                } else {
-//                    return sc1.getPlayer().getFullName().compareTo(sc2.getPlayer().getFullName());
-//                }
-//            }
-//        });
-
         var trainingAnalysisTableModel = UserColumnController.instance().getTrainingAnalysisTableModel();
         trainingAnalysisTableModel.setChanges(values);
-
-//		changesTable.setDefaultRenderer(Object.class, new ChangeTableRenderer());
-//		changesTable.getTableHeader().setReorderingAllowed(false);
-//		changesTable.getColumnModel().getColumn(0).setPreferredWidth(50);
-//		changesTable.getColumnModel().getColumn(1).setPreferredWidth(50);
-//		changesTable.getColumnModel().getColumn(2).setPreferredWidth(150);
-//		changesTable.getColumnModel().getColumn(3).setPreferredWidth(100);
-//		changesTable.getColumnModel().getColumn(4).setPreferredWidth(100);
-
-//		// Hide column 5
-//		TableColumn tblColumn = changesTable.getTableHeader().getColumnModel().getColumn(5);
-//		tblColumn.setPreferredWidth(0);
-//		tblColumn.setMinWidth(0);
-//		tblColumn.setMaxWidth(0);
-//
-//		// Hide column 6
-//		tblColumn = changesTable.getTableHeader().getColumnModel().getColumn(6);
-//		tblColumn.setPreferredWidth(0);
-//		tblColumn.setMinWidth(0);
-//		tblColumn.setMaxWidth(0);
-
-//		// Set own renderer instance for skillup column.
-//		changesTable.getTableHeader().getColumnModel().getColumn(3)
-//				.setCellRenderer(new SkillupTypeTableCellRenderer());
 	}
 
 	private void addListeners() {
-
         PlayersTable.Companion.addPropertyChangeListener(evt -> selectPlayerFromModel());
-
-		this.oldPlayersCheckBox.addChangeListener(e -> updateFilterPanel());
-
+        this.oldPlayersCheckBox.addChangeListener(e -> updateFilterPanel());
 		this.changesTable.getSelectionModel().addListSelectionListener(e->{
             var modelIndex = this.changesTable.getSelectedModelIndex();
             if (modelIndex > -1){

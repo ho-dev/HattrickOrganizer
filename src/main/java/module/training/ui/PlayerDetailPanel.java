@@ -1,4 +1,3 @@
-// %4263391236:hoplugins.trainingExperience.ui%
 package module.training.ui;
 
 import core.constants.player.PlayerAbility;
@@ -41,8 +40,6 @@ import static core.constants.player.PlayerSkill.STAMINA;
  */
 public class PlayerDetailPanel extends LazyImagePanel implements PropertyChangeListener {
 
-    @Serial
-    private static final long serialVersionUID = -6606934473344186243L;
     private static final int skillNumber = 9;
     private JLabel playerLabel;
     private JTextArea m_jtaNotes;
@@ -77,8 +74,6 @@ public class PlayerDetailPanel extends LazyImagePanel implements PropertyChangeL
 
     private void addListeners() {
         PlayersTable.Companion.addPropertyChangeListener(this);
-
-//        this.model.addModelChangeListener(change -> setNeedsRefresh(true));
     }
 
     /**

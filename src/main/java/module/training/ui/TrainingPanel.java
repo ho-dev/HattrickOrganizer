@@ -50,7 +50,6 @@ private TrainingSettingsTable futureTrainingsTable;
 
 	private static final Color TABLE_BG = ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
 	private static final Color SELECTION_BG = ThemeManager.getColor(HOColorName.TABLE_SELECTION_BG);
-//	private static final Color TABLE_FG = ThemeManager.getColor(HOColorName.TABLEENTRY_FG);
 
 	/**
 	 * Creates a new TrainingPanel object.
@@ -101,7 +100,6 @@ private TrainingSettingsTable futureTrainingsTable;
 					JOptionPane.PLAIN_MESSAGE, ImageUtilities.getSvgIcon(TRAINING_ICON, colorMap, 25,25),
 					options, options[0]);
 		});
-
 
 		m_jbEditAllFutureTrainings.addActionListener(arg0 -> {
 			TableCellEditor editor = futureTrainingsTable.getCellEditor();
@@ -227,8 +225,6 @@ private TrainingSettingsTable futureTrainingsTable;
         };
 
         var upperScrollPane = pastTrainingsTable.getContainerComponent();
-//        JScrollPane upperScrollPane = new JScrollPane(pastTrainingsTable.getContainerComponent());
-//		upperScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		uGbc.gridy = 1;
 		uGbc.weightx = 1.0;
 		uGbc.weighty = 1.0;
@@ -262,10 +258,8 @@ private TrainingSettingsTable futureTrainingsTable;
 		lGbc.weightx = 0;
 		futureTrainingsPanel.add(this.m_jbEditAllFutureTrainings, lGbc);
 
-//		futureTrainingsTableModel = new FutureTrainingsTableModel(this.model);
         var futureTrainingsTableModel = UserColumnController.instance().getTrainingSettingsFutureTableModel();
         futureTrainingsTableModel.setTrainingModel(this.model);
-
 		futureTrainingsTable = new TrainingSettingsTable(futureTrainingsTableModel){
 
 			public Component prepareRenderer(
@@ -320,8 +314,6 @@ private TrainingSettingsTable futureTrainingsTable;
 		});
 
         var lowerScrollPane = this.futureTrainingsTable.getContainerComponent();
-//        JScrollPane lowerScrollPane = new JScrollPane(this.futureTrainingsTable.getContainerComponent());
-//		lowerScrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		lGbc.gridx = 0;
 		lGbc.gridy = 1;
 		lGbc.weighty = 1;
@@ -342,13 +334,7 @@ private TrainingSettingsTable futureTrainingsTable;
 
 		public TrainingSettingsTable(TrainingSettingsTableModel arg0) {
 			super(arg0,3);
-//			setComboBoxEditor();
-//		}
-//
-//		/**
-//		 * Initiates combo box and editor
-//		 */
-//		private void setComboBoxEditor() {
+
 			// Sets the combo box for selecting the training type
 			var jcbTrainingEditor = new TrainingComboBox();
 			TableColumn trainingColumn = this.getTableColumn(3);

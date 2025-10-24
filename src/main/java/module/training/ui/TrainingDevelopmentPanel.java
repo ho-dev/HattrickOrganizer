@@ -44,8 +44,6 @@ public class TrainingDevelopmentPanel extends LazyPanel implements PropertyChang
 	}
 
 	private void addListeners() {
-//		this.model.addModelChangeListener(change -> setNeedsRefresh(true));
-
 		PlayersTable.Companion.addPropertyChangeListener(this);
 	}
 
@@ -64,7 +62,6 @@ public class TrainingDevelopmentPanel extends LazyPanel implements PropertyChang
 	 */
 	private void initComponents() {
 		table = new FixedColumnsTable(UserColumnController.instance().getTrainingPlayerSkillChangesTableModel());
-//		table.getTableHeader().setReorderingAllowed(false);
 		JPanel headerPanel = new ImagePanel();
 		headerPanel.setOpaque(false);
 

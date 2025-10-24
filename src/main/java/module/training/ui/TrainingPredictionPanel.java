@@ -45,14 +45,6 @@ public class TrainingPredictionPanel extends LazyImagePanel  {
                 update();
             }
         });
-
-//        this.model.addModelChangeListener(change -> {
-//            if (change == ModelChange.ACTIVE_PLAYER) {
-//                selectPlayerFromModel();
-//            } else {
-//                update();
-//            }
-//        });
     }
 
     /**
@@ -81,19 +73,4 @@ public class TrainingPredictionPanel extends LazyImagePanel  {
             this.recapTable.storeUserSettings();
         }
     }
-
-//    private void selectPlayerFromModel() {
-//        this.recapTable.getLockedTable().clearSelection();
-//        Player player = this.model.getActivePlayer();
-//        if (player != null) {
-//            for (int i = 0; i < this.recapTable.getLockedTable().getRowCount(); i++) {
-//                String name = (String) this.recapTable.getLockedTable().getValueAt(i, 0);
-//                if (player.getFullName().equals(name)) {
-//                    int viewIndex = this.recapTable.getLockedTable().convertRowIndexToView(i);
-//                    this.recapTable.getLockedTable().setRowSelectionInterval(viewIndex, viewIndex);
-//                    break;
-//                }
-//            }
-//        }
-//    }
 }

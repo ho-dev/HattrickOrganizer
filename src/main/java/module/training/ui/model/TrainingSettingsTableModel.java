@@ -19,29 +19,12 @@ public class TrainingSettingsTableModel extends HOTableModel {
 	protected List<TrainingPerWeek> o_TrainingsPerWeek;
 
     protected TrainingModel trainingModel;
-//    protected Object[][]o_Data;
-//    private final String[] o_ColumnNames;
-//    private final TrainingType o_trainingType;
-
 
     /**
      * Creates a new AbstractTrainingsTableModel object.
      */
     public TrainingSettingsTableModel(UserColumnController.ColumnModelId columnModelId, String name) {
         super(columnModelId, name);
-
-//        o_trainingType = _trainingType;
-//        o_Data = new Object[][]{};
-//        o_ColumnNames = new String[]{
-//                Helper.getTranslation("ls.youth.player.training.date"),
-//                Helper.getTranslation("Season"),
-//                Helper.getTranslation("Week"),
-//                Helper.getTranslation("ls.team.trainingtype"),
-//                Helper.getTranslation("ls.team.trainingintensity"),
-//                Helper.getTranslation("ls.team.staminatrainingshare"),
-//                Helper.getTranslation("ls.team.coachingskill"),
-//                Helper.getTranslation("ls.module.statistics.club.assistant_trainers_level")
-//        };
 
         columns = new ArrayList<>(List.of(
                 new TrainingColumn("ls.youth.player.training.date", 150) {
@@ -123,53 +106,6 @@ public class TrainingSettingsTableModel extends HOTableModel {
     public void setTrainingModel(TrainingModel trainingModel) {
         this.trainingModel = trainingModel;
     }
-
-
-//    /**
-//     * Cells that are editable should be less than 2 seasons old (otherwise it could be misleading as they won't be considered in skill recalculation)
-//     * also first column is not editable
-//     */
-//    @Override
-//	public boolean isCellEditable(int row, int column) {
-//        return (column > 2);
-//    }
-//
-//    @Override
-//	public Class<?> getColumnClass(int column) {
-//        return getValueAt(0, column).getClass();
-//    }
-//
-//    /**
-//     * Return number of columns
-//     *
-//     * @return int
-//     */
-//    @Override
-//	public int getColumnCount() {
-//        return o_ColumnNames.length;
-//    }
-//
-//    /**
-//     * Return header for the specified column
-//     *
-//     * @param column index of column
-//     *
-//     * @return column header
-//     */
-//    @Override
-//	public String getColumnName(int column) {
-//        return o_ColumnNames[column];
-//    }
-//
-//    /**
-//     * Returns row number
-//     *
-//     * @return int
-//     */
-//    @Override
-//	public int getRowCount() {
-//        return (o_TrainingsPerWeek != null) ? o_TrainingsPerWeek.size() : 0;
-//    }
 
     /**
      * Method to be called to populate the table with the data from HO API
