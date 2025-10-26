@@ -39,7 +39,7 @@ public class TrainingProgressTableModel extends HOTableModel {
      * @param columnModelId Column model id defined in UserColumnController
      */
     public TrainingProgressTableModel(UserColumnController.ColumnModelId columnModelId) {
-        super(columnModelId, "TrainingOverview");
+        super(columnModelId, "ls.module.training.overview");
         columns = new ArrayList<>(List.of(
                 new TrainingColumn("Spieler", 150) {
                     @Override

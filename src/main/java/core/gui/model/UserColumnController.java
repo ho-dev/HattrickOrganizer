@@ -151,14 +151,14 @@ public final class UserColumnController {
 
     public TrainingSettingsTableModel getTrainingSettingsPastTableModel() {
         if (this.trainingSettingsPastTableModel == null){
-            this.trainingSettingsPastTableModel = new TrainingSettingsTableModel(ColumnModelId.TRAININGSETTINGSPAST, "trainingSettings.past");
+            this.trainingSettingsPastTableModel = new TrainingSettingsTableModel(ColumnModelId.TRAININGSETTINGSPAST, "ls.module.training.settings.past");
         }
         return this.trainingSettingsPastTableModel;
     }
 
     public TrainingSettingsTableModel getTrainingSettingsFutureTableModel() {
         if (this.trainingSettingsFutureTableModel == null){
-            this.trainingSettingsFutureTableModel = new TrainingSettingsTableModel(ColumnModelId.TRAININGSETTINGSFUTURE, "trainingSettings.future");
+            this.trainingSettingsFutureTableModel = new TrainingSettingsTableModel(ColumnModelId.TRAININGSETTINGSFUTURE, "ls.module.training.settings.future");
         }
         return this.trainingSettingsFutureTableModel;
     }

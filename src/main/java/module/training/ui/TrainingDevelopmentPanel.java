@@ -7,7 +7,6 @@ import core.gui.comp.table.PlayersTable;
 import core.gui.model.UserColumnController;
 import core.model.player.Player;
 import core.util.Helper;
-import module.training.ui.model.ChangesTableModel;
 import module.training.ui.model.SkillupTableModel;
 import module.training.ui.model.TrainingModel;
 import java.awt.BorderLayout;

@@ -24,7 +24,7 @@ public class SkillupTableModel extends HOTableModel {
 	private TrainingModel trainingModel;
 
 	public SkillupTableModel(UserColumnController.@NotNull ColumnModelId id) {
-		super(id, "TrainingSkillUps");
+		super(id, "ls.module.training.skillUps");
 		columns = new ArrayList<>(List.of(
 				new TrainingColumn("ls.player.skill", 150) {
 					@Override
