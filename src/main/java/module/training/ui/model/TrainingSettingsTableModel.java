@@ -140,7 +140,6 @@ public class TrainingSettingsTableModel extends HOTableModel {
      *                  or null if no value is changed
      */
     public TrainingPerWeek getEditedEntry(int row, int column) {
-        // Column index is from the not fixed table part
         if ( row >= 0 && row < this.o_TrainingsPerWeek.size() && column >= 3 && column < 8){
             var entry = this.o_TrainingsPerWeek.get(row);
             var value = this.getValueAt(row, column);

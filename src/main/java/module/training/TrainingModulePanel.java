@@ -25,6 +25,8 @@ public class TrainingModulePanel extends LazyPanel {
     private TrainingPredictionPanel trainingPredictionPanel;
     private AnalyzerPanel trainingAnalyzerPanel;
     private EffectPanel trainingEffectPanel;
+    private TrainingPanel trainingPanel;
+    private TrainingDevelopmentPanel trainingDevelopmentPanel;
 
     @Override
 	protected void initialize() {
@@ -43,9 +45,6 @@ public class TrainingModulePanel extends LazyPanel {
 		// reset the selected player
 		this.model.setActivePlayer(null);
 		this.model.resetFutureTrainings();
-		// reload the staff, could have changed
-		//setStaffInTrainingModel(this.model);
-
 		if (oldPlayer != null) {
 			Player player = HOVerwaltung.instance().getModel()
 					.getCurrentPlayer(oldPlayer.getPlayerId());
@@ -56,7 +55,7 @@ public class TrainingModulePanel extends LazyPanel {
 	private void initComponents() {
 		setLayout(new BorderLayout());
 
-		var trainingDevelopmentPanel = new TrainingDevelopmentPanel(this.model);
+		this.trainingDevelopmentPanel = new TrainingDevelopmentPanel(this.model);
 		JSplitPane bottomPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, trainingDevelopmentPanel,
 				new JScrollPane(new PlayerDetailPanel(this.model)));
 		UserParameter.instance().training_bottomSplitPane.init(bottomPanel);
@@ -70,7 +69,8 @@ public class TrainingModulePanel extends LazyPanel {
 		JSplitPane splitPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT, tabbedPane, bottomPanel);
 		UserParameter.instance().training_mainSplitPane.init(splitPanel);
 
-		JSplitPane mainPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, splitPanel, new TrainingPanel(this.model));
+        this.trainingPanel = new TrainingPanel(this.model);
+		JSplitPane mainPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, splitPanel, trainingPanel);
 		UserParameter.instance().training_rightSplitPane.init(mainPanel);
 		mainPanel.setResizeWeight(0.8);
 
@@ -87,5 +87,11 @@ public class TrainingModulePanel extends LazyPanel {
             this.trainingPredictionPanel.storeUserSettings();
         if (this.trainingEffectPanel != null)
             this.trainingEffectPanel.storeUserSettings();
+        if (this.trainingPanel != null){
+            this.trainingPanel.storeUserSettings();
+        }
+        if (this.trainingDevelopmentPanel != null){
+            this.trainingDevelopmentPanel.storeUserSettings();
+        }
 	}
 }

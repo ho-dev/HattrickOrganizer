@@ -327,7 +327,18 @@ private TrainingSettingsTable futureTrainingsTable;
 		add(splitPane, BorderLayout.CENTER);
 	}
 
-	/**
+    public void storeUserSettings(){
+        var tableModel = (TrainingSettingsTableModel)this.futureTrainingsTable.getModel();
+        if ( tableModel != null) {
+            tableModel.storeUserSettings();
+        }
+        tableModel = (TrainingSettingsTableModel)this.pastTrainingsTable.getModel();
+        if ( tableModel != null) {
+            tableModel.storeUserSettings();
+        }
+    }
+
+    /**
 	 * JTable class for past and future trainings table
 	 */
 	private static class TrainingSettingsTable extends FixedColumnsTable {

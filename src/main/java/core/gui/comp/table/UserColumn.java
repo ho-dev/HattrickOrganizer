@@ -1,7 +1,6 @@
 package core.gui.comp.table;
 
 import core.model.TranslationFacility;
-
 import javax.swing.*;
 import javax.swing.table.TableColumn;
 
@@ -10,7 +9,6 @@ import javax.swing.table.TableColumn;
  */
 public abstract class UserColumn {
 
-    //~ Instance fields ----------------------------------------------------------------------------
 	/** unique column id **/
 	protected int id;
 	
