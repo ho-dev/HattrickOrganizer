@@ -265,6 +265,7 @@ public final class UserColumnController {
 		v.add(getTrainingPlayerSkillChangesTableModel());
         v.add(getTrainingSettingsPastTableModel());
         v.add(getTrainingSettingsFutureTableModel());
+        v.add(getTrainingEffectTableModel());
 		// MatchesOverView1Model should not add in this vector, because columns should not be edited
 		return v;
 	}

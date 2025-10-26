@@ -26,7 +26,7 @@ public class EffectTableModel extends HOTableModel {
      * @param columnModelId UserColumnController.ColumnModelId.
      */
     public EffectTableModel(UserColumnController.ColumnModelId columnModelId) {
-        super(columnModelId, "training.effect");
+        super(columnModelId, "ls.module.training.effect");
 
         columns = new ArrayList<>(List.of(
                 new TrainingColumn("Season", 60) {
