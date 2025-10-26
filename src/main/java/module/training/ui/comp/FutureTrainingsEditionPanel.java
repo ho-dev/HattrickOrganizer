@@ -89,7 +89,7 @@ public class FutureTrainingsEditionPanel extends JPanel {
             }
 
             if(m_jcbCoachSkillEditor.getSelectedItem() != null) {
-                train.setCoachLevel((Integer)m_jcbCoachSkillEditor.getSelectedItem());
+                train.setCoachLevel((Integer)m_jcbCoachSkillEditor.getSelectedItem()+3);
             }
 
             if(m_jcbAssitantsTotalLevelEditor.getSelectedItem() != null) {

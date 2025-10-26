@@ -226,6 +226,20 @@ open class FixedColumnsTable @JvmOverloads constructor(
 
     /**
      * Return th table column of the fixed or right hand side table
+     * @param i Model column index
+     * @return TableColumn
+     */
+    fun getModelTableColumn(modelColumnIndex: Int): TableColumn {
+        if (fixed != null && modelColumnIndex < fixedColumnsCount) {
+            val i = fixed!!.convertColumnIndexToView(modelColumnIndex)
+            return fixed!!.columnModel.getColumn(i)
+        }
+        val i = super.convertColumnIndexToView(modelColumnIndex);
+        return super.getColumnModel().getColumn(i)
+    }
+
+    /**
+     * Return th table column of the fixed or right hand side table
      * @param i Column index
      * @return TableColumn
      */

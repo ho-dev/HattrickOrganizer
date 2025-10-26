@@ -39,46 +39,43 @@ import static module.lineup.LineupPanel.TITLE_FG;
  */
 public class TrainingPanel extends JPanel implements TrainingConstants {
 
-private TrainingSettingsTable futureTrainingsTable;
+    private TrainingSettingsTable futureTrainingsTable;
     private TrainingSettingsTable pastTrainingsTable;
-	private JButton m_jbEditAllFutureTrainings;
-	private JButton m_jbEditSelectedFutureTrainings;
-
+    private JButton m_jbEditAllFutureTrainings;
+    private JButton m_jbEditSelectedFutureTrainings;
     private ListSelectionModel m_lsm;
+    private final TrainingModel model;
+    private static final Color TABLE_BG = ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
+    private static final Color SELECTION_BG = ThemeManager.getColor(HOColorName.TABLE_SELECTION_BG);
 
-	private final TrainingModel model;
+    /**
+     * Creates a new TrainingPanel object.
+     */
+    public TrainingPanel(TrainingModel _model) {
+        super();
+        model = _model;
+        initComponents();
+        addListeners();
+        reload();
+    }
 
-	private static final Color TABLE_BG = ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
-	private static final Color SELECTION_BG = ThemeManager.getColor(HOColorName.TABLE_SELECTION_BG);
-
-	/**
-	 * Creates a new TrainingPanel object.
-	 */
-	public TrainingPanel(TrainingModel _model) {
-		super();
-		model = _model;
-		initComponents();
-		addListeners();
-		reload();
-	}
-
-	/**
-	 * Populate the table is called everytime a refresh command is issued
-	 */
-	public void reload() {
+    /**
+     * Populate the table is called everytime a refresh command is issued
+     */
+    public void reload() {
         var pastTrainingsTableModel = UserColumnController.instance().getTrainingSettingsPastTableModel();
         var futureTrainingsTableModel = UserColumnController.instance().getTrainingSettingsFutureTableModel();
-		pastTrainingsTableModel.setTrainingSettings(TrainingManager.instance().getHistoricalTrainings());
-		futureTrainingsTableModel.setTrainingSettings(model.getFutureTrainings());
-	}
+        pastTrainingsTableModel.setTrainingSettings(TrainingManager.instance().getHistoricalTrainings());
+        futureTrainingsTableModel.setTrainingSettings(model.getFutureTrainings());
+    }
 
-	private void addListeners() {
+    private void addListeners() {
 
-		Map<Object, Object> colorMap = Map.of(
-				"trainingColor1", ThemeManager.getColor(HOColorName.TRAINING_ICON_COLOR_1),
-				"trainingColor2", ThemeManager.getColor(HOColorName.TRAINING_ICON_COLOR_2));
+        Map<Object, Object> colorMap = Map.of(
+                "trainingColor1", ThemeManager.getColor(HOColorName.TRAINING_ICON_COLOR_1),
+                "trainingColor2", ThemeManager.getColor(HOColorName.TRAINING_ICON_COLOR_2));
 
-		Object[] options = {Helper.getTranslation("ls.button.close")};
+        Object[] options = {Helper.getTranslation("ls.button.close")};
 
         var futureTrainingsTableModel = UserColumnController.instance().getTrainingSettingsFutureTableModel();
         futureTrainingsTableModel.addTableModelListener(this::saveFutureTrainingSetting);
@@ -86,57 +83,59 @@ private TrainingSettingsTable futureTrainingsTable;
         var pastTrainingTableModel = UserColumnController.instance().getTrainingSettingsPastTableModel();
         pastTrainingTableModel.addTableModelListener(this::savePastTrainingSetting);
 
-		m_jbEditSelectedFutureTrainings.addActionListener(arg0 -> {
+        m_jbEditSelectedFutureTrainings.addActionListener(arg0 -> {
 
-			TableCellEditor editor = futureTrainingsTable.getCellEditor();
-			if (editor != null) {
-				editor.stopCellEditing();
-			}
+            TableCellEditor editor = futureTrainingsTable.getCellEditor();
+            if (editor != null) {
+                editor.stopCellEditing();
+            }
 
-			JOptionPane.showOptionDialog(getTopLevelAncestor(),
-					new FutureTrainingsEditionPanel(model, futureTrainingsTableModel, m_lsm),
-					Helper.getTranslation("ls.module.training.edit_selected_future_trainings.tt"),
-					JOptionPane.YES_NO_CANCEL_OPTION,
-					JOptionPane.PLAIN_MESSAGE, ImageUtilities.getSvgIcon(TRAINING_ICON, colorMap, 25,25),
-					options, options[0]);
-		});
+            JOptionPane.showOptionDialog(getTopLevelAncestor(),
+                    new FutureTrainingsEditionPanel(model, futureTrainingsTableModel, m_lsm),
+                    Helper.getTranslation("ls.module.training.edit_selected_future_trainings.tt"),
+                    JOptionPane.YES_NO_CANCEL_OPTION,
+                    JOptionPane.PLAIN_MESSAGE, ImageUtilities.getSvgIcon(TRAINING_ICON, colorMap, 25, 25),
+                    options, options[0]);
+        });
 
-		m_jbEditAllFutureTrainings.addActionListener(arg0 -> {
-			TableCellEditor editor = futureTrainingsTable.getCellEditor();
+        m_jbEditAllFutureTrainings.addActionListener(arg0 -> {
+            TableCellEditor editor = futureTrainingsTable.getCellEditor();
 
-			if (editor != null) {
-				editor.stopCellEditing();
-			}
+            if (editor != null) {
+                editor.stopCellEditing();
+            }
 
-			JOptionPane.showOptionDialog(getTopLevelAncestor(),
-					new FutureTrainingsEditionPanel(model, futureTrainingsTableModel),
-					Helper.getTranslation("ls.module.training.edit_all_future_trainings.tt"),
-					JOptionPane.YES_NO_CANCEL_OPTION,
-					JOptionPane.PLAIN_MESSAGE, ImageUtilities.getSvgIcon(TRAINING_ICON, colorMap, 25,25),
-					options, options[0]);
-		});
+            JOptionPane.showOptionDialog(getTopLevelAncestor(),
+                    new FutureTrainingsEditionPanel(model, futureTrainingsTableModel),
+                    Helper.getTranslation("ls.module.training.edit_all_future_trainings.tt"),
+                    JOptionPane.YES_NO_CANCEL_OPTION,
+                    JOptionPane.PLAIN_MESSAGE, ImageUtilities.getSvgIcon(TRAINING_ICON, colorMap, 25, 25),
+                    options, options[0]);
+        });
 
-		this.model.addModelChangeListener(change -> {
-			if (change == ModelChange.FUTURE_TRAINING) {
-				reload();
-			}
-		});
-	}
+        this.model.addModelChangeListener(change -> {
+            if (change == ModelChange.FUTURE_TRAINING) {
+                reload();
+            }
+        });
+    }
 
     /**
      * Save past training settings
      * Model class is called to move the edited values to the model object
      * If successful, the changed entry is stored in database.
+     *
      * @param e TableModelEvent
      */
     private void savePastTrainingSetting(TableModelEvent e) {
-        if ( e.getColumn() > -1) {
+        if (e.getColumn() > -1) {
             var model = (TrainingSettingsTableModel) e.getSource();
             var modelColumnIndex = this.pastTrainingsTable.convertColumnIndexToModel(e.getColumn());
             var modelRowIndex = this.pastTrainingsTable.convertRowIndexToModel(e.getFirstRow());
             var entry = model.getEditedEntry(modelRowIndex, modelColumnIndex);
             if (entry != null) {
                 DBManager.instance().saveTraining(entry, entry.getTrainingDate());
+                RefreshManager.instance().doRefresh();
             }
         }
     }
@@ -146,6 +145,7 @@ private TrainingSettingsTable futureTrainingsTable;
      * Model class is called to move the edited values to the model object
      * If successful, the changed entry is stored in database and the
      * refresh is triggered to update for instance the training prediction table
+     *
      * @param e TableModelEvent
      */
     private void saveFutureTrainingSetting(TableModelEvent e) {
@@ -162,24 +162,25 @@ private TrainingSettingsTable futureTrainingsTable;
     }
 
     /**
-	 * Initialize the object layout
-	 */
-	private void initComponents() {
-		JPanel pastTrainingsPanel = new JPanel(new GridBagLayout()){};
-		GridBagConstraints uGbc = new GridBagConstraints();
-		uGbc.anchor = GridBagConstraints.WEST;
-		uGbc.insets = new Insets(3, 3, 3, 3);
+     * Initialize the object layout
+     */
+    private void initComponents() {
+        JPanel pastTrainingsPanel = new JPanel(new GridBagLayout()) {
+        };
+        GridBagConstraints uGbc = new GridBagConstraints();
+        uGbc.anchor = GridBagConstraints.WEST;
+        uGbc.insets = new Insets(3, 3, 3, 3);
 
-		JLabel pastTrainingsLabel = new JLabel();
-		pastTrainingsLabel.setText(TranslationFacility.tr("PastTrainings"));
-		pastTrainingsLabel.setForeground(TITLE_FG);
-		pastTrainingsLabel.setFont(getFont().deriveFont(Font.BOLD));
-		uGbc.gridx = 0;
-		uGbc.gridy = 0;
-		pastTrainingsPanel.add(pastTrainingsLabel, uGbc);
+        JLabel pastTrainingsLabel = new JLabel();
+        pastTrainingsLabel.setText(TranslationFacility.tr("PastTrainings"));
+        pastTrainingsLabel.setForeground(TITLE_FG);
+        pastTrainingsLabel.setFont(getFont().deriveFont(Font.BOLD));
+        uGbc.gridx = 0;
+        uGbc.gridy = 0;
+        pastTrainingsPanel.add(pastTrainingsLabel, uGbc);
 
-		var pastTrainingsTableModel = UserColumnController.instance().getTrainingSettingsPastTableModel();
-		this.pastTrainingsTable = new TrainingSettingsTable(pastTrainingsTableModel) {
+        var pastTrainingsTableModel = UserColumnController.instance().getTrainingSettingsPastTableModel();
+        this.pastTrainingsTable = new TrainingSettingsTable(pastTrainingsTableModel) {
 
             public Component prepareRenderer(
                     TableCellRenderer renderer, int row, int column) {
@@ -225,153 +226,152 @@ private TrainingSettingsTable futureTrainingsTable;
         };
 
         var upperScrollPane = pastTrainingsTable.getContainerComponent();
-		uGbc.gridy = 1;
-		uGbc.weightx = 1.0;
-		uGbc.weighty = 1.0;
-		uGbc.fill = GridBagConstraints.BOTH;
-		pastTrainingsPanel.add(upperScrollPane, uGbc);
+        uGbc.gridy = 1;
+        uGbc.weightx = 1.0;
+        uGbc.weighty = 1.0;
+        uGbc.fill = GridBagConstraints.BOTH;
+        pastTrainingsPanel.add(upperScrollPane, uGbc);
 
-		JPanel futureTrainingsPanel = new JPanel(new GridBagLayout());
-		GridBagConstraints lGbc = new GridBagConstraints();
-		lGbc.anchor = GridBagConstraints.WEST;
-		lGbc.insets = new Insets(3, 3, 3, 3);
+        JPanel futureTrainingsPanel = new JPanel(new GridBagLayout());
+        GridBagConstraints lGbc = new GridBagConstraints();
+        lGbc.anchor = GridBagConstraints.WEST;
+        lGbc.insets = new Insets(3, 3, 3, 3);
 
-		JLabel futureTrainingLabel = new JLabel();
-		futureTrainingLabel.setText(Helper.getTranslation("FutureTrainings"));
-		futureTrainingLabel.setForeground(TITLE_FG);
-		futureTrainingLabel.setFont(getFont().deriveFont(Font.BOLD));
-		lGbc.gridx = 0;
-		lGbc.gridy = 0;
-		futureTrainingsPanel.add(futureTrainingLabel, lGbc);
+        JLabel futureTrainingLabel = new JLabel();
+        futureTrainingLabel.setText(Helper.getTranslation("FutureTrainings"));
+        futureTrainingLabel.setForeground(TITLE_FG);
+        futureTrainingLabel.setFont(getFont().deriveFont(Font.BOLD));
+        lGbc.gridx = 0;
+        lGbc.gridy = 0;
+        futureTrainingsPanel.add(futureTrainingLabel, lGbc);
 
-		m_jbEditSelectedFutureTrainings = new JButton(Helper.getTranslation("ls.button.edit_selected"));
-		m_jbEditSelectedFutureTrainings.setToolTipText(Helper.getTranslation("ls.module.training.edit_selected_future_trainings.tt"));
-		m_jbEditSelectedFutureTrainings.setEnabled(false);
-		lGbc.gridx = 1;
-		lGbc.anchor = GridBagConstraints.EAST;
-		lGbc.weightx = 1;
-		futureTrainingsPanel.add(this.m_jbEditSelectedFutureTrainings, lGbc);
+        m_jbEditSelectedFutureTrainings = new JButton(Helper.getTranslation("ls.button.edit_selected"));
+        m_jbEditSelectedFutureTrainings.setToolTipText(Helper.getTranslation("ls.module.training.edit_selected_future_trainings.tt"));
+        m_jbEditSelectedFutureTrainings.setEnabled(false);
+        lGbc.gridx = 1;
+        lGbc.anchor = GridBagConstraints.EAST;
+        lGbc.weightx = 1;
+        futureTrainingsPanel.add(this.m_jbEditSelectedFutureTrainings, lGbc);
 
-		m_jbEditAllFutureTrainings = new JButton(Helper.getTranslation("ls.button.edit_all"));
-		m_jbEditAllFutureTrainings.setToolTipText(Helper.getTranslation("ls.module.training.edit_all_future_trainings.tt"));
-		lGbc.gridx = 2;
-		lGbc.weightx = 0;
-		futureTrainingsPanel.add(this.m_jbEditAllFutureTrainings, lGbc);
+        m_jbEditAllFutureTrainings = new JButton(Helper.getTranslation("ls.button.edit_all"));
+        m_jbEditAllFutureTrainings.setToolTipText(Helper.getTranslation("ls.module.training.edit_all_future_trainings.tt"));
+        lGbc.gridx = 2;
+        lGbc.weightx = 0;
+        futureTrainingsPanel.add(this.m_jbEditAllFutureTrainings, lGbc);
 
         var futureTrainingsTableModel = UserColumnController.instance().getTrainingSettingsFutureTableModel();
         futureTrainingsTableModel.setTrainingModel(this.model);
-		futureTrainingsTable = new TrainingSettingsTable(futureTrainingsTableModel){
+        futureTrainingsTable = new TrainingSettingsTable(futureTrainingsTableModel) {
 
-			public Component prepareRenderer(
-					TableCellRenderer renderer, int row, int column) {
-				Component c = super.prepareRenderer(renderer, row, column);
-				int modelRow = convertRowIndexToModel(row);
-				TrainingPerWeek tpw = model.getFutureTrainings().get(modelRow);
-				var source = tpw.getSource();
-				switch (source) {
-					case MANUAL -> c.setForeground(ThemeManager.getColor(HOColorName.BLUE));
-					case GUESS -> c.setForeground(ThemeManager.getColor(HOColorName.RED));
-					default -> c.setForeground(ThemeManager.getColor(HOColorName.TABLEENTRY_FG));
-				}
-				if (super.isRowSelected(modelRow)) {
-					c.setBackground(SELECTION_BG);
-				}
-				else {
-					c.setBackground(TABLE_BG);
-				}
-				return c;
-			}
+            public Component prepareRenderer(
+                    TableCellRenderer renderer, int row, int column) {
+                Component c = super.prepareRenderer(renderer, row, column);
+                int modelRow = convertRowIndexToModel(row);
+                TrainingPerWeek tpw = model.getFutureTrainings().get(modelRow);
+                var source = tpw.getSource();
+                switch (source) {
+                    case MANUAL -> c.setForeground(ThemeManager.getColor(HOColorName.BLUE));
+                    case GUESS -> c.setForeground(ThemeManager.getColor(HOColorName.RED));
+                    default -> c.setForeground(ThemeManager.getColor(HOColorName.TABLEENTRY_FG));
+                }
+                if (super.isRowSelected(modelRow)) {
+                    c.setBackground(SELECTION_BG);
+                } else {
+                    c.setBackground(TABLE_BG);
+                }
+                return c;
+            }
 
-			public String getToolTipText(@NotNull MouseEvent e) {
-				String tip = null;
-				java.awt.Point p = e.getPoint();
-				int rowIndex = rowAtPoint(p);
+            public String getToolTipText(@NotNull MouseEvent e) {
+                String tip = null;
+                java.awt.Point p = e.getPoint();
+                int rowIndex = rowAtPoint(p);
 
-				try {
-					int modelRow = convertRowIndexToModel(rowIndex);
-					TrainingPerWeek tpw = model.getFutureTrainings().get(modelRow);
-					var source = tpw.getSource();
-					tip = switch (source) {
-						case MANUAL -> Helper.getTranslation("ls.module.training.manual_entry.tt");
-						case GUESS -> Helper.getTranslation("ls.module.training.guess_entry.tt");
-						default -> Helper.getTranslation("ls.module.training.hrf_entry.tt");
-					};
+                try {
+                    int modelRow = convertRowIndexToModel(rowIndex);
+                    TrainingPerWeek tpw = model.getFutureTrainings().get(modelRow);
+                    var source = tpw.getSource();
+                    tip = switch (source) {
+                        case MANUAL -> Helper.getTranslation("ls.module.training.manual_entry.tt");
+                        case GUESS -> Helper.getTranslation("ls.module.training.guess_entry.tt");
+                        default -> Helper.getTranslation("ls.module.training.hrf_entry.tt");
+                    };
 
-				} catch (RuntimeException e1) {
-					//catch null pointer exception if mouse is over an empty line
-				}
+                } catch (RuntimeException e1) {
+                    //catch null pointer exception if mouse is over an empty line
+                }
 
-				return tip;
-			}
+                return tip;
+            }
 
         };
 
         futureTrainingsTable.setSelectionMode(SINGLE_INTERVAL_SELECTION);
         ListSelectionModel listSelectionModel = futureTrainingsTable.getSelectionModel();
-		listSelectionModel.addListSelectionListener(e -> {
-			m_lsm= (ListSelectionModel)e.getSource();
-			m_jbEditSelectedFutureTrainings.setEnabled(!m_lsm.isSelectionEmpty());
-		});
+        listSelectionModel.addListSelectionListener(e -> {
+            m_lsm = (ListSelectionModel) e.getSource();
+            m_jbEditSelectedFutureTrainings.setEnabled(!m_lsm.isSelectionEmpty());
+        });
 
         var lowerScrollPane = this.futureTrainingsTable.getContainerComponent();
-		lGbc.gridx = 0;
-		lGbc.gridy = 1;
-		lGbc.weighty = 1;
-		lGbc.gridwidth = 3;
-		lGbc.fill = GridBagConstraints.BOTH;
-		futureTrainingsPanel.add(lowerScrollPane, lGbc);
+        lGbc.gridx = 0;
+        lGbc.gridy = 1;
+        lGbc.weighty = 1;
+        lGbc.gridwidth = 3;
+        lGbc.fill = GridBagConstraints.BOTH;
+        futureTrainingsPanel.add(lowerScrollPane, lGbc);
 
         JSplitPane splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, pastTrainingsPanel, futureTrainingsPanel);
-		UserParameter.instance().training_pastFutureTrainingsSplitPane.init(splitPane);
-		setLayout(new BorderLayout());
-		add(splitPane, BorderLayout.CENTER);
-	}
+        UserParameter.instance().training_pastFutureTrainingsSplitPane.init(splitPane);
+        setLayout(new BorderLayout());
+        add(splitPane, BorderLayout.CENTER);
+    }
 
-    public void storeUserSettings(){
-        var tableModel = (TrainingSettingsTableModel)this.futureTrainingsTable.getModel();
-        if ( tableModel != null) {
+    public void storeUserSettings() {
+        var tableModel = (TrainingSettingsTableModel) this.futureTrainingsTable.getModel();
+        if (tableModel != null) {
             tableModel.storeUserSettings();
         }
-        tableModel = (TrainingSettingsTableModel)this.pastTrainingsTable.getModel();
-        if ( tableModel != null) {
+        tableModel = (TrainingSettingsTableModel) this.pastTrainingsTable.getModel();
+        if (tableModel != null) {
             tableModel.storeUserSettings();
         }
     }
 
     /**
-	 * JTable class for past and future trainings table
-	 */
-	private static class TrainingSettingsTable extends FixedColumnsTable {
+     * JTable class for past and future trainings table
+     */
+    private static class TrainingSettingsTable extends FixedColumnsTable {
 
-		public TrainingSettingsTable(TrainingSettingsTableModel arg0) {
-			super(arg0,3);
+        public TrainingSettingsTable(TrainingSettingsTableModel arg0) {
+            super(arg0, 3);
 
-			// Sets the combo box for selecting the training type
-			var jcbTrainingEditor = new TrainingComboBox();
-			TableColumn trainingColumn = this.getTableColumn(3);
+            // Sets the combo box for selecting the training type
+            var jcbTrainingEditor = new TrainingComboBox();
+            TableColumn trainingColumn = this.getModelTableColumn(3);
             var cellEditor = new DefaultCellEditor(jcbTrainingEditor);
             cellEditor.addCellEditorListener(this);
-			trainingColumn.setCellEditor(cellEditor);
+            trainingColumn.setCellEditor(cellEditor);
 
-			// Sets the combo box for selecting the intensity
-			var jcbIntensityEditor = new TrainingParametersEditor(TrainingConstants.MIN_TRAINING_INTENSITY);
-			TableColumn trainingIntensityColumn =this.getTableColumn(4);
-			trainingIntensityColumn.setCellEditor(new DefaultCellEditor(jcbIntensityEditor));
+            // Sets the combo box for selecting the intensity
+            var jcbIntensityEditor = new TrainingParametersEditor(TrainingConstants.MIN_TRAINING_INTENSITY);
+            TableColumn trainingIntensityColumn = this.getModelTableColumn(4);
+            trainingIntensityColumn.setCellEditor(new DefaultCellEditor(jcbIntensityEditor));
 
-			// Sets the combo box for selecting the staminaTrainingPart
-			var jcbStaminaEditor = new TrainingParametersEditor(TrainingConstants.MIN_STAMINA_SHARE);
-			TableColumn staminaColumn = this.getTableColumn(5);
-			staminaColumn.setCellEditor(new DefaultCellEditor(jcbStaminaEditor));
+            // Sets the combo box for selecting the staminaTrainingPart
+            var jcbStaminaEditor = new TrainingParametersEditor(TrainingConstants.MIN_STAMINA_SHARE);
+            TableColumn staminaColumn = this.getModelTableColumn(5);
+            staminaColumn.setCellEditor(new DefaultCellEditor(jcbStaminaEditor));
 
-			// Sets the combo box for selecting the coach skill
-			var jcbCoachSkillEditor = new TrainingParametersEditor(TrainingConstants.MIN_COACH_SKILL, TrainingConstants.MAX_COACH_SKILL);
-			TableColumn coachSkillColumn = this.getTableColumn(6);
-			coachSkillColumn.setCellEditor(new DefaultCellEditor(jcbCoachSkillEditor));
+            // Sets the combo box for selecting the coach skill
+            var jcbCoachSkillEditor = new TrainingParametersEditor(TrainingConstants.MIN_COACH_SKILL, TrainingConstants.MAX_COACH_SKILL);
+            TableColumn coachSkillColumn = this.getModelTableColumn(6);
+            coachSkillColumn.setCellEditor(new DefaultCellEditor(jcbCoachSkillEditor));
 
-			// Sets the combo box for selecting the Assistant Coach Total Level
-			var assistantsTotalLevelEditor = new TrainingParametersEditor(TrainingConstants.MIN_ASSISTANTS_COACH_LEVEL, TrainingConstants.MAX_ASSISTANTS_COACH_LEVEL);
-			TableColumn assistantsTotalLevelColumn = this.getTableColumn(7);
-			assistantsTotalLevelColumn.setCellEditor(new DefaultCellEditor(assistantsTotalLevelEditor));
-		}
-	}
+            // Sets the combo box for selecting the Assistant Coach Total Level
+            var assistantsTotalLevelEditor = new TrainingParametersEditor(TrainingConstants.MIN_ASSISTANTS_COACH_LEVEL, TrainingConstants.MAX_ASSISTANTS_COACH_LEVEL);
+            TableColumn assistantsTotalLevelColumn = this.getModelTableColumn(7);
+            assistantsTotalLevelColumn.setCellEditor(new DefaultCellEditor(assistantsTotalLevelEditor));
+        }
+    }
 }

@@ -141,11 +141,6 @@ public class TrainingProgressTableModel extends HOTableModel {
         )).toArray(new TrainingColumn[0]);
     }
 
-    public TrainingColumn getPlayerIdColumn(){
-        return (TrainingColumn) columns[COL_PLAYER_ID];
-    }
-
-
     /**
      * Get the training length for a player in a specific skill
      *
