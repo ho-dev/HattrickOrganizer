@@ -4,6 +4,7 @@ import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
+import core.model.UserParameter;
 import core.util.AmountOfMoney;
 import core.util.HODateTime;
 import core.util.Helper;
@@ -61,7 +62,8 @@ public class ColorLabelEntry extends JLabel implements IHOTableCellEntry {
         number = sortIndex;
         m_clFGColor = foreground;
         m_clBGColor = background;
-        setBorderWidth(8);
+        var fontSize = UserParameter.instance().fontSize;
+        setBorderWidth(fontSize*2/3);
         createComponent();
     }
 
