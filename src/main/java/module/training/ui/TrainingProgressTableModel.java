@@ -30,7 +30,6 @@ import java.util.List;
  */
 public class TrainingProgressTableModel extends HOTableModel {
 
-    private static final int COL_PLAYER_ID = 12;
     private TrainingModel model;
 
     /**

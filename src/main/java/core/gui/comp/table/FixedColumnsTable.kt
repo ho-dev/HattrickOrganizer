@@ -226,7 +226,7 @@ open class FixedColumnsTable @JvmOverloads constructor(
 
     /**
      * Return th table column of the fixed or right hand side table
-     * @param i Model column index
+     * @param modelColumnIndex Model column index
      * @return TableColumn
      */
     fun getModelTableColumn(modelColumnIndex: Int): TableColumn {
@@ -234,6 +234,8 @@ open class FixedColumnsTable @JvmOverloads constructor(
             val i = fixed!!.convertColumnIndexToView(modelColumnIndex)
             return fixed!!.columnModel.getColumn(i)
         }
+        // The registered model index values are not changed when column model is divided into fixed and not fixed part
+        // So do not adapt the model column index here
         val i = super.convertColumnIndexToView(modelColumnIndex);
         return super.getColumnModel().getColumn(i)
     }
