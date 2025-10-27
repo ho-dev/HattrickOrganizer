@@ -236,7 +236,7 @@ open class FixedColumnsTable @JvmOverloads constructor(
         }
         // The registered model index values are not changed when column model is divided into fixed and not fixed part
         // So do not adapt the model column index here
-        val i = super.convertColumnIndexToView(modelColumnIndex);
+        val i = super.convertColumnIndexToView(modelColumnIndex)
         return super.getColumnModel().getColumn(i)
     }
 
