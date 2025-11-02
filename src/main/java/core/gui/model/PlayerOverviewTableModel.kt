@@ -88,6 +88,7 @@ class PlayerOverviewTableModel(id: ColumnModelId, name: String) : HOTableModel(i
     }
 
     // TODO: table column model should control isEditable
+    // Refactoring player overview table model should replace the class BooleanColumn
     override fun isCellEditable(row: Int, column: Int): Boolean {
         return getValueAt(row, column) is Boolean
     }
