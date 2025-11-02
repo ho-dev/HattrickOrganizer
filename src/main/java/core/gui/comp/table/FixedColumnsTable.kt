@@ -111,20 +111,20 @@ open class FixedColumnsTable @JvmOverloads constructor(
             val rightHorizontalScrollbar = rightScrollPane.horizontalScrollBar
             fixedHorizontalScrollbar.addComponentListener(object : ComponentAdapter() {
                 override fun componentShown(e: ComponentEvent?) {
-                    showHorizontalScrollbar(rightScrollPane);
+                    showHorizontalScrollbar(rightScrollPane)
                 }
 
                 override fun componentHidden(e: ComponentEvent?) {
-                    horizontalScrollbarHidden(fixedScrollPane, rightScrollPane);
+                    horizontalScrollbarHidden(fixedScrollPane, rightScrollPane)
                 }
             })
             rightHorizontalScrollbar.addComponentListener(object : ComponentAdapter() {
                 override fun componentShown(e: ComponentEvent?) {
-                    showHorizontalScrollbar(fixedScrollPane);
+                    showHorizontalScrollbar(fixedScrollPane)
                 }
 
                 override fun componentHidden(e: ComponentEvent?) {
-                    horizontalScrollbarHidden(rightScrollPane, fixedScrollPane);
+                    horizontalScrollbarHidden(rightScrollPane, fixedScrollPane)
                 }
             })
 
@@ -181,8 +181,8 @@ open class FixedColumnsTable @JvmOverloads constructor(
         if (scrollPane.horizontalScrollBar.isVisible) return // already visible, no action required
         if (scrollPane.horizontalScrollBarPolicy != HORIZONTAL_SCROLLBAR_ALWAYS){
             scrollPane.horizontalScrollBarPolicy = HORIZONTAL_SCROLLBAR_ALWAYS
-            scrollPane.revalidate();
-            scrollPane.repaint();
+            scrollPane.revalidate()
+            scrollPane.repaint()
         }
     }
 
@@ -198,13 +198,13 @@ open class FixedColumnsTable @JvmOverloads constructor(
         if (otherScrollbar.maximum-otherScrollbar.visibleAmount == otherScrollbar.minimum){
             // Full size, no scroll bar needed
             otherScrollPane.horizontalScrollBarPolicy = HORIZONTAL_SCROLLBAR_AS_NEEDED
-            otherScrollPane.revalidate();
-            otherScrollPane.repaint();
+            otherScrollPane.revalidate()
+            otherScrollPane.repaint()
         }
         else {
             hiddenScrollPane.horizontalScrollBarPolicy = HORIZONTAL_SCROLLBAR_ALWAYS
-            hiddenScrollPane.revalidate();
-            hiddenScrollPane.repaint();
+            hiddenScrollPane.revalidate()
+            hiddenScrollPane.repaint()
         }
     }
 
