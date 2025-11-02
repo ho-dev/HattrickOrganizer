@@ -7,7 +7,7 @@ import java.beans.PropertyChangeListener
 import java.beans.PropertyChangeSupport
 import javax.swing.event.ListSelectionEvent
 
-class PlayersTable @JvmOverloads constructor(tableModel: HOTableModel, fixedColumnsCount: Int = 1) :
+class PlayersTable @JvmOverloads constructor(tableModel: HOPlayersTableModel, fixedColumnsCount: Int = 1) :
     FixedColumnsTable(tableModel, fixedColumnsCount), PropertyChangeListener {
 
         companion object {
@@ -41,7 +41,10 @@ class PlayersTable @JvmOverloads constructor(tableModel: HOTableModel, fixedColu
             }
         }
 
-    var players: MutableList<Player?> = HOVerwaltung.instance().getModel().getCurrentPlayers()
+    private fun getPlayers() : List<Player>{
+        val hoPlayersTableModel = this.model as HOPlayersTableModel
+        return hoPlayersTableModel.players
+    }
 
     init {
         this.addListSelectionListener { _: ListSelectionEvent? ->
@@ -49,6 +52,7 @@ class PlayersTable @JvmOverloads constructor(tableModel: HOTableModel, fixedColu
                 val selectedRow = this.getSelectedRow()
                 if (selectedRow != -1) {
                     val modelIndex = this.convertRowIndexToModel(selectedRow)
+                    val players = getPlayers()
                     if (modelIndex >= 0 && modelIndex < players.size) {
                         setSelectedPlayer(players.get(modelIndex))
                     }
@@ -63,6 +67,7 @@ class PlayersTable @JvmOverloads constructor(tableModel: HOTableModel, fixedColu
     private var enableListSelectionListener : Boolean = true
 
     fun selectPlayer(player: Player?, fireEvent : Boolean = true) {
+        val players = getPlayers()
         val modelIndex = players.indexOf(player)
         if (modelIndex >= 0 && modelIndex < players.size) {
             val viewIndex = this.convertRowIndexToView(modelIndex)

@@ -3,7 +3,7 @@ package module.training.ui;
 import core.constants.player.PlayerSkill;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.IHOTableCellEntry;
-import core.gui.comp.table.HOTableModel;
+import core.gui.comp.table.HOPlayersTableModel;
 import core.gui.model.UserColumnController;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
@@ -28,7 +28,7 @@ import java.util.List;
  * A - 2325 Himberg Tabellenmodel und Daten für die dargestellte Tabelle
  * für das HO Plugin
  */
-public class TrainingProgressTableModel extends HOTableModel {
+public class TrainingProgressTableModel extends HOPlayersTableModel {
 
     private TrainingModel model;
 

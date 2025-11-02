@@ -2,7 +2,7 @@ package module.training.ui;
 
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.IHOTableCellEntry;
-import core.gui.comp.table.HOTableModel;
+import core.gui.comp.table.HOPlayersTableModel;
 import core.gui.comp.table.UserColumn;
 import core.gui.model.UserColumnController;
 import core.gui.theme.HOColorName;
@@ -23,7 +23,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TrainingPredictionTableModel  extends HOTableModel {
+public class TrainingPredictionTableModel  extends HOPlayersTableModel {
 
 
     private TrainingModel model;
