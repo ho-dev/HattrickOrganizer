@@ -1,6 +1,5 @@
 package core.gui.comp.table
 
-import core.model.HOVerwaltung
 import core.model.player.Player
 import java.beans.PropertyChangeEvent
 import java.beans.PropertyChangeListener
