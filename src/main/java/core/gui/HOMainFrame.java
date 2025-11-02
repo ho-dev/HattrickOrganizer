@@ -726,8 +726,18 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 			 */
 			@Override
 			public void windowClosing(WindowEvent windowEvent) {
-				HOLogger.instance().info(getClass(), "shutting down HO... ");
-				shutdown();
+				int choice = JOptionPane.showConfirmDialog(
+						HOMainFrame.this,
+						TranslationFacility.tr("confirm.exit.message"),
+						TranslationFacility.tr("confirm.exit.title"),
+						JOptionPane.YES_NO_OPTION,
+						JOptionPane.QUESTION_MESSAGE
+				);
+
+				if (choice == JOptionPane.YES_OPTION) {
+					HOLogger.instance().info(getClass(), "shutting down HO... ");
+					shutdown();
+				}
 			}
 
 		});
