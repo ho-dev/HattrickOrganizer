@@ -85,6 +85,9 @@ public final class UserParameter extends Configuration {
      */
     public boolean showHRFSaveDialog = true;
 
+    // If true, shows a confirmation dialog when exiting the application
+    public boolean confirmOnExit = true;
+
     //Download Options
     /**
      * XML Download checked in Download Dialog?
