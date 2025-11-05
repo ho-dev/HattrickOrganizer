@@ -96,7 +96,7 @@ public class TrainingPredictionTableModel  extends HOPlayersTableModel {
 
     @Override
     protected void initData() {
-        var currentPlayers = HOVerwaltung.instance().getModel().getCurrentPlayers();
+        var currentPlayers = getPlayers();
         m_clData = new Object[currentPlayers.size()][getDisplayedColumns().length];
         int rownum = 0;
         for (var player : currentPlayers) {
