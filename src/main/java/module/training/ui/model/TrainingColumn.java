@@ -7,12 +7,6 @@ import module.training.PlayerSkillChange;
 import module.training.TrainWeekEffect;
 
 public class TrainingColumn extends UserColumn {
-    static int nextId = 0;
-
-    public TrainingColumn(String name, int minWidth) {
-        this(nextId++, name, name, minWidth);
-    }
-
     public TrainingColumn(int id, String name, String tooltip, int minWidth) {
         super(id, name, tooltip);
         this.index = this.getId();

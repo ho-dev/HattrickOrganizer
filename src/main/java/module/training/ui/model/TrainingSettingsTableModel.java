@@ -16,8 +16,12 @@ import javax.swing.*;
  */
 public class TrainingSettingsTableModel extends HOTableModel {
 
-	protected List<TrainingPerWeek> o_TrainingsPerWeek;
-
+    private static final int COLUMN_INDEX_INTENSITY = 4;
+    private static final int COLUMN_INDEX_STAMINA_SHARE = 5;
+    private static final int COLUMN_INDEX_COACH_LEVEL = 6;
+    private static final int COLUMN_INDEX_ASSISTANT_LEVEL = 7;
+    private static int nextId=0;
+    protected List<TrainingPerWeek> o_TrainingsPerWeek;
     protected TrainingModel trainingModel;
 
     /**
@@ -27,7 +31,8 @@ public class TrainingSettingsTableModel extends HOTableModel {
         super(columnModelId, name);
 
         columns = new ArrayList<>(List.of(
-                new TrainingColumn("ls.youth.player.training.date", 150) {
+                // 0
+                new TrainingColumn(nextId++, "ls.youth.player.training.date", 150) {
                     @Override
                     public IHOTableCellEntry getTableEntry(TrainingPerWeek entry) {
                         return new ColorLabelEntry(entry.getTrainingDate(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
@@ -38,21 +43,24 @@ public class TrainingSettingsTableModel extends HOTableModel {
                         return false;
                     }
                 },
-                new TrainingColumn("Season", 60) {
+                // 1
+                new TrainingColumn(nextId++, "Season", 60) {
                     @Override
                     public IHOTableCellEntry getTableEntry(TrainingPerWeek entry) {
                         var trainingDate = entry.getTrainingDate();
                         return new ColorLabelEntry(HODateTime.toEpochSecond(trainingDate), String.valueOf(trainingDate.toLocaleHTWeek().season), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
-                new TrainingColumn("Week", 60) {
+                // 2
+                new TrainingColumn(nextId++, "Week", 60) {
                     @Override
                     public IHOTableCellEntry getTableEntry(TrainingPerWeek entry) {
                         var trainingDate = entry.getTrainingDate();
                         return new ColorLabelEntry(HODateTime.toEpochSecond(trainingDate), String.valueOf(trainingDate.toLocaleHTWeek().week), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
-                new TrainingColumn("ls.team.trainingtype", 140) {
+                // 3
+                new TrainingColumn(nextId++, "ls.team.trainingtype", 140) {
                     @Override
                     public IHOTableCellEntry getTableEntry(TrainingPerWeek entry) {
                         return new ColorLabelEntry(core.constants.TrainingType.toString(entry.getTrainingType()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
@@ -60,7 +68,8 @@ public class TrainingSettingsTableModel extends HOTableModel {
                     @Override
                     public boolean isEditable() {return true;}
                 },
-                new TrainingColumn("ls.team.trainingintensity", 70) {
+                // 4
+                new TrainingColumn(nextId++, "ls.team.trainingintensity", 70) {
                     @Override
                     public IHOTableCellEntry getTableEntry(TrainingPerWeek entry) {
                         return new ColorLabelEntry(entry.getTrainingIntensity(), String.valueOf(entry.getTrainingIntensity()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
@@ -68,7 +77,8 @@ public class TrainingSettingsTableModel extends HOTableModel {
                     @Override
                     public boolean isEditable() {return true;}
                 },
-                new TrainingColumn("ls.team.staminatrainingshare", 70) {
+                // 5
+                new TrainingColumn(nextId++, "ls.team.staminatrainingshare", 70) {
                     @Override
                     public IHOTableCellEntry getTableEntry(TrainingPerWeek entry) {
                         return new ColorLabelEntry(entry.getStaminaShare(), String.valueOf(entry.getStaminaShare()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
@@ -76,7 +86,8 @@ public class TrainingSettingsTableModel extends HOTableModel {
                     @Override
                     public boolean isEditable() {return true;}
                 },
-                new TrainingColumn("ls.team.coachingskill", 70) {
+                // 6
+                new TrainingColumn(nextId++, "ls.team.coachingskill", 70) {
                     @Override
                     public IHOTableCellEntry getTableEntry(TrainingPerWeek entry) {
                         return new ColorLabelEntry(entry.getCoachLevel(), getCoachLevelDisplayText(entry.getCoachLevel()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
@@ -84,7 +95,8 @@ public class TrainingSettingsTableModel extends HOTableModel {
                     @Override
                     public boolean isEditable() {return true;}
                 },
-                new TrainingColumn("ls.module.statistics.club.assistant_trainers_level", 70) {
+                // 7
+                new TrainingColumn(nextId++, "ls.module.statistics.club.assistant_trainers_level", 70) {
                     @Override
                     public IHOTableCellEntry getTableEntry(TrainingPerWeek entry) {
                         return new ColorLabelEntry(entry.getTrainingAssistantsLevel(), String.valueOf(entry.getTrainingAssistantsLevel()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
@@ -148,16 +160,16 @@ public class TrainingSettingsTableModel extends HOTableModel {
                    entry.setTrainingType(cbItem.getId());
                 else {
                     switch (column) {
-                        case 4:
+                        case COLUMN_INDEX_INTENSITY:
                             entry.setTrainingIntensity((int) value);
                             break;
-                        case 5:
+                        case COLUMN_INDEX_STAMINA_SHARE:
                             entry.setStaminaShare((int) value);
                             break;
-                        case 6:
+                        case COLUMN_INDEX_COACH_LEVEL:
                             entry.setCoachLevel((int) value + 3);
                             break;
-                        case 7:
+                        case COLUMN_INDEX_ASSISTANT_LEVEL:
                             entry.setTrainingAssistantLevel((int) value);
                             break;
                         default:

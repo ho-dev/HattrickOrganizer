@@ -20,13 +20,14 @@ import java.util.List;
 
 public class SkillupTableModel extends HOTableModel {
 
+    private static int nextId=0;
 	private ArrayList<PlayerSkillChange> skillChanges;
 	private TrainingModel trainingModel;
 
 	public SkillupTableModel(UserColumnController.@NotNull ColumnModelId id) {
 		super(id, "ls.module.training.skillUps");
 		columns = new ArrayList<>(List.of(
-				new TrainingColumn("ls.player.skill", 150) {
+				new TrainingColumn(nextId++, "ls.player.skill", 150) {
 					@Override
 					public IHOTableCellEntry getTableEntry(PlayerSkillChange entry) {
 						var skillChange = entry.getSkillChange();
@@ -37,7 +38,7 @@ public class SkillupTableModel extends HOTableModel {
 						return ret;
 					}
 				},
-				new TrainingColumn("Week", 50) {
+				new TrainingColumn(nextId++, "Week", 50) {
 					@Override
 					public IHOTableCellEntry getTableEntry(PlayerSkillChange entry) {
 						var date = entry.getSkillChange().getDate();
@@ -47,7 +48,7 @@ public class SkillupTableModel extends HOTableModel {
 						return ret;
 					}
 				},
-				new TrainingColumn("Season", 50) {
+				new TrainingColumn(nextId++, "Season", 50) {
 					@Override
 					public IHOTableCellEntry getTableEntry(PlayerSkillChange entry) {
 						var date = entry.getSkillChange().getDate();
@@ -58,7 +59,7 @@ public class SkillupTableModel extends HOTableModel {
 
 					}
 				},
-				new TrainingColumn("ls.player.age", 50) {
+				new TrainingColumn(nextId++, "ls.player.age", 50) {
 					@Override
 					public IHOTableCellEntry getTableEntry(PlayerSkillChange entry) {
 						var date = entry.getSkillChange().getDate();
