@@ -94,7 +94,7 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
      * Init components
      */
     private void initComponents() {
-        setLayout(new GridLayout(10, 1, 4, 4));
+        setLayout(new GridLayout(11, 1, 4, 4));
 
         add (new JLabel(" "));
 
@@ -190,8 +190,8 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
 
         m_jchConfirmOnExit = new JCheckBox(TranslationFacility.tr("ls.menu.file.quit.neveraskagain"));
         m_jchConfirmOnExit.setOpaque(false);
-        m_jchConfirmOnExit.setSelected(!UserParameter.instance().confirmOnExit);
-        m_jchConfirmOnExit.addItemListener(e -> UserParameter.instance().confirmOnExit = !m_jchConfirmOnExit.isSelected());
+        m_jchConfirmOnExit.setSelected(!UserParameter.temp().confirmOnExit);
+        m_jchConfirmOnExit.addItemListener(e -> UserParameter.temp().confirmOnExit = !m_jchConfirmOnExit.isSelected());
         add(m_jchConfirmOnExit);
 
 //        m_jcbPromotionStatusTest = new JCheckBox(TranslationFacility.tr("PMStatusTest"));
