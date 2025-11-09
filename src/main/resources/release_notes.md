@@ -1,5 +1,6 @@
 ## Highlights
 * Add experience skill to training tables
+* Add confirm on exit dialog
 
 
 ## [Detailed Changelog](https://github.com/ho-dev/HattrickOrganizer/milestone/27)

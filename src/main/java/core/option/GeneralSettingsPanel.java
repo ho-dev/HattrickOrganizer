@@ -43,6 +43,7 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
     private JCheckBox m_jchShowSkillNumericalValue;
     private SliderPanel m_jslFontSize;
     private SliderPanel m_jslAlternativePositionsTolerance;
+    private JCheckBox m_jchConfirmOnExit;
 //    private JCheckBox m_jcbPromotionStatusTest;
 
     /**
@@ -93,7 +94,7 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
      * Init components
      */
     private void initComponents() {
-        setLayout(new GridLayout(10, 1, 4, 4));
+        setLayout(new GridLayout(11, 1, 4, 4));
 
         add (new JLabel(" "));
 
@@ -186,6 +187,12 @@ public final class GeneralSettingsPanel extends ImagePanel implements ChangeList
         m_jslAlternativePositionsTolerance.setValue(UserParameter.temp().alternativePositionsTolerance);
         m_jslAlternativePositionsTolerance.addChangeListener(this);
         add(m_jslAlternativePositionsTolerance);
+
+        m_jchConfirmOnExit = new JCheckBox(TranslationFacility.tr("ls.menu.file.quit.neveraskagain"));
+        m_jchConfirmOnExit.setOpaque(false);
+        m_jchConfirmOnExit.setSelected(!UserParameter.temp().confirmOnExit);
+        m_jchConfirmOnExit.addItemListener(e -> UserParameter.temp().confirmOnExit = !m_jchConfirmOnExit.isSelected());
+        add(m_jchConfirmOnExit);
 
 //        m_jcbPromotionStatusTest = new JCheckBox(TranslationFacility.tr("PMStatusTest"));
 //        m_jcbPromotionStatusTest.setOpaque(false);
