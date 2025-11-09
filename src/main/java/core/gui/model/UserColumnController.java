@@ -2,6 +2,7 @@ package core.gui.model;
 
 import core.db.DBManager;
 import core.gui.comp.table.HOTableModel;
+import module.hallOfFame.HallOfFameTableModel;
 import module.matches.statistics.MatchesOverviewColumnModel;
 import module.specialEvents.SpecialEventsTableModel;
 import module.teamAnalyzer.ui.RecapPanelTableModel;
@@ -50,7 +51,8 @@ public final class UserColumnController {
         TRAININGANALYSIS(18),
         TRAININGSETTINGSFUTURE(19),
         TRAININGSETTINGSPAST(20),
-        TRAININGEFFECT(21);
+        TRAININGEFFECT(21),
+        HALL_OF_FAME(22);
 
 		private final int value;
 		ColumnModelId(int value){this.value=value;}
@@ -95,7 +97,10 @@ public final class UserColumnController {
     private TrainingSettingsTableModel trainingSettingsPastTableModel;
     private EffectTableModel effectTableModel;
 
-	/**
+    private HallOfFameTableModel hallOfFameTableModel;
+
+
+    /**
 	 * constructor
 	 *
 	 */
@@ -141,13 +146,19 @@ public final class UserColumnController {
         dbManager.loadHOColumModel(getTrainingEffectTableModel());
 	}
 
+    public HallOfFameTableModel getHallOfFameTableModel() {
+        if (this.hallOfFameTableModel == null){
+            this.hallOfFameTableModel = new HallOfFameTableModel(ColumnModelId.HALL_OF_FAME);
+        }
+        return this.hallOfFameTableModel;
+    }
+
     public EffectTableModel getTrainingEffectTableModel() {
         if ( this.effectTableModel == null){
             this.effectTableModel = new EffectTableModel(ColumnModelId.TRAININGEFFECT);
         }
         return this.effectTableModel;
     }
-
 
     public TrainingSettingsTableModel getTrainingSettingsPastTableModel() {
         if (this.trainingSettingsPastTableModel == null){
@@ -266,6 +277,7 @@ public final class UserColumnController {
         v.add(getTrainingSettingsPastTableModel());
         v.add(getTrainingSettingsFutureTableModel());
         v.add(getTrainingEffectTableModel());
+        v.add(getHallOfFameTableModel());
 		// MatchesOverView1Model should not add in this vector, because columns should not be edited
 		return v;
 	}

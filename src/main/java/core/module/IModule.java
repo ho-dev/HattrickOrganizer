@@ -30,6 +30,7 @@ public interface IModule {
     //public static final int MATCHESANALYZER	= 18;
     //int OPPONENTSPY = 19;
     int YOUTH = 20;
+    int HALL_OF_FAME = 21;
 
     int getModuleId();
 
@@ -58,4 +59,10 @@ public interface IModule {
     void setStatus(int statusId);
 
     void storeUserSettings();
+
+    default int getMenuOrder(){
+        return this.getKeyStroke().getKeyCode();
+    }
+
+
 }
