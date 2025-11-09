@@ -1,4 +1,5 @@
 ## Highlights
+* Add experience skill to training tables
 
 
 ## [Detailed Changelog](https://github.com/ho-dev/HattrickOrganizer/milestone/27)
@@ -19,7 +20,8 @@
 ### Lineup
 
 
-### Team spirit forecast
+### Training
+* Add experience skill to training tables (#2283)
 
 
 ### Transfer
@@ -35,7 +37,7 @@
 
 ## Translations
 
-Reports by Contributors - October 19, 2025 - October 19, 2025
+Reports by Contributors - October 19, 2025 - November 09, 2025
+* Ioannidouefty 459
 
-
-Total 0
+Total 459
