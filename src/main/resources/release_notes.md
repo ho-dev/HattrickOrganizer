@@ -1,4 +1,5 @@
 ## Highlights
+* Add confirm on exit dialog
 
 
 ## [Detailed Changelog](https://github.com/ho-dev/HattrickOrganizer/milestone/27)
