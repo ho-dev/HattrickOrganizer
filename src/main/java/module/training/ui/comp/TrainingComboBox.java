@@ -18,9 +18,9 @@ public class TrainingComboBox extends JComboBox {
     /**
      * Creates a new TrainingComboBox object with an empty entry
      */
-    public TrainingComboBox(boolean emptyEntry) {
+    public TrainingComboBox(boolean addEmptyEntry) {
         super();
-        if(emptyEntry){
+        if(addEmptyEntry){
             addItem(null);
         }
         for(CBItem _trainingType:TrainingType.ITEMS){
@@ -42,7 +42,6 @@ public class TrainingComboBox extends JComboBox {
         @Override
         public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
             Component component = delegate.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-            Dimension size = component.getPreferredSize();
             if (value == null) {
                 return new JLabel(" ");
             }

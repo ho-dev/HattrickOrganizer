@@ -48,11 +48,15 @@ public class PastTrainingManager {
 				element.setDate(trainingDate);
 				allSkillChanges.add(element);
 
-				if (skill == PlayerSkill.KEEPER || skill == PlayerSkill.DEFENDING
-						|| skill == PlayerSkill.WINGER || skill == PlayerSkill.PLAYMAKING
-						|| skill == PlayerSkill.SCORING || skill == PlayerSkill.PASSING
-						|| skill == PlayerSkill.SETPIECES) {
-					trainSkillChanges.add(element);
+				if (skill == PlayerSkill.KEEPER
+						|| skill == PlayerSkill.DEFENDING
+						|| skill == PlayerSkill.WINGER
+						|| skill == PlayerSkill.PLAYMAKING
+						|| skill == PlayerSkill.SCORING
+						|| skill == PlayerSkill.PASSING
+						|| skill == PlayerSkill.SETPIECES
+						|| skill == PlayerSkill.EXPERIENCE) {
+                    trainSkillChanges.add(element);
 				}
 
 			}

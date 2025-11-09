@@ -7,13 +7,18 @@ import java.awt.Component
 import java.awt.Dimension
 import java.awt.event.AdjustmentEvent
 import java.awt.event.AdjustmentListener
+import java.awt.event.ComponentAdapter
+import java.awt.event.ComponentEvent
 import java.beans.PropertyChangeEvent
 import javax.swing.*
+import javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS
+import javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED
 import javax.swing.event.ListSelectionListener
 import javax.swing.event.TableModelEvent
 import javax.swing.table.TableCellRenderer
 import javax.swing.table.TableColumn
 import javax.swing.table.TableModel
+
 
 /**
  * Table with fixed columns on the left hand side
@@ -97,28 +102,54 @@ open class FixedColumnsTable @JvmOverloads constructor(
             // Sync scroll bars of both tables
             val fixedScrollPane = JScrollPane(fixed)
             val rightScrollPane = JScrollPane(this)
-            fixedScrollPane.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS
-            rightScrollPane.horizontalScrollBarPolicy = ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS
-            val fixedScrollBar = fixedScrollPane.verticalScrollBar
-            val rightScrollBar = rightScrollPane.verticalScrollBar
+
+            // Synchronize horizontal scroll bars appearances
+            // Initially set policy AS_NEEDED
+            // If one scroll bar appears, and the other one is not visible, set ALWAYS
+            // If one scroll bar disappears, and the other has policy ALWAYS, set AS_NEEDED
+            val fixedHorizontalScrollbar = fixedScrollPane.horizontalScrollBar
+            val rightHorizontalScrollbar = rightScrollPane.horizontalScrollBar
+            fixedHorizontalScrollbar.addComponentListener(object : ComponentAdapter() {
+                override fun componentShown(e: ComponentEvent?) {
+                    showHorizontalScrollbar(rightScrollPane)
+                }
+
+                override fun componentHidden(e: ComponentEvent?) {
+                    horizontalScrollbarHidden(fixedScrollPane, rightScrollPane)
+                }
+            })
+            rightHorizontalScrollbar.addComponentListener(object : ComponentAdapter() {
+                override fun componentShown(e: ComponentEvent?) {
+                    showHorizontalScrollbar(fixedScrollPane)
+                }
+
+                override fun componentHidden(e: ComponentEvent?) {
+                    horizontalScrollbarHidden(rightScrollPane, fixedScrollPane)
+                }
+            })
+
+            val fixedVerticalScrollBar = fixedScrollPane.verticalScrollBar
+            val rightVerticalScrollBar = rightScrollPane.verticalScrollBar
 
             // setVisible(false) does not have an effect, so we set the size to
             // false. We can't disable the scrollbar with VERTICAL_SCROLLBAR_NEVER
             // because this will disable mouse wheel scrolling.
-            fixedScrollBar.preferredSize = Dimension(0, 0)
+            fixedVerticalScrollBar.preferredSize = Dimension(0, 0)
 
             // Synchronize vertical scrolling
-            val adjustmentListener = AdjustmentListener { e: AdjustmentEvent ->
-                if (e.source === rightScrollBar) {
-                    fixedScrollBar.value = e.value
+            val verticalAdjustmentListener = AdjustmentListener { e: AdjustmentEvent ->
+                if (e.source === rightVerticalScrollBar) {
+                    fixedVerticalScrollBar.value = e.value
                 } else {
-                    rightScrollBar.value = e.value
+                    rightVerticalScrollBar.value = e.value
                 }
             }
-            fixedScrollBar.addAdjustmentListener(adjustmentListener)
-            rightScrollBar.addAdjustmentListener(adjustmentListener)
+
+            fixedVerticalScrollBar.addAdjustmentListener(verticalAdjustmentListener)
+            rightVerticalScrollBar.addAdjustmentListener(verticalAdjustmentListener)
             rightScrollPane.verticalScrollBar.model = fixedScrollPane.verticalScrollBar.model
             val splitPane = JSplitPane(JSplitPane.HORIZONTAL_SPLIT, fixedScrollPane, rightScrollPane)
+            splitPane.dividerSize = 2
             if (width == 0) width = 60
             this.dividerLocation = HOConfigurationIntParameter("TableDividerLocation_" + tableModel.id, width)
             splitPane.dividerLocation = dividerLocation?.getIntValue()!!
@@ -143,6 +174,41 @@ open class FixedColumnsTable @JvmOverloads constructor(
     }
 
     /**
+     * Show the horizontal scroll bar of the scroll pane when the other horizontal scroll bar appeared in case of pane resizing
+     * @param scrollPane The scroll pane that has to be synchronized with the other scroll pane
+     */
+    private fun showHorizontalScrollbar(scrollPane: JScrollPane) {
+        if (scrollPane.horizontalScrollBar.isVisible) return // already visible, no action required
+        if (scrollPane.horizontalScrollBarPolicy != HORIZONTAL_SCROLLBAR_ALWAYS){
+            scrollPane.horizontalScrollBarPolicy = HORIZONTAL_SCROLLBAR_ALWAYS
+            scrollPane.revalidate()
+            scrollPane.repaint()
+        }
+    }
+
+    /**
+     * Hide the horizontal scroll bar of the scroll pane when the other horizontal scroll bar disappeared in case of pane resizing
+     * If the other scroll bar does not require a scroll bar, its scroll bar will be removed
+     * otherwise the disappearance in hidden scroll bar will be reset.
+     * @param hiddenScrollPane The scroll pane that removed the scroll bar
+     * @param otherScrollPane The scroll pane that has to be adapted
+     */
+    private fun horizontalScrollbarHidden(hiddenScrollPane: JScrollPane, otherScrollPane: JScrollPane){
+        val otherScrollbar = otherScrollPane.horizontalScrollBar
+        if (otherScrollbar.maximum-otherScrollbar.visibleAmount == otherScrollbar.minimum){
+            // Full size, no scroll bar needed
+            otherScrollPane.horizontalScrollBarPolicy = HORIZONTAL_SCROLLBAR_AS_NEEDED
+            otherScrollPane.revalidate()
+            otherScrollPane.repaint()
+        }
+        else {
+            hiddenScrollPane.horizontalScrollBarPolicy = HORIZONTAL_SCROLLBAR_ALWAYS
+            hiddenScrollPane.revalidate()
+            hiddenScrollPane.repaint()
+        }
+    }
+
+    /**
      * Set row selection interval of both tables synchronously
      * @param rowIndex0 one end of the interval
      * @param rowIndex1 the other end of the interval
@@ -150,6 +216,16 @@ open class FixedColumnsTable @JvmOverloads constructor(
     override fun setRowSelectionInterval(rowIndex0: Int, rowIndex1: Int) {
         super.setRowSelectionInterval(rowIndex0, rowIndex1)
         fixed?.setRowSelectionInterval(rowIndex0, rowIndex1)
+    }
+
+    /**
+     * Add row selection interval of both tables synchronously
+     * @param rowIndex0 one end of the interval
+     * @param rowIndex1 the other end of the interval
+     */
+    override fun addRowSelectionInterval(rowIndex0: Int, rowIndex1: Int) {
+        super.addRowSelectionInterval(rowIndex0, rowIndex1)
+        fixed?.addRowSelectionInterval(rowIndex0, rowIndex1)
     }
 
     /**
@@ -215,6 +291,22 @@ open class FixedColumnsTable @JvmOverloads constructor(
 
     /**
      * Return th table column of the fixed or right hand side table
+     * @param modelColumnIndex Model column index
+     * @return TableColumn
+     */
+    fun getModelTableColumn(modelColumnIndex: Int): TableColumn {
+        if (fixed != null && modelColumnIndex < fixedColumnsCount) {
+            val i = fixed!!.convertColumnIndexToView(modelColumnIndex)
+            return fixed!!.columnModel.getColumn(i)
+        }
+        // The registered model index values are not changed when column model is divided into fixed and not fixed part
+        // So do not adapt the model column index here
+        val i = super.convertColumnIndexToView(modelColumnIndex)
+        return super.getColumnModel().getColumn(i)
+    }
+
+    /**
+     * Return th table column of the fixed or right hand side table
      * @param i Column index
      * @return TableColumn
      */
@@ -238,4 +330,5 @@ open class FixedColumnsTable @JvmOverloads constructor(
         }
         return null
     }
+
 }

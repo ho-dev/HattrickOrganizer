@@ -53,6 +53,8 @@ abstract class HOTableModel protected constructor(
     @JvmField
 	protected var m_clData: Array<Array<Any?>>? = null
 
+
+    // TODO: Check if a list of tables is necessary (See SpielerMatchesTable, which uses two instances of same table model type)
     /** Table component  */
     protected var tables: MutableList<JTable> = ArrayList()
 
@@ -265,7 +267,7 @@ abstract class HOTableModel protected constructor(
     private fun setUserColumnSettings(table: JTable): Boolean {
         var changed = false
         val displayedColumns = getDisplayedColumns()
-        for (index in 0..<table.columnCount) {
+        for (index in 0..<displayedColumns.size) {
             val tableColumn = getTableColumn(table, index)
             val modelColumn = displayedColumns[tableColumn.modelIndex]
 
@@ -314,6 +316,11 @@ abstract class HOTableModel protected constructor(
         for (userColumn in displayedColumns) {
             val tableColumn = getTableColumn(table, i++)
             tableColumn.identifier = userColumn.getId()
+            if (userColumn.isHidden){
+                tableColumn.preferredWidth=0
+                tableColumn.minWidth=0
+                tableColumn.maxWidth=0
+            }
         }
         getUserColumnSettings(table)
 
@@ -371,8 +378,8 @@ abstract class HOTableModel protected constructor(
     private fun getRowOrderSettings(rowSorter: RowSorter<HOTableModel>) {
         // Restore row order setting
         val sortKeys = ArrayList<RowSorter.SortKey>()
-        val sortColumns = Arrays.stream(this.columns).filter { i: UserColumn -> i.sortPriority != null }.sorted(
-            Comparator.comparingInt { obj: UserColumn -> obj.getSortPriority() }).toList()
+        val sortColumns = Arrays.stream(this.columns).filter { i: UserColumn -> i.sortPriority != null }
+            .sorted(Comparator.comparingInt { obj: UserColumn -> obj.getSortPriority() }).toList()
         if (sortColumns.isNotEmpty()) {
             val userColumns = Arrays.stream(this.columns).toList()
             for (col in sortColumns) {

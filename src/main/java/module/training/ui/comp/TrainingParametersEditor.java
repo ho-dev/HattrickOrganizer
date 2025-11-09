@@ -4,12 +4,12 @@ import javax.swing.JComboBox;
 
 
 /**
- * ComboBox for editing the training paramters in Training table
+ * ComboBox for editing the training setting parameters in training table
  */
-public class trainingParametersEditor extends JComboBox {
+public class TrainingParametersEditor extends JComboBox {
 
 
-    public trainingParametersEditor(int min, int max, boolean emptyEntry) {
+    public TrainingParametersEditor(int min, int max, boolean emptyEntry) {
         super();
         if(emptyEntry){
             addItem(null);
@@ -24,16 +24,16 @@ public class trainingParametersEditor extends JComboBox {
         setRenderer(new TrainingComboBox.HighLightRowRenderer(getRenderer()));
     }
 
-    public trainingParametersEditor(int min, int max) {
+    public TrainingParametersEditor(int min, int max) {
         this(min, max, false);
     }
 
 
-    public trainingParametersEditor(int min, boolean emptyEntry) {
+    public TrainingParametersEditor(int min, boolean emptyEntry) {
         this(min, 100, emptyEntry);
     }
 
-    public trainingParametersEditor(int min) {
+    public TrainingParametersEditor(int min) {
         this(min, 100, false);
     }
 }

@@ -16,6 +16,7 @@ import core.training.*;
 import core.util.*;
 
 import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
 
 import static core.constants.player.PlayerSkill.*;
@@ -1892,7 +1893,7 @@ public class Player extends AbstractTable.Storable {
      * Get the training priority of a hattrick week. If user training plan is given for the week this user selection is
      * returned. If no user plan is available, the training priority is determined by the player's best position.
      *
-     * @param wt           used to get priority depending from the player's best position.
+     * @param wt           used to get priority depending on the player's best position.
      * @param trainingDate the training week
      * @return the training priority
      */
@@ -1958,10 +1959,10 @@ public class Player extends AbstractTable.Storable {
     }
 
     public String getBestPositionInfo() {
-        return MatchRoleID.getNameForPosition(getIdealPosition())
-                + " ("
-                + String.format("%.2f", getIdealPositionRating())
-                + ")";
+        var idealPosition = getIdealPosition();
+        return String.format("%s (%.2f)",
+                MatchRoleID.getNameForPosition(idealPosition),
+                this.getPositionRating(idealPosition));
     }
 
     public FuturePlayerTraining.Priority getFuturePlayerSkillTrainingPriority(PlayerSkill skillIndex) {
@@ -2006,7 +2007,7 @@ public class Player extends AbstractTable.Storable {
 
 
     /**
-     * training priority information of the training panel
+     * Training priority information of the training panel
      *
      * @param nextWeek training priorities after this week will be considered
      * @return if there is one user selected priority, the name of the priority is returned
@@ -2391,6 +2392,37 @@ public class Player extends AbstractTable.Storable {
             }
         }
         return skillChanges;
+    }
+
+    /**
+     * Get the experience increment average over the last 16 weeks
+     */
+    private Double experienceIncrementPerWeek;
+    public double getExperienceIncrementPerWeek(){
+        if (experienceIncrementPerWeek==null){
+            // Look for player status maximal 16 weeks ago
+            Player previousPlayer = null;
+            HODateTime start = HOVerwaltung.instance().getModel().getBasics().getDatum().minus(16*7, ChronoUnit.DAYS);
+            for (var p : DBManager.instance().loadPlayerHistory(this.getPlayerId())) {
+                if (previousPlayer == null || p.getHrfDate().isBefore(start) ) {
+                    previousPlayer = p;
+                }
+                else if (p.getHrfDate().isAfter(start)){
+                    break;
+                }
+            }
+
+            if ( previousPlayer != null){
+                double experienceIncrement = this.getSkill(EXPERIENCE) - previousPlayer.getSkill(EXPERIENCE);
+                HODateTime.HODuration duration = HODateTime.HODuration.between(previousPlayer.getHrfDate(), this.getHrfDate());
+                experienceIncrementPerWeek = experienceIncrement / duration.toDouble() / 16;
+            }
+            else {
+                // some minimal increment if no information is available
+                experienceIncrementPerWeek = 0.005;
+            }
+        }
+        return experienceIncrementPerWeek;
     }
 
     /**

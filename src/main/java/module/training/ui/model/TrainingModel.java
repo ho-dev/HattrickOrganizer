@@ -18,7 +18,6 @@ import java.util.List;
 
 public class TrainingModel implements PropertyChangeListener {
 
-
 	private Player activePlayer;
 	private List<TrainingPerWeek> futureTrainings;
 	private PastTrainingManager skillupManager;
@@ -44,7 +43,6 @@ public class TrainingModel implements PropertyChangeListener {
 			this.activePlayer = player;
 			this.skillupManager = null;
 			resetFutureTrainings_();
-			fireModelChanged(ModelChange.ACTIVE_PLAYER);
 		}
 	}
 
@@ -77,7 +75,6 @@ public class TrainingModel implements PropertyChangeListener {
 
 	public void saveFutureTraining(TrainingPerWeek training) {
 		DBManager.instance().saveFutureTraining(training);
-		//futureTrainings = null; //force reload
 		fireModelChanged(ModelChange.FUTURE_TRAINING);
 	}
 

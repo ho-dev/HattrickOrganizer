@@ -2,25 +2,23 @@ package module.training.ui;
 
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyPanel;
-import core.model.player.SkillChange;
+import core.gui.comp.table.FixedColumnsTable;
+import core.gui.comp.table.PlayersTable;
+import core.gui.model.UserColumnController;
+import core.model.player.Player;
 import core.util.Helper;
 import module.training.ui.model.SkillupTableModel;
 import module.training.ui.model.TrainingModel;
-import module.training.ui.renderer.SkillupTableRenderer;
 import java.awt.BorderLayout;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.ScrollPaneConstants;
 import javax.swing.SwingConstants;
 
+public class TrainingDevelopmentPanel extends LazyPanel implements PropertyChangeListener {
 
-public class TrainingDevelopmentPanel extends LazyPanel {
-
-	private SkillupTable table;
+	private FixedColumnsTable table;
 	private final TrainingModel model;
 
 	private JLabel title;
@@ -46,52 +44,24 @@ public class TrainingDevelopmentPanel extends LazyPanel {
 	}
 
 	private void addListeners() {
-		this.model.addModelChangeListener(change -> setNeedsRefresh(true));
+		PlayersTable.Companion.addPropertyChangeListener(this);
 	}
 
 	/**
 	 * Populate the table
 	 */
 	private void loadFromModel() {
-		List<SkillChange> skillups = new ArrayList<>();
 		if (this.model.getActivePlayer() != null) {
 			this.title.setText(Helper.getTranslation("ls.module.training.training_development")+ " " + this.model.getActivePlayer().getFullName());
-			skillups.addAll(this.model.getSkillupManager().getTrainedSkillChanges());
-			skillups.addAll(this.model.getFutureTrainingManager().getFutureSkillChanges());
-			Collections.reverse(skillups);
 		}
-		((SkillupTableModel) this.table.getModel()).setData(this.model.getActivePlayer(), skillups);
-	}
-
-	/**
-	 * Resize the column
-	 * 
-	 * @param col
-	 *            column to resize
-	 * @param width
-	 *            new width
-	 */
-	private void setColumnWidth(int col, int width) {
-		table.getTableHeader().getColumnModel().getColumn(col).setWidth(width);
-		table.getTableHeader().getColumnModel().getColumn(col).setPreferredWidth(width);
-		table.getTableHeader().getColumnModel().getColumn(col).setMaxWidth(200);
-		table.getTableHeader().getColumnModel().getColumn(col).setMinWidth(0);
+		((SkillupTableModel) this.table.getModel()).setTrainingModel(this.model);
 	}
 
 	/**
 	 * Initialize the object layout
 	 */
 	private void initComponents() {
-		table = new SkillupTable(new SkillupTableModel());
-		table.setDefaultRenderer(Object.class, new SkillupTableRenderer());
-
-		setColumnWidth(1, 50);
-		setColumnWidth(2, 50);
-
-		JScrollPane scrollPane = new JScrollPane(table);
-		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-		scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-
+		table = new FixedColumnsTable(UserColumnController.instance().getTrainingPlayerSkillChangesTableModel());
 		JPanel headerPanel = new ImagePanel();
 		headerPanel.setOpaque(false);
 
@@ -102,6 +72,22 @@ public class TrainingDevelopmentPanel extends LazyPanel {
 
 		setLayout(new BorderLayout());
 		add(headerPanel, BorderLayout.NORTH);
-		add(scrollPane, BorderLayout.CENTER);
+		add(table.getContainerComponent(), BorderLayout.CENTER);
 	}
+
+	@Override
+	public void propertyChange(PropertyChangeEvent evt) {
+		if ( evt.getPropertyName().equals("SelectedPlayer") ) {
+			var newSelection = (Player) evt.getNewValue();
+			this.model.setActivePlayer(newSelection);
+			loadFromModel();
+		}
+	}
+
+    public void storeUserSettings() {
+        var tableModel = (SkillupTableModel)this.table.getModel();
+        if ( tableModel != null){
+            tableModel.storeUserSettings();
+        }
+    }
 }

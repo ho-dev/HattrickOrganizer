@@ -1,9 +1,11 @@
-// %2601556114:hoplugins.trainingExperience.ui%
 package module.training.ui;
 
 import core.constants.player.PlayerSkill;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyPanel;
+import core.gui.comp.table.FixedColumnsTable;
+import core.gui.comp.table.PlayersTable;
+import core.gui.model.UserColumnController;
 import core.gui.theme.ImageUtilities;
 import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
@@ -13,10 +15,7 @@ import core.util.GUIUtils;
 import module.training.PastTrainingManager;
 import module.training.PlayerSkillChange;
 import module.training.ui.model.ChangesTableModel;
-import module.training.ui.model.ModelChange;
-import module.training.ui.model.TrainingModel;
-import module.training.ui.renderer.ChangeTableRenderer;
-import module.training.ui.renderer.SkillupTypeTableCellRenderer;
+
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -28,16 +27,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.swing.BorderFactory;
-import javax.swing.ButtonModel;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.table.TableColumn;
+import javax.swing.*;
 
 /**
  * Shows a table of skillups, which can be filtered using the checkboxes on the
@@ -51,20 +41,19 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
 	private static final String CMD_CLEAR_ALL = "clearAll";
 	private ButtonModel oldPlayers;
 	private JPanel filterPanel;
-	private JTable changesTable;
+	private FixedColumnsTable changesTable;
 	private JCheckBox oldPlayersCheckBox;
 	private final Map<PlayerSkill, ButtonModel> buttonModels = new HashMap<>();
 	private Map<PlayerSkill, List<PlayerSkillChange>> skillups;
 	private Map<PlayerSkill, List<PlayerSkillChange>> skillupsOld;
-	private final TrainingModel model;
+    private ChangesTableModel tableModel;
 
-	/**
+    /**
 	 * Creates a new AnalyzerPanel object.
 	 */
-	public AnalyzerPanel(TrainingModel model) {
+	public AnalyzerPanel() {
 		super();
-		this.model = model;
-	}
+    }
 
 	/**
 	 * @see java.awt.event.ActionListener#actionPerformed(java.awt.event.ActionEvent)
@@ -81,6 +70,7 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
 
 	@Override
 	protected void initialize() {
+        this.tableModel = UserColumnController.instance().getTrainingAnalysisTableModel();
 		initComponents();
 		addListeners();
 		update();
@@ -115,70 +105,23 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
             }
         }
 
-		values.sort((sc1, sc2) -> {
-            if (sc1.getSkillChange().getHtSeason() > sc2.getSkillChange().getHtSeason()) {
-                return -1;
-            } else if (sc1.getSkillChange().getHtSeason() < sc2.getSkillChange().getHtSeason()) {
-                return 1;
-            } else {
-                if (sc1.getSkillChange().getHtWeek() > sc2.getSkillChange().getHtWeek()) {
-                    return -1;
-                } else if (sc1.getSkillChange().getHtWeek() < sc2.getSkillChange().getHtWeek()) {
-                    return 1;
-                } else {
-                    if ((sc1.getPlayer().equals(sc2.getPlayer()))
-                            && (sc1.getSkillChange().getType() == sc2.getSkillChange().getType())) {
-                        if (sc1.getSkillChange().getValue() > sc2.getSkillChange().getValue()) {
-                            return -1;
-                        } else {
-                            return 1;
-                        }
-                    } else {
-                        return sc1.getPlayer().getFullName().compareTo(sc2.getPlayer().getFullName());
-                    }
-                }
-            }
-        });
-
-		changesTable.setModel(new ChangesTableModel(values));
-		changesTable.setDefaultRenderer(Object.class, new ChangeTableRenderer());
-		changesTable.getTableHeader().setReorderingAllowed(false);
-		changesTable.getColumnModel().getColumn(0).setPreferredWidth(50);
-		changesTable.getColumnModel().getColumn(1).setPreferredWidth(50);
-		changesTable.getColumnModel().getColumn(2).setPreferredWidth(150);
-		changesTable.getColumnModel().getColumn(3).setPreferredWidth(100);
-		changesTable.getColumnModel().getColumn(4).setPreferredWidth(100);
-
-		// Hide column 5
-		TableColumn tblColumn = changesTable.getTableHeader().getColumnModel().getColumn(5);
-		tblColumn.setPreferredWidth(0);
-		tblColumn.setMinWidth(0);
-		tblColumn.setMaxWidth(0);
-
-		// Hide column 6
-		tblColumn = changesTable.getTableHeader().getColumnModel().getColumn(6);
-		tblColumn.setPreferredWidth(0);
-		tblColumn.setMinWidth(0);
-		tblColumn.setMaxWidth(0);
-
-		// Set own renderer instance for skillup column.
-		changesTable.getTableHeader().getColumnModel().getColumn(3)
-				.setCellRenderer(new SkillupTypeTableCellRenderer());
+        var trainingAnalysisTableModel = UserColumnController.instance().getTrainingAnalysisTableModel();
+        trainingAnalysisTableModel.setChanges(values);
 	}
 
-	private void addListeners() {	
-		this.model.addModelChangeListener(change -> {
-            if (change == ModelChange.ACTIVE_PLAYER) {
-                selectPlayerFromModel();
+	private void addListeners() {
+        PlayersTable.Companion.addPropertyChangeListener(evt -> selectPlayerFromModel());
+        this.oldPlayersCheckBox.addChangeListener(e -> updateFilterPanel());
+		this.changesTable.getSelectionModel().addListSelectionListener(e->{
+            var modelIndex = this.changesTable.getSelectedModelIndex();
+            if (modelIndex > -1){
+                var tableModel = (ChangesTableModel) this.changesTable.getModel();
+                var playerSkillChange = tableModel.getValues().get(modelIndex);
+                PlayersTable.Companion.setSelectedPlayer(playerSkillChange.getPlayer());
+                this.selectPlayerFromModel();
             }
         });
-
-		this.oldPlayersCheckBox.addChangeListener(e -> updateFilterPanel());
-
-		this.changesTable.getSelectionModel().addListSelectionListener(
-				new PlayerSelectionListener(this.model, this.changesTable,
-						ChangesTableModel.COL_PLAYER_ID));
-	}
+    }
 
 	private void setAllSelected(boolean selected) {
         for (ButtonModel bModel : this.buttonModels.values()) {
@@ -269,9 +212,9 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
 		skillPanel.setLayout(new BorderLayout());
 		skillPanel.setBorder(BorderFactory.createTitledBorder(TranslationFacility.tr("TAB_SKILL")));
 
-		// Add selection listener.
-		this.changesTable = new JTable();
-		skillPanel.add(new JScrollPane(this.changesTable), BorderLayout.CENTER);
+		this.changesTable = new FixedColumnsTable(this.tableModel,2);
+        this.changesTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+		skillPanel.add(new JScrollPane(this.changesTable.getContainerComponent()), BorderLayout.CENTER);
 
 		this.oldPlayersCheckBox = new JCheckBox();
 		this.oldPlayersCheckBox.setOpaque(false);
@@ -354,20 +297,29 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
 		filterPanel.revalidate();
 	}
 
-	private void selectPlayerFromModel() {
+    private boolean disableListSelectionListener = false;
+
+    private void selectPlayerFromModel() {
+        if (this.disableListSelectionListener) return;
+        this.disableListSelectionListener = true;
 		this.changesTable.clearSelection();
-		Player player = this.model.getActivePlayer();
+		Player player = PlayersTable.Companion.getSelectedPlayer();
 		if (player != null) {
 			ChangesTableModel tblModel = (ChangesTableModel) this.changesTable.getModel();
 			for (int i = 0; i < tblModel.getRowCount(); i++) {
-				String val = (String) tblModel.getValueAt(i, ChangesTableModel.COL_PLAYER_ID);
-				int id = Integer.parseInt(val);
-				if (player.getPlayerId() == id) {
+                var playerSkillChange = tblModel.getValues().get(i);
+				if (player.getPlayerId() == playerSkillChange.getPlayer().getPlayerId()) {
 					int viewIndex = this.changesTable.convertRowIndexToView(i);
-					this.changesTable.getSelectionModel()
-							.addSelectionInterval(viewIndex, viewIndex);
+                    this.changesTable.addRowSelectionInterval(viewIndex, viewIndex);
 				}
 			}
 		}
+        this.disableListSelectionListener = false;
 	}
+
+    public void storeUserSettings() {
+        if ( this.tableModel != null ) {
+            this.tableModel.storeUserSettings();
+        }
+    }
 }

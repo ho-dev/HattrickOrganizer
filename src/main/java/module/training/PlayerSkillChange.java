@@ -9,12 +9,9 @@ import core.model.player.SkillChange;
  * @author NetHyperon
  */
 public class PlayerSkillChange {
-    //~ Instance fields ----------------------------------------------------------------------------
 
     private final SkillChange skillChange;
     private final Player player;
-
-    //~ Constructors -------------------------------------------------------------------------------
 
     /**
      * Creates a new SkillChange object.
@@ -27,8 +24,6 @@ public class PlayerSkillChange {
         this.skillChange = skillup;
     }
 
-    //~ Methods ------------------------------------------------------------------------------------
-
     /**
      * Get the player
      *
@@ -39,9 +34,9 @@ public class PlayerSkillChange {
     }
 
     /**
-     * Get the skillup
+     * Get the skill change
      *
-     * @return Skillup
+     * @return SkillChange
      */
     public SkillChange getSkillChange() {
         return skillChange;

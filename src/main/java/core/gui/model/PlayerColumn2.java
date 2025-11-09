@@ -1,6 +1,6 @@
 package core.gui.model;
 
-import core.gui.comp.entry.IHOTableEntry;
+import core.gui.comp.entry.IHOTableCellEntry;
 import core.gui.comp.table.UserColumn;
 
 
@@ -14,7 +14,7 @@ public class PlayerColumn2 extends UserColumn {
 		preferredWidth = 80;
 	}
 
-	public IHOTableEntry getTableEntry(PlayerMatchCBItem spielerCBItem){
+	public IHOTableCellEntry getTableEntry(PlayerMatchCBItem spielerCBItem){
 		return null;
 	}
 }

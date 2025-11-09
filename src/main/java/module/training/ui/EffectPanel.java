@@ -1,27 +1,22 @@
-// %3525181034:hoplugins.trainingExperience.ui%
 package module.training.ui;
 
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyPanel;
+import core.gui.comp.table.FixedColumnsTable;
+import core.gui.model.UserColumnController;
 import core.model.TranslationFacility;
 import module.training.EffectDAO;
-import module.training.TrainWeekEffect;
-import module.training.ui.model.EffectTableModel;
-import module.training.ui.renderer.SkillupsTableCellRenderer;
-
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
 
 /**
- * Shows a table with training effet.
+ * Shows a table with training effect.
  * 
  * @author NetHyperon
  */
 public class EffectPanel extends LazyPanel {
 
-	private static final long serialVersionUID = 6139712209582341384L;
-	private JTable effectTable;
+	private FixedColumnsTable effectTable;
 
 	@Override
 	protected void initialize() {
@@ -34,28 +29,7 @@ public class EffectPanel extends LazyPanel {
 	@Override
 	protected void update() {
 		EffectDAO.reload();
-		setEffectModel(EffectDAO.getTrainEffect());
-	}
-
-	/**
-	 * Sets the model for effect table.
-	 * 
-	 * @param values
-	 *            List of values
-	 */
-	private void setEffectModel(List<TrainWeekEffect> values) {
-		effectTable.setModel(new EffectTableModel(values));
-		effectTable.getColumnModel().getColumn(0).setPreferredWidth(50);
-		effectTable.getColumnModel().getColumn(1).setPreferredWidth(50);
-		effectTable.getColumnModel().getColumn(4).setPreferredWidth(100);
-		effectTable.getColumnModel().getColumn(6).setPreferredWidth(100);
-		effectTable.getColumnModel().getColumn(7).setPreferredWidth(25);
-		effectTable.getColumnModel().getColumn(7).setCellRenderer(new SkillupsTableCellRenderer());
-
-		// Hide column 8
-		effectTable.getTableHeader().getColumnModel().getColumn(8).setPreferredWidth(0);
-		effectTable.getTableHeader().getColumnModel().getColumn(8).setMinWidth(0);
-		effectTable.getTableHeader().getColumnModel().getColumn(8).setMaxWidth(0);
+        UserColumnController.instance().getTrainingEffectTableModel().initData();
 	}
 
 	/**
@@ -78,11 +52,8 @@ public class EffectPanel extends LazyPanel {
 		JPanel mainpanel = new ImagePanel();
 		mainpanel.setLayout(new BorderLayout());
 
-		this.effectTable = new JTable();
-		JScrollPane effectPane = new JScrollPane(this.effectTable);
-		effectPane.setOpaque(false);
-		mainpanel.add(effectPane, BorderLayout.CENTER);
-
+		this.effectTable = new FixedColumnsTable(UserColumnController.instance().getTrainingEffectTableModel(), 2);
+		mainpanel.add(effectTable.getContainerComponent(), BorderLayout.CENTER);
 		p.add(mainpanel, BorderLayout.CENTER);
 		add(p, BorderLayout.CENTER);
 
@@ -90,4 +61,11 @@ public class EffectPanel extends LazyPanel {
 		p.add(new TrainingLegendPanel(), BorderLayout.SOUTH);
 		add(p, BorderLayout.CENTER);
 	}
+
+    public void storeUserSettings() {
+        if ( this.effectTable != null){
+            var tableModel = (EffectTableModel) this.effectTable.getModel();
+            tableModel.storeUserSettings();
+        }
+    }
 }

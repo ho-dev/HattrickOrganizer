@@ -327,6 +327,8 @@ public class HODateTime implements Comparable<HODateTime> {
         public String toString(){
             return season + " (" + week + ")";
         }
+
+        public boolean equals(HTWeek other) { return this.week == other.week && this.season == other.season;}
     }
 
     /**

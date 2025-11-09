@@ -8,8 +8,8 @@ import core.model.enums.DBDataSource;
 import core.training.TrainingPerWeek;
 import core.util.HODateTime;
 import core.util.Helper;
-import module.training.ui.model.FutureTrainingsTableModel;
 import module.training.ui.model.TrainingModel;
+import module.training.ui.model.TrainingSettingsTableModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,7 +26,7 @@ import static module.lineup.LineupPanel.TITLE_FG;
  */
 public class FutureTrainingsEditionPanel extends JPanel {
 
-	private final FutureTrainingsTableModel m_FutureTrainingsTableModel;
+	private final TrainingSettingsTableModel trainingSettingsTableModel;
     private JComboBox m_jcbIntensity;
     private JComboBox m_jcbStaminaTrainingPart;
     private JComboBox m_jcbTrainingType;
@@ -36,10 +36,10 @@ public class FutureTrainingsEditionPanel extends JPanel {
     private final TrainingModel m_TrainingModel;
 
 
-    public FutureTrainingsEditionPanel(TrainingModel _TrainingModel, FutureTrainingsTableModel fm, ListSelectionModel lsm) {
+    public FutureTrainingsEditionPanel(TrainingModel _TrainingModel, TrainingSettingsTableModel fm, ListSelectionModel lsm) {
         setLayout(new BorderLayout());
         m_TrainingModel = _TrainingModel;
-        m_FutureTrainingsTableModel = fm;
+        trainingSettingsTableModel = fm;
         m_selectedTrainingDates = new HashSet<>();
         for (var i : lsm.getSelectedIndices()){
             TrainingPerWeek tpw = _TrainingModel.getFutureTrainings().get(i);
@@ -49,11 +49,11 @@ public class FutureTrainingsEditionPanel extends JPanel {
     }
 
 
-    public FutureTrainingsEditionPanel(TrainingModel _TrainingModel, FutureTrainingsTableModel fm) {
+    public FutureTrainingsEditionPanel(TrainingModel _TrainingModel, TrainingSettingsTableModel fm) {
         setLayout(new BorderLayout());
         m_selectedTrainingDates = null;
         m_TrainingModel = _TrainingModel;
-        m_FutureTrainingsTableModel = fm;
+        trainingSettingsTableModel = fm;
         initComponents();
     }
 
@@ -89,7 +89,7 @@ public class FutureTrainingsEditionPanel extends JPanel {
             }
 
             if(m_jcbCoachSkillEditor.getSelectedItem() != null) {
-                train.setCoachLevel((Integer)m_jcbCoachSkillEditor.getSelectedItem());
+                train.setCoachLevel((Integer)m_jcbCoachSkillEditor.getSelectedItem()+3);
             }
 
             if(m_jcbAssitantsTotalLevelEditor.getSelectedItem() != null) {
@@ -101,7 +101,7 @@ public class FutureTrainingsEditionPanel extends JPanel {
         }
 
         m_TrainingModel.updateFutureTrainings(futureTrainingsToSave);
-        m_FutureTrainingsTableModel.populate(m_TrainingModel.getFutureTrainings());
+        trainingSettingsTableModel.setTrainingSettings(m_TrainingModel.getFutureTrainings());
         RefreshManager.instance().doRefresh();
     }
 
@@ -180,7 +180,7 @@ public class FutureTrainingsEditionPanel extends JPanel {
         jlTrainingIntensity.setToolTipText(Helper.getTranslation("ls.team.trainingintensity"));
         add(jlTrainingIntensity, gbc);
 
-        m_jcbIntensity = new trainingParametersEditor(TrainingConstants.MIN_TRAINING_INTENSITY, true);
+        m_jcbIntensity = new TrainingParametersEditor(TrainingConstants.MIN_TRAINING_INTENSITY, true);
         m_jcbIntensity.setToolTipText(Helper.getTranslation("ls.team.trainingintensity"));
         gbc.gridy = 1;
         add(m_jcbIntensity, gbc);
@@ -192,7 +192,7 @@ public class FutureTrainingsEditionPanel extends JPanel {
         jlStaminatrainingshare.setToolTipText(Helper.getTranslation("ls.team.staminatrainingshare"));
         add(jlStaminatrainingshare, gbc);
 
-        m_jcbStaminaTrainingPart = new trainingParametersEditor(TrainingConstants.MIN_STAMINA_SHARE, true);
+        m_jcbStaminaTrainingPart = new TrainingParametersEditor(TrainingConstants.MIN_STAMINA_SHARE, true);
         m_jcbStaminaTrainingPart.setToolTipText(Helper.getTranslation("ls.team.staminatrainingshare"));
         gbc.gridy = 1;
         add(m_jcbStaminaTrainingPart, gbc);
@@ -204,7 +204,7 @@ public class FutureTrainingsEditionPanel extends JPanel {
         jlCoachingSkill.setToolTipText(Helper.getTranslation("ls.team.coachingskill"));
         add(jlCoachingSkill, gbc);
 
-        m_jcbCoachSkillEditor  = new trainingParametersEditor(TrainingConstants.MIN_COACH_SKILL, TrainingConstants.MAX_COACH_SKILL, true);
+        m_jcbCoachSkillEditor  = new TrainingParametersEditor(TrainingConstants.MIN_COACH_SKILL, TrainingConstants.MAX_COACH_SKILL, true);
         m_jcbCoachSkillEditor.setToolTipText(Helper.getTranslation("ls.team.coachingskill"));
         gbc.gridy = 1;
         add(m_jcbCoachSkillEditor, gbc);
@@ -216,7 +216,7 @@ public class FutureTrainingsEditionPanel extends JPanel {
         jlAssistantsTrainerLevel.setToolTipText(Helper.getTranslation("ls.module.statistics.club.assistant_trainers_level"));
         add(jlAssistantsTrainerLevel, gbc);
 
-        m_jcbAssitantsTotalLevelEditor  = new trainingParametersEditor(TrainingConstants.MIN_ASSISTANTS_COACH_LEVEL, TrainingConstants.MAX_ASSISTANTS_COACH_LEVEL, true);
+        m_jcbAssitantsTotalLevelEditor  = new TrainingParametersEditor(TrainingConstants.MIN_ASSISTANTS_COACH_LEVEL, TrainingConstants.MAX_ASSISTANTS_COACH_LEVEL, true);
         m_jcbAssitantsTotalLevelEditor.setToolTipText(Helper.getTranslation("ls.module.statistics.club.assistant_trainers_level"));
         gbc.gridy = 1;
         add(m_jcbAssitantsTotalLevelEditor, gbc);

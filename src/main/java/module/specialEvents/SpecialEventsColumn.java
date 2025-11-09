@@ -1,6 +1,6 @@
 package module.specialEvents;
 
-import core.gui.comp.entry.IHOTableEntry;
+import core.gui.comp.entry.IHOTableCellEntry;
 import core.gui.comp.table.UserColumn;
 
 public class SpecialEventsColumn extends UserColumn {
@@ -14,7 +14,7 @@ public class SpecialEventsColumn extends UserColumn {
         this.setDisplay(true);
     }
 
-    public IHOTableEntry getTableEntry(MatchRow row) {
+    public IHOTableCellEntry getTableEntry(MatchRow row) {
         return null;
     }
 

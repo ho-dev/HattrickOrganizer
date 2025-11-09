@@ -3,7 +3,7 @@ package core.gui.model;
 
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.DoubleLabelEntries;
-import core.gui.comp.entry.IHOTableEntry;
+import core.gui.comp.entry.IHOTableCellEntry;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.player.IMatchRoleID;
@@ -48,7 +48,7 @@ public class PlayerPositionColumn extends PlayerColumn {
      * will not be overridden
      */
     @Override
-    public IHOTableEntry getTableEntry(Player player, Player comparePlayer) {
+    public IHOTableCellEntry getTableEntry(Player player, Player comparePlayer) {
         return new DoubleLabelEntries(getEntryValue(player), getCompareValue(player, comparePlayer));
     }
 

@@ -157,9 +157,4 @@ public class TrainingPerWeek extends AbstractTable.Storable {
     public void setTrainingAssistantLevel(int trainingAssistantsLevel) {
         this.o_TrainingAssistantsLevel=trainingAssistantsLevel;
     }
-
-    public boolean skillDropDayIsBetween(HODateTime from, HODateTime to) {
-        var skillDropDay = o_TrainingDate.minus(7*12, ChronoUnit.HOURS); // half week. TODO: check exact time difference
-        return from.isBefore(skillDropDay) && !to.isBefore(skillDropDay);
-    }
 }

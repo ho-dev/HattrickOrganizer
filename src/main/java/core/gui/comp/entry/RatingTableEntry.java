@@ -105,7 +105,7 @@ public class RatingTableEntry extends AbstractHOTableEntry {
         m_clComponent.add(jlabel);
     }
 
-	public final int compareTo(@NotNull IHOTableEntry obj) {
+	public final int compareTo(@NotNull IHOTableCellEntry obj) {
         if (obj instanceof RatingTableEntry entry) {
             return Float.compare(getRating(), entry.getRating());
         }

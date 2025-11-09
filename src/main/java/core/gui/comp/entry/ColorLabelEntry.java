@@ -4,14 +4,17 @@ import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
+import core.model.UserParameter;
 import core.util.AmountOfMoney;
+import core.util.HODateTime;
 import core.util.Helper;
 import org.jetbrains.annotations.NotNull;
 import java.awt.Color;
 import java.awt.Font;
 import javax.swing.*;
+import javax.swing.border.EmptyBorder;
 
-public class ColorLabelEntry extends JLabel implements IHOTableEntry {
+public class ColorLabelEntry extends JLabel implements IHOTableCellEntry {
 
     public static final Color FG_STANDARD = ThemeManager.getColor(HOColorName.TABLEENTRY_FG);
     public static final Color BG_STANDARD = ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
@@ -20,6 +23,11 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
     public static final Color BG_SINGLEPLAYERVALUES = ThemeManager.getColor(HOColorName.PLAYER_SKILL_BG);
     public static final Color BG_PLAYERSPOSITIONVALUES = ThemeManager.getColor(HOColorName.PLAYER_POS_BG);
     public static final Color BG_PLAYERSSUBPOSITIONVALUES = ThemeManager.getColor(HOColorName.PLAYER_SUBPOS_BG);
+    private boolean isSelectionBackgroundColorDisabled = false;
+
+    public void setBackgroundColor(Color m_clBGColor) {
+        this.m_clBGColor = m_clBGColor;
+    }
 
     //~ Instance fields ----------------------------------------------------------------------------
     private Color m_clBGColor = ColorLabelEntry.BG_STANDARD;
@@ -54,7 +62,22 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
         number = sortIndex;
         m_clFGColor = foreground;
         m_clBGColor = background;
+        var fontSize = UserParameter.instance().fontSize;
+        setBorderWidth(fontSize*2/3);
         createComponent();
+    }
+
+    public void setBorderWidth(int width) {
+        var insets = this.getInsets();
+        this.setBorder(new EmptyBorder(insets.top,width,insets.bottom,width));//top,left,bottom,right
+    }
+    public void setLeftBorderWidth(int width) {
+        var insets = this.getInsets();
+        this.setBorder(new EmptyBorder(insets.top,width, insets.bottom,insets.right));//top,left,bottom,right
+    }
+    public void setRightBorderWidth(int width) {
+        var insets = this.getInsets();
+        this.setBorder(new EmptyBorder(insets.top,insets.left,insets.bottom,width));//top,left,bottom,right
     }
 
     /**
@@ -152,6 +175,10 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
         setAmountOfMoney(amount, false);
     }
 
+    public ColorLabelEntry(HODateTime date, Color foreground, Color background, int horizontalOrientation){
+        this(HODateTime.toEpochSecond(date), date.toLocaleDateTime(), foreground, background, horizontalOrientation);
+    }
+
     public void setAmountOfMoney (AmountOfMoney amount, boolean switchColor){
         if (amount != null){
             this.number = amount.getSwedishKrona().doubleValue();
@@ -210,7 +237,7 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
     @Override
     public final JComponent getComponent(boolean isSelected) {
 
-        if (isSelected) {
+        if (isSelected && !isSelectionBackgroundColorDisabled) {
             setBackground(HODefaultTableCellRenderer.SELECTION_BG);
 
         } else {
@@ -361,7 +388,7 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
      * Compare two ColorLabelEntry objects based on non negative number or text.
      */
     @Override
-    public final int compareTo(@NotNull IHOTableEntry obj) {
+    public final int compareTo(@NotNull IHOTableCellEntry obj) {
         if (obj instanceof ColorLabelEntry entry) {
 
             if (number != Float.NEGATIVE_INFINITY) {
@@ -399,12 +426,23 @@ public class ColorLabelEntry extends JLabel implements IHOTableEntry {
     }
 
     @Override
-    public final int compareToThird(IHOTableEntry obj) {
+    public final int compareToThird(IHOTableCellEntry obj) {
         return this.compareTo(obj);
     }
 
     public void setBold(boolean bold) {
         int style = (bold) ? Font.BOLD : Font.PLAIN;
         setFont(getFont().deriveFont(style));
+    }
+
+    /**
+     * Disable the selection background color.
+     * Is used in method getComponent to select the cell's background color.
+     * @param b boolean.
+     *         If true the selected cell will use the normal background color.
+     *         If not, the selection background color is used.
+     */
+    public void disableSelectionBackgroundColor(boolean b) {
+        this.isSelectionBackgroundColorDisabled = b;
     }
 }

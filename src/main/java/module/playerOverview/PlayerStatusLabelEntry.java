@@ -2,7 +2,7 @@ package module.playerOverview;
 
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.DoubleLabelEntries;
-import core.gui.comp.entry.IHOTableEntry;
+import core.gui.comp.entry.IHOTableCellEntry;
 import core.gui.comp.icon.StatusIcon;
 import core.gui.theme.ImageUtilities;
 import core.model.player.Player;
@@ -54,7 +54,7 @@ public class PlayerStatusLabelEntry extends DoubleLabelEntries {
     }
 
     @Override
-	public final int compareTo(@NotNull IHOTableEntry obj) {
+	public final int compareTo(@NotNull IHOTableCellEntry obj) {
         if (obj instanceof PlayerStatusLabelEntry) {
             final PlayerStatusLabelEntry entry = (PlayerStatusLabelEntry) obj;
 

@@ -1,7 +1,6 @@
 package core.gui.comp.table;
 
 import core.model.TranslationFacility;
-
 import javax.swing.*;
 import javax.swing.table.TableColumn;
 
@@ -10,7 +9,6 @@ import javax.swing.table.TableColumn;
  */
 public abstract class UserColumn {
 
-    //~ Instance fields ----------------------------------------------------------------------------
 	/** unique column id **/
 	protected int id;
 	
@@ -32,6 +30,9 @@ public abstract class UserColumn {
 	/** if a column is shown in the table. Only displayed columns are saved in db. **/
 	protected boolean display = false;
 
+    protected boolean translateColumnName = true;
+    protected boolean translateColumnTooltip = true;
+
 	/**
 	 * Sort order of the column
 	 */
@@ -43,7 +44,7 @@ public abstract class UserColumn {
 	 */
 	Integer sortPriority;
 
-	/**
+    /**
 	 * Constructor of an user column
 	 * @param id  column identifier has to be unique in one table
 	 * @param name Column name is displayed in the column header
@@ -74,8 +75,8 @@ public abstract class UserColumn {
 	 * @return String
 	 */
 	public final String getColumnName() {
-		return (columnName.equals("TSI") || columnName.equals(" ")) ? columnName: TranslationFacility.tr(columnName);
-	}
+        return translateColumnName ? TranslationFacility.tr(columnName) : columnName;
+    }
 	
 	/**
 	 * Return  id
@@ -85,16 +86,12 @@ public abstract class UserColumn {
 		return id;
 	}
 
-//	public void setId(int v){
-//		this.id = v;
-//	}
-	
 	/**
 	 * returns the language dependency tooltip of the column
 	 * @return String
 	 */
 	public final String getTooltip() {
-		return (columnName.equals("TSI") || tooltip.equals(" "))?tooltip: TranslationFacility.tr(tooltip);
+		return (this.translateColumnTooltip)?TranslationFacility.tr(tooltip):tooltip;
 	}
 	
 	/**
@@ -146,12 +143,18 @@ public abstract class UserColumn {
 	}
 
 	/**
-	 * Some columns must be displayed, so some columns are not editable
+	 * Some columns must be displayed, so some columns are not editable in options dialog
 	 * @return boolean
 	 */
 	public boolean canBeDisabled(){
 		return true;
 	}
+
+	/**
+	 * Column is not visible (width is reduced to zero).
+	 * @return boolean
+	 */
+	public boolean isHidden(){return false;}
 
 	/**
 	 * set minWidth and prefWidth in the TableColumn
