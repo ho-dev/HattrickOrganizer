@@ -460,6 +460,7 @@ public final class UserParameter extends Configuration {
         map.put("downloadTournamentPlayoffMatches", String.valueOf(downloadTournamentPlayoffMatches));
         map.put("downloadDivisionBattleMatches", String.valueOf(downloadDivisionBattleMatches));
         map.put("showHRFSaveDialog", String.valueOf(showHRFSaveDialog));
+        map.put("confirmOnExit", String.valueOf(confirmOnExit));
         map.put("spieleranalyseVertikal", String.valueOf(spieleranalyseVertikal));
         map.put("statistikAlleBeschriftung", String.valueOf(statistikAlleBeschriftung));
         map.put("statistikAlleErfahrung", String.valueOf(statistikAlleErfahrung));
@@ -693,6 +694,7 @@ public final class UserParameter extends Configuration {
         downloadTournamentPlayoffMatches = getBooleanValue(values, "downloadTournamentPlayoffMatches");
         downloadDivisionBattleMatches = getBooleanValue(values, "downloadDivisionBattleMatches");
         showHRFSaveDialog = getBooleanValue(values, "showHRFSaveDialog");
+        confirmOnExit = getBooleanValue(values, "confirmOnExit");
         spieleranalyseVertikal = getBooleanValue(values, "spieleranalyseVertikal");
         statistikAlleBeschriftung = getBooleanValue(values, "statistikAlleBeschriftung");
         statistikAlleErfahrung = getBooleanValue(values, "statistikAlleErfahrung");
