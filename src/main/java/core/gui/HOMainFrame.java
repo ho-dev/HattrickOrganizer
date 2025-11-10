@@ -726,10 +726,32 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 			 */
 			@Override
 			public void windowClosing(WindowEvent windowEvent) {
-				HOLogger.instance().info(getClass(), "shutting down HO... ");
-				shutdown();
-			}
+				UserParameter userParam = UserParameter.instance();
+				if (!userParam.confirmOnExit) {
+					HOLogger.instance().info(getClass(), "shutting down HO... ");
+					shutdown();
+					return;
+				}
 
-		});
+				JCheckBox dontAskAgain = new JCheckBox(TranslationFacility.tr("ls.menu.file.quit.neveraskagain"));
+				Object[] params = {TranslationFacility.tr("confirm.exit.message"), dontAskAgain};
+
+				int choice = JOptionPane.showConfirmDialog(
+						HOMainFrame.this,
+						params,
+						TranslationFacility.tr("confirm.exit.title"),
+						JOptionPane.YES_NO_OPTION,
+						JOptionPane.QUESTION_MESSAGE
+				);
+
+				if (dontAskAgain.isSelected()) {
+					UserParameter.instance().confirmOnExit = false;
+				}
+				if (choice == JOptionPane.YES_OPTION) {
+					HOLogger.instance().info(getClass(), "shutting down HO... ");
+					shutdown();
+				}
+				}
+			});
 	}
 }
