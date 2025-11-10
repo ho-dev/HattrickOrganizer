@@ -1,8 +1,6 @@
 package core.option;
 
 import core.datatype.CBItem;
-import core.db.DBManager;
-import core.gui.HOMainFrame;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.Theme;
 import core.gui.theme.ThemeManager;
@@ -23,7 +21,6 @@ import java.time.ZoneId;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
-
 
 public final class GeneralSettingsPanel extends ImagePanel implements ChangeListener, ItemListener {
 
