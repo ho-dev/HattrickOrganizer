@@ -22,7 +22,6 @@ import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
-
 public final class GeneralSettingsPanel extends ImagePanel implements ChangeListener, ItemListener {
 
     public static CBItem[] NB_DECIMALS = {new CBItem("1 (1.2)", 1), new CBItem("2 (1.23)", 2)};
