@@ -29,18 +29,31 @@ public class HallOfFameTableModel extends HOTableModel {
                         return false;
                     }
                 },
-                new YouthPlayerColumn("ls.player.age") {
+                new HallOfFameColumn("ls.player.age") {
                     @Override
-                    public IHOTableCellEntry getTableEntry(YouthPlayer player) {
+                    public IHOTableCellEntry getTableEntry(HallOfFamePlayer player) {
                         return new ColorLabelEntry(player.getAgeYears() * 112 + player.getAgeDays(), Player.getAgeWithDaysAsString(player.getAgeYears(), player.getAgeDays(), HODateTime.now()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
-                new YouthPlayerColumn("ls.youth.player.arrival") {
+                new HallOfFameColumn("ls.halloffame.arrival") {
                     @Override
-                    public IHOTableCellEntry getTableEntry(YouthPlayer player) {
-                        return new ColorLabelEntry(HODateTime.toEpochSecond(player.getArrivalDate()), HODateTime.toLocaleDateTime(player.getArrivalDate()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                    public IHOTableCellEntry getTableEntry(HallOfFamePlayer player) {
+                        return new ColorLabelEntry(HODateTime.toEpochSecond(player.getHallOfFameDateOfEntry()), HODateTime.toLocaleDateTime(player.getHallOfFameDateOfEntry()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                    }
+                },
+                new HallOfFameColumn("ls.halloffame.arrival") {
+                    @Override
+                    public IHOTableCellEntry getTableEntry(HallOfFamePlayer player) {
+                        return new ColorLabelEntry(HODateTime.toEpochSecond(player.getHallOfFameDateOfEntry()), HODateTime.toLocaleDateTime(player.getHallOfFameDateOfEntry()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                    }
+                },
+                new HallOfFameColumn("ls.halloffame.experttype") {
+                    @Override
+                    public IHOTableCellEntry getTableEntry(HallOfFamePlayer player) {
+                        return new ColorLabelEntry(player.getExpertType(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 }
+        )).toArray(new HallOfFameColumn[0]);
     }
 
     @Override
