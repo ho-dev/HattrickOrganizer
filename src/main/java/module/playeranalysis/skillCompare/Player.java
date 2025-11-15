@@ -273,7 +273,7 @@ public class Player
 		setAge(m_Player.getAge());
 		setWages(m_Player.getWage());
 		setTSI(m_Player.getTsi());
-		setNationality(m_Player.getNationalityId());
+		setNationality(m_Player.getCountryId());
 		setLeadership(m_Player.getLeadership());
 		setGroup(m_Player.getTeamGroup());
 		setSpeciality(m_Player.getSpecialty());
@@ -381,7 +381,7 @@ public class Player
 			m_PlayerChangedSkills.setLastName(m_LastName);
 			m_PlayerChangedSkills.setAge(m_Age);
 			m_PlayerChangedSkills.setTsi(m_TSI);
-			m_PlayerChangedSkills.setNationalityId(m_Nationality);
+			m_PlayerChangedSkills.setCountryId(m_Nationality);
 			m_PlayerChangedSkills.setTeamInfoSmilie(m_Group);
 			m_PlayerChangedSkills.setSpecialty(m_Speciality);
 			m_PlayerChangedSkills.setHomeGrown(m_Player.isHomeGrown());

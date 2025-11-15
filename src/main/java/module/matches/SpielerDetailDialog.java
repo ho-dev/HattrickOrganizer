@@ -232,7 +232,7 @@ final class SpielerDetailDialog extends JDialog {
 
 		m_jpName.setText(m_clPlayer.getFullName());
 		m_jpAlter.setText(m_clPlayer.getAge() + "");
-		m_jpNationalitaet.setIcon(ImageUtilities.getCountryFlagIcon(m_clPlayer.getNationalityId()));
+		m_jpNationalitaet.setIcon(ImageUtilities.getCountryFlagIcon(m_clPlayer.getCountryId()));
 
 		var lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
 		if (lineup.isPlayerInLineup(m_clPlayer.getPlayerId())

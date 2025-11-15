@@ -15,6 +15,7 @@ import core.rating.RatingPredictionManager;
 import core.rating.RatingPredictionModel;
 import core.util.HODateTime;
 import core.training.TrainingPerWeek;
+import module.hallOfFame.HallOfFamePlayer;
 import module.youth.YouthPlayer;
 import core.model.series.Liga;
 import core.training.TrainingManager;
@@ -56,7 +57,7 @@ public class HOModel {
     private List<MatchLineup> youthMatchLineups;
     private List<YouthTraining> youthTrainings;
     private RatingPredictionManager ratingPredictionManager;
-
+    private List<HallOfFamePlayer> hallOfFamePlayers;
     private PersistenceManager persistenceManager;
 
 
@@ -721,5 +722,9 @@ public class HOModel {
             ratingPredictionManager = new RatingPredictionManager();
         }
         return ratingPredictionManager;
+    }
+
+    public void setHallOfFamesPlayers(List<HallOfFamePlayer> hallOfFamesPlayer) {
+        this.hallOfFamePlayers = hallOfFamesPlayer;
     }
 }

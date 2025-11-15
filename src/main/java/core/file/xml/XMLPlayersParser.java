@@ -233,6 +233,41 @@ public class XMLPlayersParser {
         return hash;
     }
 
+    public List<SafeInsertMap> parseHallOfFamesPlayersFromString(String inputStream) {
+        Document doc = XMLManager.parseString(inputStream);
+        return createHallOfFamesPlayerList(doc);
+    }
+
+    private List<SafeInsertMap> createHallOfFamesPlayerList(Document doc) {
+        final Vector<SafeInsertMap> ret = new Vector<>();
+
+        try {
+            var root = doc.getDocumentElement();
+            // <Players>
+            root = (Element) root.getElementsByTagName("Players").item(0);
+
+            // <Player>
+            var list = root.getElementsByTagName("Player");
+            for (int i = 0; i < list.getLength(); i++) {
+                var hash = new SafeInsertMap();
+                root = (Element) list.item(i);
+                xmlValue2Hash(hash, root, "PlayerID");
+                xmlValue2Hash(hash, root, "FirstName");
+                xmlValue2Hash(hash, root, "NickName");
+                xmlValue2Hash(hash, root, "LastName");
+                xmlValue2Hash(hash, root, "Age");
+                xmlValue2Hash(hash, root, "NextBirthday");
+                xmlValue2Hash(hash, root, "CountryID");
+                xmlValue2Hash(hash, root, "ArrivalDate");
+                xmlValue2Hash(hash, root, "ExpertType");
+                xmlValue2Hash(hash, root, "HofDate");
+                xmlValue2Hash(hash, root, "HofAge");
+                ret.add(hash);
+            }
+        } catch (Exception ignored) {}
+        return ret;
+    }
+
     public List<SafeInsertMap> parseYouthPlayersFromString(String inputStream) {
         Document doc = XMLManager.parseString(inputStream);
         return createYouthPlayerList(doc);
@@ -422,7 +457,7 @@ public class XMLPlayersParser {
         player.setHomeGrown(xmlBoolValue(root, "MotherClubBonus"));
         player.setLeadership(xmlIntValue(root, "Leadership"));
         player.setSpecialty(xmlIntValue(root, "Specialty"));
-        player.setNationalityId(xmlIntValue(root, "NativeCountryID"));
+        player.setCountryId(xmlIntValue(root, "NativeCountryID"));
 
 //                NativeLeagueID : unsigned Integer
 //        LeagueID of the league where the player was born.
