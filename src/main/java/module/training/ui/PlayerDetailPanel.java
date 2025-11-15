@@ -348,9 +348,7 @@ public class PlayerDetailPanel extends LazyImagePanel implements PropertyChangeL
     public void propertyChange(PropertyChangeEvent evt) {
         if ( evt.getPropertyName().equals("SelectedPlayer") ) {
             var newSelection = (Player) evt.getNewValue();
-
             PlayersTable.Companion.setSelectedPlayer(newSelection);
-//            this.model.setActivePlayer(newSelection);
             update();
         }
     }

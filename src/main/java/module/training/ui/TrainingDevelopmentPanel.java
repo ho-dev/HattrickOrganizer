@@ -79,7 +79,6 @@ public class TrainingDevelopmentPanel extends LazyPanel implements PropertyChang
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ( evt.getPropertyName().equals("SelectedPlayer") ) {
 			var newSelection = (Player) evt.getNewValue();
-//			this.model.setActivePlayer(newSelection);
             PlayersTable.Companion.setSelectedPlayer(newSelection);
 			loadFromModel();
 		}

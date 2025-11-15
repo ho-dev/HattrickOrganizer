@@ -39,15 +39,7 @@ public class TrainingModulePanel extends LazyPanel {
 
 	@Override
 	protected void update() {
-//		Player oldPlayer = this.model.getActivePlayer();
-		// reset the selected player
-//		this.model.setActivePlayer(null);
 		this.model.resetFutureTrainings();
-//		if (oldPlayer != null) {
-//			Player player = HOVerwaltung.instance().getModel()
-//					.getCurrentPlayer(oldPlayer.getPlayerId());
-//			this.model.setActivePlayer(player);
-//		}
 	}
 
 	private void initComponents() {
