@@ -1,6 +1,7 @@
 package module.training.ui.model;
 
 import core.db.DBManager;
+import core.gui.comp.table.PlayersTable;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.enums.DBDataSource;
@@ -25,7 +26,8 @@ public class TrainingModel implements PropertyChangeListener {
 	private final List<ModelChangeListener> listeners = new ArrayList<>();
 
 	public TrainingModel(){
-		HOVerwaltung.instance().addPropertyChangeListener(this);
+        HOVerwaltung.instance().addPropertyChangeListener(this);
+        PlayersTable.Companion.addPropertyChangeListener(evt -> setActivePlayer(PlayersTable.Companion.getSelectedPlayer()));
 	}
 
 	public void propertyChange(PropertyChangeEvent evt) {
@@ -36,7 +38,7 @@ public class TrainingModel implements PropertyChangeListener {
 		return activePlayer;
 	}
 
-	public void setActivePlayer(Player player) {
+	private void setActivePlayer(Player player) {
 		if (this.activePlayer == null && player != null ||
 				this.activePlayer != null && player == null ||
 				this.activePlayer != null && this.activePlayer.getPlayerId() != player.getPlayerId()) {

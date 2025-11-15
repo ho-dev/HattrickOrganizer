@@ -79,7 +79,8 @@ public class PlayerDetailPanel extends LazyImagePanel implements PropertyChangeL
      * Method that populates this panel for the selected player
      */
     private void loadFromModel() {
-        if (this.model.getActivePlayer() == null) {
+        var selectedPlayer = PlayersTable.Companion.getSelectedPlayer();
+        if (selectedPlayer == null) {
             for (var select : trainingPlanSelection) {
                 if (select != null) {
                     select.setSelectedItem(null);
@@ -98,19 +99,19 @@ public class PlayerDetailPanel extends LazyImagePanel implements PropertyChangeL
         }
 
         // sets player number
-        String value = MatchRoleID.getNameForPosition(this.model.getActivePlayer().getIdealPosition())
-                + String.format(" (%.2f)", this.model.getActivePlayer().getIdealPositionRating());
-        playerLabel.setText("<html><b>" + this.model.getActivePlayer().getFullName() + "</b> - " + value + "</html>");
+        String value = MatchRoleID.getNameForPosition(selectedPlayer.getIdealPosition())
+                + String.format(" (%.2f)", selectedPlayer.getIdealPositionRating());
+        playerLabel.setText("<html><b>" + selectedPlayer.getFullName() + "</b> - " + value + "</html>");
 
         m_jtaNotes.setEditable(true);
-        m_jtaNotes.setText(this.model.getActivePlayer().getNote());
+        m_jtaNotes.setText(selectedPlayer.getNote());
 
         // instantiate a future train manager to calculate the previsions */
         FutureTrainingManager ftm = this.model.getFutureTrainingManager();
 
         for (int i=0; i<skillNumber; i++) {
             var skill = Skills.getSkillAtPosition(i);
-            var skillValue = this.model.getActivePlayer().getSkillValue(skill);
+            var skillValue = selectedPlayer.getSkillValue(skill);
             skillLabel[i].setText(PlayerAbility.getNameForSkill(skillValue, true));
 
             FuturePlayer fp = ftm.previewPlayer(UserParameter.instance().futureWeeks);
@@ -125,7 +126,7 @@ public class PlayerDetailPanel extends LazyImagePanel implements PropertyChangeL
 
             if (trainingPlanSelection[i] != null) {
                 trainingPlanSelection[i].setEnabled(true);
-                trainingPlanSelection[i].setSelectedItem(this.model.getActivePlayer().getFuturePlayerSkillTrainingPriority(skill));
+                trainingPlanSelection[i].setSelectedItem(selectedPlayer.getFuturePlayerSkillTrainingPriority(skill));
             }
         }
     }
@@ -315,7 +316,7 @@ public class PlayerDetailPanel extends LazyImagePanel implements PropertyChangeL
     }
 
     private void selectTraining(ActionEvent e, PlayerSkill skillIndex) {
-        var player = this.model.getActivePlayer();
+        var player = PlayersTable.Companion.getSelectedPlayer();
         if (player != null) {
             var combox = (JComboBox<FuturePlayerTraining.Priority>) e.getSource();
             var prio = (FuturePlayerTraining.Priority) combox.getSelectedItem();
@@ -347,7 +348,9 @@ public class PlayerDetailPanel extends LazyImagePanel implements PropertyChangeL
     public void propertyChange(PropertyChangeEvent evt) {
         if ( evt.getPropertyName().equals("SelectedPlayer") ) {
             var newSelection = (Player) evt.getNewValue();
-            this.model.setActivePlayer(newSelection);
+
+            PlayersTable.Companion.setSelectedPlayer(newSelection);
+//            this.model.setActivePlayer(newSelection);
             update();
         }
     }
