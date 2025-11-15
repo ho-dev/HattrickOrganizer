@@ -6,6 +6,7 @@ import core.model.UserParameter
 import core.model.XtraData
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
+import java.math.BigDecimal
 
 class HOCurrencyTests {
     @Test
@@ -17,13 +18,13 @@ class HOCurrencyTests {
         hov.model.xtraDaten.countryId = 3
         UserParameter.instance().currencyRate = 10f
 
-        val c = AmountOfMoney(10)
-        Assertions.assertEquals(0, c.toLocale())
+        val amountOfMoney = AmountOfMoney(10)
+        Assertions.assertEquals(BigDecimal.valueOf(1), amountOfMoney.toLocale())
 
         val e = AmountOfMoney(50)
-        Assertions.assertEquals(10, e.toLocale())
+        Assertions.assertEquals(BigDecimal.valueOf(5), e.toLocale())
 
-        val d = AmountOfMoney(c.swedishKrona + 90)
+        val d = AmountOfMoney(amountOfMoney.swedishKrona + BigDecimal.valueOf(90))
         val nbsp = "\u00A0"
         Assertions.assertEquals("10" + nbsp + "€", d.toLocaleString())
     }

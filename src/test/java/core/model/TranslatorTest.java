@@ -23,6 +23,7 @@ class TranslatorTest {
             "Czech",
             "Danish",
             "English",
+            "Estonian",
             "Finnish",
             "French",
             "Galego",
