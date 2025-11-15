@@ -1,9 +1,7 @@
 package module.training;
 
 import core.gui.comp.panel.LazyPanel;
-import core.model.HOVerwaltung;
 import core.model.UserParameter;
-import core.model.player.Player;
 import core.util.Helper;
 import module.training.ui.AnalyzerPanel;
 import module.training.ui.EffectPanel;

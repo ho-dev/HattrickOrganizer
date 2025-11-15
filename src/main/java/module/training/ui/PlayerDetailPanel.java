@@ -326,7 +326,7 @@ public class PlayerDetailPanel extends LazyImagePanel implements PropertyChangeL
                     var futureTrainings = this.model.getFutureTrainings();
                     for (var training : futureTrainings) {
                         var trainingType = WeeklyTrainingType.instance(training.getTrainingType());
-                        if (trainingType.isTraining(skillIndex)) {
+                        if (trainingType != null && trainingType.isTraining(skillIndex)) {
                             player.setFutureTraining(null, training.getTrainingDate(), training.getTrainingDate().plus(7, ChronoUnit.DAYS));
                         }
                     }
