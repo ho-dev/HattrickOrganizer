@@ -1,9 +1,7 @@
 package module.training;
 
 import core.gui.comp.panel.LazyPanel;
-import core.model.HOVerwaltung;
 import core.model.UserParameter;
-import core.model.player.Player;
 import core.util.Helper;
 import module.training.ui.AnalyzerPanel;
 import module.training.ui.EffectPanel;
@@ -41,15 +39,7 @@ public class TrainingModulePanel extends LazyPanel {
 
 	@Override
 	protected void update() {
-		Player oldPlayer = this.model.getActivePlayer();
-		// reset the selected player
-		this.model.setActivePlayer(null);
 		this.model.resetFutureTrainings();
-		if (oldPlayer != null) {
-			Player player = HOVerwaltung.instance().getModel()
-					.getCurrentPlayer(oldPlayer.getPlayerId());
-			this.model.setActivePlayer(player);
-		}
 	}
 
 	private void initComponents() {

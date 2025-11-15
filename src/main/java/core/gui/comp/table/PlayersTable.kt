@@ -56,7 +56,7 @@ class PlayersTable @JvmOverloads constructor(tableModel: HOPlayersTableModel, fi
                         setSelectedPlayer(players.get(modelIndex))
                     }
                 } else if (selectedPlayer != null) {
-                    setSelectedPlayer(null)
+                    setSelectedPlayer(selectedPlayer)
                 }
             }
         }
