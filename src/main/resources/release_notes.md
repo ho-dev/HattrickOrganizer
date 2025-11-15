@@ -35,7 +35,8 @@
 
 ## Translations
 
-Reports by Contributors - October 19, 2025 - October 19, 2025
+Reports by Contributors - October 19, 2025 - November 09, 2025
+* Ioannidouefty 459
+* wsbrenk 16
 
-
-Total 0
+Total 475
