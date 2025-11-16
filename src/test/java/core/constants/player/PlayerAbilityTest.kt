@@ -36,7 +36,7 @@ class PlayerAbilityTest {
         assertEquals(
             String.format(
                 "!ls.player.skill.value.outstanding! (!verylow!) (%s)",
-                Helper.getNumberFormat(false, 1).format(Helper.round(10.0, 1))
+                Helper.getNumberFormat(1).format(Helper.round(10.0, 1))
             ),
             PlayerAbility.getNameForSkill(10.0, true, true, 1)
         )
@@ -51,14 +51,14 @@ class PlayerAbilityTest {
         assertEquals(
             String.format(
                 "!ls.player.skill.value.outstanding! (%s)",
-                Helper.getNumberFormat(false, 1).format(Helper.round(10.0, 1))
+                Helper.getNumberFormat( 1).format(Helper.round(10.0, 1))
             ),
             PlayerAbility.getNameForSkill(10.0, true, false, 1)
         )
         assertEquals(
             String.format(
                 "!ls.player.skill.value.outstanding! (%s)",
-                Helper.getNumberFormat(false, 2).format(Helper.round(10.0, 2))
+                Helper.getNumberFormat( 2).format(Helper.round(10.0, 2))
             ),
             PlayerAbility.getNameForSkill(10.0, true, false, 2)
         )
@@ -73,14 +73,14 @@ class PlayerAbilityTest {
         assertEquals(
             String.format(
                 "!ls.player.skill.value.outstanding! (!low!) (%s)",
-                Helper.getNumberFormat(false, 1).format(Helper.round(10.2, 1))
+                Helper.getNumberFormat( 1).format(Helper.round(10.2, 1))
             ),
             PlayerAbility.getNameForSkill(10.3, true, true, 1)
         )
         assertEquals(
             String.format(
                 "!ls.player.skill.value.outstanding! (!high!) (%s)",
-                Helper.getNumberFormat(false, 1).format(Helper.round(10.5, 1))
+                Helper.getNumberFormat( 1).format(Helper.round(10.5, 1))
 
             ),
             PlayerAbility.getNameForSkill(10.5, true, true, 1)
@@ -88,7 +88,7 @@ class PlayerAbilityTest {
         assertEquals(
             String.format(
                 "!ls.player.skill.value.outstanding! (!veryhigh!) (%s)",
-                Helper.getNumberFormat(false, 1).format(Helper.round(10.8, 1))
+                Helper.getNumberFormat( 1).format(Helper.round(10.8, 1))
             ),
             PlayerAbility.getNameForSkill(10.8, true, true, 1)
         )

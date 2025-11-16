@@ -7,6 +7,7 @@ import core.gui.comp.table.PlayersTable;
 import core.gui.model.UserColumnController;
 import core.model.player.Player;
 import core.util.Helper;
+import module.training.ui.model.ModelChange;
 import module.training.ui.model.SkillupTableModel;
 import module.training.ui.model.TrainingModel;
 import java.awt.BorderLayout;
@@ -45,6 +46,11 @@ public class TrainingDevelopmentPanel extends LazyPanel implements PropertyChang
 
 	private void addListeners() {
 		PlayersTable.Companion.addPropertyChangeListener(this);
+        this.model.addModelChangeListener(change -> {
+            if (change == ModelChange.FUTURE_TRAINING) {
+                update();
+            }
+        });
 	}
 
 	/**
