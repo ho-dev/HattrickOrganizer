@@ -442,7 +442,12 @@ public class MyConnector {
 		return ret;
 	}
 
-	/**
+    public String downloadHallOfFamePlayers(int teamId) {
+        String url = htUrl + "?file=hofplayers&version=1.12&teamID=" + teamId;
+        return  getCHPPWebFile(url);
+    }
+
+    /**
 	 * Download Staff
 	 */
 	public String getStaff(int teamId) {
@@ -910,5 +915,4 @@ public class MyConnector {
 		String url = htUrl + "?file=nationalteamdetails&version=1.9&teamid=" + teamId;
 		return getCHPPWebFile(url);
 	}
-
 }

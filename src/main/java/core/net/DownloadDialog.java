@@ -295,9 +295,9 @@ public class DownloadDialog extends JDialog implements ActionListener {
             // Check if Hall Of Fame module is active
             if ( ModuleManager.instance().getModule(HALL_OF_FAME).getStatus() != STATUS_DEACTIVATED){
                 HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.hall_of_fame"), progressIncrement);
-                var hallOfFamesPlayer = OnlineWorker.downloadHallOfFame();
+                var hallOfFamesPlayer = OnlineWorker.downloadHallOfFame(teamId);
                 model.setHallOfFamesPlayers(hallOfFamesPlayer);
-                DBManager.instance().storeHallOfFame(hallOfFamesPlayer);
+                DBManager.instance().storeHallOfFame(model.getHrfId(), hallOfFamesPlayer);
             }
 
 			if (this.downloadFilter.isChecked(filterRoot.getCurrentMatches())) {

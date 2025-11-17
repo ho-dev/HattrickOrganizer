@@ -4,27 +4,38 @@ import core.model.player.Player;
 import core.util.HODateTime;
 
 public class HallOfFamePlayer extends Player {
+
+    /**
+     NextBirthday : DateTime
+     The approximate Date/time of next birthday.
+     */
+    private HODateTime nextBirthday;
     public HODateTime getNextBirthday() {
         return nextBirthday;
     }
 
+    /**
+     *  ExpertType : unsigned Integer
+     * An identifier to show which type of job the player have now.
+     * # See table HoFExpertType
+     */
+    private int expertTypeId;
+
+    /**
+     * HofDate : DateTime
+     *  The date the player was made hall of fame.
+     */
+    private HODateTime hofDate;
+
+    /**
+     * HofAge : unsigned Integer
+     * The age of the player in years when he was made hall of fame.
+     */
+    private int hofAge;
+
     public void setNextBirthday(HODateTime nextBirthday) {
         this.nextBirthday = nextBirthday;
     }
-
-    //    PlayerID : unsigned Integer
-//    The globally unique PlayerID.
-//    FirstName : String
-//    Player FirstName name.
-//            NickName : String
-//    Player NickName name.
-//            LastName : String
-//    Player LastName name.
-//            Age : unsigned Integer
-//    The age of the player in years.
-//            NextBirthday : DateTime
-//    The approximate Date/time of next birthday.
-    private HODateTime nextBirthday;
 
     public HODateTime getHofDate() {
         return hofDate;
@@ -42,18 +53,6 @@ public class HallOfFamePlayer extends Player {
         this.expertTypeId = expertTypeId;
     }
 
-    //    CountryID : unsigned Integer
-//    CountryID of the country where the player was born.
-//            ArrivalDate : DateTime
-//    The date of arrival to the team.
-//            ExpertType : unsigned Integer
-//    An identifier to show which type of job the player have now.
-//            # See table HoFExpertType
-    private int expertTypeId;
-//    HofDate : DateTime
-//    The date the player was made hall of fame.
-    private HODateTime hofDate;
-
     public int getHofAge() {
         return hofAge;
     }
@@ -62,11 +61,9 @@ public class HallOfFamePlayer extends Player {
         this.hofAge = hofAge;
     }
 
-    //            HofAge : unsigned Integer
-//    The age of the player in years when he was made hall of fame.
-    private int hofAge;
-
-
     public String getExpertType() {
+        var type =  ExpertType.fromInteger(this.expertTypeId);
+        if ( type != null) return type.getLanguageString();
+        return null;
     }
 }

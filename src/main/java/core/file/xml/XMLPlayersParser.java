@@ -1,5 +1,6 @@
 package core.file.xml;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -12,6 +13,7 @@ import core.model.player.PlayerCategory;
 import core.model.player.TrainerType;
 import core.util.AmountOfMoney;
 import core.util.HODateTime;
+import module.hallOfFame.HallOfFamePlayer;
 import module.youth.YouthPlayer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -233,12 +235,12 @@ public class XMLPlayersParser {
         return hash;
     }
 
-    public List<SafeInsertMap> parseHallOfFamesPlayersFromString(String inputStream) {
+    public static List<SafeInsertMap> parseHallOfFamesPlayersFromString(String inputStream) {
         Document doc = XMLManager.parseString(inputStream);
         return createHallOfFamesPlayerList(doc);
     }
 
-    private List<SafeInsertMap> createHallOfFamesPlayerList(Document doc) {
+    private static  List<SafeInsertMap> createHallOfFamesPlayerList(Document doc) {
         final Vector<SafeInsertMap> ret = new Vector<>();
 
         try {

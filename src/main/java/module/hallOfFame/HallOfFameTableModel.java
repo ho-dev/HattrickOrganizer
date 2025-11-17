@@ -36,16 +36,16 @@ public class HallOfFameTableModel extends HOPlayersTableModel {
                         return new ColorLabelEntry(player.getAge() * 112 + player.getAgeDays(), Player.getAgeWithDaysAsString(player.getAge(), player.getAgeDays(), HODateTime.now()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
-                new HallOfFameColumn("ls.halloffame.arrival") {
+                new HallOfFameColumn("ImTeamSeit") {
                     @Override
                     public IHOTableCellEntry getTableEntry(HallOfFamePlayer player) {
-                        return new ColorLabelEntry(HODateTime.toEpochSecond(player.getHallOfFameDateOfEntry()), HODateTime.toLocaleDateTime(player.getHallOfFameDateOfEntry()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        return new ColorLabelEntry(HODateTime.toEpochSecond(player.getArrivalDate()), HODateTime.toLocaleDateTime(player.getArrivalDate()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
                 new HallOfFameColumn("ls.halloffame.arrival") {
                     @Override
                     public IHOTableCellEntry getTableEntry(HallOfFamePlayer player) {
-                        return new ColorLabelEntry(HODateTime.toEpochSecond(player.getHallOfFameDateOfEntry()), HODateTime.toLocaleDateTime(player.getHallOfFameDateOfEntry()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        return new ColorLabelEntry(HODateTime.toEpochSecond(player.getHofDate()), HODateTime.toLocaleDateTime(player.getHofDate()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
                 new HallOfFameColumn("ls.halloffame.experttype") {
