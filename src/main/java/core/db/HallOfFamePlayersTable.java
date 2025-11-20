@@ -38,6 +38,11 @@ public class HallOfFamePlayersTable extends AbstractTable {
         )).toArray(new ColumnDescriptor[0]);
     }
 
+    @Override
+    public String createDeleteStatement() {
+        return createDeleteStatement("WHERE HRF_ID=?");
+    }
+
     public void DeleteHallOfFamePlayersTable(int hrfId) {
         executePreparedDelete(hrfId);
     }
@@ -45,5 +50,14 @@ public class HallOfFamePlayersTable extends AbstractTable {
     public void storeHallOfFamePlayer(int hrfId, HallOfFamePlayer player) {
         player.setHrfId(hrfId);
         store(player);
+    }
+
+    @Override
+    public String createSelectStatement() {
+        return createSelectStatement("WHERE HRF_ID=?");
+    }
+
+    public List<HallOfFamePlayer> loadHallOfFame(int hrfId) {
+        return load(HallOfFamePlayer.class, hrfId);
     }
 }

@@ -17,7 +17,6 @@ import core.net.login.ProxyDialog;
 import core.util.HODateTime;
 import core.util.HOLogger;
 import core.util.Helper;
-import module.hallOfFame.HallOfFamePlayer;
 import module.nthrf.NtTeamChooser;
 import module.nthrf.NthrfUtil;
 import module.series.MatchFixtures;

@@ -1324,23 +1324,6 @@ public class OnlineWorker {
 
     public static List<HallOfFamePlayer> downloadHallOfFame(int teamId) {
         String xmlString = MyConnector.instance().downloadHallOfFamePlayers(teamId);
-        var maps = XMLPlayersParser.parseHallOfFamesPlayersFromString(xmlString);
-        var ret = new ArrayList<HallOfFamePlayer>();
-        for (var map : maps){
-            var player = new HallOfFamePlayer();
-            player.setPlayerId(Integer.parseInt(map.get("PlayerID")));
-            player.setFirstName(map.get("FirstName"));
-            player.setNickName(map.get("NickName"));
-            player.setLastName(map.get("LastName"));
-            player.setAge(Integer.parseInt(map.get("Age")));
-            player.setNextBirthday(HODateTime.fromHT(map.get("NextBirthday")));
-            player.setCountryId(Integer.parseInt(map.get("CountryID")));
-            player.setArrivalDate(HODateTime.fromHT(map.get("ArrivalDate")));
-            player.setExpertTypeId(Integer.parseInt(map.get("ExpertType")));
-            player.setHofDate(HODateTime.fromHT(map.get("HofDate")));
-            player.setHofAge(Integer.parseInt(map.get("HofAge")));
-            ret.add(player);
-        }
-        return ret;
+        return XMLPlayersParser.parseHallOfFamesPlayersFromString(xmlString);
     }
 }

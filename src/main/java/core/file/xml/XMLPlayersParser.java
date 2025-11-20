@@ -235,38 +235,23 @@ public class XMLPlayersParser {
         return hash;
     }
 
-    public static List<SafeInsertMap> parseHallOfFamesPlayersFromString(String inputStream) {
+    public static List<HallOfFamePlayer> parseHallOfFamesPlayersFromString(String inputStream) {
         Document doc = XMLManager.parseString(inputStream);
         return createHallOfFamesPlayerList(doc);
     }
 
-    private static  List<SafeInsertMap> createHallOfFamesPlayerList(Document doc) {
-        final Vector<SafeInsertMap> ret = new Vector<>();
-
-        try {
-            var root = doc.getDocumentElement();
-            // <Players>
-            root = (Element) root.getElementsByTagName("Players").item(0);
-
+    private static  List<HallOfFamePlayer> createHallOfFamesPlayerList(Document doc) {
+        var root = doc.getDocumentElement();
+        var ret = new ArrayList<HallOfFamePlayer>();
+        // <Players> # error in chpp api doc
+        root = (Element) root.getElementsByTagName("PlayerList").item(0);
+        if ( root != null) {
             // <Player>
             var list = root.getElementsByTagName("Player");
             for (int i = 0; i < list.getLength(); i++) {
-                var hash = new SafeInsertMap();
-                root = (Element) list.item(i);
-                xmlValue2Hash(hash, root, "PlayerID");
-                xmlValue2Hash(hash, root, "FirstName");
-                xmlValue2Hash(hash, root, "NickName");
-                xmlValue2Hash(hash, root, "LastName");
-                xmlValue2Hash(hash, root, "Age");
-                xmlValue2Hash(hash, root, "NextBirthday");
-                xmlValue2Hash(hash, root, "CountryID");
-                xmlValue2Hash(hash, root, "ArrivalDate");
-                xmlValue2Hash(hash, root, "ExpertType");
-                xmlValue2Hash(hash, root, "HofDate");
-                xmlValue2Hash(hash, root, "HofAge");
-                ret.add(hash);
+                ret.add(new HallOfFamePlayer((Element) list.item(i)));
             }
-        } catch (Exception ignored) {}
+        }
         return ret;
     }
 

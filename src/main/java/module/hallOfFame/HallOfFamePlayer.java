@@ -1,9 +1,50 @@
 package module.hallOfFame;
 
+
+import core.db.DBManager;
 import core.model.player.Player;
 import core.util.HODateTime;
+import org.w3c.dom.Element;
+
+import static core.file.xml.XMLManager.*;
 
 public class HallOfFamePlayer extends Player {
+
+    class ExTrainer {
+        HODateTime from;
+        HODateTime to;
+        HODateTime.HODuration getTrainerDuration (){
+            if ( from != null && to != null) return HODateTime.HODuration.between(from, to);
+            return null;
+        }
+    }
+
+    private ExTrainer exTrainer;
+
+    private void loadExTrainer() {
+        var history = DBManager.instance().loadPlayerHistory(this.getPlayerId());
+        exTrainer = new ExTrainer();
+        var trainerTime = history.stream().filter(Player::isCoach).toList();
+        if (!trainerTime.isEmpty()) {
+            exTrainer.from = trainerTime.get(0).getHrfDate();
+            exTrainer.to = trainerTime.get(trainerTime.size() - 1).getHrfDate();
+        }
+    }
+
+    public HODateTime getExTrainerFrom(){
+        if ( exTrainer == null) loadExTrainer();
+        if ( exTrainer.from != null) return exTrainer.from;
+        return null;
+    }
+    public HODateTime getExTrainerTo(){
+        if ( exTrainer == null) loadExTrainer();
+        if ( exTrainer.to != null) return exTrainer.to;
+        return null;
+    }
+    public HODateTime.HODuration getExTrainerDuration(){
+        if ( exTrainer == null) loadExTrainer();
+        return exTrainer.getTrainerDuration();
+    }
 
     /**
      NextBirthday : DateTime
@@ -32,6 +73,22 @@ public class HallOfFamePlayer extends Player {
      * The age of the player in years when he was made hall of fame.
      */
     private int hofAge;
+
+    public HallOfFamePlayer(){}
+
+    public HallOfFamePlayer(Element root){
+        this.setPlayerId(xmlIntValue(root, "PlayerId"));
+        this.setFirstName(xmlValue( root, "FirstName"));
+        this.setNickName(xmlValue( root, "NickName"));
+        this.setLastName(xmlValue( root, "LastName"));
+        this.setAge(xmlIntValue( root, "Age"));
+        this.setNextBirthday(xmlHODateTimeValue(root, "NextBirthday"));
+//        this.setCountryId(xmlIntValue(root, "CountryID"));
+        this.setArrivalDate(xmlHODateTimeValue( root, "ArrivalDate"));
+        this.setExpertTypeId(xmlIntValue(root, "ExpertType"));
+        this.setHofDate(xmlHODateTimeValue(root, "HofDate"));
+        this.setHofAge(xmlIntValue(root, "HofAge"));
+    }
 
     public void setNextBirthday(HODateTime nextBirthday) {
         this.nextBirthday = nextBirthday;

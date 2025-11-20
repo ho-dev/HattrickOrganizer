@@ -144,6 +144,7 @@ public final class UserColumnController {
         dbManager.loadHOColumModel(getTrainingSettingsFutureTableModel());
         dbManager.loadHOColumModel(getTrainingSettingsPastTableModel());
         dbManager.loadHOColumModel(getTrainingEffectTableModel());
+        dbManager.loadHOColumModel(getHallOfFameTableModel());
 	}
 
     public HallOfFameTableModel getHallOfFameTableModel() {

@@ -443,7 +443,7 @@ public class MyConnector {
 	}
 
     public String downloadHallOfFamePlayers(int teamId) {
-        String url = htUrl + "?file=hofplayers&version=1.12&teamID=" + teamId;
+        String url = htUrl + "?file=hofplayers&version=1.2&teamID=" + teamId;
         return  getCHPPWebFile(url);
     }
 

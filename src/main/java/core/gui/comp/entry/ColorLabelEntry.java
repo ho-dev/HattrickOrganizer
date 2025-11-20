@@ -176,7 +176,7 @@ public class ColorLabelEntry extends JLabel implements IHOTableCellEntry {
     }
 
     public ColorLabelEntry(HODateTime date, Color foreground, Color background, int horizontalOrientation){
-        this(HODateTime.toEpochSecond(date), date.toLocaleDateTime(), foreground, background, horizontalOrientation);
+        this(date!=null?HODateTime.toEpochSecond(date):0, date!=null?date.toLocaleDateTime():"", foreground, background, horizontalOrientation);
     }
 
     public void setAmountOfMoney (AmountOfMoney amount, boolean switchColor){

@@ -727,4 +727,10 @@ public class HOModel {
     public void setHallOfFamesPlayers(List<HallOfFamePlayer> hallOfFamesPlayer) {
         this.hallOfFamePlayers = hallOfFamesPlayer;
     }
+    public List<HallOfFamePlayer> getHallOfFamePlayers() {
+        if ( this.hallOfFamePlayers == null){
+            this.hallOfFamePlayers = DBManager.instance().loadHallOfFame(this.getHrfId());
+        }
+        return this.hallOfFamePlayers;
+    }
 }

@@ -13,9 +13,11 @@ public class HallOfFamePanel extends JPanel {
         var tableModel = UserColumnController.instance().getHallOfFameTableModel();
         this.hallOfFameTable = new PlayersTable(tableModel);
         add(this.hallOfFameTable.getContainerComponent(), BorderLayout.CENTER);
+        tableModel.initData();
     }
 
     public void storeUserSettings() {
-
+        var tableModel = UserColumnController.instance().getHallOfFameTableModel();
+        tableModel.storeUserSettings();
     }
 }

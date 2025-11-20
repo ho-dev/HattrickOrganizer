@@ -2425,4 +2425,9 @@ public class DBManager implements PersistenceManager {
             hallOfFamePlayersTable.storeHallOfFamePlayer(hrfId, player);
         }
     }
+
+    public List<HallOfFamePlayer> loadHallOfFame(int hrfId){
+        var hallOfFamePlayersTable = ((HallOfFamePlayersTable) getTable(HallOfFamePlayersTable.TABLENAME));
+        return hallOfFamePlayersTable.loadHallOfFame(hrfId);
+    }
 }
