@@ -6,13 +6,12 @@ import javax.swing.*;
 import java.awt.*;
 
 public class HallOfFamePanel extends JPanel {
-    private PlayersTable hallOfFameTable;
 
     public HallOfFamePanel(){
         setLayout(new BorderLayout());
         var tableModel = UserColumnController.instance().getHallOfFameTableModel();
-        this.hallOfFameTable = new PlayersTable(tableModel);
-        add(this.hallOfFameTable.getContainerComponent(), BorderLayout.CENTER);
+        PlayersTable hallOfFameTable = new PlayersTable(tableModel);
+        add(hallOfFameTable.getContainerComponent(), BorderLayout.CENTER);
         tableModel.initData();
     }
 

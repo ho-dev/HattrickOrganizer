@@ -3,6 +3,7 @@ package core.module;
 import javax.swing.JMenu;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
+import java.awt.event.KeyEvent;
 
 public interface IModule {
 
@@ -61,7 +62,9 @@ public interface IModule {
     void storeUserSettings();
 
     default int getMenuOrder(){
-        return this.getKeyStroke().getKeyCode();
+        int ret = this.getKeyStroke().getKeyCode();
+        if ( ret < KeyEvent.VK_F1) ret += 1000;
+        return ret;
     }
 
 

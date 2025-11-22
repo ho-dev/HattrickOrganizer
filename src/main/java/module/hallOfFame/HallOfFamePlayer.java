@@ -10,7 +10,7 @@ import static core.file.xml.XMLManager.*;
 
 public class HallOfFamePlayer extends Player {
 
-    class ExTrainer {
+    static class ExTrainer {
         HODateTime from;
         HODateTime to;
         HODateTime.HODuration getTrainerDuration (){
