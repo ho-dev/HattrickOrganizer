@@ -4,7 +4,6 @@ import core.constants.player.PlayerAbility;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.IHOTableCellEntry;
 import core.gui.comp.table.HOPlayersTableModel;
-import core.gui.comp.table.HOTableModel;
 import core.gui.model.UserColumnController;
 import core.model.player.Player;
 import core.util.HODateTime;

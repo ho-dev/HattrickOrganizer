@@ -3,8 +3,6 @@ package module.training.ui;
 import core.constants.player.PlayerSkill;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyPanel;
-import core.gui.comp.table.FixedColumnsTable;
-import core.gui.comp.table.HOPlayersTableModel;
 import core.gui.comp.table.PlayersTable;
 import core.gui.model.UserColumnController;
 import core.gui.theme.ImageUtilities;

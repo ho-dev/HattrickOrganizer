@@ -17,7 +17,7 @@ public class RefreshManager {
 
     //~ Instance fields ----------------------------------------------------------------------------
 
-    private Vector<IRefreshable> m_clRefreshable = new Vector<>();
+    private final Vector<IRefreshable> m_clRefreshable = new Vector<>();
 
     //~ Constructors -------------------------------------------------------------------------------
 
