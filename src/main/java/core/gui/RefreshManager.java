@@ -17,7 +17,7 @@ public class RefreshManager {
 
     //~ Instance fields ----------------------------------------------------------------------------
 
-    private Vector<IRefreshable> m_clRefreshable = new Vector<>();
+    private final Vector<IRefreshable> m_clRefreshable = new Vector<>();
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -44,8 +44,8 @@ public class RefreshManager {
         for (IRefreshable iRefreshable : m_clRefreshable) {
             try {
                 //no plugin
-                if (iRefreshable instanceof Refreshable) {
-                    ((Refreshable) iRefreshable).reInit();
+                if (iRefreshable instanceof Refreshable refreshable) {
+                    refreshable.reInit();
                 }
                 //plugin
                 else {

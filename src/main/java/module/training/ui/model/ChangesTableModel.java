@@ -3,12 +3,14 @@ package module.training.ui.model;
 import core.constants.player.PlayerAbility;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.IHOTableCellEntry;
-import core.gui.comp.table.HOTableModel;
+import core.gui.comp.table.HOPlayersTableModel;
 import core.gui.model.UserColumnController;
+import core.model.player.Player;
 import core.util.HODateTime;
 import module.training.PlayerSkillChange;
 import module.training.ui.TrainingLegendPanel;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -19,7 +21,7 @@ import java.util.List;
  * 
  * @author NetHyperon
  */
-public class ChangesTableModel extends HOTableModel {
+public class ChangesTableModel extends HOPlayersTableModel {
 
 	private List<PlayerSkillChange> values;
     static int nextColumnId = 0;
@@ -92,4 +94,25 @@ public class ChangesTableModel extends HOTableModel {
         return values;
     }
 
+    @Override
+    public int getModelIndex(@Nullable Player player) {
+        if ( player != null){
+            int i = 0;
+            for (var change : this.values){
+                if (change.getPlayer().getPlayerId() == player.getPlayerId()){
+                    return i;
+                }
+                i++;
+            }
+        }
+        return -1;
+    }
+
+    @Override
+    public Player getPlayer(int index){
+        if (index > -1 && index < this.values.size()){
+            return this.values.get(index).getPlayer();
+        }
+        return null;
+    }
 }
