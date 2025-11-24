@@ -66,26 +66,26 @@ class PlayersTable @JvmOverloads constructor(tableModel: HOPlayersTableModel, fi
     private var enableListSelectionListener : Boolean = true
 
     fun selectPlayer(player: Player?, fireEvent : Boolean = true) {
-        val players = getPlayers()
-        val modelIndex = players.indexOf(player)
-        if (modelIndex >= 0 && modelIndex < players.size) {
+        val tableModel = this.getModel() as HOPlayersTableModel
+        val modelIndex = tableModel.getModelIndex(player)
+        if (modelIndex >= 0) {
             val viewIndex = this.convertRowIndexToView(modelIndex)
-            enableListSelectionListener = fireEvent
-            this.setRowSelectionInterval(viewIndex, viewIndex)
-            enableListSelectionListener = true
+            if (!this.isRowSelected(viewIndex)) {
+                enableListSelectionListener = fireEvent
+                this.setRowSelectionInterval(viewIndex, viewIndex)
+                enableListSelectionListener = true
+            }
         }
     }
-
-    /**
-     * Initialize the selection to the player selected by earlier created players tables
-     * This function must only be called after the model's initData function was called.
-     */
-    fun initSelection(){
-        selectPlayer(selectedPlayer, false)
-    }
-
     override fun propertyChange(evt: PropertyChangeEvent?) {
         selectPlayer(evt?.newValue as Player?, false)
+    }
+
+    fun refresh() {
+        val tableModel = this.getModel() as HOPlayersTableModel
+        val selected = selectedPlayer
+        tableModel.refresh()
+        this.selectPlayer(selected, false)
     }
 
 }

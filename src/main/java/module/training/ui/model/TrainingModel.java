@@ -5,7 +5,6 @@ import core.gui.comp.table.PlayersTable;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.enums.DBDataSource;
-import core.model.player.Player;
 import core.training.FutureTrainingManager;
 import core.training.TrainingManager;
 import core.training.TrainingPerWeek;
@@ -18,39 +17,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TrainingModel implements PropertyChangeListener {
-
-	private Player activePlayer;
-	private List<TrainingPerWeek> futureTrainings;
+    private List<TrainingPerWeek> futureTrainings;
 	private PastTrainingManager skillupManager;
 	private FutureTrainingManager futureTrainingManager;
 	private final List<ModelChangeListener> listeners = new ArrayList<>();
 
 	public TrainingModel(){
         HOVerwaltung.instance().addPropertyChangeListener(this);
-        PlayersTable.Companion.addPropertyChangeListener(evt -> setActivePlayer(PlayersTable.Companion.getSelectedPlayer()));
 	}
 
 	public void propertyChange(PropertyChangeEvent evt) {
 		futureTrainings = null;
 	}
 
-	public Player getActivePlayer() {
-		return activePlayer;
-	}
-
-	private void setActivePlayer(Player player) {
-		if (this.activePlayer == null && player != null ||
-				this.activePlayer != null && player == null ||
-				this.activePlayer != null && this.activePlayer.getPlayerId() != player.getPlayerId()) {
-			this.activePlayer = player;
-			this.skillupManager = null;
-			resetFutureTrainings_();
-		}
-	}
-
 	public PastTrainingManager getSkillupManager() {
 		if (this.skillupManager == null) {
-			this.skillupManager = new PastTrainingManager(this.activePlayer);
+			this.skillupManager = new PastTrainingManager(PlayersTable.Companion.getSelectedPlayer());
 		}
 		return this.skillupManager;
 	}
@@ -94,19 +76,15 @@ public class TrainingModel implements PropertyChangeListener {
 			List<TrainingPerWeek> trainings = getFutureTrainings();
 
 			// instantiate a future train manager to calculate the previsions */
-			this.futureTrainingManager = new FutureTrainingManager(this.activePlayer, trainings);
+			this.futureTrainingManager = new FutureTrainingManager(PlayersTable.Companion.getSelectedPlayer(), trainings);
 		}
 		return this.futureTrainingManager;
 	}
 	
 	public void resetFutureTrainings() {
-		resetFutureTrainings_();
+        this.futureTrainings = null;
+        this.futureTrainingManager = null;
 		fireModelChanged(ModelChange.FUTURE_TRAINING);
-	}
-	
-	private void resetFutureTrainings_() {
-		this.futureTrainings = null;
-		this.futureTrainingManager = null;
 	}
 
 	public void fireModelChanged(ModelChange change) {

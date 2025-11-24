@@ -1,6 +1,7 @@
 package module.training.ui;
 
 import core.gui.comp.panel.LazyImagePanel;
+import core.gui.comp.table.PlayersTable;
 import core.model.TranslationFacility;
 import core.training.FuturePlayerTraining;
 import core.util.HODateTime;
@@ -43,7 +44,7 @@ public class FutureTrainingPrioPopup  extends JPopupMenu implements ActionListen
     @Override
     public void actionPerformed(ActionEvent e) {
         // Training Priority Popup Menu Actions
-        var player = model.getActivePlayer();
+        var player = PlayersTable.Companion.getSelectedPlayer();
         if (player == null) return;
 
         HODateTime from;
@@ -89,8 +90,9 @@ public class FutureTrainingPrioPopup  extends JPopupMenu implements ActionListen
     }
 
     public void updateActivePlayer() {
-        if ( model.getActivePlayer() != null) {
-            bestPositionTrainingMenuItem.setText(model.getActivePlayer().getBestPositionInfo());
+        var selectedPlayer = PlayersTable.Companion.getSelectedPlayer();
+        if ( selectedPlayer != null) {
+            bestPositionTrainingMenuItem.setText(selectedPlayer.getBestPositionInfo());
         }
     }
 }
