@@ -22,9 +22,7 @@ public class TrainingRecapTable extends JScrollPane {
     }
 
     public void refresh() {
-        var tableModel = (TrainingPredictionTableModel)trainingPredictionTable.getModel();
-        tableModel.initData();
-        this.trainingPredictionTable.initSelection();
+        this.trainingPredictionTable.refresh();
     }
 
     /**

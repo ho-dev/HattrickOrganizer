@@ -5,5 +5,18 @@ import core.model.HOVerwaltung
 import core.model.player.Player
 
 abstract class HOPlayersTableModel(id: ColumnModelId, name: String) : HOTableModel(id, name) {
+    fun refresh() {initData()}
+    open fun getModelIndex(player: Player?) : Int {
+        return players.indexOf(player)
+    }
+
+    open fun getPlayer(index : Int) : Player?{
+        if (index > -1 && index < players.size) {
+            return players[index]
+        }
+        return null
+    }
+
     var players: List<Player> = HOVerwaltung.instance().getModel().getCurrentPlayers()
+
 }

@@ -3,7 +3,6 @@ package module.training.ui;
 import core.constants.player.PlayerSkill;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyPanel;
-import core.gui.comp.table.FixedColumnsTable;
 import core.gui.comp.table.PlayersTable;
 import core.gui.model.UserColumnController;
 import core.gui.theme.ImageUtilities;
@@ -41,7 +40,7 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
 	private static final String CMD_CLEAR_ALL = "clearAll";
 	private ButtonModel oldPlayers;
 	private JPanel filterPanel;
-	private FixedColumnsTable changesTable;
+	private PlayersTable changesTable;
 	private JCheckBox oldPlayersCheckBox;
 	private final Map<PlayerSkill, ButtonModel> buttonModels = new HashMap<>();
 	private Map<PlayerSkill, List<PlayerSkillChange>> skillups;
@@ -83,7 +82,8 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
 		this.skillups = getSkillups(HOVerwaltung.instance().getModel().getCurrentPlayers());
 		this.skillupsOld = getSkillups(HOVerwaltung.instance().getModel().getFormerPlayers());
 		updateFilterPanel();
-		updateTableModel();		
+		updateTableModel();
+        this.changesTable.refresh();
 	}
 	
 	/**
@@ -212,7 +212,7 @@ public class AnalyzerPanel extends LazyPanel implements ActionListener {
 		skillPanel.setLayout(new BorderLayout());
 		skillPanel.setBorder(BorderFactory.createTitledBorder(TranslationFacility.tr("TAB_SKILL")));
 
-		this.changesTable = new FixedColumnsTable(this.tableModel,2);
+		this.changesTable = new PlayersTable(this.tableModel,2);
         this.changesTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		skillPanel.add(new JScrollPane(this.changesTable.getContainerComponent()), BorderLayout.CENTER);
 

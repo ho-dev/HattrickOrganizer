@@ -274,7 +274,7 @@ public class PlayerDetailPanel extends LazyImagePanel implements PropertyChangeL
         m_jtaNotes.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
-                startEdit(model.getActivePlayer());
+                startEdit(PlayersTable.Companion.getSelectedPlayer());
             }
 
             @Override

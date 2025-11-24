@@ -4,6 +4,7 @@ import core.constants.player.PlayerAbility;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.IHOTableCellEntry;
 import core.gui.comp.table.HOTableModel;
+import core.gui.comp.table.PlayersTable;
 import core.gui.model.UserColumnController;
 import core.model.HOVerwaltung;
 import core.model.player.SkillChange;
@@ -85,22 +86,16 @@ public class SkillupTableModel extends HOTableModel {
 		initData();
 	}
 
-	public SkillChange getSkillup(int row) {
-		if ( this.skillChanges != null && row > - 1 && row < this.skillChanges.size() ) {
-			return this.skillChanges.get(row).getSkillChange();
-		}
-		return null;
-	}
-
 	@Override
 	protected void initData() {
 		this.skillChanges = new ArrayList<>();
-		if (this.trainingModel.getActivePlayer() != null) {
+        var selectedPlayer = PlayersTable.Companion.getSelectedPlayer();
+		if (selectedPlayer != null) {
 			for ( var skillUp : this.trainingModel.getSkillupManager().getTrainedSkillChanges()){
-				skillChanges.add(new PlayerSkillChange(this.trainingModel.getActivePlayer(), skillUp));
+				skillChanges.add(new PlayerSkillChange(selectedPlayer, skillUp));
 			}
 			for ( var skillUp : this.trainingModel.getFutureTrainingManager().getFutureSkillChanges()){
-				skillChanges.add(new PlayerSkillChange(this.trainingModel.getActivePlayer(), skillUp));
+				skillChanges.add(new PlayerSkillChange(selectedPlayer, skillUp));
 			}
 			Collections.reverse(skillChanges);
 		}

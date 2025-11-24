@@ -70,49 +70,49 @@ public class TrainingProgressTableModel extends HOPlayersTableModel {
                 new TrainingColumn(nextId++, "ls.player.skill.keeper", 70) {
                     @Override
                     public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
-                        return createIcon(entry.getPlayer(), PlayerSkill.KEEPER);
+                        return createVerticalIndicator(entry.getPlayer(), PlayerSkill.KEEPER);
                     }
                 },
                 new TrainingColumn(nextId++, "ls.player.skill.defending", 70) {
                     @Override
                     public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
-                        return createIcon(entry.getPlayer(), PlayerSkill.DEFENDING);
+                        return createVerticalIndicator(entry.getPlayer(), PlayerSkill.DEFENDING);
                     }
                 },
                 new TrainingColumn(nextId++, "ls.player.skill.playmaking", 70) {
                     @Override
                     public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
-                        return createIcon(entry.getPlayer(), PlayerSkill.PLAYMAKING);
+                        return createVerticalIndicator(entry.getPlayer(), PlayerSkill.PLAYMAKING);
                     }
                 },
                 new TrainingColumn(nextId++, "ls.player.skill.passing", 70) {
                     @Override
                     public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
-                        return createIcon(entry.getPlayer(), PlayerSkill.PASSING);
+                        return createVerticalIndicator(entry.getPlayer(), PlayerSkill.PASSING);
                     }
                 },
                 new TrainingColumn(nextId++, "ls.player.skill.winger", 70) {
                     @Override
                     public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
-                        return createIcon(entry.getPlayer(), PlayerSkill.WINGER);
+                        return createVerticalIndicator(entry.getPlayer(), PlayerSkill.WINGER);
                     }
                 },
                 new TrainingColumn(nextId++, "ls.player.skill.scoring", 70) {
                     @Override
                     public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
-                        return createIcon(entry.getPlayer(), PlayerSkill.SCORING);
+                        return createVerticalIndicator(entry.getPlayer(), PlayerSkill.SCORING);
                     }
                 },
                 new TrainingColumn(nextId++, "ls.player.skill.setpieces", 70) {
                     @Override
                     public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
-                        return createIcon(entry.getPlayer(), PlayerSkill.SETPIECES);
+                        return createVerticalIndicator(entry.getPlayer(), PlayerSkill.SETPIECES);
                     }
                 },
                 new TrainingColumn(nextId++, "ls.player.skill.stamina", 70) {
                     @Override
                     public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
-                        return createIcon(entry.getPlayer(), PlayerSkill.STAMINA);
+                        return createVerticalIndicator(entry.getPlayer(), PlayerSkill.STAMINA);
                     }
                 },
                 new TrainingColumn(nextId++, "ls.player.experience", 70) {
@@ -171,7 +171,7 @@ public class TrainingProgressTableModel extends HOPlayersTableModel {
      * @param skillIndex points to skillup
      * @return the VerticalIndicator object
      */
-    private VerticalIndicator createIcon(Player player, PlayerSkill skillIndex) {
+    private VerticalIndicator createVerticalIndicator(Player player, PlayerSkill skillIndex) {
         double trainingLength = getTrainingLength(player, skillIndex);
         double point = trainingLength * player.getSub4Skill(skillIndex);
         return new VerticalIndicator(Helper.round(point, 1), Helper.round(
@@ -181,7 +181,7 @@ public class TrainingProgressTableModel extends HOPlayersTableModel {
 
     @Override
     protected void initData() {
-        var currentPlayers = getPlayers();
+        var currentPlayers = this.getPlayers();
         m_clData = new Object[currentPlayers.size()][getDisplayedColumns().length];
         int rownum = 0;
         for (var player : currentPlayers) {

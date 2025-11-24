@@ -40,8 +40,9 @@
 
 ## Translations
 
-Reports by Contributors - October 19, 2025 - November 09, 2025
+Reports by Contributors - October 19, 2025 - November 24, 2025
 * Ioannidouefty 459
 * wsbrenk 31
+* Lidegand 24
 
-Total 490
+Total 514

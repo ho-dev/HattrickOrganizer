@@ -5,7 +5,6 @@ import core.gui.comp.panel.LazyPanel;
 import core.gui.comp.table.FixedColumnsTable;
 import core.gui.comp.table.PlayersTable;
 import core.gui.model.UserColumnController;
-import core.model.player.Player;
 import core.util.Helper;
 import module.training.ui.model.ModelChange;
 import module.training.ui.model.SkillupTableModel;
@@ -57,8 +56,9 @@ public class TrainingDevelopmentPanel extends LazyPanel implements PropertyChang
 	 * Populate the table
 	 */
 	private void loadFromModel() {
-		if (this.model.getActivePlayer() != null) {
-			this.title.setText(Helper.getTranslation("ls.module.training.training_development")+ " " + this.model.getActivePlayer().getFullName());
+        var selectedPlayer = PlayersTable.Companion.getSelectedPlayer();
+		if (selectedPlayer != null) {
+			this.title.setText(Helper.getTranslation("ls.module.training.training_development")+ " " + selectedPlayer.getFullName());
 		}
 		((SkillupTableModel) this.table.getModel()).setTrainingModel(this.model);
 	}
@@ -84,8 +84,6 @@ public class TrainingDevelopmentPanel extends LazyPanel implements PropertyChang
 	@Override
 	public void propertyChange(PropertyChangeEvent evt) {
 		if ( evt.getPropertyName().equals("SelectedPlayer") ) {
-			var newSelection = (Player) evt.getNewValue();
-            PlayersTable.Companion.setSelectedPlayer(newSelection);
 			loadFromModel();
 		}
 	}
