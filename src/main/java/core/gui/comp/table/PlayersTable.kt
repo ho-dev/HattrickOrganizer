@@ -63,6 +63,15 @@ class PlayersTable @JvmOverloads constructor(tableModel: HOPlayersTableModel, fi
         Companion.addPropertyChangeListener(this)
     }
 
+    fun getSelectedPlayers() : List<Player>{
+        var players = mutableListOf<Player>()
+        val allPLayers = getPlayers()
+        for (viewRow in this.selectedRows){
+            players.add(allPLayers.get(this.convertRowIndexToModel(viewRow)))
+        }
+        return players
+    }
+
     private var enableListSelectionListener : Boolean = true
 
     fun selectPlayer(player: Player?, fireEvent : Boolean = true) {

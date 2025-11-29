@@ -5,7 +5,6 @@ import core.gui.comp.entry.IHOTableCellEntry;
 import core.gui.comp.table.HOPlayersTableModel;
 import core.gui.model.UserColumnController;
 import core.model.HOVerwaltung;
-import core.model.player.Player;
 import core.util.HODateTime;
 
 import javax.swing.*;
@@ -31,7 +30,7 @@ public class HallOfFameTableModel extends HOPlayersTableModel {
                 new HallOfFameColumn("ls.player.age") {
                     @Override
                     public IHOTableCellEntry getTableEntry(HallOfFamePlayer player) {
-                        return new ColorLabelEntry(player.getAge() * 112 + player.getAgeDays(), Player.getAgeWithDaysAsString(player.getAge(), player.getAgeDays(), HODateTime.now()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        return new ColorLabelEntry(player.getAge(), String.valueOf(player.getAge()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
                 new HallOfFameColumn("ImTeamSeit") {

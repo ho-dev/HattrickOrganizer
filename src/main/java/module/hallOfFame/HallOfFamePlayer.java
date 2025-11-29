@@ -6,17 +6,27 @@ import core.model.player.Player;
 import core.util.HODateTime;
 import org.w3c.dom.Element;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static core.file.xml.XMLManager.*;
 
 public class HallOfFamePlayer extends Player {
 
-    static class ExTrainer {
+    public static class ExTrainer {
         HODateTime from;
         HODateTime to;
         HODateTime.HODuration getTrainerDuration (){
             if ( from != null && to != null) return HODateTime.HODuration.between(from, to);
             return null;
         }
+
+        static class Rating {
+            HODateTime time;
+            int coachLevel;
+        }
+
+        List<Rating> ratings = new ArrayList<>();
     }
 
     private ExTrainer exTrainer;
@@ -25,24 +35,33 @@ public class HallOfFamePlayer extends Player {
         var history = DBManager.instance().loadPlayerHistory(this.getPlayerId());
         exTrainer = new ExTrainer();
         var trainerTime = history.stream().filter(Player::isCoach).toList();
-        if (!trainerTime.isEmpty()) {
-            exTrainer.from = trainerTime.get(0).getHrfDate();
-            exTrainer.to = trainerTime.get(trainerTime.size() - 1).getHrfDate();
+        for ( var historicalPlayer : trainerTime){
+            if (exTrainer.from == null) exTrainer.from = historicalPlayer.getHrfDate();
+            exTrainer.to = historicalPlayer.getHrfDate();
+            var rating = new ExTrainer.Rating();
+            rating.time = historicalPlayer.getHrfDate();
+            rating.coachLevel = historicalPlayer.getCoachSkill();
+            exTrainer.ratings.add(rating);
         }
     }
 
-    public HODateTime getExTrainerFrom(){
+    public ExTrainer getExTrainer(){
         if ( exTrainer == null) loadExTrainer();
+        return exTrainer;
+    }
+
+    public HODateTime getExTrainerFrom(){
+        getExTrainer();
         if ( exTrainer.from != null) return exTrainer.from;
         return null;
     }
     public HODateTime getExTrainerTo(){
-        if ( exTrainer == null) loadExTrainer();
+        getExTrainer();
         if ( exTrainer.to != null) return exTrainer.to;
         return null;
     }
     public HODateTime.HODuration getExTrainerDuration(){
-        if ( exTrainer == null) loadExTrainer();
+        getExTrainer();
         return exTrainer.getTrainerDuration();
     }
 
