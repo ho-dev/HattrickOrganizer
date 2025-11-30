@@ -18,12 +18,6 @@ import java.awt.*;
 import java.time.Duration;
 
 public class ArenaStatistikTableModel extends AbstractTableModel {
-    //~ Static fields/initializers -----------------------------------------------------------------
-
-	private static final long serialVersionUID = 7187251269604772672L;
-
-
-    //~ Instance fields ----------------------------------------------------------------------------
 
     public String[] m_sToolTipStrings = {
 			TranslationFacility.tr("Datum"),
@@ -106,16 +100,6 @@ public class ArenaStatistikTableModel extends AbstractTableModel {
     private int m_iMaxArenaGroesse;
     private int m_iMaxFananzahl;
 
-    // ~ Constructors
-	// -------------------------------------------------------------------------------
-
-    /**
-     * Creates a new ArenaStatistikTableModel object.
-     */
-    public ArenaStatistikTableModel() {
-        //Nix
-    }
-
     /**
      * Creates a new ArenaStatistikTableModel object.
      */
@@ -126,8 +110,6 @@ public class ArenaStatistikTableModel extends AbstractTableModel {
         m_iMaxFananzahl = maxFananzahl;
         initData();
     }
-
-    //~ Methods ------------------------------------------------------------------------------------
 
     /**
      * Check, if cell is editable.
