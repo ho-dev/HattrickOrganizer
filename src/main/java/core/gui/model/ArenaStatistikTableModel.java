@@ -259,153 +259,70 @@ public class ArenaStatistikTableModel extends AbstractTableModel {
 
 			    //Datum
 				var matchDate = match.getMatchDate();
-			    m_clData[i][colIndex] = new ColorLabelEntry(matchDate.toDbTimestamp().getTime(),
-			    		matchDate.toLocaleDateTime(),
-			    		ColorLabelEntry.FG_STANDARD, background, SwingConstants.LEFT);
-				colIndex++;
+			    m_clData[i][colIndex++] = new ColorLabelEntry(matchDate.toDbTimestamp().getTime(),matchDate.toLocaleDateTime(), ColorLabelEntry.FG_STANDARD, background, SwingConstants.LEFT);
 			    //Spielart
-			    m_clData[i][1] = new ColorLabelEntry(
-			    					ThemeManager.getIcon(HOIconName.MATCHICONS[match.getMatchTyp().getIconArrayIndex()]),
-			    		match.getMatchTyp().getMatchTypeId(), ColorLabelEntry.FG_STANDARD, background, SwingConstants.CENTER);
-				colIndex++;
+			    m_clData[i][colIndex++] = new ColorLabelEntry(ThemeManager.getIcon(HOIconName.MATCHICONS[match.getMatchTyp().getIconArrayIndex()]),match.getMatchTyp().getMatchTypeId(), ColorLabelEntry.FG_STANDARD, background, SwingConstants.CENTER);
 			    //Gast
-			    m_clData[i][colIndex] = new ColorLabelEntry(match.getGastName(), ColorLabelEntry.FG_STANDARD,
-			    		background, SwingConstants.LEFT);
-				colIndex++;
-
+			    m_clData[i][colIndex++] = new ColorLabelEntry(match.getGastName(), ColorLabelEntry.FG_STANDARD,	background, SwingConstants.LEFT);
 			    //Ergebnis
-			    m_clData[i][colIndex] = new ColorLabelEntry(StringUtils.getResultString(match.getHeimTore(), match.getGastTore(), ""),
-			    		ColorLabelEntry.FG_STANDARD, background, SwingConstants.CENTER);
-			    //Sterne für Sieger!
+			    m_clData[i][colIndex] = new ColorLabelEntry(StringUtils.getResultString(match.getHeimTore(), match.getGastTore(), ""), ColorLabelEntry.FG_STANDARD, background, SwingConstants.CENTER);
+			    // Stars for the winner in the same column (do not increment the column index)
 			    if (match.getMatchStatus() != MatchKurzInfo.FINISHED) {
-			        ((ColorLabelEntry) m_clData[i][colIndex]).setIcon(ImageUtilities.NOIMAGEICON);
+			        ((ColorLabelEntry) m_clData[i][colIndex++]).setIcon(ImageUtilities.NOIMAGEICON);
 			    } else if (match.getHeimTore() > match.getGastTore()) {
-			        ((ColorLabelEntry) m_clData[i][colIndex]).setIcon(ImageUtilities.getStarIcon());
+			        ((ColorLabelEntry) m_clData[i][colIndex++]).setIcon(ImageUtilities.getStarIcon());
 			    } else if (match.getHeimTore() < match.getGastTore()) {
-			        ((ColorLabelEntry) m_clData[i][colIndex]).setIcon(ImageUtilities.NOIMAGEICON);
+			        ((ColorLabelEntry) m_clData[i][colIndex++]).setIcon(ImageUtilities.NOIMAGEICON);
 			    } else {
-			        ((ColorLabelEntry) m_clData[i][colIndex]).setIcon(ImageUtilities.getStarIcon());
+			        ((ColorLabelEntry) m_clData[i][colIndex++]).setIcon(ImageUtilities.getStarIcon());
 			    }
-				colIndex++;
-
 			    //Wetter
-			    m_clData[i][colIndex] = new ColorLabelEntry(ThemeManager.getIcon(HOIconName.WEATHER[match.getWetter()]),
-			                                         match.getWetter(), ColorLabelEntry.FG_STANDARD,
-			                                         background, SwingConstants.RIGHT);
-				colIndex++;
-
+			    m_clData[i][colIndex++] = new ColorLabelEntry(ThemeManager.getIcon(HOIconName.WEATHER[match.getWetter()]), match.getWetter(), ColorLabelEntry.FG_STANDARD, background, SwingConstants.RIGHT);
 			    //Matchid
-			    m_clData[i][colIndex] = new ColorLabelEntry(match.getMatchID(), match.getMatchID() + "",
-			                                         ColorLabelEntry.FG_STANDARD, background,
-			                                         SwingConstants.RIGHT);
-				colIndex++;
-
+			    m_clData[i][colIndex++] = new ColorLabelEntry(match.getMatchID(), match.getMatchID() + "", ColorLabelEntry.FG_STANDARD, background, SwingConstants.RIGHT);
 			    //Stadiongroesse
-			    m_clData[i][colIndex] = new ProgressbarTableEntry(match.getArenaGroesse(), 0,
-			    		m_iMaxArenaGroesse, 0, 1, background, new Color(0, 0, 120), "");
-				colIndex++;
-
+			    m_clData[i][colIndex++] = new ProgressbarTableEntry(match.getArenaGroesse(), 0, m_iMaxArenaGroesse, 0, 1, background, new Color(0, 0, 120), "");
 			    //Zuschauer
-			    m_clData[i][colIndex] = new ProgressbarTableEntry(match.getZuschaueranzahl(), 0,
-			    		m_iMaxArenaGroesse, 0, 1, background, new Color(0, 120, 0), "");
-				colIndex++;
-
+			    m_clData[i][colIndex++] = new ProgressbarTableEntry(match.getZuschaueranzahl(), 0, m_iMaxArenaGroesse, 0, 1, background, new Color(0, 120, 0), "");
 			    //Verhältnis Auslastung
-			    m_clData[i][colIndex] = new ProgressbarTableEntry(
-			    		(int) ((float) match.getZuschaueranzahl() / (float) match.getArenaGroesse() * 1000),
-			    		0, 1000, 1, 0.1, background, new Color(0, 120, 120), " %");
-				colIndex++;
-
+			    m_clData[i][colIndex++] = new ProgressbarTableEntry((int) ((float) match.getZuschaueranzahl() / (float) match.getArenaGroesse() * 1000), 0, 1000, 1, 0.1, background, new Color(0, 120, 120), " %");
 			    //Total Income
-				m_clData[i][colIndex] = new ColorLabelEntry(match.getTotalIncome(),  background);
-				colIndex++;
-
+				m_clData[i][colIndex++] = new ColorLabelEntry(match.getTotalIncome(),  background);
 			    //Terraces
-			    m_clData[i][colIndex] = new ColorLabelEntry(match.getSoldTerraces() + " / " + match.getMaxTerraces() + "",
-			                                          ColorLabelEntry.FG_STANDARD, background,
-			                                          SwingConstants.CENTER);
-				colIndex++;
-
-			    m_clData[i][colIndex] = new ProgressbarTableEntry((int) ((float) match.getSoldTerraces() / (float) match.getMaxTerraces() * 1000), 0, 1000, 1, 0.1, background, new Color(0, 120, 0), " %");
-				colIndex++;
-
+			    m_clData[i][colIndex++] = new ColorLabelEntry(match.getSoldTerraces() + " / " + match.getMaxTerraces(), ColorLabelEntry.FG_STANDARD, background, SwingConstants.CENTER);
+			    m_clData[i][colIndex++] = new ProgressbarTableEntry((int) ((float) match.getSoldTerraces() / (float) match.getMaxTerraces() * 1000), 0, 1000, 1, 0.1, background, new Color(0, 120, 0), " %");
 				//Terrace Income
-				m_clData[i][colIndex] = new ColorLabelEntry(match.getTerracesIncome(),
-						ColorLabelEntry.FG_STANDARD);
-				colIndex++;
-
+				m_clData[i][colIndex++] = new ColorLabelEntry(match.getTerracesIncome(), background);
 			    //Basic seats
-			    m_clData[i][colIndex] = new ColorLabelEntry(match.getSoldBasics() + " / " + match.getMaxBasic(),
-			                                          ColorLabelEntry.FG_STANDARD, background,
-			                                          SwingConstants.CENTER);
-				colIndex++;
-
-                m_clData[i][colIndex] = new ProgressbarTableEntry((int) ((float) match.getSoldBasics() / (float) match.getMaxBasic() * 1000), 0, 1000, 1, 0.1, background, new Color(0, 120, 0), " %");
-				colIndex++;
-
+			    m_clData[i][colIndex++] = new ColorLabelEntry(match.getSoldBasics() + " / " + match.getMaxBasic(), ColorLabelEntry.FG_STANDARD, background, SwingConstants.CENTER);
+                m_clData[i][colIndex++] = new ProgressbarTableEntry((int) ((float) match.getSoldBasics() / (float) match.getMaxBasic() * 1000), 0, 1000, 1, 0.1, background, new Color(0, 120, 0), " %");
 				//Basic Seat Income
-				m_clData[i][colIndex] = new ColorLabelEntry(match.getBasicSeatIncome(), background);
-				colIndex++;
-
+				m_clData[i][colIndex++] = new ColorLabelEntry(match.getBasicSeatIncome(), background);
 			    //Seats under the roof
-			    m_clData[i][colIndex] = new ColorLabelEntry(match.getSoldRoof() + " / " + match.getMaxRoof(),
-			                                          ColorLabelEntry.FG_STANDARD, background,
-			                                          SwingConstants.CENTER);
-				colIndex++;
-
-                m_clData[i][colIndex] = new ProgressbarTableEntry((int) ((float) match.getSoldRoof() / (float) match.getMaxRoof() * 1000), 0, 1000, 1, 0.1, background, new Color(0, 120, 0), " %");
-				colIndex++;
-
+			    m_clData[i][colIndex++] = new ColorLabelEntry(match.getSoldRoof() + " / " + match.getMaxRoof(), ColorLabelEntry.FG_STANDARD, background, SwingConstants.CENTER);
+                m_clData[i][colIndex++] = new ProgressbarTableEntry((int) ((float) match.getSoldRoof() / (float) match.getMaxRoof() * 1000), 0, 1000, 1, 0.1, background, new Color(0, 120, 0), " %");
 				//Seats under the roof Income
-				m_clData[i][colIndex] = new ColorLabelEntry(match.getSeatRoofIncome(), background);
-				colIndex++;
-
+				m_clData[i][colIndex++] = new ColorLabelEntry(match.getSeatRoofIncome(), background);
 			    //VIP seats
-			    m_clData[i][colIndex] = new ColorLabelEntry(match.getSoldVip() + " / " + match.getMaxVip(),
-			                                          ColorLabelEntry.FG_STANDARD, background,
-			                                          SwingConstants.CENTER);
-				colIndex++;
-
-                m_clData[i][colIndex] = new ProgressbarTableEntry((int) ((float) match.getSoldVip() / (float) match.getMaxVip() * 1000), 0, 1000, 1, 0.1, background, new Color(0, 120, 0), " %");
-				colIndex++;
-
+			    m_clData[i][colIndex++] = new ColorLabelEntry(match.getSoldVip() + " / " + match.getMaxVip(), ColorLabelEntry.FG_STANDARD, background, SwingConstants.CENTER);
+                m_clData[i][colIndex++] = new ProgressbarTableEntry((int) ((float) match.getSoldVip() / (float) match.getMaxVip() * 1000), 0, 1000, 1, 0.1, background, new Color(0, 120, 0), " %");
 				//SVIP seats Income
-				m_clData[i][colIndex] = new ColorLabelEntry(match.getVipIncome(), background);
-				colIndex++;
-
+				m_clData[i][colIndex++] = new ColorLabelEntry(match.getVipIncome(), background);
 			    // fan count
-			    m_clData[i][colIndex] = new ProgressbarTableEntry(match.getFans(), 0, m_iMaxFananzahl, 0, 1, background, new Color(80, 80, 80), "");
-				colIndex++;
-
+			    m_clData[i][colIndex++] = new ProgressbarTableEntry(match.getFans(), 0, m_iMaxFananzahl, 0, 1, background, new Color(80, 80, 80), "");
 			    // fan count increment per week
 			    float fanzuwachs = 0;
-
 			    if ((i + 1) < m_clMatches.length) {
 					var diff = Duration.between(m_clMatches[i+1].getMatchDate().instant,match.getMatchDate().instant).toMillis();
 			        fanzuwachs = ((match.getFans() - m_clMatches[i + 1].getFans()) * 604800000f) / diff;
 			    }
-
-			    m_clData[i][colIndex] = new ColorLabelEntry(fanzuwachs, background, false,0);
-				colIndex++;
-
+			    m_clData[i][colIndex++] = new ColorLabelEntry(fanzuwachs, background, false,0);
 			    //Quotione  Zuschauer/Fans
-			    m_clData[i][colIndex] = new ColorLabelEntry(Helper.round((float) match.getZuschaueranzahl()
-						/ (float) match.getFans(), 2) + "", ColorLabelEntry.FG_STANDARD, background,
-						SwingConstants.RIGHT);
-				colIndex++;
-
+			    m_clData[i][colIndex++] = new ColorLabelEntry(Helper.round((float) match.getZuschaueranzahl() / (float) match.getFans(), 2) + "", ColorLabelEntry.FG_STANDARD, background, SwingConstants.RIGHT);
 			    // Fanstimmung
-			    m_clData[i][colIndex] = new ColorLabelEntry(Economy.getNameForLevelFans(match.getFanZufriedenheit(), match.getMatchDate()),
-			                                          ColorLabelEntry.FG_STANDARD, background,
-			                                          SwingConstants.LEFT);
-				colIndex++;
-
+			    m_clData[i][colIndex++] = new ColorLabelEntry(Economy.getNameForLevelFans(match.getFanZufriedenheit(), match.getMatchDate()), ColorLabelEntry.FG_STANDARD, background, SwingConstants.LEFT);
 			    //Ligaplatz
-			    m_clData[i][colIndex] = new ColorLabelEntry(match.getLigaPlatz() + ".",
-			                                          ColorLabelEntry.FG_STANDARD, background,
-			                                          SwingConstants.CENTER);
-				colIndex++;
-
+			    m_clData[i][colIndex++] = new ColorLabelEntry(match.getLigaPlatz() + ".", ColorLabelEntry.FG_STANDARD, background, SwingConstants.CENTER);
 			}
 		} catch (Exception e) {
 			HOLogger.instance().error(getClass(), e);
