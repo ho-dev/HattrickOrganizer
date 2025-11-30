@@ -24,6 +24,7 @@ public class HallOfFamePlayer extends Player {
         static class Rating {
             HODateTime time;
             int coachLevel;
+            int leadership;
         }
 
         List<Rating> ratings = new ArrayList<>();
@@ -41,6 +42,7 @@ public class HallOfFamePlayer extends Player {
             var rating = new ExTrainer.Rating();
             rating.time = historicalPlayer.getHrfDate();
             rating.coachLevel = historicalPlayer.getCoachSkill();
+            rating.leadership = historicalPlayer.getLeadership();
             exTrainer.ratings.add(rating);
         }
     }
