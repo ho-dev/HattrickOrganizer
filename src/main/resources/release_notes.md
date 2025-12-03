@@ -29,7 +29,8 @@
 
 ### Transfer
 
-### International Friendlies
+### Statistics
+* Fix background color of terraces income column (#2356)
 
 ### Youth module
 
@@ -40,9 +41,11 @@
 
 ## Translations
 
-Reports by Contributors - October 19, 2025 - November 24, 2025
+Reports by Contributors - October 19, 2025 - December 03, 2025
 * Ioannidouefty 459
 * wsbrenk 31
 * Lidegand 24
+* Mara 3
+* Joeri Roels 1
 
-Total 514
+Total 518
