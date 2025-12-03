@@ -38,7 +38,7 @@
 
 ## Translations
 
-Reports by Contributors - October 19, 2025 - November 30, 2025
+Reports by Contributors - October 19, 2025 - December 03, 2025
 * Ioannidouefty 459
 * wsbrenk 31
 * Lidegand 24
