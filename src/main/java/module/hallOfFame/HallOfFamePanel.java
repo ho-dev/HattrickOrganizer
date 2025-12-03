@@ -10,6 +10,7 @@ import core.util.chart.LinesChartDataModel;
 import module.statistics.Colors;
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class HallOfFamePanel extends JPanel {
@@ -40,11 +41,11 @@ public class HallOfFamePanel extends JPanel {
 
         var players = this.hallOfFameTable.getSelectedPlayers();
         for (var player : players) {
-            var chartDataModels = new LinesChartDataModel[2];
+            var chartDataModels = new ArrayList<LinesChartDataModel>();
             if (player instanceof HallOfFamePlayer hallOfFamePlayer) {
                 var exTrainer = hallOfFamePlayer.getExTrainer();
-                chartDataModels[0] = new LinesChartDataModel(exTrainer.ratings.stream().mapToDouble(i -> i.coachLevel).toArray(), "CoachLevel", true, Colors.getColor(Colors.COLOR_PLAYER_PM));
-                chartDataModels[1] = new LinesChartDataModel(exTrainer.ratings.stream().mapToDouble(i -> i.leadership).toArray(), "Leadership", true, Colors.getColor(Colors.COLOR_PLAYER_WI));
+                chartDataModels.add(new LinesChartDataModel(exTrainer.ratings.stream().mapToDouble(i -> i.coachLevel).toArray(), "CoachLevel", true, Colors.getColor(Colors.COLOR_PLAYER_PM)));
+                chartDataModels.add(new LinesChartDataModel(exTrainer.ratings.stream().mapToDouble(i -> i.leadership).toArray(), "Leadership", true, Colors.getColor(Colors.COLOR_PLAYER_WI)));
                 historyChart.setAllValues(chartDataModels,exTrainer.ratings.stream().mapToDouble(i-> Date.from(i.time.instant).getTime()).toArray() , Helper.DEFAULTDEZIMALFORMAT, TranslationFacility.tr("Wochen"), "", false, true);
             }
         }
