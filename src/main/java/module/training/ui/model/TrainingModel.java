@@ -5,7 +5,6 @@ import core.gui.comp.table.PlayersTable;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.enums.DBDataSource;
-import core.model.player.Player;
 import core.training.FutureTrainingManager;
 import core.training.TrainingManager;
 import core.training.TrainingPerWeek;
