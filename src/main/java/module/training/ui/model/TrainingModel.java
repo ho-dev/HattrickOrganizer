@@ -5,6 +5,7 @@ import core.gui.comp.table.PlayersTable;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.enums.DBDataSource;
+import core.model.player.Player;
 import core.training.FutureTrainingManager;
 import core.training.TrainingManager;
 import core.training.TrainingPerWeek;
@@ -31,8 +32,9 @@ public class TrainingModel implements PropertyChangeListener {
 	}
 
 	public PastTrainingManager getSkillupManager() {
-		if (this.skillupManager == null) {
-			this.skillupManager = new PastTrainingManager(PlayersTable.Companion.getSelectedPlayer());
+        var selectedPlayer = PlayersTable.Companion.getSelectedPlayer();
+		if (this.skillupManager == null || this.skillupManager.getPlayer() != selectedPlayer) {
+			this.skillupManager = new PastTrainingManager(selectedPlayer);
 		}
 		return this.skillupManager;
 	}
@@ -69,14 +71,12 @@ public class TrainingModel implements PropertyChangeListener {
 	}
 
 	public FutureTrainingManager getFutureTrainingManager() {
-		
-		if (this.futureTrainingManager == null) {
-			
+		var selectedPlayer = PlayersTable.Companion.getSelectedPlayer();
+		if (this.futureTrainingManager == null || this.futureTrainingManager.getPlayer() != selectedPlayer) {
 			// gets the list of future trainings
 			List<TrainingPerWeek> trainings = getFutureTrainings();
-
 			// instantiate a future train manager to calculate the previsions */
-			this.futureTrainingManager = new FutureTrainingManager(PlayersTable.Companion.getSelectedPlayer(), trainings);
+			this.futureTrainingManager = new FutureTrainingManager(selectedPlayer, trainings);
 		}
 		return this.futureTrainingManager;
 	}
