@@ -15,6 +15,12 @@ import java.util.List;
  */
 public class PastTrainingManager {
 
+    public Player getPlayer() {
+        return player;
+    }
+
+    private final Player player;
+
 	/** List of all skill up */
 	private List<SkillChange> allSkillChanges = new ArrayList<>();
 	/** List of trained skill up */
@@ -26,6 +32,7 @@ public class PastTrainingManager {
 	 * @param player Player
 	 */
 	public PastTrainingManager(Player player) {
+        this.player = player;
 		if (player == null) {
 			return;
 		}
