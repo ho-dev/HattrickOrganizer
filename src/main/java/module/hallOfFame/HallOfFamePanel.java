@@ -8,10 +8,14 @@ import core.util.Helper;
 import core.util.chart.HOLinesChart;
 import core.util.chart.LinesChartDataModel;
 import module.statistics.Colors;
+
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Date;
+import java.util.*;
+import org.jetbrains.letsPlot.*;
+import org.jetbrains.letsPlot.export.*;
+import kotlin.collections.MapsKt;
+import org.jetbrains.letsPlot.intern.Plot;
 
 public class HallOfFamePanel extends JPanel {
     private final HOLinesChart historyChart;
@@ -35,6 +39,19 @@ public class HallOfFamePanel extends JPanel {
 
         var dividerLocation = ModuleConfig.instance().getInteger("HallOfFamePanel.VerticalSplitPosition");
         splitPane.setDividerLocation(dividerLocation != null ? dividerLocation : 400);
+    }
+
+    private void createPlot(){
+        // Prepare data
+        Map<String, Object> data = new HashMap<>();
+        data.put("x", Arrays.asList(1, 2, 3, 4, 5));
+        data.put("y", Arrays.asList(3, 7, 8, 5, 6));
+
+        // Create plot
+        Plot plot = LetsPlotKt.letsPlot(data)
+                .plus(GeomLine.Companion.line(MapsKt.mapOf("color", "blue")))
+                .plus(GeomPoint.Companion.point(MapsKt.mapOf("size", 4)));
+
     }
 
     private void refreshHistory() {
