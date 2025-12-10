@@ -50,7 +50,7 @@ public class TrainingPredictionTableModel  extends HOPlayersTableModel {
                 new TrainingColumn(nextColumnId++,"ls.player.age", 60) {
                     @Override
                     public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
-                        return new ColorLabelEntry(entry.getPlayer().getAgeWithDaysAsString(), ColorLabelEntry.FG_STANDARD, getBackgroundColor(entry), SwingConstants.LEFT);
+                        return new ColorLabelEntry(entry.getPlayer().getAlterWithAgeDays(), entry.getPlayer().getAgeWithDaysAsString(), ColorLabelEntry.FG_STANDARD, getBackgroundColor(entry), SwingConstants.LEFT);
                     }
                 },
                 new TrainingColumn(nextColumnId++,"BestePosition", 140) {

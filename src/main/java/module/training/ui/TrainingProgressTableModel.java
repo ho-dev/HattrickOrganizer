@@ -58,7 +58,7 @@ public class TrainingProgressTableModel extends HOPlayersTableModel {
                 new TrainingColumn(nextId++, "ls.player.age", 60) {
                     @Override
                     public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
-                        return new ColorLabelEntry(entry.getPlayer().getAgeWithDaysAsString(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        return new ColorLabelEntry(entry.getPlayer().getAlterWithAgeDays(), entry.getPlayer().getAgeWithDaysAsString(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
                 new TrainingColumn(nextId++, "trainpre.priority", 140) {
