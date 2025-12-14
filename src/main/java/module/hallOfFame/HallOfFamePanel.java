@@ -44,7 +44,7 @@ public class HallOfFamePanel extends JPanel {
             var chartDataModels = new ArrayList<LinesChartDataModel>();
             if (player instanceof HallOfFamePlayer hallOfFamePlayer) {
                 var exTrainer = hallOfFamePlayer.getExTrainer();
-                chartDataModels.add(new LinesChartDataModel(exTrainer.ratings.stream().mapToDouble(i -> i.coachLevel).toArray(), "CoachLevel", true, Colors.getColor(Colors.COLOR_PLAYER_PM)));
+                chartDataModels.add(new LinesChartDataModel(exTrainer.ratings.stream().mapToDouble(i -> i.coachLevel).toArray(), player.getShortName() + " " + TranslationFacility.tr("ls.team.coachingskill"), true, Colors.getColor(Colors.COLOR_PLAYER_PM)));
                 chartDataModels.add(new LinesChartDataModel(exTrainer.ratings.stream().mapToDouble(i -> i.leadership).toArray(), "Leadership", true, Colors.getColor(Colors.COLOR_PLAYER_WI)));
                 historyChart.setAllValues(chartDataModels.toArray(new LinesChartDataModel[0]),
                         exTrainer.ratings.stream().mapToDouble(i-> Date.from(i.time.instant).getTime()).toArray(),
