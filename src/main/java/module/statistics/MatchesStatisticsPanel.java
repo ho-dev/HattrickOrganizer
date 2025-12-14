@@ -93,57 +93,57 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 				c_jpChart.setShow(sumStars, c_jcbRating.isSelected());
 				UserParameter.instance().statistikSpieleBewertung = c_jcbRating.isSelected();
 			} else if (e.getSource() == c_jcbTotalStrength.getCheckbox()) {
-				c_jpChart.setShow("Gesamtstaerke", c_jcbTotalStrength.isSelected());
+				c_jpChart.setShow(getLangStr("Gesamtstaerke"), c_jcbTotalStrength.isSelected());
 				UserParameter.instance().statistikSpieleGesamt = c_jcbTotalStrength.isSelected();
 			} else if (e.getSource() == c_jcbMidfield.getCheckbox()) {
-				c_jpChart.setShow("ls.match.ratingsector.midfield",
+				c_jpChart.setShow(getLangStr("ls.match.ratingsector.midfield"),
 						c_jcbMidfield.isSelected());
 				UserParameter.instance().statistikSpieleMittelfeld = c_jcbMidfield
 						.isSelected();
 			} else if (e.getSource() == c_jcbRightDefence.getCheckbox()) {
-				c_jpChart.setShow("ls.match.ratingsector.rightdefence",
+				c_jpChart.setShow(getLangStr("ls.match.ratingsector.rightdefence"),
 						c_jcbRightDefence.isSelected());
 				UserParameter.instance().statistikSpieleRechteAbwehr = c_jcbRightDefence
 						.isSelected();
 			} else if (e.getSource() == c_jcbCentralDefence.getCheckbox()) {
-				c_jpChart.setShow("ls.match.ratingsector.centraldefence",
+				c_jpChart.setShow(getLangStr("ls.match.ratingsector.centraldefence"),
 						c_jcbCentralDefence.isSelected());
 				UserParameter.instance().statistikSpieleAbwehrzentrum = c_jcbCentralDefence
 						.isSelected();
 			} else if (e.getSource() == c_jcbLeftDefence.getCheckbox()) {
-				c_jpChart.setShow("ls.match.ratingsector.leftdefence",
+				c_jpChart.setShow(getLangStr("ls.match.ratingsector.leftdefence"),
 						c_jcbLeftDefence.isSelected());
 				UserParameter.instance().statistikSpieleLinkeAbwehr = c_jcbLeftDefence
 						.isSelected();
 			} else if (e.getSource() == c_jcbRightAttack.getCheckbox()) {
-				c_jpChart.setShow("ls.match.ratingsector.rightattack",
+				c_jpChart.setShow(getLangStr("ls.match.ratingsector.rightattack"),
 						c_jcbRightAttack.isSelected());
 				UserParameter.instance().statistikSpieleRechterAngriff = c_jcbRightAttack
 						.isSelected();
 			} else if (e.getSource() == c_jcbCentralAttack.getCheckbox()) {
-				c_jpChart.setShow("ls.match.ratingsector.centralattack",
+				c_jpChart.setShow(getLangStr("ls.match.ratingsector.centralattack"),
 						c_jcbCentralAttack.isSelected());
 				UserParameter.instance().statistikSpieleAngriffszentrum = c_jcbCentralAttack
 						.isSelected();
 			} else if (e.getSource() == c_jcbLeftAttack.getCheckbox()) {
-				c_jpChart.setShow("ls.match.ratingsector.leftattack",
+				c_jpChart.setShow(getLangStr("ls.match.ratingsector.leftattack"),
 						c_jcbLeftAttack.isSelected());
 				UserParameter.instance().statistikSpieleLinkerAngriff = c_jcbLeftAttack
 						.isSelected();
 			} else if (e.getSource() == c_jcbTeamSpirit.getCheckbox()) {
-				c_jpChart.setShow("ls.team.teamspirit", c_jcbTeamSpirit.isSelected());
+				c_jpChart.setShow(getLangStr("ls.team.teamspirit"), c_jcbTeamSpirit.isSelected());
 				UserParameter.instance().statistikSpieleStimmung = c_jcbTeamSpirit.isSelected();
 			} else if (e.getSource() == c_jcbHatStats.getCheckbox()) {
-				c_jpChart.setShow("ls.match.ratingtype.hatstats",
+				c_jpChart.setShow(getLangStr("ls.match.ratingtype.hatstats"),
 						c_jcbHatStats.isSelected());
 				UserParameter.instance().statistikSpieleHatStats = c_jcbHatStats.isSelected();
 			} else if (e.getSource() == c_jcbLoddarStats.getCheckbox()) {
-				c_jpChart.setShow("ls.match.ratingtype.loddarstats",
+				c_jpChart.setShow(getLangStr("ls.match.ratingtype.loddarstats"),
 						c_jcbLoddarStats.isSelected());
 				UserParameter.instance().statistikSpieleLoddarStats = c_jcbLoddarStats
 						.isSelected();
 			} else if (e.getSource() == c_jcbConfidence.getCheckbox()) {
-				c_jpChart.setShow("ls.team.confidence",
+				c_jpChart.setShow(getLangStr("ls.team.confidence"),
 						c_jcbConfidence.isSelected());
 				UserParameter.instance().statistikSpieleSelbstvertrauen = c_jcbConfidence
 						.isSelected();
@@ -549,32 +549,19 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 
 			LinesChartDataModel[] models = new LinesChartDataModel[statistikWerte.length];
 
-			models[0] = new LinesChartDataModel(statistikWerte[0], sumStars, c_jcbRating.isSelected(),
-					Colors.getColor(Colors.COLOR_TEAM_RATING), SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, 0d, true);
-			models[1] = new LinesChartDataModel(statistikWerte[1], "ls.match.ratingsector.midfield", c_jcbMidfield.isSelected(),
-					Colors.getColor(Colors.COLOR_TEAM_MID));
-			models[2] = new LinesChartDataModel(statistikWerte[2], "ls.match.ratingsector.rightdefence", c_jcbRightDefence.isSelected(),
-					Colors.getColor(Colors.COLOR_TEAM_RD));
-			models[3] = new LinesChartDataModel(statistikWerte[3], "ls.match.ratingsector.centraldefence", c_jcbCentralDefence.isSelected(),
-					Colors.getColor(Colors.COLOR_TEAM_CD));
-			models[4] = new LinesChartDataModel(statistikWerte[4], "ls.match.ratingsector.leftdefence", c_jcbRightDefence.isSelected(),
-					Colors.getColor(Colors.COLOR_TEAM_LD));
-			models[5] = new LinesChartDataModel(statistikWerte[5], "ls.match.ratingsector.rightattack", c_jcbRightAttack.isSelected(),
-					Colors.getColor(Colors.COLOR_TEAM_RA));
-			models[6] = new LinesChartDataModel(statistikWerte[6], "ls.match.ratingsector.centralattack", c_jcbCentralAttack.isSelected(),
-					Colors.getColor(Colors.COLOR_TEAM_CA));
-			models[7] = new LinesChartDataModel(statistikWerte[7], "ls.match.ratingsector.leftattack", c_jcbLeftAttack.isSelected(),
-					Colors.getColor(Colors.COLOR_TEAM_LA));
-			models[8] = new LinesChartDataModel(statistikWerte[8], "Gesamtstaerke", c_jcbTotalStrength.isSelected(),
-					Colors.getColor(Colors.COLOR_TEAM_TOTAL_STRENGTH));
-			models[9] = new LinesChartDataModel(statistikWerte[9], "ls.team.teamspirit", c_jcbTeamSpirit.isSelected(),
-					Colors.getColor(Colors.COLOR_TEAM_TS));
-			models[10] = new LinesChartDataModel(statistikWerte[10], "ls.team.confidence", c_jcbConfidence.isSelected(),
-					Colors.getColor(Colors.COLOR_TEAM_CONFIDENCE));
-			models[11] = new LinesChartDataModel(statistikWerte[11], "ls.match.ratingtype.hatstats",
-					c_jcbHatStats.isSelected(), Colors.getColor(Colors.COLOR_TEAM_HATSTATS), SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, 0d, true);
-			models[12] = new LinesChartDataModel(statistikWerte[12], "ls.match.ratingtype.loddarstats", c_jcbLoddarStats.isSelected(),
-					Colors.getColor(Colors.COLOR_TEAM_LODDAR), SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, 0d, true);
+			models[0] = new LinesChartDataModel(statistikWerte[0], sumStars, c_jcbRating.isSelected(), Colors.getColor(Colors.COLOR_TEAM_RATING), SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, 0d, true);
+			models[1] = new LinesChartDataModel(statistikWerte[1], getLangStr("ls.match.ratingsector.midfield"), c_jcbMidfield.isSelected(), Colors.getColor(Colors.COLOR_TEAM_MID));
+			models[2] = new LinesChartDataModel(statistikWerte[2], getLangStr("ls.match.ratingsector.rightdefence"), c_jcbRightDefence.isSelected(), Colors.getColor(Colors.COLOR_TEAM_RD));
+			models[3] = new LinesChartDataModel(statistikWerte[3], getLangStr("ls.match.ratingsector.centraldefence"), c_jcbCentralDefence.isSelected(), Colors.getColor(Colors.COLOR_TEAM_CD));
+			models[4] = new LinesChartDataModel(statistikWerte[4], getLangStr("ls.match.ratingsector.leftdefence"), c_jcbRightDefence.isSelected(), Colors.getColor(Colors.COLOR_TEAM_LD));
+			models[5] = new LinesChartDataModel(statistikWerte[5], getLangStr("ls.match.ratingsector.rightattack"), c_jcbRightAttack.isSelected(), Colors.getColor(Colors.COLOR_TEAM_RA));
+			models[6] = new LinesChartDataModel(statistikWerte[6], getLangStr("ls.match.ratingsector.centralattack"), c_jcbCentralAttack.isSelected(), Colors.getColor(Colors.COLOR_TEAM_CA));
+			models[7] = new LinesChartDataModel(statistikWerte[7], getLangStr("ls.match.ratingsector.leftattack"), c_jcbLeftAttack.isSelected(), Colors.getColor(Colors.COLOR_TEAM_LA));
+			models[8] = new LinesChartDataModel(statistikWerte[8], getLangStr("Gesamtstaerke"), c_jcbTotalStrength.isSelected(), Colors.getColor(Colors.COLOR_TEAM_TOTAL_STRENGTH));
+			models[9] = new LinesChartDataModel(statistikWerte[9], getLangStr("ls.team.teamspirit"), c_jcbTeamSpirit.isSelected(), Colors.getColor(Colors.COLOR_TEAM_TS));
+			models[10] = new LinesChartDataModel(statistikWerte[10], getLangStr("ls.team.confidence"), c_jcbConfidence.isSelected(), Colors.getColor(Colors.COLOR_TEAM_CONFIDENCE));
+			models[11] = new LinesChartDataModel(statistikWerte[11], getLangStr("ls.match.ratingtype.hatstats"), c_jcbHatStats.isSelected(), Colors.getColor(Colors.COLOR_TEAM_HATSTATS), SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, 0d, true);
+			models[12] = new LinesChartDataModel(statistikWerte[12], getLangStr("ls.match.ratingtype.loddarstats"), c_jcbLoddarStats.isSelected(), Colors.getColor(Colors.COLOR_TEAM_LODDAR), SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, 0d, true);
 
 			c_jpChart.setAllValues(models, statistikWerte[13], Helper.DEFAULTDEZIMALFORMAT,
 					getLangStr("Spiele"), null, jcbInscribe.isSelected(), c_jcbHelpLines.isSelected());

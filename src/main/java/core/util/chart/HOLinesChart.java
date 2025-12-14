@@ -87,6 +87,8 @@ public class HOLinesChart implements IChart {
         m_chart.getStyler().setToolTipType(Styler.ToolTipType.yLabels);
         m_chart.getStyler().setDecimalPattern("#0.00");
 
+        m_chart.getStyler().setCursorEnabled(true);
+
         var font = m_chart.getStyler().getCursorFont().deriveFont((float) UserParameter.instance().fontSize);
         m_chart.getStyler().setAnnotationTextFont(font);
         m_chart.getStyler().setToolTipFont(font);

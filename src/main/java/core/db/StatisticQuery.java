@@ -26,7 +26,7 @@ public class StatisticQuery {
 	private static final String getSpielerBewertungSql = "SELECT Bewertung FROM SPIELER WHERE Bewertung>0 AND Datum>=? AND Datum<=? AND SpielerID=? ORDER BY Datum";
 
 	public static double[][] getSpielerDaten4Statistik(int spielerId, int anzahlHRF) {
-		final int anzahlSpalten = 17;
+		final int anzahlSpalten = 16;
 		var exchangeRate = AmountOfMoney.Companion.getExchangeRate().doubleValue();
 
 		double[][] returnWerte = new double[0][0];
@@ -58,7 +58,7 @@ public class StatisticQuery {
 					tempwerte[13] = rs.getDouble("Bewertung") / 2d;
 					tempwerte[14] = rs.getDouble("Loyalty");
 					tempwerte[15] = rs.getTimestamp("Datum").getTime();
-					tempwerte[16] = rs.getDouble("Kondition"); // temporary statistics of stamina without sub to check sub stamina calculation
+//					tempwerte[16] = rs.getDouble("Kondition"); // temporary statistics of stamina without sub to check sub stamina calculation
 
 					//TSI, alle Marktwerte / 1000 teilen
 					if (rs.getTimestamp("Datum").before(DBManager.TSIDATE)) {

@@ -72,47 +72,47 @@ public class ClubStatisticsPanel extends LazyImagePanel {
                 gup.statistikAlleBeschriftung = jcbInscribe.isSelected();
             }
             else if (e.getSource() == jcbAssistantTrainerLevels.getCheckbox()) {
-                oChartPanel.setShow("AssistantTrainerLevel", jcbAssistantTrainerLevels.isSelected());
+                oChartPanel.setShow(getLangStr("ls.module.statistics.club.assistant_trainers_level"), jcbAssistantTrainerLevels.isSelected());
                 gup.statisticsClubAssistantTrainersLevel = jcbAssistantTrainerLevels.isSelected();
             }
             else if (e.getSource() == jcbFinancialDirectorLevels.getCheckbox()) {
-                oChartPanel.setShow("FinancialDirectorLevel", jcbFinancialDirectorLevels.isSelected());
+                oChartPanel.setShow(getLangStr("ls.module.statistics.club.financial_directors_level"), jcbFinancialDirectorLevels.isSelected());
                 gup.statisticsClubFinancialDirectorsLevel = jcbFinancialDirectorLevels.isSelected();
             }
             else if (e.getSource() == jcbFormCoachLevels.getCheckbox()) {
-                oChartPanel.setShow("FormCoachLevel", jcbFormCoachLevels.isSelected());
+                oChartPanel.setShow(getLangStr("ls.module.statistics.club.form_coachs_level"), jcbFormCoachLevels.isSelected());
                 gup.statisticsClubFormCoachsLevel = jcbFormCoachLevels.isSelected();
             }
             else if (e.getSource() == jcbDoctorLevels.getCheckbox()) {
-                oChartPanel.setShow("DoctorLevel", jcbDoctorLevels.isSelected());
+                oChartPanel.setShow(getLangStr("ls.module.statistics.club.doctors_level"), jcbDoctorLevels.isSelected());
                 gup.statisticsClubDoctorsLevel = jcbDoctorLevels.isSelected();
             }
             else if (e.getSource() == jcbSpokePersonLevels.getCheckbox()) {
-                oChartPanel.setShow("SpokespersonLevel", jcbSpokePersonLevels.isSelected());
+                oChartPanel.setShow(getLangStr("ls.module.statistics.club.spokesperson"), jcbSpokePersonLevels.isSelected());
                 gup.statisticsClubSpokePersonsLevel = jcbSpokePersonLevels.isSelected();
             }
             else if (e.getSource() == jcbSportPsychologistLevels.getCheckbox()) {
-                oChartPanel.setShow("SportPsychologistLevel", jcbSportPsychologistLevels.isSelected());
+                oChartPanel.setShow(getLangStr("ls.module.statistics.club.sport_psychologist_levels"), jcbSportPsychologistLevels.isSelected());
                 gup.statisticsClubSportPsychologistLevels = jcbSportPsychologistLevels.isSelected();
             }
             else if (e.getSource() == jcbTacticalAssistantLevels.getCheckbox()) {
-                oChartPanel.setShow("TacticalAssistantLevel", jcbTacticalAssistantLevels.isSelected());
+                oChartPanel.setShow(getLangStr("ls.module.statistics.club.tactical_assistant_levels"), jcbTacticalAssistantLevels.isSelected());
                 gup.statisticsClubTacticalAssistantLevels = jcbTacticalAssistantLevels.isSelected();
             }
             else if (e.getSource() == jcbFanClubSize.getCheckbox()) {
-                oChartPanel.setShow("FanClubSize", jcbFanClubSize.isSelected());
+                oChartPanel.setShow(getLangStr("ls.module.statistics.club.fan_club_size"), jcbFanClubSize.isSelected());
                 gup.statisticsClubFanClubSize = jcbFanClubSize.isSelected();
             }
             else if (e.getSource() == jcbGlobalRanking.getCheckbox()) {
-                oChartPanel.setShow("GlobalRanking", jcbGlobalRanking.isSelected());
+                oChartPanel.setShow(getLangStr("ls.module.statistics.club.global_ranking"), jcbGlobalRanking.isSelected());
                 gup.statisticsClubGlobalRanking = jcbGlobalRanking.isSelected();
             }
             else if (e.getSource() == jcbLeagueRanking.getCheckbox()) {
-                oChartPanel.setShow("LeagueRanking", jcbLeagueRanking.isSelected());
+                oChartPanel.setShow(getLangStr("ls.module.statistics.club.league_ranking"), jcbLeagueRanking.isSelected());
                 gup.statisticsClubLeagueRanking = jcbLeagueRanking.isSelected();
             }
             else if (e.getSource() == jcbPowerRating.getCheckbox()) {
-                oChartPanel.setShow("PowerRating", jcbPowerRating.isSelected());
+                oChartPanel.setShow(getLangStr("ls.module.statistics.club.power_rating"), jcbPowerRating.isSelected());
                 gup.statisticsClubPowerRating = jcbPowerRating.isSelected();
             }
         };
@@ -359,30 +359,30 @@ public class ClubStatisticsPanel extends LazyImagePanel {
             double[][] data = DBManager.instance().getDataForClubStatisticsPanel(nbHRFs);
 
             LinesChartDataModel[] models;
-            models = new LinesChartDataModel[14];
+            models = new LinesChartDataModel[11];
 
             if (data.length > 0) {
-                models[0] = new LinesChartDataModel(data[0], "AssistantTrainerLevel", jcbAssistantTrainerLevels.isSelected(),
+                models[0] = new LinesChartDataModel(data[0], getLangStr("ls.module.statistics.club.assistant_trainers_level"), jcbAssistantTrainerLevels.isSelected(),
                         Colors.getColor(Colors.COLOR_CLUB_ASSISTANT_TRAINERS_LEVEL));
-                models[1] = new LinesChartDataModel(data[1], "FinancialDirectorLevel", jcbFinancialDirectorLevels.isSelected(),
+                models[1] = new LinesChartDataModel(data[1], getLangStr("ls.module.statistics.club.financial_directors_level"), jcbFinancialDirectorLevels.isSelected(),
                         Colors.getColor(Colors.COLOR_CLUB_FINANCIAL_DIRECTORS_LEVEL));
-                models[2] = new LinesChartDataModel(data[2], "FormCoachLevel", jcbFormCoachLevels.isSelected(),
+                models[2] = new LinesChartDataModel(data[2], getLangStr("ls.module.statistics.club.form_coachs_level"), jcbFormCoachLevels.isSelected(),
                         Colors.getColor(Colors.COLOR_CLUB_FORM_COACHS_LEVEL));
-                models[3] = new LinesChartDataModel(data[3], "DoctorLevel", jcbDoctorLevels.isSelected(),
+                models[3] = new LinesChartDataModel(data[3], getLangStr("ls.module.statistics.club.doctors_level"), jcbDoctorLevels.isSelected(),
                         Colors.getColor(Colors.COLOR_CLUB_DOCTORS_LEVEL));
-                models[4] = new LinesChartDataModel(data[4], "SpokespersonLevel", jcbSpokePersonLevels.isSelected(),
+                models[4] = new LinesChartDataModel(data[4], getLangStr("ls.module.statistics.club.spokesperson"), jcbSpokePersonLevels.isSelected(),
                         Colors.getColor(Colors.COLOR_CLUB_SPOKE_PERSONS_LEVEL));
-                models[5] = new LinesChartDataModel(data[5], "SportPsychologistLevel", jcbSportPsychologistLevels.isSelected(),
+                models[5] = new LinesChartDataModel(data[5], getLangStr("ls.module.statistics.club.sport_psychologist_levels"), jcbSportPsychologistLevels.isSelected(),
                         Colors.getColor(Colors.COLOR_CLUB_SPORT_PSYCHOLOGIST_LEVELS));
-                models[6] = new LinesChartDataModel(data[6], "TacticalAssistantLevel", jcbTacticalAssistantLevels.isSelected(),
+                models[6] = new LinesChartDataModel(data[6], getLangStr("ls.module.statistics.club.tactical_assistant_levels"), jcbTacticalAssistantLevels.isSelected(),
                         Colors.getColor(Colors.COLOR_CLUB_TACTICAL_ASSISTANT_LEVELS));
-                models[7] = new LinesChartDataModel(data[7], "FanClubSize", jcbFanClubSize.isSelected(),
+                models[7] = new LinesChartDataModel(data[7], getLangStr("ls.module.statistics.club.fan_club_size"), jcbFanClubSize.isSelected(),
                         Colors.getColor(Colors.COLOR_CLUB_FAN_CLUB_SIZE), 0d, true);
-                models[8] = new LinesChartDataModel(data[8], "GlobalRanking", jcbGlobalRanking.isSelected(),
+                models[8] = new LinesChartDataModel(data[8], getLangStr("ls.module.statistics.club.global_ranking"), jcbGlobalRanking.isSelected(),
                         Colors.getColor(Colors.COLOR_CLUB_GLOBAL_RANKING), SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, 0d, "Y3");
-                models[9] = new LinesChartDataModel(data[9], "LeagueRanking", jcbLeagueRanking.isSelected(),
+                models[9] = new LinesChartDataModel(data[9], getLangStr("ls.module.statistics.club.league_ranking"), jcbLeagueRanking.isSelected(),
                         Colors.getColor(Colors.COLOR_CLUB_LEAGUE_RANKING), SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, 0d, "Y3");
-                models[10] = new LinesChartDataModel(data[10], "PowerRating", jcbPowerRating.isSelected(),
+                models[10] = new LinesChartDataModel(data[10], getLangStr("ls.module.statistics.club.power_rating"), jcbPowerRating.isSelected(),
                         Colors.getColor(Colors.COLOR_CLUB_POWER_RATING), 0d, true);
             }
 

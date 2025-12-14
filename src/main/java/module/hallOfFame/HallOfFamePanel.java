@@ -12,10 +12,6 @@ import module.statistics.Colors;
 import javax.swing.*;
 import java.awt.*;
 import java.util.*;
-import org.jetbrains.letsPlot.*;
-import org.jetbrains.letsPlot.export.*;
-import kotlin.collections.MapsKt;
-import org.jetbrains.letsPlot.intern.Plot;
 
 public class HallOfFamePanel extends JPanel {
     private final HOLinesChart historyChart;
@@ -41,19 +37,6 @@ public class HallOfFamePanel extends JPanel {
         splitPane.setDividerLocation(dividerLocation != null ? dividerLocation : 400);
     }
 
-    private void createPlot(){
-        // Prepare data
-        Map<String, Object> data = new HashMap<>();
-        data.put("x", Arrays.asList(1, 2, 3, 4, 5));
-        data.put("y", Arrays.asList(3, 7, 8, 5, 6));
-
-        // Create plot
-        Plot plot = LetsPlotKt.letsPlot(data)
-                .plus(GeomLine.Companion.line(MapsKt.mapOf("color", "blue")))
-                .plus(GeomPoint.Companion.point(MapsKt.mapOf("size", 4)));
-
-    }
-
     private void refreshHistory() {
 
         var players = this.hallOfFameTable.getSelectedPlayers();
@@ -63,7 +46,11 @@ public class HallOfFamePanel extends JPanel {
                 var exTrainer = hallOfFamePlayer.getExTrainer();
                 chartDataModels.add(new LinesChartDataModel(exTrainer.ratings.stream().mapToDouble(i -> i.coachLevel).toArray(), "CoachLevel", true, Colors.getColor(Colors.COLOR_PLAYER_PM)));
                 chartDataModels.add(new LinesChartDataModel(exTrainer.ratings.stream().mapToDouble(i -> i.leadership).toArray(), "Leadership", true, Colors.getColor(Colors.COLOR_PLAYER_WI)));
-                historyChart.setAllValues(chartDataModels,exTrainer.ratings.stream().mapToDouble(i-> Date.from(i.time.instant).getTime()).toArray() , Helper.DEFAULTDEZIMALFORMAT, TranslationFacility.tr("Wochen"), "", false, true);
+                historyChart.setAllValues(chartDataModels.toArray(new LinesChartDataModel[0]),
+                        exTrainer.ratings.stream().mapToDouble(i-> Date.from(i.time.instant).getTime()).toArray(),
+                        Helper.DEFAULTDEZIMALFORMAT,
+                        TranslationFacility.tr("Wochen"),
+                        "", false, true);
             }
         }
     }
