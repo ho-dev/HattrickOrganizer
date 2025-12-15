@@ -130,10 +130,6 @@ public class HODateTime implements Comparable<HODateTime> {
         return 0L;
     }
 
-    public  static HODateTime fromEpochSecond(long seconds){
-        return new HODateTime(Instant.ofEpochSecond(seconds));
-    }
-
     /**
      * Convert to HT (chpp) string representation
      *

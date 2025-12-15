@@ -15,7 +15,7 @@ import java.util.*;
 
 public class HallOfFamePanel extends JPanel {
     private final HOLinesChart historyChart;
-    private PlayersTable hallOfFameTable;
+    private final PlayersTable hallOfFameTable;
 
     public HallOfFamePanel(){
         setLayout(new BorderLayout());
@@ -43,9 +43,10 @@ public class HallOfFamePanel extends JPanel {
         for (var player : players) {
             var chartDataModels = new ArrayList<LinesChartDataModel>();
             if (player instanceof HallOfFamePlayer hallOfFamePlayer) {
-                var exTrainer = hallOfFamePlayer.getExTrainer();
-                chartDataModels.add(new LinesChartDataModel(exTrainer.ratings.stream().mapToDouble(i -> i.coachLevel).toArray(), player.getShortName() + " " + TranslationFacility.tr("ls.team.coachingskill"), true, Colors.getColor(Colors.COLOR_PLAYER_PM)));
-                chartDataModels.add(new LinesChartDataModel(exTrainer.ratings.stream().mapToDouble(i -> i.leadership).toArray(), "Leadership", true, Colors.getColor(Colors.COLOR_PLAYER_WI)));
+                var exTrainer = hallOfFamePlayer.getHistory();
+                var prefix = player.getShortName() + " ";
+                chartDataModels.add(new LinesChartDataModel(exTrainer.ratings.stream().mapToDouble(i -> i.coachLevel).toArray(), prefix + TranslationFacility.tr("ls.team.coachingskill"), true, Colors.getColor(Colors.COLOR_PLAYER_PM)));
+                chartDataModels.add(new LinesChartDataModel(exTrainer.ratings.stream().mapToDouble(i -> i.leadership).toArray(), prefix + TranslationFacility.tr("ls.player.leadership"), true, Colors.getColor(Colors.COLOR_PLAYER_WI)));
                 historyChart.setAllValues(chartDataModels.toArray(new LinesChartDataModel[0]),
                         exTrainer.ratings.stream().mapToDouble(i-> Date.from(i.time.instant).getTime()).toArray(),
                         Helper.DEFAULTDEZIMALFORMAT,

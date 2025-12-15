@@ -13,11 +13,11 @@ import static core.file.xml.XMLManager.*;
 
 public class HallOfFamePlayer extends Player {
 
-    public static class ExTrainer {
-        HODateTime from;
-        HODateTime to;
+    public static class History {
+        HODateTime trainerFrom;
+        HODateTime trainerTo;
         HODateTime.HODuration getTrainerDuration (){
-            if ( from != null && to != null) return HODateTime.HODuration.between(from, to);
+            if ( trainerFrom != null && trainerTo != null) return HODateTime.HODuration.between(trainerFrom, trainerTo);
             return null;
         }
 
@@ -30,41 +30,41 @@ public class HallOfFamePlayer extends Player {
         List<Rating> ratings = new ArrayList<>();
     }
 
-    private ExTrainer exTrainer;
+    private History history;
 
-    private void loadExTrainer() {
+    private void loadHistory() {
         var history = DBManager.instance().loadPlayerHistory(this.getPlayerId());
-        exTrainer = new ExTrainer();
+        this.history = new History();
         var trainerTime = history.stream().filter(Player::isCoach).toList();
         for ( var historicalPlayer : trainerTime){
-            if (exTrainer.from == null) exTrainer.from = historicalPlayer.getHrfDate();
-            exTrainer.to = historicalPlayer.getHrfDate();
-            var rating = new ExTrainer.Rating();
+            if (this.history.trainerFrom == null) this.history.trainerFrom = historicalPlayer.getHrfDate();
+            this.history.trainerTo = historicalPlayer.getHrfDate();
+            var rating = new History.Rating();
             rating.time = historicalPlayer.getHrfDate();
             rating.coachLevel = historicalPlayer.getCoachSkill();
             rating.leadership = historicalPlayer.getLeadership();
-            exTrainer.ratings.add(rating);
+            this.history.ratings.add(rating);
         }
     }
 
-    public ExTrainer getExTrainer(){
-        if ( exTrainer == null) loadExTrainer();
-        return exTrainer;
+    public History getHistory(){
+        if ( history == null) loadHistory();
+        return history;
     }
 
-    public HODateTime getExTrainerFrom(){
-        getExTrainer();
-        if ( exTrainer.from != null) return exTrainer.from;
+    public HODateTime getTrainerFrom(){
+        getHistory();
+        if ( history.trainerFrom != null) return history.trainerFrom;
         return null;
     }
-    public HODateTime getExTrainerTo(){
-        getExTrainer();
-        if ( exTrainer.to != null) return exTrainer.to;
+    public HODateTime getTrainerTo(){
+        getHistory();
+        if ( history.trainerTo != null) return history.trainerTo;
         return null;
     }
-    public HODateTime.HODuration getExTrainerDuration(){
-        getExTrainer();
-        return exTrainer.getTrainerDuration();
+    public HODateTime.HODuration getTrainerDuration(){
+        getHistory();
+        return history.getTrainerDuration();
     }
 
     /**
@@ -104,7 +104,7 @@ public class HallOfFamePlayer extends Player {
         this.setLastName(xmlValue( root, "LastName"));
         this.setAge(xmlIntValue( root, "Age"));
         this.setNextBirthday(xmlHODateTimeValue(root, "NextBirthday"));
-//        this.setCountryId(xmlIntValue(root, "CountryID"));
+        this.setCountryId(xmlIntValue(root, "CountryID"));
         this.setArrivalDate(xmlHODateTimeValue( root, "ArrivalDate"));
         this.setExpertTypeId(xmlIntValue(root, "ExpertType"));
         this.setHofDate(xmlHODateTimeValue(root, "HofDate"));
