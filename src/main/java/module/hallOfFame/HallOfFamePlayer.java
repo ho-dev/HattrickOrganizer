@@ -13,58 +13,39 @@ import static core.file.xml.XMLManager.*;
 
 public class HallOfFamePlayer extends Player {
 
-    public static class History {
         HODateTime trainerFrom;
         HODateTime trainerTo;
-        HODateTime.HODuration getTrainerDuration (){
-            if ( trainerFrom != null && trainerTo != null) return HODateTime.HODuration.between(trainerFrom, trainerTo);
-            return null;
-        }
 
-        static class Rating {
-            HODateTime time;
-            int coachLevel;
-            int leadership;
-        }
-
-        List<Rating> ratings = new ArrayList<>();
-    }
-
-    private History history;
+        List<Player> history = null;
 
     private void loadHistory() {
-        var history = DBManager.instance().loadPlayerHistory(this.getPlayerId());
-        this.history = new History();
+        this.history = DBManager.instance().loadPlayerHistory(this.getPlayerId());
         var trainerTime = history.stream().filter(Player::isCoach).toList();
         for ( var historicalPlayer : trainerTime){
-            if (this.history.trainerFrom == null) this.history.trainerFrom = historicalPlayer.getHrfDate();
-            this.history.trainerTo = historicalPlayer.getHrfDate();
-            var rating = new History.Rating();
-            rating.time = historicalPlayer.getHrfDate();
-            rating.coachLevel = historicalPlayer.getCoachSkill();
-            rating.leadership = historicalPlayer.getLeadership();
-            this.history.ratings.add(rating);
+            if (this.trainerFrom == null) this.trainerFrom = historicalPlayer.getHrfDate();
+            this.trainerTo = historicalPlayer.getHrfDate();
         }
     }
 
-    public History getHistory(){
+    public List<Player> getHistory(){
         if ( history == null) loadHistory();
         return history;
     }
 
     public HODateTime getTrainerFrom(){
         getHistory();
-        if ( history.trainerFrom != null) return history.trainerFrom;
+        if (trainerFrom != null) return trainerFrom;
         return null;
     }
     public HODateTime getTrainerTo(){
         getHistory();
-        if ( history.trainerTo != null) return history.trainerTo;
+        if ( trainerTo != null) return trainerTo;
         return null;
     }
     public HODateTime.HODuration getTrainerDuration(){
         getHistory();
-        return history.getTrainerDuration();
+        if ( trainerTo != null && trainerFrom != null ) return HODateTime.HODuration.between(trainerFrom, trainerTo);
+        return null;
     }
 
     /**

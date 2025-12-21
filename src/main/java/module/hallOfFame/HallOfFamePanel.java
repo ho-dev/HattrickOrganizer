@@ -1,8 +1,10 @@
 package module.hallOfFame;
 
+import core.constants.player.PlayerSkill;
 import core.gui.comp.table.PlayersTable;
 import core.gui.model.UserColumnController;
 import core.model.TranslationFacility;
+import core.model.player.Player;
 import core.module.config.ModuleConfig;
 import core.util.Helper;
 import core.util.chart.HOLinesChart;
@@ -26,7 +28,7 @@ public class HallOfFamePanel extends JPanel {
         splitPane.setLeftComponent(hallOfFameTable.getContainerComponent());
         var historyPanel = new JPanel(new BorderLayout());
         historyPanel.add(new JLabel("History"), BorderLayout.NORTH);
-        historyChart  = new HOLinesChart(false, "skill", null,null, null, 0., 9. );
+        historyChart  = new HOLinesChart(false, "skill", null,null, null, 0., 21. );
         historyPanel.add(historyChart.getPanel());
         splitPane.setRightComponent(historyPanel);
 
@@ -43,12 +45,13 @@ public class HallOfFamePanel extends JPanel {
         for (var player : players) {
             var chartDataModels = new ArrayList<LinesChartDataModel>();
             if (player instanceof HallOfFamePlayer hallOfFamePlayer) {
-                var exTrainer = hallOfFamePlayer.getHistory();
+                var history = hallOfFamePlayer.getHistory();
                 var prefix = player.getShortName() + " ";
-                chartDataModels.add(new LinesChartDataModel(exTrainer.ratings.stream().mapToDouble(i -> i.coachLevel).toArray(), prefix + TranslationFacility.tr("ls.team.coachingskill"), true, Colors.getColor(Colors.COLOR_PLAYER_PM)));
-                chartDataModels.add(new LinesChartDataModel(exTrainer.ratings.stream().mapToDouble(i -> i.leadership).toArray(), prefix + TranslationFacility.tr("ls.player.leadership"), true, Colors.getColor(Colors.COLOR_PLAYER_WI)));
+                chartDataModels.add(new LinesChartDataModel(history.stream().mapToDouble(Player::getCoachLevel).boxed().toArray(Double[]::new), prefix + TranslationFacility.tr("ls.team.coachingskill"), true, Colors.getColor(Colors.COLOR_CLUB_FORM_COACHS_LEVEL)));
+                chartDataModels.add(new LinesChartDataModel(history.stream().mapToDouble(Player::getLeadership).boxed().toArray(Double[]::new), prefix + TranslationFacility.tr("ls.player.leadership"), true, Colors.getColor(Colors.COLOR_PLAYER_LEADERSHIP)));
+                chartDataModels.add(new LinesChartDataModel(history.stream().mapToDouble(i->i.getSkillValue(PlayerSkill.PLAYMAKING)).boxed().toArray(Double[]::new), prefix + TranslationFacility.tr("ls.player.playmaking"), true, Colors.getColor(Colors.COLOR_PLAYER_PM)));
                 historyChart.setAllValues(chartDataModels.toArray(new LinesChartDataModel[0]),
-                        exTrainer.ratings.stream().mapToDouble(i-> Date.from(i.time.instant).getTime()).toArray(),
+                        history.stream().mapToDouble(i-> Date.from(i.getHrfDate().instant).getTime()).boxed().toArray(Double[]::new),
                         Helper.DEFAULTDEZIMALFORMAT,
                         TranslationFacility.tr("Wochen"),
                         "", false, true);
