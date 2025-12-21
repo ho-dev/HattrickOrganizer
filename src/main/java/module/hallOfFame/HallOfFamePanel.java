@@ -47,11 +47,11 @@ public class HallOfFamePanel extends JPanel {
             if (player instanceof HallOfFamePlayer hallOfFamePlayer) {
                 var history = hallOfFamePlayer.getHistory();
                 var prefix = player.getShortName() + " ";
-                chartDataModels.add(new LinesChartDataModel(history.stream().mapToDouble(Player::getCoachLevel).boxed().toArray(Double[]::new), prefix + TranslationFacility.tr("ls.team.coachingskill"), true, Colors.getColor(Colors.COLOR_CLUB_FORM_COACHS_LEVEL)));
-                chartDataModels.add(new LinesChartDataModel(history.stream().mapToDouble(Player::getLeadership).boxed().toArray(Double[]::new), prefix + TranslationFacility.tr("ls.player.leadership"), true, Colors.getColor(Colors.COLOR_PLAYER_LEADERSHIP)));
-                chartDataModels.add(new LinesChartDataModel(history.stream().mapToDouble(i->i.getSkillValue(PlayerSkill.PLAYMAKING)).boxed().toArray(Double[]::new), prefix + TranslationFacility.tr("ls.player.playmaking"), true, Colors.getColor(Colors.COLOR_PLAYER_PM)));
+                chartDataModels.add(new LinesChartDataModel(history.stream().mapToDouble(Player::getCoachSkill).toArray(), prefix + TranslationFacility.tr("ls.team.coachingskill"), true, Colors.getColor(Colors.COLOR_CLUB_FORM_COACHS_LEVEL)));
+                chartDataModels.add(new LinesChartDataModel(history.stream().mapToDouble(Player::getLeadership).toArray(), prefix + TranslationFacility.tr("ls.player.leadership"), true, Colors.getColor(Colors.COLOR_PLAYER_LEADERSHIP)));
+                chartDataModels.add(new LinesChartDataModel(history.stream().mapToDouble(i->i.getSkillValue(PlayerSkill.PLAYMAKING)).toArray(), prefix + TranslationFacility.tr("ls.player.playmaking"), true, Colors.getColor(Colors.COLOR_PLAYER_PM)));
                 historyChart.setAllValues(chartDataModels.toArray(new LinesChartDataModel[0]),
-                        history.stream().mapToDouble(i-> Date.from(i.getHrfDate().instant).getTime()).boxed().toArray(Double[]::new),
+                        history.stream().mapToDouble(i-> Date.from(i.getHrfDate().instant).getTime()).toArray(),
                         Helper.DEFAULTDEZIMALFORMAT,
                         TranslationFacility.tr("Wochen"),
                         "", false, true);
