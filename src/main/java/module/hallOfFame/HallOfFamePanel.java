@@ -40,20 +40,29 @@ public class HallOfFamePanel extends JPanel {
     }
 
     private void refreshHistory() {
-
+        this.historyChart.clearAllPlots();
         var players = this.hallOfFameTable.getSelectedPlayers();
         for (var player : players) {
-            var chartDataModels = new ArrayList<LinesChartDataModel>();
             if (player instanceof HallOfFamePlayer hallOfFamePlayer) {
                 var history = hallOfFamePlayer.getHistory();
                 var prefix = player.getShortName() + " ";
-                chartDataModels.add(new LinesChartDataModel(history.stream().mapToDouble(Player::getCoachSkill).toArray(), prefix + TranslationFacility.tr("ls.team.coachingskill"), true, Colors.getColor(Colors.COLOR_CLUB_FORM_COACHS_LEVEL)));
+                var exTrainer = history.stream().filter(i->i.getCoachSkill()>0).toList();
+                if (!exTrainer.isEmpty()) {
+                    var exTrainerChartDataModels = new ArrayList<LinesChartDataModel>();
+                    exTrainerChartDataModels.add(new LinesChartDataModel(exTrainer.stream().mapToDouble(Player::getCoachSkill).toArray(), prefix + TranslationFacility.tr("ls.team.coachingskill"), true, Colors.getColor(Colors.COLOR_CLUB_FORM_COACHS_LEVEL)));
+                    this.historyChart.setAllValues(exTrainerChartDataModels.toArray(new LinesChartDataModel[0]),
+                            exTrainer.stream().mapToDouble(i -> Date.from(i.getHrfDate().instant).getTime()).toArray(),
+                            Helper.DEFAULTDEZIMALFORMAT,
+                            TranslationFacility.tr("Datum"),
+                            "", false, true);
+                }
+                var chartDataModels = new ArrayList<LinesChartDataModel>();
                 chartDataModels.add(new LinesChartDataModel(history.stream().mapToDouble(Player::getLeadership).toArray(), prefix + TranslationFacility.tr("ls.player.leadership"), true, Colors.getColor(Colors.COLOR_PLAYER_LEADERSHIP)));
-                chartDataModels.add(new LinesChartDataModel(history.stream().mapToDouble(i->i.getSkillValue(PlayerSkill.PLAYMAKING)).toArray(), prefix + TranslationFacility.tr("ls.player.playmaking"), true, Colors.getColor(Colors.COLOR_PLAYER_PM)));
-                historyChart.setAllValues(chartDataModels.toArray(new LinesChartDataModel[0]),
+                chartDataModels.add(new LinesChartDataModel(history.stream().mapToDouble(i->i.getSkillValue(PlayerSkill.PLAYMAKING)).toArray(), prefix + TranslationFacility.tr("ls.player.skill.playmaking"), true, Colors.getColor(Colors.COLOR_PLAYER_PM)));
+                this.historyChart.setAllValues(chartDataModels.toArray(new LinesChartDataModel[0]),
                         history.stream().mapToDouble(i-> Date.from(i.getHrfDate().instant).getTime()).toArray(),
                         Helper.DEFAULTDEZIMALFORMAT,
-                        TranslationFacility.tr("Wochen"),
+                        TranslationFacility.tr("Datum"),
                         "", false, true);
             }
         }

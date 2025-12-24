@@ -225,8 +225,17 @@ public class HOLinesChart implements IChart {
         m_panel.repaint();
     }
 
-
     public final void clearAllPlots(){
+        // Remove all series from chart
+        var seriesNames = new ArrayList<String>();
+        var series = this.m_chart.getSeriesMap();
+        for ( var s : series.keySet()){
+            seriesNames.add(s);
+        }
+        for (var s: seriesNames){
+            this.m_chart.removeSeries(s);
+        }
+
         if (m_models != null){
             for (LinesChartDataModel m_model : m_models) {
                 if (m_model != null) {
@@ -313,6 +322,3 @@ public class HOLinesChart implements IChart {
 
     }
 }
-
-
-

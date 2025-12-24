@@ -5,8 +5,6 @@ import core.db.DBManager;
 import core.model.player.Player;
 import core.util.HODateTime;
 import org.w3c.dom.Element;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import static core.file.xml.XMLManager.*;
