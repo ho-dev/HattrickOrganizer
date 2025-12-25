@@ -23,6 +23,7 @@ public class HallOfFamePanel extends JPanel {
         setLayout(new BorderLayout());
         var tableModel = UserColumnController.instance().getHallOfFameTableModel();
         this.hallOfFameTable = new PlayersTable(tableModel);
+        this.hallOfFameTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         this.hallOfFameTable.addListSelectionListener(e -> refreshHistory());
         var splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false);
         splitPane.setLeftComponent(hallOfFameTable.getContainerComponent());

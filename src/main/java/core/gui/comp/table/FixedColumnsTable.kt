@@ -228,6 +228,11 @@ open class FixedColumnsTable @JvmOverloads constructor(
         fixed?.addRowSelectionInterval(rowIndex0, rowIndex1)
     }
 
+    override  fun  setSelectionMode(selectionMode : Int) {
+        super.setSelectionMode(selectionMode)
+        fixed?.setSelectionMode(selectionMode)
+    }
+
     /**
      * The provided renderer is set to both internal tables
      * @param columnClass  set the default cell renderer for this columnClass
