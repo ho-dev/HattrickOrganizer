@@ -16,7 +16,7 @@ import java.awt.*;
 import java.util.*;
 
 public class HallOfFamePanel extends JPanel {
-    private final HOLinesChart historyChart;
+    private final JPanel historyPanel = new JPanel(new BorderLayout());
     private final PlayersTable hallOfFameTable;
 
     public HallOfFamePanel(){
@@ -26,10 +26,7 @@ public class HallOfFamePanel extends JPanel {
         this.hallOfFameTable.addListSelectionListener(e -> refreshHistory());
         var splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, false);
         splitPane.setLeftComponent(hallOfFameTable.getContainerComponent());
-        var historyPanel = new JPanel(new BorderLayout());
         historyPanel.add(new JLabel("History"), BorderLayout.NORTH);
-        historyChart  = new HOLinesChart(false, "skill", null,null, null, 0., 21. );
-        historyPanel.add(historyChart.getPanel());
         splitPane.setRightComponent(historyPanel);
 
         add(splitPane, BorderLayout.CENTER);
@@ -37,10 +34,16 @@ public class HallOfFamePanel extends JPanel {
 
         var dividerLocation = ModuleConfig.instance().getInteger("HallOfFamePanel.VerticalSplitPosition");
         splitPane.setDividerLocation(dividerLocation != null ? dividerLocation : 400);
+        refreshHistory();
     }
 
     private void refreshHistory() {
-        this.historyChart.clearAllPlots();
+        // Remove current chart
+        var currentChart = ((BorderLayout)historyPanel.getLayout()).getLayoutComponent(BorderLayout.CENTER);
+        if ( currentChart != null){ this.historyPanel.remove(currentChart);}
+        // Create and add new chart
+        var historyChart  = new HOLinesChart(false, "skill", null,null, null, 0., 21. );
+        this.historyPanel.add(historyChart.getPanel(), BorderLayout.CENTER);
         var players = this.hallOfFameTable.getSelectedPlayers();
         for (var player : players) {
             if (player instanceof HallOfFamePlayer hallOfFamePlayer) {
@@ -50,7 +53,7 @@ public class HallOfFamePanel extends JPanel {
                 if (!exTrainer.isEmpty()) {
                     var exTrainerChartDataModels = new ArrayList<LinesChartDataModel>();
                     exTrainerChartDataModels.add(new LinesChartDataModel(exTrainer.stream().mapToDouble(Player::getCoachSkill).toArray(), prefix + TranslationFacility.tr("ls.team.coachingskill"), true, Colors.getColor(Colors.COLOR_CLUB_FORM_COACHS_LEVEL)));
-                    this.historyChart.setAllValues(exTrainerChartDataModels.toArray(new LinesChartDataModel[0]),
+                    historyChart.setAllValues(exTrainerChartDataModels.toArray(new LinesChartDataModel[0]),
                             exTrainer.stream().mapToDouble(i -> Date.from(i.getHrfDate().instant).getTime()).toArray(),
                             Helper.DEFAULTDEZIMALFORMAT,
                             TranslationFacility.tr("Datum"),
@@ -59,13 +62,15 @@ public class HallOfFamePanel extends JPanel {
                 var chartDataModels = new ArrayList<LinesChartDataModel>();
                 chartDataModels.add(new LinesChartDataModel(history.stream().mapToDouble(Player::getLeadership).toArray(), prefix + TranslationFacility.tr("ls.player.leadership"), true, Colors.getColor(Colors.COLOR_PLAYER_LEADERSHIP)));
                 chartDataModels.add(new LinesChartDataModel(history.stream().mapToDouble(i->i.getSkillValue(PlayerSkill.PLAYMAKING)).toArray(), prefix + TranslationFacility.tr("ls.player.skill.playmaking"), true, Colors.getColor(Colors.COLOR_PLAYER_PM)));
-                this.historyChart.setAllValues(chartDataModels.toArray(new LinesChartDataModel[0]),
+                historyChart.setAllValues(chartDataModels.toArray(new LinesChartDataModel[0]),
                         history.stream().mapToDouble(i-> Date.from(i.getHrfDate().instant).getTime()).toArray(),
                         Helper.DEFAULTDEZIMALFORMAT,
                         TranslationFacility.tr("Datum"),
                         "", false, true);
             }
         }
+        historyPanel.revalidate();
+        historyPanel.repaint();
     }
 
     public void storeUserSettings() {

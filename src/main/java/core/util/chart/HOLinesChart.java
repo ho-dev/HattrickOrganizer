@@ -89,7 +89,7 @@ public class HOLinesChart implements IChart {
         m_chart.getStyler().setDecimalPattern("#0.00");
 
         m_chart.getStyler().setCursorEnabled(true);
-        m_chart.getStyler().setCustomCursorXDataFormattingFunction(x->  toDatetimeString(x));
+        m_chart.getStyler().setCustomCursorXDataFormattingFunction(this::toDatetimeString);
 
         var font = m_chart.getStyler().getCursorFont().deriveFont((float) UserParameter.instance().fontSize);
         m_chart.getStyler().setAnnotationTextFont(font);
