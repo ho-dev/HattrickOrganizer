@@ -83,9 +83,9 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
          */
         private fun getCurrencyFormatter(): NumberFormat {
             if (this.currencyFormatter == null) {
-                val countryId = currencyCountryId.getIntValue()
+                val countryId = currencyCountryId.getValue()
                 if (countryId != null) {
-                    val worldDetailLeague = WorldDetailsManager.instance().getWorldDetailLeagueByCountryId(countryId)
+                    val worldDetailLeague = WorldDetailsManager.instance().getWorldDetailLeagueByCountryId(countryId.toInt())
                     for (locale in NumberFormat.getAvailableLocales()) {
                         val ret = NumberFormat.getCurrencyInstance(locale)
                         if (ret.currency.getSymbol().equals(worldDetailLeague.currencyName) || locale.country.equals(worldDetailLeague.countryCode)) {
@@ -104,16 +104,16 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
          */
          fun getExchangeRate(): BigDecimal {
             if (exchangeRate == null) {
-                var countryId = currencyCountryId.getIntValue()
+                var countryId = currencyCountryId.getValue()
                 if ( countryId == null){
                     val worldDetailLeague = WorldDetailLeague.getWorldDetailsLeagueOfPremierTeam()
                     if (worldDetailLeague != null){
-                        countryId = worldDetailLeague.countryId
-                        currencyCountryId.setIntValue(countryId)
+                        countryId = Integer.valueOf(worldDetailLeague.countryId) as Integer?
+                        currencyCountryId.setValue(countryId?.toInt() ?: 0)
                     }
                 }
                 if (countryId != null) {
-                    val worldDetailLeague = WorldDetailsManager.instance().getWorldDetailLeagueByCountryId(countryId)
+                    val worldDetailLeague = WorldDetailsManager.instance().getWorldDetailLeagueByCountryId(countryId.toInt())
                     if ( worldDetailLeague != null) {
                         exchangeRate = BigDecimal.valueOf(worldDetailLeague.currencyRate)
                     }
@@ -132,7 +132,7 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
                 val countryCode = inCurrencyInfo.substringAfter("(").substringBefore(")")
                 for (country in WorldDetailsManager.instance().leagues){
                     if ( country.countryCode.equals(countryCode)){
-                        currencyCountryId.setIntValue(country.countryId)
+                        currencyCountryId.setValue(country.countryId)
                         currencyFormatter = null
                         exchangeRate = null
                         return true
@@ -146,7 +146,7 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
          * Get a display string of the current currency setting.
          */
         fun getSelectedCurrencyCode(): String? {
-            val worldDetailLeague = WorldDetailsManager.instance().getWorldDetailLeagueByCountryId(currencyCountryId.getIntValue())
+            val worldDetailLeague = WorldDetailsManager.instance().getWorldDetailLeagueByCountryId(currencyCountryId.getValue()?.toInt())
             if (worldDetailLeague != null) {
                 return getCurrencyInfo(worldDetailLeague)
             }
@@ -167,7 +167,8 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
          * Get the currency name (symbol) of current setting
          */
         fun getCurrencyName() : String {
-            val worldDetailLeague = WorldDetailsManager.instance().getWorldDetailLeagueByCountryId(currencyCountryId.getIntValue())
+            val worldDetailLeague = WorldDetailsManager.instance().getWorldDetailLeagueByCountryId(currencyCountryId.getValue()
+                ?.toInt())
             if (worldDetailLeague != null) {
                 return worldDetailLeague.currencyName
             }

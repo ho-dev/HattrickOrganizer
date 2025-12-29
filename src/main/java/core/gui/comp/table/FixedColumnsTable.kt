@@ -152,12 +152,12 @@ open class FixedColumnsTable @JvmOverloads constructor(
             splitPane.dividerSize = 2
             if (width == 0) width = 60
             this.dividerLocation = HOConfigurationIntParameter("TableDividerLocation_" + tableModel.id, width)
-            splitPane.dividerLocation = dividerLocation?.getIntValue()!!
+            splitPane.dividerLocation = dividerLocation?.getValue()!!.toInt()
             splitPane.addPropertyChangeListener { evt: PropertyChangeEvent ->
                 val propertyName = evt.propertyName
                 if (propertyName == "dividerLocation") {
                     val pane = evt.source as JSplitPane
-                    dividerLocation!!.setIntValue(pane.dividerLocation)
+                    dividerLocation!!.setValue(pane.dividerLocation)
                 }
             }
             containerComponent = JPanel()
@@ -172,6 +172,7 @@ open class FixedColumnsTable @JvmOverloads constructor(
             containerComponent.add(JScrollPane(this))
         }
     }
+
 
     /**
      * Show the horizontal scroll bar of the scroll pane when the other horizontal scroll bar appeared in case of pane resizing
