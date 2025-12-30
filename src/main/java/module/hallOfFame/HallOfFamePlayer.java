@@ -168,7 +168,7 @@ public class HallOfFamePlayer extends Player {
 
     /**
      * Set player age
-     * @param hofAge
+     * @param hofAge int
      */
     public void setHofAge(int hofAge) {
         this.hofAge = hofAge;
