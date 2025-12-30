@@ -69,7 +69,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 	@Override
 	protected void update() {
 		initSpielerCB();
-		initStatistik();
+		initStatistic();
 	}
 
 	@Override
@@ -77,7 +77,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		initComponents();
 		initSpielerCB();
 		addListeners();
-		initStatistik();
+		initStatistic();
 		setNeedsRefresh(false);
 		registerRefreshable(true);
 	}
@@ -94,7 +94,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 
 		jcbPlayer.addItemListener(e -> {
 			if (e.getStateChange() == ItemEvent.SELECTED) {
-				initStatistik();
+				initStatistic();
 			}
 		});
 
@@ -106,56 +106,56 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 				oChartPanel.setLabelling(jcbInscribe.isSelected());
 				UserParameter.instance().statistikAlleBeschriftung = jcbInscribe.isSelected();
 			} else if (e.getSource() == jcbLeadership.getCheckbox()) {
-				oChartPanel.setShow("ls.player.leadership", jcbLeadership.isSelected());
+				oChartPanel.setShow(getLangStr("ls.player.leadership"), jcbLeadership.isSelected());
 				UserParameter.instance().statistikFuehrung = jcbLeadership.isSelected();
 			} else if (e.getSource() == jcbExperience.getCheckbox()) {
-				oChartPanel.setShow("ls.player.experience", jcbExperience.isSelected());
+				oChartPanel.setShow(getLangStr("ls.player.experience"), jcbExperience.isSelected());
 				UserParameter.instance().statistikErfahrung = jcbExperience.isSelected();
 			} else if (e.getSource() == jcbLoyalty.getCheckbox()) {
-				oChartPanel.setShow("ls.player.loyalty", jcbLoyalty.isSelected());
+				oChartPanel.setShow(getLangStr("ls.player.loyalty"), jcbLoyalty.isSelected());
 				UserParameter.instance().statistikLoyalty = jcbLoyalty.isSelected();
 			} else if (e.getSource() == jcbForm.getCheckbox()) {
-				oChartPanel.setShow("ls.player.form", jcbForm.isSelected());
+				oChartPanel.setShow(getLangStr("ls.player.form"), jcbForm.isSelected());
 				UserParameter.instance().statistikForm = jcbForm.isSelected();
 			} else if (e.getSource() == jcbStamina.getCheckbox()) {
-				oChartPanel.setShow("ls.player.skill.stamina",
+				oChartPanel.setShow(getLangStr("ls.player.skill.stamina"),
 						jcbStamina.isSelected());
 				UserParameter.instance().statistikKondition = jcbStamina.isSelected();
 			} else if (e.getSource() == jcbKeeper.getCheckbox()) {
-				oChartPanel.setShow("ls.player.skill.keeper", jcbKeeper.isSelected());
+				oChartPanel.setShow(getLangStr("ls.player.skill.keeper"), jcbKeeper.isSelected());
 				UserParameter.instance().statistikTorwart = jcbKeeper.isSelected();
 			} else if (e.getSource() == jcbDefending.getCheckbox()) {
-				oChartPanel.setShow("ls.player.skill.defending",
+				oChartPanel.setShow(getLangStr("ls.player.skill.defending"),
 						jcbDefending.isSelected());
 				UserParameter.instance().statistikVerteidigung = jcbDefending.isSelected();
 			} else if (e.getSource() == jcbPlaymaking.getCheckbox()) {
-				oChartPanel.setShow("ls.player.skill.playmaking",
+				oChartPanel.setShow(getLangStr("ls.player.skill.playmaking"),
 						jcbPlaymaking.isSelected());
 				UserParameter.instance().statistikSpielaufbau = jcbPlaymaking.isSelected();
 			} else if (e.getSource() == jcbPass.getCheckbox()) {
-				oChartPanel.setShow("ls.player.skill.passing",
+				oChartPanel.setShow(getLangStr("ls.player.skill.passing"),
 						jcbPass.isSelected());
 				UserParameter.instance().statistikPasspiel = jcbPass.isSelected();
 			} else if (e.getSource() == jcbWing.getCheckbox()) {
-				oChartPanel.setShow("ls.player.skill.winger", jcbWing.isSelected());
+				oChartPanel.setShow(getLangStr("ls.player.skill.winger"), jcbWing.isSelected());
 				UserParameter.instance().statistikFluegel = jcbWing.isSelected();
 			} else if (e.getSource() == jcbScoring.getCheckbox()) {
-				oChartPanel.setShow("ls.player.skill.scoring",
+				oChartPanel.setShow(getLangStr("ls.player.skill.scoring"),
 						jcbScoring.isSelected());
 				UserParameter.instance().statistikTorschuss = jcbScoring.isSelected();
 			} else if (e.getSource() == jcbSetPieces.getCheckbox()) {
-				oChartPanel.setShow("ls.player.skill.setpieces",
+				oChartPanel.setShow(getLangStr("ls.player.skill.setpieces"),
 						jcbSetPieces.isSelected());
 				UserParameter.instance().statistikStandards = jcbSetPieces.isSelected();
 			} else if (e.getSource() == jcbRating.getCheckbox()) {
-				oChartPanel.setShow("RecapPanel.Stars", jcbRating.isSelected());
+				oChartPanel.setShow(getLangStr("RecapPanel.Stars"), jcbRating.isSelected());
 				UserParameter.instance().statistikBewertung = jcbRating.isSelected();
 			} else if (e.getSource() == jcbTSI.getCheckbox()) {
-				oChartPanel.setShow("Marktwert", jcbTSI.isSelected());
+				oChartPanel.setShow(getLangStr("Marktwert"), jcbTSI.isSelected());
 				UserParameter.instance().statistikSpielerFinanzenMarktwert = jcbTSI
 						.isSelected();
 			} else if (e.getSource() == jcbSalary.getCheckbox()) {
-				oChartPanel.setShow("ls.player.wage", jcbSalary.isSelected());
+				oChartPanel.setShow(getLangStr("ls.player.wage"), jcbSalary.isSelected());
 				UserParameter.instance().statistikSpielerFinanzenGehalt = jcbSalary
 						.isSelected();
 			}
@@ -422,7 +422,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		initSpielerCB();
 		if ( selection != null){
 			jcbPlayer.setSelectedItem(selection); // reset selection
-			initStatistik();
+			initStatistic();
 		}
 	}
 
@@ -460,7 +460,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		jcbPlayer.setSelectedItem(null);
 	}
 
-	private void initStatistik() {
+	private void initStatistic() {
 		try {
 			int anzahlHRF = Integer.parseInt(jtfNbWeeks.getText());
 
@@ -475,71 +475,30 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 				final double[][] statistikWerte = DBManager.instance().getSpielerDaten4Statistik(
 						((PlayerCBItem) jcbPlayer.getSelectedItem()).getPlayer()
 								.getPlayerId(), anzahlHRF);
-				final LinesChartDataModel[] models = new LinesChartDataModel[statistikWerte.length];
+				final LinesChartDataModel[] models = new LinesChartDataModel[statistikWerte.length-1];
 
-				if (statistikWerte.length > 0) {
-					double maxTSI = Helper.getMaxValue(statistikWerte[0]);
-					double maxWage = Helper.getMaxValue(statistikWerte[1]);
+                double maxTSI = Helper.getMaxValue(statistikWerte[0]);
+                double maxWage = Helper.getMaxValue(statistikWerte[1]);
 
-					//   TSI =========================================================================
-					models[0] = new LinesChartDataModel(statistikWerte[0], "Marktwert", jcbTSI.isSelected(), Colors.getColor(Colors.COLOR_PLAYER_TSI),
-							SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, 19/maxTSI, true);
-
-					models[1] = new LinesChartDataModel(statistikWerte[1], "ls.player.wage", jcbSalary.isSelected(), Colors.getColor(Colors.COLOR_PLAYER_WAGE),
-
-							SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND,  16/maxWage, true);
-
-					models[2] = new LinesChartDataModel(statistikWerte[2], "ls.player.leadership",
-							jcbLeadership.isSelected(),
-
-							Colors.getColor(Colors.COLOR_PLAYER_LEADERSHIP));
-					models[3] = new LinesChartDataModel(statistikWerte[3], "ls.player.experience",
-							jcbExperience.isSelected(),
-							Colors.getColor(Colors.COLOR_PLAYER_XP));
-					models[4] = new LinesChartDataModel(statistikWerte[4], "ls.player.form",
-							jcbForm.isSelected(), Colors.getColor(Colors.COLOR_PLAYER_FORM));
-					models[5] = new LinesChartDataModel(statistikWerte[5], "ls.player.skill.stamina",
-							jcbStamina.isSelected(),
-							Colors.getColor(Colors.COLOR_PLAYER_STAMINA));
-
-					models[15] = new LinesChartDataModel(statistikWerte[16], "ls.player.stamina",
-							jcbStamina.isSelected(),
-							Colors.getColor(Colors.COLOR_PLAYER_GK));
-
-					models[6] = new LinesChartDataModel(statistikWerte[6], "ls.player.skill.keeper",
-							jcbKeeper.isSelected(),
-							Colors.getColor(Colors.COLOR_PLAYER_GK));
-					models[7] = new LinesChartDataModel(statistikWerte[7], "ls.player.skill.defending",
-							jcbDefending.isSelected(),
-							Colors.getColor(Colors.COLOR_PLAYER_DE));
-					models[8] = new LinesChartDataModel(statistikWerte[8], "ls.player.skill.playmaking",
-							jcbPlaymaking.isSelected(),
-							Colors.getColor(Colors.COLOR_PLAYER_PM));
-					models[9] = new LinesChartDataModel(statistikWerte[9], "ls.player.skill.passing",
-							jcbPass.isSelected(),
-							Colors.getColor(Colors.COLOR_PLAYER_PS));
-					models[10] = new LinesChartDataModel(statistikWerte[10], "ls.player.skill.winger",
-							jcbWing.isSelected(),
-							Colors.getColor(Colors.COLOR_PLAYER_WI));
-					models[11] = new LinesChartDataModel(statistikWerte[11], "ls.player.skill.scoring",
-							jcbScoring.isSelected(),
-							Colors.getColor(Colors.COLOR_PLAYER_SC));
-					models[12] = new LinesChartDataModel(statistikWerte[12],
-							"ls.player.skill.setpieces", jcbSetPieces.isSelected(),
-							Colors.getColor(Colors.COLOR_PLAYER_SP));
-					models[13] = new LinesChartDataModel(statistikWerte[13], "RecapPanel.Stars",
-							jcbRating.isSelected(),
-							Colors.getColor(Colors.COLOR_PLAYER_RATING));
-					models[14] = new LinesChartDataModel(statistikWerte[14], "ls.player.loyalty",
-							jcbLoyalty.isSelected(),
-							Colors.getColor(Colors.COLOR_PLAYER_LOYALTY));
-				}
-
-				oChartPanel.setAllValues(models, statistikWerte[15], format, TranslationFacility.tr("Wochen"), "",
-						jcbInscribe.isSelected(), jcbHelpLines.isSelected());
+                //   TSI =========================================================================
+                models[0] = new LinesChartDataModel(statistikWerte[0], getLangStr("Marktwert"), jcbTSI.isSelected(), Colors.getColor(Colors.COLOR_PLAYER_TSI), SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND, 19/maxTSI, true);
+                models[1] = new LinesChartDataModel(statistikWerte[1], getLangStr("ls.player.wage"), jcbSalary.isSelected(), Colors.getColor(Colors.COLOR_PLAYER_WAGE), SeriesLines.DASH_DASH, SeriesMarkers.DIAMOND,  16/maxWage, true);
+                models[2] = new LinesChartDataModel(statistikWerte[2], getLangStr("ls.player.leadership"), jcbLeadership.isSelected(), Colors.getColor(Colors.COLOR_PLAYER_LEADERSHIP));
+                models[3] = new LinesChartDataModel(statistikWerte[3], getLangStr("ls.player.experience"), jcbExperience.isSelected(), Colors.getColor(Colors.COLOR_PLAYER_XP));
+                models[4] = new LinesChartDataModel(statistikWerte[4], getLangStr("ls.player.form"), jcbForm.isSelected(), Colors.getColor(Colors.COLOR_PLAYER_FORM));
+                models[5] = new LinesChartDataModel(statistikWerte[5], getLangStr("ls.player.skill.stamina"), jcbStamina.isSelected(), Colors.getColor(Colors.COLOR_PLAYER_STAMINA));
+                models[6] = new LinesChartDataModel(statistikWerte[6], getLangStr("ls.player.skill.keeper"), jcbKeeper.isSelected(), Colors.getColor(Colors.COLOR_PLAYER_GK));
+                models[7] = new LinesChartDataModel(statistikWerte[7], getLangStr("ls.player.skill.defending"), jcbDefending.isSelected(), Colors.getColor(Colors.COLOR_PLAYER_DE));
+                models[8] = new LinesChartDataModel(statistikWerte[8], getLangStr("ls.player.skill.playmaking"), jcbPlaymaking.isSelected(), Colors.getColor(Colors.COLOR_PLAYER_PM));
+                models[9] = new LinesChartDataModel(statistikWerte[9], getLangStr("ls.player.skill.passing"), jcbPass.isSelected(), Colors.getColor(Colors.COLOR_PLAYER_PS));
+                models[10] = new LinesChartDataModel(statistikWerte[10], getLangStr("ls.player.skill.winger"), jcbWing.isSelected(), Colors.getColor(Colors.COLOR_PLAYER_WI));
+                models[11] = new LinesChartDataModel(statistikWerte[11], getLangStr("ls.player.skill.scoring"), jcbScoring.isSelected(), Colors.getColor(Colors.COLOR_PLAYER_SC));
+                models[12] = new LinesChartDataModel(statistikWerte[12],getLangStr("ls.player.skill.setpieces"), jcbSetPieces.isSelected(), Colors.getColor(Colors.COLOR_PLAYER_SP));
+                models[13] = new LinesChartDataModel(statistikWerte[13], getLangStr("RecapPanel.Stars"), jcbRating.isSelected(), Colors.getColor(Colors.COLOR_PLAYER_RATING));
+                models[14] = new LinesChartDataModel(statistikWerte[14], getLangStr("ls.player.loyalty"), jcbLoyalty.isSelected(), Colors.getColor(Colors.COLOR_PLAYER_LOYALTY));
+                oChartPanel.setAllValues(models, statistikWerte[15], format, TranslationFacility.tr("Wochen"), "", jcbInscribe.isSelected(), jcbHelpLines.isSelected());
 			} else {
-				oChartPanel.setAllValues(null, new double[0], format, TranslationFacility.tr("Wochen"), "",
-						jcbInscribe.isSelected(), jcbHelpLines.isSelected());
+				oChartPanel.setAllValues(null, new double[0], format, TranslationFacility.tr("Wochen"), "", jcbInscribe.isSelected(), jcbHelpLines.isSelected());
 			}
 		} catch (Exception e) {
 			HOLogger.instance().log(getClass(), e);

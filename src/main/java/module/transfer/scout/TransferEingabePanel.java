@@ -160,7 +160,7 @@ public class TransferEingabePanel extends ImagePanel implements ItemListener, Ac
             copyPaste();
         } else if (actionEvent.getSource().equals(jbAddTempSpieler)) {
             final core.model.player.Player tempPlayer = new core.model.player.Player();
-            tempPlayer.setNationalityId(HOVerwaltung.instance().getModel().getBasics().getLand());
+            tempPlayer.setCountryId(HOVerwaltung.instance().getModel().getBasics().getLand());
             tempPlayer.setPlayerId(getNextTempSpielerID());
             if (jtfName.getText().trim().isEmpty()) {
                 tempPlayer.setLastName("Temp " + Math.abs(1000 + tempPlayer.getPlayerId()));

@@ -14,6 +14,7 @@ import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.match.Weather;
 import core.model.player.Player;
+import core.module.DefaultModule;
 import core.module.IModule;
 import core.module.ModuleManager;
 import core.module.config.ModuleConfig;
@@ -41,10 +42,10 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import java.net.URI;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Vector;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.stream.Collectors;
 
 /**
  * The Main HO window
@@ -400,8 +401,8 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 
 	private void initModuleFunctionMenus(JMenu functionsMenu, JMenu modulesMenu) {
 		// Modules
-		IModule[] activeModules = ModuleManager.instance().getModules(true);
-		for (IModule activeModule : activeModules) {
+        var listOfModules = Arrays.stream(ModuleManager.instance().getModules(true)).sorted(Comparator.comparing(IModule::getMenuOrder)).toList();
+    	for (IModule activeModule : listOfModules) {
 			if (activeModule.hasMainTab()) {
 				JMenuItem showTabMenuItem = new JMenuItem(activeModule.getDescription());
 				showTabMenuItem.setAccelerator(activeModule.getKeyStroke());
@@ -412,7 +413,6 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 					getTabbedPane().showTab(module.getModuleId());
 					RefreshManager.instance().doRefresh();
 				});
-
 				functionsMenu.add(showTabMenuItem);
 			}
 			if (activeModule.hasMenu()) {

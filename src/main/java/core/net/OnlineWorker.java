@@ -20,6 +20,7 @@ import core.util.HODateTime;
 import core.util.HOLogger;
 import core.util.Helper;
 import core.util.StringUtils;
+import module.hallOfFame.HallOfFamePlayer;
 import module.lineup.Lineup;
 import module.nthrf.NtTeamDetails;
 import module.series.MatchFixtures;
@@ -1320,4 +1321,9 @@ public class OnlineWorker {
 			throw new RuntimeException(e);
 		}
 	}
+
+    public static List<HallOfFamePlayer> downloadHallOfFame(int teamId) {
+        String xmlString = MyConnector.instance().downloadHallOfFamePlayers(teamId);
+        return XMLPlayersParser.parseHallOfFamesPlayersFromString(xmlString);
+    }
 }

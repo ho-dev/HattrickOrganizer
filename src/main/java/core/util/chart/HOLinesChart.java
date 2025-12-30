@@ -5,6 +5,7 @@ import javax.swing.*;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.UserParameter;
+import core.util.HODateTime;
 import org.jetbrains.annotations.Nullable;
 import org.knowm.xchart.XChartPanel;
 import org.knowm.xchart.XYChart;
@@ -87,6 +88,9 @@ public class HOLinesChart implements IChart {
         m_chart.getStyler().setToolTipType(Styler.ToolTipType.yLabels);
         m_chart.getStyler().setDecimalPattern("#0.00");
 
+        m_chart.getStyler().setCursorEnabled(true);
+        m_chart.getStyler().setCustomCursorXDataFormattingFunction(this::toDatetimeString);
+
         var font = m_chart.getStyler().getCursorFont().deriveFont((float) UserParameter.instance().fontSize);
         m_chart.getStyler().setAnnotationTextFont(font);
         m_chart.getStyler().setToolTipFont(font);
@@ -142,6 +146,11 @@ public class HOLinesChart implements IChart {
         m_panel = new XChartPanel<>(m_chart);
     }
 
+    private String toDatetimeString(Double x) {
+        var seconds = (long) x.doubleValue();
+        var datetime = new HODateTime(new Date(seconds).toInstant());
+        return datetime.toHTWeek().toString() + ": " + datetime.toLocaleDate();
+    }
 
     private void reverseTS(){
         if (m_models == null) return;
@@ -215,7 +224,6 @@ public class HOLinesChart implements IChart {
 
         m_panel.repaint();
     }
-
 
     public final void clearAllPlots(){
         if (m_models != null){
@@ -304,6 +312,3 @@ public class HOLinesChart implements IChart {
 
     }
 }
-
-
-

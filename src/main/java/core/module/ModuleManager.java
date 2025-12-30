@@ -2,6 +2,7 @@ package core.module;
 
 import core.model.UserParameter;
 import core.module.config.ModuleConfig;
+import module.hallOfFame.HallOfFameModule;
 import module.ifa.IfaModule;
 import module.lineup.LineupModule;
 import module.matches.MatchesModule;
@@ -62,6 +63,7 @@ public final class ModuleManager {
 		map.put(IModule.TEAM_OF_THE_WEEK, new TeamOfTheWeekModule());
 		map.put(IModule.IFA, new IfaModule());
 		map.put(IModule.YOUTH, new YouthModule());
+        map.put(IModule.HALL_OF_FAME, new HallOfFameModule());
 	}
 
 	private void initialize() {

@@ -125,8 +125,8 @@ public class HODateTime implements Comparable<HODateTime> {
      * @param ts HODateTime
      * @return long, seconds since epoch
      */
-    public static long toEpochSecond(HODateTime ts){
-        if ( ts!= null) return ts.instant.getEpochSecond();
+    public static long toEpochSecond(HODateTime ts) {
+        if (ts != null) return ts.instant.getEpochSecond();
         return 0L;
     }
 

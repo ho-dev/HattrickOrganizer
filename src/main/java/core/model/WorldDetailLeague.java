@@ -7,7 +7,7 @@ import java.util.List;
 
 public class WorldDetailLeague  extends AbstractTable.Storable {
 
-	private static final HOConfigurationParameter latestDownload = new HOConfigurationParameter("LatestWorldDetailsDownload", null);
+	private static final HOConfigurationStringParameter latestDownload = new HOConfigurationStringParameter("LatestWorldDetailsDownload", null);
 
 	private int leagueId;
 	private int countryId;

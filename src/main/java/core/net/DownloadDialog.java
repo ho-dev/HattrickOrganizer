@@ -12,6 +12,7 @@ import core.model.*;
 import core.model.enums.MatchType;
 import core.model.match.MatchKurzInfo;
 import core.model.player.Player;
+import core.module.ModuleManager;
 import core.net.login.ProxyDialog;
 import core.util.HODateTime;
 import core.util.HOLogger;
@@ -28,6 +29,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.util.List;
 import java.util.*;
+
+import static core.module.IModule.HALL_OF_FAME;
+import static core.module.IModule.STATUS_DEACTIVATED;
 
 /**
  * User dialog to download different hattrick data
@@ -286,6 +290,15 @@ public class DownloadDialog extends JDialog implements ActionListener {
 
 		int progressIncrement = 3;
 		if (teamId > 0) {
+
+            // Check if Hall Of Fame module is active
+            if ( ModuleManager.instance().getModule(HALL_OF_FAME).getStatus() != STATUS_DEACTIVATED){
+                HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.hall_of_fame"), progressIncrement);
+                var hallOfFamesPlayer = OnlineWorker.downloadHallOfFame(teamId);
+                model.setHallOfFamesPlayers(hallOfFamesPlayer);
+                DBManager.instance().storeHallOfFame(model.getHrfId(), hallOfFamesPlayer);
+            }
+
 			if (this.downloadFilter.isChecked(filterRoot.getCurrentMatches())) {
 				// Only get lineups for own fixtures
 				HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.match_info"), progressIncrement);

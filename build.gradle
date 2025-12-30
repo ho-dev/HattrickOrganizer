@@ -26,7 +26,7 @@ plugins {
     id "application"
     id "org.kordamp.gradle.markdown" version "2.2.0"
     id "com.github.breadmoirai.github-release" version "2.5.2"
-    id "com.install4j.gradle" version "10.0.8"
+    id "com.install4j.gradle" version "12.0"
     id "org.barfuin.gradle.taskinfo" version "2.2.0"
     id "io.freefair.lombok" version "8.13"
 }
@@ -46,7 +46,7 @@ repositories {
 }
 
 dependencies {
-    implementation "com.install4j:install4j-runtime:10.0.8"
+    implementation "com.install4j:install4j-runtime:12.0"
     implementation "com.github.scribejava:scribejava-core:8.3.3"
     implementation "org.hsqldb:hsqldb:2.7.4"
     implementation "com.google.code.gson:gson:2.12.1"

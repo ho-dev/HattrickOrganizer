@@ -203,7 +203,7 @@ public class Player extends AbstractTable.Storable {
     /**
      * Aus welchem Land kommt der Player
      */
-    private int nationalityId = 49;
+    private int countryId = 49;
 
     /**
      * SpezialitätID
@@ -376,7 +376,7 @@ public class Player extends AbstractTable.Storable {
         loyalty = properties.getInt("loy", 0);
         leadership = properties.getInt("led", 0);
         wage = new AmountOfMoney(properties.getInt("sal", 0));
-        nationalityId = properties.getInt("countryid", 0);
+        countryId = properties.getInt("countryid", 0);
         tsi = properties.getInt("mkt", 0);
 
         // also read subskills when importing hrf from hattrickportal.pro/ useful for U20/NT
@@ -648,7 +648,7 @@ public class Player extends AbstractTable.Storable {
     public int getBonus() {
         int bonus = 0;
 
-        if (nationalityId != HOVerwaltung.instance().getModel().getBasics().getLand()) {
+        if (countryId != HOVerwaltung.instance().getModel().getBasics().getLand()) {
             bonus = 20;
         }
 
@@ -1106,12 +1106,12 @@ public class Player extends AbstractTable.Storable {
         return getFirstName() + " '" + getNickName() + "' " + getLastName();
     }
 
-    public void setNationalityId(int m_iNationalitaet) {
-        this.nationalityId = m_iNationalitaet;
+    public void setCountryId(int m_iNationalitaet) {
+        this.countryId = m_iNationalitaet;
     }
 
-    public int getNationalityId() {
-        return nationalityId;
+    public int getCountryId() {
+        return countryId;
     }
 
 
@@ -1119,7 +1119,7 @@ public class Player extends AbstractTable.Storable {
         if (nationality != null) {
             return nationality;
         }
-        WorldDetailLeague leagueDetail = WorldDetailsManager.instance().getWorldDetailLeagueByCountryId(nationalityId);
+        WorldDetailLeague leagueDetail = WorldDetailsManager.instance().getWorldDetailLeagueByCountryId(countryId);
         if (leagueDetail != null) {
             nationality = leagueDetail.getCountryName();
         } else {

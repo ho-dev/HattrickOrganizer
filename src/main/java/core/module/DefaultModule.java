@@ -11,10 +11,8 @@ public abstract class DefaultModule implements IModule {
 	public abstract String getDescription();
 	public abstract JPanel createTabPanel();
 
-	protected DefaultModule(){
-		
-	}
-	
+	protected DefaultModule(){}
+
 	protected DefaultModule(boolean isActive){
 		this.isActive = isActive;
 	}

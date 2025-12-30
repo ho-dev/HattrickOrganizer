@@ -1,46 +1,34 @@
 package core.model
 
-
 /**
  * Configuration parameter of integer type
  */
-class HOConfigurationIntParameter : HOConfigurationParameter{
 
-    constructor(key: String, defaultValue: Int) : super(key, defaultValue.toString())
-    constructor(key: String) : super(key, null)
+class HOConfigurationIntParameter(key : String, defaultValue : Object?)
+    : HOConfigurationParameter(key,defaultValue) {
 
-    /**
-     * Parameter value as integer
-     */
-    private var intValue: Int?
+    constructor(key: String, default : Int) : this(key, default as Object){}
+    constructor(key: String) : this(key, null){}
 
     /**
-     * Constructor calls string constructor
+     * Return the value
+     * @return Integer?
      */
-    init {
-        val stringVal = this.getValue()
-        if (stringVal != null && !stringVal.isEmpty()) this.intValue = Integer.valueOf(stringVal)
-        else this.intValue = null
+    fun getValue(): Integer? {
+        return parameters.get(key) as Integer?
     }
 
     /**
-     * Return the parameter integer value
-     * @return int
+     * Set parameter of int type
      */
-    fun getIntValue(): Int? {
-        return this.intValue
+    fun setValue(v: Int){
+        this.setValue(Integer.valueOf(v) as Object?)
     }
 
     /**
-     * Set the new parameter integer value
-     * ParameterChanged is set true if new value is different to previous parameter value
-     * @param newValue New integer value
+     * Convert stored value to integer type
      */
-    fun setIntValue(newValue: Int?) {
-        if (this.intValue != newValue) {
-            this.intValue = newValue
-            if (newValue != null) setValue(newValue.toString())
-            else setValue(null)
-        }
+    override fun convertToObject(storedValue: String) : Object {
+        return Integer.valueOf(storedValue) as Object
     }
 }

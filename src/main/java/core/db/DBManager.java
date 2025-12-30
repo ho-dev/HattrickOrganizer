@@ -23,6 +23,7 @@ import core.model.player.Player;
 import core.training.FuturePlayerSkillTraining;
 import core.util.AmountOfMoney;
 import core.util.HODateTime;
+import module.hallOfFame.HallOfFamePlayer;
 import module.matches.MatchLocation;
 import module.nthrf.NtTeamDetails;
 import module.teamAnalyzer.vo.SquadInfo;
@@ -280,6 +281,7 @@ public class DBManager implements PersistenceManager {
 		tables.put(MatchTeamRatingTable.TABLENAME, new MatchTeamRatingTable(connectionManager));
 		tables.put(SquadInfoTable.TABLENAME, new SquadInfoTable(connectionManager));
 		tables.put(HOColorTable.TABLENAME, new HOColorTable(connectionManager));
+        tables.put(HallOfFamePlayersTable.TABLENAME, new HallOfFamePlayersTable(connectionManager));
 	}
 
 	/**
@@ -2415,4 +2417,17 @@ public class DBManager implements PersistenceManager {
 		getTable(HOColorTable.TABLENAME).delete(color);
 	}
 
+    public void storeHallOfFame(int hrfId, List<HallOfFamePlayer> hallOfFamesPlayers) {
+        var hallOfFamePlayersTable = ((HallOfFamePlayersTable) getTable(HallOfFamePlayersTable.TABLENAME));
+        hallOfFamePlayersTable.DeleteHallOfFamePlayersTable(hrfId);
+        for (var player : hallOfFamesPlayers) {
+            player.setIsStored(false);
+            hallOfFamePlayersTable.storeHallOfFamePlayer(hrfId, player);
+        }
+    }
+
+    public List<HallOfFamePlayer> loadHallOfFame(int hrfId){
+        var hallOfFamePlayersTable = ((HallOfFamePlayersTable) getTable(HallOfFamePlayersTable.TABLENAME));
+        return hallOfFamePlayersTable.loadHallOfFame(hrfId);
+    }
 }

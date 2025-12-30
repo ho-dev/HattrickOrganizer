@@ -1,6 +1,7 @@
 package core.file.xml;
 
 import core.util.AmountOfMoney;
+import core.util.HODateTime;
 import core.util.HOLogger;
 
 import java.io.File;
@@ -88,6 +89,10 @@ public class XMLManager {
 
     public static AmountOfMoney xmlAmountOfMoneyValue(Element ele, String xmlKey) {
         return new AmountOfMoney(xmlIntValue(ele,xmlKey,0));
+    }
+
+    public static HODateTime xmlHODateTimeValue(Element ele, String xmlKey){
+        return HODateTime.fromHT(xmlValue(ele, xmlKey));
     }
 
     public static int xmlIntValue(Element ele, String xmlKey, int def) {

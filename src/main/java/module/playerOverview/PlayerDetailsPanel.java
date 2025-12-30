@@ -193,7 +193,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
     private void setLabels() {
         Icon playerAvatar = ThemeManager.instance().getPlayerAvatar(m_clPlayer.getPlayerId());
         jlPlayerAvatar.setIcon(playerAvatar);
-        jlNationality.setIcon(ImageUtilities.getCountryFlagIcon(m_clPlayer.getNationalityId()));
+        jlNationality.setIcon(ImageUtilities.getCountryFlagIcon(m_clPlayer.getCountryId()));
         jlNationality.setToolTipText(m_clPlayer.getNationality());
         jlNationality.setText(m_clPlayer.getAgeStringFull());
 

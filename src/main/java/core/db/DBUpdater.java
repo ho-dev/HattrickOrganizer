@@ -141,6 +141,9 @@ final class DBUpdater {
 		var stadiumTable = dbManager.getTable(StadionTable.TABLENAME);
 		stadiumTable.tryChangeColumn("AusbauKosten", "NULL");
 
+        var hofTable = dbManager.getTable(HallOfFamePlayersTable.TABLENAME);
+        hofTable.createTable();
+
 		updateDBVersion(dbVersion, 1000);
 	}
 

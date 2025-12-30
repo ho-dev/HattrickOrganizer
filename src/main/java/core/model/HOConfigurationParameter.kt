@@ -8,21 +8,14 @@ import core.db.DBManager
  * which is saved in the user configuration table at application termination
  * Remark: This class should replace usage of UserParameter an HOParameter classes
  */
-open class HOConfigurationParameter(
+abstract class HOConfigurationParameter(
     /**
      * Parameter key
      */
-    val key: String, defaultValue: String?
+    val key: String, val defaultValue : Object?
 ) : Storable() {
-    /**
-     * Return the key
-     * @return String
-     */
 
-    /**
-     * Parameter value
-     */
-    private var value: String?
+
 
     /**
      * Create configuration parameter
@@ -32,33 +25,36 @@ open class HOConfigurationParameter(
      * @param defaultValue Default value
      */
     init {
-        this.value = parameters.getProperty(key)
-        if (this.value == null) {
-            this.value = DBManager.instance().loadHOConfigurationParameter(key)
-            if (this.value == null) {
-                this.value = defaultValue
+        if (!parameters.contains(key)) {
+            var storedValue = DBManager.instance().loadHOConfigurationParameter(key)
+            if (storedValue != null){
+                parameters[key] = convertToObject(storedValue)
             }
-            if ( this.value != null ) parameters.setProperty(key, this.value)
+            else if (defaultValue != null){
+                parameters[key] = defaultValue
+            }
         }
     }
 
     /**
-     * Return the value
-     * @return String
+     * Convert stored string value to corresponding object type
      */
-    fun getValue(): String? {
-        return value
-    }
+    abstract fun convertToObject(storedValue: String) : Object
+
 
     /**
      * Set the value.
      * ParameterChanged is set to true, if new value different to previous value
      * @param value New value
      */
-    fun setValue(value: String?) {
-        if (value != this.value) {
-            this.value = value
-            parameters.setProperty(key, value)
+    fun setValue(value: Object?) {
+        if (value != null) {
+            if (!value.equals(parameters.get(key))) {
+                parameters.put(key, value)
+                parametersChanged = true
+            }
+        } else if (parameters.contains(key)) {
+            parameters.remove(key)
             parametersChanged = true
         }
     }
@@ -73,7 +69,7 @@ open class HOConfigurationParameter(
         /**
          * Remember if parameters were changed
          */
-        private var parametersChanged = false
+        var parametersChanged = false
 
         /**
          * Store the current parameters of the registry in the database
@@ -82,7 +78,7 @@ open class HOConfigurationParameter(
         fun storeParameters() {
             if (parametersChanged) {
                 for ((key, value) in parameters) {
-                    DBManager.instance().saveUserParameter(key as String, value as String)
+                    DBManager.instance().saveUserParameter(key as String, value.toString())
                 }
             }
         }

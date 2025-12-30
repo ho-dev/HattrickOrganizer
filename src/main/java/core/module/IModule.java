@@ -3,6 +3,7 @@ package core.module;
 import javax.swing.JMenu;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
+import java.awt.event.KeyEvent;
 
 public interface IModule {
 
@@ -30,6 +31,7 @@ public interface IModule {
     //public static final int MATCHESANALYZER	= 18;
     //int OPPONENTSPY = 19;
     int YOUTH = 20;
+    int HALL_OF_FAME = 21;
 
     int getModuleId();
 
@@ -58,4 +60,12 @@ public interface IModule {
     void setStatus(int statusId);
 
     void storeUserSettings();
+
+    default int getMenuOrder(){
+        int ret = this.getKeyStroke().getKeyCode();
+        if ( ret < KeyEvent.VK_F1) ret += 1000;
+        return ret;
+    }
+
+
 }

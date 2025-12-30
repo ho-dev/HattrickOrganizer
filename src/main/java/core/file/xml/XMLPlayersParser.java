@@ -1,5 +1,6 @@
 package core.file.xml;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Vector;
 
@@ -12,6 +13,7 @@ import core.model.player.PlayerCategory;
 import core.model.player.TrainerType;
 import core.util.AmountOfMoney;
 import core.util.HODateTime;
+import module.hallOfFame.HallOfFamePlayer;
 import module.youth.YouthPlayer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -233,6 +235,26 @@ public class XMLPlayersParser {
         return hash;
     }
 
+    public static List<HallOfFamePlayer> parseHallOfFamesPlayersFromString(String inputStream) {
+        Document doc = XMLManager.parseString(inputStream);
+        return createHallOfFamesPlayerList(doc);
+    }
+
+    private static  List<HallOfFamePlayer> createHallOfFamesPlayerList(Document doc) {
+        var root = doc.getDocumentElement();
+        var ret = new ArrayList<HallOfFamePlayer>();
+        // <Players> # error in chpp api doc
+        root = (Element) root.getElementsByTagName("PlayerList").item(0);
+        if ( root != null) {
+            // <Player>
+            var list = root.getElementsByTagName("Player");
+            for (int i = 0; i < list.getLength(); i++) {
+                ret.add(new HallOfFamePlayer((Element) list.item(i)));
+            }
+        }
+        return ret;
+    }
+
     public List<SafeInsertMap> parseYouthPlayersFromString(String inputStream) {
         Document doc = XMLManager.parseString(inputStream);
         return createYouthPlayerList(doc);
@@ -422,7 +444,7 @@ public class XMLPlayersParser {
         player.setHomeGrown(xmlBoolValue(root, "MotherClubBonus"));
         player.setLeadership(xmlIntValue(root, "Leadership"));
         player.setSpecialty(xmlIntValue(root, "Specialty"));
-        player.setNationalityId(xmlIntValue(root, "NativeCountryID"));
+        player.setCountryId(xmlIntValue(root, "NativeCountryID"));
 
 //                NativeLeagueID : unsigned Integer
 //        LeagueID of the league where the player was born.
