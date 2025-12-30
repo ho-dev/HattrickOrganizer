@@ -1,6 +1,6 @@
 ## Highlights
+* New hall of fame module
 * Confirm exit dialog
-* Experience skill is added to all training tables
 * Currency selectable in option settings
 
 
@@ -18,14 +18,13 @@
 
 ### Team Analyzer
 
-### Series
+### Hall of fame
+* Added (#2296)
 
 ### Lineup
 
-
 ### Training
 * Add experience skill to training tables (#2283)
-### Team spirit forecast
 
 ### Transfer
 
@@ -41,11 +40,12 @@
 
 ## Translations
 
-Reports by Contributors - October 19, 2025 - December 03, 2025
+Reports by Contributors - October 19, 2025 - December 30, 2025
 * Ioannidouefty 459
 * wsbrenk 31
 * Lidegand 24
+* Kristaps 4
 * Mara 3
 * Joeri Roels 1
 
-Total 518
+Total 522
