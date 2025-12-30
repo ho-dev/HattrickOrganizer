@@ -36,6 +36,9 @@ abstract class HOConfigurationParameter(
         }
     }
 
+    /**
+     * Convert stored string value to corresponding object type
+     */
     abstract fun convertToObject(storedValue: String) : Object
 
 

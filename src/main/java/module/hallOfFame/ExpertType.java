@@ -45,6 +45,11 @@ public enum ExpertType {
         return id;
     }
 
+    /**
+     * Convert integer to expert type object
+     * @param i Integer
+     * @return ExpertType
+     */
     public static ExpertType fromInteger(Integer i) {
         if (i != null) {
             for (var s : ExpertType.values()) {
@@ -56,6 +61,10 @@ public enum ExpertType {
         return null;
     }
 
+    /**
+     * Get translated expert type string
+     * @return String
+     */
     public String getLanguageString() {
         return TranslationFacility.tr("ls.hof.experttype." + toString().toLowerCase());
     }

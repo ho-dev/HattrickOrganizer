@@ -1,8 +1,5 @@
 package core.model
 
-import core.db.DBManager
-
-
 /**
  * Configuration parameter of boolean type
  */
@@ -18,6 +15,9 @@ class HOConfigurationBooleanParameter(key : String, defaultValue: Boolean?)
         return parameters.get(key) as Boolean?
     }
 
+    /**
+     * Convert stored value to boolean
+     */
     override fun convertToObject(storedValue: String): Object {
         return java.lang.Boolean.valueOf(storedValue) as Object
     }

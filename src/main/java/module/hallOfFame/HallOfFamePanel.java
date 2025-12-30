@@ -7,7 +7,6 @@ import core.gui.comp.table.PlayersTable;
 import core.gui.model.UserColumnController;
 import core.gui.theme.HOColorName;
 import core.model.HOConfigurationBooleanParameter;
-import core.model.HOConfigurationParameter;
 import core.model.TranslationFacility;
 import core.model.player.Player;
 import core.module.config.ModuleConfig;
@@ -37,6 +36,9 @@ public class HallOfFamePanel extends JPanel {
     private final HOConfigurationBooleanParameter chartDisplayScoring= new HOConfigurationBooleanParameter("hof.chart.display.scoring", true);
     private final HOConfigurationBooleanParameter chartDisplayCoachLevel= new HOConfigurationBooleanParameter("hof.chart.display.coachlevel", true);
 
+    /**
+     * Create the hall of fame panel
+     */
     public HallOfFamePanel(){
         setLayout(new BorderLayout());
         var tableModel = UserColumnController.instance().getHallOfFameTableModel();
@@ -57,8 +59,11 @@ public class HallOfFamePanel extends JPanel {
         refreshHistory();
     }
 
+    /**
+     * Create the chart selection panel part
+     * @return JPanel
+     */
     private JPanel initChartSelectionPanel(){
-
         final JPanel chartSelectionPanel = new ImagePanel();
         final GridBagLayout layout = new GridBagLayout();
         final GridBagConstraints constraints = new GridBagConstraints();
@@ -75,34 +80,52 @@ public class HallOfFamePanel extends JPanel {
         constraints.insets = new Insets(20,0,0,0);  //top padding
 
         chartSelectionPanel.add(createSelectionCheckForm(layout, constraints, "ls.player.leadership", Colors.COLOR_PLAYER_LEADERSHIP, chartDisplayLeadership));
-        chartSelectionPanel.add(createSelectionCheckForm(layout, constraints, "ls.player.defence", Colors.COLOR_PLAYER_DE, chartDisplayDefence));
-        chartSelectionPanel.add(createSelectionCheckForm(layout, constraints, "ls.player.keeper", Colors.COLOR_PLAYER_GK, chartDisplayGoalkepper));
-        chartSelectionPanel.add(createSelectionCheckForm(layout, constraints, "ls.player.playmaking", Colors.COLOR_PLAYER_PM, chartDisplayPlaymaking));
-        chartSelectionPanel.add(createSelectionCheckForm(layout, constraints, "ls.player.passing", Colors.COLOR_PLAYER_PS,chartDisplayPassing));
-        chartSelectionPanel.add(createSelectionCheckForm(layout, constraints, "ls.player.winger", Colors.COLOR_PLAYER_WI,chartDisplayWinger));
-        chartSelectionPanel.add(createSelectionCheckForm(layout, constraints, "ls.player.setpieces", Colors.COLOR_PLAYER_SP,chartDisplaySetPieces));
-        chartSelectionPanel.add(createSelectionCheckForm(layout, constraints, "ls.player.scoring", Colors.COLOR_PLAYER_SC, chartDisplayScoring));
-        chartSelectionPanel.add(createSelectionCheckForm(layout, constraints, "ls.player.coachlevel", Colors.COLOR_CLUB_FORM_COACHS_LEVEL, chartDisplayCoachLevel));
+        chartSelectionPanel.add(createSelectionCheckForm(layout, constraints, "ls.player.skill.defending", Colors.COLOR_PLAYER_DE, chartDisplayDefence));
+        chartSelectionPanel.add(createSelectionCheckForm(layout, constraints, "ls.player.skill.keeper", Colors.COLOR_PLAYER_GK, chartDisplayGoalkepper));
+        chartSelectionPanel.add(createSelectionCheckForm(layout, constraints, "ls.player.skill.playmaking", Colors.COLOR_PLAYER_PM, chartDisplayPlaymaking));
+        chartSelectionPanel.add(createSelectionCheckForm(layout, constraints, "ls.player.skill.passing", Colors.COLOR_PLAYER_PS,chartDisplayPassing));
+        chartSelectionPanel.add(createSelectionCheckForm(layout, constraints, "ls.player.skill.winger", Colors.COLOR_PLAYER_WI,chartDisplayWinger));
+        chartSelectionPanel.add(createSelectionCheckForm(layout, constraints, "ls.player.skill.setpieces", Colors.COLOR_PLAYER_SP,chartDisplaySetPieces));
+        chartSelectionPanel.add(createSelectionCheckForm(layout, constraints, "ls.player.skill.scoring", Colors.COLOR_PLAYER_SC, chartDisplayScoring));
+        chartSelectionPanel.add(createSelectionCheckForm(layout, constraints, "ls.team.coachingskill", Colors.COLOR_CLUB_FORM_COACHS_LEVEL, chartDisplayCoachLevel));
         chartSelectionPanel.add(createSelectionCheckForm(layout, constraints, "ls.player.form", Colors.COLOR_PLAYER_FORM, chartDisplayForm));
         chartSelectionPanel.add(createSelectionCheckForm(layout, constraints, "ls.player.tsi", Colors.COLOR_PLAYER_TSI, chartDisplayTSI));
         chartSelectionPanel.add(createSelectionCheckForm(layout, constraints, "ls.player.wage", Colors.COLOR_PLAYER_WAGE, chartDisplayWage));
         return chartSelectionPanel;
     }
 
+    /**
+     * Create a single chart selection check box with label and color legend entry
+     * @param layout GridBagLayout
+     * @param constraints GridBagConstraints, the gridy property is incremented
+     * @param label String
+     * @param color HOColorName
+     * @param isSelected HOConfigurationBooleanParameter
+     * @return Component
+     */
     private Component createSelectionCheckForm(GridBagLayout layout, GridBagConstraints constraints, String label, HOColorName color, HOConfigurationBooleanParameter isSelected) {
         var form = new ImageCheckbox(TranslationFacility.tr(label), Colors.getColor(color), Boolean.TRUE.equals(isSelected.getValue()));
-//        form.addActionListener(i->handleSelection(isSelected,(JCheckBox)i.getSource()));
+        form.addActionListener(i->handleSelection(isSelected,i.getSource()));
         form.setOpaque(false);
         layout.setConstraints(form, constraints);
         constraints.gridy++;
         return form;
     }
 
-    private void handleSelection(HOConfigurationBooleanParameter isSelected, JCheckBox source) {
-        isSelected.setValue(source.isSelected());
+    /**
+     * Listener of selection check boxes
+     * @param isSelected HOConfigurationBooleanParameter
+     * @param source JCheckBox
+     */
+    private void handleSelection(HOConfigurationBooleanParameter isSelected, Object source) {
+        var checkbox = (JCheckBox)source;
+        isSelected.setValue(checkbox.isSelected());
         refreshHistory();
     }
 
+    /**
+     * Refresh history charts
+     */
     private void refreshHistory() {
         // Remove current chart
         var currentChart = ((BorderLayout)historyPanel.getLayout()).getLayoutComponent(BorderLayout.CENTER);
@@ -154,7 +177,7 @@ public class HallOfFamePanel extends JPanel {
                 if (Boolean.TRUE.equals(chartDisplayForm.getValue())) {
                     chartDataModels.add(new LinesChartDataModel(
                             history.stream().mapToDouble(i -> i.getSkillValue(PlayerSkill.FORM)).toArray(),
-                            prefix + TranslationFacility.tr("ls.player.skill.form"),
+                            prefix + TranslationFacility.tr("ls.player.form"),
                             true,
                             Colors.getColor(Colors.COLOR_PLAYER_FORM)));
                 }
@@ -179,6 +202,13 @@ public class HallOfFamePanel extends JPanel {
                             true,
                             Colors.getColor(Colors.COLOR_PLAYER_SC)));
                 }
+                if (Boolean.TRUE.equals(chartDisplayWinger.getValue())) {
+                    chartDataModels.add(new LinesChartDataModel(
+                            history.stream().mapToDouble(i -> i.getSkillValue(PlayerSkill.WINGER)).toArray(),
+                            prefix + TranslationFacility.tr("ls.player.skill.winger"),
+                            true,
+                            Colors.getColor(Colors.COLOR_PLAYER_WI)));
+                }
                 if (Boolean.TRUE.equals(chartDisplaySetPieces.getValue())) {
                     chartDataModels.add(new LinesChartDataModel(
                             history.stream().mapToDouble(i -> i.getSkillValue(PlayerSkill.SETPIECES)).toArray(),
@@ -196,9 +226,9 @@ public class HallOfFamePanel extends JPanel {
                 if (Boolean.TRUE.equals(chartDisplayWage.getValue())) {
                     chartDataModels.add(new LinesChartDataModel(
                             history.stream().mapToDouble(i->i.getWage().toLocale().doubleValue()).toArray(),
-                            prefix + TranslationFacility.tr("ls.player.tsi"),
+                            prefix + TranslationFacility.tr("ls.player.wage"),
                             true,
-                            Colors.getColor(Colors.COLOR_PLAYER_TSI), 1, true));
+                            Colors.getColor(Colors.COLOR_PLAYER_WAGE), 1, true));
                 }
 
 
@@ -213,6 +243,10 @@ public class HallOfFamePanel extends JPanel {
         historyPanel.repaint();
     }
 
+    /**
+     * Store user settings
+     * of table model and ui positions
+     */
     public void storeUserSettings() {
         var tableModel = UserColumnController.instance().getHallOfFameTableModel();
         tableModel.storeUserSettings();

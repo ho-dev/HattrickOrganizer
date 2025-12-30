@@ -21,7 +21,7 @@ public class HallOfFameModule extends DefaultModule {
 
     @Override
     public String getDescription() {
-        return TranslationFacility.tr("ls.HallOfFame");
+        return TranslationFacility.tr("ls.hof");
     }
 
     @Override

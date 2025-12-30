@@ -3,11 +3,9 @@ package module.hallOfFame;
 import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.IHOTableCellEntry;
 import core.gui.comp.table.HOPlayersTableModel;
-import core.gui.model.PlayerColumn;
 import core.gui.model.UserColumnController;
 import core.gui.theme.ImageUtilities;
 import core.model.HOVerwaltung;
-import core.model.player.Player;
 import core.util.HODateTime;
 
 import javax.swing.*;
@@ -16,7 +14,7 @@ import java.util.List;
 
 public class HallOfFameTableModel extends HOPlayersTableModel {
     public HallOfFameTableModel(UserColumnController.ColumnModelId columnModelId) {
-        super(columnModelId, "ls.halloffame");
+        super(columnModelId, "ls.hof");
 
         this.columns = new ArrayList<>(List.of(
                 new HallOfFameColumn("ls.player.name") {
@@ -48,31 +46,31 @@ public class HallOfFameTableModel extends HOPlayersTableModel {
                         return new ColorLabelEntry(HODateTime.toEpochSecond(player.getArrivalDate()), HODateTime.toLocaleDateTime(player.getArrivalDate()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
-                new HallOfFameColumn("ls.halloffame.arrival") {
+                new HallOfFameColumn("ls.hof.arrival") {
                     @Override
                     public IHOTableCellEntry getTableEntry(HallOfFamePlayer player) {
                         return new ColorLabelEntry(HODateTime.toEpochSecond(player.getHofDate()), HODateTime.toLocaleDateTime(player.getHofDate()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
-                new HallOfFameColumn("ls.halloffame.experttype") {
+                new HallOfFameColumn("ls.hof.experttype") {
                     @Override
                     public IHOTableCellEntry getTableEntry(HallOfFamePlayer player) {
                         return new ColorLabelEntry(player.getExpertType(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
-                new HallOfFameColumn("ls.halloffame.extrainer.from") {
+                new HallOfFameColumn("ls.hof.extrainer.from") {
                     @Override
                     public IHOTableCellEntry getTableEntry(HallOfFamePlayer player) {
                         return new ColorLabelEntry(player.getTrainerFrom(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
-                new HallOfFameColumn("ls.halloffame.extrainer.to") {
+                new HallOfFameColumn("ls.hof.extrainer.to") {
                     @Override
                     public IHOTableCellEntry getTableEntry(HallOfFamePlayer player) {
                         return new ColorLabelEntry(player.getTrainerTo(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
-                new HallOfFameColumn("ls.halloffame.extrainer.duration") {
+                new HallOfFameColumn("ls.hof.extrainer.duration") {
                     @Override
                     public IHOTableCellEntry getTableEntry(HallOfFamePlayer player) {
                         String str;
@@ -80,6 +78,27 @@ public class HallOfFameTableModel extends HOPlayersTableModel {
                         if ( duration != null) str = duration.toString();
                         else str = "";
                         return new ColorLabelEntry(str, ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                    }
+                },
+                new HallOfFameColumn("ls.player.matchescurrentteam") {
+                    @Override
+                    public IHOTableCellEntry getTableEntry(HallOfFamePlayer player) {
+                        var currentTeamMatches = player.getCurrentTeamMatches();
+                        String txt;
+                        if ( currentTeamMatches != null){
+                            txt = String.valueOf(currentTeamMatches);
+                        }
+                        else {
+                            currentTeamMatches = 0;
+                            txt = "";
+                        }
+                        return new ColorLabelEntry(currentTeamMatches, txt, ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                    }
+                },
+                new HallOfFameColumn("ls.player.team_goals") {
+                    @Override
+                    public IHOTableCellEntry getTableEntry(HallOfFamePlayer player) {
+                        return new ColorLabelEntry(player.getCurrentTeamGoals(), String.valueOf(player.getCurrentTeamGoals()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 }
         )).toArray(new HallOfFameColumn[0]);

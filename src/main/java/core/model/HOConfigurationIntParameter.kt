@@ -1,8 +1,5 @@
 package core.model
 
-import core.db.DBManager
-
-
 /**
  * Configuration parameter of integer type
  */
@@ -21,10 +18,16 @@ class HOConfigurationIntParameter(key : String, defaultValue : Object?)
         return parameters.get(key) as Integer?
     }
 
+    /**
+     * Set parameter of int type
+     */
     fun setValue(v: Int){
         this.setValue(Integer.valueOf(v) as Object?)
     }
 
+    /**
+     * Convert stored value to integer type
+     */
     override fun convertToObject(storedValue: String) : Object {
         return Integer.valueOf(storedValue) as Object
     }

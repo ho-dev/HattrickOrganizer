@@ -282,7 +282,7 @@ final class SpielerTable extends AbstractTable {
 	private String loadLatestTSI(String query, int playerId) {
 		try (ResultSet rs = connectionManager.executePreparedQuery(query, playerId)) {
 			if (rs != null && rs.next()) {
-				return rs.getString("markwert");
+				return rs.getString("marktwert");
 			}
 		} catch (SQLException e) {
 			HOLogger.instance().error(SpielerTable.class, "Error retrieving TSI: " + e);
