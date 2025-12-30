@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<install4j version="12.0" transformSequenceNumber="12">
+<install4j version="12.0.2" transformSequenceNumber="12">
   <directoryPresets config="." />
   <application name="Hattrick Organizer" applicationId="7901-8968-2695-6971" mediaDir="${compiler:projectDir}/build/artefacts" mediaFilePattern="${compiler:sys.shortName}-${compiler:sys.version}${compiler:versionType}" shortName="HO" version="${compiler:HO_version}" allPathsRelative="true" convertDotsToUnderscores="false" macVolumeId="509e74c97593e805" javaMinVersion="14">
     <languages skipLanguageSelection="true">
@@ -1290,6 +1290,10 @@ return true;</property>
         <launcher id="606" />
       </excludedLaunchers>
     </windowsArchive>
+    <macosFolder name="macOS Single Bundle - JRE" id="1224" />
+    <macosFolder name="macOS Single Bundle" id="1225">
+      <jreBundle jreBundleSource="none" />
+    </macosFolder>
   </mediaSets>
   <buildIds buildAll="false">
     <mediaSet refId="64" />
