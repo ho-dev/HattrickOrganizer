@@ -296,14 +296,14 @@ tasks.register("media", Install4jTask) {
     //buildIds = [60]
 
     variables = [HO_version: project.version, projectDir: projectDir, versionType: project.ext.version_type]
-    doFirst {
-        // Ensures that the project.version used for HO_version
-        // is the expanded version computed in `createVersion` task.
-        var mediaTask = tasks.findByName("media") as Install4jTask
-        mediaTask.configure {
-            variables.HO_version = project.version
-        }
-    }
+//    doFirst {
+//        // Ensures that the project.version used for HO_version
+//        // is the expanded version computed in `createVersion` task.
+//        var mediaTask = tasks.findByName("media") as Install4jTask
+//        mediaTask.configure {
+//            variables.HO_version = project.version
+//        }
+//    }
 }
 
 tasks.register("makeAllMedias") {
