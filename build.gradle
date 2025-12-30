@@ -278,8 +278,8 @@ tasks.register("media", Install4jTask) {
     // 1208 -> Windows archive (32bits)
     // 1211 -> Windows archive JRE (32bits)
 
-    // 172 -> macOS Single Bundle
-    // 473 -> macOS Single Bundle JRE
+    // 1225 -> macOS Single Bundle
+    // 1224 -> macOS Single Bundle JRE
 
     // 173 -> Unix Archive
     // 477 -> Unix Archive JRE
@@ -292,7 +292,7 @@ tasks.register("media", Install4jTask) {
     // 464  -> Linux rpm JRE
     // 471 -> Linux deb JRE
 
-    buildIds = ["60", "485", "64", "481", "172", "473", "173", "477", "1062", "1064", "1203", "1206", "1208", "1211"]
+    buildIds = ["60", "485", "64", "481", "1225", "1224", "173", "477", "1062", "1064", "1203", "1206", "1208", "1211"]
     //buildIds = [60]
 
     variables = [HO_version: project.version, projectDir: projectDir, versionType: project.ext.version_type]
