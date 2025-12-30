@@ -293,9 +293,8 @@ tasks.register("media", Install4jTask) {
     // 471 -> Linux deb JRE
 
     buildIds = ["60", "485", "64", "481", "1225", "1224", "173", "477", "1062", "1064", "1203", "1206", "1208", "1211"]
-    //buildIds = [60]
 
-    variables = [HO_version: project.version, projectDir: projectDir, versionType: project.ext.version_type]
+    variables = [HO_version: project.version.toString(), projectDir: projectDir, versionType: project.ext.version_type]
 //    doFirst {
 //        // Ensures that the project.version used for HO_version
 //        // is the expanded version computed in `createVersion` task.
