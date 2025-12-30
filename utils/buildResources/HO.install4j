@@ -1290,7 +1290,7 @@ return true;</property>
         <launcher id="606" />
       </excludedLaunchers>
     </windowsArchive>
-    <macosFolder name="macOS Single Bundle - JRE" id="1224" />
+    <macosFolder name="macOS Single Bundle - JRE" id="1224" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}${compiler:versionType}-JRE" />
     <macosFolder name="macOS Single Bundle" id="1225">
       <jreBundle jreBundleSource="none" />
     </macosFolder>
