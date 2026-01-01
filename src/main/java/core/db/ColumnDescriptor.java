@@ -1,5 +1,7 @@
 package core.db;
 
+import core.util.HOLogger;
+
 import java.sql.Types;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
@@ -11,7 +13,6 @@ public final class ColumnDescriptor {
 
     private final String columnName;
     private final int type;
-
 
     private final int length;
     private final boolean nullable;
@@ -28,6 +29,26 @@ public final class ColumnDescriptor {
         this.primaryKey = builder.primaryKey;
         this.getter = builder.getter;
         this.setter = builder.setter;
+    }
+
+    /**
+     * Get value of the column from the object
+     * The defined getter method is applied to get the value.
+     * If it is a string value and its length exceeds the defined column length the string is shortened
+     * and a warning message is logged.
+     * @param object T The object from which the value is fetched
+     * @return Object value
+     * @param <T> The storable object type
+     */
+    public <T extends AbstractTable.Storable> Object getLimitedValue(T object) {
+        var val = this.getter.apply(object);
+        if ( this.type == Types.VARCHAR && val instanceof String stringValue){
+            if ( stringValue.length()>  this.length){
+                HOLogger.instance().warning(this.getClass(), "Shorten value of column " + this.columnName + " to column length: " + this.length + ". Complete string is: " + stringValue);
+                return stringValue.substring(0,this.length);
+            }
+        }
+        return val;
     }
 
     public static class Builder {
