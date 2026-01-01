@@ -265,10 +265,7 @@ tasks.register("createVersion") {
 
 tasks.register("media", Install4jTask) {
     group 'sub tasks'
-    dependsOn tasks.createDistribution
-    def developmentStage = project.ext.development_stage
-    def buildNumber = System.getenv("RUN_NUMBER") ?: "0"
-
+    dependsOn tasks.createDistribution, tasks.createVersion
     projectFile = file("${projectDir}/utils/buildResources/HO.install4j")
 
     // 60 -> Windows Setup
@@ -297,7 +294,7 @@ tasks.register("media", Install4jTask) {
 
     buildIds = ["60", "485", "64", "481", "1225", "1224", "173", "477", "1062", "1064", "1203", "1206", "1208", "1211"]
 
-    variables = [HO_version: "$project.version.$buildNumber.$developmentStage", projectDir: projectDir, versionType: project.ext.version_type]
+    variables = [HO_version: project.version.toString(), projectDir: projectDir, versionType: project.ext.version_type]
 }
 
 tasks.register("makeAllMedias") {
