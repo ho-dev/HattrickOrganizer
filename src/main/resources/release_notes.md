@@ -15,6 +15,7 @@
 * Fix null pointer exception in nt team download (#2314)
 
 ### Player overview
+* Fix error storing owner notes with length exceeding the column length (#2358)
 
 ### Team Analyzer
 

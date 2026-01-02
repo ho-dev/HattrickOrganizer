@@ -134,7 +134,7 @@ public abstract class AbstractTable {
 	 */
 	private <T extends Storable> int insert(T object) {
 		return executePreparedInsert(Arrays.stream(columns).map(
-				c->c.getter.apply(object)
+				c->c.getLimitedValue(object)
 		).toArray());
 	}
 
@@ -148,7 +148,7 @@ public abstract class AbstractTable {
 	 */
 	private <T extends Storable> int update(T object) {
 		var values = new ArrayList<>();
-		values.addAll(Arrays.stream(columns).skip(idColumns).map(c->c.getter.apply(object)).toList());
+		values.addAll(Arrays.stream(columns).skip(idColumns).map(c->c.getLimitedValue(object)).toList());
 		values.addAll(Arrays.stream(columns).limit(idColumns).map(c->c.getter.apply(object)).toList()); // where
 		return executePreparedUpdate(values.toArray());
 	}
