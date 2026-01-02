@@ -79,10 +79,11 @@ open class FixedColumnsTable @JvmOverloads constructor(
 
         if (fixedColumnsCount > 0) {
             fixed = JTable(model)
-            fixed!!.setFocusable(false)
-            fixed!!.setSelectionModel(getSelectionModel())
+            fixed!!.setFocusable(true)
             fixed!!.getTableHeader().reorderingAllowed = false
             fixed!!.setSelectionModel(getSelectionModel())
+            fixed!!.columnModel.selectionModel = getSelectionModel()
+
             //  Remove the non-fixed columns from the fixed table
             while (fixed!!.getColumnCount() > fixedColumnsCount) {
                 val _columnModel = fixed!!.getColumnModel()

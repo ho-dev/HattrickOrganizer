@@ -38,6 +38,11 @@ class PlayerOverviewTable : FixedColumnsTable(UserColumnController.instance().pl
     init {
         playerTableModel.setValues(HOVerwaltung.instance().model.currentPlayers)
         isOpaque = false
+        if ( playerTableModel.players != null) {
+            if ( playerTableModel.players!!.size > 0){
+                setRowSelectionInterval(0,0)
+            }
+        }
         RefreshManager.instance().registerRefreshable(this)
 
         // Add a mouse listener that, when clicking on the “Last match” column
@@ -112,8 +117,4 @@ class PlayerOverviewTable : FixedColumnsTable(UserColumnController.instance().pl
         playerTableModel.setValues(HOVerwaltung.instance().model.currentPlayers)
     }
 
-    companion object {
-        @Serial
-        private val serialVersionUID = -6074136156090331418L
-    }
 }

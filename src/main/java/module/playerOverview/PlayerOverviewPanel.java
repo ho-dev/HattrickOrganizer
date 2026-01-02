@@ -165,6 +165,7 @@ public class PlayerOverviewPanel extends ImagePanel {
 
 
 	private boolean areSelecting = false;
+
 	/**
 	 * Adds ListSelectionListener which keep the row selection of the table with
 	 * the players name and the table with the players details in sync.
