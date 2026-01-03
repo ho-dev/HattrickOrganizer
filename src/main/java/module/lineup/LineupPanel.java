@@ -2,6 +2,7 @@ package module.lineup;
 
 import core.gui.HOMainFrame;
 import core.gui.Updatable;
+import core.gui.comp.table.PlayersTable;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.UserParameter;
@@ -144,7 +145,8 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 						areSelecting = true;
 						var player = lineupPlayersTable.getPlayer(e.getFirstIndex());
 						if (player == null) {
-							player = HOMainFrame.instance().getSelectedPlayer();
+//							player = HOMainFrame.instance().getSelectedPlayer();
+							player = PlayersTable.Companion.getSelectedPlayer();
 							if (player != null) {
 								lineupPlayersTable.setPlayer(player.getPlayerId());
 							}

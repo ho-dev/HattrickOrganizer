@@ -17,6 +17,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 
 /**
@@ -159,14 +160,14 @@ public class RemoveGruppenPanel extends ImagePanel implements ActionListener {
         boolean update = false;
 
         for (Player player : allePlayer) {
-            if (!player.getTeamGroup().equals("")) {
+            if (!player.getTeamGroup().isEmpty()) {
                 player.setTeamInfoSmilie("");
                 update = true;
             }
         }
 
         if (update) {
-            HOMainFrame.instance().getLineupPanel().update();
+            Objects.requireNonNull(HOMainFrame.instance().getLineupPanel()).update();
         }
 
     }
@@ -185,7 +186,7 @@ public class RemoveGruppenPanel extends ImagePanel implements ActionListener {
                 }
             }
 
-            core.gui.HOMainFrame.instance().getLineupPanel().update();
+            Objects.requireNonNull(HOMainFrame.instance().getLineupPanel()).update();
         }
     }
 

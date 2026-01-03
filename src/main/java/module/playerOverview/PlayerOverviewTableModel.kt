@@ -105,7 +105,7 @@ class PlayerOverviewTableModel(id: UserColumnController.ColumnModelId, name: Str
         get() {
             val rowIndex = table!!.selectedRow
             if (rowIndex >= 0 && rowIndex < this.rowCount) {
-                return players!![table!!.convertRowIndexToModel(rowIndex)]
+                return players[table!!.convertRowIndexToModel(rowIndex)]
             }
             return null
         }
@@ -118,10 +118,10 @@ class PlayerOverviewTableModel(id: UserColumnController.ColumnModelId, name: Str
     }
 
     fun getPlayerAtRow(tableRow: Int): Player? {
-        if (players != null && tableRow > -1 && tableRow < this.rowCount) {
+        if (tableRow > -1 && tableRow < this.rowCount) {
             val modelIndex = table!!.convertRowIndexToModel(tableRow)
             if (modelIndex > -1 && modelIndex < this.rowCount) {
-                return players!![modelIndex]
+                return players[modelIndex]
             }
         }
         return null
@@ -142,7 +142,7 @@ class PlayerOverviewTableModel(id: UserColumnController.ColumnModelId, name: Str
 
     fun getPlayerIndex(playerId: Int): Int {
         var i = 0
-        for (m_vPlayer in players!!) {
+        for (m_vPlayer in players) {
             if (m_vPlayer.playerId == playerId) {
                 return i
             }
@@ -210,10 +210,10 @@ class PlayerOverviewTableModel(id: UserColumnController.ColumnModelId, name: Str
      */
     override fun initData() {
         val tmpDisplayedColumns = getDisplayedColumns()
-        m_clData = Array(players!!.size) { arrayOfNulls(tmpDisplayedColumns.size) }
+        m_clData = Array(players.size) { arrayOfNulls(tmpDisplayedColumns.size) }
 
-        for (i in players!!.indices) {
-            val currentPlayer = players!![i]
+        for (i in players.indices) {
+            val currentPlayer = players[i]
             val comparisonPlayer = getPreviousPlayerDevelopmentStage(currentPlayer)
             for (j in tmpDisplayedColumns.indices) {
                 if (tmpDisplayedColumns[j] is PlayerColumn) {
@@ -226,24 +226,24 @@ class PlayerOverviewTableModel(id: UserColumnController.ColumnModelId, name: Str
         fireTableDataChanged()
     }
 
-    /**
-     * Initializes the lineup only
-     */
-    fun reInitData() {
-        val tmpDisplayedColumns = getDisplayedColumns()
-        for (i in players!!.indices) {
-            val currentPlayer = players!![i]
-            for (j in tmpDisplayedColumns.indices) {
-                if (tmpDisplayedColumns[j].id == UserColumnFactory.NAME ||
-                    tmpDisplayedColumns[j].id == UserColumnFactory.LINEUP ||
-                    tmpDisplayedColumns[j].id == UserColumnFactory.BEST_POSITION ||
-                    tmpDisplayedColumns[j].id == UserColumnFactory.SCHUM_RANK_BENCHMARK ||
-                    tmpDisplayedColumns[j].id == UserColumnFactory.GROUP) {
-                    m_clData!![i][j] = (tmpDisplayedColumns[j] as PlayerColumn).getTableEntry(currentPlayer, null)
-                } else if (tmpDisplayedColumns[j].id == UserColumnFactory.AUTO_LINEUP) {
-                    m_clData!![i][j] = (tmpDisplayedColumns[j] as BooleanColumn).getValue(currentPlayer)
-                }
-            }
-        }
-    }
+//    /**
+//     * Initializes the lineup only
+//     */
+//    fun reInitData() {
+//        val tmpDisplayedColumns = getDisplayedColumns()
+//        for (i in players!!.indices) {
+//            val currentPlayer = players!![i]
+//            for (j in tmpDisplayedColumns.indices) {
+//                if (tmpDisplayedColumns[j].id == UserColumnFactory.NAME ||
+//                    tmpDisplayedColumns[j].id == UserColumnFactory.LINEUP ||
+//                    tmpDisplayedColumns[j].id == UserColumnFactory.BEST_POSITION ||
+//                    tmpDisplayedColumns[j].id == UserColumnFactory.SCHUM_RANK_BENCHMARK ||
+//                    tmpDisplayedColumns[j].id == UserColumnFactory.GROUP) {
+//                    m_clData!![i][j] = (tmpDisplayedColumns[j] as PlayerColumn).getTableEntry(currentPlayer, null)
+//                } else if (tmpDisplayedColumns[j].id == UserColumnFactory.AUTO_LINEUP) {
+//                    m_clData!![i][j] = (tmpDisplayedColumns[j] as BooleanColumn).getValue(currentPlayer)
+//                }
+//            }
+//        }
+//    }
 }

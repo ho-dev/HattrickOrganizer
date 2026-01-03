@@ -1,7 +1,6 @@
 package module.lineup.lineup;
 
 import core.datatype.CBItem;
-import core.gui.HOMainFrame;
 import core.gui.Updatable;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.table.PlayersTable;

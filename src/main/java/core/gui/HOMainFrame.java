@@ -14,7 +14,6 @@ import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.match.Weather;
 import core.model.player.Player;
-import core.module.DefaultModule;
 import core.module.IModule;
 import core.module.ModuleManager;
 import core.module.config.ModuleConfig;
@@ -45,7 +44,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Collectors;
 
 /**
  * The Main HO window
@@ -71,12 +69,12 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 	private final Color c_beta = new Color(162, 201, 255);
 	private final Color c_dev = new Color(235, 170, 170);
 
-	// TODO: Move this to a model backing the main window
-	public Player getSelectedPlayer() {
-		return m_selectedPlayer;
-	}
-
-	private Player m_selectedPlayer;
+//	// TODO: Move this to a model backing the main window
+//	public Player getSelectedPlayer() {
+//		return m_selectedPlayer;
+//	}
+//
+//	private Player m_selectedPlayer;
 
 	// ~ Constructors
 	// -------------------------------------------------------------------------------
