@@ -2,10 +2,11 @@ package module.playerOverview;
 
 import core.gui.HOMainFrame;
 import core.gui.comp.panel.ImagePanel;
+import core.gui.comp.table.PlayersTable;
+import core.gui.model.UserColumnController;
 import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
-import core.model.player.Player;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,27 +21,27 @@ public class PlayerOverviewPanel extends ImagePanel {
 	private JSplitPane verticalSplitPane;
 	private PlayerDetailsPanel playerDetailsPanel;
 	private SpielerTrainingsSimulatorPanel spielerTrainingsSimulatorPanel;
-	private PlayerOverviewTable playerOverviewTable;
+	private PlayersTable playerOverviewTable;
 	private TeamSummaryPanel teamSummaryPanel;
 
 	/**
-	 * Creates a new SpielerUebersichtsPanel object. (Players view panel)
+	 * Creates a new player overview. (Players view panel)
 	 */
 	public PlayerOverviewPanel() {
 		initComponents();
-		addTableSelectionListeners();
+		this.playerOverviewTable.addListSelectionListener(e -> selectPlayer());
+		this.playerOverviewTable.setRowSelectionInterval(0, 0);
 	}
 
 	/**
-	 * Selects the player with the given id.
-	 * 
-	 * @param player
-	 *            the id of the player to select.
+	 * Selects the player
 	 */
-	public void setPlayer(Player player) {
-		playerOverviewTable.selectPlayer(player.getPlayerId());
-		playerDetailsPanel.setPlayer(player);
-		spielerTrainingsSimulatorPanel.setSpieler(player);
+	public void selectPlayer() {
+		var players = this.playerOverviewTable.getSelectedPlayers();
+		for (var player : players ) {
+			playerDetailsPanel.setPlayer(player);
+			spielerTrainingsSimulatorPanel.setSpieler(player);
+		}
 	}
 
 	/**
@@ -66,8 +67,9 @@ public class PlayerOverviewPanel extends ImagePanel {
 	 * Updates all the columns affected by a comparison.
 	 */
 	public final void refreshHRFComparison() {
-		playerOverviewTable.refreshHRFComparison();
-		playerDetailsPanel.setPlayer(playerOverviewTable.getSelectedPlayer());
+		var playerTableModel = (PlayerOverviewTableModel)playerOverviewTable.getModel();
+		playerTableModel.reInitDataHRFComparison();
+//		playerDetailsPanel.setPlayer(playerOverviewTable.getSelectedPlayer());
 	}
 
 	/**
@@ -100,11 +102,11 @@ public class PlayerOverviewPanel extends ImagePanel {
 	}
 
 	/*
-	 * Initialise the players details
+	 * Initialize the players details
 	 */
 	private Component initSpielerDetail() {
 		JTabbedPane tabbedPane = new JTabbedPane();
-		playerDetailsPanel = new PlayerDetailsPanel(playerOverviewTable);
+		playerDetailsPanel = new PlayerDetailsPanel();
 
 		JScrollPane scrollPane = new JScrollPane(playerDetailsPanel);
 		scrollPane.getVerticalScrollBar().setBlockIncrement(100);
@@ -121,7 +123,7 @@ public class PlayerOverviewPanel extends ImagePanel {
 	}
 
 	/*
-	 * Initialise the players history
+	 * Initialize the players history
 	 */
 	private Component initSpielerHistory() {
 		JPanel panel = new ImagePanel();
@@ -132,7 +134,7 @@ public class PlayerOverviewPanel extends ImagePanel {
 		scrollPane.getVerticalScrollBar().setBlockIncrement(100);
 		scrollPane.getVerticalScrollBar().setUnitIncrement(20);
 		panel.add(spielerTrainingsVergleichsPanel, BorderLayout.CENTER);
-		panel.add(new JScrollPane(new RemoveGruppenPanel(playerOverviewTable)), BorderLayout.NORTH);
+		panel.add(new JScrollPane(new RemoveGruppenPanel()), BorderLayout.NORTH);
 
 		if (teamSummaryPanel != null) {
 			spielerTrainingsVergleichsPanel.addChangeListener(teamSummaryPanel);
@@ -149,7 +151,8 @@ public class PlayerOverviewPanel extends ImagePanel {
 		overviewPanel.setLayout(new BorderLayout());
 
 		// table with the player's details
-		playerOverviewTable = new PlayerOverviewTable();
+		var playerOverviewTableModel = UserColumnController.instance().getPlayerOverviewModel();
+		playerOverviewTable = new PlayersTable(playerOverviewTableModel, 1);
 		overviewPanel.add(playerOverviewTable.getContainerComponent(), BorderLayout.CENTER);
 		TeamSummaryModel teamSummaryModel = new TeamSummaryModel();
 		teamSummaryModel.setPlayers(HOVerwaltung.instance().getModel().getCurrentPlayers());
@@ -160,37 +163,41 @@ public class PlayerOverviewPanel extends ImagePanel {
 		scrollPane.setPreferredSize(new Dimension((int) teamSummaryPanel.getPreferredSize().getWidth(),
 				(int) teamSummaryPanel.getPreferredSize().getHeight() + 22));
 		overviewPanel.add(scrollPane, BorderLayout.SOUTH);
+
+		playerOverviewTableModel.initData();
 		return overviewPanel;
 	}
 
 
-	private boolean areSelecting = false;
+//	private boolean areSelecting = false;
+//
+//	/**
+//	 * Adds ListSelectionListener which keep the row selection of the table with
+//	 * the players name and the table with the players details in sync.
+//	 */
+//	private void addTableSelectionListeners() {
+//		playerOverviewTable.getSelectionModel().addListSelectionListener(
+//				e -> {
+//					if (!areSelecting) {
+//						areSelecting = true;
+//						var player = playerOverviewTable.getSelectedPlayer();
+//						if (player == null) {
+//							player = HOMainFrame.instance().getSelectedPlayer();
+//							if ( player != null) {
+//								playerOverviewTable.selectPlayer(player.getPlayerId());
+//							}
+//						} else {
+//							HOMainFrame.instance().selectPlayer(player);
+//						}
+//						areSelecting = false;
+//					}
+//				}
+//		);
+//	}
 
-	/**
-	 * Adds ListSelectionListener which keep the row selection of the table with
-	 * the players name and the table with the players details in sync.
-	 */
-	private void addTableSelectionListeners() {
-		playerOverviewTable.getSelectionModel().addListSelectionListener(
-				e -> {
-					if (!areSelecting) {
-						areSelecting = true;
-						var player = playerOverviewTable.getSelectedPlayer();
-						if (player == null) {
-							player = HOMainFrame.instance().getSelectedPlayer();
-							if ( player != null) {
-								playerOverviewTable.selectPlayer(player.getPlayerId());
-							}
-						} else {
-							HOMainFrame.instance().selectPlayer(player);
-						}
-						areSelecting = false;
-					}
-				}
-		);
-	}
-
-    public void storeUserSettings() {
-		playerOverviewTable.getPlayerTableModel().storeUserSettings();
+    public void storeUserSettings()
+	{
+		var playerOverviewTableModel = (PlayerOverviewTableModel)playerOverviewTable.getModel();
+		playerOverviewTableModel.storeUserSettings();
     }
 }

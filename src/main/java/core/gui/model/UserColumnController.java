@@ -4,6 +4,7 @@ import core.db.DBManager;
 import core.gui.comp.table.HOTableModel;
 import module.hallOfFame.HallOfFameTableModel;
 import module.matches.statistics.MatchesOverviewColumnModel;
+import module.playerOverview.PlayerOverviewTableModel;
 import module.specialEvents.SpecialEventsTableModel;
 import module.teamAnalyzer.ui.RecapPanelTableModel;
 import module.training.ui.TrainingProgressTableModel;

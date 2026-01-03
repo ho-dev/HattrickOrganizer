@@ -24,8 +24,6 @@ import java.util.Map;
  */
 public class RemoveGruppenPanel extends ImagePanel implements ActionListener {
 
-	private static final long serialVersionUID = 3606384591123088694L;
-
 	//~ Instance fields ----------------------------------------------------------------------------
     private final JButton doButton = new JButton(ImageUtilities.getSvgIcon(HOIconName.TURN));
     private final JButton m_jbClean = new JButton(ImageUtilities.getSvgIcon(HOIconName.GROUP_TEAM_CLEAN, Map.of("fillColor", HOColorName.TABLEENTRY_DECLINE_FG)));
@@ -80,7 +78,7 @@ public class RemoveGruppenPanel extends ImagePanel implements ActionListener {
 	 * Creates a new RemoveGruppenPanel object.
 	 *
 	 */
-    public RemoveGruppenPanel(PlayerOverviewTable spielerTable) {
+    public RemoveGruppenPanel() {
         initComponents();
     }
 

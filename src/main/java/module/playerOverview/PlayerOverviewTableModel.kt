@@ -1,13 +1,16 @@
-package core.gui.model
+package module.playerOverview
 
 import core.db.DBManager
 import core.gui.comp.table.BooleanColumn
-import core.gui.comp.table.HOTableModel
+import core.gui.comp.table.HOPlayersTableModel
 import core.gui.comp.table.UserColumn
-import core.gui.model.UserColumnController.ColumnModelId
+import core.gui.model.PlayerColumn
+import core.gui.model.PlayerPositionColumn
+import core.gui.model.PlayerSkillColumn
+import core.gui.model.UserColumnController
+import core.gui.model.UserColumnFactory
 import core.model.player.Player
 import core.util.HODateTime
-import module.playerOverview.SpielerTrainingsVergleichsPanel
 
 /**
  * Model used to display players in the Squad table.
@@ -15,16 +18,13 @@ import module.playerOverview.SpielerTrainingsVergleichsPanel
  * @author Thorsten Dietz
  * @since 1.36
  */
-class PlayerOverviewTableModel(id: ColumnModelId, name: String) : HOTableModel(id, name) {
-    /** all players  */
-    var players: List<Player>? = null
-        private set
+class PlayerOverviewTableModel(id: UserColumnController.ColumnModelId, name: String) : HOPlayersTableModel(id, name) {
 
     /**
      * constructor
      *
      */
-    internal constructor(id: ColumnModelId) : this(id, "Spieleruebersicht")
+    internal constructor(id: UserColumnController.ColumnModelId) : this(id, "Spieleruebersicht")
 
     init {
         val basic: Array<out PlayerColumn>? = UserColumnFactory.createPlayerBasicArray()
@@ -127,18 +127,18 @@ class PlayerOverviewTableModel(id: ColumnModelId, name: String) : HOTableModel(i
         return null
     }
 
-    fun getPlayer(playerId: Int): Player? {
-        // Can be negative for temp player
-        if (playerId != 0) {
-            for (m_vPlayer in players!!) {
-                if (m_vPlayer.playerId == playerId) {
-                    return m_vPlayer
-                }
-            }
-        }
-
-        return null
-    }
+//    fun getPlayer(playerId: Int): Player? {
+//        // Can be negative for temp player
+//        if (playerId != 0) {
+//            for (m_vPlayer in players!!) {
+//                if (m_vPlayer.playerId == playerId) {
+//                    return m_vPlayer
+//                }
+//            }
+//        }
+//
+//        return null
+//    }
 
     fun getPlayerIndex(playerId: Int): Int {
         var i = 0
@@ -151,13 +151,13 @@ class PlayerOverviewTableModel(id: ColumnModelId, name: String) : HOTableModel(i
         return -1
     }
 
-    /**
-     * Sets the new list of players.
-     */
-    fun setValues(player: List<Player>?) {
-        players = player
-        initData()
-    }
+//    /**
+//     * Sets the new list of players.
+//     */
+//    fun setValues(player: List<Player>?) {
+//        players = player
+//        initData()
+//    }
 
     /**
      * Resets the data for an HRF comparison.

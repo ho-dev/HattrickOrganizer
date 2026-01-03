@@ -6,7 +6,7 @@ import core.gui.RefreshManager;
 import core.gui.comp.renderer.BooleanTableCellRenderer;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.comp.table.FixedColumnsTable;
-import core.gui.model.PlayerOverviewTableModel;
+import module.playerOverview.PlayerOverviewTableModel;
 import core.gui.model.UserColumnController;
 import core.gui.model.UserColumnFactory;
 import core.model.HOVerwaltung;
@@ -30,7 +30,7 @@ public final class LineupPlayersTable extends FixedColumnsTable implements core.
 	LineupPlayersTable() {
 		super(UserColumnController.instance().getLineupModel());
 		tableModel = (PlayerOverviewTableModel) this.getModel();
-		tableModel.setValues(HOVerwaltung.instance().getModel().getCurrentPlayers());
+//		tableModel.setValues(HOVerwaltung.instance().getModel().getCurrentPlayers());
 		setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
 		setDefaultRenderer(Boolean.class, new BooleanTableCellRenderer());
 		RefreshManager.instance().registerRefreshable(this);
@@ -71,7 +71,7 @@ public final class LineupPlayersTable extends FixedColumnsTable implements core.
 	}
 
 	private void resetPlayers() {
-		tableModel.setValues(HOVerwaltung.instance().getModel().getCurrentPlayers());
+		tableModel.setPlayers(HOVerwaltung.instance().getModel().getCurrentPlayers());
 	}
 
 	private void initListeners() {

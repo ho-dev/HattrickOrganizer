@@ -4,6 +4,7 @@ import core.datatype.CBItem;
 import core.gui.HOMainFrame;
 import core.gui.Updatable;
 import core.gui.comp.panel.ImagePanel;
+import core.gui.comp.table.PlayersTable;
 import core.gui.model.PlayerCBItem;
 import core.gui.model.PlayerCBItemRenderer;
 import core.gui.theme.HOColorName;
@@ -104,7 +105,8 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
     @Override
     public void focusGained(FocusEvent event) {
         if (getSelectedPlayer() != null) {
-            HOMainFrame.instance().selectPlayer(getSelectedPlayer());
+            PlayersTable.Companion.setSelectedPlayer(getSelectedPlayer());
+//            HOMainFrame.instance().selectPlayer(getSelectedPlayer());
         }
     }
 
@@ -203,7 +205,8 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
             }
 
             if (player != null) {
-                HOMainFrame.instance().selectPlayer(player);
+                PlayersTable.Companion.setSelectedPlayer(player);
+//                HOMainFrame.instance().selectPlayer(player);
             }
 
             //Update all other positions

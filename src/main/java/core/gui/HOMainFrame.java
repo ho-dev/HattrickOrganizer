@@ -190,14 +190,14 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 		return m_HOMainFrame_initialized;
 	}
 
-	public void selectPlayer(Player player) {
-		if (m_selectedPlayer != player) {
-			m_selectedPlayer = player;
-			var lineupPanel = getLineupPanel();
-			if (lineupPanel != null) lineupPanel.setPlayer(player.getPlayerId());
-			getSpielerUebersichtPanel().setPlayer(player);
-		}
-	}
+//	public void selectPlayer(Player player) {
+//		if (m_selectedPlayer != player) {
+//			m_selectedPlayer = player;
+//			var lineupPanel = getLineupPanel();
+//			if (lineupPanel != null) lineupPanel.setPlayer(player.getPlayerId());
+//			getSpielerUebersichtPanel().setPlayer(player);
+//		}
+//	}
 
 	public LineupPanel getLineupPanel() {
 		Container c = getTabbedPane().getModulePanel(IModule.LINEUP);

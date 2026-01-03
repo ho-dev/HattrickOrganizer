@@ -149,7 +149,7 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 								lineupPlayersTable.setPlayer(player.getPlayerId());
 							}
 						} else {
-							HOMainFrame.instance().selectPlayer(player);
+//							HOMainFrame.instance().selectPlayer(player);
 						}
 						areSelecting = false;
 					}
