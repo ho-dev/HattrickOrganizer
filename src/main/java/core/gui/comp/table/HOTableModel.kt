@@ -337,6 +337,7 @@ abstract class HOTableModel protected constructor(
                             val newSelectedRow = table.convertRowIndexToView(modelIndex)
                             table.setRowSelectionInterval(newSelectedRow, newSelectedRow)
                         }
+                        selectedRow = -1
                     }
                 }
             }

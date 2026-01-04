@@ -10,6 +10,7 @@ import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.DoubleLabelEntries;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.renderer.SmilieListCellRenderer;
+import core.gui.comp.table.PlayersTable;
 import core.gui.theme.*;
 import core.model.FactorObject;
 import core.model.FormulaFactors;
@@ -114,7 +115,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
     public void setPlayer(Player player) {
         if (player == null) {
             if (HOMainFrame.isHOMainFrame_initialized()) {
-                player = HOMainFrame.instance().getSelectedPlayer();
+                player = PlayersTable.Companion.getSelectedPlayer();
             }
         }
 //        if  ( player == null) {

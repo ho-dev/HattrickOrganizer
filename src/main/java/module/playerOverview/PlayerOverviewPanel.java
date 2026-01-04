@@ -1,6 +1,8 @@
 package module.playerOverview;
 
 import core.gui.HOMainFrame;
+import core.gui.RefreshManager;
+import core.gui.Refreshable;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.table.PlayersTable;
 import core.gui.model.UserColumnController;
@@ -15,7 +17,7 @@ import java.util.Objects;
 /**
  * Overview of all the players on the team (main class of the package)
  */
-public class PlayerOverviewPanel extends ImagePanel {
+public class PlayerOverviewPanel extends ImagePanel implements Refreshable {
 
 	private JSplitPane horizontalRightSplitPane;
 	private JSplitPane verticalSplitPane;
@@ -29,6 +31,7 @@ public class PlayerOverviewPanel extends ImagePanel {
 	 */
 	public PlayerOverviewPanel() {
 		initComponents();
+		RefreshManager.instance().registerRefreshable(this);
 		this.playerOverviewTable.addListSelectionListener(e -> selectPlayer());
 		this.playerOverviewTable.setRowSelectionInterval(0, 0);
 	}
@@ -59,8 +62,8 @@ public class PlayerOverviewPanel extends ImagePanel {
 	 * Refresh, if a player is changed in the lineup
 	 */
 	public final void refresh() {
-		playerDetailsPanel.refresh();
 		playerOverviewTable.refresh();
+		playerDetailsPanel.refresh();
 	}
 
 	/**
@@ -200,4 +203,9 @@ public class PlayerOverviewPanel extends ImagePanel {
 		var playerOverviewTableModel = (PlayerOverviewTableModel)playerOverviewTable.getModel();
 		playerOverviewTableModel.storeUserSettings();
     }
+
+	@Override
+	public void reInit() {
+		refresh();
+	}
 }
