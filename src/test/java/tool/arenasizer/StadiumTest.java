@@ -1,8 +1,10 @@
 package tool.arenasizer;
 
+import core.util.AmountOfMoney;
 import core.util.HODateTime;
 import org.junit.jupiter.api.Test;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -46,6 +48,11 @@ class StadiumTest {
 			stadium.setUnderRoofSeatingUnderConstruction(EXPANSION_SEATS_UNDER_ROOF);
 			stadium.setVipBoxUnderConstruction(EXPANSION_VIP);
 			stadium.setExpansionDate(EXPANSION_DATE);
+			stadium.setExpansionCosts(ArenaRebuild.calculateCosts(
+					stadium.getTerraces(),
+					stadium.getBasicSeating(),
+					stadium.getUnderRoofSeating(),
+					stadium.getVipBox()));
 		} else {
 			stadium.setRebuiltDate(REBUILT_DATE);
 		}
@@ -63,7 +70,7 @@ class StadiumTest {
 	}
 
 	@Test
-	void getAusbauGesamtgroesse_mitAusbau() {
+	void getTotalSizeUnderConstruction_withExpansion() {
 		// given
 		final var stadium = createStadium(true);
 
@@ -72,7 +79,7 @@ class StadiumTest {
 	}
 
 	@Test
-	void getAusbauGesamtgroesse_ohneAusbau() {
+	void getTotalSizeUnderConstruction_withoutExpansion() {
 		// given
 		final var stadium = createStadium(false);
 
@@ -81,7 +88,7 @@ class StadiumTest {
 	}
 
 	@Test
-	void getFutureTotalSize_mitAusbau() {
+	void getFutureTotalSize_withExpansion() {
 		// given
 		final var stadium = createStadium(true);
 
@@ -90,7 +97,7 @@ class StadiumTest {
 	}
 
 	@Test
-	void getFutureTotalSize_ohneAusbau() {
+	void getFutureTotalSize_withoutExpansion() {
 		// given
 		final var stadium = createStadium(false);
 
@@ -108,7 +115,7 @@ class StadiumTest {
 	}
 
 	@Test
-	void getFutureBasicSeating_mitAusbau() {
+	void getFutureBasicSeating_withExpansion() {
 		// given
 		final var stadium = createStadium(true);
 
@@ -117,7 +124,7 @@ class StadiumTest {
 	}
 
 	@Test
-	void getFutureUnderRoofSeating_mitAusbau() {
+	void getFutureUnderRoofSeating_withExpansion() {
 		// given
 		final var stadium = createStadium(true);
 
@@ -126,7 +133,7 @@ class StadiumTest {
 	}
 
 	@Test
-	void getFutureVipBoxes_mitAusbau() {
+	void getFutureVipBoxes_withExpansion() {
 		// given
 		final var stadium = createStadium(true);
 
@@ -135,7 +142,7 @@ class StadiumTest {
 	}
 
 	@Test
-	void getRebuiltDate_mitAusbau() {
+	void getRebuiltDate_withExpansion() {
 		// given
 		final var stadium = createStadium(true);
 
@@ -144,7 +151,7 @@ class StadiumTest {
 	}
 
 	@Test
-	void getRebuiltDate_ohneAusbau() {
+	void getRebuiltDate_withoutExpansion() {
 		// given
 		final var stadium = createStadium(false);
 
@@ -153,7 +160,7 @@ class StadiumTest {
 	}
 
 	@Test
-	void getExpansionDate_mitAusbau() {
+	void getExpansionDate_withExpansion() {
 		// given
 		final var stadium = createStadium(true);
 
@@ -162,11 +169,29 @@ class StadiumTest {
 	}
 
 	@Test
-	void getExpansionDate_ohneAusbau() {
+	void getExpansionDate_withoutExpansion() {
 		// given
 		final var stadium = createStadium(false);
 
 		// when-then
 		assertThat(stadium.getExpansionDate()).isNull();
+	}
+
+	@Test
+	void getExpansionCostsInSwedishKrona_withoutExpansion() {
+		// given
+		final var stadium = createStadium(false);
+
+		// when-then
+		assertThat(stadium.getExpansionCostsInSwedishKrona()).isNull();
+	}
+
+	@Test
+	void getExpansionCostsInSwedishKrona_withExpansion() {
+		// given
+		final var stadium = createStadium(true);
+
+		// when-then
+		assertThat(stadium.getExpansionCostsInSwedishKrona()).isEqualTo(BigDecimal.valueOf(38350000));
 	}
 }

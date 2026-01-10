@@ -4,8 +4,10 @@ import core.db.AbstractTable;
 import core.util.AmountOfMoney;
 import core.util.HODateTime;
 import core.util.HOLogger;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import java.math.BigDecimal;
@@ -14,6 +16,8 @@ import java.util.Properties;
 
 @Setter
 @Getter
+@EqualsAndHashCode(callSuper = false)
+@ToString
 public class Stadium extends AbstractTable.Storable {
 
 	/**
@@ -84,15 +88,11 @@ public class Stadium extends AbstractTable.Storable {
 	/**
 	 * Rebuilt date
 	 */
-	@Setter
-	@Getter
 	private HODateTime rebuiltDate;
 
 	/**
 	 * Expansion date
 	 */
-	@Setter
-	@Getter
 	private HODateTime expansionDate;
 
 	public Stadium() {
@@ -158,12 +158,7 @@ public class Stadium extends AbstractTable.Storable {
 		return isUnderConstruction() ? Optional.of(getVipBox() + getVipBoxUnderConstruction()) : Optional.empty();
 	}
 
-	public void setExpansionCosts(AmountOfMoney v){
-		this.expansionCosts = v;
-	}
-
 	public BigDecimal getExpansionCostsInSwedishKrona() {
-		if ( this.expansionCosts != null) return this.expansionCosts.getSwedishKrona();
-		return null;
+		return Optional.ofNullable(expansionCosts).map(AmountOfMoney::getSwedishKrona).orElse(null);
 	}
 }
