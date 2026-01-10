@@ -24,12 +24,12 @@ public class SystemManager {
 	private static final String ISNUMERICRATING = "TA_numericRating";
 	private static final String ISLINEUP = "TA_lineupCompare";
 	private static final String ISTACTICDETAIL = "TA_tacticDetail";
-	private final static String ISDESCRIPTIONRATING = "TA_descriptionRating";
-	private final static String ISSHOWUNAVAILABLE = "TA_isShowUnavailable";
-	private final static String ISMIXEDLINEUP = "TA_mixedLineup";
-	private final static String ISSHOWPLAYERINFO = "TA_isShowPlayerInfo";
-	private final static String ISCHECKTEAMNAME = "TA_isCheckTeamName";
-	private final static String IS_SPECIAL_EVENT_VISIBLE = "TA_isSpecialEventVisible";
+	private static final String ISDESCRIPTIONRATING = "TA_descriptionRating";
+	private static final String ISSHOWUNAVAILABLE = "TA_isShowUnavailable";
+	private static final String ISMIXEDLINEUP = "TA_mixedLineup";
+	private static final String ISSHOWPLAYERINFO = "TA_isShowPlayerInfo";
+	private static final String ISCHECKTEAMNAME = "TA_isCheckTeamName";
+	private static final String IS_SPECIAL_EVENT_VISIBLE = "TA_isSpecialEventVisible";
 
 	public static class Setting {
 		Boolean is;

@@ -217,7 +217,7 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
 
     private boolean isRefreshingPlayerDetails =false;
 
-    final private Map<PlayerSkill, Color> skillIDColorMap = Map.of(
+    private final Map<PlayerSkill, Color> skillIDColorMap = Map.of(
             PlayerSkill.KEEPER, Colors.getColor(Colors.COLOR_PLAYER_GK),
             PlayerSkill.SETPIECES, Colors.getColor(Colors.COLOR_PLAYER_SP),
             PlayerSkill.DEFENDING, Colors.getColor(Colors.COLOR_PLAYER_DE),

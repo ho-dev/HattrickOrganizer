@@ -42,7 +42,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 	private static DownloadDialog m_clDownloadDialog;
 	private static final HOVerwaltung hov = HOVerwaltung.instance();
 	private final JButton m_jbAbort = new JButton(TranslationFacility.tr("ls.button.cancel"));
-	final private JButton m_jbDownload = new JButton(TranslationFacility.tr("ls.button.download"));
+	private final JButton m_jbDownload = new JButton(TranslationFacility.tr("ls.button.download"));
 	private final JButton m_jbProxy = new JButton(TranslationFacility.tr("ConfigureProxy"));
 	private final DownloadFilter filterRoot = new DownloadFilter();
 	private final CheckBoxTree downloadFilter = new CheckBoxTree();

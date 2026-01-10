@@ -53,7 +53,7 @@ import static core.util.Helper.INTEGERFORMAT;
 public final class PlayerDetailsPanel extends ImagePanel implements Refreshable, ItemListener, ActionListener {
 
     private final int MATCH_HISTORY_LENGTH = 3;
-    private final static Icon iconStar = ImageUtilities.getStarIcon(ThemeManager.getColor(HOColorName.PLAYER_DETAILS_STARS_FILL));
+    private static final Icon iconStar = ImageUtilities.getStarIcon(ThemeManager.getColor(HOColorName.PLAYER_DETAILS_STARS_FILL));
 
     private final Color BGcolor = ThemeManager.getColor(HOColorName.PANEL_BG);
     private final Color URL = ThemeManager.getColor(HOColorName.URL_PANEL_BG);
