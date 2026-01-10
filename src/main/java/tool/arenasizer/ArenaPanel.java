@@ -37,7 +37,8 @@ final class ArenaPanel extends JPanel {
 
 	public void reInit() {
 		HOModel model = HOVerwaltung.instance().getModel();
-		m_clStadien = ArenaSizer.calcConstructionArenas(model.getStadium(), model.getClub().getFans());
+        m_clStadium = model.getStadium();
+		m_clStadien = ArenaSizer.calcConstructionArenas(m_clStadium, model.getClub().getFans());
 		reinitTable();
 	}
 
@@ -89,6 +90,7 @@ final class ArenaPanel extends JPanel {
 	}
 
 	void reinitArena(Stadium currentArena, int maxSupporter, int normalSupporter, int minSupporter) {
+        m_clStadium = currentArena;
 		m_clStadien = ArenaSizer.calcConstructionArenas(currentArena, maxSupporter, normalSupporter, minSupporter);
 		reinitTable();
 	}
