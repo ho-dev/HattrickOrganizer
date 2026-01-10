@@ -20,7 +20,7 @@ import core.model.player.PlayerCategory;
 import core.util.HODateTime;
 import core.util.Helper;
 import core.util.StringUtils;
-import module.playerOverview.PlayerStatusLabelEntry;
+import module.playeroverview.PlayerStatusLabelEntry;
 
 import javax.swing.*;
 import javax.swing.table.TableColumn;

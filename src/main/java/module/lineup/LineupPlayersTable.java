@@ -14,7 +14,7 @@ import core.model.match.MatchKurzInfo;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import core.net.HattrickLink;
-import module.playerOverview.PlayerTable;
+import module.playeroverview.PlayerTable;
 import org.jetbrains.annotations.Nullable;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;

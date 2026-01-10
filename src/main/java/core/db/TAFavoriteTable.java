@@ -1,6 +1,6 @@
 package core.db;
 
-import module.teamAnalyzer.vo.Team;
+import module.teamanalyzer.vo.Team;
 import java.sql.Types;
 import java.util.List;
 

@@ -1,11 +1,10 @@
 package tool;
 
 import core.gui.HOMainFrame;
-import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
 import tool.arenasizer.ArenaSizerDialog;
 import tool.export.CsvPlayerExport;
-import tool.hrfExplorer.HrfExplorerDialog;
+import tool.hrfexplorer.HrfExplorerDialog;
 import tool.injury.InjuryDialog;
 import tool.keepertool.KeeperToolDialog;
 import tool.notepad.NotepadDialog;

@@ -8,7 +8,7 @@ import core.model.match.IMatchDetails;
 import core.model.match.Matchdetails;
 import core.prediction.engine.TeamData;
 import core.prediction.engine.TeamRatings;
-import module.teamAnalyzer.ui.RatingUtil;
+import module.teamanalyzer.ui.RatingUtil;
 
 import javax.swing.*;
 import java.awt.*;

@@ -5,9 +5,9 @@ import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
 import module.lineup.Lineup;
 import module.lineup.substitution.model.GoalDiffCriteria;
-import module.teamAnalyzer.SystemManager;
-import module.teamAnalyzer.ht.HattrickManager;
-import module.teamAnalyzer.vo.PlayerInfo;
+import module.teamanalyzer.SystemManager;
+import module.teamanalyzer.ht.HattrickManager;
+import module.teamanalyzer.vo.PlayerInfo;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

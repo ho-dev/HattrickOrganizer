@@ -14,7 +14,6 @@ import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.match.Weather;
 import core.model.player.Player;
-import core.module.DefaultModule;
 import core.module.IModule;
 import core.module.ModuleManager;
 import core.module.config.ModuleConfig;
@@ -27,7 +26,7 @@ import core.util.*;
 import module.lineup.LineupMasterView;
 import module.lineup.LineupPanel;
 import module.matches.MatchesPanel;
-import module.playerOverview.PlayerOverviewPanel;
+import module.playeroverview.PlayerOverviewPanel;
 import module.playeranalysis.PlayerAnalysisModulePanel;
 import module.transfer.TransfersPanel;
 import tool.ToolManager;
@@ -45,7 +44,6 @@ import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.stream.Collectors;
 
 /**
  * The Main HO window

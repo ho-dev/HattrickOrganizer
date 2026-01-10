@@ -13,7 +13,7 @@ import core.gui.model.PlayerMatchCBItem;
 import core.gui.theme.HOColor;
 import core.gui.theme.TeamLogoInfo;
 import core.model.*;
-import core.model.Tournament.TournamentDetails;
+import core.model.tournament.TournamentDetails;
 import core.model.enums.MatchType;
 import core.model.match.*;
 import core.model.misc.Basics;
@@ -23,10 +23,10 @@ import core.model.player.Player;
 import core.training.FuturePlayerSkillTraining;
 import core.util.AmountOfMoney;
 import core.util.HODateTime;
-import module.hallOfFame.HallOfFamePlayer;
+import module.halloffame.HallOfFamePlayer;
 import module.matches.MatchLocation;
 import module.nthrf.NtTeamDetails;
-import module.teamAnalyzer.vo.SquadInfo;
+import module.teamanalyzer.vo.SquadInfo;
 import module.transfer.TransferType;
 import module.youth.YouthPlayer;
 import core.model.series.Liga;
@@ -39,7 +39,7 @@ import core.util.ExceptionUtils;
 import module.ifa.IfaMatch;
 import module.lineup.substitution.model.Substitution;
 import module.series.MatchFixtures;
-import module.teamAnalyzer.vo.PlayerInfo;
+import module.teamanalyzer.vo.PlayerInfo;
 import module.transfer.PlayerTransfer;
 import module.transfer.scout.ScoutEintrag;
 import module.youth.YouthTraining;
@@ -1972,7 +1972,7 @@ public class DBManager implements PersistenceManager {
 	 *
 	 * @param team the team
 	 */
-	public void addTAFavoriteTeam(module.teamAnalyzer.vo.Team team) {
+	public void addTAFavoriteTeam(module.teamanalyzer.vo.Team team) {
 		((TAFavoriteTable) getTable(TAFavoriteTable.TABLENAME)).addTeam(team);
 	}
 
@@ -1992,7 +1992,7 @@ public class DBManager implements PersistenceManager {
 	 *
 	 * @return List of Teams Object
 	 */
-	public List<module.teamAnalyzer.vo.Team> getTAFavoriteTeams() {
+	public List<module.teamanalyzer.vo.Team> getTAFavoriteTeams() {
 		return ((TAFavoriteTable) getTable(TAFavoriteTable.TABLENAME))
 				.getTAFavoriteTeams();
 	}

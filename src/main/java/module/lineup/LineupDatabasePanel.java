@@ -9,8 +9,8 @@ import core.model.enums.MatchType;
 import core.model.match.MatchKurzInfo;
 import core.model.match.MatchLineupTeam;
 import core.util.Helper;
-import module.teamAnalyzer.ui.MatchComboBoxRenderer;
-import module.teamAnalyzer.vo.Team;
+import module.teamanalyzer.ui.MatchComboBoxRenderer;
+import module.teamanalyzer.vo.Team;
 
 import javax.swing.*;
 import java.awt.*;
