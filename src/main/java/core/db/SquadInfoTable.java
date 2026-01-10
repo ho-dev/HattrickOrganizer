@@ -2,7 +2,7 @@ package core.db;
 
 import core.util.AmountOfMoney;
 import core.util.HODateTime;
-import module.teamAnalyzer.vo.SquadInfo;
+import module.teamanalyzer.vo.SquadInfo;
 
 import java.sql.Types;
 import java.util.List;

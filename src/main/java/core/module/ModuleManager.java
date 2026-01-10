@@ -2,18 +2,18 @@ package core.module;
 
 import core.model.UserParameter;
 import core.module.config.ModuleConfig;
-import module.hallOfFame.HallOfFameModule;
+import module.halloffame.HallOfFameModule;
 import module.ifa.IfaModule;
 import module.lineup.LineupModule;
 import module.matches.MatchesModule;
 import module.misc.MiscModule;
-import module.playerOverview.PlayerOverviewModule;
+import module.playeroverview.PlayerOverviewModule;
 import module.playeranalysis.PlayerAnalysisModule;
 import module.series.SeriesModule;
-import module.specialEvents.SpecialEventsModule;
+import module.specialevents.SpecialEventsModule;
 import module.statistics.StatisticsModule;
-import module.teamAnalyzer.TeamAnalyzerModule;
-import module.teamOfTheWeek.TeamOfTheWeekModule;
+import module.teamanalyzer.TeamAnalyzerModule;
+import module.teamoftheweek.TeamOfTheWeekModule;
 import module.training.TrainingModule;
 import module.transfer.TransfersModule;
 import module.tsforecast.TSForecastModule;
@@ -22,7 +22,6 @@ import module.youth.YouthModule;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 public final class ModuleManager {

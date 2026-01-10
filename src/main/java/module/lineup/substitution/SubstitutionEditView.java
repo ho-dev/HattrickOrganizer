@@ -12,7 +12,7 @@ import module.lineup.substitution.model.RedCardCriteria;
 import module.lineup.substitution.model.Substitution;
 import module.lineup.substitution.positionchooser.PositionChooser;
 import module.lineup.substitution.positionchooser.PositionSelectionEvent.Change;
-import module.teamAnalyzer.vo.PlayerInfo;
+import module.teamanalyzer.vo.PlayerInfo;
 import java.awt.*;
 import java.util.List;
 import java.util.Map;

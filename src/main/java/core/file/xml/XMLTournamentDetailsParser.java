@@ -1,14 +1,11 @@
 package core.file.xml;
 
-import core.model.Tournament.TournamentDetails;
-import core.model.misc.Basics;
+import core.model.tournament.TournamentDetails;
 import core.util.HODateTime;
 import core.util.HOLogger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-
-import java.util.Date;
 
 public class XMLTournamentDetailsParser {
 

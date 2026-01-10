@@ -2,10 +2,10 @@ package core.gui.model;
 
 import core.db.DBManager;
 import core.gui.comp.table.HOTableModel;
-import module.hallOfFame.HallOfFameTableModel;
+import module.halloffame.HallOfFameTableModel;
 import module.matches.statistics.MatchesOverviewColumnModel;
-import module.specialEvents.SpecialEventsTableModel;
-import module.teamAnalyzer.ui.RecapPanelTableModel;
+import module.specialevents.SpecialEventsTableModel;
+import module.teamanalyzer.ui.RecapPanelTableModel;
 import module.training.ui.TrainingProgressTableModel;
 import module.training.ui.model.ChangesTableModel;
 import module.training.ui.EffectTableModel;
