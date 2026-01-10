@@ -17,7 +17,6 @@ import java.math.BigDecimal;
 
 final class ArenaPanel extends JPanel {
 
-	private final ArenaSizer m_clArenaSizer = new ArenaSizer();
 	private final JTable m_jtArena = new JTable();
 
 	//Teststadium
@@ -38,8 +37,7 @@ final class ArenaPanel extends JPanel {
 
 	public void reInit() {
 		HOModel model = HOVerwaltung.instance().getModel();
-		m_clStadium = model.getStadium();
-		m_clStadien = m_clArenaSizer.calcConstructionArenas(m_clStadium, model.getClub().getFans());
+		m_clStadien = ArenaSizer.calcConstructionArenas(model.getStadium(), model.getClub().getFans());
 		reinitTable();
 	}
 
@@ -91,8 +89,7 @@ final class ArenaPanel extends JPanel {
 	}
 
 	void reinitArena(Stadium currentArena, int maxSupporter, int normalSupporter, int minSupporter) {
-		m_clStadium = currentArena;
-		m_clStadien = m_clArenaSizer.calcConstructionArenas(currentArena, maxSupporter, normalSupporter, minSupporter);
+		m_clStadien = ArenaSizer.calcConstructionArenas(currentArena, maxSupporter, normalSupporter, minSupporter);
 		reinitTable();
 	}
 
@@ -109,22 +106,26 @@ final class ArenaPanel extends JPanel {
 			((DoubleLabelEntries) values[3][1]).getRight().setSpecialNumber(m_clStadium.getVipBox() - stadium.getVipBox(), false);
 			((DoubleLabelEntries) values[4][1]).getLeft().setText(m_clStadium.getTotalSize() + "");
 			((DoubleLabelEntries) values[4][1]).getRight().setSpecialNumber(m_clStadium.getTotalSize() - stadium.getTotalSize(), false);
-			((DoubleLabelEntries) values[5][1]).getLeft().setText(m_clArenaSizer.calcMaxIncome(m_clStadium).toLocaleString());
-			((DoubleLabelEntries) values[5][1]).getRight().setText(m_clArenaSizer.calcMaxIncome(m_clStadium).minus(m_clArenaSizer.calcMaxIncome(stadium)).toLocaleString());
-			((DoubleLabelEntries) values[6][1]).getLeft().setText(m_clArenaSizer.calcMaintenance(m_clStadium).times(BigDecimal.valueOf(-1)).toLocaleString());
-			((DoubleLabelEntries) values[6][1]).getRight().setText(m_clArenaSizer.calcMaintenance(m_clStadium).minus(m_clArenaSizer.calcMaintenance(stadium)).times(BigDecimal.valueOf(-1)).toLocaleString());
-			((DoubleLabelEntries) values[7][1]).getLeft().setText(m_clArenaSizer.calcMaxIncome(m_clStadium).minus(m_clArenaSizer.calcMaintenance(m_clStadium)).toLocaleString());
+			((DoubleLabelEntries) values[5][1]).getLeft().setText(ArenaAdmission.calculateIncome(m_clStadium).toLocaleString());
+			((DoubleLabelEntries) values[5][1]).getRight().setText(ArenaAdmission.calculateIncome(m_clStadium).minus(ArenaAdmission.calculateIncome(stadium)).toLocaleString());
+			((DoubleLabelEntries) values[6][1]).getLeft().setText(ArenaMaintenance.calculateCosts(m_clStadium).times(BigDecimal.valueOf(-1)).toLocaleString());
+			((DoubleLabelEntries) values[6][1]).getRight().setText(ArenaMaintenance.calculateCosts(m_clStadium).minus(ArenaMaintenance.calculateCosts(stadium)).times(BigDecimal.valueOf(-1)).toLocaleString());
+			((DoubleLabelEntries) values[7][1]).getLeft().setText(ArenaAdmission.calculateIncome(m_clStadium).minus(ArenaMaintenance.calculateCosts(m_clStadium)).toLocaleString());
 			((DoubleLabelEntries) values[7][1]).getRight().setText(
-					m_clArenaSizer.calcMaxIncome(m_clStadium)
-							.minus(m_clArenaSizer.calcMaintenance(m_clStadium))
-							.minus(m_clArenaSizer.calcMaxIncome(stadium))
-							.minus(m_clArenaSizer.calcMaintenance(stadium))
+					ArenaAdmission.calculateIncome(m_clStadium)
+							.minus(ArenaMaintenance.calculateCosts(m_clStadium))
+							.minus(ArenaAdmission.calculateIncome(stadium))
+							.minus(ArenaMaintenance.calculateCosts(stadium))
 							.toLocaleString());
+			final int newTerraces = m_clStadium.getTerraces() - stadium.getTerraces();
+			final int newBasicSeating = m_clStadium.getBasicSeating() - stadium.getBasicSeating();
+			final int newUnderRoofSeating = m_clStadium.getUnderRoofSeating() - stadium.getUnderRoofSeating();
+			final int newVipBox = m_clStadium.getVipBox() - stadium.getVipBox();
 			((DoubleLabelEntries) values[8][1]).getLeft().setText(
-					m_clArenaSizer.calcConstructionCosts(m_clStadium.getTerraces() - stadium.getTerraces(),
-				m_clStadium.getBasicSeating() - stadium.getBasicSeating(),
-				m_clStadium.getUnderRoofSeating() - stadium.getUnderRoofSeating(),
-				m_clStadium.getVipBox() - stadium.getVipBox()).toLocaleString());
+					ArenaRebuild.calculateCosts(newTerraces,
+							newBasicSeating,
+							newUnderRoofSeating,
+							newVipBox).toLocaleString());
 			((DoubleLabelEntries) values[8][1]).getRight().setText("");
 
 			for (int i = 2; i < 5; i++) {
@@ -138,15 +139,15 @@ final class ArenaPanel extends JPanel {
                 ((DoubleLabelEntries) values[3][i]).getRight().setSpecialNumber(m_clStadien[i - 2].getVipBox() - m_clStadium.getVipBox(), false);
                 ((DoubleLabelEntries) values[4][i]).getLeft().setText(m_clStadien[i - 2].getTotalSize() + "");
                 ((DoubleLabelEntries) values[4][i]).getRight().setSpecialNumber(m_clStadien[i - 2].getTotalSize() - m_clStadium.getTotalSize(), false);
-                ((DoubleLabelEntries) values[5][i]).getLeft().setText(m_clArenaSizer.calcMaxIncome(m_clStadien[i - 2]).toLocaleString());
-                ((DoubleLabelEntries) values[5][i]).getRight().setText(m_clArenaSizer.calcMaxIncome(m_clStadien[i - 2]).minus(m_clArenaSizer.calcMaxIncome(m_clStadium)).toLocaleString());
-                ((DoubleLabelEntries) values[6][i]).getLeft().setText(m_clArenaSizer.calcMaintenance(m_clStadien[i - 2]).times(BigDecimal.valueOf(-1)).toLocaleString());
-                ((DoubleLabelEntries) values[6][i]).getRight().setText(m_clArenaSizer.calcMaintenance(m_clStadien[i - 2]).minus(m_clArenaSizer.calcMaintenance(m_clStadium)).times(BigDecimal.valueOf(-1)).toLocaleString());
-                ((DoubleLabelEntries) values[7][i]).getLeft().setText(m_clArenaSizer.calcMaxIncome(m_clStadien[i - 2]).minus(m_clArenaSizer.calcMaintenance(m_clStadien[i - 2])).toLocaleString());
-                ((DoubleLabelEntries) values[7][i]).getRight().setText(m_clArenaSizer.calcMaxIncome(m_clStadien[i - 2])
-                        .minus(m_clArenaSizer.calcMaintenance(m_clStadien[i - 2]))
-                        .minus(m_clArenaSizer.calcMaxIncome(m_clStadium))
-                        .minus(m_clArenaSizer.calcMaintenance(m_clStadium)).toLocaleString());
+                ((DoubleLabelEntries) values[5][i]).getLeft().setText(ArenaAdmission.calculateIncome(m_clStadien[i - 2]).toLocaleString());
+                ((DoubleLabelEntries) values[5][i]).getRight().setText(ArenaAdmission.calculateIncome(m_clStadien[i - 2]).minus(ArenaAdmission.calculateIncome(m_clStadium)).toLocaleString());
+                ((DoubleLabelEntries) values[6][i]).getLeft().setText(ArenaMaintenance.calculateCosts(m_clStadien[i - 2]).times(BigDecimal.valueOf(-1)).toLocaleString());
+                ((DoubleLabelEntries) values[6][i]).getRight().setText(ArenaMaintenance.calculateCosts(m_clStadien[i - 2]).minus(ArenaMaintenance.calculateCosts(m_clStadium)).times(BigDecimal.valueOf(-1)).toLocaleString());
+                ((DoubleLabelEntries) values[7][i]).getLeft().setText(ArenaAdmission.calculateIncome(m_clStadien[i - 2]).minus(ArenaMaintenance.calculateCosts(m_clStadien[i - 2])).toLocaleString());
+                ((DoubleLabelEntries) values[7][i]).getRight().setText(ArenaAdmission.calculateIncome(m_clStadien[i - 2])
+                        .minus(ArenaMaintenance.calculateCosts(m_clStadien[i - 2]))
+                        .minus(ArenaAdmission.calculateIncome(m_clStadium))
+                        .minus(ArenaMaintenance.calculateCosts(m_clStadium)).toLocaleString());
                 var expansionCosts = m_clStadien[i - 2].getExpansionCosts();
                 if (expansionCosts != null) {
                     ((DoubleLabelEntries) values[8][i]).getLeft().setText(expansionCosts.times(BigDecimal.valueOf(-1)).toLocaleString());

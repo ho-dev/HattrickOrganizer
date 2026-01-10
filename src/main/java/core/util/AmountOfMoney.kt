@@ -11,7 +11,7 @@ import java.util.*
 /**
  * Amounts of money are stored in swedish krona and displayed in players' locale
  */
-class AmountOfMoney(var swedishKrona: BigDecimal) {
+data class AmountOfMoney(var swedishKrona: BigDecimal) {
     constructor(swedishKrona: Long) : this(BigDecimal.valueOf(swedishKrona, 0))
 
     /**
@@ -246,13 +246,6 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
 
     fun divide(divisor: AmountOfMoney): BigDecimal {
         return this.swedishKrona.divide(divisor.swedishKrona, 2, RoundingMode.HALF_UP)
-    }
-
-    /**
-     * Returns true if the given amounts are equal
-     */
-    fun equals(other: AmountOfMoney): Boolean {
-        return this.swedishKrona.equals(other.swedishKrona)
     }
 
     /**
