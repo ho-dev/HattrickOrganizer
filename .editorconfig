@@ -71,3 +71,7 @@ tab_width = 4
 indent_style = space
 indent_size = 4
 tab_width = 4
+
+# Property files for translations
+[*.properties]
+charset = utf-8
