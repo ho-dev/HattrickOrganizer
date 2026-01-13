@@ -11,7 +11,7 @@ import java.util.Map;
  * The Table UserConfiguration contain all User properties.
  * CONFIG_KEY = Primary Key, fieldname of the class
  * CONFIG_VALUE = value of the field, save as VARCHAR. Convert to right datatype if loaded
- * 
+ *
  * @since 1.36
  *
  */

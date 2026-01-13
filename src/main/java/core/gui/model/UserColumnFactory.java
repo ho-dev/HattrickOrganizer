@@ -25,6 +25,7 @@ import module.playeroverview.PlayerStatusLabelEntry;
 import javax.swing.*;
 import javax.swing.table.TableColumn;
 import java.awt.*;
+import java.util.Optional;
 
 import static core.model.player.IMatchRoleID.aPositionBehaviours;
 import static core.model.player.MatchRoleID.isFieldMatchRoleId;
@@ -176,41 +177,56 @@ public final class UserColumnFactory {
      * @return PlayerColumn[]
      */
     public static PlayerColumn[] createGoalsColumnsArray() {
-        final PlayerColumn[] playerGoalsArray = new PlayerColumn[5];
-        playerGoalsArray[0] = new PlayerColumn(380, "TG", "ls.player.career_goals", 20) {
+        final PlayerColumn[] playerGoalsArray = new PlayerColumn[7];
+        playerGoalsArray[0] = new PlayerColumn(380, "PlayerOverview.CareerGoals.short", "PlayerOverview.CareerGoals.long", 20) {
             @Override
             public int getValue(Player player) {
                 return player.getTotalGoals();
             }
         };
 
-        playerGoalsArray[1] = new PlayerColumn(420, "TG", "ls.player.team_goals", 20) {
+        playerGoalsArray[1] = new PlayerColumn(420, "PlayerOverview.GoalsTeam.short", "PlayerOverview.GoalsTeam.long", 20) {
             @Override
             public int getValue(Player player) {
                 return player.getCurrentTeamGoals();
             }
         };
 
-        playerGoalsArray[2] = new PlayerColumn(390, "HT", "ls.player.hattricks", 20) {
+        playerGoalsArray[2] = new PlayerColumn(390, "PlayerOverview.Hattricks.short", "PlayerOverview.Hattricks.long", 20) {
             @Override
             public int getValue(Player player) {
                 return player.getHatTricks();
             }
         };
 
-        playerGoalsArray[3] = new PlayerColumn(400, "TL", "ls.player.season_series_goals", 20) {
+        playerGoalsArray[3] = new PlayerColumn(400, "PlayerOverview.SeasonSeriesGoals.short", "PlayerOverview.SeasonSeriesGoals.long", 20) {
             @Override
             public int getValue(Player player) {
                 return player.getLeagueGoals();
             }
         };
 
-        playerGoalsArray[4] = new PlayerColumn(410, "TP", "ls.player.season_cup_goals", 20) {
+        playerGoalsArray[4] = new PlayerColumn(410, "PlayerOverview.SeasonCupGoals.short", "PlayerOverview.SeasonCupGoals.long", 20) {
             @Override
             public int getValue(Player player) {
                 return player.getCupGameGoals();
             }
         };
+
+        playerGoalsArray[5] = new PlayerColumn(411, "PlayerOverview.CareerAssists.short", "PlayerOverview.CareerAssists.long", 20) {
+            @Override
+            public int getValue(Player player) {
+                return Optional.ofNullable(player.getCareerAssists()).orElse(0);
+            }
+        };
+
+        playerGoalsArray[6] = new PlayerColumn(412, "PlayerOverview.AssistsCurrentTeam.short", "PlayerOverview.AssistsCurrentTeam.long", 20) {
+            @Override
+            public int getValue(Player player) {
+                return Optional.ofNullable(player.getAssistsCurrentTeam()).orElse(0);
+            }
+        };
+
         return playerGoalsArray;
     }
 

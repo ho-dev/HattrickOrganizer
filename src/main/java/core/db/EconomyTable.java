@@ -9,7 +9,7 @@ import java.sql.Types;
 public final class EconomyTable extends AbstractTable {
 
 	public static final String TABLENAME = "ECONOMY";
-	
+
 	EconomyTable(ConnectionManager adapter){
 		super(TABLENAME,adapter);
 	}

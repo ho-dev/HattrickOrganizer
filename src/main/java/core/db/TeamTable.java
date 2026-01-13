@@ -5,7 +5,7 @@ import java.sql.Types;
 
 final class TeamTable extends AbstractTable {
 	public static final String TABLENAME = "TEAM";
-	
+
 	TeamTable(ConnectionManager adapter){
 		super(TABLENAME,adapter);
 	}
@@ -92,7 +92,7 @@ final class TeamTable extends AbstractTable {
 //		}
 //		return intvalue;
 //	}
-	
+
 	/**
 	 * load the team data for the given HRF id
 	 */

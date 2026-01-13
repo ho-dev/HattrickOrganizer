@@ -11,22 +11,22 @@ public abstract class UserColumn {
 
 	/** unique column id **/
 	protected int id;
-	
+
 	/** columnName properties representation, not display!! **/
 	protected String columnName;
-	
+
 	/** tooltip properties representation **/
 	protected String tooltip;
-	
+
 	/** minimum width of the column **/
 	protected int minWidth;
-	
+
 	/** preferred width of the column **/
 	protected int preferredWidth;
-	
+
 	/** index of the column in the table **/
 	protected int index = 0;
-	
+
 	/** if a column is shown in the table. Only displayed columns are saved in db. **/
 	protected boolean display = false;
 
@@ -69,7 +69,7 @@ public abstract class UserColumn {
 	 * constructor is used by AbstractTable
 	 */
 	public UserColumn(){}
-	
+
 	/**
 	 * returns the language dependency name of the column
 	 * @return String
@@ -77,7 +77,7 @@ public abstract class UserColumn {
 	public final String getColumnName() {
         return translateColumnName ? TranslationFacility.tr(columnName) : columnName;
     }
-	
+
 	/**
 	 * Return  id
 	 * @return int
@@ -90,10 +90,10 @@ public abstract class UserColumn {
 	 * returns the language dependency tooltip of the column
 	 * @return String
 	 */
-	public final String getTooltip() {
-		return (this.translateColumnTooltip)?TranslationFacility.tr(tooltip):tooltip;
-	}
-	
+    public final String getTooltip() {
+        return this.translateColumnTooltip ? TranslationFacility.tr(tooltip) : tooltip;
+    }
+
 	/**
 	 * Should a column be shown
 	 * @return boolean
@@ -164,7 +164,7 @@ public abstract class UserColumn {
 		column.setMinWidth(minWidth);
 		column.setPreferredWidth(preferredWidth);
 	}
-	
+
 	/**
 	 * set preferredWidth for saving to DB
 	 * @param width int
@@ -172,7 +172,7 @@ public abstract class UserColumn {
 	public void setPreferredWidth(int width){
 		preferredWidth = width;
 	}
-	
+
 	public int getPreferredWidth(){
 		return preferredWidth;
 	}

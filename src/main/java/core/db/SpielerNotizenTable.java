@@ -7,7 +7,7 @@ final class SpielerNotizenTable extends AbstractTable {
 
 	/** tablename **/
 	public static final String TABLENAME = "SPIELERNOTIZ";
-	
+
 	SpielerNotizenTable(ConnectionManager adapter){
 		super(TABLENAME,adapter);
 	}

@@ -12,7 +12,7 @@ final class ScoutTable extends AbstractTable {
 
 	/** tablename **/
 	public static final String TABLENAME = "SCOUT";
-	
+
 	ScoutTable(ConnectionManager adapter){
 		super(TABLENAME,adapter);
 	}
@@ -78,5 +78,5 @@ final class ScoutTable extends AbstractTable {
 	List<ScoutEintrag> getScoutList() {
 		return load(ScoutEintrag.class);
 	}
-	
+
 }

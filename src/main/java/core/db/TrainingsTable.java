@@ -16,7 +16,7 @@ import java.util.stream.Stream;
  */
 final class TrainingsTable extends AbstractTable {
 	static final String TABLENAME = "TRAINING";
-	
+
 	TrainingsTable(ConnectionManager adapter){
 		super(TABLENAME, adapter);
 	}

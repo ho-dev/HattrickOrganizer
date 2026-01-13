@@ -166,19 +166,19 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
                 return ret;
             }
         });
-        tmp.add(new YouthPlayerColumn("ls.player.career_goals") {
+        tmp.add(new YouthPlayerColumn("YouthPlayerOverview.CareerGoals.long") {
             @Override
             public IHOTableCellEntry getTableEntry(YouthPlayer player) {
                 return new ColorLabelEntry(player.getCareerGoals(), String.valueOf(player.getCareerGoals()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
             }
         });
-        tmp.add(new YouthPlayerColumn("ls.player.season_series_goals") {
+        tmp.add(new YouthPlayerColumn("YouthPlayerOverview.SeasonSeriesGoals.long") {
             @Override
             public IHOTableCellEntry getTableEntry(YouthPlayer player) {
                 return new ColorLabelEntry(player.getLeagueGoals(), String.valueOf(player.getLeagueGoals()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
             }
         });
-        tmp.add(new YouthPlayerColumn("ls.player.hattricks") {
+        tmp.add(new YouthPlayerColumn("PlayerOverview.Hattricks.long") {
             @Override
             public IHOTableCellEntry getTableEntry(YouthPlayer player) {
                 return new ColorLabelEntry(player.getCareerHattricks(), String.valueOf(player.getCareerHattricks()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);

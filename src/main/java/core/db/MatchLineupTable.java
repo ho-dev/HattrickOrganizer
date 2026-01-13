@@ -12,7 +12,7 @@ public final class MatchLineupTable extends AbstractTable {
 
 	/** tablename **/
 	public static final String TABLENAME = "MATCHLINEUP";
-	
+
 	MatchLineupTable(ConnectionManager adapter){
 		super(TABLENAME,adapter);
 		idColumns = 2;

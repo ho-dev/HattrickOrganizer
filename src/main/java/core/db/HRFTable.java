@@ -101,10 +101,10 @@ public final class HRFTable extends AbstractTable {
 
 	/**
 	 * Get a list of all HRFs
-	 * 
+	 *
 	 * @param asc
 	 *            order ascending (descending otherwise)
-	 * 
+	 *
 	 * @return all matching HRFs
 	 */
 	HRF[] loadAllHRFs(boolean asc) {

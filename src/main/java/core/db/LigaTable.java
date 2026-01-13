@@ -7,11 +7,11 @@ public final class LigaTable extends AbstractTable {
 
 	/** tablename **/
 	public static final String TABLENAME = "LIGA";
-	
+
 	LigaTable(ConnectionManager adapter){
 		super(TABLENAME,adapter);
 	}
-	
+
 	@Override
 	protected void initColumns() {
 		columns = new ColumnDescriptor[]{
@@ -44,5 +44,5 @@ public final class LigaTable extends AbstractTable {
 	Liga getLiga(int hrfID) {
 		return loadOne(Liga.class, hrfID);
 	}
-	
+
 }

@@ -9,7 +9,7 @@ public final class FaktorenTable extends AbstractTable {
 
 	/** tablename **/
 	public static final String TABLENAME = "FAKTOREN";
-	
+
 	FaktorenTable(ConnectionManager adapter){
 		super(TABLENAME, adapter);
 	}

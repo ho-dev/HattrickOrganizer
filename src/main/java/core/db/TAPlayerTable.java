@@ -9,9 +9,9 @@ import java.sql.Types;
  * The Table UserConfiguration contain all User properties. CONFIG_KEY = Primary
  * Key, fieldname of the class CONFIG_VALUE = value of the field, save as
  * VARCHAR. Convert to right datatype if loaded
- * 
+ *
  * @since 1.36
- * 
+ *
  */
 final class TAPlayerTable extends AbstractTable {
 	static final String TABLENAME = "TA_PLAYER";
@@ -57,10 +57,10 @@ final class TAPlayerTable extends AbstractTable {
 
 	/**
 	 * Returns the specialEvent code for a player
-	 * 
+	 *
 	 * @param playerId
 	 *            the playerId
-	 * 
+	 *
 	 * @return a numeric code
 	 */
 	PlayerInfo getLatestPlayerInfo(int playerId) {
@@ -71,7 +71,7 @@ final class TAPlayerTable extends AbstractTable {
 
 	/**
 	 * Add a player to a team
-	 * 
+	 *
 	 * @param info PlayerInfo
 	 */
 	void storePlayer(PlayerInfo info) {

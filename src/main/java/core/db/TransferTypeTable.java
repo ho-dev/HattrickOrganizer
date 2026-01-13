@@ -7,11 +7,11 @@ import java.sql.Types;
 public class TransferTypeTable extends AbstractTable {
 
     static final String TABLENAME = "TRANSFERTYPE";
-	
+
 	TransferTypeTable(ConnectionManager adapter){
 		super(TABLENAME,adapter);
 	}
-	
+
 	@Override
 	protected void initColumns() {
         columns = new ColumnDescriptor[]{
@@ -24,7 +24,7 @@ public class TransferTypeTable extends AbstractTable {
         type.setIsStored(isStored(type.getPlayerId()));
         store(type);
     }
-    
+
     TransferType loadTransferType(int playerId) {
         return loadOne(TransferType.class, playerId);
     }

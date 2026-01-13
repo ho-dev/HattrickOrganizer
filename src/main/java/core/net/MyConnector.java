@@ -79,7 +79,7 @@ public class MyConnector {
 	/**
 	 * Sets the DEBUGSAVE flag. Setting the flag to true will save downloaded
 	 * CHPP files.
-	 * 
+	 *
 	 * @param debugSave
 	 *            true to save downloaded CHPP files, false otherwise.
 	 */
@@ -89,7 +89,7 @@ public class MyConnector {
 
 	/**
 	 * Fetch a specific arena
-	 * 
+	 *
 	 * @param arenaId
 	 *            id of the arena to fetch (-1 = our arena)
 	 * @return arena xml
@@ -132,10 +132,10 @@ public class MyConnector {
 	/**
 	 * downloads an xml File from hattrick Behavior has changed with oauth, but
 	 * we try to convert old syntaxes.
-	 * 
+	 *
 	 * @param file
 	 *            ex. = "?file=leaguedetails&[leagueLevelUnitID = integer]"
-	 * 
+	 *
 	 * @return the complete file as String
 	 */
 	public String getHattrickXMLFile(String file){
@@ -181,7 +181,7 @@ public class MyConnector {
 	 * Fetches matches from Hattrick's matches archive (see 'matchesarchive' in
 	 * Hattrick's CHPP API documentation) for the given team and a specified
 	 * period of time.
-	 * 
+	 *
 	 * @param teamId
 	 *            the ID of the team to fetch the matches for.
 	 * @param firstDate
@@ -248,9 +248,9 @@ public class MyConnector {
 			url += ("&matchID=" + matchId);
 		}
 
-		// Had to remove check for negative team ID. Street teams used in cup have that. 
+		// Had to remove check for negative team ID. Street teams used in cup have that.
 		url += ("&teamID=" + teamId);
-		
+
 		url += "&sourceSystem=" + matchType.getSourceString();
 
 		return getCHPPWebFile(url);
@@ -280,7 +280,7 @@ public class MyConnector {
 
 	/**
 	 * Fetches the match order xml from Hattrick
-	 * 
+	 *
 	 * @param matchId
 	 *            The match id to fetch the lineup for
 	 * @param matchType
@@ -297,7 +297,7 @@ public class MyConnector {
 
 	/**
 	 * Sets the match order with the provided content to the provided match.
-	 * 
+	 *
 	 * @param matchId
 	 *            The match id to upload the order to
 	 * @param matchType
@@ -347,7 +347,7 @@ public class MyConnector {
 	/**
 	 * Gets the most recent and upcoming matches for a given teamId and up to a
 	 * specific date.
-	 * 
+	 *
 	 * @param teamId
 	 *            the id of the team.
 	 * @param forceRefresh
@@ -422,7 +422,7 @@ public class MyConnector {
 	 * Download Players
 	 */
 	public String downloadPlayers(int teamId) {
-		String url = htUrl + "?file=players&version=2.6&includeMatchInfo=true&teamID=" + teamId;
+		String url = htUrl + "?file=players&version=2.7&includeMatchInfo=true&teamID=" + teamId;
 		return getCHPPWebFile(url);
 	}
 	public String downloadPlayerDetails(String playerID) {
@@ -454,7 +454,7 @@ public class MyConnector {
 		String url = htUrl + "?file=stafflist&version=1.2&teamId=" + teamId;
 		return getCHPPWebFile(url);
 	}
-	
+
 	/**
 	 * Download team details
 	 */
@@ -857,7 +857,7 @@ public class MyConnector {
 
 	/**
 	 * Save downloaded data to a temp-file for debugging purposes.
-	 * 
+	 *
 	 * @param url
 	 *            the url where the content was downloaded from
 	 * @param content

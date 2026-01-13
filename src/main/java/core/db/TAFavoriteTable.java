@@ -8,7 +8,7 @@ import java.util.List;
  * The Table UserConfiguration contain all User properties.
  * CONFIG_KEY = Primary Key, fieldname of the class
  * CONFIG_VALUE = value of the field, save as VARCHAR. Convert to right datatype if loaded
- * 
+ *
  * @since 1.36
  *
  */
@@ -31,7 +31,7 @@ final class TAFavoriteTable extends AbstractTable {
     void removeTeam(int teamId) {
         executePreparedDelete(teamId);
     }
-    
+
     void addTeam(Team team) {
         store(team);
     }

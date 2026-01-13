@@ -10,7 +10,7 @@ import java.util.Vector;
 
 final class SpielplanTable extends AbstractTable {
 	static final String TABLENAME = "SPIELPLAN";
-	
+
 	SpielplanTable(ConnectionManager adapter){
 		super(TABLENAME,adapter);
 		idColumns = 2;
@@ -64,7 +64,7 @@ final class SpielplanTable extends AbstractTable {
 		}
 		return ligaid;
 	}
-	
+
 	/**
 	 * Saves a game schedule ({@link MatchFixtures}) with its associated fixtures.
 	 *

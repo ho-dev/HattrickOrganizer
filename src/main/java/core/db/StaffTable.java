@@ -34,9 +34,9 @@ public class StaffTable extends AbstractTable{
 	protected List<StaffMember> getStaffByHrfId(int hrfId) {
 		return load(StaffMember.class, hrfId);
 	}
-	
+
 	protected void storeStaff(int hrfId, List<StaffMember> list) {
-		
+
 		if ( list==null || hrfId < 0) {
 			return;
 		}

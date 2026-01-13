@@ -88,7 +88,7 @@ public class TransferTable extends AbstractTable {
         }
         return load(PlayerTransfer.class, this.connectionManager.executePreparedQuery(getAllTransfersSql, playerid));
     }
-    
+
     /**
      * Gets a list of transfers for your own team.
      *
