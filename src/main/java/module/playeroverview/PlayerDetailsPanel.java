@@ -36,6 +36,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Optional;
 
 import static core.gui.theme.HOIconName.GOTOANALYSEBOTTOM;
 import static core.gui.theme.HOIconName.GOTOANALYSETOP;
@@ -85,6 +86,8 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
     private final JLabel m_jlHattricks = new JLabel("");
     private final JLabel m_jlSeasonSeriesGoals = new JLabel("");
     private final JLabel m_jlSeasonCupGoals = new JLabel("");
+    private final JLabel m_jlCareerAssists = new JLabel("");
+    private final JLabel m_jlAssistsCurrentTeam = new JLabel("");
     private final JLabel m_jlBestPosition = new JLabel("");
     private final JComboBox m_jcbSquad = new JComboBox(GroupTeamFactory.TEAMS_GROUPS);
     private final JComboBox m_jcbInformation = new JComboBox(SMILEYS);
@@ -280,6 +283,8 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         m_jlHattricks.setText(String.valueOf(m_clPlayer.getHatTricks()));
         m_jlSeasonSeriesGoals.setText(String.valueOf(m_clPlayer.getLeagueGoals()));
         m_jlSeasonCupGoals.setText(String.valueOf(m_clPlayer.getCupGameGoals()));
+        m_jlCareerAssists.setText(labelInteger(m_clPlayer.getCareerAssists()));
+        m_jlAssistsCurrentTeam.setText(labelInteger(m_clPlayer.getAssistsCurrentTeam()));
 
         var bestPosition = m_clPlayer.getCalculatedBestPosition();
         m_jlBestPosition.setText(MatchRoleID.getNameForPosition(bestPosition)
@@ -354,6 +359,10 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
                 jpMatchHistory.update(i, _MatchDate, _MatchLabel, _MatchTypeIcon, _MatchPosition, ratingText, match.getMatchID());
         }
 
+    }
+
+    private static String labelInteger(Integer integer) {
+        return Optional.ofNullable(integer).map(String::valueOf).orElse("-");
     }
 
     private Player getComparisonPlayerFirstHRF(Player player) {
@@ -706,13 +715,35 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         jpPlayerGoalsStats.add(m_jlSeasonCupGoals);
 
 
+        label = createLabel("ls.player.career_assists.long");
+        constraintsPlayerGoalsStatsPanel.gridx = 0;
+        constraintsPlayerGoalsStatsPanel.gridy = 5;
+        layoutPlayerGoalsStatsPanel.setConstraints(label, constraintsPlayerGoalsStatsPanel);
+        jpPlayerGoalsStats.add(label);
+
+        constraintsPlayerGoalsStatsPanel.gridx = 1;
+        layoutPlayerGoalsStatsPanel.setConstraints(m_jlCareerAssists, constraintsPlayerGoalsStatsPanel);
+        jpPlayerGoalsStats.add(m_jlCareerAssists);
+
+
+        label = createLabel("ls.player.assists_current_team.long");
+        constraintsPlayerGoalsStatsPanel.gridx = 0;
+        constraintsPlayerGoalsStatsPanel.gridy = 6;
+        layoutPlayerGoalsStatsPanel.setConstraints(label, constraintsPlayerGoalsStatsPanel);
+        jpPlayerGoalsStats.add(label);
+
+        constraintsPlayerGoalsStatsPanel.gridx = 1;
+        layoutPlayerGoalsStatsPanel.setConstraints(m_jlAssistsCurrentTeam, constraintsPlayerGoalsStatsPanel);
+        jpPlayerGoalsStats.add(m_jlAssistsCurrentTeam);
+
+
         label = new JLabel(Helper.getTranslation("ls.module.player_analysis.goals_stats_disclaimer"));
         Font newLabelFont = new Font(label.getFont().getName(), Font.ITALIC, label.getFont().getSize());
         label.setFont(newLabelFont);
 
         constraintsPlayerGoalsStatsPanel.gridx = 0;
-        constraintsPlayerGoalsStatsPanel.gridy = 5;
-        constraintsPlayerGoalsStatsPanel.insets = new Insets(10,10,5,0);
+        constraintsPlayerGoalsStatsPanel.gridy = 7;
+        constraintsPlayerGoalsStatsPanel.insets = new Insets(10,10,7,0);
         layoutPlayerGoalsStatsPanel.setConstraints(label, constraintsPlayerGoalsStatsPanel);
         jpPlayerGoalsStats.add(label);
 

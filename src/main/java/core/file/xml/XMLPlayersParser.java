@@ -160,6 +160,8 @@ public class XMLPlayersParser {
         hash.put("CareerHattricks", (XMLManager.getFirstChildNodeValue(ele)));
         xmlValue2Hash(hash, root, "MatchesCurrentTeam");
         xmlValue2Hash(hash, root, "GoalsCurrentTeam");
+        xmlValue2Hash(hash, root, "CareerAssists");
+        xmlValue2Hash(hash, root, "AssistsCurrentTeam");
         ele = (Element) root.getElementsByTagName("Specialty").item(0);
         hash.put("Specialty", (XMLManager.getFirstChildNodeValue(ele)));
         ele = (Element) root.getElementsByTagName("TransferListed").item(0);
@@ -473,6 +475,8 @@ public class XMLPlayersParser {
         player.setHatTricks(xmlIntValue(root, "CareerHattricks"));
         player.setCurrentTeamMatches(xmlIntegerValue(root, "MatchesCurrentTeam"));
         player.setCurrentTeamGoals(xmlIntValue(root, "GoalsCurrentTeam"));
+        player.setCareerAssists(xmlIntValue(root, "CareerAssists"));
+        player.setAssistsCurrentTeam(xmlIntValue(root, "AssistsCurrentTeam"));
         player.setNationalTeamId(xmlIntegerValue(root, "NationalTeamID"));
 
 //        NationalTeamName : String*
@@ -508,6 +512,5 @@ public class XMLPlayersParser {
         }
 
         return player;
-
     }
 }
