@@ -27,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.swing.*;
 import javax.swing.table.TableColumn;
 import java.awt.*;
+import java.util.Optional;
 
 import static core.model.player.IMatchRoleID.aPositionBehaviours;
 import static core.model.player.MatchRoleID.isFieldMatchRoleId;
@@ -178,7 +179,7 @@ public final class UserColumnFactory {
      * @return PlayerColumn[]
      */
     public static PlayerColumn[] createGoalsColumnsArray() {
-        final PlayerColumn[] playerGoalsArray = new PlayerColumn[5];
+        final PlayerColumn[] playerGoalsArray = new PlayerColumn[7];
         playerGoalsArray[0] = new PlayerColumn(380, "TG", "ls.player.career_goals", 20) {
             @Override
             public int getValue(Player player) {
@@ -186,7 +187,7 @@ public final class UserColumnFactory {
             }
         };
 
-        playerGoalsArray[1] = new PlayerColumn(420, "TG", "ls.player.team_goals", 20) {
+        playerGoalsArray[1] = new PlayerColumn(420, "ls.player.team_goals.short", "ls.player.team_goals", 20) {
             @Override
             public int getValue(Player player) {
                 return player.getCurrentTeamGoals();
@@ -213,6 +214,21 @@ public final class UserColumnFactory {
                 return player.getCupGameGoals();
             }
         };
+
+        playerGoalsArray[5] = new PlayerColumn(411, "ls.player.career_assists.short", "ls.player.career_assists.long", 20) {
+            @Override
+            public int getValue(Player player) {
+                return Optional.ofNullable(player.getCareerAssists()).orElse(0);
+            }
+        };
+
+        playerGoalsArray[6] = new PlayerColumn(412, "ls.player.assists_current_team.short", "ls.player.assists_current_team.long", 20) {
+            @Override
+            public int getValue(Player player) {
+                return Optional.ofNullable(player.getAssistsCurrentTeam()).orElse(0);
+            }
+        };
+
         return playerGoalsArray;
     }
 

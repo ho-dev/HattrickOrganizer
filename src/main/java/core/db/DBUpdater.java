@@ -1,10 +1,13 @@
 package core.db;
 
+import core.HO;
 import core.db.user.UserManager;
 import core.model.enums.DBDataSource;
 import core.util.HODateTime;
 import core.util.HOLogger;
+import module.youth.YouthPlayer;
 
+import javax.swing.*;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
@@ -14,10 +17,10 @@ import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.WeekFields;
-import java.util.*;
-import javax.swing.JOptionPane;
-import core.HO;
-import module.youth.YouthPlayer;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Locale;
 
 final class DBUpdater {
 	ConnectionManager connectionManager;
@@ -136,8 +139,12 @@ final class DBUpdater {
 
 			var stadiumTable = dbManager.getTable(StadionTable.TABLENAME);
 			stadiumTable.tryChangeColumnDataType("AusbauKosten", "INTEGER", "DECIMAL");
-
 		}
+
+        // #2254: Career Assists and Assists for the Team
+        playerTable.tryAddColumn("CareerAssists", "INTEGER");
+        playerTable.tryAddColumn("AssistsCurrentTeam", "INTEGER");
+
 		var stadiumTable = dbManager.getTable(StadionTable.TABLENAME);
 		stadiumTable.tryChangeColumn("AusbauKosten", "NULL");
 
