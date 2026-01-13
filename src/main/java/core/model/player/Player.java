@@ -14,6 +14,8 @@ import core.net.OnlineWorker;
 import core.rating.RatingPredictionModel;
 import core.training.*;
 import core.util.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
@@ -25,10 +27,7 @@ import static core.model.player.MatchRoleID.getPosition;
 import static core.model.player.MatchRoleID.isFieldMatchRoleId;
 import static java.lang.Integer.MAX_VALUE;
 import static java.lang.Integer.min;
-import static java.lang.Math.max;
-import static java.lang.Math.pow;
-import static java.lang.Math.round;
-import static java.lang.Math.sqrt;
+import static java.lang.Math.*;
 
 public class Player extends AbstractTable.Storable {
 
@@ -81,34 +80,41 @@ public class Player extends AbstractTable.Storable {
     /**
      * Wing skill
      */
+    @Getter
     private double subWingerSkill;
 
     /**
      * Pass skill
      */
+    @Getter
     private double subPassingSkill;
 
     /**
      * Playmaking skill
      */
+    @Getter
     private double subPlaymakingSkill;
 
     /**
      * Standards
      */
+    @Getter
     private double subSetPiecesSkill;
 
     /**
      * Goal
      */
+    @Getter
     private double subScoringSkill;
 
     //Subskills
+    @Getter
     private double subGoalkeeperSkill;
 
     /**
      * Verteidigung
      */
+    @Getter
     private double subDefendingSkill;
     private double subStamina;
     private double subForm;
@@ -173,6 +179,15 @@ public class Player extends AbstractTable.Storable {
     private int hatTricks;
 
     private int currentTeamGoals;
+
+    @Getter
+    @Setter
+    private Integer careerAssists;
+
+    @Getter
+    @Setter
+    private Integer assistsCurrentTeam;
+
     /**
      * Home Grown
      */
@@ -405,6 +420,8 @@ public class Player extends AbstractTable.Storable {
         hatTricks = properties.getInt("hat", 0);
         currentTeamGoals = properties.getInt("goalscurrentteam", 0);
         currentTeamMatches = properties.getInt("matchescurrentteam", 0);
+        setCareerAssists(properties.getInt("careerassists", 0));
+        setAssistsCurrentTeam(properties.getInt("assistscurrentteam", 0));
 
         this.isExternallyRecruitedCoach = properties.getBoolean("lineupdisabled", false);
         this.rating = properties.getInt("rating", 0);
@@ -448,8 +465,10 @@ public class Player extends AbstractTable.Storable {
 
         //Subskills calculation
         //Called when saving the HRF because the necessary data is not available here
-        final HOModel oldmodel = HOVerwaltung.instance().getModel();
-        final Player oldPlayer = oldmodel.getCurrentPlayer(spielerId);
+        final Player oldPlayer = Optional.ofNullable(HOVerwaltung.instance())
+            .map(HOVerwaltung::getModel)
+            .map(model -> model.getCurrentPlayer(spielerId))
+            .orElse(null);
         if (oldPlayer != null) {
             // Training blocked (could be done in the past)
             trainingBlock = oldPlayer.hasTrainingBlock();
@@ -467,6 +486,7 @@ public class Player extends AbstractTable.Storable {
         downloadMotherClubInfoIfMissing();
         return this.motherClubId;
     }
+
     private void downloadMotherClubInfoIfMissing() {
         var isCurrentPlayer = HOVerwaltung.instance().getModel().getCurrentPlayer(this.getPlayerId()) != null;
         if (isCurrentPlayer && motherClubId == null ) {
@@ -1002,7 +1022,7 @@ public class Player extends AbstractTable.Storable {
         this.internationalMatches = m_iLaenderspiele;
     }
 
-    public int getInternalMatches() {
+    public int getInternationalMatches() {
         return internationalMatches;
     }
 

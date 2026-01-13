@@ -477,6 +477,8 @@ public class HRFStringBuilder {
             appendKeyValue(playersStringBuilder, "gtc", ht.get("CupGoals"));
             appendKeyValue(playersStringBuilder, "gtt", ht.get("FriendliesGoals"));
             appendKeyValue(playersStringBuilder, "GoalsCurrentTeam", ht.get("GoalsCurrentTeam"));
+            appendKeyValue(playersStringBuilder, "CareerAssists", ht.get("CareerAssists"));
+            appendKeyValue(playersStringBuilder, "AssistsCurrentTeam", ht.get("AssistsCurrentTeam"));
             appendKeyValue(playersStringBuilder, "MatchesCurrentTeam", ht.get("MatchesCurrentTeam"));
             appendKeyValue(playersStringBuilder, "hat", ht.get("CareerHattricks"));
             appendKeyValue(playersStringBuilder, "CountryID", ht.get("CountryID"));
