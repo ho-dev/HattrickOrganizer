@@ -5,7 +5,7 @@ import core.file.xml.TeamStats;
 import core.file.xml.XMLManager;
 import core.file.xml.XMLPlayersParser;
 import core.model.match.MatchKurzInfo;
-import core.net.MyConnector;
+import core.net.Connector;
 import core.net.OnlineWorker;
 import core.util.HODateTime;
 import module.teamanalyzer.manager.PlayerDataManager;
@@ -98,7 +98,7 @@ public class HattrickManager {
     public static List<PlayerInfo> downloadPlayers(int teamId) {
         String xml;
         try {
-            xml = MyConnector.instance().downloadPlayers(teamId);
+            xml = Connector.instance().downloadPlayers(teamId);
         } catch (Exception e) {
             return null;
         }
@@ -173,7 +173,7 @@ public class HattrickManager {
      *
      */
     public static String downloadTeamName(int teamId) {
-		String xml = MyConnector.instance().getHattrickXMLFile("/common/chppxml.axd?file=team&teamID=" + teamId);
+		String xml = Connector.instance().getHattrickXMLFile("/common/chppxml.axd?file=team&teamID=" + teamId);
         Document dom = XMLManager.parseString(xml);
         if ( dom != null) {
             Document teamDocument = dom.getElementsByTagName("Team").item(0).getOwnerDocument();

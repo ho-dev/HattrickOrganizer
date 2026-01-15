@@ -9,8 +9,8 @@ import core.model.HOVerwaltung;
 import core.model.WorldDetailLeague;
 import core.model.WorldDetailsManager;
 import core.model.enums.MatchType;
+import core.net.Connector;
 import core.net.DownloadDialog;
-import core.net.MyConnector;
 import core.util.HODateTime;
 import core.util.HOLogger;
 import module.ifa.gif.Quantize;
@@ -32,7 +32,7 @@ public class PluginIfaUtils {
 	}
 
 	private static String getTeamDetails(int teamID) {
-		return MyConnector.instance().getTeamDetails(teamID);
+		return Connector.instance().getTeamDetails(teamID);
 	}
 
 	private static String parseXmlElement(Document doc, String element, int i, String eleText) {
@@ -135,18 +135,18 @@ public class PluginIfaUtils {
 	private static void insertMatches(HODateTime from, HODateTime to) {
 		StringBuilder errors = new StringBuilder();
 		HODateTime matchDate = null;
-		String matchesArchive = MyConnector.instance().getMatchesArchive(HOVerwaltung.instance().getModel().getBasics().getTeamId(), from, to);
+		String matchesArchive = Connector.instance().getMatchesArchive(HOVerwaltung.instance().getModel().getBasics().getTeamId(), from, to);
 		Document doc = XMLManager.parseString(matchesArchive);
 
 		assert doc != null;
 		int matchesCount = ((Element) doc.getDocumentElement().getElementsByTagName("MatchList")
 				.item(0)).getElementsByTagName("Match").getLength();
-		
+
 		int ownLeague = HOVerwaltung.instance().getModel().getBasics().getLiga();
 		int ownId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 		int opponentId;
 		int opponentLeague = 0;
-		
+
 		for (int i = 0; i < matchesCount; i++) {
 			int matchTypeId = Integer.parseInt(parseXmlElement(doc, "MatchType", i, "Match"));
 			IfaMatch match = new IfaMatch(matchTypeId);
@@ -169,12 +169,12 @@ public class PluginIfaUtils {
 					int awayTeamGoals = Integer.parseInt(parseXmlElement(doc, "AwayGoals", i,
 							"Match"));
 					try {
-						
+
 						int homeLeagueIndex;
 						int awayLeagueIndex;
-						
+
 						// Some ifs inserted to avoid downloading own team info for every match
-						
+
 						if (homeTeamID == ownId) {
 							opponentId = awayTeamID;
 						} else if (awayTeamID == ownId) {
@@ -183,7 +183,7 @@ public class PluginIfaUtils {
 							HOLogger.instance().error(null, "IFA: Owner team not involved in match");
 							continue;
 						}
-						
+
 						List<TeamInfo> opp = XMLTeamDetailsParser.getTeamInfoFromString(getTeamDetails(opponentId));
 						for (TeamInfo o : opp) {
 							if (o.getTeamId() == opponentId) {
@@ -191,7 +191,7 @@ public class PluginIfaUtils {
 								break;
 							}
 						}
-						
+
 						if (homeTeamID == ownId) {
 							homeLeagueIndex = ownLeague;
 							awayLeagueIndex = opponentLeague;
@@ -199,7 +199,7 @@ public class PluginIfaUtils {
 							awayLeagueIndex = ownLeague;
 							homeLeagueIndex = opponentLeague;
 						}
-						
+
 						match.setMatchId(matchID);
 						match.setPlayedDate(matchDate);
 						match.setHomeLeagueId(homeLeagueIndex);

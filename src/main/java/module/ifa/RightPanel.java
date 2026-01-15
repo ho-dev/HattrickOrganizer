@@ -6,7 +6,7 @@ import core.file.xml.XMLWorldDetailsParser;
 import core.model.TranslationFacility;
 import core.model.WorldDetailLeague;
 import core.model.WorldDetailsManager;
-import core.net.MyConnector;
+import core.net.Connector;
 import core.util.GUIUtils;
 import core.util.HOLogger;
 import core.util.IOUtils;
@@ -100,7 +100,7 @@ public class RightPanel extends JPanel {
 		this.updateButton.addActionListener(arg0 -> {
             String worldDetails;
             try {
-                worldDetails = MyConnector.instance().getWorldDetails(0);
+                worldDetails = Connector.instance().getWorldDetails(0);
                 List<WorldDetailLeague> leagues = XMLWorldDetailsParser.parseDetails(XMLManager
                         .parseString(worldDetails));
                 DBManager.instance().storeWorldDetailLeagues(leagues);

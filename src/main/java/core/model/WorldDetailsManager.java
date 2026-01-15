@@ -3,7 +3,7 @@ package core.model;
 import core.db.DBManager;
 import core.file.xml.XMLManager;
 import core.file.xml.XMLWorldDetailsParser;
-import core.net.MyConnector;
+import core.net.Connector;
 import core.util.HOLogger;
 
 import java.util.*;
@@ -92,7 +92,7 @@ public class WorldDetailsManager {
 	private WorldDetailLeague downloadWorldDetailLeague(Integer countryId) {
 		WorldDetailLeague ret = null;
 		try {
-			var worldDetails = MyConnector.instance().getWorldDetailsByCountryId(countryId);
+			var worldDetails = Connector.instance().getWorldDetailsByCountryId(countryId);
 			var leagues = XMLWorldDetailsParser.parseDetails(XMLManager.parseString(worldDetails));
 			if (!leagues.isEmpty()) {
 				ret = leagues.get(0);

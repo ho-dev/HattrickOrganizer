@@ -16,7 +16,7 @@ import core.gui.theme.nimbus.NimbusTheme;
 import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.player.PlayerAvatar;
-import core.net.MyConnector;
+import core.net.Connector;
 import core.util.HODateTime;
 import core.util.HOLogger;
 import core.util.OSUtils;
@@ -411,7 +411,7 @@ public final class ThemeManager {
 	 * @param playerId int
 	 */
 	public void downloadPlayerAvatar(int playerId) {
-		var xml = MyConnector.instance().getAvatars(HOVerwaltung.instance().getModel().getBasics().getTeamId());
+		var xml = Connector.instance().getAvatars(HOVerwaltung.instance().getModel().getBasics().getTeamId());
 		List<PlayerAvatar> playersAvatar = XMLAvatarsParser.parseAvatarsFromString(xml);
 		var playerAvatar = playersAvatar.stream().filter(a->a.getPlayerID()==playerId).toList();
 		for ( var p : playerAvatar ){

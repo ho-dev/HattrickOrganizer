@@ -6,7 +6,7 @@ import core.gui.comp.NumericDocument;
 import core.gui.comp.panel.ImagePanel;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
-import core.net.MyConnector;
+import core.net.Connector;
 import core.util.GUIUtils;
 import core.util.StringUtils;
 
@@ -259,7 +259,7 @@ public class ProxyDialog extends JDialog {
 		settings.setUsername(proxyAuthNameTextField.getText());
 		settings.setPassword(new String(proxyPasswordField.getPassword()));
 
-		MyConnector.instance().enableProxy(settings);
+		Connector.instance().enableProxy(settings);
 
 		UserParameter.instance().ProxyAktiv = useProxyCheckBox.isSelected();
 		UserParameter.instance().ProxyHost = proxyHostTextField.getText();

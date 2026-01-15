@@ -148,7 +148,7 @@ public class OnlineWorker {
 
 				try {
 					HOMainFrame.instance().setInformation(TranslationFacility.tr("ls.update_status.match_info"), 20);
-					matchesString = MyConnector.instance().getMatchesArchive(teamId, firstDate,	lastDate);
+					matchesString = Connector.instance().getMatchesArchive(teamId, firstDate,	lastDate);
 					HOMainFrame.instance().setInformation(TranslationFacility.tr("ls.update_status.match_info"), 20);
 				} catch (Exception e) {
 					// Info
@@ -209,7 +209,7 @@ public class OnlineWorker {
 	}
 
 	private static Matchdetails downloadMatchDetails(SourceSystem sourceSystem, int matchId) {
-		var matchDetails = MyConnector.instance().downloadMatchDetails(sourceSystem.to_string(), matchId);
+		var matchDetails = Connector.instance().downloadMatchDetails(sourceSystem.to_string(), matchId);
 		if (downloadOfMatchDetailsFailed(matchDetails, matchId)) {
 			return null;
 		}
@@ -409,7 +409,7 @@ public class OnlineWorker {
 
 	private static void downloadTeamRatings(int matchID, MatchType matchType, int teamID) {
 		try {
-			var xml = MyConnector.instance().getTeamDetails(teamID);
+			var xml = Connector.instance().getTeamDetails(teamID);
 			var teamrating = new MatchTeamRating(matchID, matchType, XMLTeamDetailsParser.parseTeamdetailsFromString(xml, teamID));
 			DBManager.instance().storeTeamRatings(teamrating);
 		} catch (Exception e) {
@@ -422,7 +422,7 @@ public class OnlineWorker {
 	}
 
 	public static Map<String, String> getTeam(int teamId) {
-		String str = MyConnector.instance().getTeamDetails(teamId);
+		String str = Connector.instance().getTeamDetails(teamId);
 		return XMLTeamDetailsParser.parseTeamdetailsFromString(str, teamId);
 	}
 
@@ -476,7 +476,7 @@ public class OnlineWorker {
 	public static List<MatchKurzInfo> getMatches(int teamId, HODateTime date) {
 		String matchesString = null;
 		try {
-			matchesString = MyConnector.instance().getMatches(teamId, true, date);
+			matchesString = Connector.instance().getMatches(teamId, true, date);
 		} catch (IOException e) {
 			Helper.showMessage(HOMainFrame.instance(), getLangString("Downloadfehler")
 					+ " : Error fetching matches : " + e, getLangString("Fehler"),
@@ -499,7 +499,7 @@ public class OnlineWorker {
 		String tournamentString = "";
 
 		try {
-			tournamentString = MyConnector.instance().getTournamentDetails(tournamentId);
+			tournamentString = Connector.instance().getTournamentDetails(tournamentId);
 		} catch (IOException e) {
 			Helper.showMessage(HOMainFrame.instance(), getLangString("Downloadfehler")
 							+ " : Error fetching Tournament Details : " + e, getLangString("Fehler"),
@@ -535,7 +535,7 @@ public class OnlineWorker {
 		HOMainFrame.instance().setWaitInformation();
 
 		try {
-			matchesString = MyConnector.instance().getMatches(teamId, forceRefresh, upcoming);
+			matchesString = Connector.instance().getMatches(teamId, forceRefresh, upcoming);
 			bOK = (matchesString != null && !matchesString.isEmpty());
 			if (bOK)
 				HOMainFrame.instance().setWaitInformation();
@@ -691,7 +691,7 @@ public class OnlineWorker {
 		String leagueFixtures;
 		try {
 			HOMainFrame.instance().setWaitInformation();
-			leagueFixtures = MyConnector.instance().getLeagueFixtures(season, leagueID);
+			leagueFixtures = Connector.instance().getLeagueFixtures(season, leagueID);
 			HOMainFrame.instance().setWaitInformation();
 			return XMLSpielplanParser.parseSpielplanFromString(leagueFixtures);
 		} catch (Exception e) {
@@ -719,7 +719,7 @@ public class OnlineWorker {
 		String result;
 		String orders = lineup.toJson();
 		try {
-			result = MyConnector.instance().uploadMatchOrder(matchId, HOVerwaltung.instance().getModel().getBasics().getTeamId(), matchType, orders);
+			result = Connector.instance().uploadMatchOrder(matchId, HOVerwaltung.instance().getModel().getBasics().getTeamId(), matchType, orders);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -736,7 +736,7 @@ public class OnlineWorker {
 	public static MatchKurzInfo inferMissingMatchType(MatchKurzInfo _match) {
 		String matchDetails;
 		Matchdetails details;
-		var conn = MyConnector.instance();
+		var conn = Connector.instance();
 		conn.setSilentDownload(true);
 
 		try {
@@ -812,7 +812,7 @@ public class OnlineWorker {
 		Matchdetails details;
 
 		try {
-			matchDetails = MyConnector.instance().downloadMatchdetails(matchID, matchType);
+			matchDetails = Connector.instance().downloadMatchdetails(matchID, matchType);
 			if (downloadOfMatchDetailsFailed(matchDetails, matchID)) {
 				return null;
 			}
@@ -823,7 +823,7 @@ public class OnlineWorker {
 				HOLogger.instance().warning(OnlineWorker.class, "Error parsing match details for match " + matchID);
 				return null;
 			}
-			String arenaString = MyConnector.instance().downloadArena(details.getArenaID());
+			String arenaString = Connector.instance().downloadArena(details.getArenaID());
 			HOMainFrame.instance().setWaitInformation();
 			details.setRegionId(XMLArenaParser.parseArenaFromString(arenaString).getRight().getRegion().id());
 		} catch (Exception e) {
@@ -849,7 +849,7 @@ public class OnlineWorker {
 		MatchLineup lineUp=null;
 		boolean bOK;
 		try {
-			matchLineup = MyConnector.instance().downloadMatchLineup(matchID, teamID, matchType);
+			matchLineup = Connector.instance().downloadMatchLineup(matchID, teamID, matchType);
 			bOK = (matchLineup != null && !matchLineup.isEmpty());
 		} catch (Exception e) {
 			String msg = getLangString("Downloadfehler") + " : Error fetching Matchlineup :";
@@ -906,7 +906,7 @@ public class OnlineWorker {
 
 		try {
 			var teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-			String xml = MyConnector.instance().downloadMatchOrder(matchId, matchType, teamId);
+			String xml = Connector.instance().downloadMatchOrder(matchId, matchType, teamId);
 
 			if (!StringUtils.isEmpty(xml)) {
 				Map<String, String> map = XMLMatchOrderParser.parseMatchOrderFromString(xml);
@@ -936,7 +936,7 @@ public class OnlineWorker {
 	public static Regiondetails getRegionDetails(int regionId)
 	{
 		try {
-			String xml = MyConnector.instance().getRegion(regionId);
+			String xml = Connector.instance().getRegion(regionId);
 			if ( !StringUtils.isEmpty(xml)){
 				return new Regiondetails(XMLRegionParser.parseRegionDetailsFromString(xml));
 			}
@@ -1139,16 +1139,16 @@ public class OnlineWorker {
 	}
 
 	public static boolean isSilentDownload() {
-		return MyConnector.instance().isSilentDownload();
+		return Connector.instance().isSilentDownload();
 	}
 
 	public static void setSilentDownload(boolean silentDownload) {
-		MyConnector.instance().setSilentDownload(silentDownload);
+		Connector.instance().setSilentDownload(silentDownload);
 	}
 
 	public static List<MatchKurzInfo> downloadMatchesOfSeason(int teamId, int season){
 		try{
-			var xml = MyConnector.instance().getMatchesOfSeason(teamId, season);
+			var xml = Connector.instance().getMatchesOfSeason(teamId, season);
 			return XMLMatchArchivParser.parseMatchesFromString(xml);
 		}
 		catch (Exception exception) {
@@ -1173,7 +1173,7 @@ public class OnlineWorker {
 			else {
 				dateUntil = null;	// until now
 			}
-			var mc = MyConnector.instance();
+			var mc = Connector.instance();
 			try {
 				var xml = mc.getMatchesArchive(SourceSystem.YOUTH, youthteamid, dateSince, dateUntil);
 				var youthMatches = XMLMatchArchivParser.parseMatchesFromString(xml);
@@ -1213,7 +1213,7 @@ public class OnlineWorker {
 	}
 
 	private static NtTeamDetails downloadNtTeam(int teamId) {
-		var xml = MyConnector.instance().downloadNtTeamDetails(teamId);
+		var xml = Connector.instance().downloadNtTeamDetails(teamId);
 		NtTeamDetails details = new NtTeamDetails();
 		details.parseDetails(xml);
 		details.setHrfId(DBManager.instance().getLatestHRF().getHrfId());
@@ -1222,7 +1222,7 @@ public class OnlineWorker {
 	}
 
 	public static Player downloadPlayerDetails(String playerID) {
-		var xml = MyConnector.instance().downloadPlayerDetails(playerID);
+		var xml = Connector.instance().downloadPlayerDetails(playerID);
 		return new XMLPlayersParser().parsePlayerDetailsFromString(xml);
 	}
 
@@ -1248,7 +1248,7 @@ public class OnlineWorker {
 		var lastFinishedMatch = matches.stream().filter(f->f.getMatchStatus()==MatchKurzInfo.FINISHED).max(MatchKurzInfo::compareTo);
 		if ( lastFinishedMatch.isPresent()) {
 			var match = lastFinishedMatch.get();
-			var matchLineupString = MyConnector.instance().downloadMatchLineup(match.getMatchID(), teamId, match.getMatchType());
+			var matchLineupString = Connector.instance().downloadMatchLineup(match.getMatchID(), teamId, match.getMatchType());
 			if (!matchLineupString.isEmpty()) {
 				matchLineup = XMLMatchLineupParser.parseMatchLineupFromString(matchLineupString);
 			}
@@ -1260,7 +1260,7 @@ public class OnlineWorker {
 		if (matchLineup != null) {
 			Matchdetails md = XMLMatchdetailsParser
 					.parseMatchdetailsFromString(
-							MyConnector.instance().downloadMatchdetails(matchLineup.getMatchID(),
+							Connector.instance().downloadMatchdetails(matchLineup.getMatchID(),
 									matchLineup.getMatchTyp()), null);
 
 			if (matchLineup.getHomeTeamId() == teamId) {
@@ -1289,7 +1289,7 @@ public class OnlineWorker {
 			var nextMatch = matches.stream().filter(f -> f.getMatchStatus() == MatchKurzInfo.UPCOMING).min(MatchKurzInfo::compareTo);
 			if ( nextMatch.isPresent()){
 				var match = nextMatch.get();
-				return XMLMatchOrderParser.parseMatchOrderFromString(MyConnector.instance().downloadMatchOrder(
+				return XMLMatchOrderParser.parseMatchOrderFromString(Connector.instance().downloadMatchOrder(
 						match.getMatchID(), match.getMatchType(), teamId));
 			}
 		}
@@ -1299,7 +1299,7 @@ public class OnlineWorker {
 	}
 
 	public static Map<String, TeamStats> downloadLeagueDetails(int leagueId) {
-		String leagueDetailsXml = MyConnector.instance().getLeagueDetails(String.valueOf(leagueId));
+		String leagueDetailsXml = Connector.instance().getLeagueDetails(String.valueOf(leagueId));
 		return XMLLeagueDetailsParser.parseLeagueDetails(leagueDetailsXml);
 	}
 
@@ -1315,7 +1315,7 @@ public class OnlineWorker {
 
 	public static List<WorldDetailLeague> downloadWorldDetails() {
 		try {
-			var worldDetails = MyConnector.instance().getWorldDetails(0);
+			var worldDetails = Connector.instance().getWorldDetails(0);
 			return XMLWorldDetailsParser.parseDetails(XMLManager.parseString(worldDetails));
 		} catch (IOException e) {
 			throw new RuntimeException(e);
@@ -1323,7 +1323,7 @@ public class OnlineWorker {
 	}
 
     public static List<HallOfFamePlayer> downloadHallOfFame(int teamId) {
-        String xmlString = MyConnector.instance().downloadHallOfFamePlayers(teamId);
+        String xmlString = Connector.instance().downloadHallOfFamePlayers(teamId);
         return XMLPlayersParser.parseHallOfFamesPlayersFromString(xmlString);
     }
 }

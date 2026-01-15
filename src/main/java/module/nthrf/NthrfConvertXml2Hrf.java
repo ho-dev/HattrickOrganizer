@@ -4,7 +4,7 @@ import core.file.hrf.HRFStringBuilder;
 import core.file.xml.*;
 import core.gui.HOMainFrame;
 import core.model.match.*;
-import core.net.MyConnector;
+import core.net.Connector;
 import core.net.OnlineWorker;
 import core.util.HOLogger;
 import core.util.Helper;
@@ -27,7 +27,7 @@ class NthrfConvertXml2Hrf {
 	/**
 	 * Create the HRF file.
 	 */
-	final String createHrf(long teamId, MyConnector dh) throws Exception {
+	final String createHrf(long teamId, Connector dh) throws Exception {
 		try {
 			int progressIncrement = 5;
 			HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.connection"), progressIncrement);
@@ -89,7 +89,7 @@ class NthrfConvertXml2Hrf {
 	/**
 	 * Parse all leagues and (nativeLeagueId) and their countryId.
 	 */
-	HashMap<Integer, Integer> getCountryMapping(MyConnector dh) {
+	HashMap<Integer, Integer> getCountryMapping(Connector dh) {
 		HashMap<Integer, Integer> ret = new HashMap<>(100);
 		try {
 			String str = getWorldDetailString(dh);
@@ -124,7 +124,7 @@ class NthrfConvertXml2Hrf {
 		return ret;
 	}
 
-    private String getWorldDetailString(MyConnector dh) {
+    private String getWorldDetailString(Connector dh) {
         return dh.getHattrickXMLFile("/chppxml.axd?file=worlddetails&version=1.8");
     }
 
