@@ -1,4 +1,4 @@
-package module.playeranalysis.skillCompare;
+package module.playeranalysis.skillcompare;
 
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;

@@ -8,7 +8,7 @@ import core.model.player.Player;
 import module.lineup.Lineup;
 import module.opponentspy.OppPlayerSkillEstimator;
 import module.opponentspy.OpponentPlayer;
-import module.opponentspy.OpponentTeam.PlayedPosition;
+import module.opponentspy.opponentteam.PlayedPosition;
 import module.teamanalyzer.manager.PlayerDataManager;
 import module.teamanalyzer.vo.MatchDetail;
 import module.teamanalyzer.vo.PlayerInfo;
