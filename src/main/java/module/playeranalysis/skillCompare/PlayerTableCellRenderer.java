@@ -19,7 +19,7 @@ import java.awt.*;
 import java.text.DecimalFormat;
 import java.util.StringTokenizer;
 
-class MyTableCellRenderer  implements TableCellRenderer{
+class PlayerTableCellRenderer implements TableCellRenderer {
 	private Color gelb;
 	private Color gruen;
 	private final Color dklgruen = new Color (0,200,0);
@@ -31,7 +31,7 @@ class MyTableCellRenderer  implements TableCellRenderer{
 	private final String[] name = new String[2];
     private final DecimalFormat df = new DecimalFormat("#,###,##0.00");
 
-	public MyTableCellRenderer()
+	public PlayerTableCellRenderer()
 	{
 		gelb = ThemeManager.getColor(HOColorName.PLAYER_SKILL_BG);
 		gruen= ThemeManager.getColor(HOColorName.PLAYER_SKILL_SPECIAL_BG);
