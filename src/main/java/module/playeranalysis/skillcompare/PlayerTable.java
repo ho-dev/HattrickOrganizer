@@ -55,7 +55,6 @@ class PlayerTable extends JTable{
 	    {
 	    	int width = 65;
 	    	col = this.getColumnModel().getColumn(qq);
-	    	//col.setCellRenderer(new MyTableCellRenderer(iHoMiniMod));
 	    	if(qq ==1)
 	    		width = 90;
 	    	col.setPreferredWidth(width);
@@ -80,7 +79,7 @@ class PlayerTable extends JTable{
 	    	col = this.getColumnModel().getColumn(pp);
 	    	if(pp > 0)
 	    	{
-	    		col.setCellRenderer(new MyTableCellRenderer());
+	    		col.setCellRenderer(new PlayerTableCellRenderer());
 	    	}
 	    	if(columnName.equals(TranslationFacility.tr("ls.player.position_short.keeper"))
 	    			|| columnName.equals(TranslationFacility.tr("ls.player.position_short.centraldefender"))
