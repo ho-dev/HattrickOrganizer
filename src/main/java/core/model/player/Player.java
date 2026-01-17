@@ -9,7 +9,7 @@ import core.model.*;
 import core.model.enums.MatchType;
 import core.model.match.MatchLineupPosition;
 import core.model.match.MatchLineupTeam;
-import core.net.MyConnector;
+import core.net.Connector;
 import core.net.OnlineWorker;
 import core.rating.RatingPredictionModel;
 import core.training.*;
@@ -470,7 +470,7 @@ public class Player extends AbstractTable.Storable {
     private void downloadMotherClubInfoIfMissing() {
         var isCurrentPlayer = HOVerwaltung.instance().getModel().getCurrentPlayer(this.getPlayerId()) != null;
         if (isCurrentPlayer && motherClubId == null ) {
-            var connection = MyConnector.instance();
+            var connection = Connector.instance();
             var isSilentDownload = connection.isSilentDownload();
             try {
                 connection.setSilentDownload(true);

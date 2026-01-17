@@ -15,12 +15,12 @@ import core.model.HOVerwaltung;
 import core.model.match.*;
 import core.model.player.PlayerAvatar;
 import core.model.player.TrainerStatus;
+import core.net.Connector;
 import core.net.OnlineWorker;
 import core.util.AmountOfMoney;
 import core.util.HODateTime;
 import core.util.Helper;
 import core.module.config.ModuleConfig;
-import core.net.MyConnector;
 import hattrickdata.Arena;
 import module.transfer.PlayerTransfer;
 import org.jetbrains.annotations.Nullable;
@@ -33,7 +33,7 @@ import static core.net.OnlineWorker.*;
 
 /**
  * Convert the necessary xml data into a HRF file.
- * 
+ *
  * @author thomas.werth
  */
 public class ConvertXml2Hrf {
@@ -50,7 +50,7 @@ public class ConvertXml2Hrf {
 	public static @Nullable String createHrf() throws IOException {
 		int progressIncrement = 3;
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.connection"), progressIncrement);
-		final MyConnector mc = MyConnector.instance();
+		final Connector mc = Connector.instance();
 		int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 		Integer youthTeamId = HOVerwaltung.instance().getModel().getBasics().getYouthTeamId();
 

@@ -5,7 +5,7 @@ import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
 import core.model.Translator;
-import core.net.MyConnector;
+import core.net.Connector;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -26,7 +26,7 @@ public class PlayerAvatars {
     TranslationFacility.setLanguage(Translator.LANGUAGE_DEFAULT);
 //    HOVerwaltung.instance().set
 
-    final MyConnector mc = MyConnector.instance();
+    final Connector mc = Connector.instance();
     int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
 //    Map<String, String> arenaDataMap = XMLAvatarsParser.parseAvatarsFromString(mc.getAvatars(teamId));
 

@@ -3,7 +3,7 @@ package module.nthrf;
 import core.file.ExampleFileFilter;
 import core.file.xml.XMLManager;
 import core.model.TranslationFacility;
-import core.net.MyConnector;
+import core.net.Connector;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
@@ -27,7 +27,7 @@ public class NthrfUtil {
      */
     public static String createNthrf(long teamId) {
         try {
-            MyConnector dh = MyConnector.instance();
+            Connector dh = Connector.instance();
             NthrfConvertXml2Hrf x2h = new NthrfConvertXml2Hrf();
 
             var hrf = x2h.createHrf(teamId, dh);
@@ -88,7 +88,7 @@ public class NthrfUtil {
     public static List<String[]> getNtTeams() {
     	List<String[]> ret = new ArrayList<>();
         try {
-            String xmldata = MyConnector.instance().getHattrickXMLFile("/chppxml.axd?file=team");
+            String xmldata = Connector.instance().getHattrickXMLFile("/chppxml.axd?file=team");
             final Document doc = XMLManager.parseString(xmldata);
             Element ele;
             Element root;

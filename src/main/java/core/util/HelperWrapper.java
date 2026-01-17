@@ -5,7 +5,7 @@ import core.model.HOVerwaltung;
 import core.model.enums.MatchType;
 import core.model.match.Matchdetails;
 import core.model.player.IMatchRoleID;
-import core.net.MyConnector;
+import core.net.Connector;
 
 /**
  * @author thomas.werth
@@ -74,7 +74,7 @@ public class HelperWrapper {
     @Deprecated
     public boolean isUserMatch(String matchID, MatchType matchType) {
     	try {
-          String input = MyConnector.instance().downloadMatchdetails(Integer.parseInt(matchID), matchType);
+          String input = Connector.instance().downloadMatchdetails(Integer.parseInt(matchID), matchType);
           Matchdetails mdetails = XMLMatchdetailsParser.parseMatchdetailsFromString(input, null);
           int teamID = HOVerwaltung.instance().getModel().getBasics().getTeamId();
           return ((mdetails.getHomeTeamId() == teamID) || (mdetails.getGuestTeamId() == teamID));

@@ -1,7 +1,7 @@
 package core.gui;
 
 import core.db.frontend.SQLDialog;
-import core.net.MyConnector;
+import core.net.Connector;
 
 import javax.swing.*;
 import java.awt.event.ItemEvent;
@@ -34,7 +34,7 @@ public class DebugMode {
 
 	private static JMenuItem getSaveXMLMenuItem() {
 		JMenuItem newItem = new JCheckBoxMenuItem("Save downloaded XML");
-		newItem.addItemListener(e -> MyConnector.setDebugSave(e.getStateChange() == ItemEvent.SELECTED));
+		newItem.addItemListener(e -> Connector.setDebugSave(e.getStateChange() == ItemEvent.SELECTED));
 		return newItem;
 	}
 }

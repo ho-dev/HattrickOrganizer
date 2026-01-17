@@ -3,14 +3,14 @@ package tool.updater;
 import java.awt.*;
 import javax.swing.*;
 import core.gui.comp.HyperLinkLabel;
-import core.net.MyConnector;
+import core.net.Connector;
 
 public class UpdaterPanel extends JPanel {
 
 	private String version;
 	private String releaseNoteUrl;
 	private String updateLink;
-	
+
 	public UpdaterPanel(String version, String releaseNoteUrl) {
 		this.version = version;
 		this.releaseNoteUrl = releaseNoteUrl;
@@ -27,19 +27,19 @@ public class UpdaterPanel extends JPanel {
 		setPreferredSize( new Dimension( 680, 300 ) );
 		initLayout();
 	}
-	
+
 	private void initLayout() {
 		initLabelVersion();
 		initHiperLink();
 	    add(Box.createRigidArea(new Dimension(10,0)));
 	    initReleaseNotesPanel();
 	}
-	
+
 	// Create Version panel
 	private void initLabelVersion() {
 		JPanel panel = new JPanel();
-	    JLabel label = new JLabel(version);	    
-		
+	    JLabel label = new JLabel(version);
+
 		panel.setLayout(new BoxLayout(panel, BoxLayout.PAGE_AXIS));
 		panel.setBorder(BorderFactory.createCompoundBorder());
 	    panel.add(label);
@@ -62,14 +62,14 @@ public class UpdaterPanel extends JPanel {
 			add(panel);
 		}
 	}
-	
+
 	// Create Release Notes panel
 	private void initReleaseNotesPanel() {
 
         JTextPane panel  = new JTextPane();
         panel.setContentType("text/html;charset=UTF-8");
         try {
-			var is = MyConnector.instance().getWebFile(releaseNoteUrl, false);
+			var is = Connector.instance().getWebFile(releaseNoteUrl, false);
 			panel.read(is, "Release notes");
             //panel.setPage(releaseNoteUrl);
         } catch (Exception  e) {

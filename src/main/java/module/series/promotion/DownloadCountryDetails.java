@@ -5,10 +5,9 @@ import core.file.xml.TeamStats;
 import core.file.xml.XMLLeagueDetailsParser;
 import core.file.xml.XMLTeamDetailsParser;
 import core.model.HOVerwaltung;
-import core.net.MyConnector;
+import core.net.Connector;
 import core.util.HOLogger;
 
-import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
@@ -47,7 +46,7 @@ import java.util.stream.Collectors;
  */
 public class DownloadCountryDetails {
 
-    final MyConnector mc = MyConnector.instance();
+    final Connector mc = Connector.instance();
     final DataSubmitter submitter = HttpDataSubmitter.instance();
 
     private Map<String, TeamStats> getTeamsInfoInSeries(int seriesId) {

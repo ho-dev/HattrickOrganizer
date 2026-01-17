@@ -5,7 +5,7 @@ import core.HO;
 import core.gui.HOMainFrame;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
-import core.net.MyConnector;
+import core.net.Connector;
 import core.util.BrowserLauncher;
 import core.util.HOLogger;
 import core.util.Updater;
@@ -44,11 +44,11 @@ public final class UpdateController {
         // check if version available based on channel
         switch (UserParameter.temp().ReleaseChannel) {
             case "Dev":
-                VersionInfo devVersion = MyConnector.instance().getLatestVersion();
+                VersionInfo devVersion = Connector.instance().getLatestVersion();
                 if (compareToCurrentVersions(devVersion)) updateVersion = devVersion;
                 // no break; to check if there is a newer beta release
             case "Beta":
-                VersionInfo betaVersion = MyConnector.instance().getLatestBetaVersion();
+                VersionInfo betaVersion = Connector.instance().getLatestBetaVersion();
                 if (compareToCurrentVersions(betaVersion)) {
                     if (compareTwoVersions(betaVersion, updateVersion)) {
                         updateVersion = betaVersion;
@@ -58,7 +58,7 @@ public final class UpdateController {
                 // no break to check if there is a newer stable release
             default:
             case "Stable":
-                VersionInfo stableVersion = MyConnector.instance().getLatestStableVersion();
+                VersionInfo stableVersion = Connector.instance().getLatestStableVersion();
                 if (compareToCurrentVersions(stableVersion)) {
                     if (compareTwoVersions(stableVersion, updateVersion)) {
                         updateVersion = stableVersion;
