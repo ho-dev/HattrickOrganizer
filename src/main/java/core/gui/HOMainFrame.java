@@ -13,7 +13,6 @@ import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.match.Weather;
-import core.model.player.Player;
 import core.module.IModule;
 import core.module.ModuleManager;
 import core.module.config.ModuleConfig;

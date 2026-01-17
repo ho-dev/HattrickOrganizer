@@ -13,7 +13,7 @@ public class CheckBoxTableEntry extends JCheckBox implements IHOTableCellEntry {
 
     private Boolean value;
 
-    public CheckBoxTableEntry(boolean isEnabled, Boolean value, Color fgStandard, Color bgStandard, int center) {
+    public CheckBoxTableEntry(boolean isEnabled, Boolean value, Color fgStandard, Color bgStandard) {
         this.value = value;
         this.fgStandard = fgStandard;
         this.bgStandard = bgStandard;
@@ -83,8 +83,7 @@ public class CheckBoxTableEntry extends JCheckBox implements IHOTableCellEntry {
         super.setEnabled(b);
         if ( b){
             this.setFocusable(true);
-            this.addItemListener(event -> {
-                setValue(event.getStateChange()== ItemEvent.SELECTED);});
+            this.addItemListener(event -> setValue(event.getStateChange()== ItemEvent.SELECTED));
 //            var editor = new DefaultCellEditor(this.checkBox);
 //            editor.setClickCountToStart(1);
         }
