@@ -62,7 +62,7 @@ public class PlayerColumn extends UserColumn {
 	 */
 	public IHOTableCellEntry getTableEntry(Player player, @Nullable Player comparePlayer){
 		return new ColorLabelEntry(getValue(player),
-	            ColorLabelEntry.BG_STANDARD, false, 0);
+	            ColorLabelEntry.BG_STANDARD, 0);
 	}
 
 	/**
