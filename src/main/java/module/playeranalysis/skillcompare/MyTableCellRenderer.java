@@ -1,7 +1,7 @@
 /*
  * Created on 06.07.2004
  */
-package module.playeranalysis.skillCompare;
+package module.playeranalysis.skillcompare;
 
 import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;

@@ -1,4 +1,4 @@
-package module.playeranalysis.skillCompare;
+package module.playeranalysis.skillcompare;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import javax.swing.Icon;
@@ -25,52 +24,52 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
 /**
- * TableSorter is a decorator for TableModels; adding sorting 
- * functionality to a supplied TableModel. TableSorter does 
- * not store or copy the data in its TableModel; instead it maintains 
- * a map from the row indexes of the view to the row indexes of the 
- * model. As requests are made of the sorter (like getValueAt(row, col)) 
- * they are passed to the underlying model after the row numbers 
- * have been translated via the internal mapping array. This way, 
- * the TableSorter appears to hold another copy of the table 
+ * TableSorter is a decorator for TableModels; adding sorting
+ * functionality to a supplied TableModel. TableSorter does
+ * not store or copy the data in its TableModel; instead it maintains
+ * a map from the row indexes of the view to the row indexes of the
+ * model. As requests are made of the sorter (like getValueAt(row, col))
+ * they are passed to the underlying model after the row numbers
+ * have been translated via the internal mapping array. This way,
+ * the TableSorter appears to hold another copy of the table
  * with the rows in a different order.
  * <p>
- * TableSorter registers itself as a listener to the underlying model,  
- * just as the JTable itself would. Events revieved from the model  
- * are examined, sometimes manipulated (typically widened), and then 
- * passed on to the TableSorter's listeners (typically the JTable). 
- * If a change to the model has invalidated the order of TableSorter's 
- * rows, a note of this is made and the sorter will resort the 
- * rows the next time a value is requested. 
+ * TableSorter registers itself as a listener to the underlying model,
+ * just as the JTable itself would. Events revieved from the model
+ * are examined, sometimes manipulated (typically widened), and then
+ * passed on to the TableSorter's listeners (typically the JTable).
+ * If a change to the model has invalidated the order of TableSorter's
+ * rows, a note of this is made and the sorter will resort the
+ * rows the next time a value is requested.
  * <p>
- * When the tableHeader property is set, either by using the 
- * setTableHeader() method or the two argument constructor, the 
- * table header may be used as a complete UI for TableSorter. 
- * The default renderer of the tableHeader is decorated with a renderer 
- * that indicates the sorting status of each column. In addition, 
- * a mouse listener is installed with the following behavior: 
+ * When the tableHeader property is set, either by using the
+ * setTableHeader() method or the two argument constructor, the
+ * table header may be used as a complete UI for TableSorter.
+ * The default renderer of the tableHeader is decorated with a renderer
+ * that indicates the sorting status of each column. In addition,
+ * a mouse listener is installed with the following behavior:
  * <ul>
  * <li>
- * Mouse-click: Clears the sorting status of all other columns 
- * and advances the sorting status of that column through three 
- * values: {NOT_SORTED, ASCENDING, DESCENDING} (then back to 
- * NOT_SORTED again). 
+ * Mouse-click: Clears the sorting status of all other columns
+ * and advances the sorting status of that column through three
+ * values: {NOT_SORTED, ASCENDING, DESCENDING} (then back to
+ * NOT_SORTED again).
  * <li>
- * SHIFT-mouse-click: Clears the sorting status of all other columns 
- * and cycles the sorting status of the column through the same 
- * three values, in a different order: {NOT_SORTED, DESCENDING, ASCENDING}.  
+ * SHIFT-mouse-click: Clears the sorting status of all other columns
+ * and cycles the sorting status of the column through the same
+ * three values, in a different order: {NOT_SORTED, DESCENDING, ASCENDING}.
  * <li>
- * CONTROL-mouse-click and CONTROL-SHIFT-mouse-click: as above except 
- * that the changes to the column do not cancel the statuses of columns 
- * that are already sorting - giving a way to initiate a compound 
- * sort.  
+ * CONTROL-mouse-click and CONTROL-SHIFT-mouse-click: as above except
+ * that the changes to the column do not cancel the statuses of columns
+ * that are already sorting - giving a way to initiate a compound
+ * sort.
  * </ul>
- * 
+ *
  * @author Philip Milne
- * @author Brendon McLean 
+ * @author Brendon McLean
  * @author Dan van Enckevort
  * @author Parwinder Sekhon
- * 
+ *
  */
 
 class TableSorter extends AbstractTableModel {
@@ -83,7 +82,7 @@ class TableSorter extends AbstractTableModel {
     public static final int ASCENDING = 1;
 
     private static final Directive EMPTY_DIRECTIVE = new Directive(-1, NOT_SORTED);
-    
+
     @SuppressWarnings("unchecked")
 	public static final Comparator COMPARABLE_COMAPRATOR = (o1, o2) -> ((Comparable) o1).compareTo(o2);
     public static final Comparator LEXICAL_COMPARATOR = (o1, o2) -> o1.toString().compareTo(o2.toString());
@@ -105,7 +104,7 @@ class TableSorter extends AbstractTableModel {
     TableSorter(TableModel tableModel) {
         this();
         setTableModel(tableModel);
-         
+
     }
 
     private void clearSortingState() {
@@ -162,7 +161,7 @@ class TableSorter extends AbstractTableModel {
                 return directive;
             }
         }
-        return EMPTY_DIRECTIVE; 
+        return EMPTY_DIRECTIVE;
     }
 
     public int getSortingStatus(int column) {
@@ -176,11 +175,11 @@ class TableSorter extends AbstractTableModel {
     }
 
     public void setSortingStatus(int column, int status) {
-        Directive directive = getDirective(column); 
+        Directive directive = getDirective(column);
         if (directive != EMPTY_DIRECTIVE) {
-            sortingColumns.remove(directive); 
+            sortingColumns.remove(directive);
         }
-        if (status != NOT_SORTED) { 
+        if (status != NOT_SORTED) {
             sortingColumns.add(new Directive(column, status));
         }
         sortingStatusChanged();
@@ -189,11 +188,11 @@ class TableSorter extends AbstractTableModel {
     protected Icon getHeaderRendererIcon(int column, int size) {
         Directive directive = getDirective(column);
         if (directive == EMPTY_DIRECTIVE) {
-            return null; 
-        } 
-        return new Arrow(directive.direction == DESCENDING, size, sortingColumns.indexOf(directive)); 
+            return null;
+        }
+        return new Arrow(directive.direction == DESCENDING, size, sortingColumns.indexOf(directive));
     }
-    
+
     private void cancelSorting() {
         sortingColumns.clear();
         sortingStatusChanged();
@@ -229,7 +228,7 @@ class TableSorter extends AbstractTableModel {
     public int modelIndex(int viewIndex) {
         return getViewToModel()[viewIndex].modelIndex;
     }
-    
+
     private int[] getModelToView() {
         if (modelToView == null) {
             int n = getViewToModel().length;
@@ -241,7 +240,7 @@ class TableSorter extends AbstractTableModel {
         return modelToView;
     }
 
-    // TableModel interface methods 
+    // TableModel interface methods
 
     public int getRowCount() {
         return (tableModel == null) ? 0 : tableModel.getRowCount();
@@ -276,7 +275,7 @@ class TableSorter extends AbstractTableModel {
     }
 
     // Helper classes
-    
+
     @SuppressWarnings("unchecked")
 	private class Row implements Comparable {
         private final int modelIndex;
@@ -315,52 +314,52 @@ class TableSorter extends AbstractTableModel {
 
     private class TableModelHandler implements TableModelListener {
         public void tableChanged(TableModelEvent e) {
-            // If we're not sorting by anything, just pass the event along. 
+            // If we're not sorting by anything, just pass the event along.
             if (!isSorting()) {
                 fireTableChanged(e);
                 return;
             }
-                
-            // If the table structure has changed, cancel the sorting; the 
-            // sorting columns may have been either moved or deleted from 
-            // the model. 
+
+            // If the table structure has changed, cancel the sorting; the
+            // sorting columns may have been either moved or deleted from
+            // the model.
             if (e.getFirstRow() == TableModelEvent.HEADER_ROW) {
                 cancelSorting();
                 fireTableChanged(e);
                 return;
             }
 
-            // We can map a cell event through to the view without widening             
-            // when the following conditions apply: 
-            // 
-            // a) all the changes are on one row (e.getFirstRow() == e.getLastRow()) and, 
+            // We can map a cell event through to the view without widening
+            // when the following conditions apply:
+            //
+            // a) all the changes are on one row (e.getFirstRow() == e.getLastRow()) and,
             // b) all the changes are in one column (column != TableModelEvent.ALL_COLUMNS) and,
-            // c) we are not sorting on that column (getSortingStatus(column) == NOT_SORTED) and, 
+            // c) we are not sorting on that column (getSortingStatus(column) == NOT_SORTED) and,
             // d) a reverse lookup will not trigger a sort (modelToView != null)
             //
             // Note: INSERT and DELETE events fail this test as they have column == ALL_COLUMNS.
-            // 
-            // The last check, for (modelToView != null) is to see if modelToView 
-            // is already allocated. If we don't do this check; sorting can become 
-            // a performance bottleneck for applications where cells  
-            // change rapidly in different parts of the table. If cells 
-            // change alternately in the sorting column and then outside of             
-            // it this class can end up re-sorting on alternate cell updates - 
-            // which can be a performance problem for large tables. The last 
-            // clause avoids this problem. 
+            //
+            // The last check, for (modelToView != null) is to see if modelToView
+            // is already allocated. If we don't do this check; sorting can become
+            // a performance bottleneck for applications where cells
+            // change rapidly in different parts of the table. If cells
+            // change alternately in the sorting column and then outside of
+            // it this class can end up re-sorting on alternate cell updates -
+            // which can be a performance problem for large tables. The last
+            // clause avoids this problem.
             int column = e.getColumn();
-            if (e.getFirstRow() == e.getLastRow() 
+            if (e.getFirstRow() == e.getLastRow()
              && column != TableModelEvent.ALL_COLUMNS
              && getSortingStatus(column) == NOT_SORTED
              && modelToView != null) {
                 int viewIndex = getModelToView()[e.getFirstRow()];
-                fireTableChanged(new TableModelEvent(TableSorter.this, 
-                                                     viewIndex, viewIndex, 
+                fireTableChanged(new TableModelEvent(TableSorter.this,
+                                                     viewIndex, viewIndex,
                                                      column, e.getType()));
                 return;
             }
 
-            // Something has happened to the data that may have invalidated the row order. 
+            // Something has happened to the data that may have invalidated the row order.
             clearSortingState();
             fireTableDataChanged();
         }
@@ -393,35 +392,35 @@ class TableSorter extends AbstractTableModel {
         private final boolean descending;
         private final int size;
         private final int priority;
-        
+
         public Arrow(boolean descending, int size, int priority) {
             this.descending = descending;
-            this.size = size; 
-            this.priority = priority; 
+            this.size = size;
+            this.priority = priority;
         }
 
         public void paintIcon(Component c, Graphics g, int x, int y) {
-            Color color = c == null ? Color.GRAY : c.getBackground();             
-            // In a compound sort, make each succesive triangle 20% 
-            // smaller than the previous one. 
+            Color color = c == null ? Color.GRAY : c.getBackground();
+            // In a compound sort, make each succesive triangle 20%
+            // smaller than the previous one.
             int dx = (int)(size/2*Math.pow(0.8, priority));
             int dy = descending ? dx: -dx;
-            // Align icon (roughly) with font baseline. 
+            // Align icon (roughly) with font baseline.
             y = y + 5*size/6 + (descending ? -dy : 0);
             int shift = descending ? 1 : -1;
             g.translate(x, y);
 
-            // Right diagonal. 
+            // Right diagonal.
             g.setColor(color.darker());
             g.drawLine(dx / 2, dy, 0, 0);
             g.drawLine(dx / 2, dy + shift, 0, shift);
-            
-            // Left diagonal. 
+
+            // Left diagonal.
             g.setColor(color.brighter());
             g.drawLine(dx / 2, dy, dx, 0);
             g.drawLine(dx / 2, dy + shift, dx, shift);
-            
-            // Horizontal line. 
+
+            // Horizontal line.
             if (descending) {
                 g.setColor(color.darker().darker());
             } else {
@@ -461,7 +460,7 @@ class TableSorter extends AbstractTableModel {
             return c;
         }
     }
-    
+
     private static class Directive {
         private final int column;
         private final int direction;

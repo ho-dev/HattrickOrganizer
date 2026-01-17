@@ -1,7 +1,7 @@
 /*
  * Created on 19.06.2004
  */
-package module.playeranalysis.skillCompare;
+package module.playeranalysis.skillcompare;
 
 import core.constants.player.PlayerAbility;
 import core.datatype.CBItem;
@@ -62,8 +62,8 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 	private JComboBox m_CB_Nr_Scoring;
 	private JComboBox m_CB_Nr_SetPieces;
 	private JComboBox m_CB_Nr_Loyalty;
-	private Vector<module.playeranalysis.skillCompare.Player> m_V_setPlayers;
-    private module.playeranalysis.skillCompare.Player[] m_ar_allPlayers;
+	private Vector<module.playeranalysis.skillcompare.Player> m_V_setPlayers;
+    private module.playeranalysis.skillcompare.Player[] m_ar_allPlayers;
     private final CBItem[] m_rating = PlayerAbility.ITEMS;
 	private static int m_selectedRow;
 	private int m_i_ptmTopCount;
@@ -631,17 +631,17 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 	}
 
 	/**
-	 * 
+	 *
 	 * getAllPlayers(): - Fetches all players via the MiniModel
-	 * 
+	 *
 	 */
 	private void getAllPlayers() {
         List<core.model.player.Player> m_V_allPlayers = HOVerwaltung.instance().getModel().getCurrentPlayers();
         int m_numberOfPlayers = m_V_allPlayers.size();
-		m_ar_allPlayers = new module.playeranalysis.skillCompare.Player[m_numberOfPlayers];
+		m_ar_allPlayers = new module.playeranalysis.skillcompare.Player[m_numberOfPlayers];
 		int i=0;
 		for ( core.model.player.Player p : m_V_allPlayers){
-			m_ar_allPlayers[i] = new module.playeranalysis.skillCompare.Player(p);
+			m_ar_allPlayers[i] = new module.playeranalysis.skillcompare.Player(p);
 			i++;
 		}
 	}
@@ -897,7 +897,7 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 	}
 
 	private void setDummyPlayerDetails() {
-		module.playeranalysis.skillCompare.Player dummy = new module.playeranalysis.skillCompare.Player();
+		module.playeranalysis.skillcompare.Player dummy = new module.playeranalysis.skillcompare.Player();
 		JLabel l_SpielerName = new JLabel();
 		l_SpielerName.setPreferredSize(new Dimension(100, 30));
 		l_SpielerName.setText(TranslationFacility.tr("ls.player.name"));
@@ -978,7 +978,7 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 	private int getSelectedRow() {
 		return m_selectedRow;
 	}
-	
+
 	private class TableBottomMouseListener extends MouseAdapter {
 		@Override
 		public void mouseClicked(MouseEvent e) {
@@ -989,7 +989,7 @@ public class PlayerComparePanel extends LazyImagePanel implements ItemListener, 
 			p_PlayerDetail.removeAll();
 			p_PlayerDetail.setPreferredSize(new Dimension(150, 30));
 			p_PlayerDetail.setBackground(lightblue);
-			module.playeranalysis.skillCompare.Player tmpPlayer = null;
+			module.playeranalysis.skillcompare.Player tmpPlayer = null;
 			m_playerTableModelDetail = null;
 			m_scrollPanePlayer.setViewportView(null);
 			m_scrollPanePlayer.validate();

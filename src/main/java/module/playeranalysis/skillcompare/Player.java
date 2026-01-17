@@ -1,4 +1,4 @@
-package module.playeranalysis.skillCompare;
+package module.playeranalysis.skillcompare;
 
 import core.constants.player.PlayerSkill;
 import core.model.HOVerwaltung;
@@ -98,7 +98,7 @@ public class Player
 	private float m_OldBestPositionRating;
 	private String m_Group;
 	private int m_Speciality;
-	
+
 	//Konstruktor
 	public Player(core.model.player.Player player)
 	{
@@ -110,15 +110,15 @@ public class Player
 		setNewPositionValues();
 		setPlayerValues();
 	}
-	
+
 	public Player()	{}
-	
+
 	/* @function getPositionCompareAsString(int position)
 	 * returns a string in the format ("1.35;0.15") where the first value is the
 	 * new position value and the second is the change from the original value
-	 * 
+	 *
 	 * int position
-	 * 
+	 *
 	 * return: String
 	 */
 	public String getPositionCompareAsString(byte position)
@@ -147,13 +147,13 @@ public class Player
 		}
 		return s;
 	}
-	
+
 	/* @function getSkillCompareAsDouble(int skill)
 	 * returns a Double in format (5.06) where 5 is the new skill value
 	 * and 06  is the old value multiplied by 0.01
-	 * 
+	 *
 	 * int skill
-	 * 
+	 *
 	 * return: double
 	 */
 	public double getSkillCompareAsDouble(int skill)
@@ -178,7 +178,7 @@ public class Player
 
 	/* @function changeSkill(int skill, int wert)
 	 * Function that changes the values of the players
-	 * Called by changePlayerSkillValues() 
+	 * Called by changePlayerSkillValues()
 	 */
 	public void changeSkill(int skill, int wert)
 	{
@@ -202,14 +202,14 @@ public class Player
             }
 		}
 	}
-	
+
 	/* @function changePlayerSkillValues(boolean direction)
 	 * Function that calculates the values of the player
 	 * for changing in the data store.
-	 * Is used to calculate the rating of each position with 
+	 * Is used to calculate the rating of each position with
 	 * Player.calcPositionValue()
-	 * 
-	 * boolean direction: determines if the new or original values 
+	 *
+	 * boolean direction: determines if the new or original values
 	 * 		should be saved in the database
 	 * 		true: save new values
 	 * 		false: save old values
@@ -218,14 +218,14 @@ public class Player
 	{
 		// Array for the old values
 		int[] oldSkillValues = getOldSkillValues();
-		
+
 		if(direction)
 		{
 			// Array for newly set values
 			int[] newRatings = PlayerComparePanel.getNewRating();
 			// Array for the changes
 			int[] changedSkills = PlayerComparePanel.getChangeRatingBy();
-			
+
 			for(int j = 0; j < newRatings.length; j++)
 			{
 				if(newRatings[j] == 0)
@@ -251,9 +251,9 @@ public class Player
 				changeSkill(i, oldSkillValues[i]);
 			}
 		}
-		
+
 	}
-	
+
 	public void resetPlayers()
 	{
 		int[] oldSkillValues = getOldSkillValues();
@@ -263,7 +263,7 @@ public class Player
 			setNewSkillValues(i,oldSkillValues[i]);
 		}
 	}
-	
+
 	public void setPlayerValues()
 	{
 		setID(m_Player.getPlayerId());
@@ -278,7 +278,7 @@ public class Player
 		setGroup(m_Player.getTeamGroup());
 		setSpeciality(m_Player.getSpecialty());
 	}
-	
+
 	public void setOldSkillValues()
 	{
 		setOldExperience(m_Player.getExperience());
@@ -294,7 +294,7 @@ public class Player
 		setOldLoyalty(m_Player.getLoyalty());
 		setOldHomeGrown(m_Player.isHomeGrown() ? 2 : 1);
 	}
-	
+
 	public int[] getOldSkillValues()
 	{
 		int[] oldSkills = new int[12];
@@ -327,7 +327,7 @@ public class Player
 		setLoyalty(m_Player.getLoyalty());
 		setHomeGrown(m_Player.isHomeGrown() ? 2 : 1);
 	}
-	
+
 	public void setNewSkillValues(int skill, int wert)
 	{
 		switch (skill) {
@@ -345,7 +345,7 @@ public class Player
 			case 11 -> setHomeGrown(wert);
 		}
 	}
-	
+
 	public void setOldPositionValues()
 	{
 		var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
@@ -371,7 +371,7 @@ public class Player
 		setOldBestPosition(m_Player.getIdealPosition());
 		setOldBestPositionRating((float)m_Player.getIdealPositionRating());
 	}
-	
+
 	public void setNewPositionValues()
 	{
 		if (m_PlayerChangedSkills==null){

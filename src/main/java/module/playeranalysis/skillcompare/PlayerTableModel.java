@@ -1,7 +1,7 @@
 /*
  * Created on 20.06.2004
  */
-package module.playeranalysis.skillCompare;
+package module.playeranalysis.skillcompare;
 
 //import hoplugins.PlayerCompare;
 

@@ -1,10 +1,9 @@
 package module.playeranalysis;
 
 import core.gui.comp.panel.LazyImagePanel;
-import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
 import core.module.config.ModuleConfig;
-import module.playeranalysis.skillCompare.PlayerComparePanel;
+import module.playeranalysis.skillcompare.PlayerComparePanel;
 
 import java.awt.BorderLayout;
 
@@ -25,7 +24,7 @@ public class PlayerAnalysisModulePanel extends LazyImagePanel {
 	public final void setSpieler4Top(int spielerid) {
 		getSpielerAnalyseMainPanel().setSpieler4Top(spielerid);
 	}
-	
+
 	@Override
 	protected void initialize() {
 		setLayout(new BorderLayout());
@@ -36,7 +35,7 @@ public class PlayerAnalysisModulePanel extends LazyImagePanel {
 	protected void update() {
 		// nothing to do here, data is updated in the tabs
 	}
-	
+
 	private JTabbedPane getTabbedPane() {
 		if (tabbedPane == null) {
 			tabbedPane = new JTabbedPane();
