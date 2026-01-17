@@ -6,6 +6,7 @@ import core.gui.RefreshManager;
 import core.gui.comp.renderer.BooleanTableCellRenderer;
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.comp.table.FixedColumnsTable;
+import core.util.HOLogger;
 import module.playerOverview.PlayerOverviewTableModel;
 import core.gui.model.UserColumnController;
 import core.gui.model.UserColumnFactory;
@@ -16,6 +17,8 @@ import core.model.player.Player;
 import core.net.HattrickLink;
 import module.playerOverview.PlayerTable;
 import org.jetbrains.annotations.Nullable;
+
+import javax.swing.event.TableModelEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -31,10 +34,17 @@ public final class LineupPlayersTable extends FixedColumnsTable implements core.
 		super(UserColumnController.instance().getLineupModel());
 		tableModel = (PlayerOverviewTableModel) this.getModel();
 //		tableModel.setValues(HOVerwaltung.instance().getModel().getCurrentPlayers());
+		tableModel.addTableModelListener(this::editPlayerAutoLineup);
+
 		setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
 		setDefaultRenderer(Boolean.class, new BooleanTableCellRenderer());
 		RefreshManager.instance().registerRefreshable(this);
 		initListeners();
+	}
+
+	private void editPlayerAutoLineup(TableModelEvent tableModelEvent) {
+
+		HOLogger.instance().info(this.getClass(), "editPlayerLineupEnabled");
 	}
 
 	@Override

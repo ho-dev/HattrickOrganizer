@@ -1,8 +1,10 @@
 package module.lineup;
 
-import core.gui.HOMainFrame;
+import core.gui.Refreshable;
 import core.gui.Updatable;
+import core.gui.comp.entry.CheckBoxTableEntry;
 import core.gui.comp.table.PlayersTable;
+import core.gui.model.UserColumnController;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.UserParameter;
@@ -12,6 +14,8 @@ import module.lineup.lineup.LineupPositionsPanel;
 import module.lineup.lineup.MatchAndLineupSelectionPanel;
 import module.lineup.lineup.PlayerPositionPanel;
 import module.lineup.ratings.LineupRatingPanel;
+import module.playerOverview.PlayerOverviewTableModel;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -21,28 +25,31 @@ import java.util.Map;
 /**
  * Master panel of the Lineup module
  */
-public class LineupPanel extends core.gui.comp.panel.ImagePanel {
+public class LineupPanel extends core.gui.comp.panel.ImagePanel implements Refreshable {
 
 	public static final Color TITLE_FG = ThemeManager.getColor(HOColorName.LINEUP_HIGHLIGHT_FG);
 	private LineupPositionsPanel lineupPositionsPanel;
-	private LineupPlayersTable lineupPlayersTable;
+	private PlayersTable lineupPlayersTable;
 	private LineupRatingAssistantPanel lineupRatingAssistantPanel;
 	private JSplitPane horizontalSplitPane;
 	private JSplitPane verticalSplitPane;
 	private final List<Updatable> updatable = new ArrayList<>();
-	private boolean areSelecting = false;
+//	private boolean areSelecting = false;
 
 	public LineupPanel() {
 		initComponents();
+		var playerOverviewTableModel = (PlayerOverviewTableModel)this.lineupPlayersTable.getModel();
+		playerOverviewTableModel.reInitData();
 	}
 
 	public void storeUserSettings(){
-		this.lineupPlayersTable.getTableModel().storeUserSettings();
+		var playerOverviewTableModel = (PlayerOverviewTableModel)this.lineupPlayersTable.getModel();
+		playerOverviewTableModel.storeUserSettings();
 	}
 
-	public void setPlayer(int idPlayer) {
-		lineupPlayersTable.setPlayer(idPlayer);
-	}
+//	public void setPlayer(int idPlayer) {
+//		lineupPlayersTable.setPlayer(idPlayer);
+//	}
 
 	public void refresh() {
 		lineupPlayersTable.refresh();
@@ -80,9 +87,9 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 		return locations;
 	}
 
-	public void saveColumnOrder() {
-		lineupPlayersTable.saveColumnOrder();
-	}
+//	public void saveColumnOrder() {
+//		lineupPlayersTable.saveColumnOrder();
+//	}
 
 	/**
 	 * Refresh the players and tactics of each Lineup panels
@@ -138,25 +145,32 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 	}
 
 	private Component initSpielerTabelle() {
-		lineupPlayersTable = new LineupPlayersTable();
-		lineupPlayersTable.getSelectionModel().addListSelectionListener(
-				e -> {
-					if (!areSelecting) {
-						areSelecting = true;
-						var player = lineupPlayersTable.getPlayer(e.getFirstIndex());
-						if (player == null) {
-//							player = HOMainFrame.instance().getSelectedPlayer();
-							player = PlayersTable.Companion.getSelectedPlayer();
-							if (player != null) {
-								lineupPlayersTable.setPlayer(player.getPlayerId());
-							}
-						} else {
-//							HOMainFrame.instance().selectPlayer(player);
-						}
-						areSelecting = false;
-					}
-				}
-		);
+		var model = UserColumnController.instance().getLineupModel();
+		lineupPlayersTable = new PlayersTable(model);
+//		for ( var modelColumn : model.getColumns()){
+//			if ( modelColumn.isEditable()){
+//				var tableColumn = lineupPlayersTable.getColumn(modelColumn.getId());
+//				tableColumn.setCellEditor(new DefaultCellEditor(new JCheckBox()));
+//			}
+//		}
+//		lineupPlayersTable.getSelectionModel().addListSelectionListener(
+//				e -> {
+//					if (!areSelecting) {
+//						areSelecting = true;
+//						var player = lineupPlayersTable.getPlayer(e.getFirstIndex());
+//						if (player == null) {
+////							player = HOMainFrame.instance().getSelectedPlayer();
+//							player = PlayersTable.Companion.getSelectedPlayer();
+//							if (player != null) {
+//								lineupPlayersTable.setPlayer(player.getPlayerId());
+//							}
+//						} else {
+////							HOMainFrame.instance().selectPlayer(player);
+//						}
+//						areSelecting = false;
+//					}
+//				}
+//		);
 		return lineupPlayersTable.getContainerComponent();
 	}
 
@@ -254,5 +268,10 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel {
 
 	public int getSelectedMatchMinute() {
 		return this.lineupRatingAssistantPanel.getLineupRatingPanel().getSelectedMatchMinute();
+	}
+
+	@Override
+	public void reInit() {
+		refresh();
 	}
 }

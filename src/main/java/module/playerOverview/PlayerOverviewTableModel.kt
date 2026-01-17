@@ -1,7 +1,7 @@
 package module.playerOverview
 
 import core.db.DBManager
-import core.gui.comp.table.BooleanColumn
+import core.gui.comp.table.PlayerCheckBoxColumn
 import core.gui.comp.table.HOPlayersTableModel
 import core.gui.comp.table.UserColumn
 import core.gui.model.PlayerColumn
@@ -75,7 +75,8 @@ class PlayerOverviewTableModel(id: UserColumnController.ColumnModelId, name: Str
         columns[60] = additionalArray?.get(22)
         columns[61] = additionalArray?.get(23) // schum-rank
         columns[62] = additionalArray?.get(24) // schum-rank benchmark
-        columns[63] = BooleanColumn(UserColumnFactory.AUTO_LINEUP, " ", "AutoAufstellung", 28)
+//        columns[63] = BooleanColumn(UserColumnFactory.AUTO_LINEUP, " ", "AutoAufstellung", 28)
+        columns[63] = additionalArray?.get(31)
         columns[64] = additionalArray?.get(25)
         columns[65] = additionalArray?.get(26)
         columns[66] = additionalArray?.get(27)
@@ -87,11 +88,11 @@ class PlayerOverviewTableModel(id: UserColumnController.ColumnModelId, name: Str
         assert(this.columns.size == columns.size)
     }
 
-    // TODO: table column model should control isEditable
-    // Refactoring player overview table model should replace the class BooleanColumn
-    override fun isCellEditable(row: Int, column: Int): Boolean {
-        return getValueAt(row, column) is Boolean
-    }
+//    // TODO: table column model should control isEditable
+//    // Refactoring player overview table model should replace the class BooleanColumn
+//    override fun isCellEditable(row: Int, column: Int): Boolean {
+//        return getValueAt(row, column) is Boolean
+//    }
 
     fun getRowIndexOfPlayer(playerId: Int): Int {
         val modelIndex = getPlayerIndex(playerId)
@@ -160,9 +161,9 @@ class PlayerOverviewTableModel(id: UserColumnController.ColumnModelId, name: Str
 //    }
 
     /**
-     * Resets the data for an HRF comparison.
+     * Resets the data.
      */
-    fun reInitDataHRFComparison() {
+    fun reInitData() {
         initData()
     }
 
@@ -216,10 +217,10 @@ class PlayerOverviewTableModel(id: UserColumnController.ColumnModelId, name: Str
             val currentPlayer = players[i]
             val comparisonPlayer = getPreviousPlayerDevelopmentStage(currentPlayer)
             for (j in tmpDisplayedColumns.indices) {
-                if (tmpDisplayedColumns[j] is PlayerColumn) {
-                    m_clData!!.get(i)[j] = (tmpDisplayedColumns[j] as PlayerColumn).getTableEntry(currentPlayer, comparisonPlayer)
-                } else if (tmpDisplayedColumns[j] is BooleanColumn) {
-                    m_clData!!.get(i)[j] = (tmpDisplayedColumns[j] as BooleanColumn).getValue(currentPlayer)
+                if (tmpDisplayedColumns[j] is PlayerCheckBoxColumn) {
+                    m_clData!!.get(i)[j] = (tmpDisplayedColumns[j] as PlayerCheckBoxColumn).getTableEntry(currentPlayer)
+                } else if (tmpDisplayedColumns[j] is PlayerColumn) {
+                    m_clData!!.get(i)[j]  = (tmpDisplayedColumns[j] as PlayerColumn).getTableEntry(currentPlayer, comparisonPlayer)
                 }
             }
         }

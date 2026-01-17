@@ -30,8 +30,10 @@ public class HODefaultTableCellRenderer implements javax.swing.table.TableCellRe
     {
         if (value instanceof IHOTableCellEntry ihoTableCellEntry) {
             final JComponent component = ihoTableCellEntry.getComponent(isSelected);
-            if (isSelected) {
-                component.setOpaque(true);
+            if ( component != null) {
+                if (isSelected) {
+                    component.setOpaque(true);
+                }
             }
             return component;
         } else if (value instanceof JComponent component) {

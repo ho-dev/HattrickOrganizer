@@ -682,7 +682,7 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 			final int[] ap = getLineupPanel().getDividerLocations();
 			parameter.lineupPanel_verticalSplitLocation = ap[0];
 			parameter.lineupPanel_horizontalSplitLocation = ap[1];
-			getLineupPanel().saveColumnOrder();
+//			getLineupPanel().saveColumnOrder();
 		}
 
 		// TransferScoutPanel

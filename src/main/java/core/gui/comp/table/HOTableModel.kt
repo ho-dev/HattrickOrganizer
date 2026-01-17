@@ -138,8 +138,9 @@ abstract class HOTableModel protected constructor(
     }
 
     override fun isCellEditable(row: Int, column: Int): Boolean {
-        if (column > -1 && column < columns.size) {
-            return columns[column].isEditable
+        val cols = getDisplayedColumns()
+        if (column > -1 && column < cols.size) {
+            return cols[column].isEditable
         }
         return false
     }

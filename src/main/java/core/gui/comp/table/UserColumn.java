@@ -1,6 +1,8 @@
 package core.gui.comp.table;
 
 import core.model.TranslationFacility;
+import org.jetbrains.annotations.NotNull;
+
 import javax.swing.*;
 import javax.swing.table.TableColumn;
 
@@ -194,4 +196,6 @@ public abstract class UserColumn {
 	}
 
     public boolean isEditable() {return false;}
+
+	public DefaultCellEditor getEditor() {return null;}
 }

@@ -1233,16 +1233,21 @@ public class Player extends AbstractTable.Storable {
      * set whether that player can be selected by the assistant
      */
     public void setCanBeSelectedByAssistant(boolean flag) {
+        if (flag == canBeSelectedByAssistant) return; // nothing changed
         if (this.isExternallyRecruitedCoach()) flag = false;
         getNotes().setEligibleToPlay(flag);
         DBManager.instance().storePlayerNotes(notes);
+        canBeSelectedByAssistant = flag;
     }
+
+    private Boolean canBeSelectedByAssistant;
 
     /**
      * get whether that player can be selected by the assistant
      */
-    public boolean getCanBeSelectedByAssistant() {
-        return !this.isExternallyRecruitedCoach() && getNotes().isEligibleToPlay();
+    public Boolean getCanBeSelectedByAssistant() {
+        if (canBeSelectedByAssistant == null) {canBeSelectedByAssistant = !this.isExternallyRecruitedCoach() && getNotes().isEligibleToPlay();}
+        return canBeSelectedByAssistant;
     }
 
     public void setPlayerId(int m_iSpielerID) {

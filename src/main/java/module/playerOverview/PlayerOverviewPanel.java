@@ -71,8 +71,7 @@ public class PlayerOverviewPanel extends ImagePanel implements Refreshable {
 	 */
 	public final void refreshHRFComparison() {
 		var playerTableModel = (PlayerOverviewTableModel)playerOverviewTable.getModel();
-		playerTableModel.reInitDataHRFComparison();
-//		playerDetailsPanel.setPlayer(playerOverviewTable.getSelectedPlayer());
+		playerTableModel.reInitData();
 	}
 
 	/**
@@ -170,33 +169,6 @@ public class PlayerOverviewPanel extends ImagePanel implements Refreshable {
 		playerOverviewTableModel.initData();
 		return overviewPanel;
 	}
-
-
-//	private boolean areSelecting = false;
-//
-//	/**
-//	 * Adds ListSelectionListener which keep the row selection of the table with
-//	 * the players name and the table with the players details in sync.
-//	 */
-//	private void addTableSelectionListeners() {
-//		playerOverviewTable.getSelectionModel().addListSelectionListener(
-//				e -> {
-//					if (!areSelecting) {
-//						areSelecting = true;
-//						var player = playerOverviewTable.getSelectedPlayer();
-//						if (player == null) {
-//							player = HOMainFrame.instance().getSelectedPlayer();
-//							if ( player != null) {
-//								playerOverviewTable.selectPlayer(player.getPlayerId());
-//							}
-//						} else {
-//							HOMainFrame.instance().selectPlayer(player);
-//						}
-//						areSelecting = false;
-//					}
-//				}
-//		);
-//	}
 
     public void storeUserSettings()
 	{
