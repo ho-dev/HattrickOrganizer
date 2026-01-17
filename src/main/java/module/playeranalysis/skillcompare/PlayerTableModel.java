@@ -194,7 +194,7 @@ public class PlayerTableModel extends DefaultTableModel{
             data[counter][35] = tmpPlayer.getPositionCompareAsString(IMatchRoleID.FORWARD);
             data[counter][36] = tmpPlayer.getPositionCompareAsString(IMatchRoleID.FORWARD_DEF);
             data[counter][37] = tmpPlayer.getPositionCompareAsString(IMatchRoleID.FORWARD_TOWING);
-            data[counter][38] = tmpPlayer.getWages().toLocale();
+            data[counter][38] = tmpPlayer.getWages();
             data[counter][39] = tmpPlayer.getTSI();
             data[counter][40] = tmpPlayer.getId();
             counter++;
