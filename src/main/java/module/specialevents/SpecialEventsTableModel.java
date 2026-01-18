@@ -9,11 +9,12 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.match.IMatchDetails;
+import core.model.match.Matchdetails;
 import core.util.HODateTime;
 
+import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
-import javax.swing.*;
 
 public class SpecialEventsTableModel extends HOTableModel {
 
@@ -40,7 +41,7 @@ public class SpecialEventsTableModel extends HOTableModel {
 					@Override
 					public IHOTableCellEntry getTableEntry(MatchRow entry) {
 						var tacticId = entry.getMatch().getHostingTeamTactic();
-						var ret = new ColorLabelEntry(tacticId, "", ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+						var ret = new ColorLabelEntry(tacticId, Matchdetails.getShortTacticName(tacticId), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
 						ret.setIcon(getTacticIcon(tacticId));
 						return ret;
 					}
@@ -63,11 +64,11 @@ public class SpecialEventsTableModel extends HOTableModel {
 						return  new ColorLabelEntry(entry.getMatch().getVisitingTeam(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
 					}
 				},
-				new SpecialEventsColumn("ls.team.guest.tactic") {
+				new SpecialEventsColumn("ls.team.tactic") {
 					@Override
 					public IHOTableCellEntry getTableEntry(MatchRow entry) {
 						var tacticId = entry.getMatch().getVisitingTeamTactic();
-						var ret = new ColorLabelEntry(tacticId, "", ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+						var ret = new ColorLabelEntry(tacticId, Matchdetails.getShortTacticName(tacticId), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
 						ret.setIcon(getTacticIcon(tacticId));
 						return ret;
 					}
