@@ -1,5 +1,11 @@
 package core.util;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
+
 public class MathUtils {
 
     private MathUtils() {
@@ -20,4 +26,13 @@ public class MathUtils {
      || (a == b) // needed to ensure that infinities equal themselves
       || (Double.isNaN(a) && Double.isNaN(b));
        }
+
+    public static Optional<BigDecimal> average(List<BigDecimal> bigDecimals, RoundingMode roundingMode, int scale) {
+        if (bigDecimals.isEmpty()) {
+            return Optional.empty();
+        }
+
+        BigDecimal sum = bigDecimals.stream().map(Objects::requireNonNull).reduce(BigDecimal.ZERO, BigDecimal::add);
+        return Optional.of(sum.divide(BigDecimal.valueOf(bigDecimals.size()), scale, roundingMode));
+    }
 }
