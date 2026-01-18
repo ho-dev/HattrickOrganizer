@@ -38,6 +38,11 @@
 
 ### Youth module
 
+### Special Events
+
+* Fixed the missing translation for the home/away `Tactic` and `Details` column and displaying the abbreviation of the
+  tactic now in the corresponding column.
+
 ### Option setting
 * Add option to select currency setting (#2288)
 
