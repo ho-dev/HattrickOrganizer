@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Vector;
 
 /**
- * 
+ *
  * @author Thorsten Dietz
  * @since 1.36
  *
@@ -33,7 +33,7 @@ public class PlayerAnalysisModel extends HOTableModel {
 	}
 
 	private void initialize() {
-		columns = new UserColumn[65];
+		columns = new UserColumn[67];
 
 		final UserColumn[] additionalArray =  UserColumnFactory.createPlayerAdditionalArray();
 		final MatchKurzInfoColumn [] matches = UserColumnFactory.createMatchesArray();
@@ -102,23 +102,25 @@ public class PlayerAnalysisModel extends HOTableModel {
 		columns[48] = goals[1];
 		columns[49] = goals[2];
 		columns[50] = goals[3];
+        columns[51] = goals[4];
+        columns[52] = goals[5];
 
-		columns[51] = additionalArray[7];
-		columns[52] = additionalArray[8];
-		columns[53] = cbItems[4];
+		columns[53] = additionalArray[7];
+		columns[54] = additionalArray[8];
+		columns[55] = cbItems[4];
 
-		columns[54] = matches[7];
+		columns[56] = matches[7];
 
-		columns[55] = additionalArray[16];
-		columns[56] = additionalArray[17];
-		columns[57] = additionalArray[18];
-		columns[58] = additionalArray[13];
-		columns[59] = additionalArray[14];
-		columns[60] = additionalArray[15];
-		columns[61] = additionalArray[19];
-		columns[62] = additionalArray[20];
-		columns[63] = additionalArray[23];
-		columns[64] = additionalArray[24];
+		columns[57] = additionalArray[16];
+		columns[58] = additionalArray[17];
+		columns[59] = additionalArray[18];
+		columns[60] = additionalArray[13];
+		columns[61] = additionalArray[14];
+		columns[62] = additionalArray[15];
+		columns[63] = additionalArray[19];
+		columns[64] = additionalArray[20];
+		columns[65] = additionalArray[23];
+		columns[66] = additionalArray[24];
 	}
 
 //  -----initialisierung-----------------------------------------

@@ -13,39 +13,40 @@ import core.gui.model.PlayerMatchCBItem;
 import core.gui.theme.HOColor;
 import core.gui.theme.TeamLogoInfo;
 import core.model.*;
-import core.model.tournament.TournamentDetails;
 import core.model.enums.MatchType;
 import core.model.match.*;
 import core.model.misc.Basics;
 import core.model.misc.Economy;
 import core.model.misc.Verein;
 import core.model.player.Player;
-import core.training.FuturePlayerSkillTraining;
-import core.util.AmountOfMoney;
-import core.util.HODateTime;
-import module.halloffame.HallOfFamePlayer;
-import module.matches.MatchLocation;
-import module.nthrf.NtTeamDetails;
-import module.teamanalyzer.vo.SquadInfo;
-import module.transfer.TransferType;
-import module.youth.YouthPlayer;
 import core.model.series.Liga;
 import core.model.series.Paarung;
+import core.model.tournament.TournamentDetails;
+import core.training.FuturePlayerSkillTraining;
 import core.training.FuturePlayerTraining;
 import core.training.TrainingPerWeek;
-import module.youth.YouthTrainerComment;
-import core.util.HOLogger;
+import core.util.AmountOfMoney;
 import core.util.ExceptionUtils;
+import core.util.HODateTime;
+import core.util.HOLogger;
+import module.halloffame.HallOfFamePlayer;
 import module.ifa.IfaMatch;
 import module.lineup.substitution.model.Substitution;
+import module.matches.MatchLocation;
+import module.nthrf.NtTeamDetails;
 import module.series.MatchFixtures;
 import module.teamanalyzer.vo.PlayerInfo;
+import module.teamanalyzer.vo.SquadInfo;
 import module.transfer.PlayerTransfer;
+import module.transfer.TransferType;
 import module.transfer.scout.ScoutEintrag;
+import module.youth.YouthPlayer;
+import module.youth.YouthTrainerComment;
 import module.youth.YouthTraining;
 import org.hsqldb.error.ErrorCode;
 import org.jetbrains.annotations.Nullable;
 import tool.arenasizer.Stadium;
+
 import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -157,7 +158,6 @@ public class DBManager implements PersistenceManager {
 			// Try connecting to the DB
 			try {
 				m_clInstance.connect();
-//				dbUpdater.setDbManager(tempInstance);
 			} catch (Exception e) {
 
 				String msg = e.getMessage();
@@ -218,7 +218,6 @@ public class DBManager implements PersistenceManager {
 				dbUpdater.updateDB(DBVersion);
 			}
 
-			// tempInstance.updateConfig();
 			HOLogger.instance().info(DBManager.class, "instance " + UserManager.instance().getCurrentUser().getDbURL() + "; parent folder: " + UserManager.instance().getDbParentFolder());
 		}
 		return m_clInstance;
