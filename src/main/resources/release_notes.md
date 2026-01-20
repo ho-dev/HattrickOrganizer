@@ -37,7 +37,9 @@
 ### Option setting
 * Add option to select currency setting (#2288)
 
-### Misc module
+### Misc
+
+* Fix CVEs with HO dependencies
 
 ## Translations
 
