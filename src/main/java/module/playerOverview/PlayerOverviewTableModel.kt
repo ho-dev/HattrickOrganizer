@@ -87,14 +87,6 @@ class PlayerOverviewTableModel(id: UserColumnController.ColumnModelId, name: Str
         assert(this.columns.size == columns.size)
     }
 
-    fun getRowIndexOfPlayer(playerId: Int): Int {
-        val modelIndex = getPlayerIndex(playerId)
-        if (modelIndex > -1 && modelIndex < this.rowCount) {
-            return table!!.convertRowIndexToView(modelIndex)
-        }
-        return -1
-    }
-
     val selectedPlayer: Player?
         get() {
             val rowIndex = table!!.selectedRow
@@ -103,17 +95,6 @@ class PlayerOverviewTableModel(id: UserColumnController.ColumnModelId, name: Str
             }
             return null
         }
-
-    fun getPlayerIndex(playerId: Int): Int {
-        var i = 0
-        for (m_vPlayer in players) {
-            if (m_vPlayer.playerId == playerId) {
-                return i
-            }
-            i++
-        }
-        return -1
-    }
 
     /**
      * Resets the data.

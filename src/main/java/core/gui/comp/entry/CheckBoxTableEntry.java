@@ -50,7 +50,7 @@ public class CheckBoxTableEntry implements IHOTableCellEntry {
 
     /**
      * Return the checkbox component
-     * @param selected
+     * @param selected boolean
      * @return JComponent
      */
     @Override
@@ -94,8 +94,8 @@ public class CheckBoxTableEntry implements IHOTableCellEntry {
 
     /**
      * Same as compareTo
-     * @param obj
-     * @return
+     * @param obj IHOTableCellEntry The other entry
+     * @return int
      */
     @Override
     public int compareToThird(IHOTableCellEntry obj) {
