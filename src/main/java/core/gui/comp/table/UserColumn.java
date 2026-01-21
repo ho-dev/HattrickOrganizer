@@ -195,6 +195,4 @@ public abstract class UserColumn {
 	}
 
     public boolean isEditable() {return false;}
-
-	public DefaultCellEditor getEditor() {return null;}
 }

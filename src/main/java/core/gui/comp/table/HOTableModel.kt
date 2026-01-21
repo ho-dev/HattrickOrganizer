@@ -1,11 +1,14 @@
 package core.gui.comp.table
 
 import core.db.DBManager
+import core.gui.comp.entry.CheckBoxTableEntry
 import core.gui.comp.renderer.HODefaultTableCellRenderer
 import core.gui.model.UserColumnController.ColumnModelId
 import core.model.TranslationFacility
 import core.util.HOLogger
+import okhttp3.internal.checkOffsetAndCount
 import java.util.*
+import javax.swing.JCheckBox
 import javax.swing.JTable
 import javax.swing.RowSorter
 import javax.swing.SortOrder
@@ -132,7 +135,11 @@ abstract class HOTableModel protected constructor(
      */
     override fun getValueAt(row: Int, column: Int): Any? {
         if (m_clData != null && m_clData!!.size > row && row > -1 && column > -1 && column < m_clData!![row].size ) {
-            return m_clData!![row][column]
+            var ret =  m_clData!![row][column]
+            if ( ret is CheckBoxTableEntry){
+                return ret.value
+            }
+            return ret
         }
         return null
     }
@@ -162,6 +169,9 @@ abstract class HOTableModel protected constructor(
         val obj = getValueAt(0, columnIndex)
 
         if (obj != null) {
+            if ( obj is CheckBoxTableEntry) {
+                return Boolean::class.java
+            }
             return obj.javaClass
         }
 

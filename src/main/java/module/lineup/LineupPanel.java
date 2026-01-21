@@ -2,6 +2,8 @@ package module.lineup;
 
 import core.gui.Refreshable;
 import core.gui.Updatable;
+import core.gui.comp.entry.CheckBoxTableEntry;
+import core.gui.comp.table.PlayerCheckBoxColumn;
 import core.gui.comp.table.PlayersTable;
 import core.gui.model.UserColumnController;
 import core.gui.theme.HOColorName;
@@ -38,6 +40,18 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel implements Refre
 	public LineupPanel() {
 		initComponents();
 		var playerOverviewTableModel = (PlayerOverviewTableModel)this.lineupPlayersTable.getModel();
+
+//		for (var c : playerOverviewTableModel.getColumns()) {
+//			if (c instanceof PlayerCheckBoxColumn playerCheckBoxColumn) {
+//				if (playerCheckBoxColumn.isEditable()) {
+//					var tableColumn = lineupPlayersTable.getColumn(c.getId());
+//					if (tableColumn != null) {
+//						tableColumn.setCellEditor(CheckBoxTableEntry.getEditor().getCellEditor());
+//					}
+//				}
+//			}
+//		}
+
 		playerOverviewTableModel.reInitData();
 	}
 
@@ -273,4 +287,5 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel implements Refre
 	public void reInit() {
 		refresh();
 	}
+
 }
