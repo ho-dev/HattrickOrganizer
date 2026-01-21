@@ -133,7 +133,7 @@ abstract class HOTableModel protected constructor(
      */
     override fun getValueAt(row: Int, column: Int): Any? {
         if (m_clData != null && m_clData!!.size > row && row > -1 && column > -1 && column < m_clData!![row].size ) {
-            var ret =  m_clData!![row][column]
+            val ret =  m_clData!![row][column]
             if ( ret is CheckBoxTableEntry){
                 return ret.value
             }
@@ -196,7 +196,7 @@ abstract class HOTableModel protected constructor(
      */
     override fun setValueAt(value: Any, row: Int, column: Int) {
         if (m_clData != null && m_clData!!.size > row && row > -1 && column > -1 && column < m_clData!![row].size ) {
-            var ret =  m_clData!![row][column]
+            val ret =  m_clData!![row][column]
             if ( ret is CheckBoxTableEntry){
                 ret.value = value as Boolean?
             }

@@ -1,21 +1,16 @@
 package core.gui.comp.entry;
 
 import core.gui.comp.renderer.HODefaultTableCellRenderer;
-import core.gui.comp.table.PlayersTable;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
-import javax.swing.event.CellEditorListener;
-import javax.swing.event.ChangeEvent;
 import java.awt.*;
-import java.awt.event.ItemEvent;
 
 public class CheckBoxTableEntry implements IHOTableCellEntry {
 
     private final Color fgStandard;
     private final Color bgStandard;
-
-    private JCheckBox checkBox;
+    private final JCheckBox checkBox;
     private Boolean value;
 
     public CheckBoxTableEntry(boolean isEnabled, Boolean value, Color fgStandard, Color bgStandard) {

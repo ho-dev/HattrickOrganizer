@@ -2,8 +2,6 @@ package module.lineup;
 
 import core.gui.Refreshable;
 import core.gui.Updatable;
-import core.gui.comp.entry.CheckBoxTableEntry;
-import core.gui.comp.table.PlayerCheckBoxColumn;
 import core.gui.comp.table.PlayersTable;
 import core.gui.model.UserColumnController;
 import core.gui.theme.HOColorName;
