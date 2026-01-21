@@ -39,6 +39,7 @@
 
 ### Misc
 
+* Fix CVEs with HO dependencies
 * Update darklaf to most recent version.
 
 ## Translations
