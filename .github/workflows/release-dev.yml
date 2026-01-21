@@ -23,6 +23,8 @@ jobs:
           distribution: 'temurin'
       - name: Validate Gradle wrapper
         uses: gradle/actions/wrapper-validation@v5
+      - name: Run unit tests
+        run: ./gradlew test
       - name: Download and install install4j
         run: wget https://download.ej-technologies.com/install4j/install4j_linux-x64_12_0_2.deb && sudo dpkg -i install4j_linux-x64_12_0_2.deb
       - name: Build with Gradle
