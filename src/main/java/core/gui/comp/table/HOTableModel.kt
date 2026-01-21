@@ -6,9 +6,7 @@ import core.gui.comp.renderer.HODefaultTableCellRenderer
 import core.gui.model.UserColumnController.ColumnModelId
 import core.model.TranslationFacility
 import core.util.HOLogger
-import okhttp3.internal.checkOffsetAndCount
 import java.util.*
-import javax.swing.JCheckBox
 import javax.swing.JTable
 import javax.swing.RowSorter
 import javax.swing.SortOrder
@@ -198,6 +196,10 @@ abstract class HOTableModel protected constructor(
      */
     override fun setValueAt(value: Any, row: Int, column: Int) {
         if (m_clData != null && m_clData!!.size > row && row > -1 && column > -1 && column < m_clData!![row].size ) {
+            var ret =  m_clData!![row][column]
+            if ( ret is CheckBoxTableEntry){
+                ret.value = value as Boolean?
+            }
             m_clData!![row][column] = value
         }
         for (table in tables) {

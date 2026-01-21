@@ -966,7 +966,7 @@ final public class UserColumnFactory {
             public IHOTableCellEntry getTableEntry(@NotNull Player player) {
                 return new CheckBoxTableEntry(!player.isExternallyRecruitedCoach(), player.getCanBeSelectedByAssistant(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD){
                   @Override
-                  protected void setValue(boolean value) {
+                  public void setValue(boolean value) {
                       player.setCanBeSelectedByAssistant(value);
                       super.setValue(value);
                   }

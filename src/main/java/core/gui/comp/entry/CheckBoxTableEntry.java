@@ -12,77 +12,47 @@ import java.awt.event.ItemEvent;
 
 public class CheckBoxTableEntry implements IHOTableCellEntry {
 
-    public static class Editor implements CellEditorListener {
-
-        private JCheckBox checkBox;
-        private DefaultCellEditor  cellEditor;
-
-        public Editor() {
-            this.checkBox = new JCheckBox();
-            cellEditor = new DefaultCellEditor(this.checkBox);
-            cellEditor.setClickCountToStart(1);
-            cellEditor.addCellEditorListener(this);
-        }
-
-        public DefaultCellEditor getCellEditor() {return cellEditor; }
-        public JCheckBox getCheckBox() { return checkBox; }
-
-        @Override
-        public void editingStopped(ChangeEvent e) {
-
-        }
-
-        @Override
-        public void editingCanceled(ChangeEvent e) {
-
-        }
-
-    }
-
-    private static Editor editor =  new Editor();
-    public static Editor getEditor() { return editor; }
-
     private final Color fgStandard;
     private final Color bgStandard;
 
+    private JCheckBox checkBox;
     private Boolean value;
-    private boolean isEnabled;
 
-    private JCheckBox getCheckbox(){return this.getEditor().getCheckBox();}
     public CheckBoxTableEntry(boolean isEnabled, Boolean value, Color fgStandard, Color bgStandard) {
         this.value = value;
-        this.isEnabled=isEnabled;
+        this.checkBox = new JCheckBox();
+        this.checkBox.setSelected(value != null && value);
+        this.checkBox.setEnabled(isEnabled);
         this.fgStandard = fgStandard;
         this.bgStandard = bgStandard;
         createComponent();
     }
 
-    protected void setValue(boolean b) {
+    public void setValue(boolean b) {
         this.value = b;
+        this.checkBox.setSelected(b);
         this.updateComponent();
     }
 
     public Boolean getValue() {
         return this.value;
     }
-    
 
     @Override
     public JComponent getComponent(boolean selected) {
-        var checkbox = getCheckbox();
         if (selected) {
-            checkbox.setBackground(HODefaultTableCellRenderer.SELECTION_BG);
+            this.checkBox.setBackground(HODefaultTableCellRenderer.SELECTION_BG);
 
         } else {
-            checkbox.setBackground(bgStandard);
+            this.checkBox.setBackground(bgStandard);
         }
-        checkbox.setForeground(selected ? HODefaultTableCellRenderer.SELECTION_FG : fgStandard);
-        return checkbox;
+        this.checkBox.setForeground(selected ? HODefaultTableCellRenderer.SELECTION_FG : fgStandard);
+        return this.checkBox;
     }
 
     @Override
     public void clear() {
-        getCheckbox().setSelected(false);
+        this.checkBox.setSelected(false);
     }
 
     @Override
@@ -111,22 +81,8 @@ public class CheckBoxTableEntry implements IHOTableCellEntry {
 
     @Override
     public void updateComponent() {
-        var checkbox =  getCheckbox();
-        checkbox.setEnabled(this.isEnabled);
-        checkbox.setSelected(this.value);
-        checkbox.setBackground(bgStandard);
-        checkbox.setForeground(fgStandard);
+        this.checkBox.setSelected(this.value);
+        this.checkBox.setBackground(bgStandard);
+        this.checkBox.setForeground(fgStandard);
     }
-
-//    public void setEnabled(boolean b) {
-//        var checkbox = getCheckbox();
-//        checkbox.setEnabled(b);
-//        if ( b){
-//            checkbox.setFocusable(true);
-////            checkbox.addItemListener(event ->
-////                    setValue(event.getStateChange()== ItemEvent.SELECTED));
-////            var editor = new DefaultCellEditor(this.checkBox);
-////            editor.setClickCountToStart(1);
-//        }
-//    }
 }
