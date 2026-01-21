@@ -24,6 +24,8 @@
 
 ### Lineup
 
+* Fix empty list of upcoming games in Lineup panel after first download.
+
 ### Training
 * Add experience skill to training tables (#2283)
 
