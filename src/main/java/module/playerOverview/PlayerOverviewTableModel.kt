@@ -28,7 +28,7 @@ class PlayerOverviewTableModel(id: UserColumnController.ColumnModelId, name: Str
 
     init {
         val basic: Array<out PlayerColumn>? = UserColumnFactory.createPlayerBasicArray()
-        val columns : Array<UserColumn?> = arrayOfNulls(70)
+        val columns: Array<UserColumn?> = arrayOfNulls(70)
         columns[0] = basic?.get(0)
         columns[48] = basic?.get(1)
 
@@ -75,7 +75,6 @@ class PlayerOverviewTableModel(id: UserColumnController.ColumnModelId, name: Str
         columns[60] = additionalArray?.get(22)
         columns[61] = additionalArray?.get(23) // schum-rank
         columns[62] = additionalArray?.get(24) // schum-rank benchmark
-//        columns[63] = BooleanColumn(UserColumnFactory.AUTO_LINEUP, " ", "AutoAufstellung", 28)
         columns[63] = additionalArray?.get(31)
         columns[64] = additionalArray?.get(25)
         columns[65] = additionalArray?.get(26)
@@ -87,12 +86,6 @@ class PlayerOverviewTableModel(id: UserColumnController.ColumnModelId, name: Str
         this.columns = columns.filterNotNull().toTypedArray()
         assert(this.columns.size == columns.size)
     }
-
-//    // TODO: table column model should control isEditable
-//    // Refactoring player overview table model should replace the class BooleanColumn
-//    override fun isCellEditable(row: Int, column: Int): Boolean {
-//        return getValueAt(row, column) is Boolean
-//    }
 
     fun getRowIndexOfPlayer(playerId: Int): Int {
         val modelIndex = getPlayerIndex(playerId)
@@ -111,36 +104,6 @@ class PlayerOverviewTableModel(id: UserColumnController.ColumnModelId, name: Str
             return null
         }
 
-    fun selectPlayer(playerId: Int) {
-        val row = getRowIndexOfPlayer(playerId)
-        if (row > -1 && row < this.rowCount) {
-            table!!.setRowSelectionInterval(row, row)
-        }
-    }
-
-    fun getPlayerAtRow(tableRow: Int): Player? {
-        if (tableRow > -1 && tableRow < this.rowCount) {
-            val modelIndex = table!!.convertRowIndexToModel(tableRow)
-            if (modelIndex > -1 && modelIndex < this.rowCount) {
-                return players[modelIndex]
-            }
-        }
-        return null
-    }
-
-//    fun getPlayer(playerId: Int): Player? {
-//        // Can be negative for temp player
-//        if (playerId != 0) {
-//            for (m_vPlayer in players!!) {
-//                if (m_vPlayer.playerId == playerId) {
-//                    return m_vPlayer
-//                }
-//            }
-//        }
-//
-//        return null
-//    }
-
     fun getPlayerIndex(playerId: Int): Int {
         var i = 0
         for (m_vPlayer in players) {
@@ -151,14 +114,6 @@ class PlayerOverviewTableModel(id: UserColumnController.ColumnModelId, name: Str
         }
         return -1
     }
-
-//    /**
-//     * Sets the new list of players.
-//     */
-//    fun setValues(player: List<Player>?) {
-//        players = player
-//        initData()
-//    }
 
     /**
      * Resets the data.
@@ -172,7 +127,7 @@ class PlayerOverviewTableModel(id: UserColumnController.ColumnModelId, name: Str
      */
     private fun getPreviousPlayerDevelopmentStage(currentDevelopmentStage: Player): Player? {
         val id = currentDevelopmentStage.playerId
-        if ( id >= 0 ) {
+        if (id >= 0) {
             // not a temporary player
             val selectedPlayerDevelopmentStage = SpielerTrainingsVergleichsPanel.getSelectedPlayerDevelopmentStage()
             var i = 0
@@ -220,31 +175,11 @@ class PlayerOverviewTableModel(id: UserColumnController.ColumnModelId, name: Str
                 if (tmpDisplayedColumns[j] is PlayerCheckBoxColumn) {
                     m_clData!!.get(i)[j] = (tmpDisplayedColumns[j] as PlayerCheckBoxColumn).getTableEntry(currentPlayer)
                 } else if (tmpDisplayedColumns[j] is PlayerColumn) {
-                    m_clData!!.get(i)[j]  = (tmpDisplayedColumns[j] as PlayerColumn).getTableEntry(currentPlayer, comparisonPlayer)
+                    m_clData!!.get(i)[j] =
+                        (tmpDisplayedColumns[j] as PlayerColumn).getTableEntry(currentPlayer, comparisonPlayer)
                 }
             }
         }
         fireTableDataChanged()
     }
-
-//    /**
-//     * Initializes the lineup only
-//     */
-//    fun reInitData() {
-//        val tmpDisplayedColumns = getDisplayedColumns()
-//        for (i in players!!.indices) {
-//            val currentPlayer = players!![i]
-//            for (j in tmpDisplayedColumns.indices) {
-//                if (tmpDisplayedColumns[j].id == UserColumnFactory.NAME ||
-//                    tmpDisplayedColumns[j].id == UserColumnFactory.LINEUP ||
-//                    tmpDisplayedColumns[j].id == UserColumnFactory.BEST_POSITION ||
-//                    tmpDisplayedColumns[j].id == UserColumnFactory.SCHUM_RANK_BENCHMARK ||
-//                    tmpDisplayedColumns[j].id == UserColumnFactory.GROUP) {
-//                    m_clData!![i][j] = (tmpDisplayedColumns[j] as PlayerColumn).getTableEntry(currentPlayer, null)
-//                } else if (tmpDisplayedColumns[j].id == UserColumnFactory.AUTO_LINEUP) {
-//                    m_clData!![i][j] = (tmpDisplayedColumns[j] as BooleanColumn).getValue(currentPlayer)
-//                }
-//            }
-//        }
-//    }
 }

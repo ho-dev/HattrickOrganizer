@@ -8,7 +8,8 @@ import java.awt.event.KeyEvent;
 
 public final class LineupModule extends DefaultModule {
 
-	private LineupMasterView  lineupMasterView;
+	private LineupMasterView lineupMasterView;
+
 	public LineupModule() {
 		super(true);
 	}
@@ -35,10 +36,7 @@ public final class LineupModule extends DefaultModule {
 	}
 
 	@Override
-	public void storeUserSettings()
-	{
+	public void storeUserSettings() {
 		if (this.lineupMasterView != null) this.lineupMasterView.storeUserSettings();
 	}
-
-
 }

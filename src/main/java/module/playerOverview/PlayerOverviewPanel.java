@@ -104,7 +104,7 @@ public class PlayerOverviewPanel extends ImagePanel implements Refreshable {
 	}
 
 	/*
-	 * Initialize the players details
+	 * Initialise the players details
 	 */
 	private Component initSpielerDetail() {
 		JTabbedPane tabbedPane = new JTabbedPane();
@@ -125,7 +125,7 @@ public class PlayerOverviewPanel extends ImagePanel implements Refreshable {
 	}
 
 	/*
-	 * Initialize the players history
+	 * Initialise the players history
 	 */
 	private Component initSpielerHistory() {
 		JPanel panel = new ImagePanel();
@@ -170,11 +170,10 @@ public class PlayerOverviewPanel extends ImagePanel implements Refreshable {
 		return overviewPanel;
 	}
 
-    public void storeUserSettings()
-	{
-		var playerOverviewTableModel = (PlayerOverviewTableModel)playerOverviewTable.getModel();
+    public void storeUserSettings() {
+		var playerOverviewTableModel = (PlayerOverviewTableModel) playerOverviewTable.getModel();
 		playerOverviewTableModel.storeUserSettings();
-    }
+	}
 
 	@Override
 	public void reInit() {

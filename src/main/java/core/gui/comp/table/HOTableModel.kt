@@ -35,8 +35,8 @@ abstract class HOTableModel protected constructor(
      * Identifier of the column model.
      * It is used for saving columns in db
      */
-	@JvmField
-	val id: Int = id.value
+    @JvmField
+    val id: Int = id.value
 
     /**
      * Return all columns of the model
@@ -52,7 +52,7 @@ abstract class HOTableModel protected constructor(
 
     /** Data of table  */
     @JvmField
-	protected var m_clData: Array<Array<Any?>>? = null
+    protected var m_clData: Array<Array<Any?>>? = null
 
 
     // TODO: Check if a list of tables is necessary (See SpielerMatchesTable, which uses two instances of same table model type)
@@ -132,9 +132,9 @@ abstract class HOTableModel protected constructor(
      * @return Object
      */
     override fun getValueAt(row: Int, column: Int): Any? {
-        if (m_clData != null && m_clData!!.size > row && row > -1 && column > -1 && column < m_clData!![row].size ) {
-            val ret =  m_clData!![row][column]
-            if ( ret is CheckBoxTableEntry){
+        if (m_clData != null && m_clData!!.size > row && row > -1 && column > -1 && column < m_clData!![row].size) {
+            val ret = m_clData!![row][column]
+            if (ret is CheckBoxTableEntry) {
                 return ret.value
             }
             return ret
@@ -167,7 +167,7 @@ abstract class HOTableModel protected constructor(
         val obj = getValueAt(0, columnIndex)
 
         if (obj != null) {
-            if ( obj is CheckBoxTableEntry) {
+            if (obj is CheckBoxTableEntry) {
                 return Boolean::class.java
             }
             return obj.javaClass
@@ -195,9 +195,9 @@ abstract class HOTableModel protected constructor(
      * @param column  column of cell
      */
     override fun setValueAt(value: Any, row: Int, column: Int) {
-        if (m_clData != null && m_clData!!.size > row && row > -1 && column > -1 && column < m_clData!![row].size ) {
-            val ret =  m_clData!![row][column]
-            if ( ret is CheckBoxTableEntry){
+        if (m_clData != null && m_clData!!.size > row && row > -1 && column > -1 && column < m_clData!![row].size) {
+            val ret = m_clData!![row][column]
+            if (ret is CheckBoxTableEntry) {
                 ret.value = value as Boolean?
             }
             m_clData!![row][column] = value
@@ -325,14 +325,14 @@ abstract class HOTableModel protected constructor(
 
         // Copy user columns' identifiers to table's columns
         val displayedColumns = getDisplayedColumns()
-        var i=0
+        var i = 0
         for (userColumn in displayedColumns) {
             val tableColumn = getTableColumn(table, i++)
             tableColumn.identifier = userColumn.getId()
-            if (userColumn.isHidden){
-                tableColumn.preferredWidth=0
-                tableColumn.minWidth=0
-                tableColumn.maxWidth=0
+            if (userColumn.isHidden) {
+                tableColumn.preferredWidth = 0
+                tableColumn.minWidth = 0
+                tableColumn.maxWidth = 0
             }
         }
         getUserColumnSettings(table)

@@ -47,7 +47,6 @@ import static core.model.player.IMatchRoleID.UNSELECTABLE;
 import static core.util.Helper.DEFAULTDEZIMALFORMAT;
 import static core.util.Helper.INTEGERFORMAT;
 
-
 /**
  * Shows player details for the selected player
  */
@@ -60,7 +59,6 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
     private final Color URL = ThemeManager.getColor(HOColorName.URL_PANEL_BG);
     private final Color FGcolor = ColorLabelEntry.FG_STANDARD;
     private final Color BORDER_COLOR = ThemeManager.getColor(HOColorName.PLAYER_DETAILS_BAR_BORDER_COLOR);
-//    private final PlayerOverviewTable m_playerOverviewTable;
     private final JLabel jlName = new JLabel("");
     private final JLabel m_jlPlayerDescription = new JLabel("");
     private final JPanel jpPlayerGeneral = new JPanel();
@@ -118,11 +116,6 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
                 player = PlayersTable.Companion.getSelectedPlayer();
             }
         }
-//        if  ( player == null) {
-//            // at initialisation select first player to ensure clean display =====
-//            player = m_playerOverviewTable.getPlayerTableModel().getPlayerAtRow(0);
-//        }
-
         m_clPlayer = player;
         if (m_clPlayer != null) {
             findComparisonPlayer();
@@ -154,7 +147,6 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
             refresh();
         }
     }
-
 
     @Override
     public void itemStateChanged(java.awt.event.ItemEvent itemEvent) {
@@ -336,7 +328,6 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         jlPlayerAvatar.setEnabled(true);
 
         formatBar(jpbForm, m_clPlayer.getForm(), true);
-        //m_clPlayer.getValue4Skill(6)
         formatBar(jpbStamina, m_clPlayer.getStamina(), true);
         formatBar(jpbGK, (float)Helper.round(m_clPlayer.getSkill(PlayerSkill.KEEPER), 2));
         formatBar(jpbDE, (float)Helper.round(m_clPlayer.getSkill(PlayerSkill.DEFENDING), 2));

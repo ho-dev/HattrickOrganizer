@@ -155,9 +155,7 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
             isRefreshingPlayerOverview = true;
             var selection = this.playerOverviewTable.getSelectedModelIndex();
             playerOverviewTableModel.initData();
-            SwingUtilities.invokeLater(() -> {
-                this.playerOverviewTable.selectModelIndex(selection);
-            });
+            SwingUtilities.invokeLater(() -> this.playerOverviewTable.selectModelIndex(selection));
         }
         finally {
             isRefreshingPlayerOverview=false;
@@ -267,7 +265,6 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
     }
 
     private String formatLine(String text) {
-        /*if ( !text.endsWith("&nbsp;")) */
         return text + "<br/>";
     }
 

@@ -33,34 +33,17 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel implements Refre
 	private JSplitPane horizontalSplitPane;
 	private JSplitPane verticalSplitPane;
 	private final List<Updatable> updatable = new ArrayList<>();
-//	private boolean areSelecting = false;
 
 	public LineupPanel() {
 		initComponents();
-		var playerOverviewTableModel = (PlayerOverviewTableModel)this.lineupPlayersTable.getModel();
-
-//		for (var c : playerOverviewTableModel.getColumns()) {
-//			if (c instanceof PlayerCheckBoxColumn playerCheckBoxColumn) {
-//				if (playerCheckBoxColumn.isEditable()) {
-//					var tableColumn = lineupPlayersTable.getColumn(c.getId());
-//					if (tableColumn != null) {
-//						tableColumn.setCellEditor(CheckBoxTableEntry.getEditor().getCellEditor());
-//					}
-//				}
-//			}
-//		}
-
+		var playerOverviewTableModel = (PlayerOverviewTableModel) this.lineupPlayersTable.getModel();
 		playerOverviewTableModel.reInitData();
 	}
 
-	public void storeUserSettings(){
-		var playerOverviewTableModel = (PlayerOverviewTableModel)this.lineupPlayersTable.getModel();
+	public void storeUserSettings() {
+		var playerOverviewTableModel = (PlayerOverviewTableModel) this.lineupPlayersTable.getModel();
 		playerOverviewTableModel.storeUserSettings();
 	}
-
-//	public void setPlayer(int idPlayer) {
-//		lineupPlayersTable.setPlayer(idPlayer);
-//	}
 
 	public void refresh() {
 		lineupPlayersTable.refresh();
@@ -86,7 +69,6 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel implements Refre
 		return lineupPositionsPanel;
 	}
 
-
 	/**
 	 * Get the divider location to restore user previous view organization
 	 */
@@ -98,10 +80,6 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel implements Refre
 		return locations;
 	}
 
-//	public void saveColumnOrder() {
-//		lineupPlayersTable.saveColumnOrder();
-//	}
-
 	/**
 	 * Refresh the players and tactics of each Lineup panels
 	 */
@@ -111,7 +89,6 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel implements Refre
 		lineupPlayersTable.refresh();
 		// Refresh the table and details of the player overview
 		core.gui.HOMainFrame.instance().getSpielerUebersichtPanel().refresh();
-
 		fireUpdate();
 	}
 
@@ -158,30 +135,6 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel implements Refre
 	private Component initSpielerTabelle() {
 		var model = UserColumnController.instance().getLineupModel();
 		lineupPlayersTable = new PlayersTable(model);
-//		for ( var modelColumn : model.getColumns()){
-//			if ( modelColumn.isEditable()){
-//				var tableColumn = lineupPlayersTable.getColumn(modelColumn.getId());
-//				tableColumn.setCellEditor(new DefaultCellEditor(new JCheckBox()));
-//			}
-//		}
-//		lineupPlayersTable.getSelectionModel().addListSelectionListener(
-//				e -> {
-//					if (!areSelecting) {
-//						areSelecting = true;
-//						var player = lineupPlayersTable.getPlayer(e.getFirstIndex());
-//						if (player == null) {
-////							player = HOMainFrame.instance().getSelectedPlayer();
-//							player = PlayersTable.Companion.getSelectedPlayer();
-//							if (player != null) {
-//								lineupPlayersTable.setPlayer(player.getPlayerId());
-//							}
-//						} else {
-////							HOMainFrame.instance().selectPlayer(player);
-//						}
-//						areSelecting = false;
-//					}
-//				}
-//		);
 		return lineupPlayersTable.getContainerComponent();
 	}
 
