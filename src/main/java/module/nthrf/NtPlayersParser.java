@@ -2,7 +2,7 @@ package module.nthrf;
 
 import core.file.xml.SafeInsertMap;
 import core.file.xml.XMLManager;
-import core.net.MyConnector;
+import core.net.Connector;
 import java.util.ArrayList;
 import java.util.List;
 import org.w3c.dom.Document;
@@ -21,7 +21,7 @@ class NtPlayersParser {
 		List<SafeInsertMap> ret = new ArrayList<>();
 		try {
 			for (var playerId : playerIds) {
-				String xmlData = MyConnector.instance().downloadPlayerDetails(playerId);
+				String xmlData = Connector.instance().downloadPlayerDetails(playerId);
 				Document doc = XMLManager.parseString(xmlData);
 				Element root = doc.getDocumentElement();
 				Element ele = (Element) root.getElementsByTagName("Player").item(0);

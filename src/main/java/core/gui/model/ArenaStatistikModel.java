@@ -1,13 +1,10 @@
-// %3080703537:de.hattrickorganizer.gui.model%
 package core.gui.model;
 
 import core.model.enums.MatchType;
 import core.model.match.IMatchType;
 import core.util.AmountOfMoney;
 import core.util.HODateTime;
-import tool.arenasizer.ArenaSizer;
-
-import java.math.BigDecimal;
+import tool.arenasizer.ArenaAdmission;
 
 
 /**
@@ -362,23 +359,23 @@ public class ArenaStatistikModel {
     }
 
     public AmountOfMoney getTerracesIncome() {
-        return  ArenaSizer.ADMISSION_PRICE_TERRACES.times(BigDecimal.valueOf(getSoldTerraces())).times(BigDecimal.valueOf(getMatchTypeFactor()));
+        return ArenaAdmission.calculateTerracesIncome(getSoldTerraces());
     }
 
     public AmountOfMoney getBasicSeatIncome() {
-        return  ArenaSizer.ADMISSION_PRICE_BASICS.times(BigDecimal.valueOf(getSoldBasics())).times(BigDecimal.valueOf(getMatchTypeFactor()));
+        return ArenaAdmission.calculateBasicSeatingIncome(getSoldBasics());
     }
 
     public AmountOfMoney getSeatRoofIncome() {
-        return ArenaSizer.ADMISSION_PRICE_ROOF.times(BigDecimal.valueOf(getSoldRoof())).times(BigDecimal.valueOf(getMatchTypeFactor()));
+        return ArenaAdmission.calculateUnderRoofIncome(getSoldRoof());
     }
 
     public AmountOfMoney getVipIncome() {
-        return ArenaSizer.ADMISSION_PRICE_VIP.times(BigDecimal.valueOf(getSoldVip())).times(BigDecimal.valueOf(getMatchTypeFactor()));
+        return ArenaAdmission.calculateVipBoxIncome(getSoldVip());
     }
 
     public AmountOfMoney getTotalIncome() {
-        return getTerracesIncome().plus(getBasicSeatIncome()).plus(getSeatRoofIncome()).plus(getVipIncome());
+        return ArenaAdmission.calculateIncome(getSoldTerraces(), getSoldBasics(), getSoldRoof(), getSoldVip());
     }
 
     /*

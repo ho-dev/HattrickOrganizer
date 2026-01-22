@@ -13,7 +13,7 @@ import core.model.player.PlayerCategory;
 import core.model.player.TrainerType;
 import core.util.AmountOfMoney;
 import core.util.HODateTime;
-import module.hallOfFame.HallOfFamePlayer;
+import module.halloffame.HallOfFamePlayer;
 import module.youth.YouthPlayer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

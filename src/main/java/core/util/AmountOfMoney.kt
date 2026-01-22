@@ -6,12 +6,11 @@ import core.model.WorldDetailsManager
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.text.NumberFormat
-import java.util.*
 
 /**
  * Amounts of money are stored in swedish krona and displayed in players' locale
  */
-class AmountOfMoney(var swedishKrona: BigDecimal) {
+data class AmountOfMoney(var swedishKrona: BigDecimal) {
     constructor(swedishKrona: Long) : this(BigDecimal.valueOf(swedishKrona, 0))
 
     /**
@@ -65,13 +64,13 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
          */
         fun parse(v: String?): AmountOfMoney? {
             var amount: Number?
-            try {
-                amount = currencyFormatter?.parse(v)
+            amount = try {
+                currencyFormatter?.parse(v)
             } catch (_: Exception) {
                 try {
-                    amount = Helper.getNumberFormat(0).parse(v)
+                    Helper.getNumberFormat(0).parse(v)
                 } catch (ex: Exception) {
-                    HOLogger.instance().error(Helper::class.java, "error parsing currency " + ex)
+                    HOLogger.instance().error(Helper::class.java, "error parsing currency $ex")
                     return null
                 }
             }
@@ -121,6 +120,15 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
                 if (exchangeRate == null) return BigDecimal(1)
             }
             return exchangeRate!!
+        }
+
+        /**
+         * sets the exchange rate explicitly.
+         *
+         * @param exchangeRate Exchange Rate to be set.
+         */
+        fun setExchangeRate(exchangeRate: BigDecimal) {
+            this.exchangeRate = exchangeRate
         }
 
         /**
@@ -190,9 +198,9 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
      */
     @JvmOverloads
     fun toLocaleString( decimals : Int = 0): String {
-        val formatter =  getCurrencyFormatter()
-        formatter.maximumFractionDigits=decimals
-        formatter.minimumFractionDigits=decimals
+        val formatter = getCurrencyFormatter()
+        formatter.maximumFractionDigits = decimals
+        formatter.minimumFractionDigits = decimals
         return formatter.format(this.toLocale())
     }
 
@@ -246,13 +254,6 @@ class AmountOfMoney(var swedishKrona: BigDecimal) {
 
     fun divide(divisor: AmountOfMoney): BigDecimal {
         return this.swedishKrona.divide(divisor.swedishKrona, 2, RoundingMode.HALF_UP)
-    }
-
-    /**
-     * Returns true if the given amounts are equal
-     */
-    fun equals(other: AmountOfMoney): Boolean {
-        return this.swedishKrona.equals(other.swedishKrona)
     }
 
     /**

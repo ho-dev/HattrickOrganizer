@@ -13,7 +13,7 @@ import module.lineup.lineup.LineupPositionsPanel;
 import module.lineup.lineup.MatchAndLineupSelectionPanel;
 import module.lineup.lineup.PlayerPositionPanel;
 import module.lineup.ratings.LineupRatingPanel;
-import module.playerOverview.PlayerOverviewTableModel;
+import module.playeroverview.PlayerOverviewTableModel;
 
 import javax.swing.*;
 import java.awt.*;

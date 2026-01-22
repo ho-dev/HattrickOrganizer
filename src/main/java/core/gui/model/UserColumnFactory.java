@@ -21,7 +21,7 @@ import core.model.player.PlayerCategory;
 import core.util.HODateTime;
 import core.util.Helper;
 import core.util.StringUtils;
-import module.playerOverview.PlayerStatusLabelEntry;
+import module.playeroverview.PlayerStatusLabelEntry;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -36,7 +36,7 @@ import static core.model.player.MatchRoleID.isFieldMatchRoleId;
  * different {@link core.gui.comp.table.HOTableModel} table models.  Each column has a name,
  * an ID, and may have a preferred width.
  */
-final public class UserColumnFactory {
+public final class UserColumnFactory {
 
     public static final int NAME = 1;
     public static final int BEST_POSITION = 40;

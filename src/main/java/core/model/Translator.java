@@ -3,6 +3,8 @@ package core.model;
 import core.file.FileLoader;
 import core.util.HOLogger;
 import core.util.UTF8Control;
+import lombok.Getter;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.InputStream;
 import java.text.MessageFormat;
@@ -10,6 +12,7 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 
+@Getter
 public class Translator {
 
     public static final String LANGUAGE_RESOURCE_PATH = "language";
@@ -74,24 +77,18 @@ public class Translator {
         return load(LANGUAGE_DEFAULT);
     }
 
-    public String getLanguage() {
-        return this.language;
-    }
-
-    public ResourceBundle getResourceBundle() {
-        return this.resourceBundle;
-    }
-
     /**
-     * Returns the String connected to the active language file or connected to the english language file. Returns !key!
-     * if the key can not be found.
+     * Returns the String connected to the active language file or connected to the English language file.
+     * Returns {@code !key!} if the key cannot be found.
      *
      * @param key Key to be searched in language files
      *
-     * @return String connected to the key or !key! if nothing can be found in language files
+     * @return String connected to the key or {@code !key!} if nothing can be found in language files
      */
     public String translate(String key) {
-        if (key.isBlank()) return "";
+        if (StringUtils.isBlank(key)) {
+            return StringUtils.EMPTY;
+        }
         String temp = null;
         try {
             if (resourceBundle != null) {

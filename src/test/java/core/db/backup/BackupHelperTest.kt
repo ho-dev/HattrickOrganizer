@@ -28,7 +28,6 @@ internal class BackupHelperTest {
 
 	private fun zipFileName() = "db_user-${formatter.format(LocalDate.now())}.zip"
 
-
 	private fun listFilesInZip(zipPath: String): List<String> {
 		return ZipFile(zipPath)
 			.entries()
@@ -77,7 +76,7 @@ internal class BackupHelperTest {
 		(1..5).forEach { i ->
 			val date = currentDate.minusDays(i.toLong())
 			val f = File(testResourcesDir, "db/db_user-${formatter.format(date)}.zip")
-			f.createNewFile()
+			Assertions.assertDoesNotThrow { f.createNewFile() }
 			Files.setLastModifiedTime(f.toPath(), FileTime.from(date.toInstant(ZoneOffset.UTC)))
 		}
 

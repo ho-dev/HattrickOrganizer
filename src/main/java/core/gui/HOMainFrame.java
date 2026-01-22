@@ -17,7 +17,7 @@ import core.module.IModule;
 import core.module.ModuleManager;
 import core.module.config.ModuleConfig;
 import core.net.DownloadDialog;
-import core.net.MyConnector;
+import core.net.Connector;
 import core.net.login.ProxySettings;
 import core.option.OptionenDialog;
 import core.option.db.UserAdministrationDialog;
@@ -25,7 +25,7 @@ import core.util.*;
 import module.lineup.LineupMasterView;
 import module.lineup.LineupPanel;
 import module.matches.MatchesPanel;
-import module.playerOverview.PlayerOverviewPanel;
+import module.playeroverview.PlayerOverviewPanel;
 import module.playeranalysis.PlayerAnalysisModulePanel;
 import module.transfer.TransfersPanel;
 import tool.ToolManager;
@@ -552,7 +552,7 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 			settings.setAuthenticationNeeded(UserParameter.instance().ProxyAuthAktiv);
 			settings.setUsername(UserParameter.instance().ProxyAuthName);
 			settings.setPassword(UserParameter.instance().ProxyAuthPassword);
-			MyConnector.instance().enableProxy(settings);
+			Connector.instance().enableProxy(settings);
 		}
 	}
 

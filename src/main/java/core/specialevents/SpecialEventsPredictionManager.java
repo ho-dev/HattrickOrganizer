@@ -8,11 +8,11 @@ import core.model.player.Player;
 import module.lineup.Lineup;
 import module.opponentspy.OppPlayerSkillEstimator;
 import module.opponentspy.OpponentPlayer;
-import module.opponentspy.OpponentTeam.PlayedPosition;
-import module.teamAnalyzer.manager.PlayerDataManager;
-import module.teamAnalyzer.vo.MatchDetail;
-import module.teamAnalyzer.vo.PlayerInfo;
-import module.teamAnalyzer.vo.PlayerPerformance;
+import module.opponentspy.opponentteam.PlayedPosition;
+import module.teamanalyzer.manager.PlayerDataManager;
+import module.teamanalyzer.vo.MatchDetail;
+import module.teamanalyzer.vo.PlayerInfo;
+import module.teamanalyzer.vo.PlayerPerformance;
 import java.util.*;
 
 public class SpecialEventsPredictionManager {

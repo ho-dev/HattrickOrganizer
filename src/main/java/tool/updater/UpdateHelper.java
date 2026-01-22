@@ -1,6 +1,6 @@
 package tool.updater;
 
-import core.net.MyConnector;
+import core.net.Connector;
 import core.util.HOLogger;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -23,7 +23,7 @@ public class UpdateHelper {
 		int data;
 		try {
 			FileOutputStream outStream = new FileOutputStream(targetFile);
-			InputStream in = MyConnector.instance().getFileFromWeb(urlName, false);
+			InputStream in = Connector.instance().getFileFromWeb(urlName, false);
 			BufferedOutputStream out = new BufferedOutputStream(outStream);
 			while (true) {
 				data = in.read();

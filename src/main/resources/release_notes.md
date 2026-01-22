@@ -15,6 +15,7 @@
 * Fix null pointer exception in nt team download (#2314)
 
 ### Player overview
+* Fix error storing owner notes with length exceeding the column length (#2358)
 
 ### Team Analyzer
 
@@ -22,6 +23,8 @@
 * Added (#2296)
 
 ### Lineup
+
+* Fix empty list of upcoming games in Lineup panel after first download.
 
 ### Training
 * Add experience skill to training tables (#2283)
@@ -36,7 +39,10 @@
 ### Option setting
 * Add option to select currency setting (#2288)
 
-### Misc module
+### Misc
+
+* Fix CVEs with HO dependencies
+* Update darklaf to most recent version.
 
 ## Translations
 

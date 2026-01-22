@@ -2,11 +2,11 @@ package core.gui.model;
 
 import core.db.DBManager;
 import core.gui.comp.table.HOTableModel;
-import module.hallOfFame.HallOfFameTableModel;
+import module.halloffame.HallOfFameTableModel;
 import module.matches.statistics.MatchesOverviewColumnModel;
-import module.playerOverview.PlayerOverviewTableModel;
-import module.specialEvents.SpecialEventsTableModel;
-import module.teamAnalyzer.ui.RecapPanelTableModel;
+import module.playeroverview.PlayerOverviewTableModel;
+import module.specialevents.SpecialEventsTableModel;
+import module.teamanalyzer.ui.RecapPanelTableModel;
 import module.training.ui.TrainingProgressTableModel;
 import module.training.ui.model.ChangesTableModel;
 import module.training.ui.EffectTableModel;
@@ -62,19 +62,19 @@ public final class UserColumnController {
 
 	/** singleton **/
 	private static final UserColumnController columnController = new UserColumnController();
-	
+
 	/** model for matches table **/
 	private  MatchesColumnModel matchesColumnModel			= null;
 
 	/** model for matches statistic table **/
 	private  MatchesOverviewColumnModel matchesOverview1ColumnModel		= null;
-	
+
 	/** model for player overview **/
 	private PlayerOverviewTableModel playerOverviewColumnModel	= null;
-	
+
 	/** model for lineup table **/
 	private PlayerOverviewTableModel lineupColumnModel			= null;
-	
+
 	/** model for player analysis **/
 	private final PlayerAnalysisModel[] playerAnalysisModels 		= new PlayerAnalysisModel[2];
 
@@ -106,7 +106,7 @@ public final class UserColumnController {
 	 *
 	 */
 	private UserColumnController(){
-		
+
 	}
 	/**
 	 * singelton
@@ -115,7 +115,7 @@ public final class UserColumnController {
 	public static UserColumnController instance(){
 		return columnController;
 	}
-	
+
 	/**
 	 * load all models from db
 	 *
@@ -212,35 +212,35 @@ public final class UserColumnController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @return PlayerAnalysisModel
 	 */
 	public PlayerAnalysisModel getAnalysisModel(int instance){
 		if(playerAnalysisModels[instance-1] == null)
 			playerAnalysisModels[instance-1] = new PlayerAnalysisModel(ColumnModelId.PLAYERANALYSIS1, instance);
-		
+
 		return playerAnalysisModels[instance-1];
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return MatchesColumnModel
 	 */
 	public MatchesColumnModel getMatchesModel(){
 		if(matchesColumnModel == null)
 			matchesColumnModel = new MatchesColumnModel(ColumnModelId.MATCHES);
-		
+
 		return matchesColumnModel;
 	}
-	
+
 	public MatchesOverviewColumnModel getMatchesOverview1ColumnModel(){
 		if(matchesOverview1ColumnModel == null)
 			matchesOverview1ColumnModel = new MatchesOverviewColumnModel(ColumnModelId.MATCHESOVERVIEW);
-		return matchesOverview1ColumnModel;	
+		return matchesOverview1ColumnModel;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return PlayerOverviewModel
 	 */
 	public PlayerOverviewTableModel getPlayerOverviewModel(){
@@ -249,9 +249,9 @@ public final class UserColumnController {
 		}
 		return playerOverviewColumnModel;
 	}
-	
+
 	/**
-	 * 
+	 *
 	 * @return LineupColumnModel
 	 */
 	public PlayerOverviewTableModel getLineupModel(){

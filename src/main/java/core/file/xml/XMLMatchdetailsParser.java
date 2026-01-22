@@ -1,7 +1,7 @@
 package core.file.xml;
 
 import core.db.DBManager;
-import core.model.Tournament.TournamentDetails;
+import core.model.tournament.TournamentDetails;
 import core.model.cup.CupLevel;
 import core.model.cup.CupLevelIndex;
 import core.model.enums.MatchType;

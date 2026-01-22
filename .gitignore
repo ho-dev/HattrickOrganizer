@@ -17,6 +17,10 @@
 # Covers JetBrains IDEs: IntelliJ, RubyMine, PhpStorm, AppCode, PyCharm, CLion, Android Studio and WebStorm
 # Reference: https://intellij-support.jetbrains.com/hc/en-us/articles/206544839
 
+.idea/*
+# explicitly included for default encoding of property file in UTF-8
+!.idea/encodings.xml
+
 # User-specific stuff
 .idea/**/workspace.xml
 .idea/**/tasks.xml
@@ -144,7 +148,6 @@ local.properties
 .DS_Store
 /updateDB.py
 /.idea/jarRepositories.xml
-.idea/
 /database.data
 /database.properties
 /database.script

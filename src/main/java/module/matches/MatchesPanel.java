@@ -31,7 +31,7 @@ import core.util.Helper;
 import module.lineup.Lineup;
 import module.matches.statistics.MatchesHighlightsTable;
 import module.matches.statistics.MatchesOverviewTable;
-import module.teamAnalyzer.ui.RatingUtil;
+import module.teamanalyzer.ui.RatingUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;

@@ -1,8 +1,8 @@
 package core.db;
 
 import core.util.AmountOfMoney;
-import module.teamAnalyzer.manager.PlayerDataManager;
-import module.teamAnalyzer.vo.PlayerInfo;
+import module.teamanalyzer.manager.PlayerDataManager;
+import module.teamanalyzer.vo.PlayerInfo;
 import java.sql.Types;
 
 /**

@@ -27,11 +27,11 @@ public class PlayerConverter {
     //~ Instance fields ----------------------------------------------------------------------------
 
     /** List of all 21 ratings for the active language */
-	final private List<String> skills;
-	final private List<Integer> skillvalues;
-	final private List<String> specialities;
-	final private List<Integer> specialitiesvalues;
-	final private static Set<String> NORMALCHARS = new HashSet<>();
+    private final List<String> skills;
+    private final List<Integer> skillvalues;
+    private final List<String> specialities;
+    private final List<Integer> specialitiesvalues;
+    private static final Set<String> NORMALCHARS = new HashSet<>();
 
     public static final int SUCCESS = 0; // No error detected
     public static final int WARNING = 1; // One or some fields don't detected
@@ -39,8 +39,8 @@ public class PlayerConverter {
     public static final int EMPTY_INPUT_ERROR = 3; // Empty input error detected
 
 	private int status;
-    final private List<String> errorFields;
-    final private List<String> notSupportedFields;
+    private final List<String> errorFields;
+    private final List<String> notSupportedFields;
     final HOVerwaltung homodel = HOVerwaltung.instance();
 
 	static {

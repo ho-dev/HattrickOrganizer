@@ -9,7 +9,7 @@ import core.model.UserParameter;
 import core.prediction.engine.MatchPredictionManager;
 import core.prediction.engine.MatchResult;
 import core.prediction.engine.TeamData;
-import module.teamAnalyzer.SystemManager;
+import module.teamanalyzer.SystemManager;
 
 import javax.swing.*;
 import java.awt.*;

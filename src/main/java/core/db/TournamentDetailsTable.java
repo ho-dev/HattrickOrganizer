@@ -1,6 +1,6 @@
 package core.db;
 
-import core.model.Tournament.TournamentDetails;
+import core.model.tournament.TournamentDetails;
 import core.util.HODateTime;
 import java.sql.Types;
 

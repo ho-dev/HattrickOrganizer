@@ -1,6 +1,7 @@
 package core.model;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.MissingResourceException;
 import java.util.stream.Stream;
 
+import static org.apache.commons.lang3.StringUtils.EMPTY;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.junit.jupiter.params.provider.Arguments.of;
@@ -149,22 +151,10 @@ class TranslatorTest {
         assertThat(translator.getResourceBundle()).isNotNull();
     }
 
-//    @ParameterizedTest
-//    @MethodSource("whitelist")
-//    void getLocale(String language) {
-//        // given
-//        final var translator = Translator.load(language);
-//
-//        // when-then
-//        if (StringUtils.endsWithIgnoreCase(language, "FRENCH")) {
-//            assertThat(translator.getLocale()).isEqualTo(Locale.FRENCH);
-//        } else {
-//            assertThat(translator.getLocale()).isEqualTo(Locale.ENGLISH);
-//        }
-//    }
-
     private static Stream<Arguments> translate() {
         return Stream.of(
+                of("English", null, EMPTY),
+                of("English", EMPTY, EMPTY),
                 of("English", "ls.core.preferences.misc.language", "Language"),
                 of("English", "ls.button.save", "Save"),
                 of("English", "ls.player.shirtnumber", "Shirt number"),

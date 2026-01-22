@@ -6,7 +6,7 @@ import core.db.DBManager;
 import core.file.xml.XMLManager;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
-import core.net.MyConnector;
+import core.net.Connector;
 import core.util.AmountOfMoney;
 import core.util.HODateTime;
 import java.time.temporal.ChronoUnit;
@@ -45,7 +45,7 @@ public final class XMLParser {
      */
     public static List<PlayerTransfer> getAllPlayerTransfers(int playerId) {
 
-    	final String xml = MyConnector.instance().getTransfersForPlayer(playerId);
+    	final String xml = Connector.instance().getTransfersForPlayer(playerId);
         final List<PlayerTransfer> transferList = new Vector<>();
         if (StringUtils.isEmpty(xml)) {
             return transferList;
@@ -149,7 +149,7 @@ public final class XMLParser {
      */
     public static List<PlayerTransfer> downloadTeamTransfers(int teamId, int page){
         var url = "/common/chppxml.axd?file=transfersTeam&teamID="+teamId+"&pageIndex="+page;
-        var xml = MyConnector.instance().getHattrickXMLFile(url);
+        var xml = Connector.instance().getHattrickXMLFile(url);
         var doc = XMLManager.parseString(xml);
         if (doc != null){
             return parseTeamTransfers(doc);

@@ -35,8 +35,6 @@ import static module.lineup.LineupPanel.TITLE_FG;
 
 
 public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable {
-
-    private final int OWN_TEAM_ID = HOVerwaltung.instance().getModel().getBasics().getTeamId();
     LineupPanel lineupPanel;
     private JComboBox<MatchOrdersCBItem> m_jcbUpcomingGames;
     private List<MatchOrdersCBItem> upcomingMatchesInDB;
@@ -150,7 +148,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         m_jbDownloadLineup.setToolTipText(Helper.getTranslation("lineup.upload.btn.download.tooltip"));
         m_jbDownloadLineup.setEnabled((m_clSelectedMatch != null) && (m_clSelectedMatch.areOrdersSetInHT()));
 
-        GUIUtils.equalizeComponentSizes(m_jbUploadLineup, m_jbDownloadLineup/*, m_jbGetRatingsPrediction*/);
+        GUIUtils.equalizeComponentSizes(m_jbUploadLineup, m_jbDownloadLineup);
 
         jpButtons.add(m_jbUploadLineup);
         jpButtons.add(m_jbDownloadLineup);
@@ -193,7 +191,6 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
     private void addListeners() {
 
         m_jbDownloadLineup.addActionListener(e -> downloadLineupFromHT());
-
         m_jbUploadLineup.addActionListener(e -> uploadLineupToHT());
 
         m_jcbUpcomingGames.addActionListener(e -> {
@@ -265,8 +262,9 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         add(label);
     }
 
-    private void setUpcomingMatchesFromDB(){
-        var matches = DBManager.instance().getMatchesKurzInfo(OWN_TEAM_ID, MatchKurzInfo.UPCOMING);
+    private void setUpcomingMatchesFromDB() {
+        int ownTeamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
+        var matches = DBManager.instance().getMatchesKurzInfo(ownTeamId, MatchKurzInfo.UPCOMING);
         Collections.sort(matches);
         var now = HODateTime.now();
         List<MatchOrdersCBItem> upcomingMatches = new ArrayList<>();
@@ -403,20 +401,20 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         }
 
         if (success) {
+            int ownTeamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
             if (m_clSelectedMatch != null) m_clSelectedMatch.setOrdersSetInHT(true);
             try {
                 CursorToolkit.startWaitCursor(this);
-                MatchKurzInfo refreshed = OnlineWorker.updateMatch(OWN_TEAM_ID, m_clSelectedMatch);
+                MatchKurzInfo refreshed = OnlineWorker.updateMatch(ownTeamId, m_clSelectedMatch);
                 if (refreshed != null) {
                     m_clSelectedMatch.merge(refreshed);
                 }
                 DBManager.instance().updateMatchKurzInfo(m_clSelectedMatch);
                 refresh();
-                //update_jcbUpcomingGamesAfterSendingMatchOrders(m_clSelectedMatch);
 
                 // store lineup in database
                 var lineupTeam = new MatchLineupTeam(m_clSelectedMatch.getMatchType(), m_clSelectedMatch.getMatchID(),
-                        HOVerwaltung.instance().getModel().getBasics().getTeamName(), OWN_TEAM_ID, 0);
+                        HOVerwaltung.instance().getModel().getBasics().getTeamName(), ownTeamId, 0);
                 lineupTeam.setLineup(lineup);
                 DBManager.instance().storeMatchLineupTeam(lineupTeam);
             } finally {
@@ -426,8 +424,6 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
 
         JOptionPane.showMessageDialog(instance(), message, Helper.getTranslation("lineup.upload.title"), messageType);
     }
-
-
 
     @Override
     public void reInit() {

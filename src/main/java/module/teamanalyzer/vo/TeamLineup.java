@@ -1,0 +1,326 @@
+// %3414899912:hoplugins.teamAnalyzer.vo%
+package module.teamanalyzer.vo;
+
+import core.model.enums.MatchType;
+import core.model.match.IMatchType;
+import core.prediction.engine.TeamData;
+import core.prediction.engine.TeamRatings;
+import core.specialevents.SpecialEventsPredictionManager;
+import core.util.AmountOfMoney;
+import module.nthrf.NtTeamDetails;
+
+import java.util.Collections;
+import java.util.HashMap;
+
+
+/**
+ * Object that holds the Lineup for a certain formation, real or calculated
+ *
+ * @author <a href=mailto:draghetto@users.sourceforge.net>Massimiliano Amato</a>
+ */
+public class TeamLineup {
+    //~ Instance fields ----------------------------------------------------------------------------
+
+    // average, adjusted, opponent team name
+    private String name;
+    private IMatchType matchType=MatchType.NONE;
+    // adjusted values
+    private Integer adjustedTacticCode;
+    private Integer adjustedTacticLevel;
+
+    private MatchDetail matchDetail;
+    private SquadInfo squadInfo;
+
+    /**
+     * Rating of the team on the field
+     */
+    private MatchRating rating;
+
+    /**
+     * Array of the 11 SpotLineup object representing the single spot.
+     * Changed to a HashMap with roleID (from HO) as key...
+     */
+    private final HashMap<Integer, SpotLineup> spotLineups = new HashMap<>();
+
+    /**
+     * Number of stars
+     */
+    private double stars;
+
+    private SpecialEventsPredictionManager specialEventsPrediction;
+
+    /**
+     * NT team details
+     * are used to show team spirit (morale) and confidence info in match table for nt team users
+     */
+    private NtTeamDetails ntTeamDetails = null;
+
+    //~ Methods ------------------------------------------------------------------------------------
+
+    /**
+     * Returns the SpotLineup for the spot
+     *
+     * @param spot desired spot
+     * @return a spot lineup
+     */
+    public final SpotLineup getSpotLineup(int spot) {
+        return spotLineups.get(spot);
+    }
+
+    public void setRating(MatchRating rating) {
+        this.rating = rating;
+    }
+
+    public MatchRating getRating() {
+        return rating;
+    }
+
+    /**
+     * Sets the spot place with the passes SpotLineup
+     *
+     * @param detail SpotLineup object
+     * @param spot   spot to be filled with the object
+     */
+    public void setSpotLineup(SpotLineup detail, int spot) {
+        spotLineups.put(spot, detail);
+    }
+
+    public void setStars(double d) {
+        stars = d;
+    }
+
+    public double getStars() {
+        return stars;
+    }
+
+    /**
+     * toString methode: creates a String representation of the object
+     * Maybe not pretty after HashMap change
+     *
+     * @return the String representation
+     */
+    @Override
+    public String toString() {
+        StringBuilder buffer = new StringBuilder();
+
+        buffer.append("TeamLineup[");
+
+        buffer.append("spotLineups = ").append(Collections.singletonList(spotLineups));
+
+        buffer.append("]");
+
+        return buffer.toString();
+    }
+
+    public void setSpecialEventsPrediction(SpecialEventsPredictionManager specialEventsPredictionManager) {
+        this.specialEventsPrediction = specialEventsPredictionManager;
+    }
+
+    public SpecialEventsPredictionManager getSpecialEventsPrediction() {
+        return specialEventsPrediction;
+    }
+
+    public MatchDetail getMatchDetail() {
+        return matchDetail;
+    }
+
+    public void setMatchDetail(MatchDetail matchDetail) {
+        this.matchDetail = matchDetail;
+    }
+    public void setSquadInfo(SquadInfo info) {
+        this.squadInfo = info;
+    }
+
+    public String getName() {
+        if (this.matchDetail != null) {
+            Match match = this.matchDetail.getMatch();
+            if (match.isHome()) {
+                return match.getAwayTeam();
+            }
+            return "* " + match.getHomeTeam();
+        }
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setMatchType(IMatchType type){ this.matchType = type;}
+
+    public IMatchType getMatchType() {
+        if (this.matchType != MatchType.NONE){
+            return matchType;
+        }
+        if (this.matchDetail != null) {
+            this.matchType = this.matchDetail.getMatch().getMatchType();
+        }
+        return this.matchType;
+    }
+
+    public String getResult() {
+        if (this.matchDetail != null) {
+            Match match = this.matchDetail.getMatch();
+            if (match.isHome()) {
+                return match.getHomeGoals() + "-" + match.getAwayGoals();
+            }
+            return match.getAwayGoals() + "-" + match.getHomeGoals();
+        }
+        return "---";
+    }
+
+    public int getWeek() {
+        if (this.matchDetail != null) {
+            return this.matchDetail.getMatch().getWeek();
+        }
+        return -1;
+    }
+
+    public int getSeason() {
+        if (this.matchDetail != null) {
+            return this.matchDetail.getMatch().getSeason();
+        }
+        return -1;
+    }
+
+    public int getTacticCode() {
+        if ( this.adjustedTacticCode != null){
+            return this.adjustedTacticCode;
+        }
+        if (this.matchDetail != null) {
+            return this.matchDetail.getTacticCode();
+        }
+        return -1;
+    }
+
+    public int getTacticLevel() {
+        if ( this.adjustedTacticLevel != null){
+            return this.adjustedTacticLevel;
+        }
+        if (this.matchDetail != null) {
+            return this.matchDetail.getTacticLevel();
+        }
+        return -1;
+    }
+
+    public String getFormation() {
+        if (this.matchDetail != null) {
+            return this.matchDetail.getFormation();
+        }
+        return "---";
+    }
+
+    public boolean isHomeMatch() {
+        if (this.matchDetail != null) {
+            return this.matchDetail.getMatch().isHome();
+        }
+        return false;
+    }
+
+    public void setAdjustedTacticCode(Integer adjustedTacticCode) {
+        this.adjustedTacticCode = adjustedTacticCode;
+    }
+
+    public void setAdjustedTacticLevel(Integer adjustedTacticLevel) {
+        this.adjustedTacticLevel = adjustedTacticLevel;
+    }
+
+    public void setTeamData(TeamData teamData) {
+        MatchRating rating = new MatchRating();
+        TeamRatings tr = teamData.getRatings();
+        rating.setCentralAttack(tr.getMiddleAttack());
+        rating.setCentralDefense(tr.getMiddleDef());
+        rating.setLeftAttack(tr.getLeftAttack());
+        rating.setLeftDefense(tr.getLeftDef());
+        rating.setMidfield(tr.getMidfield());
+        rating.setRightAttack(tr.getRightAttack());
+        rating.setRightDefense(tr.getRightDef());
+        rating.setHatStats(rating.computeHatStats());
+        rating.setLoddarStats(rating.computeLoddarStats());
+        this.setRating(rating);
+        this.setAdjustedTacticCode(teamData.getTacticType());
+        this.setAdjustedTacticLevel(teamData.getTacticLevel());
+    }
+
+    public int getPositionByPlayerId(int objectPlayerID) {
+        for ( var i: this.spotLineups.entrySet()){
+            if ( i.getValue().getPlayerId() == objectPlayerID){
+                return i.getKey();
+            }
+        }
+        return 0;
+    }
+
+    public void setNtTeamDetails(NtTeamDetails ntTeamDetails) {
+        this.ntTeamDetails=ntTeamDetails;
+    }
+
+    public Integer getSelfConfidence() {
+        if (ntTeamDetails != null) {
+            return ntTeamDetails.getSelfConfidence();
+        }
+        return null;
+    }
+
+    public Integer getMorale() {
+        if (ntTeamDetails != null) {
+            return ntTeamDetails.getMorale();
+        }
+        return null;
+    }
+
+    public Integer getPlayerCount() {
+        if ( this.squadInfo != null) return squadInfo.getPlayerCount();
+        return null;
+    }
+
+    public Integer getTransferlisted() {
+        if ( this.squadInfo != null) return squadInfo.getTransferListedCount();
+        return null;
+    }
+
+    public Integer getBruised() {
+        if ( this.squadInfo != null) return squadInfo.getBruisedCount();
+        return null;
+    }
+
+    public Integer getInjured() {
+        if ( this.squadInfo != null) return squadInfo.getInjuredCount();
+        return null;
+    }
+
+    public Integer getInjuredWeeksSum() {
+        if ( this.squadInfo != null) return squadInfo.getInjuredWeeksSum();
+        return null;
+    }
+
+    public Integer getYellowCards() {
+        if ( this.squadInfo != null) return squadInfo.getSingleYellowCards();
+        return null;
+    }
+
+    public Integer getTwoYellowCards() {
+        if ( this.squadInfo != null) return squadInfo.getTwoYellowCards();
+        return null;
+    }
+
+    public Integer getSuspended() {
+        if ( this.squadInfo != null) return squadInfo.getRedCards();
+        return null;
+    }
+
+    public Integer getTsiSum() {
+        if ( this.squadInfo != null) return squadInfo.gettSISum();
+        return null;
+    }
+
+    public AmountOfMoney getSalarySum() {
+        if ( this.squadInfo != null) return squadInfo.getSalarySum();
+        return null;
+    }
+
+    public Integer getHomegrownCount() {
+        if ( this.squadInfo != null) return squadInfo.getHomegrownCount();
+        return null;
+    }
+}

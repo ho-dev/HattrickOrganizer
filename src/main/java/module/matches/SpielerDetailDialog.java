@@ -20,7 +20,7 @@ import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.util.HOLogger;
 import core.util.Helper;
-import module.playerOverview.PlayerStatusLabelEntry;
+import module.playeroverview.PlayerStatusLabelEntry;
 
 import javax.swing.*;
 import java.awt.*;

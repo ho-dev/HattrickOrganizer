@@ -1,7 +1,7 @@
 package core.db;
 
 import core.util.HODateTime;
-import module.hallOfFame.HallOfFamePlayer;
+import module.halloffame.HallOfFamePlayer;
 
 import java.sql.Types;
 import java.util.ArrayList;
