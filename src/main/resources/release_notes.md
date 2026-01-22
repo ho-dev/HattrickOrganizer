@@ -16,6 +16,8 @@
 
 ### Player overview
 * Fix error storing owner notes with length exceeding the column length (#2358)
+* Fix error selecting players with the arrow keys (#2379)
+* Synchronise player selection in training and player overview modules (#2379)
 
 ### Team Analyzer
 
@@ -48,10 +50,13 @@
 
 Reports by Contributors - October 19, 2025 - December 30, 2025
 * Ioannidouefty 459
-* wsbrenk 31
+* wsbrenk 107
+* Frankieorabona 73
+* _KOHb_ 54
+* Sebastian Reddig 32
 * Lidegand 24
 * Kristaps 4
 * Mara 3
 * Joeri Roels 1
 
-Total 522
+Total 757
