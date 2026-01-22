@@ -1,15 +1,12 @@
 package module.teamanalyzer.vo;
 
-import core.model.player.MatchRoleID;
-import core.util.HelperWrapper;
-
 public class RosterRoleData {
     //~ Instance fields ----------------------------------------------------------------------------
     private double avg;
     private double max;
     private double min;
     private int app;
-    private int pos;
+    private final int pos;
 
     //~ Constructors -------------------------------------------------------------------------------
     /**
@@ -40,12 +37,6 @@ public class RosterRoleData {
 
     public int getPos() {
         return pos;
-    }
-
-    public String getPositionDesc() {
-        int posCode = HelperWrapper.instance().getPosition(pos);
-
-        return MatchRoleID.getNameForPosition((byte) posCode);
     }
 
     public void addMatch(double rating) {
