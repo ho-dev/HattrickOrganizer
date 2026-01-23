@@ -1118,25 +1118,6 @@ public class RatingPredictionModel {
     }
 
     /**
-     * Calculate the player rating related to an optimal reference player
-     *
-     * @param p         PLayer
-     * @param roleId    Lineup position
-     * @param behaviour Behaviour
-     * @param minute    match minute
-     * @return Double
-     */
-    public double calcRelativePlayerRating(Player p, int roleId, byte behaviour, int minute) {
-        Player reference;
-        if (roleId == KEEPER) {
-            reference = Player.getReferenceKeeper();
-        } else {
-            reference = Player.getReferencePlayer();
-        }
-        return getPlayerRating(p, roleId, behaviour, minute) / getPlayerRating(reference, roleId, behaviour, minute);
-    }
-
-    /**
      * Cache of player's tactic strength
      * Player->Skill->strength (Double)
      */

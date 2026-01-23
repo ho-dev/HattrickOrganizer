@@ -25,7 +25,6 @@ import static core.constants.player.PlayerSkill.*;
 import static core.model.player.IMatchRoleID.aPositionBehaviours;
 import static core.model.player.MatchRoleID.getPosition;
 import static core.model.player.MatchRoleID.isFieldMatchRoleId;
-import static java.lang.Integer.MAX_VALUE;
 import static java.lang.Integer.min;
 import static java.lang.Math.*;
 
@@ -795,49 +794,6 @@ public class Player extends AbstractTable.Storable {
 
     public void setHrfDate() {
         setHrfDate(HODateTime.now());
-    }
-
-    static Player referencePlayer;
-    static Player referenceKeeper;
-
-    public static Player getReferencePlayer() {
-        if (referencePlayer == null) {
-            referencePlayer = new Player();
-            referencePlayer.setAge(28);
-            referencePlayer.setAgeDays(0);
-            referencePlayer.setPlayerId(MAX_VALUE);
-            referencePlayer.setForm(8);
-            referencePlayer.setStamina(9);
-            referencePlayer.setSkillValue(KEEPER, 1.);
-            referencePlayer.setSkillValue(DEFENDING, 20.);
-            referencePlayer.setSkillValue(PLAYMAKING, 20.);
-            referencePlayer.setSkillValue(PASSING, 20.);
-            referencePlayer.setSkillValue(WINGER, 20.);
-            referencePlayer.setSkillValue(SCORING, 20.);
-            referencePlayer.setSkillValue(SETPIECES, 20.);
-            referencePlayer.setSkillValue(EXPERIENCE, 20.);
-        }
-        return referencePlayer;
-    }
-
-    public static Player getReferenceKeeper() {
-        if (referenceKeeper == null) {
-            referenceKeeper = new Player();
-            referenceKeeper.setAge(28);
-            referenceKeeper.setAgeDays(0);
-            referenceKeeper.setPlayerId(MAX_VALUE);
-            referenceKeeper.setForm(8);
-            referenceKeeper.setStamina(9);
-            referenceKeeper.setSkillValue(KEEPER, 20.);
-            referenceKeeper.setSkillValue(DEFENDING, 20.);
-            referenceKeeper.setSkillValue(SETPIECES, 20.);
-            referenceKeeper.setSkillValue(PLAYMAKING, 1);
-            referenceKeeper.setSkillValue(PASSING, 1);
-            referenceKeeper.setSkillValue(WINGER, 1);
-            referenceKeeper.setSkillValue(SCORING, 1);
-            referenceKeeper.setSkillValue(EXPERIENCE, 1);
-        }
-        return referenceKeeper;
     }
 
     public double getIdealPositionRating() {
