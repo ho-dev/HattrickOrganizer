@@ -151,9 +151,13 @@ class ControlPanel extends JPanel implements ActionListener {
 		vipPercentField.setValue(ArenaSizer.VIP_PERCENT);
 
 		factorNormalField.setValue(ArenaSizer.SUPPORTER_NORMAL);
-		exampleLabel.setText("=> " + fans + " * " + ((Number) factorNormalField.getValue()).intValue() + " = " + (fans * ((Number) factorNormalField.getValue()).intValue()) + " (" + TranslationFacility.tr("Zuschauer") + " )");
-
+		exampleLabel.setText(createExampleLabelText(fans, ((Number)factorNormalField.getValue()).intValue()));
 	}
+
+    private static String createExampleLabelText(int fans, int factorNormal) {
+        final int expectedNumberOfSpectators = fans * factorNormal;
+        return "=> %d * %d = %d (%s)".formatted(fans, factorNormal, expectedNumberOfSpectators, TranslationFacility.tr("Zuschauer"));
+    }
 
 	Stadium getStadium() {
 		int steh = 0;
@@ -191,7 +195,9 @@ class ControlPanel extends JPanel implements ActionListener {
 		supporter[2] = (((Number) factorNormalField.getValue()).intValue() - 5) * getSupporter();
 
 		// the wrong place for this, only temp playCE
-		exampleLabel.setText("=> " + m_jtfFans.getText() + " * " + ((Number) factorNormalField.getValue()).intValue() + " = " + (Integer.parseInt(m_jtfFans.getText()) * ((Number) factorNormalField.getValue()).intValue()) + " (" + TranslationFacility.tr("Zuschauer") + " )");
+        final int fans = Integer.parseInt(m_jtfFans.getText());
+        final int factorNormal = ((Number) factorNormalField.getValue()).intValue();
+        exampleLabel.setText(createExampleLabelText(fans, factorNormal));
 
 		return supporter;
 	}
