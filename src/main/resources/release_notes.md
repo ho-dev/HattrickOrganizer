@@ -45,6 +45,7 @@
 
 * Fix CVEs with HO dependencies
 * Update darklaf to most recent version.
+* Tools/Arena Sizer: Removed the superfluous space for the `Spectators` in braces at the end.
 
 ## Translations
 

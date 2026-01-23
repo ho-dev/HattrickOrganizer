@@ -4,6 +4,8 @@ import core.model.enums.MatchType;
 import core.model.match.IMatchType;
 import core.util.AmountOfMoney;
 import core.util.HODateTime;
+import lombok.Getter;
+import lombok.Setter;
 import tool.arenasizer.ArenaAdmission;
 
 
@@ -41,7 +43,9 @@ public class ArenaStatistikModel {
     private int m_iFans;
     private int m_iLigaPlatz;
     private int m_iWetter;
-    private int m_iZuschaueranzahl;
+    @Getter
+    @Setter
+    private int spectators;
     private int terraces;
     private int basics;
     private int roof;
@@ -274,24 +278,6 @@ public class ArenaStatistikModel {
      */
     public final int getWetter() {
         return m_iWetter;
-    }
-
-    /**
-     * Setter for property m_iZuschaueranzahl.
-     *
-     * @param m_iZuschaueranzahl New value of property m_iZuschaueranzahl.
-     */
-    public final void setZuschaueranzahl(int m_iZuschaueranzahl) {
-        this.m_iZuschaueranzahl = m_iZuschaueranzahl;
-    }
-
-    /**
-     * Getter for property m_iZuschaueranzahl.
-     *
-     * @return Value of property m_iZuschaueranzahl.
-     */
-    public final int getZuschaueranzahl() {
-        return m_iZuschaueranzahl;
     }
 
     public int getSoldTerraces() {
