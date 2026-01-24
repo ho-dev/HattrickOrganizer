@@ -1227,13 +1227,17 @@ public class Player extends AbstractTable.Storable {
     }
 
     /**
-     * set whether that player can be selected by the assistant
+     * Set whether that player can be selected by the assistant
      * The value is stored to the database
      * @param flag boolean
      */
     public void setCanBeSelectedByAssistant(boolean flag) {
-        if (flag == canBeSelectedByAssistant) return; // nothing changed
-        if (this.isExternallyRecruitedCoach()) flag = false;
+        if (flag == canBeSelectedByAssistant) {
+            return; // Nothing changed
+        }
+        if (this.isExternallyRecruitedCoach()) {
+            flag = false;
+        }
         getNotes().setEligibleToPlay(flag);
         DBManager.instance().storePlayerNotes(notes);
         canBeSelectedByAssistant = flag;

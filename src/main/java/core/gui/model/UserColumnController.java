@@ -102,14 +102,13 @@ public final class UserColumnController {
 
 
     /**
-	 * constructor
-	 *
+	 * Constructor
 	 */
 	private UserColumnController(){
 
 	}
 	/**
-	 * singelton
+	 * Singleton
 	 * @return UserColumnController
 	 */
 	public static UserColumnController instance(){
@@ -117,8 +116,7 @@ public final class UserColumnController {
 	}
 
 	/**
-	 * load all models from db
-	 *
+	 * Load all models from db
 	 */
 	public void load() {
 		final DBManager dbManager = DBManager.instance();
