@@ -37,6 +37,8 @@ public final class LineupModule extends DefaultModule {
 
 	@Override
 	public void storeUserSettings() {
-		if (this.lineupMasterView != null) this.lineupMasterView.storeUserSettings();
+		if (this.lineupMasterView != null) {
+            this.lineupMasterView.storeUserSettings();
+        }
 	}
 }
