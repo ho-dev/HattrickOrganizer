@@ -10,189 +10,221 @@ import javax.swing.table.TableColumn;
  */
 public abstract class UserColumn {
 
-	/** unique column id **/
-	protected int id;
-	
-	/** columnName properties representation, not display!! **/
-	protected String columnName;
-	
-	/** tooltip properties representation **/
-	protected String tooltip;
-	
-	/** minimum width of the column **/
-	protected int minWidth;
-	
-	/** preferred width of the column **/
-	protected int preferredWidth;
-	
-	/** index of the column in the table **/
-	protected int index = 0;
-	
-	/** if a column is shown in the table. Only displayed columns are saved in db. **/
-	protected boolean display = false;
+    /**
+     * unique column id
+     **/
+    protected int id;
+
+    /**
+     * columnName properties representation, not display!!
+     **/
+    protected String columnName;
+
+    /**
+     * tooltip properties representation
+     **/
+    protected String tooltip;
+
+    /**
+     * minimum width of the column
+     **/
+    protected int minWidth;
+
+    /**
+     * preferred width of the column
+     **/
+    protected int preferredWidth;
+
+    /**
+     * index of the column in the table
+     **/
+    protected int index = 0;
+
+    /**
+     * if a column is shown in the table. Only displayed columns are saved in db.
+     **/
+    protected boolean display = false;
 
     protected boolean translateColumnName = true;
     protected boolean translateColumnTooltip = true;
 
-	/**
-	 * Sort order of the column
-	 */
-	SortOrder sortOrder;
-
-	/**
-	 * Sort priority
-	 * Defines the order of the sort keys if more than one column are sorted
-	 */
-	Integer sortPriority;
+    /**
+     * Sort order of the column
+     */
+    SortOrder sortOrder;
 
     /**
-	 * Constructor of an user column
-	 * @param id  column identifier has to be unique in one table
-	 * @param name Column name is displayed in the column header
-	 * @param tooltip Column header tool tip
-	 */
-	protected UserColumn(int id,String name, String tooltip){
-		this.id = id;
-		columnName = name;
-		this.tooltip = tooltip;
-	}
+     * Sort priority
+     * Defines the order of the sort keys if more than one column are sorted
+     */
+    Integer sortPriority;
 
-	/**
-	 * Constructor of an user column
-	 * @param id  column identifier has to be unique in one table
-	 * @param name Column name and tool tip
-	 */
-	protected UserColumn(int id,String name){
-		this(id,name,name);
-	}
+    /**
+     * Constructor of an user column
+     *
+     * @param id      column identifier has to be unique in one table
+     * @param name    Column name is displayed in the column header
+     * @param tooltip Column header tool tip
+     */
+    protected UserColumn(int id, String name, String tooltip) {
+        this.id = id;
+        columnName = name;
+        this.tooltip = tooltip;
+    }
 
-	/**
-	 * constructor is used by AbstractTable
-	 */
-	public UserColumn(){}
-	
-	/**
-	 * returns the language dependency name of the column
-	 * @return String
-	 */
-	public final String getColumnName() {
+    /**
+     * Constructor of an user column
+     *
+     * @param id   column identifier has to be unique in one table
+     * @param name Column name and tool tip
+     */
+    protected UserColumn(int id, String name) {
+        this(id, name, name);
+    }
+
+    /**
+     * constructor is used by AbstractTable
+     */
+    public UserColumn() {
+    }
+
+    /**
+     * returns the language dependency name of the column
+     *
+     * @return String
+     */
+    public final String getColumnName() {
         return translateColumnName ? TranslationFacility.tr(columnName) : columnName;
     }
-	
-	/**
-	 * Return  id
-	 * @return int
-	 */
-	public final int getId() {
-		return id;
-	}
 
-	/**
-	 * returns the language dependency tooltip of the column
-	 * @return String
-	 */
-	public final String getTooltip() {
-		return (this.translateColumnTooltip)?TranslationFacility.tr(tooltip):tooltip;
-	}
-	
-	/**
-	 * Should a column be shown
-	 * @return boolean
-	 */
-	public boolean isDisplay() {
-		return display;
-	}
+    /**
+     * Return  id
+     *
+     * @return int
+     */
+    public final int getId() {
+        return id;
+    }
 
-	/**
-	 * set a column to be showed
-	 * @param display boolean
-	 */
-	public final void setDisplay(boolean display) {
-		this.display = display;
-		if (!display) {
-			index = 0;
-			sortPriority = null;
-			sortOrder = null;
-		}
-	}
+    /**
+     * returns the language dependency tooltip of the column
+     *
+     * @return String
+     */
+    public final String getTooltip() {
+        return (this.translateColumnTooltip) ? TranslationFacility.tr(tooltip) : tooltip;
+    }
 
-	/**
-	 * return the current index of column
-	 * only actual if user don´t move the column !!
-	 * @return int
-	 */
-	public final int getIndex() {
-		return index;
-	}
+    /**
+     * Should a column be shown
+     *
+     * @return boolean
+     */
+    public boolean isDisplay() {
+        return display;
+    }
 
-	/**
-	 * set index
-	 * if columnModel should be saved index will set, or column is loaded
-	 * @param index int
-	 */
-	public final void setIndex(int index) {
-		this.index = index;
-	}
+    /**
+     * set a column to be showed
+     *
+     * @param display boolean
+     */
+    public final void setDisplay(boolean display) {
+        this.display = display;
+        if (!display) {
+            index = 0;
+            sortPriority = null;
+            sortOrder = null;
+        }
+    }
 
-	/**
-	 * String representation
-	 * use in UserColumnsPanel in OptionsPanel
-	 */
-	@Override
-	public String toString(){
-		return getTooltip();
-	}
+    /**
+     * return the current index of column
+     * only actual if user don´t move the column !!
+     *
+     * @return int
+     */
+    public final int getIndex() {
+        return index;
+    }
 
-	/**
-	 * Some columns must be displayed, so some columns are not editable in options dialog
-	 * @return boolean
-	 */
-	public boolean canBeDisabled(){
-		return true;
-	}
+    /**
+     * set index
+     * if columnModel should be saved index will set, or column is loaded
+     *
+     * @param index int
+     */
+    public final void setIndex(int index) {
+        this.index = index;
+    }
 
-	/**
-	 * Column is not visible (width is reduced to zero).
-	 * @return boolean
-	 */
-	public boolean isHidden(){return false;}
+    /**
+     * String representation
+     * use in UserColumnsPanel in OptionsPanel
+     */
+    @Override
+    public String toString() {
+        return getTooltip();
+    }
 
-	/**
-	 * set minWidth and prefWidth in the TableColumn
-	 * @param column TableColumn
-	 */
-	public void setSize(TableColumn column){
-		column.setMinWidth(minWidth);
-		column.setPreferredWidth(preferredWidth);
-	}
-	
-	/**
-	 * set preferredWidth for saving to DB
-	 * @param width int
-	 */
-	public void setPreferredWidth(int width){
-		preferredWidth = width;
-	}
-	
-	public int getPreferredWidth(){
-		return preferredWidth;
-	}
+    /**
+     * Some columns must be displayed, so some columns are not editable in options dialog
+     *
+     * @return boolean
+     */
+    public boolean canBeDisabled() {
+        return true;
+    }
 
-	public Integer getSortPriority() {
-		return sortPriority;
-	}
+    /**
+     * Column is not visible (width is reduced to zero).
+     *
+     * @return boolean
+     */
+    public boolean isHidden() {
+        return false;
+    }
 
-	public SortOrder getSortOrder() {
-		return sortOrder;
-	}
+    /**
+     * set minWidth and prefWidth in the TableColumn
+     *
+     * @param column TableColumn
+     */
+    public void setSize(TableColumn column) {
+        column.setMinWidth(minWidth);
+        column.setPreferredWidth(preferredWidth);
+    }
 
-	public void setSortPriority(Integer sortPriority) {
-		this.sortPriority = sortPriority;
-	}
+    /**
+     * set preferredWidth for saving to DB
+     *
+     * @param width int
+     */
+    public void setPreferredWidth(int width) {
+        preferredWidth = width;
+    }
 
-	public void setSortOrder(SortOrder sortOrder) {
-		this.sortOrder = sortOrder;
-	}
+    public int getPreferredWidth() {
+        return preferredWidth;
+    }
 
-    public boolean isEditable() {return false;}
+    public Integer getSortPriority() {
+        return sortPriority;
+    }
+
+    public SortOrder getSortOrder() {
+        return sortOrder;
+    }
+
+    public void setSortPriority(Integer sortPriority) {
+        this.sortPriority = sortPriority;
+    }
+
+    public void setSortOrder(SortOrder sortOrder) {
+        this.sortOrder = sortOrder;
+    }
+
+    public boolean isEditable() {
+        return false;
+    }
 }
