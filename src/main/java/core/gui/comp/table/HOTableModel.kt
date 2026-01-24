@@ -197,8 +197,8 @@ abstract class HOTableModel protected constructor(
     override fun setValueAt(value: Any, row: Int, column: Int) {
         if (m_clData != null && m_clData!!.size > row && row > -1 && column > -1 && column < m_clData!![row].size) {
             val ret = m_clData!![row][column]
-            if (ret is CheckBoxTableEntry) {
-                ret.value = value as Boolean?
+            if (ret is CheckBoxTableEntry && value is Boolean ) {
+                ret.changeValue(value)
             }
             m_clData!![row][column] = value
         }
