@@ -186,7 +186,7 @@ abstract class HOTableModel protected constructor(
      * @param column  column of cell
      */
     override fun setValueAt(value: Any, row: Int, column: Int) {
-        if (m_clData != null && m_clData!!.size > row && row > -1 && column > -1 && column < m_clData!![row].size ) {
+        if (m_clData != null && m_clData!!.size > row && row > -1 && column > -1 && column < m_clData!![row].size) {
             m_clData!![row][column] = value
         }
         for (table in tables) {
