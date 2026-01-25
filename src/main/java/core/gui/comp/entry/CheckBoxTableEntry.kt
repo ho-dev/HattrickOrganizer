@@ -41,7 +41,7 @@ open class CheckBoxTableEntry(isEnabled: Boolean, var value: Boolean?, fgStandar
      * @return Boolean
      */
     fun getValue(): Boolean {
-        return this.value!!
+        return value != null && value == true
     }
 
     /**
@@ -75,7 +75,7 @@ open class CheckBoxTableEntry(isEnabled: Boolean, var value: Boolean?, fgStandar
         if (obj is CheckBoxTableEntry) {
             if (this.getValue() == obj.getValue()) {
                 return 0
-            } else if (this.getValue()) {
+            } else if (this.getValue() || this.value == false && obj.value == null) {
                 return 1
             }
         }
@@ -103,7 +103,7 @@ open class CheckBoxTableEntry(isEnabled: Boolean, var value: Boolean?, fgStandar
      * Update the component
      */
     override fun updateComponent() {
-        this.checkBox.setSelected(this.value!!)
+        this.checkBox.setSelected(getValue())
         this.checkBox.setBackground(bgStandard)
         this.checkBox.setForeground(fgStandard)
     }
