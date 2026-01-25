@@ -327,7 +327,7 @@ public final class Verein extends AbstractTable.Storable {
     public String getTeamName() {
         return m_sTeamName;
     }
-  
+
 	public int getTacticalAssistantLevels() {
 		return m_iTacticalAssistantLevels;
 	}
@@ -383,4 +383,5 @@ public final class Verein extends AbstractTable.Storable {
     public void setPowerRating(int v) {
         this.m_iPowerRating = v;
     }
+
 }

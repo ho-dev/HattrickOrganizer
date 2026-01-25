@@ -1445,6 +1445,11 @@ public class DBManager implements PersistenceManager {
 				.getMatchHighlights(iMatchType, matchId);
 	}
 
+    public List<MatchEvent> getInjuries(int playerId, HODateTime from, HODateTime to) {
+        return ((MatchHighlightsTable) getTable(MatchHighlightsTable.TABLENAME))
+            .getInjuries(playerId, from.toDbTimestamp(), to.toDbTimestamp());
+    }
+
 	/**
 	 * Get chances stat matches highlights stat [ ].
 	 *

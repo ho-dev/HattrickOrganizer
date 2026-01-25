@@ -7,6 +7,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import java.sql.Timestamp;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 public class XtraData extends AbstractTable.Storable {
@@ -235,7 +236,24 @@ public class XtraData extends AbstractTable.Storable {
      * Get the list of daily updates of the next 7 days
      * @return List of HODateTime
      */
-    public ArrayList<HODateTime> getDailyUpdates() {return dailyUpdates;}
+    public List<HODateTime> getDailyUpdates() {return dailyUpdates;}
+
+    public List<HODateTime> getDailyUpdatesBetween(HODateTime from, HODateTime to ) {
+        var ret = new ArrayList<HODateTime>();
+        for (HODateTime dailyUpdate : getDailyUpdates()) {
+            while (dailyUpdate.isAfter(from)) {
+                dailyUpdate.minus(7, ChronoUnit.DAYS);
+            }
+            while (dailyUpdate.isBefore(from)) {
+                dailyUpdate.plus(7, ChronoUnit.DAYS);
+            }
+            while (!dailyUpdate.isAfter(to)) {
+                ret.add(dailyUpdate);
+                dailyUpdate.plus(7, ChronoUnit.DAYS);
+            }
+        }
+        return ret.stream().sorted().toList();
+    }
 
     /**
      * Get one daily update time stamp
