@@ -15,7 +15,6 @@ import java.awt.*;
 
 public class PlayerInfoPanel extends JPanel {
 
-	private static final long serialVersionUID = 5338615169669058973L;
 	protected JLabel ageLabel = new JLabel("");
 	protected JLabel expLabel = new JLabel("");
 	protected JLabel formLabel = new JLabel("");

@@ -20,8 +20,7 @@ import core.util.HOLogger;
  *
  */
 public class LanguageComboBoxModel extends AbstractListModel implements ComboBoxModel {
-	
-	private static final long serialVersionUID = -8499599592907864510L;
+
 	private ArrayList<String> comboBoxItemList;
 	private String selected = null;
 
@@ -54,7 +53,7 @@ public class LanguageComboBoxModel extends AbstractListModel implements ComboBox
 	 * Load up the model data from the languages.xml file using a SAX parser
 	 */
 	private void loadData() {
-		
+
 		try {
 
 			SAXParserFactory factory = SAXParserFactory.newInstance();
@@ -63,7 +62,7 @@ public class LanguageComboBoxModel extends AbstractListModel implements ComboBox
 			DefaultHandler handler = new DefaultHandler() {
 
 				boolean blname = false;
-	
+
 				@Override
 				public void startElement(String uri, String localName,String qName, Attributes attributes) throws SAXException {
 
@@ -71,7 +70,7 @@ public class LanguageComboBoxModel extends AbstractListModel implements ComboBox
 						blname = true;
 					}
 				}
-	
+
 				@Override
 				public void characters(char[] ch, int start, int length) throws SAXException {
 
@@ -85,10 +84,10 @@ public class LanguageComboBoxModel extends AbstractListModel implements ComboBox
 				}
 
 		     };
-		     
+
 		     URL languages = this.getClass().getClassLoader().getResource("language/languages.xml");
 		     saxParser.parse(languages.getPath(), handler);
-		     
+
 		 } catch (Exception e) {
 			 HOLogger.instance().error(getClass(), e.getMessage());
 		 }

@@ -15,7 +15,6 @@ import module.training.ui.model.TrainingModel;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
-import java.io.Serial;
 
 
 /**
@@ -28,8 +27,6 @@ public class TrainingRecapRenderer extends DefaultTableCellRenderer {
 	 *
 	 */
     private final TrainingModel trainingModel;
-	@Serial
-	private static final long serialVersionUID = -4088001127909689247L;
 
 	private static final Color TABLE_BG = ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
 	private static final Color SELECTION_BG = ThemeManager.getColor(HOColorName.TABLE_SELECTION_BG);

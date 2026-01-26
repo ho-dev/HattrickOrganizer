@@ -15,7 +15,6 @@ import java.awt.event.WindowEvent;
 
 public class SubstitutionEditDialog extends JDialog {
 
-	private static final long serialVersionUID = 1875761460780943159L;
 	private MatchOrderType orderType;
 	private SubstitutionEditView behaviourView;
 	private boolean canceled = true;
@@ -92,8 +91,6 @@ public class SubstitutionEditDialog extends JDialog {
 		});
 
 		Action cancelAction = new AbstractAction() {
-
-			private static final long serialVersionUID = 1L;
 
 			@Override
 			public void actionPerformed(ActionEvent e) {

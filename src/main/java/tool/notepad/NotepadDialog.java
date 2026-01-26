@@ -28,21 +28,19 @@ import javax.swing.JTextArea;
 
 public class NotepadDialog extends JDialog implements ActionListener{
 
-	private static final long serialVersionUID = 7998858836260564800L;
-	
 	private final int dialogWidth = 480;
 	private final int dialogHeight = 320;
 	private final JTextArea textArea = new JTextArea();
 	private File file = null;
 	private final JButton cmdSave	 = new JButton(ThemeManager.getIcon(HOIconName.DISK));
-	
-	
+
+
 	public NotepadDialog(JFrame owner, String title){
 		super(owner,title);
 		initialize();
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 	}
-	
+
 	private void initialize(){
 		file = new File(HOVerwaltung.instance().getModel().getBasics().getTeamId()+"_note.txt");
 		readFile();
@@ -60,7 +58,7 @@ public class NotepadDialog extends JDialog implements ActionListener{
 		getContentPane().add(getButtonPanel(), BorderLayout.NORTH);
 		getContentPane().add(new JScrollPane(textArea),BorderLayout.CENTER);
 	}
-	
+
 	private JPanel getButtonPanel(){
 		JPanel panel = new ImagePanel();
 		panel.setLayout(new FlowLayout(FlowLayout.LEFT));
@@ -72,9 +70,9 @@ public class NotepadDialog extends JDialog implements ActionListener{
 		if(arg0.getSource() == cmdSave){
 			write();
 		}
-		
+
 	}
-	
+
 	protected void readFile(){
         try {
         	if(!file.exists())

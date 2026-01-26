@@ -2,8 +2,6 @@
 package module.teamanalyzer.ui.lineup;
 
 import java.awt.*;
-import java.io.Serial;
-
 
 /**
  * This is an empty panel to display a lineup in mixed style
@@ -12,12 +10,6 @@ import java.io.Serial;
  */
 public class MixedLineupPanel extends LineupStylePanel {
     //~ Constructors -------------------------------------------------------------------------------
-
-    /**
-	 * 
-	 */
-	@Serial
-    private static final long serialVersionUID = -5452888995528327059L;
 
 	/**
      * Constructor

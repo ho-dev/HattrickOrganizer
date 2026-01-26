@@ -23,11 +23,6 @@ import javax.swing.JPanel;
 public class RasenPanel extends JPanel {
     //~ Static fields/initializers -----------------------------------------------------------------
 
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = -8146276344087586861L;
-
     public static BufferedImage background;
 
     //~ Instance fields ----------------------------------------------------------------------------

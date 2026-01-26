@@ -4,7 +4,6 @@ import javax.swing.table.AbstractTableModel;
 
 public class VAPTableModel extends AbstractTableModel {
     //~ Instance fields ----------------------------------------------------------------------------
-	private static final long serialVersionUID = -8731149650305126908L;
 
     private String[] columnNames;
     private Object[][] data;
