@@ -17,11 +17,6 @@ import javax.swing.ImageIcon;
 public class UiFilterTableModel extends BaseTableModel {
     //~ Constructors -------------------------------------------------------------------------------
 
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = 327827808706196143L;
-
 	/**
      * Creates a new instance of UiFilterTableModel
      */

@@ -22,7 +22,6 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.ItemEvent;
-import java.io.Serial;
 import java.text.NumberFormat;
 
 import static core.gui.theme.HOColorName.PANEL_BORDER;
@@ -32,8 +31,6 @@ import static core.gui.theme.HOColorName.TABLEENTRY_BG;
  * The Team statistics panel
  */
 public class TeamStatisticsPanel extends LazyImagePanel {
-	@Serial
-	private static final long serialVersionUID = -6588840565958987842L;
 	private ImageCheckbox jcbXP;
 	private ImageCheckbox jcbWinger;
 	private ImageCheckbox jcbForm;
@@ -798,6 +795,6 @@ public class TeamStatisticsPanel extends LazyImagePanel {
 		}
 	}
 
-	
+
 
 }

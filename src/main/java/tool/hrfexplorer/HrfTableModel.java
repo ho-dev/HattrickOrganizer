@@ -1,6 +1,5 @@
 package tool.hrfexplorer;
 
-import java.io.Serial;
 import java.util.Vector;
 
 import javax.swing.table.DefaultTableModel;
@@ -9,13 +8,6 @@ import javax.swing.table.DefaultTableModel;
  * @author KickMuck
  */
 public class HrfTableModel extends DefaultTableModel {
-
-
-	/**
-	 * 
-	 */
-	@Serial
-	private static final long serialVersionUID = -4726662462776212169L;
 
 	@SuppressWarnings("unchecked")
 	public HrfTableModel(Vector columns, Vector rows) {

@@ -24,8 +24,6 @@ import static java.lang.Double.parseDouble;
 
 public class RightPanel extends JPanel {
 
-	@Serial
-	private static final long serialVersionUID = -5038012557489983903L;
 	private JButton updateButton;
 	private JButton saveImageButton;
 	private JRadioButton homeRadioButton;

@@ -24,11 +24,6 @@ import java.awt.event.ActionListener;
 public class AddPanel extends JPanel {
     //~ Instance fields ----------------------------------------------------------------------------
 
-    /**
-	 *
-	 */
-	private static final long serialVersionUID = 7424042069787091891L;
-
 	/** The Favourite Menu itself */
     FavouriteMenu menu;
 
