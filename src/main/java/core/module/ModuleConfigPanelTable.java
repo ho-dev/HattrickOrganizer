@@ -14,19 +14,16 @@ import javax.swing.*;
 import javax.swing.table.TableColumn;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.Serial;
 
 import static core.gui.theme.HOColorName.DARK_GRAY;
 
 
 class ModuleConfigPanelTable extends JTable implements ActionListener{
-	@Serial
-	private static final long serialVersionUID = 1L;
 	private static final String[] stateDescriptions = {TranslationFacility.tr("Deactivated"),TranslationFacility.tr("Activated"),TranslationFacility.tr("Autostart")};
 	protected String[] columnNames = {TranslationFacility.tr("Status"),TranslationFacility.tr("Name"),TranslationFacility.tr("Optionen")};
 	private final TableEditor editor = new TableEditor();
 
-	
+
 	ModuleConfigPanelTable(){
 		initialize();
 	}
@@ -37,9 +34,9 @@ class ModuleConfigPanelTable extends JTable implements ActionListener{
 		setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
 		getTableHeader().setReorderingAllowed(false);
 	}
-	
+
 	protected TableModel getTableModel() {
-		IModule[] modules = ModuleManager.instance().getTempModules(); 
+		IModule[] modules = ModuleManager.instance().getTempModules();
 		Object[][] value = new Object[modules.length][columnNames.length];
 
 		for (int i = 0; i < modules.length; i++) {
@@ -85,9 +82,9 @@ class ModuleConfigPanelTable extends JTable implements ActionListener{
 			ModuleConfigDialog dialog = new ModuleConfigDialog((JDialog)getTopLevelAncestor(), module);
 			dialog.setVisible(true);
 		}
-		
+
 	}
-	
+
 	void refresh(){
 		setModel(getTableModel());
 		TableColumn c = getColumn(columnNames[0]);
@@ -100,5 +97,5 @@ class ModuleConfigPanelTable extends JTable implements ActionListener{
 		c.setMaxWidth(60);
 	}
 
-	
+
 }

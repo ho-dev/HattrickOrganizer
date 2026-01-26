@@ -9,7 +9,6 @@ import javax.swing.table.TableModel;
 
 import java.awt.event.MouseListener;
 
-import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -49,8 +48,6 @@ import java.util.Map;
  * @version 2.0 02/27/04
  */
 public abstract class AbstractTableSorter extends AbstractTableModel {
-	@Serial
-    private static final long serialVersionUID = 1943995728912103888L;
     public static final int DESCENDING = -1;
     public static final int NOT_SORTED = 0;
     private static final Directive EMPTY_DIRECTIVE = new Directive(-1, NOT_SORTED);
@@ -118,7 +115,7 @@ public abstract class AbstractTableSorter extends AbstractTableModel {
 
     public abstract Comparator getCustomComparator(int column);
 
-    // TableModel interface methods 
+    // TableModel interface methods
     public int getRowCount() {
         return (tableModel == null) ? 0 : tableModel.getRowCount();
     }

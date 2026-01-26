@@ -20,7 +20,6 @@ import core.util.Helper;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.Serial;
 
 
 /**
@@ -30,8 +29,6 @@ import java.io.Serial;
 final class SpielerTrainingsSimulatorPanel extends ImagePanel
         implements core.gui.Refreshable, ItemListener, ActionListener, FocusListener {
 
-    @Serial
-    private static final long serialVersionUID = 7657564758631332932L;
 
     //~ Static fields/initializers -----------------------------------------------------------------
 

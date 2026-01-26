@@ -14,15 +14,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 
 
 
 class TeamRatingPanel extends JPanel implements ItemListener {
-	@Serial
-    private static final long serialVersionUID = -6238120571629957579L;
     //~ Instance fields ----------------------------------------------------------------------------
 	private final GridBagConstraints m_clConstraints;
     private List<RatingItem> levels;

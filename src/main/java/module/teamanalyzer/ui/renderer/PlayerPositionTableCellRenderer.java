@@ -11,7 +11,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 public class PlayerPositionTableCellRenderer extends DefaultTableCellRenderer {
     //~ Static fields/initializers -----------------------------------------------------------------
-    private static final long serialVersionUID = 3258412837305923127L;
     private static Map<Object, Icon> map;
 
 

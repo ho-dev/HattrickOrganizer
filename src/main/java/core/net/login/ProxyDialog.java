@@ -19,7 +19,6 @@ import java.awt.event.*;
  * ProxyDialog
  */
 public class ProxyDialog extends JDialog {
-	private static final long serialVersionUID = -2112562621278224332L;
 	private HOMainFrame m_clMainFrame;
 	private JButton cancelButton = new JButton();
 	private JButton okButton = new JButton();
