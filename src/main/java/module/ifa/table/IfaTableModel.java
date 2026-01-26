@@ -20,7 +20,6 @@ public class IfaTableModel extends AbstractTableModel implements ModelChangeList
 	static final int COL_LOST = 4;
 	static final int COL_LASTMATCH = 5;
 	static final int COL_COOLNESS = 6;
-	private static final long serialVersionUID = -5838533232544239799L;
 	private IfaModel model;
 	private List<IfaStatistic> list;
 	private Summary summary;

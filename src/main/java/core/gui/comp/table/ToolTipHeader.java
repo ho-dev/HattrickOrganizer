@@ -9,8 +9,6 @@ import javax.swing.table.TableColumnModel;
 
 public class ToolTipHeader extends JTableHeader {
 
-	private static final long serialVersionUID = -3459959650680988134L;
-
     String[] toolTips;
 
     public ToolTipHeader(TableColumnModel model) {

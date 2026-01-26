@@ -21,7 +21,6 @@ import javax.swing.WindowConstants;
  */
 public final class InitOptionsDialog extends JDialog implements java.awt.event.ActionListener {
 
-	private static final long serialVersionUID = 1L;
 	//~ Instance fields ----------------------------------------------------------------------------
 
     private JButton m_jbOK;

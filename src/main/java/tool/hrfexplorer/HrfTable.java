@@ -12,11 +12,6 @@ import javax.swing.table.TableColumn;
 
 class HrfTable extends JTable
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -4879553257611585009L;
-
 	public HrfTable(HrfTableModel htm, String name)
 	{
 		super(htm);
@@ -30,7 +25,7 @@ class HrfTable extends JTable
 		}
 		this.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 	}
-	
+
 	public HrfTable( HrfTableModel htm, int[] colWidth, String name)
 	{
 		super(htm);
@@ -52,5 +47,5 @@ class HrfTable extends JTable
 		}
 		this.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
 	}
-	
+
 }

@@ -18,9 +18,8 @@ import javax.swing.SwingConstants;
  * Checkbox mit einem Bild
  */
 public class ImageCheckbox extends JPanel {
-	
-	private static final long serialVersionUID = -1973860107178938746L;
-	
+
+
     //~ Instance fields ----------------------------------------------------------------------------
 
 	private JCheckBox m_jchCheckbox = new JCheckBox();
@@ -83,7 +82,7 @@ public class ImageCheckbox extends JPanel {
         return m_jchCheckbox.isSelected();
     }
 
- 
+
     public final void setText(String text) {
         m_jlLabel.setText(text);
     }
@@ -92,7 +91,7 @@ public class ImageCheckbox extends JPanel {
     public final void addActionListener(ActionListener listener) {
         m_jchCheckbox.addActionListener(listener);
     }
-    
+
     private ImageIcon getImageIcon4Color(Color color) {
         final BufferedImage bufferedImage = new BufferedImage(14, 14, BufferedImage.TYPE_INT_ARGB);
 

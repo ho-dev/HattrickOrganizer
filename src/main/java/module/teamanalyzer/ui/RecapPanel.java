@@ -6,14 +6,11 @@ import core.util.HODateTime;
 import module.teamanalyzer.SystemManager;
 import module.teamanalyzer.report.TeamReport;
 import java.awt.*;
-import java.io.Serial;
 import javax.swing.*;
 
 
 public class RecapPanel extends JPanel {
 
-	@Serial
-    private static final long serialVersionUID = 486150690031160261L;
     public static final String VALUE_NA = "---"; //$NON-NLS-1$
     private String selectedTacticSkill;
     private String selectedTacticType;

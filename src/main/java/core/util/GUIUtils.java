@@ -24,7 +24,7 @@ public class GUIUtils {
 	 * height of the highest and the width of the widest component. The sizes
 	 * will be set with {@link Component#setMinimumSize(java.awt.Dimension) } and
 	 * {@link Component#setPreferredSize(java.awt.Dimension) }.
-	 * 
+	 *
 	 * @param components
 	 *            the components to equalize in size.
 	 */
@@ -42,7 +42,7 @@ public class GUIUtils {
 	 * height and the maximum preferred width is determined (over all
 	 * components) an {@link Dimension} object is created with this height and
 	 * width.
-	 * 
+	 *
 	 * @param components
 	 *            the components to get the maximum preferred width and maximum
 	 *            preferred height from.
@@ -69,14 +69,12 @@ public class GUIUtils {
 	 * Decorates the given dialog with a keyboard action which calls
 	 * {@link JDialog#dispose() } when the ESC key is hit while the dialog or one
 	 * of its subcomponents has the focus.
-	 * 
+	 *
 	 * @param dialog
 	 *            the dialog to decorate.
 	 */
 	public static void decorateWithDisposeOnESC(final JDialog dialog) {
 		dialog.getRootPane().registerKeyboardAction(new AbstractAction() {
-
-			private static final long serialVersionUID = 4054546658098440109L;
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
@@ -89,7 +87,7 @@ public class GUIUtils {
 	 * Decorates the given dialog with a action which will be executed when the
 	 * ESC key is hit while the dialog or one of its subcomponents has the
 	 * focus.
-	 * 
+	 *
 	 * @param dialog
 	 *            the dialog to decorate.
 	 * @param action
@@ -104,7 +102,7 @@ public class GUIUtils {
 	 * Selects the first row in a table. This method is tolerant, it does
 	 * nothing if the given table is <code>null</code> or does not contain any
 	 * row.
-	 * 
+	 *
 	 * @param table
 	 *            the table to select the first row from.
 	 */
@@ -121,7 +119,7 @@ public class GUIUtils {
 	 * screen if set to the calculated position.
 	 * <p>
 	 * The window instance must be visible, otherwise the location won't be set.
-	 * 
+	 *
 	 * @param window
 	 *            The <code>window</code> to be positioned.
 	 * @param component

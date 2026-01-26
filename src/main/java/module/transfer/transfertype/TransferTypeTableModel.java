@@ -6,7 +6,6 @@ import core.model.TranslationFacility;
 import module.transfer.TransferType;
 
 import javax.swing.table.AbstractTableModel;
-import java.io.Serial;
 import java.util.List;
 
 
@@ -19,11 +18,6 @@ import java.util.List;
 class TransferTypeTableModel extends AbstractTableModel {
     //~ Instance fields ----------------------------------------------------------------------------
 
-    /**
-	 *
-	 */
-	@Serial
-    private static final long serialVersionUID = 2943508984461781906L;
 	private final List<TransferredPlayer> values;
     private final String[] colNames = new String[4];
 

@@ -15,7 +15,6 @@ import java.math.BigDecimal;
 
 public class ImageDesignPanel extends JPanel {
 
-	private static final long serialVersionUID = 4562976951725733955L;
 	private static final int MIN_FLAG_WIDTH = 5;
 	private static final int MAX_FLAG_WIDTH = 12;
 	private EmblemPanel emblemPanel;
@@ -343,7 +342,7 @@ public class ImageDesignPanel extends JPanel {
 
 	/**
 	 * Convenience method
-	 * 
+	 *
 	 * @param key
 	 * @return
 	 */
