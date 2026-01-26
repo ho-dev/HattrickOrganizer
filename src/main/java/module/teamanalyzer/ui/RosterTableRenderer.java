@@ -9,7 +9,6 @@ import module.teamanalyzer.vo.PlayerInfo;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.io.Serial;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
@@ -18,8 +17,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 
 public class RosterTableRenderer extends DefaultTableCellRenderer {
-    @Serial
-    private static final long serialVersionUID = -3338455733573545222L;
 
     /*
      * (non-Javadoc)

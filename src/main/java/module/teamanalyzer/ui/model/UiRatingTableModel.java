@@ -20,7 +20,6 @@ import javax.swing.ImageIcon;
  * @author <a href=mailto:draghetto@users.sourceforge.net>Massimiliano Amato</a>
  */
 public class UiRatingTableModel extends BaseTableModel {
-	private static final long serialVersionUID = -825185956672889047L;
 
 	//~ Constructors -------------------------------------------------------------------------------
 

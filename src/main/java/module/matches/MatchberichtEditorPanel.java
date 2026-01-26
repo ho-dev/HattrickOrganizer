@@ -17,7 +17,6 @@ import javax.swing.text.html.StyleSheet;
  */
 class MatchberichtEditorPanel extends ImagePanel {
 
-	private static final long serialVersionUID = -6744361289975460222L;
 	private JEditorPane m_jepTextModusEditorPane;
 	private JScrollPane m_jscTextModusScrollPane;
 

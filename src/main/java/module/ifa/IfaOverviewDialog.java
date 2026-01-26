@@ -26,7 +26,6 @@ import static module.ifa.model.IfaModel.APACHE_LEAGUE_ID;
 
 public class IfaOverviewDialog extends JDialog {
 
-	private static final long serialVersionUID = 5745450861289812050L;
 	private final IfaModel model;
 
 	public IfaOverviewDialog(IfaModel model, Frame parent) {
@@ -108,7 +107,6 @@ public class IfaOverviewDialog extends JDialog {
 		static final int COL_COOLNESS = 2;
 		static final int COL_VISITED = 3;
 		static final int COL_HOSTED = 4;
-		private static final long serialVersionUID = 4643461935740184896L;
 		private final List<Entry> list;
 		private String[] columns = { "Country", "Active users", "Coolness", "V", "H" };
 
@@ -199,8 +197,6 @@ public class IfaOverviewDialog extends JDialog {
 
 	private static class CountryTableCellRenderer extends DefaultTableCellRenderer {
 
-		private static final long serialVersionUID = -5212837673330509051L;
-
 		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value,
 				boolean isSelected, boolean hasFocus, int row, int column) {
@@ -214,8 +210,6 @@ public class IfaOverviewDialog extends JDialog {
 	}
 
 	private static class BooleanTableCellRenderer extends DefaultTableCellRenderer {
-
-		private static final long serialVersionUID = -5648974651813645856L;
 
 		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value,

@@ -12,13 +12,11 @@ import javax.swing.table.AbstractTableModel;
 
 public abstract class AbstractMatchTableModel extends AbstractTableModel {
 
-	private static final long serialVersionUID = -7810048787047274663L;
-	
 	//~ Instance fields ----------------------------------------------------------------------------
 	protected Object[][] m_clData;
 	protected MatchResult matchResult;
 	public abstract String[] getColumnNames();
-	protected abstract void initData();	
+	protected abstract void initData();
 	private boolean isHomeMatch = true;
 	//~ Constructors -------------------------------------------------------------------------------
 	/**

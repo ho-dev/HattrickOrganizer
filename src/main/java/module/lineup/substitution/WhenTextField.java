@@ -20,13 +20,12 @@ import javax.swing.text.DocumentFilter;
 
 public class WhenTextField extends JFormattedTextField {
 
-	private static final long serialVersionUID = 1207880109251770680L;
 	private String noValueDisplayString;
 	private String valueDisplayString;
 
 	/**
 	 * Creates a new WhenTextField.
-	 * 
+	 *
 	 * @param noValueDisplayString
 	 *            the string to display if the textield is in "display mode"
 	 *            (does not contain the cursor, as opposed to "edit mode") and
@@ -84,8 +83,6 @@ public class WhenTextField extends JFormattedTextField {
 
 	private class DisplayFormatter extends JFormattedTextField.AbstractFormatter {
 
-		private static final long serialVersionUID = -3082798484771841528L;
-
 		@Override
 		public Object stringToValue(String text) throws ParseException {
 			// not needed
@@ -105,7 +102,6 @@ public class WhenTextField extends JFormattedTextField {
 
 	private static class EditFormatter extends JFormattedTextField.AbstractFormatter {
 
-		private static final long serialVersionUID = 4814824765566252119L;
 		private DocumentFilter filter = new Filter();
 
 		@Override

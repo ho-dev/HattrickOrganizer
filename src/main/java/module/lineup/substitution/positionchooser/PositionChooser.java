@@ -25,7 +25,6 @@ import javax.swing.JPanel;
 
 public class PositionChooser extends JPanel {
 
-	private static final long serialVersionUID = 7378929734827883010L;
 	private static final Color COLOR_BG = new Color(39, 127, 49);
 	private final Color COLOR_POS_DEFAULT = COLOR_BG;
 	private final Color COLOR_POS_OCCUPIED = Color.LIGHT_GRAY;
@@ -176,7 +175,6 @@ public class PositionChooser extends JPanel {
 
 	private class PositionPanel extends JPanel {
 
-		private static final long serialVersionUID = 6025107478898829134L;
 		private Integer position;
 		private Player player;
 		private boolean selected = false;
@@ -235,7 +233,7 @@ public class PositionChooser extends JPanel {
 			} else {
 				setBackground(COLOR_POS_DEFAULT);
 			}
-			
+
 		}
 	}
 

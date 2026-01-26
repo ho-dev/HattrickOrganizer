@@ -12,8 +12,6 @@ import java.util.stream.Collectors;
 
 public class LookAndFeelDialog extends JDialog {
 
-	private static final long serialVersionUID = -5492754898221009950L;
-
 	public LookAndFeelDialog() {
 		super(HOMainFrame.instance(), "Look and Feel");
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
@@ -36,7 +34,7 @@ public class LookAndFeelDialog extends JDialog {
 	/**
 	 * Gets a map containing an <code>Object</code> representation of the Look
 	 * and Feel keys and their values.
-	 * 
+	 *
 	 * @return A map with laf keys and values.
 	 */
 	private static LinkedHashMap<String, Object> getLookAndFeelOverview() {
@@ -52,7 +50,7 @@ public class LookAndFeelDialog extends JDialog {
 
 	/**
 	 * Gets a sorted collection of all Look and Feel keys.
-	 * 
+	 *
 	 * @return A sorted collection of all Look and Feel keys.
 	 */
 	private static Collection<String> getLookAndFeelKeys() {
@@ -64,7 +62,6 @@ public class LookAndFeelDialog extends JDialog {
 
 		private String[] columns = { "Key", "Value" };
 
-		private static final long serialVersionUID = 6272326208121321089L;
 		private Map<String, Object> data;
 		private List<String> keys;
 
