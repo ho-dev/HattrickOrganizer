@@ -16,8 +16,6 @@ import java.awt.event.ActionListener;
  */
 public class LigaAuswahlDialog extends JDialog implements ActionListener {
 
-	private static final long serialVersionUID = 6165662981528850898L;
-
     //~ Instance fields ----------------------------------------------------------------------------
 
 	private JButton m_jbAbbrechen = new JButton(TranslationFacility.tr("ls.button.cancel"));

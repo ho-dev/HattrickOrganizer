@@ -12,7 +12,6 @@ import java.util.*;
 
 public class RosterPanel extends JPanel {
     //~ Instance fields ----------------------------------------------------------------------------
-	private static final long serialVersionUID = -3867854224503291836L;
 	private JTable table;
     private List<PlayerInfo> oldPlayersInfo = new ArrayList<>();
     private Map<String,RosterPlayerData> players = new HashMap<>();
