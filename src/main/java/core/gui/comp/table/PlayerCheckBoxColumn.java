@@ -10,7 +10,7 @@ public class PlayerCheckBoxColumn extends PlayerColumn {
     public PlayerCheckBoxColumn(int id, String name, String tooltip, int minWidth) {
         super(id, name, tooltip);
         this.minWidth = minWidth;
-        preferredWidth = minWidth;
+        this.preferredWidth = minWidth;
     }
 
     public IHOTableCellEntry getTableEntry(@NotNull Player player) {

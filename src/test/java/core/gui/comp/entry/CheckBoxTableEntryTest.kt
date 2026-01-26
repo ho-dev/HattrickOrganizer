@@ -16,8 +16,8 @@ internal class CheckBoxTableEntryTest {
         Assertions.assertEquals(0, checkBoxTableEntryTrue.compareTo(checkBoxTableEntry))
         Assertions.assertEquals(1, checkBoxTableEntryTrue.compareTo(checkBoxTableEntryFalse))
         Assertions.assertEquals(1, checkBoxTableEntryTrue.compareTo(checkBoxTableEntryNull))
-        Assertions.assertEquals(0, checkBoxTableEntryFalse.compareTo(checkBoxTableEntryNull))
+        Assertions.assertEquals(1, checkBoxTableEntryFalse.compareTo(checkBoxTableEntryNull))
+        Assertions.assertEquals(-1, checkBoxTableEntryNull.compareTo(checkBoxTableEntryFalse))
         Assertions.assertEquals(-1, checkBoxTableEntryNull.compareTo(checkBoxTableEntry))
-        Assertions.assertEquals(-1, checkBoxTableEntryFalse.compareTo(checkBoxTableEntry))
     }
 }

@@ -19,7 +19,7 @@ open class CheckBoxTableEntry(isEnabled: Boolean, var value: Boolean?, fgStandar
      * @param bgStandard Color
      */
     init {
-        this.checkBox.setSelected(value != null && value == true)
+        this.checkBox.setSelected(value == true)
         this.checkBox.setEnabled(isEnabled)
         this.fgStandard = fgStandard
         this.bgStandard = bgStandard
@@ -32,7 +32,7 @@ open class CheckBoxTableEntry(isEnabled: Boolean, var value: Boolean?, fgStandar
      */
     open fun changeValue(b: Boolean?) {
         this.value = b
-        this.checkBox.setSelected(b != null && b)
+        this.checkBox.setSelected(b == true)
         this.updateComponent()
     }
 
@@ -41,7 +41,7 @@ open class CheckBoxTableEntry(isEnabled: Boolean, var value: Boolean?, fgStandar
      * @return Boolean
      */
     fun getValue(): Boolean {
-        return value != null && value == true
+        return value == true
     }
 
     /**
@@ -52,10 +52,11 @@ open class CheckBoxTableEntry(isEnabled: Boolean, var value: Boolean?, fgStandar
     override fun getComponent(selected: Boolean): JComponent {
         if (selected) {
             this.checkBox.setBackground(HODefaultTableCellRenderer.SELECTION_BG)
+            this.checkBox.setForeground(HODefaultTableCellRenderer.SELECTION_FG)
         } else {
             this.checkBox.setBackground(bgStandard)
+            this.checkBox.setForeground(fgStandard)
         }
-        this.checkBox.setForeground(if (selected) HODefaultTableCellRenderer.SELECTION_FG else fgStandard)
         return this.checkBox
     }
 
@@ -63,19 +64,21 @@ open class CheckBoxTableEntry(isEnabled: Boolean, var value: Boolean?, fgStandar
      * Reset the checkbox
      */
     override fun clear() {
+        this.value = false
         this.checkBox.setSelected(false)
     }
 
     /**
-     * Compare with other cell entry
+     * Compare with other cell entry.
+     * Descending order is true, false, null.
      * @param obj the object to be compared.
      * @return int [-1,0,1]
      */
     override fun compareTo(obj: IHOTableCellEntry): Int {
         if (obj is CheckBoxTableEntry) {
-            if (this.getValue() == obj.getValue()) {
+            if (this.value == obj.value) {
                 return 0
-            } else if (this.getValue() || this.value == false && obj.value == null) {
+            } else if (this.value == true || this.value == false && obj.value == null) {
                 return 1
             }
         }
