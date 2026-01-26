@@ -9,8 +9,6 @@ import javax.swing.table.TableColumnModel;
 
 
 class MatchScoreDiffTable extends JTable {
-	
-	private static final long serialVersionUID = -6343540652634219571L;
 
 	private MatchScoreDiffTableModel m_clTableModel;
 	private TableSorter m_clTableSorter;

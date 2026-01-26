@@ -11,7 +11,6 @@ import javax.swing.text.PlainDocument;
  */
 public class NumericDocument extends PlainDocument {
 
-	private static final long serialVersionUID = -7376216000843726838L;
 	private int maxLength = -1;
 	private boolean allowNegatives;
 
@@ -25,7 +24,7 @@ public class NumericDocument extends PlainDocument {
 
 	/**
 	 * Constructs a new NumericDocument.
-	 * 
+	 *
 	 * @param allowNegatives
 	 *            <code>true</code> to allow negative values, <code>false</code>
 	 *            otherwise.
@@ -36,7 +35,7 @@ public class NumericDocument extends PlainDocument {
 
 	/**
 	 * Constructs a new NumericDocument with a maximum number of digits.
-	 * 
+	 *
 	 * @param maxLength
 	 *            the maximum number of digits allowed.
 	 * @throws IllegalArgumentException
@@ -48,7 +47,7 @@ public class NumericDocument extends PlainDocument {
 
 	/**
 	 * Constructs a new NumericDocument with a maximum number of digits.
-	 * 
+	 *
 	 * @param maxLength
 	 *            the maximum number of digits allowed.
 	 * @param allowNegatives
@@ -66,7 +65,7 @@ public class NumericDocument extends PlainDocument {
 	/**
 	 * Returns <code>true</code> if negative Numbers are allowed (a minus sign
 	 * can be inserted at offset 0 in this case), <code>false</code> if not.
-	 * 
+	 *
 	 * @return <code>true</code> if negative Numbers are allowed,
 	 *         <code>false</code> otherwise.
 	 */
@@ -76,7 +75,7 @@ public class NumericDocument extends PlainDocument {
 
 	/**
 	 * Gets the maximum length a text in this document can have.
-	 * 
+	 *
 	 * @return the maximum length or <code>-1</code> if the length is not
 	 *         limited.
 	 */

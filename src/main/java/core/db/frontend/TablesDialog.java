@@ -6,15 +6,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.io.Serial;
 import java.sql.ResultSet;
 
 final class TablesDialog extends JDialog implements MouseListener {
-	@Serial
-    private static final long serialVersionUID = -1584823279333655850L;
 	private JList<String> tablelist;
     private JTable tableColumns;
-    
+
     TablesDialog(SQLDialog owner) {
         super(owner, "Tables");
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);

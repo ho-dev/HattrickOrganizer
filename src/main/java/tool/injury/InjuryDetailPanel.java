@@ -17,8 +17,6 @@ import java.awt.*;
  */
 public class InjuryDetailPanel extends JPanel {
 
-	private static final long serialVersionUID = -4123995368822577858L;
-
     //~ Instance fields ----------------------------------------------------------------------------
 
 	private final JComboBox injuryType = new JComboBox();

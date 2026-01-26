@@ -12,7 +12,6 @@ import core.model.match.Matchdetails;
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import java.awt.*;
-import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,8 +20,6 @@ import java.util.List;
  */
 public class SpielHighlightPanel extends LazyImagePanel {
 
-	@Serial
-	private static final long serialVersionUID = -6491501224900464573L;
 	private GridBagConstraints constraints;
 	private GridBagLayout layout;
 	private JLabel matchTeamsAndScores;
@@ -57,7 +54,7 @@ public class SpielHighlightPanel extends LazyImagePanel {
 
 		if (info.getMatchStatus() == MatchKurzInfo.FINISHED) {
 			clear();
-			
+
 			Matchdetails details = this.matchesModel.getDetails();
 
 			List<MatchEvent> matchHighlights = details.downloadHighlightsIfMissing();

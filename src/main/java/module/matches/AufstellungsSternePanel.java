@@ -26,7 +26,6 @@ import javax.swing.JPanel;
  */
 public class AufstellungsSternePanel extends RasenPanel {
 
-	private static final long serialVersionUID = 7568934875331878466L;
 	private JLabel m_jlTeamName;
 	private SpielerSternePanel m_clAusgewechselt1;
 	private SpielerSternePanel m_clAusgewechselt2;

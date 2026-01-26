@@ -2,7 +2,6 @@
 package module.teamoftheweek.gui;
 
 import java.awt.*;
-import java.io.Serial;
 import javax.swing.*;
 
 
@@ -10,9 +9,6 @@ import javax.swing.*;
  * This is an empty panel to display a lineup
  */
 class LineupPanel extends JPanel {
-
-    @Serial
-    private static final long serialVersionUID = -1373544624896628833L;
 
     private final JComponent m_clLeftBack = new JPanel();
     private final JComponent m_clLeftWinger = new JPanel();

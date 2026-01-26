@@ -24,7 +24,6 @@ import java.util.List;
 
 public class PluginIfaPanel extends LazyPanel {
 
-	private static final long serialVersionUID = 3806181337290704445L;
 	private JSplitPane splitPane;
 	private IfaModel model;
 
@@ -39,7 +38,7 @@ public class PluginIfaPanel extends LazyPanel {
 	@Override
 	public void update() {
 		model.reload();
-		
+
 	}
 
 	private void addListeners() {

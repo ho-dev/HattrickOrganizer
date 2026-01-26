@@ -23,8 +23,6 @@ import java.math.RoundingMode;
 
 class DistributionStatisticsPanel extends JPanel {
 
-	private static final long serialVersionUID = 1L;
-
 	public DistributionStatisticsPanel() {
 		initialize();
 	}

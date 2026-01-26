@@ -13,7 +13,6 @@ import java.awt.event.MouseEvent;
 
 public class EmblemPanel extends JPanel {
 
-	private static final long serialVersionUID = 5771493941186321587L;
 	private FlagPanel flagPanel;
 	private JLabel logoLabel;
 	private String headerText = "";

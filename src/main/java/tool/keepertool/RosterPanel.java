@@ -23,9 +23,7 @@ import javax.swing.SwingConstants;
  * @author draghetto
  */
 class RosterPanel extends JPanel {
-	
-	private static final long serialVersionUID = 4174378650521941024L;
-	
+
     //~ Instance fields ----------------------------------------------------------------------------
 
 	private JComboBox players = new JComboBox();
