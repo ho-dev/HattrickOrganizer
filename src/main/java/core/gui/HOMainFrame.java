@@ -13,7 +13,6 @@ import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.match.Weather;
-import core.model.player.Player;
 import core.module.IModule;
 import core.module.ModuleManager;
 import core.module.config.ModuleConfig;
@@ -68,16 +67,6 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 	// Menu color depending of version
 	private final Color c_beta = new Color(162, 201, 255);
 	private final Color c_dev = new Color(235, 170, 170);
-
-	// TODO: Move this to a model backing the main window
-	public Player getSelectedPlayer() {
-		return m_selectedPlayer;
-	}
-
-	private Player m_selectedPlayer;
-
-	// ~ Constructors
-	// -------------------------------------------------------------------------------
 
 	/**
 	 * Singleton
@@ -186,15 +175,6 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 
 	public static boolean isHOMainFrame_initialized() {
 		return m_HOMainFrame_initialized;
-	}
-
-	public void selectPlayer(Player player) {
-		if (m_selectedPlayer != player) {
-			m_selectedPlayer = player;
-			var lineupPanel = getLineupPanel();
-			if (lineupPanel != null) lineupPanel.setPlayer(player.getPlayerId());
-			getSpielerUebersichtPanel().setPlayer(player);
-		}
 	}
 
 	public LineupPanel getLineupPanel() {
@@ -674,7 +654,6 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 			parameter.spielerUebersichtsPanel_horizontalLeftSplitPane = sup[0];
 			parameter.spielerUebersichtsPanel_horizontalRightSplitPane = sup[1];
 			parameter.spielerUebersichtsPanel_verticalSplitPane = sup[2];
-//			getSpielerUebersichtPanel().saveColumnOrder();
 		}
 
 		// Lineup Panel
@@ -682,7 +661,6 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 			final int[] ap = getLineupPanel().getDividerLocations();
 			parameter.lineupPanel_verticalSplitLocation = ap[0];
 			parameter.lineupPanel_horizontalSplitLocation = ap[1];
-			getLineupPanel().saveColumnOrder();
 		}
 
 		// TransferScoutPanel

@@ -1,13 +1,16 @@
-package core.gui.model
+package module.playeroverview
 
 import core.db.DBManager
-import core.gui.comp.table.BooleanColumn
-import core.gui.comp.table.HOTableModel
+import core.gui.comp.table.PlayerCheckBoxColumn
+import core.gui.comp.table.HOPlayersTableModel
 import core.gui.comp.table.UserColumn
-import core.gui.model.UserColumnController.ColumnModelId
+import core.gui.model.PlayerColumn
+import core.gui.model.PlayerPositionColumn
+import core.gui.model.PlayerSkillColumn
+import core.gui.model.UserColumnController
+import core.gui.model.UserColumnFactory
 import core.model.player.Player
 import core.util.HODateTime
-import module.playeroverview.SpielerTrainingsVergleichsPanel
 
 /**
  * Model used to display players in the Squad table.
@@ -15,20 +18,17 @@ import module.playeroverview.SpielerTrainingsVergleichsPanel
  * @author Thorsten Dietz
  * @since 1.36
  */
-class PlayerOverviewTableModel(id: ColumnModelId, name: String) : HOTableModel(id, name) {
-    /** all players  */
-    var players: List<Player>? = null
-        private set
+class PlayerOverviewTableModel(id: UserColumnController.ColumnModelId, name: String) : HOPlayersTableModel(id, name) {
 
     /**
      * constructor
      *
      */
-    internal constructor(id: ColumnModelId) : this(id, "Spieleruebersicht")
+    internal constructor(id: UserColumnController.ColumnModelId) : this(id, "Spieleruebersicht")
 
     init {
         val basic: Array<out PlayerColumn>? = UserColumnFactory.createPlayerBasicArray()
-        val columns : Array<UserColumn?> = arrayOfNulls(70)
+        val columns: Array<UserColumn?> = arrayOfNulls(70)
         columns[0] = basic?.get(0)
         columns[48] = basic?.get(1)
 
@@ -75,7 +75,7 @@ class PlayerOverviewTableModel(id: ColumnModelId, name: String) : HOTableModel(i
         columns[60] = additionalArray?.get(22)
         columns[61] = additionalArray?.get(23) // schum-rank
         columns[62] = additionalArray?.get(24) // schum-rank benchmark
-        columns[63] = BooleanColumn(UserColumnFactory.AUTO_LINEUP, " ", "AutoAufstellung", 28)
+        columns[63] = additionalArray?.get(31)
         columns[64] = additionalArray?.get(25)
         columns[65] = additionalArray?.get(26)
         columns[66] = additionalArray?.get(27)
@@ -87,82 +87,19 @@ class PlayerOverviewTableModel(id: ColumnModelId, name: String) : HOTableModel(i
         assert(this.columns.size == columns.size)
     }
 
-    // TODO: table column model should control isEditable
-    // Refactoring player overview table model should replace the class BooleanColumn
-    override fun isCellEditable(row: Int, column: Int): Boolean {
-        return getValueAt(row, column) is Boolean
-    }
-
-    fun getRowIndexOfPlayer(playerId: Int): Int {
-        val modelIndex = getPlayerIndex(playerId)
-        if (modelIndex > -1 && modelIndex < this.rowCount) {
-            return table!!.convertRowIndexToView(modelIndex)
-        }
-        return -1
-    }
-
     val selectedPlayer: Player?
         get() {
             val rowIndex = table!!.selectedRow
             if (rowIndex >= 0 && rowIndex < this.rowCount) {
-                return players!![table!!.convertRowIndexToModel(rowIndex)]
+                return players[table!!.convertRowIndexToModel(rowIndex)]
             }
             return null
         }
 
-    fun selectPlayer(playerId: Int) {
-        val row = getRowIndexOfPlayer(playerId)
-        if (row > -1 && row < this.rowCount) {
-            table!!.setRowSelectionInterval(row, row)
-        }
-    }
-
-    fun getPlayerAtRow(tableRow: Int): Player? {
-        if (players != null && tableRow > -1 && tableRow < this.rowCount) {
-            val modelIndex = table!!.convertRowIndexToModel(tableRow)
-            if (modelIndex > -1 && modelIndex < this.rowCount) {
-                return players!![modelIndex]
-            }
-        }
-        return null
-    }
-
-    fun getPlayer(playerId: Int): Player? {
-        // Can be negative for temp player
-        if (playerId != 0) {
-            for (m_vPlayer in players!!) {
-                if (m_vPlayer.playerId == playerId) {
-                    return m_vPlayer
-                }
-            }
-        }
-
-        return null
-    }
-
-    fun getPlayerIndex(playerId: Int): Int {
-        var i = 0
-        for (m_vPlayer in players!!) {
-            if (m_vPlayer.playerId == playerId) {
-                return i
-            }
-            i++
-        }
-        return -1
-    }
-
     /**
-     * Sets the new list of players.
+     * Resets the data.
      */
-    fun setValues(player: List<Player>?) {
-        players = player
-        initData()
-    }
-
-    /**
-     * Resets the data for an HRF comparison.
-     */
-    fun reInitDataHRFComparison() {
+    fun reInitData() {
         initData()
     }
 
@@ -171,7 +108,7 @@ class PlayerOverviewTableModel(id: ColumnModelId, name: String) : HOTableModel(i
      */
     private fun getPreviousPlayerDevelopmentStage(currentDevelopmentStage: Player): Player? {
         val id = currentDevelopmentStage.playerId
-        if ( id >= 0 ) {
+        if (id >= 0) {
             // not a temporary player
             val selectedPlayerDevelopmentStage = SpielerTrainingsVergleichsPanel.getSelectedPlayerDevelopmentStage()
             var i = 0
@@ -210,40 +147,20 @@ class PlayerOverviewTableModel(id: ColumnModelId, name: String) : HOTableModel(i
      */
     override fun initData() {
         val tmpDisplayedColumns = getDisplayedColumns()
-        m_clData = Array(players!!.size) { arrayOfNulls(tmpDisplayedColumns.size) }
+        m_clData = Array(players.size) { arrayOfNulls(tmpDisplayedColumns.size) }
 
-        for (i in players!!.indices) {
-            val currentPlayer = players!![i]
+        for (i in players.indices) {
+            val currentPlayer = players[i]
             val comparisonPlayer = getPreviousPlayerDevelopmentStage(currentPlayer)
             for (j in tmpDisplayedColumns.indices) {
-                if (tmpDisplayedColumns[j] is PlayerColumn) {
-                    m_clData!!.get(i)[j] = (tmpDisplayedColumns[j] as PlayerColumn).getTableEntry(currentPlayer, comparisonPlayer)
-                } else if (tmpDisplayedColumns[j] is BooleanColumn) {
-                    m_clData!!.get(i)[j] = (tmpDisplayedColumns[j] as BooleanColumn).getValue(currentPlayer)
+                if (tmpDisplayedColumns[j] is PlayerCheckBoxColumn) {
+                    m_clData!!.get(i)[j] = (tmpDisplayedColumns[j] as PlayerCheckBoxColumn).getTableEntry(currentPlayer)
+                } else if (tmpDisplayedColumns[j] is PlayerColumn) {
+                    m_clData!!.get(i)[j] =
+                        (tmpDisplayedColumns[j] as PlayerColumn).getTableEntry(currentPlayer, comparisonPlayer)
                 }
             }
         }
         fireTableDataChanged()
-    }
-
-    /**
-     * Initializes the lineup only
-     */
-    fun reInitData() {
-        val tmpDisplayedColumns = getDisplayedColumns()
-        for (i in players!!.indices) {
-            val currentPlayer = players!![i]
-            for (j in tmpDisplayedColumns.indices) {
-                if (tmpDisplayedColumns[j].id == UserColumnFactory.NAME ||
-                    tmpDisplayedColumns[j].id == UserColumnFactory.LINEUP ||
-                    tmpDisplayedColumns[j].id == UserColumnFactory.BEST_POSITION ||
-                    tmpDisplayedColumns[j].id == UserColumnFactory.SCHUM_RANK_BENCHMARK ||
-                    tmpDisplayedColumns[j].id == UserColumnFactory.GROUP) {
-                    m_clData!![i][j] = (tmpDisplayedColumns[j] as PlayerColumn).getTableEntry(currentPlayer, null)
-                } else if (tmpDisplayedColumns[j].id == UserColumnFactory.AUTO_LINEUP) {
-                    m_clData!![i][j] = (tmpDisplayedColumns[j] as BooleanColumn).getValue(currentPlayer)
-                }
-            }
-        }
     }
 }

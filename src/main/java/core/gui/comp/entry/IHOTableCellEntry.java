@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Classes implementing this interface create a {@link javax.swing.JComponent} that will
  * be displayed as a cell in a {@link javax.swing.JTable}: they act as factories to
- * create and initialise the UI component.
+ * create and update the UI component.
  *
  * <p>To display the component, call {@link #getComponent(boolean)}</p>.
  */
@@ -14,7 +14,7 @@ public interface IHOTableCellEntry extends Comparable<IHOTableCellEntry> {
 
     /**
      * This method returns the JComponent, which shall be shown in the Table. The component should
-     * be created be createComponent and only the background should be changed according to the
+     * be created by createComponent and only the background should be changed according to the
      * isSelected-Flag. Nevertheless, you  can ignore the createComponent and updateComponent and
      * create a new one everytime getComponent is called, but that is much slower!
      */

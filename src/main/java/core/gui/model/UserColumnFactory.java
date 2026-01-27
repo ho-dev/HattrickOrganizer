@@ -4,6 +4,7 @@ import core.constants.player.PlayerAbility;
 import core.constants.player.PlayerSkill;
 import core.db.DBManager;
 import core.gui.comp.entry.*;
+import core.gui.comp.table.PlayerCheckBoxColumn;
 import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
@@ -21,6 +22,7 @@ import core.util.HODateTime;
 import core.util.Helper;
 import core.util.StringUtils;
 import module.playeroverview.PlayerStatusLabelEntry;
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.table.TableColumn;
@@ -499,7 +501,7 @@ public final class UserColumnFactory {
      * @return PlayerColumn[]
      */
     public static PlayerColumn[] createPlayerAdditionalArray() {
-        final PlayerColumn[] playerAdditionalArray = new PlayerColumn[31];
+        final PlayerColumn[] playerAdditionalArray = new PlayerColumn[32];
 
         playerAdditionalArray[0] = new PlayerColumn(10, "ls.player.shirtnumber.short", "ls.player.shirtnumber", 25) {
             @Override
@@ -957,6 +959,25 @@ public final class UserColumnFactory {
             public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
                 return new ColorLabelEntry(player.getNote().replace('\n', '/'), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
             }
+        };
+
+        playerAdditionalArray[31] = new PlayerCheckBoxColumn(UserColumnFactory.AUTO_LINEUP, " ", "AutoAufstellung", 28) {
+            @Override
+            public IHOTableCellEntry getTableEntry(@NotNull Player player) {
+                return new CheckBoxTableEntry(!player.isExternallyRecruitedCoach(), player.getCanBeSelectedByAssistant(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD) {
+                    @Override
+                    public void changeValue(boolean value) {
+                        player.setCanBeSelectedByAssistant(value);
+                        super.changeValue(value);
+                    }
+                };
+            }
+
+            @Override
+            public boolean isEditable() {
+                return true;
+            }
+
         };
         return playerAdditionalArray;
     }
