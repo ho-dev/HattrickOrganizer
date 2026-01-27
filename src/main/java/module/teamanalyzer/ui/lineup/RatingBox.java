@@ -9,15 +9,12 @@ import module.teamanalyzer.ui.RatingUtil;
 
 import java.awt.Color;
 import java.awt.Font;
-import java.io.Serial;
 
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 class RatingBox extends JPanel {
-	@Serial
-    private static final long serialVersionUID = 7739872564097601073L;
 
     private final JLabel arrow = new JLabel();
     private final JLabel myValue = new JLabel();

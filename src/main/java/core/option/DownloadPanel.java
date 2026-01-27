@@ -18,10 +18,8 @@ public final class DownloadPanel extends ImagePanel
     implements javax.swing.event.ChangeListener, java.awt.event.ItemListener
 {
     //~ Static fields/initializers -----------------------------------------------------------------
-
-	private static final long serialVersionUID = 1L;
 	private JCheckBox m_jchXMLDownload;
-	private JCheckBox m_jchCurrentMatchlist;    
+	private JCheckBox m_jchCurrentMatchlist;
     private JCheckBox m_jchFixtures;
     private JCheckBox m_jchShowSaveDialog;
 
@@ -36,7 +34,7 @@ public final class DownloadPanel extends ImagePanel
 
     //~ Methods ------------------------------------------------------------------------------------
 
-    public final void itemStateChanged(java.awt.event.ItemEvent itemEvent) {        
+    public final void itemStateChanged(java.awt.event.ItemEvent itemEvent) {
         core.model.UserParameter.temp().xmlDownload = m_jchXMLDownload.isSelected();
         core.model.UserParameter.temp().fixtures = m_jchFixtures.isSelected();
         core.model.UserParameter.temp().downloadCurrentMatchlist = m_jchCurrentMatchlist.isSelected();
@@ -44,7 +42,7 @@ public final class DownloadPanel extends ImagePanel
     }
 
 	public void stateChanged(ChangeEvent arg0) {
-				
+
 	}
 
     private void initComponents() {

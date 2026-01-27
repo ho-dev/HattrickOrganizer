@@ -33,7 +33,6 @@ import javax.swing.JPanel;
 
 final class CheckBox extends ImagePanel {
 
-	private static final long serialVersionUID = 1L;
 	private JCheckBox m_checkBox;
 	private JLabel m_label;
 

@@ -12,7 +12,6 @@ import java.awt.event.ActionListener;
 
 public class ModuleConfigDialog extends JDialog implements ActionListener{
 
-	private static final long serialVersionUID = -6012059855852713150L;
 	private IModule module;
 	JButton okButton;
 

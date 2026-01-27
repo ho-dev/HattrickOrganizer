@@ -13,23 +13,21 @@ import java.awt.event.ActionListener;
 
 public class RebuildDialog extends JDialog implements ActionListener {
 
-	private static final long serialVersionUID = -5212562044591100095L;
-	
 	JLabel infoLabel = new JLabel(TranslationFacility.tr("ifa.reload.info"));
 	JButton okButton = new JButton(TranslationFacility.tr("ifa.reload.reloadbutton"));
 	JButton cancelButton = new JButton(TranslationFacility.tr("ls.button.cancel"));
 	HOMainFrame mainFrame = null;
 	Boolean updatePerformed = false;
-	
-	
+
+
 	public RebuildDialog (HOMainFrame mainFrame) {
 		super(mainFrame, TranslationFacility.tr("ls.menu.modules.ifa.reloadallmatches"));
 		this.mainFrame = mainFrame;
 		setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 		init();
-	
+
 	}
-	
+
 
 	private void init() {
 		JPanel content = new JPanel();
@@ -40,8 +38,8 @@ public class RebuildDialog extends JDialog implements ActionListener {
         constraints.weightx = 1.0;
         constraints.weighty = 1.0;
         constraints.insets = new Insets(4, 4, 4, 4);
-        
-        
+
+
         constraints.gridx = 1;
         constraints.gridy = 1;
         constraints.gridwidth = 2;
@@ -59,10 +57,10 @@ public class RebuildDialog extends JDialog implements ActionListener {
         constraints.anchor = GridBagConstraints.EAST;
         constraints.gridx = 2;
         content.add(cancelButton, constraints);
-        
+
 		okButton.addActionListener(this);
 		cancelButton.addActionListener(this);
-        
+
 		setContentPane(content);
 		pack();
 
@@ -71,8 +69,8 @@ public class RebuildDialog extends JDialog implements ActionListener {
 													// the screen
 			this.setLocation((size.width / 2) - (this.getSize().width / 2),
 					(size.height / 2) - (this.getSize().height / 2));
-        
-			
+
+
 		}
 		setResizable(false);
 	}

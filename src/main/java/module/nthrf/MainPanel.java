@@ -14,7 +14,6 @@ import java.util.List;
  * Main panel of the Nthrf plugin.
  */
 public class MainPanel extends JPanel implements ActionListener {
-	static final long serialVersionUID = 1;
 	private static MainPanel instance = null;
 	private JButton btnStart = null;
 
