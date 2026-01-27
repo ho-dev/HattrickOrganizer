@@ -36,7 +36,9 @@ public class PlayerOverviewPanel extends ImagePanel implements Refreshable {
 		initComponents();
 		RefreshManager.instance().registerRefreshable(this);
 		this.playerOverviewTable.addListSelectionListener(e -> selectPlayer());
-		this.playerOverviewTable.setRowSelectionInterval(0, 0);
+        if (this.playerOverviewTable.getRowCount() > 0) {
+            this.playerOverviewTable.setRowSelectionInterval(0, 0);
+        }
 	}
 
 	/**
