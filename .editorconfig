@@ -1,4 +1,3 @@
-# Top-most EditorConfig file
 root = true
 
 [*]
@@ -6,72 +5,16 @@ end_of_line = lf
 insert_final_newline = true
 trim_trailing_whitespace = true
 charset = utf-8
-
-# Standard for all files
 indent_style = space
 indent_size = 4
 tab_width = 4
 
-# Java-specific
-[*.java]
+[*.{java,kt,py,kts,bat,sh,groovy}]
 indent_style = space
 indent_size = 4
 tab_width = 4
 
-# Kotlin-specific
-[*.kt]
-indent_style = space
-indent_size = 4
-tab_width = 4
-
-# Python-specific
-[*.py]
-indent_style = space
-indent_size = 4
-tab_width = 4
-
-# YAML-specific
-[*.yml]
+[*.{yml,json,xml,html}]
 indent_style = space
 indent_size = 2
 tab_width = 2
-
-# JSON-specific
-[*.json]
-indent_style = space
-indent_size = 4
-tab_width = 4
-
-# XML-specific
-[*.xml]
-indent_style = space
-indent_size = 4
-tab_width = 4
-
-# HTML-specific
-[*.html]
-indent_style = space
-indent_size = 4
-tab_width = 4
-
-# Gradle-specific
-[*.gradle]
-indent_style = space
-indent_size = 4
-tab_width = 4
-
-# Text files
-[*.txt]
-indent_style = space
-indent_size = 4
-tab_width = 4
-
-# Windows batch scripts
-[*.bat]
-indent_style = space
-indent_size = 4
-tab_width = 4
-
-# Property files for translations
-[*.properties]
-charset = utf-8
