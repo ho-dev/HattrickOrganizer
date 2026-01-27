@@ -4,7 +4,6 @@ import de.jansauer.poeditor.entities.Translation
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.plugins.JavaPlugin
-import java.util.function.Consumer
 
 class POEditorPlugin : Plugin<Project> {
     override fun apply(project: Project) {
@@ -25,6 +24,7 @@ class POEditorPlugin : Plugin<Project> {
                 task.trans.add(t)
             }
         }
+
         project.tasks.register("poeditorPush", PushTask::class.java) { pushTask: PushTask ->
             pushTask.group = "poeditor"
             pushTask.description = "Task pushing translation files to POEditor."

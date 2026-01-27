@@ -16,10 +16,10 @@ import javax.inject.Inject
 
 abstract class PullTask @Inject constructor() : DefaultTask() {
     @get:Input
-    abstract val apiKey: Property<String?>
+    abstract val apiKey: Property<String>
 
     @get:Input
-    abstract val projectId: Property<String?>
+    abstract val projectId: Property<String>
 
     @get:Input
     abstract val trans: ListProperty<Translation>

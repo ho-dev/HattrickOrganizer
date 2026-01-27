@@ -13,10 +13,10 @@ import java.util.stream.Collectors
 
 abstract class PushTask : DefaultTask() {
     @get:Input
-    abstract val apiKey: Property<String?>
+    abstract val apiKey: Property<String>
 
     @get:Input
-    abstract val projectId: Property<String?>
+    abstract val projectId: Property<String>
 
     @get:Input
     abstract val terms: ListProperty<Terms>

@@ -1,4 +1,6 @@
 import com.install4j.gradle.Install4jTask
+import java.util.Properties
+import org.kordamp.gradle.plugin.markdown.tasks.MarkdownToHtmlTask
 
 // Some useful commands:
 //
@@ -11,78 +13,86 @@ import com.install4j.gradle.Install4jTask
 buildscript {
     configurations.all {
         resolutionStrategy.dependencySubstitution {
-            substitute module("com.overzealous:remark:1.1.0") \
-                using module("com.wavefront:remark:2023-07.07") \
-                because "not available on maven central anymore"
+            substitute(module("com.overzealous:remark:1.1.0"))
+                .using(module("com.wavefront:remark:2023-07.07"))
+                .because("not available on maven central anymore")
         }
     }
 }
 
-
 plugins {
-    id "java"
-    id "groovy"
-    id "org.jetbrains.kotlin.jvm" version "2.2.0"
-    id "application"
-    id "org.kordamp.gradle.markdown" version "2.2.0"
-    id "com.github.breadmoirai.github-release" version "2.5.2"
-    id "com.install4j.gradle" version "12.0"
-    id "org.barfuin.gradle.taskinfo" version "2.2.0"
-    id "io.freefair.lombok" version "8.13"
+    java
+    groovy
+    id("org.jetbrains.kotlin.jvm") version "2.2.0"
+    application
+    id("org.kordamp.gradle.markdown") version "2.2.0"
+    id("com.github.breadmoirai.github-release") version "2.5.2"
+    id("com.install4j.gradle") version "12.0"
+    id("org.barfuin.gradle.taskinfo") version "2.2.0"
+    id("io.freefair.lombok") version "8.13"
 }
-apply plugin: de.jansauer.poeditor.POEditorPlugin
+apply<de.jansauer.poeditor.POEditorPlugin>()
 
-version = '10.0'
-ext {
-    // Development_stage (DEV:0  BETA:1  STABLE:2)
-    development_stage = project.properties['DEV_STAGE'] as Integer ?: 0
-    version_type = ["-DEV", "-BETA", ""].get(development_stage)
-    target_dir = "${buildDir}/artefacts"
-}
+version = "10.0"
+
+// Development_stage (DEV:0  BETA:1  STABLE:2)
+val development_stage: Int = (project.findProperty("DEV_STAGE") as? String)?.toIntOrNull() ?: 0
+val version_type = listOf("-DEV", "-BETA", "").getOrElse(development_stage) { "" }
+val target_dir = "${layout.buildDirectory.get()}/artefacts"
+
+extra["development_stage"] = development_stage
+extra["version_type"] = version_type
+extra["target_dir"] = target_dir
+
 
 repositories {
     mavenCentral()
-    maven { url 'https://maven.ej-technologies.com/repository' }
+    maven(url = "https://maven.ej-technologies.com/repository")
 }
 
 dependencies {
-    implementation "com.install4j:install4j-runtime:12.0"
-    implementation "com.fasterxml.jackson.core:jackson-core:2.21.0"
-    implementation "com.github.scribejava:scribejava-core:8.3.3"
-    implementation "org.hsqldb:hsqldb:2.7.4"
-    implementation "com.google.code.gson:gson:2.12.1"
-    implementation "com.squareup.okhttp3:okhttp:4.12.0"
-    implementation "com.squareup.okhttp3:okhttp-tls:4.12.0"
-    implementation "com.squareup.okhttp3:logging-interceptor:4.12.0"
-    implementation "com.github.weisj:darklaf-core:3.1.1"
-    implementation "com.github.weisj:darklaf-theme:3.1.1"
-    implementation "com.github.weisj:darklaf-property-loader:3.1.1"
-    implementation "org.javatuples:javatuples:1.2"
-    implementation "org.apache.commons:commons-text:1.15.0"
-    implementation "org.knowm.xchart:xchart:3.8.8"
-    implementation "org.jsoup:jsoup:1.19.1"
-    implementation "org.jetbrains:annotations:26.0.2"
-    implementation "org.codehaus.groovy:groovy-all:3.0.24"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
-    testImplementation "org.junit.jupiter:junit-jupiter:5.14.2"
-    testImplementation "org.assertj:assertj-core:3.26.3"
-    testImplementation "org.jetbrains.kotlin:kotlin-test:2.1.20"
+    implementation("com.install4j:install4j-runtime:12.0")
+    implementation("com.fasterxml.jackson.core:jackson-core:2.21.0")
+    implementation("com.github.scribejava:scribejava-core:8.3.3")
+    implementation("org.hsqldb:hsqldb:2.7.4")
+    implementation("com.google.code.gson:gson:2.12.1")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("com.squareup.okhttp3:okhttp-tls:4.12.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+    implementation("com.github.weisj:darklaf-core:3.1.1")
+    implementation("com.github.weisj:darklaf-theme:3.1.1")
+    implementation("com.github.weisj:darklaf-property-loader:3.1.1")
+    implementation("org.javatuples:javatuples:1.2")
+    implementation("org.apache.commons:commons-text:1.15.0")
+    implementation("org.knowm.xchart:xchart:3.8.8")
+    implementation("org.jsoup:jsoup:1.19.1")
+    implementation("org.jetbrains:annotations:26.0.2")
+    implementation("org.codehaus.groovy:groovy-all:3.0.24")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.14.2")
+    testImplementation("org.assertj:assertj-core:3.26.3")
+    testImplementation("org.jetbrains.kotlin:kotlin-test:2.1.20")
 }
 
-test {
+tasks.test {
     useJUnitPlatform()
 }
 
 //  configure application plugin --------------------------------
 application {
-    mainClass = "core.HOLauncher"
+    mainClass.set("core.HOLauncher")
 }
 
 //  configure java plugin --------------------------------
 java {
-    compileJava.options.encoding = "UTF-8"
     sourceCompatibility = JavaVersion.VERSION_17
     targetCompatibility = JavaVersion.VERSION_17
+    withSourcesJar()
+}
+
+// No need to explicitly set encoding in newer Gradle, but keeping for compatibility if needed
+tasks.withType<JavaCompile> {
+    options.encoding = "UTF-8"
 }
 
 kotlin {
@@ -94,134 +104,153 @@ kotlin {
 sourceSets {
     main {
         java {
-            srcDirs = ["src/main/java"]
+            srcDirs("src/main/java")
         }
         resources {
-            srcDirs = ["src/main/java", "src/main/resources"]
+            srcDirs("src/main/java", "src/main/resources")
         }
     }
     test {
         java {
-            srcDirs = ["src/test/java"]
+            srcDirs("src/test/java")
         }
         resources {
-            srcDirs = ["src/test/resources"]
+            srcDirs("src/test/resources")
         }
     }
 }
 
 // region configuration ==============================================================================================
-ext.callGit = { param ->
-    def p = param.execute()
+fun callGit(param: String): String {
+    val p = Runtime.getRuntime().exec(param)
     p.waitFor()
-    //println "error: " + p.errorStream.text
-    return p.text.trim()
+    //println("error: " + p.errorStream.bufferedReader().readText())
+    return p.inputStream.bufferedReader().readText().trim()
 }
 
 // Used to filter contributors
-ext.filter = { string, filters ->
-    def lines = string.split('\n')
-    String res = ""
-    lines.each{ l->
-        for ( String f in filters ) {
-            if ( l.contains(f) ) return
+fun filter(string: String, filters: List<String>): String {
+    val lines = string.split('\n')
+    var res = ""
+    lines.forEach { l ->
+        var skip = false
+        for (f in filters) {
+            if (l.contains(f)) {
+                skip = true
+                break
+            }
         }
-        res = res + l + "\n"
+        if (!skip) {
+            res = res + l + "\n"
+        }
     }
     return res
 }
 
+
+// This fails, need to find an alternative
 //  configure markdownToHtml --------------------------------
-markdownToHtml {
-    markdownToHtml.tables = true  // Configuration
+tasks.named<MarkdownToHtmlTask>("markdownToHtml") {
+    tables = true
+    // create html from md sources for both release notes and changelog
+    sourceDir = file("${projectDir}/docs/md")
+    outputDir = file("${projectDir}/docs/html")
+    hardwraps = true
 }
 
-// Configure poeditor plugin ================================
-poeditor {
-    apiKey = System.getenv('POEDITOR_APIKEY') ?: 'xxx'
-    projectId = '206221'
 
-    trans.add type:'properties', lang: 'bg',      file: "${projectDir}/src/main/resources/language/Bulgarian.properties"
-    trans.add type:'properties', lang: 'ca',      file: "${projectDir}/src/main/resources/language/Catalan.properties"
-    trans.add type:'properties', lang: 'hr',      file: "${projectDir}/src/main/resources/language/Hrvatski(Croatian).properties"
-    trans.add type:'properties', lang: 'cs',      file: "${projectDir}/src/main/resources/language/Czech.properties"
-    trans.add type:'properties', lang: 'da',      file: "${projectDir}/src/main/resources/language/Danish.properties"
-    trans.add type:'properties', lang: 'nl',      file: "${projectDir}/src/main/resources/language/Nederlands.properties"
-    trans.add type:'properties', lang: 'fi',      file: "${projectDir}/src/main/resources/language/Finnish.properties"
-    trans.add type:'properties', lang: 'fr',      file: "${projectDir}/src/main/resources/language/French.properties"
-    trans.add type:'properties', lang: 'de',      file: "${projectDir}/src/main/resources/language/German.properties"
-    trans.add type:'properties', lang: 'el',      file: "${projectDir}/src/main/resources/language/Greek.properties"
-    trans.add type:'properties', lang: 'he',      file: "${projectDir}/src/main/resources/language/Hebrew.properties" //Hebrew
-    trans.add type:'properties', lang: 'hu',      file: "${projectDir}/src/main/resources/language/Magyar.properties"  //Hungarian
-    trans.add type:'properties', lang: 'it',      file: "${projectDir}/src/main/resources/language/Italiano.properties"
-    trans.add type:'properties', lang: 'ko',      file: "${projectDir}/src/main/resources/language/Hangul(Korean).properties"
-    trans.add type:'properties', lang: 'lv',      file: "${projectDir}/src/main/resources/language/Latvija.properties" //Lettonie
-    trans.add type:'properties', lang: 'lt',      file: "${projectDir}/src/main/resources/language/Lithuanian.properties"
-    trans.add type:'properties', lang: 'fa',      file: "${projectDir}/src/main/resources/language/Persian.properties"
-    trans.add type:'properties', lang: 'pl',      file: "${projectDir}/src/main/resources/language/Polish.properties"
-    trans.add type:'properties', lang: 'pt',      file: "${projectDir}/src/main/resources/language/Portugues.properties"
-    trans.add type:'properties', lang: 'pt-br',   file: "${projectDir}/src/main/resources/language/PortuguesBrasil.properties"
-    trans.add type:'properties', lang: 'ro',      file: "${projectDir}/src/main/resources/language/Romanian.properties"
-    trans.add type:'properties', lang: 'ru',      file: "${projectDir}/src/main/resources/language/Russian.properties"
-    trans.add type:'properties', lang: 'sr-cyrl', file: "${projectDir}/src/main/resources/language/Serbian(Cyrillic).properties"
-    trans.add type:'properties', lang: 'sk',      file: "${projectDir}/src/main/resources/language/Slovak.properties" //Slovak
-    trans.add type:'properties', lang: 'es',      file: "${projectDir}/src/main/resources/language/Spanish.properties"
-    trans.add type:'properties', lang: 'sv',      file: "${projectDir}/src/main/resources/language/Svenska.properties" //Swedish
-    trans.add type:'properties', lang: 'tr',      file: "${projectDir}/src/main/resources/language/Turkish.properties"
-    trans.add type:'properties', lang: 'no',      file: "${projectDir}/src/main/resources/language/Norsk.properties"     // Norwegian
-    trans.add type:'properties', lang: 'id',      file: "${projectDir}/src/main/resources/language/Indonesian.properties"
-    trans.add type:'properties', lang: 'ja',      file: "${projectDir}/src/main/resources/language/Japanese.properties"
-    trans.add type:'properties', lang: 'sl',      file: "${projectDir}/src/main/resources/language/Slovenian.properties"
-    trans.add type:'properties', lang: 'uk',      file: "${projectDir}/src/main/resources/language/Ukranian.properties"
-    trans.add type:'properties', lang: 'ka',      file: "${projectDir}/src/main/resources/language/Georgian.properties"
-    trans.add type:'properties', lang: 'zh-CN',   file: "${projectDir}/src/main/resources/language/Chinese.properties"
-    trans.add type:'properties', lang: 'gl',      file: "${projectDir}/src/main/resources/language/Galego.properties"    // Galician
-    trans.add type:'properties', lang: 'nl-be',   file: "${projectDir}/src/main/resources/language/Vlaams.properties"    // Flemish
-    trans.add type:'properties', lang: 'es-ar',   file: "${projectDir}/src/main/resources/language/Spanish(AR).properties"    // Argentina
-    trans.add type:'properties', lang: 'et',      file: "${projectDir}/src/main/resources/language/Estonian.properties"
+// Configure poeditor plugin ================================
+configure<de.jansauer.poeditor.POEditorExtension> {
+    apiKey.set(System.getenv("POEDITOR_APIKEY") ?: "xxx")
+    projectId.set("206221")
+
+    val langs = listOf(
+        "bg" to "Bulgarian",
+        "ca" to "Catalan",
+        "hr" to "Hrvatski(Croatian)",
+        "cs" to "Czech",
+        "da" to "Danish",
+        "nl" to "Nederlands",
+        "fi" to "Finnish",
+        "fr" to "French",
+        "de" to "German",
+        "el" to "Greek",
+        "he" to "Hebrew",
+        "hu" to "Magyar",
+        "it" to "Italiano",
+        "ko" to "Hangul(Korean)",
+        "lv" to "Latvija",
+        "lt" to "Lithuanian",
+        "fa" to "Persian",
+        "pl" to "Polish",
+        "pt" to "Portugues",
+        "pt-br" to "PortuguesBrasil",
+        "ro" to "Romanian",
+        "ru" to "Russian",
+        "sr-cyrl" to "Serbian(Cyrillic)",
+        "sk" to "Slovak",
+        "es" to "Spanish",
+        "sv" to "Svenska",
+        "tr" to "Turkish",
+        "no" to "Norsk",
+        "id" to "Indonesian",
+        "ja" to "Japanese",
+        "sl" to "Slovenian",
+        "uk" to "Ukranian",
+        "ka" to "Georgian",
+        "zh-CN" to "Chinese",
+        "gl" to "Galego",
+        "nl-be" to "Vlaams",
+        "es-ar" to "Spanish(AR)",
+        "et" to "Estonian"
+    )
+
+    langs.forEach { (lang, fileName) ->
+        val map = linkedMapOf<String, Any>(
+            "type" to "properties",
+            "lang" to lang,
+            "file" to "${projectDir}/src/main/resources/language/${fileName}.properties"
+        )
+        trans.add(map)
+    }
 }
 
 
 // Configure jar task ================================
-jar {
-    archiveFileName = "HO.jar"
+tasks.jar {
+    archiveFileName.set("HO.jar")
     manifest {
-        attributes 'Manifest-Version': 1.0,
-                'Implementation-Title': 'HO',
-                'Implementation-Version': project.version,
-                'Main-Class': 'core.HOLauncher',
-                "Class-Path": configurations.runtimeClasspath.collect { it.getName() }.join(' ')
+        attributes(
+            "Manifest-Version" to "1.0",
+            "Implementation-Title" to "HO",
+            "Implementation-Version" to project.version,
+            "Main-Class" to "core.HOLauncher",
+            "Class-Path" to configurations.runtimeClasspath.get().map { it.name }.joinToString(" ")
+        )
     }
-    exclude "/*.jar", "/*.ico", "/*.png", "/*.md", "/*.html"
+    exclude("/*.jar", "/*.ico", "/*.png", "/*.md", "/*.html")
 }
 
 // Configure distribution task =======================
 distributions {
     main {
-        distributionBaseName = 'XXX'
+        distributionBaseName.set("XXX")
     }
 }
 
-install4j {
-    if (install4jHomeDir != null && install4jHomeDir != "") {
-        installDir = file(install4jHomeDir)
-    } else if (System.getenv('INSTALL4J_HOME')) {
-        installDir = file(System.getenv('INSTALL4J_HOME')) as File
+configure<com.install4j.gradle.Install4jExtension> {
+    if (project.hasProperty("install4jHomeDir") && project.property("install4jHomeDir") != "") {
+        installDir = file(project.property("install4jHomeDir")!!)
+    } else if (System.getenv("INSTALL4J_HOME") != null) {
+        installDir = file(System.getenv("INSTALL4J_HOME"))
     }
     disableSigning = true
-    license = System.getenv('INSTALL4J_LICENSE')
+    license = System.getenv("INSTALL4J_LICENSE")
 }
 
 
-poeditorPull {
+tasks.named("poeditorPull") {
     outputs.upToDateWhen { false }
-}
-
-markdownToHtml {
-    // create html from md sources for both release notes and changelog
-    sourceDir = new File("${projectDir}/docs/md")
-    outputDir = new File("${projectDir}/docs/html")
-    markdownToHtml.hardwraps = true
 }
 
 
@@ -231,44 +260,47 @@ markdownToHtml {
 // region my tasks ================================================================================================
 
 tasks.register("createVersion") {
-    description "Creates the version file required by the GitHub Actions release process."
+    description = "Creates the version file required by the GitHub Actions release process."
     doLast {
-        def coords = project.version.split(/\./)
-        def major = coords[0]
-        def minor = coords[1]
-        def developmentStage = project.ext.development_stage
+        val coords = project.version.toString().split("\\.".toRegex())
+        val major = coords[0]
+        val minor = coords[1]
+        val developmentStage = project.extra["development_stage"] as Int
 
-        println "development stage: ${project.ext.development_stage}"
+        println("development stage: $developmentStage")
 
-        def currentBranch = callGit('git branch --show-current')
-        Properties versionProps = new Properties()
-        def buildNumber = System.getenv("RUN_NUMBER") ?: "0"
+        val currentBranch = callGit("git branch --show-current")
+        val versionProps = Properties()
+        val buildNumber = System.getenv("RUN_NUMBER") ?: "0"
 
-        project.version = "${major}.${minor}.${buildNumber}.${developmentStage}".toString()
+        project.version = "$major.$minor.$buildNumber.$developmentStage"
         // Version in jar extension is set eagerly, override after computing version.
-        jar.manifest {
-            attributes('Implementation-Version': project.version)
+        tasks.jar.configure {
+            manifest {
+                attributes("Implementation-Version" to project.version)
+            }
         }
 
-        versionProps['buildNumber'] = buildNumber
-        versionProps['version'] = project.version.toString()
-        versionProps['shortVersion'] = "${major}.${minor}".toString()
-        versionProps['tag'] = ['dev', 'beta', 'tag_stable'].get(developmentStage)
-        versionProps['branch'] = currentBranch
+        versionProps["buildNumber"] = buildNumber
+        versionProps["version"] = project.version.toString()
+        versionProps["shortVersion"] = "$major.$minor"
+        versionProps["tag"] = listOf("dev", "beta", "tag_stable")[developmentStage]
+        versionProps["branch"] = currentBranch
 
         // Write to version.properties file
-        def versionPropsFile = new File('version.properties')
-        versionProps.store(versionPropsFile.newWriter(), null)
+        val versionPropsFile = file("version.properties")
+        versionProps.store(versionPropsFile.writer(), null)
 
-        println "Project:  $project.name $project.version ....................."
+        println("Project:  ${project.name} ${project.version} .....................")
     }
 }
 
-tasks.register("media", Install4jTask) {
-    group 'sub tasks'
-    dependsOn tasks.createDistribution
-    def developmentStage = project.ext.development_stage
-    def buildNumber = System.getenv("RUN_NUMBER") ?: "0"
+tasks.register<Install4jTask>("media") {
+    group = "sub tasks"
+    dependsOn(tasks.named("createDistribution"))
+    val developmentStage = project.extra["development_stage"]
+    val buildNumber = System.getenv("RUN_NUMBER") ?: "0"
+    val versionType = project.extra["version_type"]
 
     projectFile = file("${projectDir}/utils/buildResources/HO.install4j")
 
@@ -296,236 +328,279 @@ tasks.register("media", Install4jTask) {
     // 464  -> Linux rpm JRE
     // 471 -> Linux deb JRE
 
-    buildIds = ["60", "485", "64", "481", "1225", "1224", "173", "477", "1062", "1064", "1203", "1206", "1208", "1211"]
+    buildIds = listOf("60", "485", "64", "481", "1225", "1224", "173", "477", "1062", "1064", "1203", "1206", "1208", "1211")
 
-    variables = [HO_version: "$project.version.$buildNumber.$developmentStage", projectDir: projectDir, versionType: project.ext.version_type]
+    variables = mapOf(
+        "HO_version" to "${project.version}.$buildNumber.$developmentStage",
+        "projectDir" to projectDir.absolutePath,
+        "versionType" to versionType.toString()
+    )
 }
 
 tasks.register("makeAllMedias") {
-    dependsOn tasks.media
+    dependsOn(tasks.named("media"))
     doLast {
-        delete "${projectDir}/build/artefacts/output.txt"
+        delete("${projectDir}/build/artefacts/output.txt")
+        val targetDir = project.extra["target_dir"]
 
-        println("copy version.properties into ${project.ext.target_dir}")  // ensures version.properties.html en up with the artefacts in the release
+        println("copy version.properties into $targetDir")  // ensures version.properties.html ends up with the artefacts in the release
         copy {
-            from "${projectDir}/version.properties"
-            into "${project.ext.target_dir}"
+            from("${projectDir}/version.properties")
+            into(targetDir!!)
         }
 
         // to ensure changelog.html ends up within the distribution
-        println("copy release_notes.html")   // ensures release_notes.html en up with the artefacts in the release
+        println("copy release_notes.html")   // ensures release_notes.html ends up with the artefacts in the release
         copy {
-            from "${projectDir}/docs/html/release_notes.html"
-            into "${project.ext.target_dir}"
+            from("${projectDir}/docs/html/release_notes.html")
+            into(targetDir!!)
         }
 
         // compatibility to HO3 Updater
         // which used other zip file name
-        def versionType = project.ext.version_type ?: '-DEV'
-        println("copy ${project.ext.target_dir}/HO-${project.version}-portable-win${versionType}.zip -> HO_${project.version}.zip")
+        val versionType = project.extra["version_type"] ?: "-DEV"
+        println("copy $targetDir/HO-${project.version}-portable-win${versionType}.zip -> HO_${project.version}.zip")
         copy {
-            from "${project.ext.target_dir}/HO-${project.version}-portable-win${versionType}.zip"
-            rename "HO-${project.version}-portable-win${versionType}.zip", "HO_${project.version}.zip"
-            into "${project.ext.target_dir}"
+            from("$targetDir/HO-${project.version}-portable-win${versionType}.zip")
+            rename("HO-${project.version}-portable-win${versionType}.zip", "HO_${project.version}.zip")
+            into(targetDir!!)
         }
     }
 }
 
 tasks.register("preparingBuild") {
-    group 'sub tasks'
+    group = "sub tasks"
     doLast {
         //     Deleting build project     ---------------------------------------------------------------------
         println("Deleting build and execution files ....")
-        project.delete(files("${projectDir}/db"))
-        project.delete(files("${projectDir}/logs"))
-        project.delete(files("${projectDir}/themes"))
-        project.delete(files("${projectDir}/user.xml"))
+        delete(files("${projectDir}/db"))
+        delete(files("${projectDir}/logs"))
+        delete(files("${projectDir}/themes"))
+        delete(files("${projectDir}/user.xml"))
         //     Creating Target directory ...  ---------------------------------------------------------------------
-        mkdir project.ext.target_dir
+        mkdir(project.extra["target_dir"]!!)
     }
 }
 
 tasks.register("pushmd")  {
-    group 'sub tasks'
-    dependsOn tasks.preparingBuild
+    group = "sub tasks"
+    dependsOn(tasks.named("preparingBuild"))
     doLast {
-        def coords = project.version.split(/\./)
-        def major = coords[0]
-        def minor = coords[1]
+        val coords = project.version.toString().split("\\.".toRegex())
+        val major = coords[0]
+        val minor = coords[1]
 
         // create release notes ========
         // list the contributors that don't want to be mentioned in release notes
-        def contributorFilter = ["Che"]
+        val contributorFilter = listOf("Che")
 
-        def commitCount = callGit('git rev-list 9.0..HEAD --count')
-        def diff = callGit('git diff --shortstat 9.0..HEAD')
-        def contributors = filter(callGit('git shortlog -s -n 9.0..HEAD'), contributorFilter)
-        def latestCommit = callGit('git log -1 --pretty=format:"%s"')
+        val commitCount = callGit("git rev-list 9.0..HEAD --count")
+        val diff = callGit("git diff --shortstat 9.0..HEAD")
+        val contributors = filter(callGit("git shortlog -s -n 9.0..HEAD"), contributorFilter)
+        val latestCommit = callGit("git log -1 --pretty=format:\"%s\"")
 
         println("create release-notes")
-        def development_message = [
-                "Latest alpha release – planned features are still missing and the version might be unstable, so don't use it without backups of your database and program directories",
-                "Latest beta release – the version is feature complete – feedback from early users is welcome",
-                "Latest stable release"
-        ]
-        List<String> intro = [
-                "# HO! $major.$minor Release Notes",
-                "",
-                development_message[project.ext.development_stage],
-                "",
-                "latest commit: ${latestCommit}",
-                "",
-                "## Some numbers",
-                "* ${commitCount} commits",
-                "* ${diff}",
-                "* Contributors: \n${contributors}",
-                ""
-        ]
+        val developmentMessage = listOf(
+            "Latest alpha release – planned features are still missing and the version might be unstable, so don't use it without backups of your database and program directories",
+            "Latest beta release – the version is feature complete – feedback from early users is welcome",
+            "Latest stable release"
+        )
+        val devStage = project.extra["development_stage"] as Int
 
-        def mdDir = new File("${projectDir}/docs/md") // create directory for MD source
+        val intro = listOf(
+            "# HO! $major.$minor Release Notes",
+            "",
+            developmentMessage[devStage],
+            "",
+            "latest commit: $latestCommit",
+            "",
+            "## Some numbers",
+            "* $commitCount commits",
+            "* $diff",
+            "* Contributors: \n$contributors",
+            ""
+        )
+
+        val mdDir = file("${projectDir}/docs/md") // create directory for MD source
         mdDir.mkdirs()
-        new File(mdDir.getAbsolutePath() + "/release_notes.md").text=intro.join("\n") + file("${projectDir}/src/main/resources/release_notes.md").getText() //release notes + intro copied in md source folder
+        File(mdDir, "release_notes.md")
+            .writeText(intro.joinToString("\n")
+                       + file("${projectDir}/src/main/resources/release_notes.md").readText()) //release notes + intro copied in md source folder
 
         // create changelog
         println("create changelog")
-        List<String> changelogIntro = [
-                "# Changelist HO! $major.$minor",
-                ""
-        ]
+        val changelogIntro = listOf(
+            "# Changelist HO! $major.$minor",
+            ""
+        )
 
-        File changeLog = new File(mdDir.getAbsolutePath()+ "/changelog.md")
-        changeLog.text=changelogIntro.join("\n")
-        def toConcatenate = files("${projectDir}/src/main/resources/release_notes.md", "${projectDir}/src/main/resources/changelog.md")
-        toConcatenate.each { f -> changeLog << f.text }
+        val changeLog = File(mdDir, "changelog.md")
+        changeLog.writeText(changelogIntro.joinToString("\n"))
 
+        files("${projectDir}/src/main/resources/release_notes.md", "${projectDir}/src/main/resources/changelog.md").forEach { f ->
+            changeLog.appendText(f.readText())
+        }
     }
 }
 
 tasks.register("createDistribution") {
-    group 'sub tasks'
-    dependsOn tasks.installDist
+    group = "sub tasks"
+    dependsOn(tasks.installDist)
     outputs.upToDateWhen { false }
-    def distribDir = file("${buildDir}/install/XXX")
+    val distribDir = file("${layout.buildDirectory.get()}/install/XXX")
     doLast {
 
         // to ensure changelog.html ends up within the distribution
         copy {
-            from "${projectDir}/docs/html/changelog.html"
-            into "${distribDir}"
+            from("${projectDir}/docs/html/changelog.html")
+            into(distribDir)
         }
 
-        if (project.ext.development_stage == '0') {
+        val devStage = project.extra["development_stage"] as Int
+        if (devStage == 0) {
             copy {
-                from "${projectDir}/utils/buildResources/Logo_dev.png"
-                into "${projectDir}/utils/buildResources"
-                rename "Logo_dev.png", "Logo.png"
+                from("${projectDir}/utils/buildResources/Logo_dev.png")
+                into("${projectDir}/utils/buildResources")
+                rename("Logo_dev.png", "Logo.png")
             }
-        } else if (project.ext.development_stage == '1') {
+        } else if (devStage == 1) {
             copy {
-                from "${projectDir}/utils/buildResources/Logo_beta.png"
-                into "${projectDir}/utils/buildResources"
-                rename "Logo_beta.png", "Logo.png"
+                from("${projectDir}/utils/buildResources/Logo_beta.png")
+                into("${projectDir}/utils/buildResources")
+                rename("Logo_beta.png", "Logo.png")
             }
         } else {
             copy {
-                from "${projectDir}/utils/buildResources/Logo_stable.png"
-                into distribDir
-                rename "Logo_stable.png", "Logo.png"
+                from("${projectDir}/utils/buildResources/Logo_stable.png")
+                into(distribDir)
+                rename("Logo_stable.png", "Logo.png")
             }
         }
 
         copy {
-            from "${projectDir}/prediction"
-            into "${distribDir}/prediction"
+            from("${projectDir}/prediction")
+            into("$distribDir/prediction")
         }
 
         copy {
-            from "${distribDir}/lib"
-            include "**/*.jar"
-            into "${distribDir}"
+            from("$distribDir/lib")
+            include("**/*.jar")
+            into(distribDir)
         }
 
         copy {
-            from "${projectDir}/src/main/resources/truststore.jks"
-            into "${distribDir}"
+            from("${projectDir}/src/main/resources/truststore.jks")
+            into(distribDir)
         }
 
-        delete "${distribDir}/bin"
-        delete "${distribDir}/lib"
+        delete("$distribDir/bin")
+        delete("$distribDir/lib")
 
     }
 }
 
 tasks.register("createLanguageFileList")  {
-    group 'sub tasks'
-    dependsOn tasks.poeditorPull
+    group = "sub tasks"
+    dependsOn(tasks.named("poeditorPull"))
     outputs.upToDateWhen { false }
 
-    def lTranslationFiles = []
-    fileTree(dir: "${projectDir}/src/main/resources/language", include: '*.properties').visit {
-        FileVisitDetails details -> lTranslationFiles << details.file.name
-    }
-
     doLast {
+        val lTranslationFiles = ArrayList<String>()
+        fileTree("${projectDir}/src/main/resources/language") {
+            include("*.properties")
+        }.visit {
+            lTranslationFiles.add(this.file.name)
+        }
+
         println("listing available translation in ${projectDir}/src/main/resources/language")
-        lTranslationFiles = lTranslationFiles.collect { it.take(it.lastIndexOf('.'))}
-        lTranslationFiles.each {out.println it}
-        File lstFile = new File("${projectDir}/src/main/resources/language/ListLanguages.txt")
-        lstFile.withWriter{ out -> lTranslationFiles.each {out.println it} }
+        val processedFiles = lTranslationFiles.map { it.substringBeforeLast('.') }
+        processedFiles.forEach { println(it) }
+
+        val lstFile = File("${projectDir}/src/main/resources/language/ListLanguages.txt")
+        lstFile.printWriter().use { out ->
+            processedFiles.forEach { out.println(it) }
+        }
     }
 }
 
 tasks.register("resetDB") {
-    group 'tool'
-    description 'copy the database from existing install into project'
+    group = "tool"
+    description = "copy the database from existing install into project"
 
     doLast {
         try {
-            println("Resetting DB: copying DB from `${resetDir}` into  ${projectDir}")
-            project.delete(files("${projectDir}/db"))
-            copy {
-                from "${resetDir}/"
-                into "${projectDir}/db/"
-                exclude "**/logs/**"
-            }
+            val resetDir = if (project.hasProperty("resetDir")) project.property("resetDir") else null
 
-            println("Resetting DB: done !")
-        } catch (Exception ignored) {
-            println("Resetting DB: CANNOT copy DB from `${resetDir}` into  ${projectDir}"); return false
+            if (resetDir != null) {
+                println("Resetting DB: copying DB from `$resetDir` into  ${projectDir}")
+                delete(files("${projectDir}/db"))
+                copy {
+                    from("$resetDir/")
+                    into("${projectDir}/db/")
+                    exclude("**/logs/**")
+                }
+
+                println("Resetting DB: done !")
+            } else {
+                 println("Resetting DB: `resetDir` property not found.")
+            }
+        } catch (ignored: Exception) {
+            println("Resetting DB: failed to copy DB")
         }
     }
 }
 
 tasks.register("pushDB") {
-    group 'tool'
-    description 'copy the database from project to temp folder for analysis'
+    group = "tool"
+    description = "copy the database from project to temp folder for analysis"
 
     doLast {
         try {
-            println("Pushing DB: copying DB from ${projectDir} into `${tempDir}/db/`")
-            project.delete(files("${tempDir}/db"))
-            copy {
-                from "${projectDir}/db"
-                into "${tempDir}/db"
-                exclude "**/logs/**"
-            }
+            val tempDir = if (project.hasProperty("tempDir")) project.property("tempDir") else null
+            if (tempDir != null) {
+                println("Pushing DB: copying DB from ${projectDir} into `$tempDir/db/`")
+                delete(files("$tempDir/db"))
+                copy {
+                    from("${projectDir}/db")
+                    into("$tempDir/db")
+                    exclude("**/logs/**")
+                }
 
-            println("Pushing DB: done !")
-        } catch (Exception ignored) {
-            println("Pushing DB: CANNOT copy DB from ${projectDir} into `${tempDir}db/"); return false
+                println("Pushing DB: done !")
+            } else {
+                 println("Pushing DB: `tempDir` property not found.")
+            }
+        } catch (ignored: Exception) {
+            println("Pushing DB: failed to copy DB")
         }
     }
 }
 
-tasks.register("release", GradleBuild) {
-    tasks = ['clean', 'createVersion', 'poeditorPull', 'processResources', 'createLanguageFileList', 'makeAllMedias']
+tasks.register<GradleBuild>("release") {
+    tasks = listOf("clean", "createVersion", "poeditorPull", "processResources", "createLanguageFileList", "makeAllMedias")
 }
 
-markdownToHtml.dependsOn(pushmd)
-poeditorPull.dependsOn(markdownToHtml)
-processResources.dependsOn(poeditorPull)
-compileJava.dependsOn(clean)
-compileJava.dependsOn(processResources)
+tasks.named("markdownToHtml").configure {
+    dependsOn(tasks.named("pushmd"))
+}
+tasks.named("poeditorPull").configure {
+    dependsOn(tasks.named("markdownToHtml"))
+}
+tasks.named("processResources").configure {
+    dependsOn(tasks.named("poeditorPull"))
+    (this as Copy).duplicatesStrategy = DuplicatesStrategy.INCLUDE
+}
+tasks.named("processTestResources").configure {
+    (this as Copy).duplicatesStrategy = DuplicatesStrategy.INCLUDE
+}
+tasks.named("compileJava").configure {
+    dependsOn(tasks.named("clean"))
+    dependsOn(tasks.named("processResources"))
+}
+tasks.named<Jar>("sourcesJar").configure {
+    dependsOn(tasks.named("poeditorPull"))
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
+}
 
 
 // endregion ======================================================================================================================
