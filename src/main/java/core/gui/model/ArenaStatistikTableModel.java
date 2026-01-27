@@ -29,7 +29,7 @@ public class ArenaStatistikTableModel extends AbstractTableModel {
 			TranslationFacility.tr("ls.match.weather"),
 			TranslationFacility.tr("ls.match.id"),
 			TranslationFacility.tr("Aktuell"), // Stadiongroesse
-			TranslationFacility.tr("Zuschauer"), // Zuschauer
+			TranslationFacility.tr("Zuschauer"), // Spectators
 			"%", // Auslastung
 			TranslationFacility.tr("ls.club.arena.income.total"), // Income Total
 
@@ -68,7 +68,7 @@ public class ArenaStatistikTableModel extends AbstractTableModel {
 			TranslationFacility.tr("ls.match.weather"),
 			TranslationFacility.tr("ls.match.id"),
 			TranslationFacility.tr("Aktuell"), // Stadiongroesse
-			TranslationFacility.tr("Zuschauer"), // Zuschauer
+			TranslationFacility.tr("Zuschauer"), // Spectators
 			"%", // Auslastung
 			TranslationFacility.tr("ls.club.arena.income.total"), // Income Total
 
@@ -265,9 +265,9 @@ public class ArenaStatistikTableModel extends AbstractTableModel {
 			    //Stadiongroesse
 			    m_clData[i][colIndex++] = new ProgressbarTableEntry(match.getArenaGroesse(), 0, m_iMaxArenaGroesse, 0, 1, background, new Color(0, 0, 120), "");
 			    //Zuschauer
-			    m_clData[i][colIndex++] = new ProgressbarTableEntry(match.getZuschaueranzahl(), 0, m_iMaxArenaGroesse, 0, 1, background, new Color(0, 120, 0), "");
+			    m_clData[i][colIndex++] = new ProgressbarTableEntry(match.getSpectators(), 0, m_iMaxArenaGroesse, 0, 1, background, new Color(0, 120, 0), "");
 			    //Verhältnis Auslastung
-			    m_clData[i][colIndex++] = new ProgressbarTableEntry((int) ((float) match.getZuschaueranzahl() / (float) match.getArenaGroesse() * 1000), 0, 1000, 1, 0.1, background, new Color(0, 120, 120), " %");
+			    m_clData[i][colIndex++] = new ProgressbarTableEntry((int) ((float) match.getSpectators() / (float) match.getArenaGroesse() * 1000), 0, 1000, 1, 0.1, background, new Color(0, 120, 120), " %");
 			    //Total Income
 				m_clData[i][colIndex++] = new ColorLabelEntry(match.getTotalIncome(),  background);
 			    //Terraces
@@ -300,7 +300,7 @@ public class ArenaStatistikTableModel extends AbstractTableModel {
 			    }
 			    m_clData[i][colIndex++] = new ColorLabelEntry(fanzuwachs, background, false,0);
 			    //Quotione  Zuschauer/Fans
-			    m_clData[i][colIndex++] = new ColorLabelEntry(Helper.round((float) match.getZuschaueranzahl() / (float) match.getFans(), 2) + "", ColorLabelEntry.FG_STANDARD, background, SwingConstants.RIGHT);
+			    m_clData[i][colIndex++] = new ColorLabelEntry(Helper.round((float) match.getSpectators() / (float) match.getFans(), 2) + "", ColorLabelEntry.FG_STANDARD, background, SwingConstants.RIGHT);
 			    // Fanstimmung
 			    m_clData[i][colIndex++] = new ColorLabelEntry(Economy.getNameForLevelFans(match.getFanZufriedenheit(), match.getMatchDate()), ColorLabelEntry.FG_STANDARD, background, SwingConstants.LEFT);
 			    //Ligaplatz

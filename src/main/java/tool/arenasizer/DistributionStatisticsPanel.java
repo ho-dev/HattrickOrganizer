@@ -62,9 +62,9 @@ class DistributionStatisticsPanel extends JPanel {
                      ColorLabelEntry.FG_STANDARD,  ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
 
             value[i][1] = new ColorLabelEntry(ThemeManager.getIcon(HOIconName.WEATHER[matches[i].getWetter()]),0,ColorLabelEntry.FG_STANDARD,  ColorLabelEntry.BG_STANDARD, SwingConstants.CENTER);
-            value[i][2] = new ColorLabelEntry(matches[i].getZuschaueranzahl()+"",
+            value[i][2] = new ColorLabelEntry(matches[i].getSpectators()+"",
                     ColorLabelEntry.FG_STANDARD,  ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
-            BigDecimal tmp = new BigDecimal(matches[i].getZuschaueranzahl()).setScale(1);
+            BigDecimal tmp = new BigDecimal(matches[i].getSpectators()).setScale(1);
 
             value[i][3] = createDoppelLabelEntry(matches[i].getSoldTerraces(), new BigDecimal(matches[i].getSoldTerraces()*100).setScale(1).divide(tmp, RoundingMode.HALF_DOWN).toString());
             value[i][4] = createDoppelLabelEntry(matches[i].getSoldBasics(),new BigDecimal(matches[i].getSoldBasics()*100).setScale(1).divide(tmp, RoundingMode.HALF_DOWN).toString());
