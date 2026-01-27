@@ -28,7 +28,7 @@ public class RemoveGruppenPanelTest {
             JPanel content = new JPanel();
             content.setLayout(new BorderLayout());
 
-            RemoveGruppenPanel panel = new RemoveGruppenPanel(null);
+            RemoveGruppenPanel panel = new RemoveGruppenPanel();
             content.add(panel, BorderLayout.CENTER);
 
             frame.setContentPane(content);

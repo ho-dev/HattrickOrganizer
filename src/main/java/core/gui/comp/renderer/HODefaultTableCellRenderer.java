@@ -11,7 +11,6 @@ import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JTable;
 
-
 /**
  * Renderer for tables with JLabels as table objects
  */
@@ -26,12 +25,13 @@ public class HODefaultTableCellRenderer implements javax.swing.table.TableCellRe
                                                             boolean isSelected,
                                                             boolean hasFocus,
                                                             int row,
-                                                            int column)
-    {
+                                                            int column) {
         if (value instanceof IHOTableCellEntry ihoTableCellEntry) {
             final JComponent component = ihoTableCellEntry.getComponent(isSelected);
-            if (isSelected) {
-                component.setOpaque(true);
+            if (component != null) {
+                if (isSelected) {
+                    component.setOpaque(true);
+                }
             }
             return component;
         } else if (value instanceof JComponent component) {

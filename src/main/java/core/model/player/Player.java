@@ -334,10 +334,6 @@ public class Player extends AbstractTable.Storable {
 
     private List<SkillChange> skillChanges;
 
-
-    //~ Constructors -------------------------------------------------------------------------------
-
-
     /**
      * Creates a new instance of Player
      */
@@ -345,11 +341,12 @@ public class Player extends AbstractTable.Storable {
     }
 
     /**
-     * Erstellt einen Player aus den Properties einer HRF Datei
+     * Create player from properties of a hrf file
+     * @param properties HOProperties hrf properties
+     * @param hrfDate HODateTime Date from the hrf file
+     * @param hrfId int Identifier of the hrf file
      */
     public Player(HOProperties properties, HODateTime hrfDate, int hrfId) {
-        // Separate first, nick and last names are available. Utilize them?
-
         this.hrfId = hrfId;
         spielerId = properties.getInt("id", 0);
         firstName = properties.getProperty("firstname", "");
@@ -467,6 +464,7 @@ public class Player extends AbstractTable.Storable {
         downloadMotherClubInfoIfMissing();
         return this.motherClubId;
     }
+
     private void downloadMotherClubInfoIfMissing() {
         var isCurrentPlayer = HOVerwaltung.instance().getModel().getCurrentPlayer(this.getPlayerId()) != null;
         if (isCurrentPlayer && motherClubId == null ) {
@@ -1158,7 +1156,6 @@ public class Player extends AbstractTable.Storable {
         return tsi;
     }
 
-
     String latestTSIInjured;
     String latestTSINotInjured;
 
@@ -1230,19 +1227,33 @@ public class Player extends AbstractTable.Storable {
     }
 
     /**
-     * set whether that player can be selected by the assistant
+     * Set whether that player can be selected by the assistant
+     * The value is stored to the database
+     * @param flag boolean
      */
     public void setCanBeSelectedByAssistant(boolean flag) {
-        if (this.isExternallyRecruitedCoach()) flag = false;
+        if (flag == canBeSelectedByAssistant) {
+            return; // Nothing changed
+        }
+        if (this.isExternallyRecruitedCoach()) {
+            flag = false;
+        }
         getNotes().setEligibleToPlay(flag);
         DBManager.instance().storePlayerNotes(notes);
+        canBeSelectedByAssistant = flag;
     }
 
+    private Boolean canBeSelectedByAssistant;
+
     /**
-     * get whether that player can be selected by the assistant
+     * Get whether that player can be selected by the assistant
+     * @return Boolean
      */
     public boolean getCanBeSelectedByAssistant() {
-        return !this.isExternallyRecruitedCoach() && getNotes().isEligibleToPlay();
+        if (canBeSelectedByAssistant == null) {
+            canBeSelectedByAssistant = !this.isExternallyRecruitedCoach() && getNotes().isEligibleToPlay();
+        }
+        return canBeSelectedByAssistant;
     }
 
     public void setPlayerId(int m_iSpielerID) {

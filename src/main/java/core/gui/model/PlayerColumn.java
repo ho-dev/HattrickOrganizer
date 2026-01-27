@@ -7,6 +7,8 @@ import core.gui.comp.table.UserColumn;
 import core.model.player.Player;
 import org.jetbrains.annotations.Nullable;
 
+import javax.swing.*;
+
 /**
  * Column shows skill of a player
  * @author Thorsten Dietz
@@ -60,9 +62,9 @@ public class PlayerColumn extends UserColumn {
 	 */
 	public IHOTableCellEntry getTableEntry(Player player, @Nullable Player comparePlayer){
 		return new ColorLabelEntry(getValue(player),
-	            ColorLabelEntry.BG_STANDARD, false, 0);
+	            ColorLabelEntry.BG_STANDARD, 0);
 	}
-	
+
 	/**
 	 * return the individual playerValue
 	 * overwritten by created columns
@@ -72,6 +74,4 @@ public class PlayerColumn extends UserColumn {
 	public int getValue(Player player){
 		return player.getPlayerId();
 	}
-	
-
 }

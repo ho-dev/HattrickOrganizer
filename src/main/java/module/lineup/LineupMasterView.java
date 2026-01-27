@@ -99,4 +99,8 @@ public class LineupMasterView extends JPanel {
 		this.penaltyTakersView.setPlayers(HOVerwaltung.instance().getModel().getCurrentPlayers());
 		this.penaltyTakersView.setLineup(HOVerwaltung.instance().getModel().getCurrentLineup());
 	}
+
+    public void storeUserSettings() {
+        this.lineupPanel.storeUserSettings();
+    }
 }

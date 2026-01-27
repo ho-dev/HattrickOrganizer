@@ -64,7 +64,7 @@ class PlayersTable @JvmOverloads constructor(tableModel: HOPlayersTableModel, fi
     }
 
     fun getSelectedPlayers() : List<Player>{
-        var players = mutableListOf<Player>()
+        val players = mutableListOf<Player>()
         val allPLayers = getPlayers()
         for (viewRow in this.selectedRows){
             players.add(allPLayers.get(this.convertRowIndexToModel(viewRow)))

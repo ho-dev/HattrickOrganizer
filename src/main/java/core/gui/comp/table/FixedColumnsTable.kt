@@ -79,12 +79,13 @@ open class FixedColumnsTable @JvmOverloads constructor(
 
         if (fixedColumnsCount > 0) {
             fixed = JTable(model)
-            fixed!!.setFocusable(false)
-            fixed!!.setSelectionModel(getSelectionModel())
+            fixed!!.setFocusable(true)
             fixed!!.getTableHeader().reorderingAllowed = false
             fixed!!.setSelectionModel(getSelectionModel())
+            fixed!!.columnModel.selectionModel = getSelectionModel()
+
             //  Remove the non-fixed columns from the fixed table
-            while (fixed!!.getColumnCount() > fixedColumnsCount) {
+            while (fixed!!.columnCount > fixedColumnsCount) {
                 val _columnModel = fixed!!.getColumnModel()
                 _columnModel.removeColumn(_columnModel.getColumn(fixedColumnsCount))
             }
@@ -173,7 +174,6 @@ open class FixedColumnsTable @JvmOverloads constructor(
         }
     }
 
-
     /**
      * Show the horizontal scroll bar of the scroll pane when the other horizontal scroll bar appeared in case of pane resizing
      * @param scrollPane The scroll pane that has to be synchronized with the other scroll pane
@@ -189,8 +189,8 @@ open class FixedColumnsTable @JvmOverloads constructor(
 
     /**
      * Hide the horizontal scroll bar of the scroll pane when the other horizontal scroll bar disappeared in case of pane resizing
-     * If the other scroll bar does not require a scroll bar, its scroll bar will be removed
-     * otherwise the disappearance in hidden scroll bar will be reset.
+     * If the other scroll bar does not require a scroll bar, its scroll bar will be removed,
+     * otherwise the disappearance in hidden scroll bar will reset.
      * @param hiddenScrollPane The scroll pane that removed the scroll bar
      * @param otherScrollPane The scroll pane that has to be adapted
      */

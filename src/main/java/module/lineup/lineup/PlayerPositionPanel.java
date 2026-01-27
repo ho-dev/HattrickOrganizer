@@ -1,9 +1,9 @@
 package module.lineup.lineup;
 
 import core.datatype.CBItem;
-import core.gui.HOMainFrame;
 import core.gui.Updatable;
 import core.gui.comp.panel.ImagePanel;
+import core.gui.comp.table.PlayersTable;
 import core.gui.model.PlayerCBItem;
 import core.gui.model.PlayerCBItemRenderer;
 import core.gui.theme.HOColorName;
@@ -100,11 +100,15 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         return null;
     }
 
-
+    /**
+     * Handle the focus gained event.
+     * If a player is selected the PlayersTable's selection is updated
+     * @param event the event to be processed
+     */
     @Override
     public void focusGained(FocusEvent event) {
         if (getSelectedPlayer() != null) {
-            HOMainFrame.instance().selectPlayer(getSelectedPlayer());
+            PlayersTable.Companion.setSelectedPlayer(getSelectedPlayer());
         }
     }
 
@@ -158,7 +162,6 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         add(jlp, BorderLayout.CENTER);
     }
 
-
     @Override
     public void itemStateChanged(java.awt.event.ItemEvent itemEvent) {
         if (itemEvent.getStateChange() == ItemEvent.SELECTED) {
@@ -203,7 +206,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
             }
 
             if (player != null) {
-                HOMainFrame.instance().selectPlayer(player);
+                PlayersTable.Companion.setSelectedPlayer(player);
             }
 
             //Update all other positions
@@ -355,7 +358,6 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         cbModel.removeAllElements();
 
         //Ensure the number of m_clCBItems objects match what is needed
-
         assert m_clCBItems != null;
         if (m_clCBItems.length != oCandidates.size()) {
             PlayerCBItem[] tempCB = new PlayerCBItem[oCandidates.size()];

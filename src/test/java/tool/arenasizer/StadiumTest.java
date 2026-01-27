@@ -1,6 +1,5 @@
 package tool.arenasizer;
 
-import core.util.AmountOfMoney;
 import core.util.HODateTime;
 import org.junit.jupiter.api.Test;
 
