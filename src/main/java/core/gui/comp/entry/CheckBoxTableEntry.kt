@@ -5,7 +5,7 @@ import java.awt.Color
 import javax.swing.JCheckBox
 import javax.swing.JComponent
 
-open class CheckBoxTableEntry(isEnabled: Boolean, var value: Boolean?, fgStandard: Color?, bgStandard: Color?) :
+open class CheckBoxTableEntry(isEnabled: Boolean, var value: Boolean, fgStandard: Color?, bgStandard: Color?) :
     IHOTableCellEntry {
     private val fgStandard: Color?
     private val bgStandard: Color?
@@ -19,7 +19,7 @@ open class CheckBoxTableEntry(isEnabled: Boolean, var value: Boolean?, fgStandar
      * @param bgStandard Color
      */
     init {
-        this.checkBox.setSelected(value == true)
+        this.checkBox.setSelected(value)
         this.checkBox.setEnabled(isEnabled)
         this.fgStandard = fgStandard
         this.bgStandard = bgStandard
@@ -30,18 +30,9 @@ open class CheckBoxTableEntry(isEnabled: Boolean, var value: Boolean?, fgStandar
      * Set value is called from HOTableModel
      * @param b boolean
      */
-    open fun changeValue(b: Boolean?) {
+    open fun changeValue(b: Boolean) {
         this.value = b
-        this.checkBox.setSelected(b == true)
         this.updateComponent()
-    }
-
-    /**
-     * Get value is called from HOTableModel
-     * @return Boolean
-     */
-    fun getValue(): Boolean {
-        return value == true
     }
 
     /**
@@ -76,11 +67,7 @@ open class CheckBoxTableEntry(isEnabled: Boolean, var value: Boolean?, fgStandar
      */
     override fun compareTo(obj: IHOTableCellEntry): Int {
         if (obj is CheckBoxTableEntry) {
-            if (this.value == obj.value) {
-                return 0
-            } else if (this.value == true || this.value == false && obj.value == null) {
-                return 1
-            }
+            return this.value.compareTo(obj.value)
         }
         // Not a checkbox
         return -1
@@ -106,7 +93,7 @@ open class CheckBoxTableEntry(isEnabled: Boolean, var value: Boolean?, fgStandar
      * Update the component
      */
     override fun updateComponent() {
-        this.checkBox.setSelected(getValue())
+        this.checkBox.setSelected(value)
         this.checkBox.setBackground(bgStandard)
         this.checkBox.setForeground(fgStandard)
     }

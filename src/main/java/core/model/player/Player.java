@@ -1249,7 +1249,7 @@ public class Player extends AbstractTable.Storable {
      * Get whether that player can be selected by the assistant
      * @return Boolean
      */
-    public Boolean getCanBeSelectedByAssistant() {
+    public boolean getCanBeSelectedByAssistant() {
         if (canBeSelectedByAssistant == null) {
             canBeSelectedByAssistant = !this.isExternallyRecruitedCoach() && getNotes().isEligibleToPlay();
         }

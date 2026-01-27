@@ -964,9 +964,9 @@ public final class UserColumnFactory {
         playerAdditionalArray[31] = new PlayerCheckBoxColumn(UserColumnFactory.AUTO_LINEUP, " ", "AutoAufstellung", 28) {
             @Override
             public IHOTableCellEntry getTableEntry(@NotNull Player player) {
-                return new CheckBoxTableEntry(!player.isExternallyRecruitedCoach(), player.getCanBeSelectedByAssistant(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD) {
+                return new CheckBoxTableEntry(!player.isExternallyRecruitedCoach(), player.getCanBeSelectedByAssistant() == true, ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD) {
                     @Override
-                    public void changeValue(Boolean value) {
+                    public void changeValue(boolean value) {
                         player.setCanBeSelectedByAssistant(value);
                         super.changeValue(value);
                     }
