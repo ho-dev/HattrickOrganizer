@@ -1,10 +1,12 @@
 package core.db;
 
 import core.util.HOLogger;
+import lombok.Getter;
 
 import java.sql.Types;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 /**
  * @author Thorsten Dietz
@@ -18,8 +20,10 @@ public final class ColumnDescriptor {
     private final boolean nullable;
     private final boolean primaryKey;
 
-    public Function<Object, Object> getter;
-    public BiConsumer<Object, Object> setter;
+    @Getter
+    private final Function<Object, Object> getter;
+    @Getter
+    private final BiConsumer<Object, Object> setter;
 
     public ColumnDescriptor(Builder builder) {
         this.columnName = builder.columnName;
@@ -90,7 +94,7 @@ public final class ColumnDescriptor {
             return this;
         }
 
-        public Builder setGetter(Function<Object, Object> getter) {
+        public Builder setGetter(UnaryOperator<Object> getter) {
             this.getter = getter;
             return this;
         }
@@ -123,6 +127,8 @@ public final class ColumnDescriptor {
         this.nullable = nullable;
         this.primaryKey = primaryKey;
         this.length = length;
+        this.setter = null;
+        this.getter = null;
     }
 
     public String getColumnName() {
