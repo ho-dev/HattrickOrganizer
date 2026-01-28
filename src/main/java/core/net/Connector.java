@@ -8,6 +8,7 @@ import com.github.scribejava.core.model.Response;
 import com.github.scribejava.core.model.Verb;
 import com.github.scribejava.core.oauth.OAuth10aService;
 import core.HO;
+import core.file.xml.XMLArenaParser;
 import core.file.xml.XMLCHPPPreParser;
 import core.gui.CursorToolkit;
 import core.gui.HOMainFrame;
@@ -95,7 +96,7 @@ public class Connector {
 	 * @return arena xml
 	 */
 	public String downloadArena(int arenaId) {
-		String url = htUrl + "?file=arenadetails&version=1.7";
+		String url = htUrl + "?file=%s&version=%s".formatted(XMLArenaParser.HATTRICK_DATA_BASE_FILE_NAME, XMLArenaParser.HATTRICK_DATA_VERSION);
 		if (arenaId > 0) {
 			url += "&arenaID=" + arenaId;
 		}
