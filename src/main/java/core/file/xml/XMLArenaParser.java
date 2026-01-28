@@ -9,8 +9,9 @@ import org.w3c.dom.Element;
 
 public class XMLArenaParser {
 
-    private static final String HATTRICK_DATA_FILE_NAME = "arenadetails.xml";
-    private static final String HATTRICK_DATA_VERSION = "1.7";
+    public static final String HATTRICK_DATA_VERSION = "1.7";
+    public static final String HATTRICK_DATA_BASE_FILE_NAME = "arenadetails";
+    private static final String HATTRICK_DATA_FILE_NAME = HATTRICK_DATA_BASE_FILE_NAME + ".xml";
 
     private static final String ELEMENT_NAME_FILE_NAME = "FileName";
     private static final String ELEMENT_NAME_VERSION = "Version";
