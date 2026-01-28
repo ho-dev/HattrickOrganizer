@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <HattrickData>
     <FileName>arenadetails.xml</FileName>
-    <Version>1.3</Version>
+    <Version>1.7</Version>
     <UserID>1234567</UserID>
     <FetchedDate>2024-08-21 01:13:12</FetchedDate>
     <Arena>
         <ArenaID>2345678</ArenaID>
         <ArenaName>ArenaName</ArenaName>
+        <ArenaImage>//res.hattrick.org/arenas/22/216/2155/2345678/custom-220-100.jpg</ArenaImage>
+        <ArenaFallbackImage>//res.hattrick.org/arenas/default/28000/custom-220-100.jpg</ArenaFallbackImage>
         <Team>
             <TeamID>3456789</TeamID>
             <TeamName>TeamName</TeamName>

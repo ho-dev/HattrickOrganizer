@@ -14,6 +14,8 @@ import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.Properties;
 
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+
 @Setter
 @Getter
 @EqualsAndHashCode(callSuper = false)
@@ -33,7 +35,17 @@ public class Stadium extends AbstractTable.Storable {
 	/**
 	 * Arena-Name
 	 */
-	private String stadiumName = "";
+	private String stadiumName = EMPTY;
+
+    /**
+     * Arena-Image
+     */
+    private String arenaImage = EMPTY;
+
+    /**
+     * Arena-Fallback-Image
+     */
+    private String arenaFallbackImage = EMPTY;
 
 	/**
 	 * Terraces
@@ -101,7 +113,9 @@ public class Stadium extends AbstractTable.Storable {
 	public Stadium(Properties properties) {
 		// 'seattotal' and 'expandingSseatTotal' are currently not read
 		arenaId = NumberUtils.toInt(properties.getProperty("arenaid"), 0);
-		stadiumName = properties.getProperty("arenaname", "");
+		stadiumName = properties.getProperty("arenaname", EMPTY);
+        arenaImage = properties.getProperty("arenaimage", EMPTY);
+        arenaFallbackImage = properties.getProperty("arenafallbackimage", EMPTY);
 		terraces = NumberUtils.toInt(properties.getProperty("antalstaplats"), 0);
 		basicSeating = NumberUtils.toInt(properties.getProperty("antalsitt"), 0);
 		underRoofSeating = NumberUtils.toInt(properties.getProperty("antaltak"), 0);

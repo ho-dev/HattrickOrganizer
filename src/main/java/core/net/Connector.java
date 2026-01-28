@@ -95,7 +95,7 @@ public class Connector {
 	 * @return arena xml
 	 */
 	public String downloadArena(int arenaId) {
-		String url = htUrl + "?file=arenadetails";
+		String url = htUrl + "?file=arenadetails&version=1.7";
 		if (arenaId > 0) {
 			url += "&arenaID=" + arenaId;
 		}

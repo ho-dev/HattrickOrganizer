@@ -30,7 +30,9 @@ final class StadionTable extends AbstractTable {
 			ColumnDescriptor.Builder.newInstance().setColumnName("AusbauKosten").setGetter(p -> ((Stadium) p).getExpansionCostsInSwedishKrona()).setSetter((p, v) -> ((Stadium) p).setExpansionCosts((AmountOfMoney) v)).setType(Types.DECIMAL).isNullable(true).build(),
 			ColumnDescriptor.Builder.newInstance().setColumnName("ArenaID").setGetter(p -> ((Stadium) p).getArenaId()).setSetter((p, v) -> ((Stadium) p).setArenaId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
 			ColumnDescriptor.Builder.newInstance().setColumnName("REBUILT_DATE").setGetter(p -> HODateTime.toDbTimestamp(((Stadium) p).getRebuiltDate())).setSetter((p, v) -> ((Stadium) p).setRebuiltDate((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(true).build(),
-			ColumnDescriptor.Builder.newInstance().setColumnName("EXPANSION_DATE").setGetter(p -> HODateTime.toDbTimestamp(((Stadium) p).getExpansionDate())).setSetter((p, v) -> ((Stadium) p).setExpansionDate((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(true).build()
+			ColumnDescriptor.Builder.newInstance().setColumnName("EXPANSION_DATE").setGetter(p -> HODateTime.toDbTimestamp(((Stadium) p).getExpansionDate())).setSetter((p, v) -> ((Stadium) p).setExpansionDate((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(true).build(),
+            ColumnDescriptor.Builder.newInstance().setColumnName("ARENA_IMAGE").setGetter(p -> ((Stadium) p).getArenaImage()).setSetter((p, v) -> ((Stadium) p).setArenaImage((String) v)).setType(Types.VARCHAR).setLength(256).isNullable(false).build(),
+            ColumnDescriptor.Builder.newInstance().setColumnName("ARENA_FALLBACK_IMAGE").setGetter(p -> ((Stadium) p).getArenaFallbackImage()).setSetter((p, v) -> ((Stadium) p).setArenaFallbackImage((String) v)).setType(Types.VARCHAR).setLength(256).isNullable(false).build(),
 		};
 	}
 
