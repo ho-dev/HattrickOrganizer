@@ -76,24 +76,8 @@ public class Injury {
 
         var dailyUpdates = new ArrayList<>(HOVerwaltung.instance().getModel().getXtraDaten().getDailyUpdates());
 
-        // TODO: Calculate the age related decrease of the TSI between match and first update date.
-        // TSIact is almost always equal to the player's TSI during the match in which they got injured,
-        // but there is one important exception here:
-        // If an older player got injured in a league match on Sun,
-        // then for them at the moment after the first update on Mon
-        // TSIact = TSI_Sun – X_Mon, where
-        // TSI_Sun – the player's TSI at the time of the match on Sun
-        // X_Mon – the change in this player's TSI on Mondays in healthy condition.
+        // TSIact is  equal to the player's TSI during the match in which they got injured,
         // Age should correspond to the current one.
-        // For example, on the last Monday before the injury, the player's TSI dropped by 80.
-        // At the time of the match in which he got injured, his TSI was TSIvs = 10000,
-        // and after the injury TSItr = 6150.
-        // For him, TSIzd = 10000 – 80 = 9920. H = 6150 / 9920 = 0.62 = 62%. Str = (1-0.62)*10 = 3.8
-        // That is, the player has 62% of his health remaining, which corresponds to an injury sublevel of 3.8 conventional weeks.
-        //
-        // (The only age dependency of the TSI I know is the dropping at player's birthday from the age of 28 on.
-        // Maybe the TSI dropping mentioned by Schum comes from form changes and or skill drops)
-        //
         // From the age of 28, the TSI decreases on each birthday,
         // for field players by 1/8 of the actual TSI on each birthday,
         // until from the 34th birthday onward it remains constant at 1/8 of the true TSI.
@@ -102,6 +86,11 @@ public class Injury {
         var playerHealthy = recovery.get(recovery.size()-1);
         if (playerHealthy.getInjuryWeeks() == -1){
             if (recovery.size() > 1){
+                // Determine player's most recent tsi when healthy.
+                // This might be the value calculated above, if no update with possible randomly skill drops or
+                // training effects happened during time from healthy download and injury download.
+                // Alternatively the tsi range maybe calculated from skill and form values. whereby form sub is not
+                // well known.
                 var playerInjured = recovery.get(recovery.size()-2);
                 var clubData = DBManager.instance().getVerein(playerInjured.getHrfId());
                 var doctorLevel = clubData.getAerzte();
@@ -111,7 +100,7 @@ public class Injury {
                     var health = (double) playerInjured.getTsi() / playerHealthy.getTsi();
                     var injuryDate = injuries.get(0).getMatchDate();
                     // Updates between first update after injury date and injured download increased the health
-                    var updates = getDailyUpdatesBetween(injuryDate, playerInjured.getHrfDate());
+                    var updates = getDailyUpdatesBetween(injuryDate, player.getHrfDate());
                     var healthIncreaseBeforeDownload = 0.;
                     for (var update : updates){
                         healthIncreaseBeforeDownload += calculateHealthIncrease(playerInjured, doctorLevel, update);
