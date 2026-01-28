@@ -70,6 +70,12 @@
 * The bug where the number `100` was displayed for the shirt number when the player had no shirt number has been fixed.
   Instead, nothing is shown now if no number assigned. (#2420)
 
+### Tools
+
+#### Area Sizer
+
+* Added the image of the stadium and made the view better arranged. (#2140)
+
 ### Misc
 
 * Fix CVEs with HO dependencies
