@@ -41,6 +41,12 @@
 ### Option setting
 * Add option to select currency setting (#2288)
 
+### Tools
+
+#### Area Sizer
+
+* Added the image of the stadium and made the view better arranged. (#2140)
+
 ### Misc
 
 * Fix CVEs with HO dependencies
