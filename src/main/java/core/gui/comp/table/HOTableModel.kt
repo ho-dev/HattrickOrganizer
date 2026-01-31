@@ -200,7 +200,9 @@ abstract class HOTableModel protected constructor(
             if (ret is CheckBoxTableEntry && value is Boolean) {
                 ret.changeValue(value)
             }
-            m_clData!![row][column] = value
+            else {
+                m_clData!![row][column] = value
+            }
         }
         for (table in tables) {
             fireTableCellUpdated(table.convertRowIndexToView(row), table.convertColumnIndexToView(column))
