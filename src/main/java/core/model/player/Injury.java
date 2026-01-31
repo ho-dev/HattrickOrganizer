@@ -1,9 +1,11 @@
 package core.model.player;
 
+import core.constants.player.PlayerSkill;
 import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.util.HODateTime;
 
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -74,8 +76,6 @@ public class Injury {
             }
         }
 
-        var dailyUpdates = new ArrayList<>(HOVerwaltung.instance().getModel().getXtraDaten().getDailyUpdates());
-
         // TSIact is  equal to the player's TSI during the match in which they got injured,
         // Age should correspond to the current one.
         // From the age of 28, the TSI decreases on each birthday,
@@ -85,25 +85,61 @@ public class Injury {
         // Determination of the starting status of healing
         var playerHealthy = recovery.get(recovery.size()-1);
         if (playerHealthy.getInjuryWeeks() == -1){
-            if (recovery.size() > 1){
+            if (recovery.size() > 1) {
                 // Determine player's most recent tsi when healthy.
                 // This might be the value calculated above, if no update with possible randomly skill drops or
                 // training effects happened during time from healthy download and injury download.
                 // Alternatively the tsi range maybe calculated from skill and form values. whereby form sub is not
                 // well known.
-                var playerInjured = recovery.get(recovery.size()-2);
-                var clubData = DBManager.instance().getVerein(playerInjured.getHrfId());
-                var doctorLevel = clubData.getAerzte();
-                // Find match date when injury happened
-                var injuries = DBManager.instance().getInjuries(player.getPlayerId(), playerHealthy.getHrfDate(), playerInjured.getHrfDate());
-                if (!injuries.isEmpty()){
-                    var health = (double) playerInjured.getTsi() / playerHealthy.getTsi();
-                    var injuryDate = injuries.get(0).getMatchDate();
-                    // Updates between first update after injury date and injured download increased the health
-                    var updates = getDailyUpdatesBetween(injuryDate, player.getHrfDate());
-                    var healthIncreaseBeforeDownload = 0.;
-                    for (var update : updates){
-                        healthIncreaseBeforeDownload += calculateHealthIncrease(playerInjured, doctorLevel, update);
+                var recoveryIndex = recovery.size() - 2;
+                var playerInjured = recovery.get(recoveryIndex);
+
+                // If there were training updates between the healthy player download and the injured download, the
+                // healthy tsi might require some correction because of skill or form changes
+                // If player is older than 27 years old, the tsi drops also on birthday of the player
+                playerHealthy.setSubskill4PlayerSkill(PlayerSkill.FORM, 0);
+                var tsiHealthyCalculated = playerHealthy.calculateTSI();
+                var tsiInjuredCalculated = playerInjured.calculateTSI();
+                double healthyTSI = playerHealthy.getTsi() + tsiInjuredCalculated - tsiHealthyCalculated;
+                var health = playerInjured.getTsi() / healthyTSI;
+                var pastUpdates = getDailyUpdatesBetween(playerInjured.getHrfDate(), player.getHrfDate());
+                var doctorLevel = 0;
+                for (var update : pastUpdates) {
+                    if (recoveryIndex >= 0) {
+                        var p = recovery.get(recoveryIndex);
+                        while (update.isAfter(p.getHrfDate())) {
+                            var clubData = DBManager.instance().getVerein(playerInjured.getHrfId());
+                            doctorLevel = clubData.getAerzte();
+                            recoveryIndex--;
+                            p = recovery.get(recoveryIndex);
+                        }
+                    }
+                    var healthIncrease = calculateHealthIncrease(player, doctorLevel, update);
+                    health += healthIncrease;
+                    if (this.whenSlightlyInjured == null && health > 0.9) {
+                        this.whenSlightlyInjured = update;
+                    }
+                }
+
+                var nextDailyUpdates = HOVerwaltung.instance().getModel().getXtraDaten().getDailyUpdates();
+                while (this.whenHealthy == null) {
+
+                    for (var update : nextDailyUpdates) {
+                        var increase = calculateHealthIncrease(player, doctorLevel, update);
+                        if (increase < 0) {
+                            return; // No recovery possible
+                        }
+                        health += increase;
+                        if (this.whenSlightlyInjured == null && health >= 0.9) {
+                            this.whenSlightlyInjured = update;
+                        }
+                        if (this.whenHealthy == null && health >= 1) {
+                            this.whenHealthy = update;
+                            break;
+                        }
+                    }
+                    if (this.whenHealthy == null) {
+                        nextDailyUpdates = nextDailyUpdates.stream().map(v -> v.plus(7, ChronoUnit.DAYS)).toList();
                     }
                 }
             }
@@ -133,6 +169,12 @@ public class Injury {
      * they increase and eventually reach +9.
      */
     int injuryLevel;
+
+    /**
+     * Date when player gets healthy
+     * Date is in the past if player is healthy
+     * If null, no recovery is possible any more
+     */
     HODateTime whenHealthy;
     HODateTime whenSlightlyInjured;
 }
