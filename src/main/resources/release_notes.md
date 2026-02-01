@@ -46,6 +46,10 @@
 ### Option setting
 * Add option to select currency setting (#2288)
 
+### Special Events
+
+* Fixed a crash that occurred when not ticking `Only matches with SEs`.
+
 ### Misc
 
 * Fix CVEs with HO dependencies
