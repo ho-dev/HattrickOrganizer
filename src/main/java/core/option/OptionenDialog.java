@@ -10,6 +10,7 @@ import core.module.ModuleManager;
 import core.module.config.ModuleConfig;
 import core.util.AmountOfMoney;
 import core.util.Helper;
+import core.util.StringUtils;
 import core.util.Updater;
 
 import javax.swing.*;
@@ -109,8 +110,6 @@ public class OptionenDialog extends JDialog {
 		userColorsPanel = new UserColorsPanel();
         tabbedPane.addTab(TranslationFacility.tr("colors"), new JScrollPane(userColorsPanel));
 
-		// Colors
-
 		// Tabs der plugins
 		for (int i = 0; (i < HOMainFrame.instance().getOptionPanelNames().size())
 				&& (i < HOMainFrame.instance().getOptionPanels().size()); ++i) {
@@ -148,13 +147,15 @@ public class OptionenDialog extends JDialog {
 	}
 
 	private void save() {
-		// Store user colors before theme setting in user parameters might change
+		// Store user colours before theme setting in user parameters might change
 		userColorsPanel.storeChangedColorSettings();
 
-		// Store currency setting
-		if ( AmountOfMoney.Companion.setCurrencyCountry(UserParameter.temp().currencyName) ) {
-			OptionManager.instance().setReInitNeeded();
-		}
+        if (!StringUtils.isEmpty(UserParameter.temp().currencyName)) {
+            // Store currency setting
+            if (AmountOfMoney.Companion.setCurrencyCountry(UserParameter.temp().currencyName)) {
+                OptionManager.instance().setReInitNeeded();
+            }
+        }
 
 		UserParameter.saveTempParameter();
 		ModuleConfig.instance().save();
