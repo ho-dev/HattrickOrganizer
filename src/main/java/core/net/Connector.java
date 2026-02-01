@@ -422,7 +422,7 @@ public class Connector {
 	 * Download Players
 	 */
 	public String downloadPlayers(int teamId) {
-		String url = htUrl + "?file=players&version=2.6&includeMatchInfo=true&teamID=" + teamId;
+		String url = htUrl + "?file=players&version=2.7&includeMatchInfo=true&teamID=" + teamId;
 		return getCHPPWebFile(url);
 	}
 	public String downloadPlayerDetails(String playerID) {
