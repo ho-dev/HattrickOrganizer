@@ -1,14 +1,10 @@
 package module.playeroverview
 
 import core.db.DBManager
-import core.gui.comp.table.PlayerCheckBoxColumn
 import core.gui.comp.table.HOPlayersTableModel
+import core.gui.comp.table.PlayerCheckBoxColumn
 import core.gui.comp.table.UserColumn
-import core.gui.model.PlayerColumn
-import core.gui.model.PlayerPositionColumn
-import core.gui.model.PlayerSkillColumn
-import core.gui.model.UserColumnController
-import core.gui.model.UserColumnFactory
+import core.gui.model.*
 import core.model.player.Player
 import core.util.HODateTime
 
@@ -27,61 +23,62 @@ class PlayerOverviewTableModel(id: UserColumnController.ColumnModelId, name: Str
     internal constructor(id: UserColumnController.ColumnModelId) : this(id, "Spieleruebersicht")
 
     init {
-        val basic: Array<out PlayerColumn>? = UserColumnFactory.createPlayerBasicArray()
-        val columns: Array<UserColumn?> = arrayOfNulls(70)
-        columns[0] = basic?.get(0)
-        columns[48] = basic?.get(1)
+        val basic: Array<out PlayerColumn>? = UserColumnFactory.createPlayerBasicArray() // 2
+        val skills: Array<out PlayerSkillColumn>? = UserColumnFactory.createPlayerSkillArray() // 12
+        val positions: Array<out PlayerPositionColumn>? = UserColumnFactory.createPlayerPositionArray() // 19
+        val goals: Array<out PlayerColumn>? = UserColumnFactory.createGoalsColumnsArray() // 7
+        val additionalArray: Array<out PlayerColumn>? = UserColumnFactory.createPlayerAdditionalArray() // 32
+        val size = basic!!.size + skills!!.size + positions!!.size + goals!!.size + additionalArray!!.size + 1
+        val columns: Array<UserColumn?> = arrayOfNulls(size) // 72
 
-        val skills: Array<out PlayerSkillColumn>? = UserColumnFactory.createPlayerSkillArray()
+        columns[0] = basic[0]
+        columns[1] = additionalArray[0]
+        columns[2] = additionalArray[1]
+        columns[3] = additionalArray[12] // Mother club
+        columns[4] = additionalArray[2]
+        columns[5] = additionalArray[4]
+        columns[6] = additionalArray[5]
+        columns[7] = additionalArray[6]
+        columns[8] = additionalArray[8] // tsi
+
         val skillIndex = 9 // - 20
-        if (skills != null) {
-            System.arraycopy(skills, 0, columns, skillIndex, skills.size)
-        }
+        System.arraycopy(skills, 0, columns, skillIndex, skills.size)
 
-        val positions: Array<out PlayerPositionColumn>? = UserColumnFactory.createPlayerPositionArray()
-        val positionIndex = 23 //- 41
-        if (positions != null) {
-            System.arraycopy(positions, 0, columns, positionIndex, positions.size)
-        }
+        columns[21] = additionalArray[3] // best position
+        columns[22] = additionalArray[9] // lastmatch
 
-        val goals: Array<out PlayerColumn>? = UserColumnFactory.createGoalsColumnsArray()
-        val goalsIndex = 42 //-46
-        if (goals != null) {
-            System.arraycopy(goals, 0, columns, goalsIndex, goals.size)
-        }
-        val additionalArray: Array<out PlayerColumn>? = UserColumnFactory.createPlayerAdditionalArray()
-        columns[1] = additionalArray?.get(0)
-        columns[2] = additionalArray?.get(1)
-        columns[4] = additionalArray?.get(2)
-        columns[21] = additionalArray?.get(3) // best position
-        columns[5] = additionalArray?.get(4)
-        columns[6] = additionalArray?.get(5)
-        columns[7] = additionalArray?.get(6)
-        columns[58] = additionalArray?.get(7)
-        columns[8] = additionalArray?.get(8) // tsi
-        columns[22] = additionalArray?.get(9) // lastmatch
-        columns[47] = additionalArray?.get(11)
-        columns[3] = additionalArray?.get(12) // Motherclub
-        columns[49] = additionalArray?.get(10)
-        columns[50] = additionalArray?.get(16)
-        columns[51] = additionalArray?.get(17)
-        columns[52] = additionalArray?.get(18)
-        columns[53] = additionalArray?.get(13)
-        columns[54] = additionalArray?.get(14)
-        columns[55] = additionalArray?.get(15)
-        columns[56] = additionalArray?.get(19)
-        columns[57] = additionalArray?.get(20)
-        columns[59] = additionalArray?.get(21)
-        columns[60] = additionalArray?.get(22)
-        columns[61] = additionalArray?.get(23) // schum-rank
-        columns[62] = additionalArray?.get(24) // schum-rank benchmark
-        columns[63] = additionalArray?.get(31)
-        columns[64] = additionalArray?.get(25)
-        columns[65] = additionalArray?.get(26)
-        columns[66] = additionalArray?.get(27)
-        columns[67] = additionalArray?.get(28)
-        columns[68] = additionalArray?.get(29)
-        columns[69] = additionalArray?.get(30)
+        val positionIndex = 23 // - 41
+        System.arraycopy(positions, 0, columns, positionIndex, positions.size)
+
+        val goalsIndex = 42 // -46 (the last 2 goal columns are appended at the end)
+        System.arraycopy(goals, 0, columns, goalsIndex, goals.size - 2)
+
+        var index = 47
+        columns[index++] = additionalArray[11]
+        columns[index++] = basic[1]
+        columns[index++] = additionalArray[10]
+        columns[index++] = additionalArray[16]
+        columns[index++] = additionalArray[17]
+        columns[index++] = additionalArray[18]
+        columns[index++] = additionalArray[13]
+        columns[index++] = additionalArray[14]
+        columns[index++] = additionalArray[15]
+        columns[index++] = additionalArray[19]
+        columns[index++] = additionalArray[20]
+        columns[index++] = additionalArray[7]
+        columns[index++] = additionalArray[21]
+        columns[index++] = additionalArray[22]
+        columns[index++] = additionalArray[23] // schum-rank
+        columns[index++] = additionalArray[24] // schum-rank benchmark
+        columns[index++] = additionalArray[31]
+        columns[index++] = additionalArray[25]
+        columns[index++] = additionalArray[26]
+        columns[index++] = additionalArray[27]
+        columns[index++] = additionalArray[28]
+        columns[index++] = additionalArray[29]
+        columns[index++] = additionalArray[30]
+        columns[index++] = goals[5]
+        columns[index++] = goals[6]
 
         this.columns = columns.filterNotNull().toTypedArray()
         assert(this.columns.size == columns.size)
@@ -154,9 +151,9 @@ class PlayerOverviewTableModel(id: UserColumnController.ColumnModelId, name: Str
             val comparisonPlayer = getPreviousPlayerDevelopmentStage(currentPlayer)
             for (j in tmpDisplayedColumns.indices) {
                 if (tmpDisplayedColumns[j] is PlayerCheckBoxColumn) {
-                    m_clData!!.get(i)[j] = (tmpDisplayedColumns[j] as PlayerCheckBoxColumn).getTableEntry(currentPlayer)
+                    m_clData!![i][j] = (tmpDisplayedColumns[j] as PlayerCheckBoxColumn).getTableEntry(currentPlayer)
                 } else if (tmpDisplayedColumns[j] is PlayerColumn) {
-                    m_clData!!.get(i)[j] =
+                    m_clData!![i][j] =
                         (tmpDisplayedColumns[j] as PlayerColumn).getTableEntry(currentPlayer, comparisonPlayer)
                 }
             }

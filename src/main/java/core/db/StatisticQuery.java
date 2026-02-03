@@ -143,7 +143,7 @@ public class StatisticQuery {
 				arenamodel.setBasics(rs.getInt("soldBasic"));
 				arenamodel.setRoof(rs.getInt("soldRoof"));
 				arenamodel.setVip(rs.getInt("soldVIP"));
-				arenamodel.setZuschaueranzahl(rs.getInt("Zuschauer"));
+				arenamodel.setSpectators(rs.getInt("Zuschauer"));
 				arenamodel.setWetter(rs.getInt("WetterId"));
 				liste.add(arenamodel);
 			}
@@ -168,7 +168,7 @@ public class StatisticQuery {
 				maxArenaGroesse = Math.max(arenaStatistikModel.getArenaGroesse(), maxArenaGroesse);
 			}
 
-			if (arenaStatistikModel.getZuschaueranzahl() > arenaStatistikModel.getArenaGroesse()) {
+			if (arenaStatistikModel.getSpectators() > arenaStatistikModel.getArenaGroesse()) {
 				stadium = DBManager.instance().getStadion(hrfid + 1);
 				if (stadium != null) {
 					arenaStatistikModel.setArenaGroesse(stadium.getTotalSize());

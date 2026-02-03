@@ -25,6 +25,8 @@ public class HallOfFamePlayer extends Player {
             this.trainerTo = historicalPlayer.getHrfDate();
             this.setCurrentTeamGoals(historicalPlayer.getCurrentTeamGoals());
             this.setCurrentTeamMatches(historicalPlayer.getCurrentTeamMatches());
+            this.setCareerAssists(historicalPlayer.getCareerAssists());
+            this.setAssistsCurrentTeam(historicalPlayer.getAssistsCurrentTeam());
         }
     }
 

@@ -9,12 +9,17 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.match.IMatchDetails;
+import core.model.match.MatchEvent;
 import core.model.match.Matchdetails;
 import core.util.HODateTime;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
+import static java.util.Objects.nonNull;
 
 public class SpecialEventsTableModel extends HOTableModel {
 
@@ -31,9 +36,11 @@ public class SpecialEventsTableModel extends HOTableModel {
 				new SpecialEventsColumn("SpieleDetails") {
 					@Override
 					public IHOTableCellEntry getTableEntry(MatchRow entry) {
-						var highlight = entry.getMatchHighlight();
-						var ret = new ColorLabelEntry(HODateTime.toEpochSecond(highlight.getMatchDate()), HODateTime.toLocaleDateTime(highlight.getMatchDate()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
-						ret.setIcon(highlight.getMatchType().getIcon());
+                        var ret = new ColorLabelEntry(
+                            HODateTime.toEpochSecond(entry.getMatch().getMatchDate()),
+                            HODateTime.toLocaleDateTime(entry.getMatch().getMatchDate()),
+                            ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        Optional.ofNullable(entry.getMatch().getMatchType().getIcon()).ifPresent(ret::setIcon);
 						return ret;
 					}
 				},
@@ -49,19 +56,19 @@ public class SpecialEventsTableModel extends HOTableModel {
 				new SpecialEventsColumn("Heim") {
 					@Override
 					public IHOTableCellEntry getTableEntry(MatchRow entry) {
-						return  new ColorLabelEntry(entry.getMatch().getHostingTeam(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        return new ColorLabelEntry(entry.getMatch().getHostingTeam(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
 					}
 				},
 				new SpecialEventsColumn("ls.match.result") {
 					@Override
 					public IHOTableCellEntry getTableEntry(MatchRow entry) {
-						return  new ColorLabelEntry(entry.getMatch().getMatchResult(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        return new ColorLabelEntry(entry.getMatch().getMatchResult(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
 					}
 				},
 				new SpecialEventsColumn("Gast") {
 					@Override
 					public IHOTableCellEntry getTableEntry(MatchRow entry) {
-						return  new ColorLabelEntry(entry.getMatch().getVisitingTeam(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+						return new ColorLabelEntry(entry.getMatch().getVisitingTeam(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
 					}
 				},
 				new SpecialEventsColumn("ls.team.tactic") {
@@ -76,54 +83,56 @@ public class SpecialEventsTableModel extends HOTableModel {
 				new SpecialEventsColumn("ls.match.minute") {
 					@Override
 					public IHOTableCellEntry getTableEntry(MatchRow entry) {
-						return  new ColorLabelEntry(entry.getMatchHighlight().getMinute(), String.valueOf(entry.getMatchHighlight().getMinute()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        final var minute = entry.getMatchHighlight().map(MatchEvent::getMinute);
+                        return new ColorLabelEntry(
+                            minute.orElse(0),
+                            minute.map(String::valueOf).orElse(StringUtils.EMPTY),
+                            ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
 					}
 				},
 				new SpecialEventsColumn("Event") {
 					@Override
 					public IHOTableCellEntry getTableEntry(MatchRow entry) {
-						var ret =  new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
-						var highlight = entry.getMatchHighlight();
-						for ( var icon : highlight.getIcons()){
-							ret.addIcon(icon);
-						}
+                        var ret = new ColorLabelEntry(StringUtils.EMPTY, ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        entry.getMatchHighlight().ifPresent(highlight -> highlight.getIcons().forEach(ret::addIcon));
 						return ret;
 					}
 				},
 				new SpecialEventsColumn("ls.match.event.details") {
 					@Override
 					public IHOTableCellEntry getTableEntry(MatchRow entry) {
-						var matchHighlight = entry.getMatchHighlight();
-						var ret =   new ColorLabelEntry(SpecialEventsDM.getSEText(matchHighlight), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
-						var eventText = matchHighlight.getEventText();
-						if (eventText != null) {
-                            ret.setToolTipText("<html>" + "<table width='300'><tr><td>" + eventText + "</td></tr></table></html>");
-						}
+						final var matchHighlight = entry.getMatchHighlight();
+						var ret =  new ColorLabelEntry(
+                            matchHighlight.map(SpecialEventsDM::getSEText).orElse(StringUtils.EMPTY),
+                            ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        matchHighlight.map(MatchEvent::getEventText).ifPresent(eventText ->
+                            ret.setToolTipText("<html>" + "<table width='300'><tr><td>" + eventText + "</td></tr></table></html>"));
 						return ret;
 					}
 				},
 				new SpecialEventsColumn("Spieler") {
 					@Override
 					public IHOTableCellEntry getTableEntry(MatchRow entry) {
-						var highlight = entry.getMatchHighlight();
-						var playerName = highlight.getPlayerName();
-						var sb = new StringBuilder();
-						if (!playerName.isEmpty()){
-							sb.append(playerName);
-							var assistingPlayerId = highlight.getAssistingPlayerId();
-							if (HOVerwaltung.instance().getModel().getCurrentPlayer(assistingPlayerId) != null ||
-                                    HOVerwaltung.instance().getModel().getFormerPlayers().stream().anyMatch(i->i.getPlayerId()==assistingPlayerId)){
-								sb.append(" - ").append(highlight.getAssistingPlayerName());
-							}
-						}
+                        final String text = entry.getMatchHighlight().map(matchEvent -> {
+                                String involvedPlayers = matchEvent.getPlayerName();
+                                if (StringUtils.isNotEmpty(matchEvent.getPlayerName())) {
+                                    var model = HOVerwaltung.instance().getModel();
+                                    if (nonNull(model.getCurrentPlayer(matchEvent.getAssistingPlayerId())) ||
+                                        model.getFormerPlayers().stream().anyMatch(player -> player.getPlayerId() == matchEvent.getAssistingPlayerId())) {
+                                        involvedPlayers = involvedPlayers + " - %s".formatted(matchEvent.getAssistingPlayerName());
+                                    }
+                                }
+                                return involvedPlayers;
+                            }
+                        ).orElse(StringUtils.EMPTY);
 
-						return  new ColorLabelEntry(sb.toString(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+						return new ColorLabelEntry(text, ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
 					}
 				}
 		)).toArray(new SpecialEventsColumn[0]);
 	}
 
-	private Icon getTacticIcon(int tacticId) {
+	private static Icon getTacticIcon(int tacticId) {
 		return  switch (tacticId) {
 			case IMatchDetails.TAKTIK_PRESSING -> ThemeManager.getIcon(HOIconName.TACTIC_PRESSING);
 			case IMatchDetails.TAKTIK_KONTER -> ThemeManager.getIcon(HOIconName.TACTIC_COUNTER_ATTACKING);
@@ -159,5 +168,4 @@ public class SpecialEventsTableModel extends HOTableModel {
 	public Match getMatch(int row) {
 		return this.data.get(row).getMatch();
 	}
-
 }

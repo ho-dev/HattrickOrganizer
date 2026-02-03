@@ -108,7 +108,7 @@ public abstract class AbstractTable {
 	 * @param <T> Storable class (extends AbstractTable.Storable)
 	 */
 	public <T extends Storable> int delete(T object){
-		var values = new ArrayList<>(Arrays.stream(columns).limit(idColumns).map(c -> c.getter.apply(object)).toList()); // where
+		var values = new ArrayList<>(Arrays.stream(columns).limit(idColumns).map(c -> c.getGetter().apply(object)).toList()); // where
 		return executePreparedDelete(values.toArray());
 	}
 
@@ -149,7 +149,7 @@ public abstract class AbstractTable {
 	private <T extends Storable> int update(T object) {
 		var values = new ArrayList<>();
 		values.addAll(Arrays.stream(columns).skip(idColumns).map(c->c.getLimitedValue(object)).toList());
-		values.addAll(Arrays.stream(columns).limit(idColumns).map(c->c.getter.apply(object)).toList()); // where
+		values.addAll(Arrays.stream(columns).limit(idColumns).map(c-> c.getGetter().apply(object)).toList()); // where
 		return executePreparedUpdate(values.toArray());
 	}
 
@@ -232,7 +232,7 @@ public abstract class AbstractTable {
 							case Types.FLOAT, Types.REAL -> getFloat(rs, c.getColumnName());
 							default -> throw new IllegalStateException("Unexpected value: " + c.getType());
 						};
-						c.setter.accept(object, value);
+						c.getSetter().accept(object, value);
 					}
 					object.setIsStored(true);
 					ret.add(object);

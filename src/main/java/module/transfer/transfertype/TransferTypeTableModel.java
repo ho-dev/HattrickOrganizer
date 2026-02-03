@@ -1,4 +1,3 @@
-// %1126721330541:hoplugins.transfers.ui.model%
 package module.transfer.transfertype;
 
 import core.db.DBManager;
@@ -19,6 +18,11 @@ import java.util.List;
 class TransferTypeTableModel extends AbstractTableModel {
     //~ Instance fields ----------------------------------------------------------------------------
 
+    private static final int COLUMN_INDEX_PLAYER_ID = 0;
+    private static final int COLUMN_INDEX_PLAYER_NAME = 1;
+    private static final int COLUMN_INDEX_TRANSFER_TYPE = 2;
+    private static final int COLUMN_INDEX_PLAYER_INCOME = 3;
+
     /**
 	 *
 	 */
@@ -37,12 +41,11 @@ class TransferTypeTableModel extends AbstractTableModel {
     TransferTypeTableModel(List<TransferredPlayer> values) {
         super();
 
-        this.colNames[0] = TranslationFacility.tr("ls.player.id");
-        this.colNames[1] = TranslationFacility.tr("ls.player.name");
-        this.colNames[2] = TranslationFacility.tr("Type");
-        this.colNames[3] = TranslationFacility.tr("Income");
+        this.colNames[COLUMN_INDEX_PLAYER_ID] = TranslationFacility.tr("ls.player.id");
+        this.colNames[COLUMN_INDEX_PLAYER_NAME] = TranslationFacility.tr("ls.player.name");
+        this.colNames[COLUMN_INDEX_TRANSFER_TYPE] = TranslationFacility.tr("Type");
+        this.colNames[COLUMN_INDEX_PLAYER_INCOME] = TranslationFacility.tr("Income");
 
-        //this.colNames[2] = TranslationFacility.tr("Week"); //$NON-NLS-1$
         this.values = values;
     }
 
@@ -58,7 +61,7 @@ class TransferTypeTableModel extends AbstractTableModel {
      */
     @Override
 	public final boolean isCellEditable(int row, int column) {
-        return column == 2;
+        return column == COLUMN_INDEX_TRANSFER_TYPE;
     }
 
     /** {@inheritDoc} */
@@ -87,9 +90,9 @@ class TransferTypeTableModel extends AbstractTableModel {
      */
     @Override
 	public final void setValueAt(Object value, int row, int col) {
-        if (col == 2) {
+        if (col == COLUMN_INDEX_TRANSFER_TYPE) {
             final String type = value.toString();
-            final Object id = getValueAt(row, 0);
+            final Object id = getValueAt(row, COLUMN_INDEX_PLAYER_ID);
 
             try {
                 var transferType = new TransferType();
@@ -109,10 +112,10 @@ class TransferTypeTableModel extends AbstractTableModel {
         final TransferredPlayer transfer = values.get(rowIndex);
 
         return switch (columnIndex) {
-            case 0 -> transfer.getPlayerId();
-            case 1 -> transfer.getPlayerName();
-            case 2 -> TransferType.getTransferDesc(transfer.getTransferType());
-            case 3 -> transfer.getIncome();
+            case COLUMN_INDEX_PLAYER_ID -> transfer.getPlayerId();
+            case COLUMN_INDEX_PLAYER_NAME -> transfer.getPlayerName();
+            case COLUMN_INDEX_TRANSFER_TYPE -> TransferType.getTransferDesc(transfer.getTransferType());
+            case COLUMN_INDEX_PLAYER_INCOME -> transfer.getIncome().toLocaleString();
             default -> ""; //$NON-NLS-1$
         };
     }

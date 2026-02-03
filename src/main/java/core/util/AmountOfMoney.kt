@@ -135,11 +135,11 @@ data class AmountOfMoney(var swedishKrona: BigDecimal) {
          * Set currency.
          * All other currency settings are reset if the new value differs from the current value.
          */
-        fun setCurrencyCountry(inCurrencyInfo: String) : Boolean {
-            if ( inCurrencyInfo.contains("(")){
+        fun setCurrencyCountry(inCurrencyInfo: String?) : Boolean {
+            if (inCurrencyInfo != null && inCurrencyInfo.contains("(")) {
                 val countryCode = inCurrencyInfo.substringAfter("(").substringBefore(")")
-                for (country in WorldDetailsManager.instance().leagues){
-                    if ( country.countryCode.equals(countryCode)){
+                for (country in WorldDetailsManager.instance().leagues) {
+                    if (country.countryCode.equals(countryCode)) {
                         currencyCountryId.setValue(country.countryId)
                         currencyFormatter = null
                         exchangeRate = null

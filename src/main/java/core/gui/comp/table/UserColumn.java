@@ -13,32 +13,32 @@ public abstract class UserColumn {
     /**
      * unique column id
      **/
-    protected int id;
+	protected int id;
 
     /**
      * columnName properties representation, not display!!
      **/
-    protected String columnName;
+	protected String columnName;
 
     /**
      * tooltip properties representation
      **/
-    protected String tooltip;
+	protected String tooltip;
 
     /**
      * minimum width of the column
      **/
-    protected int minWidth;
+	protected int minWidth;
 
     /**
      * preferred width of the column
      **/
-    protected int preferredWidth;
+	protected int preferredWidth;
 
     /**
      * index of the column in the table
      **/
-    protected int index = 0;
+	protected int index = 0;
 
     /**
      * if a column is shown in the table. Only displayed columns are saved in db.
@@ -88,8 +88,8 @@ public abstract class UserColumn {
     public UserColumn() {
     }
 
-    /**
-     * returns the language dependency name of the column
+	/**
+	 * returns the language dependency name of the column
      *
      * @return String
      */
@@ -97,8 +97,8 @@ public abstract class UserColumn {
         return translateColumnName ? TranslationFacility.tr(columnName) : columnName;
     }
 
-    /**
-     * Return  id
+	/**
+	 * Return  id
      *
      * @return int
      */
@@ -109,14 +109,14 @@ public abstract class UserColumn {
     /**
      * returns the language dependency tooltip of the column
      *
-     * @return String
-     */
+	 * @return String
+	 */
     public final String getTooltip() {
-        return (this.translateColumnTooltip) ? TranslationFacility.tr(tooltip) : tooltip;
+        return translateColumnTooltip ? TranslationFacility.tr(tooltip) : tooltip;
     }
 
-    /**
-     * Should a column be shown
+	/**
+	 * Should a column be shown
      *
      * @return boolean
      */
@@ -188,25 +188,25 @@ public abstract class UserColumn {
     /**
      * set minWidth and prefWidth in the TableColumn
      *
-     * @param column TableColumn
-     */
-    public void setSize(TableColumn column) {
-        column.setMinWidth(minWidth);
-        column.setPreferredWidth(preferredWidth);
-    }
+	 * @param column TableColumn
+	 */
+	public void setSize(TableColumn column){
+		column.setMinWidth(minWidth);
+		column.setPreferredWidth(preferredWidth);
+	}
 
-    /**
-     * set preferredWidth for saving to DB
+	/**
+	 * set preferredWidth for saving to DB
      *
-     * @param width int
-     */
-    public void setPreferredWidth(int width) {
-        preferredWidth = width;
-    }
+	 * @param width int
+	 */
+	public void setPreferredWidth(int width){
+		preferredWidth = width;
+	}
 
-    public int getPreferredWidth() {
-        return preferredWidth;
-    }
+	public int getPreferredWidth(){
+		return preferredWidth;
+	}
 
     public Integer getSortPriority() {
         return sortPriority;
