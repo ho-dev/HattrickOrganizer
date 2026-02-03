@@ -1207,7 +1207,7 @@ public class Player extends AbstractTable.Storable {
      * @param flag boolean
      */
     public void setCanBeSelectedByAssistant(boolean flag) {
-        if (flag == canBeSelectedByAssistant) {
+        if (Boolean.valueOf(flag).equals(canBeSelectedByAssistant)) {
             return; // Nothing changed
         }
         if (this.isExternallyRecruitedCoach()) {
