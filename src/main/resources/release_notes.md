@@ -58,6 +58,12 @@
 
 * Fixed a crash that occurred when not ticking `Only matches with SEs`.
 
+### Tools
+
+#### Area Sizer
+
+* Added the image of the stadium and made the view better arranged. (#2140)
+
 ### Misc
 
 * Fix CVEs with HO dependencies

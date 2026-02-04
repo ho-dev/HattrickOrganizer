@@ -147,6 +147,8 @@ final class DBUpdater {
 
 		var stadiumTable = dbManager.getTable(StadionTable.TABLENAME);
 		stadiumTable.tryChangeColumn("AusbauKosten", "NULL");
+        stadiumTable.tryAddColumn("ARENA_IMAGE", "VARCHAR(256)");
+        stadiumTable.tryAddColumn("ARENA_FALLBACK_IMAGE", "VARCHAR(256)");
 
         var hofTable = dbManager.getTable(HallOfFamePlayersTable.TABLENAME);
         hofTable.createTable();
