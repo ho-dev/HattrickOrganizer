@@ -945,7 +945,7 @@ public class YouthPlayer extends AbstractTable.Storable {
         playerNumber = properties.getProperty("playernumber", "");
         statement = properties.getProperty("statement", "");
         ownerNotes = properties.getProperty("ownernotes", "");
-        playerCategory = PlayerCategory.valueOf(getInt(properties, "playercategoryid", 0));
+        playerCategory = PlayerCategory.fromId(getInt(properties, "playercategoryid", 0));
         cards = getInt(properties, "cards", 0);
         injuryLevel = getInt(properties, "injurylevel", 0);
         specialty = Specialty.getSpecialty(getInt(properties, "specialty", 0));

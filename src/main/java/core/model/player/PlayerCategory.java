@@ -1,73 +1,44 @@
 package core.model.player;
 
-import core.model.TranslationFacility;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
+@Getter
+@RequiredArgsConstructor
 public enum PlayerCategory {
 
-    //    PlayerCategoryID
-    //    Value	Description
-    //1	Keeper
-    //2	Wing back
-    //3	Central defender
-    //4	Winger
-    //5	Inner midfielder
-    //6	Forward
-    //7	Substitute
-    //8	Reserve
-    //9	Extra 1
-    //            10	Extra 2
-    //            0	No category set
-
-    NoCategorySet(0),
-    Keeper(1),
-    WingBack(2),
-    CentralDefender(3),
-    Winger(4),
-    InnerMidfield(5),
-    Forward(6),
-    Substitute(7),
-    Reserve(8),
-    Extra1(9),
-    Extra2(10);
+    NO_CATEGORY_SET(0, "ls.player.category.undefined"),
+    KEEPER(1, "ls.player.category.Keeper"),
+    WING_BACK(2, "ls.player.category.WingBack"),
+    CENTRAL_DEFENDER(3, "ls.player.category.CentralDefender"),
+    WINGER(4, "ls.player.category.Winger"),
+    INNER_MIDFIELD(5, "ls.player.category.InnerMidfield"),
+    FORWARD(6, "ls.player.category.Forward"),
+    SUBSTITUTE(7, "ls.player.category.Substitute"),
+    RESERVE(8, "ls.player.category.Reserve"),
+    EXTRA_1(9, "ls.player.category.Extra1"),
+    EXTRA_2(10, "ls.player.category.Extra2"),
+    TRAINEE_1(11, "ls.player.category.Trainee1"),
+    TRAINEE_2(12, "ls.player.category.Trainee2"),
+    COACH_PROSPECT(13, "ls.player.category.CoachProspect");
 
     private final int id;
+    private final String translationKey;
 
-    PlayerCategory(int id) {
-        this.id = id;
+    private static final Map<Integer, PlayerCategory> MAP_ID_TO_PLAYER_CATEGORY =
+        Arrays.stream(values()).collect(Collectors.toMap(PlayerCategory::getId, Function.identity()));
+
+    public static PlayerCategory fromId(Integer id) {
+        return Optional.ofNullable(id).map(MAP_ID_TO_PLAYER_CATEGORY::get).orElse(null);
     }
 
-    public static String StringValueOf(PlayerCategory value) {
-        if (value == null || value == NoCategorySet) return "";
-        return TranslationFacility.tr("ls.player.category." + value._toString());
+    public static int idOf(PlayerCategory playerCategory) {
+        return Optional.ofNullable(playerCategory).map(PlayerCategory::getId).orElse(NO_CATEGORY_SET.getId());
     }
-
-    private String _toString() {
-        return super.toString();
-    }
-
-    @Override
-    public String toString() {
-        return StringValueOf(this);
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public static PlayerCategory valueOf(Integer id) {
-        if ( id != null) {
-            for (var category : PlayerCategory.values()) {
-                if (category.getId() == id) {
-                    return category;
-                }
-            }
-        }
-        return null;
-    }
-
-    public static int idOf(PlayerCategory category){
-        if (category!=null) return category.getId();
-        return NoCategorySet.id;
-    }
-
 }
