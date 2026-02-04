@@ -53,8 +53,8 @@ public class Connector {
 	 * Creates a new instance of Connector.
 	 */
 	private Connector() {
-		m_OAService = new ServiceBuilder(Helper.decryptString(CONSUMER_KEY))
-						.apiSecret(Helper.decryptString(CONSUMER_SECRET))
+		m_OAService = new ServiceBuilder(HOEncryption.decryptString(CONSUMER_KEY))
+						.apiSecret(HOEncryption.decryptString(CONSUMER_SECRET))
 						.build(HattrickAPI.instance());
 
 
@@ -62,8 +62,8 @@ public class Connector {
 	}
 
 	private OAuth1AccessToken createOAAccessToken() {
-		return new OAuth1AccessToken(Helper.decryptString(UserParameter.instance().AccessToken),
-				Helper.decryptString(UserParameter.instance().TokenSecret));
+		return new OAuth1AccessToken(HOEncryption.decryptString(UserParameter.instance().AccessToken),
+            HOEncryption.decryptString(UserParameter.instance().TokenSecret));
 	}
 
 	/**
@@ -777,8 +777,8 @@ public class Connector {
 						m_OAAccessToken = authDialog.getAccessToken();
 						if (m_OAAccessToken == null) {
 							m_OAAccessToken = new OAuth1AccessToken(
-									Helper.decryptString(UserParameter.instance().AccessToken),
-									Helper.decryptString(UserParameter.instance().TokenSecret));
+                                HOEncryption.decryptString(UserParameter.instance().AccessToken),
+                                HOEncryption.decryptString(UserParameter.instance().TokenSecret));
 						}
 					}
 					// Try again...
