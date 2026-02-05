@@ -12,7 +12,6 @@ import java.awt.*;
 
 
 class PredictPanel extends JPanel {
-	private static final long serialVersionUID = -9143223883848733076L;
 
     private JLabel m_jlGesamtChancenGuest;
     private JLabel m_jlGesamtChancenHome;

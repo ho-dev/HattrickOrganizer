@@ -17,7 +17,6 @@ import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.Serial;
 
 
 /**
@@ -29,8 +28,6 @@ import java.io.Serial;
  */
 public class UserColumnsPanel extends JPanel implements ActionListener {
 
-	@Serial
-	private static final long serialVersionUID = 1L;
 	private JComboBox m_jcbColumnModel = null;
 	private JTable table = null;
 	private final String[] columnNames = new String[]{" ", TranslationFacility.tr("column")};

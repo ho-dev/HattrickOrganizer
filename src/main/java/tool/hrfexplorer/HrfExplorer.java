@@ -38,8 +38,6 @@ import java.util.*;
 
 public class HrfExplorer extends ImagePanel implements ActionListener,ItemListener,MouseListener,IRefreshable,TableColumnModelListener
 {
-
-	private static final long serialVersionUID = -4187405421481083232L;
 	private List<MatchKurzInfo> m_kurzInfo;				// Adapter für Spieleinfos, u.a. ob Friendly oder Liga
 	// Members für Farben
 	private Color gruen = ThemeManager.getColor(HOColorName.HRF_GREEN_BG);

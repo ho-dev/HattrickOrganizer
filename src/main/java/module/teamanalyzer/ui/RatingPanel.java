@@ -10,13 +10,10 @@ import module.teamanalyzer.vo.TeamLineup;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.Serial;
 import java.util.Arrays;
 import java.util.Vector;
 
 public class RatingPanel extends JPanel {
-	@Serial
-    private static final long serialVersionUID = -1086256822169689318L;
 
 	//~ Instance fields ----------------------------------------------------------------------------
 

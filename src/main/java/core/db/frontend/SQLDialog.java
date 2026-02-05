@@ -17,8 +17,7 @@ import java.util.regex.Pattern;
 
 
 public class SQLDialog extends JDialog implements ActionListener {
-	
-	private static final long serialVersionUID = 7727562652486277083L;
+
     private JTable table;
     private JTextPane txtArea;
     private JLabel lbl;
@@ -33,7 +32,7 @@ public class SQLDialog extends JDialog implements ActionListener {
     private final JButton butnext;
     private final JButton buthelp;
     private final JButton buttables;
-    
+
     public SQLDialog() {
         super(HOMainFrame.instance(), "Simple SQL Editor");
         setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
