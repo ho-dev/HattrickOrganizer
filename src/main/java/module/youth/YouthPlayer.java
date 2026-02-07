@@ -10,6 +10,8 @@ import core.model.player.PlayerCategory;
 import core.model.player.Specialty;
 import core.util.HODateTime;
 import core.util.HOLogger;
+import lombok.Getter;
+import lombok.Setter;
 import module.training.Skills.ScoutCommentSkillTypeID;
 
 import java.time.Duration;
@@ -20,6 +22,11 @@ import java.util.*;
 import static java.lang.Math.*;
 
 public class YouthPlayer extends AbstractTable.Storable {
+
+    public static final String PLAYER_NUMBER_NOT_SET_STRING = "100";
+    public static final int MIN_PLAYER_NUMBER = 1;
+    public static final int MAX_PLAYER_NUMBER = 99;
+
     private int hrfid;
     private int id;
     private String nickName;
@@ -30,6 +37,8 @@ public class YouthPlayer extends AbstractTable.Storable {
     private HODateTime arrivalDate;
     private HODateTime promotionDate;
     private int canBePromotedIn;
+    @Setter
+    @Getter
     private String playerNumber;
     private String statement;
     private String ownerNotes;
@@ -220,12 +229,26 @@ public class YouthPlayer extends AbstractTable.Storable {
         this.canBePromotedIn = canBePromotedIn;
     }
 
-    public String getPlayerNumber() {
-        return playerNumber;
-    }
+    public Optional<Integer> getPlayerNumberAsInt() {
+        if (PLAYER_NUMBER_NOT_SET_STRING.equals(getPlayerNumber())) {
+            return Optional.empty();
+        }
+        try {
+            final int playerNumberAsInt = Integer.parseInt(getPlayerNumber());
 
-    public void setPlayerNumber(String playerNumber) {
-        this.playerNumber = playerNumber;
+            if (playerNumberAsInt < MIN_PLAYER_NUMBER || playerNumberAsInt > MAX_PLAYER_NUMBER) {
+                HOLogger.instance().debug(YouthPlayer.class, "YouthPlayer(%d): Expected that player number %d is in the range %d-%d."
+                    .formatted(getId(), playerNumberAsInt, MIN_PLAYER_NUMBER, MAX_PLAYER_NUMBER));
+                return Optional.empty();
+            } else {
+                return Optional.of(playerNumberAsInt);
+            }
+        }
+        catch (NumberFormatException e) {
+            HOLogger.instance().debug(YouthPlayer.class, "YouthPlayer(%d): Expected that player number '%s' that can be converted to an integer."
+                .formatted(getId(), getPlayerNumber()));
+        }
+        return Optional.empty();
     }
 
     public String getStatement() {
