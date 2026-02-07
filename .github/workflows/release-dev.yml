@@ -45,6 +45,7 @@ jobs:
         id: show_version
         run: cat version.properties
       - name: Delete previous tag and release
+        continue-on-error: true
         uses: tychobrailleur/delete-tag-and-release@453626e2f16a2625a19e18d91e4cdf1f41624dde
         with:
           delete_release: true
