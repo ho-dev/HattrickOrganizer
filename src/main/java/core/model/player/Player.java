@@ -455,7 +455,7 @@ public class Player extends AbstractTable.Storable {
 
         setLastMatchType(MatchType.getById(properties.getInt("lastmatch_type", 0)));
 
-        playerCategory = PlayerCategory.valueOf(properties.getInt("playercategoryid", 0));
+        playerCategory = PlayerCategory.fromId(properties.getInt("playercategoryid", 0));
         playerStatement = properties.getProperty("statement", "");
         ownerNotes = properties.getProperty("ownernotes", "");
 

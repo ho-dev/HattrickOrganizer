@@ -417,7 +417,7 @@ public class XMLPlayersParser {
         player.setNickName(xmlValue(root, "NickName"));
         player.setLastName(xmlValue(root, "LastName"));
         player.setShirtNumber(xmlIntValue(root, "PlayerNumber"));
-        player.setPlayerCategory(PlayerCategory.valueOf(xmlIntegerValue(root, "PlayerCategoryID")));
+        player.setPlayerCategory(PlayerCategory.fromId(xmlIntegerValue(root, "PlayerCategoryID")));
         player.setOwnerNotes(xmlValue(root, "OwnerNotes"));
         player.setAge(xmlIntValue(root, "Age"));
         player.setAgeDays(xmlIntValue(root, "AgeDays"));
