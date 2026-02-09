@@ -9,6 +9,7 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.player.Player;
 import core.util.HODateTime;
 import org.apache.commons.lang3.StringUtils;
@@ -148,7 +149,9 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
         tmp.add(new YouthPlayerColumn("ls.player.category") {
             @Override
             public IHOTableCellEntry getTableEntry(YouthPlayer player) {
-                return new ColorLabelEntry(getPlayerCategoryAsInt(player), player.getPlayerCategory().toString(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
+                return new ColorLabelEntry(getPlayerCategoryAsInt(player),
+                    TranslationFacility.tr(player.getPlayerCategory().getTranslationKey()),
+                    ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
             }
         });
         tmp.add(new YouthPlayerColumn("ls.player.ownernotes") {

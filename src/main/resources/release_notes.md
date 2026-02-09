@@ -29,9 +29,14 @@
 
 * Added (#2296)
 
+### Squad
+
+* Added support of all 13 **Player Categories** (#2418)
+
 ### Lineup
 
 * Fix empty list of upcoming games in Lineup panel after first download.
+* Added support of all 13 **Player Categories** (#2418)
 
 ### Training
 
@@ -43,7 +48,9 @@
 
 * Fix background color of terraces income column (#2356)
 
-### Youth module
+### Youth
+
+* Added support of all 13 **Player Categories** (#2418)
 
 ### Special Events
 
