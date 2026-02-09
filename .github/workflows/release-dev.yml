@@ -83,9 +83,8 @@ jobs:
           delete_release: true
           delete_non_draft: true
           tag_name: ${{ steps.read_version_properties.outputs.shortVersion }}
-        # We are using here the default token of the workflow here.
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
       - name: If not dev-release create a Release with short version tag
         if: ${{ steps.read_version_properties.outputs.tag != 'dev' }}
         uses: softprops/action-gh-release@v2
