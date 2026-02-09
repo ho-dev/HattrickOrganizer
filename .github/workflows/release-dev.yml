@@ -51,9 +51,8 @@ jobs:
           delete_release: true
           delete_non_draft: true
           tag_name: ${{ steps.read_version_properties.outputs.tag }}
-        # We are using here the default token of the workflow here.
-#        env:
-#          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
       - name: Create a Release
         id: create_release
         uses: softprops/action-gh-release@v2
