@@ -51,13 +51,15 @@ jobs:
           delete_release: true
           delete_non_draft: true
           tag_name: ${{ steps.read_version_properties.outputs.tag }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        # We are using here the default token of the workflow here.
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
       - name: Create a Release
         id: create_release
         uses: softprops/action-gh-release@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        # We are using here the default token of the workflow here.
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
           files: |
             build/artefacts/**
@@ -70,7 +72,7 @@ jobs:
       - name: Publish Release
         run: |
           curl --request PATCH \
-          --header 'Authorization: Bearer ${{ secrets.GITHUB_TOKEN }}' \
+          --header 'Authorization: Bearer ${{ github.token }}' \
           --header 'Content-type: application/json' \
           --header 'User-Agent: Github-Action' \
           --url https://api.github.com/repos/ho-dev/HattrickOrganizer/releases/${{ steps.create_release.outputs.id }} \
@@ -82,13 +84,15 @@ jobs:
           delete_release: true
           delete_non_draft: true
           tag_name: ${{ steps.read_version_properties.outputs.shortVersion }}
-        env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        # We are using here the default token of the workflow here.
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
       - name: If not dev-release create a Release with short version tag
         if: ${{ steps.read_version_properties.outputs.tag != 'dev' }}
         uses: softprops/action-gh-release@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        # We are using here the default token of the workflow here.
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
           files: |
             build/artefacts/**
@@ -100,8 +104,9 @@ jobs:
       - name: Create `stable` release if `tag_stable` release
         if: ${{ steps.read_version_properties.outputs.tag == 'tag_stable' }}
         uses: softprops/action-gh-release@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
+        # We are using here the default token of the workflow here.
+#        env:
+#          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
           files: |
             build/artefacts/**
