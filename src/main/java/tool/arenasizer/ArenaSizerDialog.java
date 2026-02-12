@@ -11,7 +11,6 @@ import java.awt.event.ActionListener;
 
 public class ArenaSizerDialog extends JDialog implements ActionListener {
 
-	private static final long serialVersionUID = 1L;
 	private JTabbedPane tabbedPane;
 	private ArenaPanel arenaPanel;
 	private DistributionStatisticsPanel historyPanel;

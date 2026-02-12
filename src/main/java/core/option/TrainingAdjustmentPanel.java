@@ -26,7 +26,6 @@ import static java.lang.Float.parseFloat;
 public final class TrainingAdjustmentPanel extends ImagePanel implements KeyListener {
     //~ Static / Instance fields ----------------------------------------------------------------------------
 
-	private static final long serialVersionUID = 1L;
 	private JLabel m_jlLabel;
     private JTextField m_jtfTextfield;
     private JLabel m_jlBaseValue;
@@ -35,7 +34,7 @@ public final class TrainingAdjustmentPanel extends ImagePanel implements KeyList
     private float base;
     private NumberFormat nf = NumberFormat.getInstance(Locale.US);
     private TrainingPreferencesPanel top;
-    
+
     //~ Constructors -------------------------------------------------------------------------------
 
     /**
@@ -75,7 +74,7 @@ public final class TrainingAdjustmentPanel extends ImagePanel implements KeyList
         return offset;
     }
 
-   
+
     private void initComponents(String text) {
         final GridBagLayout layout = new GridBagLayout();
         final GridBagConstraints constraints = new GridBagConstraints();
@@ -89,7 +88,7 @@ public final class TrainingAdjustmentPanel extends ImagePanel implements KeyList
         constraints.insets = new Insets(4, 4, 4, 4);
 
         setLayout(layout);
-        
+
         m_jlLabel = new JLabel(text);
         m_jlLabel.setPreferredSize(new Dimension(200, 20));
         constraints.gridwidth = 3;
@@ -98,21 +97,21 @@ public final class TrainingAdjustmentPanel extends ImagePanel implements KeyList
         layout.setConstraints(m_jlLabel, constraints);
         add(m_jlLabel);
 
-        m_jlBaseValue = new JLabel(base + ""); 
+        m_jlBaseValue = new JLabel(base + "");
         m_jlBaseValue.setOpaque(false);
         m_jlBaseValue.setPreferredSize(new Dimension(40, 20));
         constraints.gridwidth = 1;
         constraints.gridx = 4;
         layout.setConstraints(m_jlBaseValue, constraints);
         add(m_jlBaseValue);
-        
+
         JLabel tempLabel = new JLabel("+");
         tempLabel.setPreferredSize(new Dimension(20, 20));
         tempLabel.setOpaque(false);
         constraints.gridx = 5;
         layout.setConstraints(tempLabel, constraints);
         add(tempLabel);
-       
+
 
         m_jtfTextfield = new JTextField(offset + "", 4);
         m_jtfTextfield.setEditable(true);
@@ -124,8 +123,8 @@ public final class TrainingAdjustmentPanel extends ImagePanel implements KeyList
         constraints.gridx = 6;
         layout.setConstraints(m_jtfTextfield, constraints);
         add(m_jtfTextfield);
-        
-     
+
+
         tempLabel = new JLabel("=");
         tempLabel.setOpaque(false);
         tempLabel.setPreferredSize(new Dimension(20, 20));
@@ -133,25 +132,25 @@ public final class TrainingAdjustmentPanel extends ImagePanel implements KeyList
         constraints.gridx = 7;
         layout.setConstraints(tempLabel, constraints);
         add(tempLabel);
-    
+
         m_jlTotal = new JLabel(nf.format(base + offset + 0.000001f));
         m_jlTotal.setOpaque(false);
         m_jlTotal.setPreferredSize(new Dimension(40, 20));
         constraints.gridx = 8;
         layout.setConstraints(m_jlTotal, constraints);
         add(m_jlTotal);
-    
+
     }
-	
-	
+
+
 	@Override
 	public void keyPressed(KeyEvent e) {
-		
+
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
-		
+
 		try {
 			offset = parseFloat(m_jtfTextfield.getText());
 			m_jlTotal.setText(nf.format(offset + base));

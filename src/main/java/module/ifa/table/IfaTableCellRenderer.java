@@ -17,7 +17,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 public class IfaTableCellRenderer extends DefaultTableCellRenderer {
 
-	private static final long serialVersionUID = -114748630131222088L;
 	private final DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM,
 			DateFormat.SHORT);
 	private final NumberFormat doubleFormat;
@@ -60,7 +59,7 @@ public class IfaTableCellRenderer extends DefaultTableCellRenderer {
 				isSelected, hasFocus, row, column);
 		label.setIcon(icon);
 		label.setHorizontalAlignment(alignment);
-		
+
 		Font f = label.getFont();
 		if (!isSummaryRow(row, table)) {
 			label.setFont(label.getFont().deriveFont(Font.PLAIN));
@@ -70,7 +69,7 @@ public class IfaTableCellRenderer extends DefaultTableCellRenderer {
 
 		return label;
 	}
-	
+
 	private boolean isSummaryRow(int rowIndex, JTable table) {
 		return (rowIndex == table.getRowCount() - 1);
 	}

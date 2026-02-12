@@ -19,8 +19,6 @@ import java.awt.event.ItemListener;
  */
 class ManualPanel extends JPanel {
 
-	private static final long serialVersionUID = -4449286683961509922L;
-
     //~ Instance fields ----------------------------------------------------------------------------
 
 	private JComboBox form = new JComboBox();

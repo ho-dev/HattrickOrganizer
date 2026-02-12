@@ -18,10 +18,6 @@ import java.awt.*;
 public class StateBar extends JComponent {
     //~ Instance fields ----------------------------------------------------------------------------
 
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = -8224899657762127199L;
 	private ColorModus bkgcolor = new ColorModus(Color.DARK_GRAY);
     private ColorModus color1;
     private ColorModus color2;
@@ -60,7 +56,7 @@ public class StateBar extends JComponent {
         level1 = lvl1;
         level2 = lvl2;
 
-        String desc = ""; 
+        String desc = "";
 
         if (lvl1 > 0) {
             desc = desc + TranslationFacility.tr("Aktuell") + lvl1 + "% ";
@@ -99,7 +95,7 @@ public class StateBar extends JComponent {
         g2d.setColor(bkgcolor.hell);
         g2d.fillRect(7, (int) (height / 2.3f), width - 3, (height / 8));
 
-        //Foreground			
+        //Foreground
         setLevelBar(g2d, level2, color2);
         setLevelBar(g2d, level1, color1);
     }

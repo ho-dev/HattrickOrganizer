@@ -22,7 +22,6 @@ import javax.swing.table.DefaultTableCellRenderer;
  * @author Draghetto
  */
 public class ManualFilterTableRenderer extends DefaultTableCellRenderer {
-	private static final long serialVersionUID = -685008864266149099L;
 
 	@Override
 	public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -31,7 +30,7 @@ public class ManualFilterTableRenderer extends DefaultTableCellRenderer {
 
 		// (blaghaid fixes selection colors)
 		setForeground(Color.black);
-		
+
 		try {
 			type = MatchType.getById(Integer.parseInt((String) table.getValueAt(row, 7)));
 		} catch (NumberFormatException e) {
@@ -45,7 +44,7 @@ public class ManualFilterTableRenderer extends DefaultTableCellRenderer {
 		}
 
         setEnabled(available.equalsIgnoreCase("true"));
-		
+
 		if (value instanceof ImageIcon) {
 			setIcon(ThemeManager.getIcon(HOIconName.MATCHICONS[type.getIconArrayIndex()]));
 			setText(null);
@@ -53,8 +52,8 @@ public class ManualFilterTableRenderer extends DefaultTableCellRenderer {
 			setIcon(null);
 		}
 
-		
+
 		return this;
-		
+
 	}
 }

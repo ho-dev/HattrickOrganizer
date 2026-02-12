@@ -9,21 +9,20 @@ import java.awt.*;
 
 /**
  * Renderer for the rating table cells
- * 
+ *
  * @see module.teamanalyzer.ui.RatingPanel
- * 
+ *
  * @author flattermann <HO@flattermann.net>
  *
  */
 public class RatingTableCellRenderer extends DefaultTableCellRenderer {
-	private static final long serialVersionUID = -8095772313633000705L;
 
 	/*
 	   * @see TableCellRenderer#getTableCellRendererComponent(JTable, Object, boolean, boolean, int, int)
 	   */
 	  @Override
 	public Component getTableCellRendererComponent(JTable table, Object value,
-	                                                 boolean isSelected, boolean hasFocus, 
+	                                                 boolean isSelected, boolean hasFocus,
 	                                                 int row, int column) {
 		  // Column 3 is the relative rating diff in %
 		  // right align and adjust font color
@@ -48,7 +47,7 @@ public class RatingTableCellRenderer extends DefaultTableCellRenderer {
 			  this.setText(curText);
 			  return this;
 		  } else {
-			  
+
 			  this.setIcon(null);
 			  this.setText(null);
 			  this.setForeground(Color.BLACK);

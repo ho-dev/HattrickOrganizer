@@ -15,7 +15,6 @@ import javax.swing.JPanel;
  */
 public class LineupAssistantSelectorOverlay extends JPanel {
 
-	private static final long serialVersionUID = 1L;
 	private boolean isSelected;
 
 	public LineupAssistantSelectorOverlay() {

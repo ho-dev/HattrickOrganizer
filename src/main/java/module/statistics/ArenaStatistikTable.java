@@ -10,16 +10,12 @@ import core.util.Helper;
 
 import javax.swing.JTable;
 import javax.swing.table.TableColumnModel;
-import java.io.Serial;
 
 
 /**
  * Table for arena statistics.
  */
 public class ArenaStatistikTable extends JTable {
-
-	@Serial
-    private static final long serialVersionUID = -6319111452810917050L;
 
     //~ Instance fields ----------------------------------------------------------------------------
 
@@ -127,5 +123,5 @@ public class ArenaStatistikTable extends JTable {
             m_clTableSorter.reallocateIndexes();
         }
     }
-    
+
 }

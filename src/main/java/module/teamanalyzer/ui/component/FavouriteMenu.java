@@ -21,11 +21,6 @@ import java.util.List;
 public class FavouriteMenu extends JMenu {
     //~ Instance fields ----------------------------------------------------------------------------
 
-    /**
-	 *
-	 */
-	private static final long serialVersionUID = -3404254214435543226L;
-
     /** Add menu item */
     public JMenuItem itemAdd = new JMenuItem(TranslationFacility.tr("ls.button.add"));
 

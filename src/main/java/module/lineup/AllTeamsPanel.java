@@ -13,7 +13,6 @@ import core.util.Helper;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.Serial;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -24,9 +23,6 @@ import javax.swing.*;
  * Assign players to a given group or clear group in a single click
  */
 public final class AllTeamsPanel extends JPanel implements ActionListener {
-
-	@Serial
-    private static final long serialVersionUID = 955755336335567688L;
 
     //~ Instance fields ----------------------------------------------------------------------------
 

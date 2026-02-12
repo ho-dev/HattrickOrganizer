@@ -25,7 +25,6 @@ import javax.swing.JTextArea;
  */
 public class ConnTestFrame extends JFrame {
 
-	private static final long serialVersionUID = 9043187286506794399L;
 	private ConnTest conntest = null;
 	private JTextArea log = null;
 

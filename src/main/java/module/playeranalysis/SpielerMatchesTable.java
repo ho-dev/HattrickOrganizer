@@ -6,12 +6,9 @@ import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.model.PlayerAnalysisModel;
 import core.gui.model.UserColumnController;
 import javax.swing.JTable;
-import java.io.Serial;
 
 final class SpielerMatchesTable extends JTable {
 
-	@Serial
-	private static final long serialVersionUID = 5959815846371146851L;
 	private final PlayerAnalysisModel m_clTableModel;
 	private int playerId;
 

@@ -15,11 +15,6 @@ import java.util.Vector;
 public class UiRosterTableModel extends BaseTableModel {
     //~ Constructors -------------------------------------------------------------------------------
 
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = -2333079334884026403L;
-
 	/**
      * Creates a new UiRecapTableModel object.
      *

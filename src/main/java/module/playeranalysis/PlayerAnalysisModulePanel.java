@@ -11,7 +11,6 @@ import javax.swing.JTabbedPane;
 
 public class PlayerAnalysisModulePanel extends LazyImagePanel {
 
-	private static final long serialVersionUID = 1L;
 	private JTabbedPane tabbedPane;
 	private PlayerAnalyseMainPanel playerAnalyseMainPanel;
 	private PlayerComparePanel playerComparePanel;
