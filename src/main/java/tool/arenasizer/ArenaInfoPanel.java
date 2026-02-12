@@ -1,5 +1,6 @@
 package tool.arenasizer;
 
+import core.gui.UrlImageLabel;
 import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
 import core.util.HODateTime;
@@ -17,25 +18,54 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 
 public class ArenaInfoPanel extends JPanel {
 
+    private final JPanel stadiumCard;
+    private final UrlImageLabel imageLoader;
 	private final CapacityPanel currentCapacityPanel;
+    private final JPanel renovationCard;
 	private final CapacityPanel expandedCapacityPanel;
 	private final CapacityPanel futureCapacityPanel;
 
 	public ArenaInfoPanel() {
-		setLayout(new FlowLayout());
+        setLayout(new BorderLayout(12, 12));
+        setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
-		currentCapacityPanel = new CapacityPanel();
-		add(currentCapacityPanel);
+        // LEFT: stadium card (image + current capacity)
+        stadiumCard = new JPanel();
+        stadiumCard.setLayout(new BoxLayout(stadiumCard, BoxLayout.Y_AXIS));
 
-		expandedCapacityPanel = new CapacityPanel();
-		add(expandedCapacityPanel);
+        imageLoader = new UrlImageLabel();
+        imageLoader.setPreferredSize(new Dimension(220, 220));
+        imageLoader.setMinimumSize(new Dimension(220, 220));
+        imageLoader.setMaximumSize(new Dimension(220, 220));
+        imageLoader.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-		futureCapacityPanel = new CapacityPanel();
-		add(futureCapacityPanel);
+        currentCapacityPanel = new CapacityPanel();
+        currentCapacityPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-		updateValues();
+        stadiumCard.add(imageLoader);
+        stadiumCard.add(Box.createVerticalStrut(8));
+        stadiumCard.add(currentCapacityPanel);
 
-		Timer timer = new Timer(1000, actionEvent -> updateExpansionFinishedLabel());
+        // RIGHT: renovation card (expanded + future)
+        renovationCard = new JPanel();
+        renovationCard.setLayout(new BoxLayout(renovationCard, BoxLayout.Y_AXIS));
+
+        expandedCapacityPanel = new CapacityPanel();
+        expandedCapacityPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        futureCapacityPanel = new CapacityPanel();
+        futureCapacityPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        renovationCard.add(expandedCapacityPanel);
+        renovationCard.add(Box.createVerticalStrut(8));
+        renovationCard.add(futureCapacityPanel);
+
+        add(stadiumCard, BorderLayout.WEST);
+        add(renovationCard, BorderLayout.CENTER);
+
+        updateValues();
+
+        Timer timer = new Timer(1000, actionEvent -> updateExpansionFinishedLabel());
 		timer.start();
 	}
 
@@ -49,6 +79,12 @@ public class ArenaInfoPanel extends JPanel {
 
 	private void updateValues() {
 		final Stadium stadium = HOVerwaltung.instance().getModel().getStadium();
+
+        stadiumCard.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createTitledBorder(stadium.getStadiumName()),
+            BorderFactory.createEmptyBorder(8, 8, 8, 8)
+        ));
+        imageLoader.loadWithFallback(stadium.getArenaImage(), stadium.getArenaFallbackImage());
 
 		final String notAvailableString = TranslationFacility.tr("ls.general_label.not_available_abbreviation");
 		final var numberformat = Helper.getNumberFormat( 0);
@@ -123,6 +159,11 @@ public class ArenaInfoPanel extends JPanel {
 		currentCapacityPanel.setTranslation();
 		currentCapacityPanel.setTitle(TranslationFacility.tr("ArenaInfoPanel.current"));
 		currentCapacityPanel.label1.setText(TranslationFacility.tr("ArenaInfoPanel.last_improvement"));
+
+        renovationCard.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createTitledBorder(TranslationFacility.tr("ArenaInfoPanel.stadium_expansion")),
+            BorderFactory.createEmptyBorder(8, 8, 8, 8)
+        ));
 
 		expandedCapacityPanel.setTranslation();
 		expandedCapacityPanel.setTitle(TranslationFacility.tr("ArenaInfoPanel.expansion"));
