@@ -37,8 +37,7 @@ public class Injury {
         double x1Factor = -0.002;
         double x0Factor =  0.0384;
         double x = age - 17;
-        var ret =  x2Factor * x * x + x1Factor * x + x0Factor;
-        return ret;
+        return x2Factor * x * x + x1Factor * x + x0Factor;
     }
 
     /**
@@ -49,9 +48,7 @@ public class Injury {
     private double calcMedicianFactor(int doctorLevel) {
         double x1Factor = 0.2124;
         double x0Factor = 1;
-        double x = doctorLevel;
-        var ret = (x1Factor * x + x0Factor) / (x0Factor + 5 *  x1Factor);
-        return ret;
+        return (x1Factor * (double) doctorLevel + x0Factor) / (x0Factor + 5 *  x1Factor);
     }
 
     private double calculateHealthIncrease(Player player, int doctorLevel, HODateTime dateTime){
