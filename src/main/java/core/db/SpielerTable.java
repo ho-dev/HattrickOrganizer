@@ -242,24 +242,24 @@ final class SpielerTable extends AbstractTable {
 		return loadOne(Player.class, connectionManager.executePreparedQuery(loadLatestPlayerInfoSql, playerId));
 	}
 
-	private final String loadPlayerBeforeSql = createSelectStatement(" WHERE SpielerID=? AND Datum<=? ORDER BY Datum DESC LIMIT 1");
+	private final String loadPlayerBeforeSql = createSelectStatement(" WHERE SpielerID=? AND Datum<? ORDER BY Datum DESC LIMIT 1");
 
 	public Player loadPlayerBefore(int playerId, Timestamp before) {
 		return loadOne(Player.class, connectionManager.executePreparedQuery(loadPlayerBeforeSql, playerId, before));
 	}
 
-	private final String loadPlayerAfterSql = createSelectStatement(" WHERE SpielerID=? AND Datum>=? ORDER BY Datum ASC LIMIT 1");
+	private final String loadPlayerNotBeforeSql = createSelectStatement(" WHERE SpielerID=? AND Datum>=? ORDER BY Datum ASC LIMIT 1");
 
-	public Player loadPlayerAfter(int playerId, Timestamp before) {
-		return loadOne(Player.class, connectionManager.executePreparedQuery(loadPlayerAfterSql, playerId, before));
+	public Player loadPlayerNotBefore(int playerId, Timestamp before) {
+		return loadOne(Player.class, connectionManager.executePreparedQuery(loadPlayerNotBeforeSql, playerId, before));
 	}
 
     public List<Player> loadPlayersBefore(String playerName, Timestamp before) {
-        String loadPlayersBeforeSql = "SELECT S.* FROM SPIELER S INNER JOIN ( SELECT SPIELERID, MAX(DATUM) AS DATUM  FROM SPIELER WHERE DATUM<=? AND (FIRSTNAME IS NULL AND LASTNAME=? OR FIRSTNAME=? AND LASTNAME=?) GROUP BY SPIELERID ) IJ ON S.SPIELERID = IJ.SPIELERID AND S.DATUM = IJ.DATUM";
+        String loadPlayersBeforeSql = "SELECT S.* FROM SPIELER S INNER JOIN ( SELECT SPIELERID, MAX(DATUM) AS DATUM  FROM SPIELER WHERE DATUM<? AND (FIRSTNAME IS NULL AND LASTNAME=? OR FIRSTNAME=? AND LASTNAME=?) GROUP BY SPIELERID ) IJ ON S.SPIELERID = IJ.SPIELERID AND S.DATUM = IJ.DATUM";
         return loadPlayers(loadPlayersBeforeSql, playerName, before);
 	}
 
-    public List<Player> loadPlayersAfter(String playerName, Timestamp after) {
+    public List<Player> loadPlayersNotBefore(String playerName, Timestamp after) {
         String loadPlayersAfterSql = "SELECT S.* FROM SPIELER S INNER JOIN ( SELECT SPIELERID, MIN(DATUM) AS DATUM  FROM SPIELER WHERE DATUM>=? AND (FIRSTNAME IS NULL AND LASTNAME=? OR FIRSTNAME=? AND LASTNAME=?) GROUP BY SPIELERID ) IJ ON S.SPIELERID = IJ.SPIELERID AND S.DATUM = IJ.DATUM";
         return loadPlayers(loadPlayersAfterSql, playerName, after);
 	}

@@ -242,14 +242,14 @@ public class XtraData extends AbstractTable.Storable {
         var ret = new ArrayList<HODateTime>();
         for (HODateTime dailyUpdate : getDailyUpdates()) {
             while (dailyUpdate.isAfter(from)) {
-                dailyUpdate.minus(7, ChronoUnit.DAYS);
+                dailyUpdate = dailyUpdate.minus(7, ChronoUnit.DAYS);
             }
             while (dailyUpdate.isBefore(from)) {
-                dailyUpdate.plus(7, ChronoUnit.DAYS);
+                dailyUpdate = dailyUpdate.plus(7, ChronoUnit.DAYS);
             }
             while (!dailyUpdate.isAfter(to)) {
                 ret.add(dailyUpdate);
-                dailyUpdate.plus(7, ChronoUnit.DAYS);
+                dailyUpdate = dailyUpdate.plus(7, ChronoUnit.DAYS);
             }
         }
         return ret.stream().sorted().toList();

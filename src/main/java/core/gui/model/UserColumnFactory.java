@@ -517,7 +517,7 @@ public final class UserColumnFactory {
      * @return PlayerColumn[]
      */
     public static PlayerColumn[] createPlayerAdditionalArray() {
-        final PlayerColumn[] playerAdditionalArray = new PlayerColumn[32];
+        final PlayerColumn[] playerAdditionalArray = new PlayerColumn[34];
 
         playerAdditionalArray[0] = new PlayerColumn(10, "ls.player.shirtnumber.short", "ls.player.shirtnumber", 25) {
             @Override
@@ -820,12 +820,7 @@ public final class UserColumnFactory {
             public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
                 var lastMatchRatingEndOfGame = player.getLastMatchRatingEndOfGame();
                 if (lastMatchRatingEndOfGame != null && lastMatchRatingEndOfGame > 0) {
-//                    MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(player.getLastMatchId(), null);
-//                    if (info == null) {
-//                        return new RatingTableEntry((float) player.getLastMatchRating(), true);
-//                    } else {
                     return new RatingTableEntry(lastMatchRatingEndOfGame, true);
-//                    }
                 }
                 return new RatingTableEntry();
             }
@@ -994,6 +989,20 @@ public final class UserColumnFactory {
                 return true;
             }
 
+        };
+
+        playerAdditionalArray[32] = new PlayerColumn(906, "ls.player.when.healthy", 20) {
+            @Override
+            public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
+                return new ColorLabelEntry(player.getWhenHealthy(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+            }
+        };
+
+        playerAdditionalArray[33] = new PlayerColumn(907, "ls.player.when.slightlyinjured", 20) {
+            @Override
+            public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
+                return new ColorLabelEntry(player.getWhenSlightlyInjured(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+            }
         };
         return playerAdditionalArray;
     }

@@ -403,7 +403,7 @@ public class DBManager implements PersistenceManager {
 
 	public Player getFirstPlayerDownloadAfter(int playerId, Timestamp before) {
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
-				.loadPlayerAfter(playerId, before);
+				.loadPlayerNotBefore(playerId, before);
 	}
 
 	public List<Player> getLatestPlayerDownloadBefore(String playerName, Timestamp before) {
@@ -413,7 +413,7 @@ public class DBManager implements PersistenceManager {
 
 	public List<Player> getFirstPlayerDownloadAfter(String playerName, Timestamp before) {
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
-				.loadPlayersAfter(playerName, before);
+				.loadPlayersNotBefore(playerName, before);
 	}
 
 	/**

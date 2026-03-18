@@ -875,6 +875,21 @@ public class Player extends AbstractTable.Storable {
         return latestPlayerInformation;
     }
 
+    private Injury injury = null;
+    public HODateTime getWhenHealthy() {
+        if (injury == null) {
+            injury = new Injury(this);
+        }
+        return injury.getWhenHealthy();
+    }
+
+    public HODateTime getWhenSlightlyInjured() {
+        if (injury == null) {
+            injury = new Injury(this);
+        }
+        return injury.getWhenSlightlyInjured();
+    }
+
     static class PlayerPositionRating {
 
         public PlayerPositionRating(Integer p, Byte behaviour, double rating) {

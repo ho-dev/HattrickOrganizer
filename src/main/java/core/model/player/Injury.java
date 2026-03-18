@@ -4,6 +4,7 @@ import core.constants.player.PlayerSkill;
 import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.util.HODateTime;
+import core.util.HOLogger;
 
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -15,14 +16,13 @@ import java.util.List;
 public class Injury {
 
     Injury(Player player) {
-        this.injuryLevel = player.getInjuryWeeks();
-        var date = player.getHrfDate();
-        if (injuryLevel == -1){
-            whenHealthy = date;
-            whenSlightlyInjured = date;
-        }
-        else {
-            calculateRecovery(player);
+        if (!player.isExternallyRecruitedCoach()) {
+            this.injuryLevel = player.getInjuryWeeks();
+            if (injuryLevel == -1) {
+                whenHealthy = player.getHrfDate();
+            } else {
+                calculateRecovery(player);
+            }
         }
     }
 
@@ -35,9 +35,10 @@ public class Injury {
     private double calcAgeFactor(double age) {
         double x2Factor = 0.000016;
         double x1Factor = -0.002;
-        double x0Factor = -0.384;
+        double x0Factor =  0.0384;
         double x = age - 17;
-        return x2Factor * x * x + x1Factor * x + x0Factor;
+        var ret =  x2Factor * x * x + x1Factor * x + x0Factor;
+        return ret;
     }
 
     /**
@@ -48,13 +49,14 @@ public class Injury {
     private double calcMedicianFactor(int doctorLevel) {
         double x1Factor = 0.2124;
         double x0Factor = 1;
-        double x = doctorLevel + 1;
-        var coefficient = x1Factor * x + x0Factor;
-        return 1 / coefficient;
+        double x = doctorLevel;
+        var ret = (x1Factor * x + x0Factor) / (x0Factor + 5 *  x1Factor);
+        return ret;
     }
 
     private double calculateHealthIncrease(Player player, int doctorLevel, HODateTime dateTime){
-        return calcAgeFactor(player.getAgeAtDate(dateTime).toDouble()) * calcMedicianFactor(doctorLevel);
+        var regainerFactor = player.getSpecialty() == Specialty.Regainer.getValue()? 10./9.: 1.0;
+        return regainerFactor * calcAgeFactor(player.getAgeAtDate(dateTime).toDouble()) * calcMedicianFactor(doctorLevel);
     }
 
     private void calculateRecovery(Player player) {
@@ -64,14 +66,13 @@ public class Injury {
         ArrayList<Player> recovery = new ArrayList<>();
         recovery.add(player);
         var wasInjured = this.injuryLevel > -1;
-        while (wasInjured){
+        while (wasInjured) {
             var playerBefore = DBManager.instance().getLatestPlayerDownloadBefore(player.getPlayerId(), date.toDbTimestamp());
-            if ( playerBefore != null){
+            if (playerBefore != null) {
                 recovery.add(playerBefore);
                 wasInjured = playerBefore.getInjuryWeeks() > -1;
                 date = playerBefore.getHrfDate();
-            }
-            else {
+            } else {
                 break; // No data of healthy player available
             }
         }
@@ -93,29 +94,52 @@ public class Injury {
                 // well known.
                 var recoveryIndex = recovery.size() - 2;
                 var playerInjured = recovery.get(recoveryIndex);
+                while (recoveryIndex > 0 && playerInjured.getTsi() == playerHealthy.getTsi()){
+                    // TSI update not happened yet. It will happen on first update after match date
+                    playerInjured = recovery.get(--recoveryIndex);
+                }
 
                 // If there were training updates between the healthy player download and the injured download, the
                 // healthy tsi might require some correction because of skill or form changes
                 // If player is older than 27 years old, the tsi drops also on birthday of the player
-                playerHealthy.setSubskill4PlayerSkill(PlayerSkill.FORM, 0);
+//                playerHealthy.setSubskill4PlayerSkill(PlayerSkill.FORM, 0.5);
+//                playerInjured.setSubskill4PlayerSkill(PlayerSkill.FORM, 0.5);
+//                playerHealthy.setSubskill4PlayerSkill(PlayerSkill.STAMINA, 0.5);
+//                playerInjured.setSubskill4PlayerSkill(PlayerSkill.STAMINA, 0.5);
+
+
+//                var formHealthy = playerHealthy.getSkillValue(PlayerSkill.FORM);
+//                playerInjured.setSkillValue(PlayerSkill.FORM, formHealthy);
+//                playerInjured.setSubskill4PlayerSkill(PlayerSkill.FORM, 0.);
                 var tsiHealthyCalculated = playerHealthy.calculateTSI();
                 var tsiInjuredCalculated = playerInjured.calculateTSI();
                 double healthyTSI = playerHealthy.getTsi() + tsiInjuredCalculated - tsiHealthyCalculated;
+                HOLogger.instance().info(this.getClass(), "---- " + playerInjured.getFullName());
+                LogRecovery(playerHealthy.getTsi() / healthyTSI, playerHealthy, healthyTSI);
+
                 var health = playerInjured.getTsi() / healthyTSI;
-                var pastUpdates = getDailyUpdatesBetween(playerInjured.getHrfDate(), player.getHrfDate());
+                LogRecovery(health, playerInjured, healthyTSI);
+                var pastUpdates = new ArrayList<>(getDailyUpdatesBetween(playerInjured.getHrfDate(), player.getHrfDate()));
+                var update = pastUpdates.stream().findFirst().orElse(null);
                 var doctorLevel = 0;
-                for (var update : pastUpdates) {
-                    if (recoveryIndex >= 0) {
-                        var p = recovery.get(recoveryIndex);
-                        while (update.isAfter(p.getHrfDate())) {
-                            var clubData = DBManager.instance().getVerein(playerInjured.getHrfId());
-                            doctorLevel = clubData.getAerzte();
-                            recoveryIndex--;
-                            p = recovery.get(recoveryIndex);
-                        }
+                while (recoveryIndex >= 0) {
+                    var p = recovery.get(recoveryIndex--);
+//                    p.setSkillValue(PlayerSkill.FORM, formHealthy);
+
+//                    p.setSubskill4PlayerSkill(PlayerSkill.FORM, 0.5);
+                    while (update != null && update.isBefore(p.getHrfDate())) {
+                        var clubData = DBManager.instance().getVerein(p.getHrfId());
+                        doctorLevel = clubData.getAerzte();
+                        var healthIncrease = calculateHealthIncrease(player, doctorLevel, update);
+                        health += healthIncrease;
+                        HOLogger.instance().info(this.getClass(), "UpDate " + update.toLocaleDateTime() + " Health: " + health);
+                        pastUpdates.remove(update);
+                        update = pastUpdates.stream().findFirst().orElse(null);
                     }
-                    var healthIncrease = calculateHealthIncrease(player, doctorLevel, update);
-                    health += healthIncrease;
+//                    p.setSubskill4PlayerSkill(PlayerSkill.FORM, 0.5);
+//                    p.setSubskill4PlayerSkill(PlayerSkill.STAMINA, 0.5);
+                    healthyTSI = playerHealthy.getTsi() + p.calculateTSI() - tsiHealthyCalculated;
+                    LogRecovery(health, p, healthyTSI);
                     if (this.whenSlightlyInjured == null && health > 0.9) {
                         this.whenSlightlyInjured = update;
                     }
@@ -124,17 +148,18 @@ public class Injury {
                 var nextDailyUpdates = HOVerwaltung.instance().getModel().getXtraDaten().getDailyUpdates();
                 while (this.whenHealthy == null) {
 
-                    for (var update : nextDailyUpdates) {
-                        var increase = calculateHealthIncrease(player, doctorLevel, update);
+                    for (var futureUpdate : nextDailyUpdates) {
+                        var increase = calculateHealthIncrease(player, doctorLevel, futureUpdate);
                         if (increase < 0) {
                             return; // No recovery possible
                         }
                         health += increase;
+                        HOLogger.instance().info(this.getClass(), "UpDate " + futureUpdate.toLocaleDateTime() + " Health: " + health);
                         if (this.whenSlightlyInjured == null && health >= 0.9) {
-                            this.whenSlightlyInjured = update;
+                            this.whenSlightlyInjured = futureUpdate;
                         }
                         if (this.whenHealthy == null && health >= 1) {
-                            this.whenHealthy = update;
+                            this.whenHealthy = futureUpdate;
                             break;
                         }
                     }
@@ -150,6 +175,17 @@ public class Injury {
         else {
             // TODO: No data of healthy player available
         }
+    }
+
+    private void LogRecovery(double health, Player p, double healthyTSI) {
+        HOLogger.instance().info(this.getClass(), "Date " + p.getHrfDate().toLocaleDateTime()
+            + " Stamina: " + p.getSkill(PlayerSkill.STAMINA)
+            + " Level: " + p.getInjuryWeeks()
+            + " Form: " + p.getSkill(PlayerSkill.FORM)
+            + " Stamina: " + p.getSkill(PlayerSkill.STAMINA)
+            + " Health: " + health
+            + " Calculated: " + p.getTsi() / healthyTSI
+            + "=" + p.getTsi() + "/" + healthyTSI);
     }
 
     private List<HODateTime> getDailyUpdatesBetween(HODateTime injuryDate, HODateTime hrfDate) {
@@ -169,6 +205,14 @@ public class Injury {
      * they increase and eventually reach +9.
      */
     int injuryLevel;
+
+    public HODateTime getWhenHealthy() {
+        return whenHealthy;
+    }
+
+    public HODateTime getWhenSlightlyInjured() {
+        return whenSlightlyInjured;
+    }
 
     /**
      * Date when player gets healthy
