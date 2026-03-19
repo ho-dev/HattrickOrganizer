@@ -7,10 +7,12 @@ import core.gui.model.UserColumnController;
 import core.gui.theme.ImageUtilities;
 import core.model.HOVerwaltung;
 import core.util.HODateTime;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class HallOfFameTableModel extends HOPlayersTableModel {
     public HallOfFameTableModel(UserColumnController.ColumnModelId columnModelId) {
@@ -103,13 +105,17 @@ public class HallOfFameTableModel extends HOPlayersTableModel {
             new HallOfFameColumn("ls.player.career_assists.long") {
                 @Override
                 public IHOTableCellEntry getTableEntry(HallOfFamePlayer player) {
-                    return new ColorLabelEntry(player.getCareerAssists(), String.valueOf(player.getCareerAssists()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                    final var sortValue = Optional.ofNullable(player.getCareerAssists()).orElse(0);
+                    final var displayText = Optional.ofNullable(player.getCareerAssists()).map(String::valueOf).orElse(StringUtils.EMPTY);
+                    return new ColorLabelEntry(sortValue, displayText, ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                 }
             },
             new HallOfFameColumn("ls.player.assists_current_team.long") {
                 @Override
                 public IHOTableCellEntry getTableEntry(HallOfFamePlayer player) {
-                    return new ColorLabelEntry(player.getAssistsCurrentTeam(), String.valueOf(player.getAssistsCurrentTeam()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                    final var sortValue = Optional.ofNullable(player.getAssistsCurrentTeam()).orElse(0);
+                    final var displayText = Optional.ofNullable(player.getAssistsCurrentTeam()).map(String::valueOf).orElse(StringUtils.EMPTY);
+                    return new ColorLabelEntry(sortValue, displayText, ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                 }
             }
         )).toArray(new HallOfFameColumn[0]);

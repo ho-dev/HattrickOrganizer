@@ -83,7 +83,7 @@ class PlayerTest {
         final var expectedLastMatchRating = 65;
         final var lastMatchRatingEndOfGame = 33.6;
         final var expectedLastMatchRatingEndOfGame = 67;
-        final var playerCategory = PlayerCategory.Forward;
+        final var playerCategory = PlayerCategory.FORWARD;
         final var playerStatement = "playerStatement";
         final var ownerNotes = "ownerNotes";
         properties.put("id", String.valueOf(playerId));

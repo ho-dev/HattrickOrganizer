@@ -9,8 +9,10 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.player.Player;
 import core.util.HODateTime;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;
@@ -137,13 +139,19 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
         tmp.add(new YouthPlayerColumn("ls.player.shirtnumber.short", "ls.player.shirtnumber", 10) {
             @Override
             public IHOTableCellEntry getTableEntry(YouthPlayer player) {
-                return new ColorLabelEntry(getPlayerNumberAsInt(player), player.getPlayerNumber(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
+                final var playerNumberAsInt = player.getPlayerNumberAsInt();
+                return new ColorLabelEntry(
+                    playerNumberAsInt.orElse(YouthPlayer.MAX_PLAYER_NUMBER + 1),
+                    playerNumberAsInt.map(String::valueOf).orElse(StringUtils.EMPTY),
+                    ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
             }
         });
         tmp.add(new YouthPlayerColumn("ls.player.category") {
             @Override
             public IHOTableCellEntry getTableEntry(YouthPlayer player) {
-                return new ColorLabelEntry(getPlayerCategoryAsInt(player), player.getPlayerCategory().toString(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
+                return new ColorLabelEntry(getPlayerCategoryAsInt(player),
+                    TranslationFacility.tr(player.getPlayerCategory().getTranslationKey()),
+                    ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
             }
         });
         tmp.add(new YouthPlayerColumn("ls.player.ownernotes") {
@@ -223,14 +231,6 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
         var id = player.getPlayerCategory().getId();
         if ( id != 0) return id;
         return 100;
-    }
-
-    private int getPlayerNumberAsInt(YouthPlayer player) {
-        try {
-            return Integer.parseInt(player.getPlayerNumber());
-        }
-        catch (NumberFormatException ignored) {}
-        return 0;
     }
 
     @Override

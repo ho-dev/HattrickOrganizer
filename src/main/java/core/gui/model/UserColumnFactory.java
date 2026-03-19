@@ -11,6 +11,7 @@ import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.enums.MatchType;
 import core.model.match.MatchKurzInfo;
 import core.model.match.Matchdetails;
@@ -790,11 +791,11 @@ public final class UserColumnFactory {
                 var category = player.getPlayerCategory();
                 String text;
                 double sort;
-                if (category != null && category != PlayerCategory.NoCategorySet) {
-                    text = category.toString();
+                if (category != null && category != PlayerCategory.NO_CATEGORY_SET) {
+                    text = TranslationFacility.tr(category.getTranslationKey());
                     sort = category.getId();
                 } else {
-                    text = "";
+                    text = TranslationFacility.tr(PlayerCategory.NO_CATEGORY_SET.getTranslationKey());
                     sort = 100;
                 }
                 return new ColorLabelEntry(sort, text, ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);

@@ -29,9 +29,14 @@
 
 * Added (#2296)
 
+### Squad
+
+* Added support of all 13 **Player Categories** (#2418)
+
 ### Lineup
 
 * Fix empty list of upcoming games in Lineup panel after first download.
+* Added support of all 13 **Player Categories** (#2418)
 
 ### Training
 
@@ -43,7 +48,9 @@
 
 * Fix background color of terraces income column (#2356)
 
-### Youth module
+### Youth
+
+* Added support of all 13 **Player Categories** (#2418)
 
 ### Special Events
 
@@ -58,6 +65,11 @@
 
 * Fixed a crash that occurred when not ticking `Only matches with SEs`.
 
+### Youth
+
+* The bug where the number `100` was displayed for the shirt number when the player had no shirt number has been fixed.
+  Instead, nothing is shown now if no number assigned. (#2420)
+
 ### Misc
 
 * Fix CVEs with HO dependencies
@@ -71,13 +83,13 @@
 Reports by Contributors - October 19, 2025 - December 30, 2025
 
 * Ioannidouefty 459
-* wsbrenk 107
+* wsbrenk 113
 * Frankieorabona 73
 * \_KOHb\_ 54
-* Sebastian Reddig 32
+* Sebastian Reddig 35
 * Lidegand 24
-* Kristaps 4
+* Kristaps 11
 * Mara 3
 * Joeri Roels 1
 
-Total 757
+Total 773
