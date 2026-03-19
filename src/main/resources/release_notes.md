@@ -83,13 +83,13 @@
 Reports by Contributors - October 19, 2025 - December 30, 2025
 
 * Ioannidouefty 459
-* wsbrenk 107
+* wsbrenk 113
 * Frankieorabona 73
 * \_KOHb\_ 54
-* Sebastian Reddig 32
+* Sebastian Reddig 35
 * Lidegand 24
-* Kristaps 4
+* Kristaps 11
 * Mara 3
 * Joeri Roels 1
 
-Total 757
+Total 773
