@@ -7,10 +7,12 @@ import core.gui.model.UserColumnController;
 import core.gui.theme.ImageUtilities;
 import core.model.HOVerwaltung;
 import core.util.HODateTime;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class HallOfFameTableModel extends HOPlayersTableModel {
     public HallOfFameTableModel(UserColumnController.ColumnModelId columnModelId) {
@@ -103,16 +105,16 @@ public class HallOfFameTableModel extends HOPlayersTableModel {
             new HallOfFameColumn("ls.player.career_assists.long") {
                 @Override
                 public IHOTableCellEntry getTableEntry(HallOfFamePlayer player) {
-                    var sortValue = player.getCareerAssists() != null ? player.getCareerAssists() : 0;
-                    var displayText = player.getCareerAssists() != null ? String.valueOf(player.getCareerAssists()) : "";
+                    final var sortValue = Optional.ofNullable(player.getCareerAssists()).orElse(0);
+                    final var displayText = Optional.ofNullable(player.getCareerAssists()).map(String::valueOf).orElse(StringUtils.EMPTY);
                     return new ColorLabelEntry(sortValue, displayText, ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                 }
             },
             new HallOfFameColumn("ls.player.assists_current_team.long") {
                 @Override
                 public IHOTableCellEntry getTableEntry(HallOfFamePlayer player) {
-                    var sortValue = player.getAssistsCurrentTeam() != null ? player.getAssistsCurrentTeam() : 0;
-                    var displayText = player.getAssistsCurrentTeam() != null ? String.valueOf(player.getAssistsCurrentTeam()) : "";
+                    final var sortValue = Optional.ofNullable(player.getAssistsCurrentTeam()).orElse(0);
+                    final var displayText = Optional.ofNullable(player.getAssistsCurrentTeam()).map(String::valueOf).orElse(StringUtils.EMPTY);
                     return new ColorLabelEntry(sortValue, displayText, ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                 }
             }
