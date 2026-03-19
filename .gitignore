@@ -156,3 +156,8 @@ truststore.jks
 /_db2/database.properties
 /_db2/database.script
 /buildSrc/build/
+/docs/html/changelog.html
+/docs/md/changelog.md
+/buildSrc/out/production/classes/META-INF/poeditor.kotlin_module
+/docs/html/release_notes.html
+/docs/md/release_notes.md
