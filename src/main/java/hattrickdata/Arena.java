@@ -21,6 +21,8 @@ public class Arena {
     private Team team;
     private League league;
     private Region region;
+    private String arenaImage;
+    private String arenaFallbackImage;
 
     private CurrentCapacity currentCapacity;
     private ExpandedCapacity expandedCapacity;

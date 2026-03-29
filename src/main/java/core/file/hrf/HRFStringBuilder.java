@@ -93,6 +93,8 @@ public class HRFStringBuilder {
         appendKeyValue(arenaStringBuilder, "isExpanding", arenaDataMap.get("isExpanding"));
         appendKeyValue(arenaStringBuilder, "RebuiltDate", Optional.ofNullable(arenaDataMap.get("RebuiltDate")).orElse(HO_DATE_TIME_NOT_SET));
         appendKeyValue(arenaStringBuilder, "ExpansionDate", Optional.ofNullable(arenaDataMap.get("ExpansionDate")).orElse(HO_DATE_TIME_NOT_SET));
+        appendKeyValue(arenaStringBuilder, "ArenaImage", arenaDataMap.get("ArenaImage"));
+        appendKeyValue(arenaStringBuilder, "ArenaFallbackImage", arenaDataMap.get("ArenaFallbackImage"));
     }
 
     /**
@@ -115,6 +117,8 @@ public class HRFStringBuilder {
         appendKeyValue(arenaStringBuilder, "isExpanding", arena.getExpandedCapacity().isPresent());
         appendKeyValue(arenaStringBuilder, "RebuiltDate", arena.getCurrentCapacity().getRebuiltDate().map(HODateTime::toHT).orElse(HO_DATE_TIME_NOT_SET));
         appendKeyValue(arenaStringBuilder, "ExpansionDate", arena.getExpandedCapacity().map(ExpandedCapacity::getExpansionDate).map(HODateTime::toHT).orElse(HO_DATE_TIME_NOT_SET));
+        appendKeyValue(arenaStringBuilder, "ArenaImage", arena.getArenaImage());
+        appendKeyValue(arenaStringBuilder, "ArenaFallbackImage", arena.getArenaFallbackImage());
     }
 
     /**

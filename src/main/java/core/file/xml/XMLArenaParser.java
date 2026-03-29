@@ -9,6 +9,10 @@ import org.w3c.dom.Element;
 
 public class XMLArenaParser {
 
+    public static final String HATTRICK_DATA_VERSION = "1.7";
+    public static final String HATTRICK_DATA_BASE_FILE_NAME = "arenadetails";
+    private static final String HATTRICK_DATA_FILE_NAME = HATTRICK_DATA_BASE_FILE_NAME + ".xml";
+
     private static final String ELEMENT_NAME_FILE_NAME = "FileName";
     private static final String ELEMENT_NAME_VERSION = "Version";
     private static final String ELEMENT_NAME_USER_ID = "UserID";
@@ -16,6 +20,8 @@ public class XMLArenaParser {
     private static final String ELEMENT_NAME_ARENA = "Arena";
     private static final String ELEMENT_NAME_ARENA_ID = "ArenaID";
     private static final String ELEMENT_NAME_ARENA_NAME = "ArenaName";
+    private static final String ELEMENT_NAME_ARENA_IMAGE = "ArenaImage";
+    private static final String ELEMENT_NAME_FALLBACK_IMAGE = "ArenaFallbackImage";
     private static final String ELEMENT_NAME_TEAM = "Team";
     private static final String ELEMENT_NAME_TEAM_ID = "TeamID";
     private static final String ELEMENT_NAME_TEAM_NAME = "TeamName";
@@ -58,10 +64,23 @@ public class XMLArenaParser {
 
             // FileName
             Element element = (Element) root.getElementsByTagName(ELEMENT_NAME_FILE_NAME).item(0);
-            hattrickDataInfoBuilder.fileName(XMLManager.getFirstChildNodeValue(element));
+            final var fileName = XMLManager.getFirstChildNodeValue(element);
+            hattrickDataInfoBuilder.fileName(fileName);
+
+            if (!HATTRICK_DATA_FILE_NAME.equals(fileName)) {
+                throw new UnsupportedHattrickDataFileNameException(HATTRICK_DATA_FILE_NAME, fileName);
+            }
+
             // Version
             element = (Element) root.getElementsByTagName(ELEMENT_NAME_VERSION).item(0);
-            hattrickDataInfoBuilder.version(XMLManager.getFirstChildNodeValue(element));
+
+            final var version = XMLManager.getFirstChildNodeValue(element);
+            hattrickDataInfoBuilder.version(version);
+
+            if (!HATTRICK_DATA_VERSION.equals(version)) {
+                throw new UnsupportedHattrickDataVersionException(HATTRICK_DATA_FILE_NAME, HATTRICK_DATA_VERSION, version);
+            }
+
             // UserId
             element = (Element) root.getElementsByTagName(ELEMENT_NAME_USER_ID).item(0);
             hattrickDataInfoBuilder.userId(Integer.parseInt(XMLManager.getFirstChildNodeValue(element)));
@@ -71,14 +90,21 @@ public class XMLArenaParser {
 
             final var hattrickDataInfo = hattrickDataInfoBuilder.build();
 
-            // Root wechseln
+            // change Root
             root = (Element) root.getElementsByTagName(ELEMENT_NAME_ARENA).item(0);
             element = (Element) root.getElementsByTagName(ELEMENT_NAME_ARENA_ID).item(0);
 
+            // Arena
             var arenaBuilder = Arena.builder();
             arenaBuilder.id(Integer.parseInt(XMLManager.getFirstChildNodeValue(element)));
             element = (Element) root.getElementsByTagName(ELEMENT_NAME_ARENA_NAME).item(0);
             arenaBuilder.name(XMLManager.getFirstChildNodeValue(element));
+
+            element = (Element) root.getElementsByTagName(ELEMENT_NAME_ARENA_IMAGE).item(0);
+            arenaBuilder.arenaImage(XMLManager.getFirstChildNodeValue(element));
+
+            element = (Element) root.getElementsByTagName(ELEMENT_NAME_FALLBACK_IMAGE).item(0);
+            arenaBuilder.arenaFallbackImage(XMLManager.getFirstChildNodeValue(element));
 
             // Team
             Element tmpRoot = (Element) root.getElementsByTagName(ELEMENT_NAME_TEAM).item(0);
@@ -152,7 +178,7 @@ public class XMLArenaParser {
             }
 
             return Pair.of(hattrickDataInfo, arenaBuilder.build());
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             HOLogger.instance().log(XMLArenaParser.class, e);
         }
 
