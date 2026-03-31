@@ -1,8 +1,6 @@
 ## Highlights
 
 * New hall of fame module
-* Confirm exit dialog
-* Currency selectable in option settings
 
 ## [Detailed Changelog](https://github.com/ho-dev/HattrickOrganizer/milestone/27)
 
@@ -69,33 +67,37 @@
 
 * The bug where the number `100` was displayed for the shirt number when the player had no shirt number has been fixed.
   Instead, nothing is shown now if no number assigned. (#2420)
+* Fix out of bound exception on download when youth player were removed during the week (#2442)
 
 ### Tools
 
-#### Area Sizer
+#### Arena Sizer
 
+* Removed the superfluous space for the `Spectators` in braces at the end.
 * Added the image of the stadium and made the view better arranged. (#2140)
 
 ### Misc
 
 * Fix CVEs with HO dependencies
 * Update darklaf to most recent version.
-* Tools/Arena Sizer: Removed the superfluous space for the `Spectators` in braces at the end.
 
 ## Translations
 
 * Added the missing translation for the short text in the table for `Goals for the Team`.
 
-Reports by Contributors - October 19, 2025 - December 30, 2025
+Reports by Contributors - October 19, 2025 - March 31, 2026
 
+* Jösgall 650 919
 * Ioannidouefty 459
-* wsbrenk 107
+* wsbrenk 113
 * Frankieorabona 73
 * \_KOHb\_ 54
-* Sebastian Reddig 32
+* Sebastian Reddig 35
+* Walter 28
 * Lidegand 24
-* Kristaps 4
+* Kristaps 11
+* Stefan Schenke 5
 * Mara 3
 * Joeri Roels 1
 
-Total 757
+Total 1625

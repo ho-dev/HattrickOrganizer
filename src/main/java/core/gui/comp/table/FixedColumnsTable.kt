@@ -254,7 +254,7 @@ open class FixedColumnsTable @JvmOverloads constructor(
         }
 
     fun selectModelIndex(modelIndex: Int) {
-        if (modelIndex > -1) {
+        if (modelIndex > -1 && modelIndex < this.rowCount) {
             val viewRowIndex = convertRowIndexToView(modelIndex)
             setRowSelectionInterval(viewRowIndex, viewRowIndex)
         }
