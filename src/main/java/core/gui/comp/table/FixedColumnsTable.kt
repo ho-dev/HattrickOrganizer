@@ -254,7 +254,7 @@ open class FixedColumnsTable @JvmOverloads constructor(
         }
 
     fun selectModelIndex(modelIndex: Int) {
-        if (modelIndex > -1) {
+        if (modelIndex > -1 && modelIndex < this.rowCount) {
             val viewRowIndex = convertRowIndexToView(modelIndex)
             setRowSelectionInterval(viewRowIndex, viewRowIndex)
         }
@@ -321,20 +321,6 @@ open class FixedColumnsTable @JvmOverloads constructor(
             return fixed!!.columnModel.getColumn(i)
         }
         return super.getColumnModel().getColumn(i - fixedColumnsCount)
-    }
-
-    /**
-     * Return the user column of the event
-     */
-    fun getUserColumn(e: TableModelEvent): UserColumn? {
-        if (e.column >= 0 && e.source.equals(this.model)){
-            val modelIndex = convertColumnIndexToModel(e.column)
-            if ( modelIndex > -1) {
-                val hoTableModel = this.model as HOTableModel
-                return hoTableModel.getDisplayedColumns()[modelIndex]
-            }
-        }
-        return null
     }
 
 }
