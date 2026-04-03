@@ -1092,6 +1092,8 @@ public class Player extends AbstractTable.Storable {
         if (nationality != null) {
             return nationality;
         }
+        if (countryId <= 0) return "";
+
         WorldDetailLeague leagueDetail = WorldDetailsManager.instance().getWorldDetailLeagueByCountryId(countryId);
         if (leagueDetail != null) {
             nationality = leagueDetail.getCountryName();
