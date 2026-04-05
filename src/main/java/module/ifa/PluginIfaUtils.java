@@ -49,41 +49,39 @@ public class PluginIfaUtils {
 	}
 
 	public static void updateMatchesTable() {
-		boolean retry = true;
+        int retry = 1;
+        HODateTime time;
+        do {
+            time = HOVerwaltung.instance().getModel().getBasics().getActivationDate();
+            if (time != null && !time.isBefore(HODateTime.HT_START)) {
+                break;
+            }
+            DownloadDialog.instance();
+        } while (retry-- > 0);
 
-		HODateTime time;
-		do {
-			time = HOVerwaltung.instance().getModel().getBasics().getActivationDate();
-
-			if (time != null && !time.isBefore(HODateTime.HT_START)) {
-				break;
-			}
-			DownloadDialog.instance();
-		} while (retry && !(retry = false));
-
-		try {
-			HOMainFrame.instance().resetInformation();
-			if (time != null) {
-				var from = HODateTime.fromDbTimestamp(DBManager.instance().getLastIFAMatchDate());
-				if (from == null) {
-					from = time;
-				}
-				var today = HODateTime.now();
-				while (from.isBefore(today)) {
-					var to = from.plus(60, ChronoUnit.DAYS).minus(1, ChronoUnit.SECONDS);
-					if (to.isAfter(today)) {
-						to = today;
-					}
-					insertMatches(from, to);
-					from = from.plus(60, ChronoUnit.DAYS);
-				}
-			}
-			HOMainFrame.instance().setInformationCompleted();
-		} catch (Exception e) {
-			HOMainFrame.instance().resetInformation();
-			HOLogger.instance().error(PluginIfaUtils.class, e);
-		}
-	}
+        try {
+            HOMainFrame.instance().resetInformation();
+            if (time != null) {
+                var from = HODateTime.fromDbTimestamp(DBManager.instance().getLastIFAMatchDate());
+                if (from == null) {
+                    from = time;
+                }
+                var today = HODateTime.now();
+                while (from.isBefore(today)) {
+                    var to = from.plus(60, ChronoUnit.DAYS).minus(1, ChronoUnit.SECONDS);
+                    if (to.isAfter(today)) {
+                        to = today;
+                    }
+                    insertMatches(from, to);
+                    from = from.plus(60, ChronoUnit.DAYS);
+                }
+            }
+            HOMainFrame.instance().setInformationCompleted();
+        } catch (Exception e) {
+            HOMainFrame.instance().resetInformation();
+            HOLogger.instance().error(PluginIfaUtils.class, e);
+        }
+    }
 
 	static BufferedImage quantizeBufferedImage(BufferedImage bufferedImage) throws IOException {
 		int[][] pixels = getPixels(bufferedImage);
