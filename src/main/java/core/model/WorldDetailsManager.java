@@ -50,7 +50,11 @@ public class WorldDetailsManager {
 	}
 
 	public String getNameByCountryId(int countryId) {
-		return countryMap.get(countryId).getCountryName();
+		var country =  countryMap.get(countryId);
+        if ( country != null ) {
+            return country.getCountryName();
+        }
+        return "";
 	}
 
 	public WorldDetailLeague getWorldDetailLeagueByLeagueId(Integer leagueId) {
@@ -76,6 +80,12 @@ public class WorldDetailsManager {
 				if (ret != null) {
 					downloaded.setIsStored(ret.isStored());
 				}
+                else {
+                    // Downloading country Id 0 will result in Hattrick International with league id 1000,
+                    // which is already stored with country id 1000. Do not create it again, but update it.
+                    var alreadyStored = leagueMap.get(downloaded.getLeagueId());
+                    downloaded.setIsStored(alreadyStored != null && alreadyStored.isStored());
+                }
 				DBManager.instance().storeWorldDetailLeague(downloaded);
 				initialize();
 				ret = downloaded;
