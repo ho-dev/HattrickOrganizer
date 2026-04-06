@@ -30,6 +30,7 @@
 ### Squad
 
 * Added support of all 13 **Player Categories** (#2418)
+* Fix world details constraints error (#2444)
 
 ### Lineup
 
@@ -85,9 +86,9 @@
 
 * Added the missing translation for the short text in the table for `Goals for the Team`.
 
-Reports by Contributors - October 19, 2025 - March 31, 2026
+Reports by Contributors - October 19, 2025 - April 03, 2026
 
-* Jösgall 650 919
+* Jösgall 1005
 * Ioannidouefty 459
 * wsbrenk 113
 * Frankieorabona 73
@@ -100,4 +101,4 @@ Reports by Contributors - October 19, 2025 - March 31, 2026
 * Mara 3
 * Joeri Roels 1
 
-Total 1625
+Total 1711
