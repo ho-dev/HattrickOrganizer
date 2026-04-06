@@ -179,7 +179,6 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         setPlayer(null);
     }
 
-
     @Override
     public void refresh() {
         setPlayer(m_clPlayer);

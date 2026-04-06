@@ -49,54 +49,50 @@ public class PluginIfaUtils {
 	}
 
 	public static void updateMatchesTable() {
-		boolean retry = true;
+        int retiries = 1;
+        HODateTime time;
+        do {
+            time = HOVerwaltung.instance().getModel().getBasics().getActivationDate();
+            if (time != null && !time.isBefore(HODateTime.HT_START)) {
+                break;
+            }
+            DownloadDialog.instance();
+        } while (retiries-- > 0);
 
-		HODateTime time;
-		do {
-			time = HOVerwaltung.instance().getModel().getBasics().getActivationDate();
-
-			if (time != null && !time.isBefore(HODateTime.HT_START)) {
-				break;
-			}
-			DownloadDialog.instance();
-		} while (retry && !(retry = false));
-
-		try {
-			HOMainFrame.instance().resetInformation();
-			if (time != null) {
-				var from = HODateTime.fromDbTimestamp(DBManager.instance().getLastIFAMatchDate());
-				if (from == null) {
-					from = time;
-				}
-				var today = HODateTime.now();
-				while (from.isBefore(today)) {
-					var to = from.plus(60, ChronoUnit.DAYS).minus(1, ChronoUnit.SECONDS);
-					if (to.isAfter(today)) {
-						to = today;
-					}
-					insertMatches(from, to);
-					from = from.plus(60, ChronoUnit.DAYS);
-				}
-			}
-			HOMainFrame.instance().setInformationCompleted();
-		} catch (Exception e) {
-			HOMainFrame.instance().resetInformation();
-			HOLogger.instance().error(PluginIfaUtils.class, e);
-		}
-	}
+        try {
+            HOMainFrame.instance().resetInformation();
+            if (time != null) {
+                var from = HODateTime.fromDbTimestamp(DBManager.instance().getLastIFAMatchDate());
+                if (from == null) {
+                    from = time;
+                }
+                var today = HODateTime.now();
+                while (from.isBefore(today)) {
+                    var to = from.plus(60, ChronoUnit.DAYS).minus(1, ChronoUnit.SECONDS);
+                    if (to.isAfter(today)) {
+                        to = today;
+                    }
+                    insertMatches(from, to);
+                    from = from.plus(60, ChronoUnit.DAYS);
+                }
+            }
+            HOMainFrame.instance().setInformationCompleted();
+        } catch (Exception e) {
+            HOMainFrame.instance().resetInformation();
+            HOLogger.instance().error(PluginIfaUtils.class, e);
+        }
+    }
 
 	static BufferedImage quantizeBufferedImage(BufferedImage bufferedImage) throws IOException {
 		int[][] pixels = getPixels(bufferedImage);
 		int[] palette = Quantize.quantizeImage(pixels, 256);
 		int w = pixels.length;
 		int h = pixels[0].length;
-//		int[] pix = new int[w * h];
 
 		BufferedImage bufIma = new BufferedImage(w, h, 1);
 
 		for (int x = w; x-- > 0;) {
 			for (int y = h; y-- > 0;) {
-//				pix[(y * w + x)] = palette[pixels[x][y]];
 				bufIma.setRGB(x, y, palette[pixels[x][y]]);
 			}
 		}
@@ -127,7 +123,7 @@ public class PluginIfaUtils {
 
 	public static double getCoolness(int countryId) {
 		WorldDetailLeague league = WorldDetailsManager.instance().getWorldDetailLeagueByCountryId(countryId);
-		if (league.getActiveUsers() == 0) return 0;
+		if (league == null || league.getActiveUsers() == 0) return 0;
 		return (double) WorldDetailsManager.instance().getTotalUsers()
 				/ (double) league.getActiveUsers();
 	}
