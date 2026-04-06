@@ -50,12 +50,8 @@ public class WorldDetailsManager {
 	}
 
 	public String getNameByCountryId(int countryId) {
-		var country =  countryMap.get(countryId);
-        if ( country != null ) {
-            return country.getCountryName();
-        }
-        return "";
-	}
+        return Optional.ofNullable(countryMap.get(countryId)).map(WorldDetailLeague::getCountryName).orElse("");
+    }
 
 	public WorldDetailLeague getWorldDetailLeagueByLeagueId(Integer leagueId) {
 		return leagueMap.get(leagueId);
@@ -75,20 +71,20 @@ public class WorldDetailsManager {
 		}
 		var ret = countryMap.get(countryId);
 		if (ret == null || !ret.isComplete()) {
-			var downloaded = downloadWorldDetailLeague(countryId);
-			if (downloaded != null) {
+			var downloadedWorldDetailLeague = downloadWorldDetailLeague(countryId);
+			if (downloadedWorldDetailLeague != null) {
 				if (ret != null) {
-					downloaded.setIsStored(ret.isStored());
+                    downloadedWorldDetailLeague.setIsStored(ret.isStored());
 				}
                 else {
-                    // Downloading country Id 0 will result in Hattrick International with league id 1000,
+                    // Downloading country identifier 0 will result in Hattrick International with league id 1000,
                     // which is already stored with country id 1000. Do not create it again, but update it.
-                    var alreadyStored = leagueMap.get(downloaded.getLeagueId());
-                    downloaded.setIsStored(alreadyStored != null && alreadyStored.isStored());
+                    var alreadyStoredWorldDetailLeague = leagueMap.get(downloadedWorldDetailLeague.getLeagueId());
+                    downloadedWorldDetailLeague.setIsStored(alreadyStoredWorldDetailLeague != null && alreadyStoredWorldDetailLeague.isStored());
                 }
-				DBManager.instance().storeWorldDetailLeague(downloaded);
+				DBManager.instance().storeWorldDetailLeague(downloadedWorldDetailLeague);
 				initialize();
-				ret = downloaded;
+				ret = downloadedWorldDetailLeague;
 			}
 		}
 		return ret;

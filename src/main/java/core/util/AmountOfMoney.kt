@@ -88,9 +88,7 @@ data class AmountOfMoney(var swedishKrona: BigDecimal) {
                     if (worldDetailLeague != null) {
                         for (locale in NumberFormat.getAvailableLocales()) {
                             val ret = NumberFormat.getCurrencyInstance(locale)
-                            if (ret.currency.getSymbol()
-                                    .equals(worldDetailLeague.currencyName) || locale.country.equals(worldDetailLeague.countryCode)
-                            ) {
+                            if (ret.currency.symbol == worldDetailLeague.currencyName || locale.country == worldDetailLeague.countryCode) {
                                 this.currencyFormatter = ret
                                 return ret
                             }
