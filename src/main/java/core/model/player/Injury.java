@@ -6,6 +6,8 @@ import core.model.HOVerwaltung;
 import core.util.HODateTime;
 import core.util.HOLogger;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +19,34 @@ public class Injury {
 
     Injury(Player player) {
         if (!player.isExternallyRecruitedCoach()) {
+
+            // Append to file
+            try (FileWriter writer = new FileWriter("healing.csv", true)) { // true = append mode
+                var playerHistory = DBManager.instance().loadPlayerHistory(player.getPlayerId());
+                Player previousPlayer = null;
+                String text = "";
+                for ( var entry : playerHistory){
+                    if ( entry.getInjuryWeeks() > -1){
+                        if (previousPlayer != null && previousPlayer.getInjuryWeeks() == -1){
+                            writer.write(getCSVString(previousPlayer));
+                            writer.write(System.lineSeparator()); // Add a newline
+                        }
+                        writer.write(getCSVString(entry));
+                        writer.write(System.lineSeparator()); // Add a newline
+                    }
+                    else if (previousPlayer != null && previousPlayer.getInjuryWeeks() > -1){
+                        writer.write(getCSVString(entry));
+                        writer.write(System.lineSeparator()); // Add a newline
+                    }
+                    previousPlayer = entry;
+                }
+            } catch (IOException e) {
+                System.err.println("Error writing to file: " + e.getMessage());
+            }
+
+
+
+
             this.injuryLevel = player.getInjuryWeeks();
             if (injuryLevel == -1) {
                 whenHealthy = player.getHrfDate();
@@ -24,6 +54,31 @@ public class Injury {
                 calculateRecovery(player);
             }
         }
+    }
+
+    private String getCSVString(Player player) {
+        String separator = ";";
+        var clubData = DBManager.instance().getVerein(player.getHrfId());
+        var doctorLevel = clubData.getAerzte();
+
+        String ret = player.getPlayerId() + separator;
+        ret += player.getFullName() + separator;
+        ret += player.getInjuryWeeks() + separator;
+        ret += player.getHrfDate() + separator;
+        ret += player.getTsi() + separator;
+        ret += player.getAge() + separator;
+        ret += player.getAgeDays() + separator;
+        ret += player.getSkill(PlayerSkill.FORM) + separator;
+        ret += player.getSkill(PlayerSkill.STAMINA) + separator;
+        ret += player.getSkill(PlayerSkill.KEEPER) + separator;
+        ret += player.getSkill(PlayerSkill.DEFENDING) + separator;
+        ret += player.getSkill(PlayerSkill.PASSING) + separator;
+        ret += player.getSkill(PlayerSkill.PLAYMAKING) + separator;
+        ret += player.getSkill(PlayerSkill.WINGER) + separator;
+        ret += player.getSkill(PlayerSkill.SCORING) + separator;
+        ret += doctorLevel;
+
+        return ret.replace('.', ',');
     }
 
     /**
