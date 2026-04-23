@@ -23,12 +23,13 @@ plugins {
     id "java"
     id "groovy"
     id "org.jetbrains.kotlin.jvm" version "2.2.0"
+    id "org.jetbrains.kotlin.plugin.lombok" version "2.2.0"
     id "application"
     id "org.kordamp.gradle.markdown" version "2.2.0"
     id "com.github.breadmoirai.github-release" version "2.5.2"
     id "com.install4j.gradle" version "12.0"
     id "org.barfuin.gradle.taskinfo" version "2.2.0"
-    id "io.freefair.lombok" version "8.13"
+    id "io.freefair.lombok" version "8.13.1"
 }
 apply plugin: de.jansauer.poeditor.POEditorPlugin
 
