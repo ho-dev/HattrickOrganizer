@@ -14,8 +14,6 @@ import java.awt.*;
  */
 public class InjuryDialog extends JDialog {
 
-	private static final long serialVersionUID = 5194730460165995230L;
-
     //~ Instance fields ----------------------------------------------------------------------------
     DoctorPanel doctorPanel;
     UpdatePanel updatePanel;

@@ -11,10 +11,9 @@ import javax.swing.JPanel;
  * Panel with two horizontal elements, left and right.
  */
 class DoubleLabel extends JPanel {
-	
-	private static final long serialVersionUID = 4801107348466403035L;
+
 	private LayoutManager layout = new GridLayout(1, 2);
-	
+
     public DoubleLabel() {
         setLayout(layout);
         setOpaque(true);

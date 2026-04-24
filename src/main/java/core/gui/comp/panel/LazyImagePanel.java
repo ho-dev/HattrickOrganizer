@@ -12,7 +12,6 @@ import java.awt.event.HierarchyListener;
  */
 public abstract class LazyImagePanel extends ImagePanel {
 
-	private static final long serialVersionUID = -9087071738813776734L;
 	private boolean initialized = false;
 	private boolean needsRefresh = false;
 	private IRefreshable refreshable;
@@ -44,7 +43,7 @@ public abstract class LazyImagePanel extends ImagePanel {
 	 * the panel currently showing. If the panel is not currently showing it is
 	 * marked as needed to be refreshed and the {@link #update()} method is
 	 * called as soon as the panel gets shown.
-	 * 
+	 *
 	 * @param register
 	 *            <code>true</code> to register this panel at the
 	 *            {@link RefreshManager}. If <code>false</code> the panel is
@@ -73,7 +72,7 @@ public abstract class LazyImagePanel extends ImagePanel {
 
 	/**
 	 * Indicates if the panel was already initialized.
-	 * 
+	 *
 	 * @return <code>true</code> if the panel was already initialized,
 	 *         <code>false</code> otherwise.
 	 */
@@ -83,7 +82,7 @@ public abstract class LazyImagePanel extends ImagePanel {
 
 	/**
 	 * Indicates if the panel needs to be refreshed.
-	 * 
+	 *
 	 * @return <code>true</code> if the panel needs to be refreshed,
 	 *         <code>false</code> otherwise.
 	 */
@@ -95,7 +94,7 @@ public abstract class LazyImagePanel extends ImagePanel {
 	 * Marks the panel as needs to be refreshed. If the panel is currently
 	 * showing, the {@link #update()} method is called immediately. If not, the
 	 * {@link #update()} is called as soon as the panel is shown.
-	 * 
+	 *
 	 * @param needsRefresh
 	 */
 	public void setNeedsRefresh(boolean needsRefresh) {

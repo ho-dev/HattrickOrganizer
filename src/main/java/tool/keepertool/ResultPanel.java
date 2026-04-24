@@ -18,8 +18,6 @@ import java.text.DecimalFormat;
  */
 class ResultPanel extends JPanel {
 
-	private static final long serialVersionUID = 272383166131665396L;
-
     //~ Instance fields ----------------------------------------------------------------------------
 
 	private final DecimalFormat df = new DecimalFormat("#.00");

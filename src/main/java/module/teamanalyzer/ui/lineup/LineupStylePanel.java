@@ -2,7 +2,6 @@
 package module.teamanalyzer.ui.lineup;
 
 import java.awt.*;
-import java.io.Serial;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -14,12 +13,6 @@ import javax.swing.JPanel;
  */
 public abstract class LineupStylePanel extends JPanel {
     //~ Instance fields ----------------------------------------------------------------------------
-
-    /**
-	 * 
-	 */
-	@Serial
-    private static final long serialVersionUID = 6857727877436754893L;
 
 	/** The main formation panel */
     protected FormationPanel mainPanel;

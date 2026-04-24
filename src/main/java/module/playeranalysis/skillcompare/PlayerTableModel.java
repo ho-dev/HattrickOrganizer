@@ -16,10 +16,6 @@ import javax.swing.table.DefaultTableModel;
 
 public class PlayerTableModel extends DefaultTableModel{
 
-	/**
-	 *
-	 */
-	private static final long serialVersionUID = -5133382441969026697L;
 	private int m_anzZeilen;
 	private Player tmpPlayer;
 	private String[] columnNames;

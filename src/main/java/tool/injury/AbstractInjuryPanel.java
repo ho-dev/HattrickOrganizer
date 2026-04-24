@@ -15,9 +15,7 @@ import java.text.DecimalFormat;
  * @author draghetto
  */
 public abstract class AbstractInjuryPanel extends JPanel {
-	
-	private static final long serialVersionUID = 4820048885216403402L;
-	
+
     //~ Instance fields ----------------------------------------------------------------------------
 
 	private DecimalFormat df = new DecimalFormat("00.00");

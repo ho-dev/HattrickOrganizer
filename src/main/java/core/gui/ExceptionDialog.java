@@ -18,12 +18,11 @@ import java.awt.event.ActionListener;
 import javax.swing.*;
 
 /**
- * 
+ *
  * @author kruescho
  */
 public class ExceptionDialog extends JDialog {
 
-	private static final long serialVersionUID = 767279628764672228L;
 	private JPanel detailsPanel;
 	private JTextArea textArea;
 	private JButton detailsButton;
