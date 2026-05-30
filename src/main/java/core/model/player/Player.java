@@ -876,6 +876,13 @@ public class Player extends AbstractTable.Storable {
     }
 
     private Injury injury = null;
+    public Boolean isInvalid() {
+        if (injury == null) {
+            injury = new Injury(this);
+        }
+        return injury.getIsInvalid();
+    }
+
     public HODateTime getWhenHealthy() {
         if (injury == null) {
             injury = new Injury(this);

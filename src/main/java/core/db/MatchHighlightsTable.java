@@ -94,9 +94,4 @@ final class MatchHighlightsTable extends AbstractTable {
             HOLogger.instance().log(getClass(), "DB.deleteMatchLineupsBefore Error" + e);
         }
     }
-
-    public List<MatchEvent> getInjuries(int playerId, Timestamp from, Timestamp to) {
-        return load(MatchEvent.class, connectionManager.executePreparedQuery(
-            createSelectStatement(" WHERE SPIELERID=? AND MATCHDATE BETWEEN ? AND ? ORDER BY MATCHDATE"), playerId, from, to));
-    }
 }

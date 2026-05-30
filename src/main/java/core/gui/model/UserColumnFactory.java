@@ -995,7 +995,11 @@ public final class UserColumnFactory {
         playerAdditionalArray[32] = new PlayerColumn(906, "ls.player.when.healthy", 20) {
             @Override
             public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
-                return new ColorLabelEntry(player.getWhenHealthy(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                if ( !player.isInvalid()) {
+                    return new ColorLabelEntry(player.getWhenHealthy(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                }
+                String infinitySymbol = "\u221E";
+                return new ColorLabelEntry(infinitySymbol, ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
             }
         };
 

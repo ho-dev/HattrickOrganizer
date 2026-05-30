@@ -1319,7 +1319,7 @@ public class DBManager implements PersistenceManager {
 	 */
 // ------------------------------- FutureTraining
 	// -------------------------------------------------
-	public TrainingPerWeek getFuturTraining(Timestamp trainingDate) {
+	public TrainingPerWeek getFutureTraining(Timestamp trainingDate) {
 		return ((FutureTrainingTable) getTable(FutureTrainingTable.TABLENAME)).loadFutureTrainings(trainingDate);
 	}
 
@@ -1443,11 +1443,6 @@ public class DBManager implements PersistenceManager {
 		return ((MatchHighlightsTable) getTable(MatchHighlightsTable.TABLENAME))
 				.getMatchHighlights(iMatchType, matchId);
 	}
-
-    public List<MatchEvent> getInjuries(int playerId, HODateTime from, HODateTime to) {
-        return ((MatchHighlightsTable) getTable(MatchHighlightsTable.TABLENAME))
-            .getInjuries(playerId, from.toDbTimestamp(), to.toDbTimestamp());
-    }
 
 	/**
 	 * Get chances stat matches highlights stat [ ].
@@ -1702,7 +1697,7 @@ public class DBManager implements PersistenceManager {
 	 * Returns a list of PlayerMatchCBItems for given playerID
 	 *
 	 * @param playerID the player ID
-	 * @param officialOnly whether or not to select official game only
+	 * @param officialOnly whether to select official game only
 	 */
 	public Vector<PlayerMatchCBItem> getPlayerMatchCBItems(int playerID, boolean officialOnly) {
 		if(playerID == -1) return new Vector<>();
