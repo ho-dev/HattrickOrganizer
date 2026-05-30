@@ -998,7 +998,7 @@ public final class UserColumnFactory {
                 if ( !player.isInvalid()) {
                     return new ColorLabelEntry(player.getWhenHealthy(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                 }
-                String infinitySymbol = "\u221E";
+                String infinitySymbol = "∞";
                 return new ColorLabelEntry(infinitySymbol, ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
             }
         };
