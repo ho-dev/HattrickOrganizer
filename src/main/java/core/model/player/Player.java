@@ -876,6 +876,13 @@ public class Player extends AbstractTable.Storable {
     }
 
     private Injury injury = null;
+
+    public Injury.TypeOfEstimate getInjuryTypeOfEstimate() {
+        if (injury == null) {
+            injury = new Injury(this);
+        }
+        return injury.getTypeOfEstimate();
+    }
     public Boolean isInvalid() {
         if (injury == null) {
             injury = new Injury(this);

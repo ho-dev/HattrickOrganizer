@@ -4,7 +4,9 @@ import core.constants.player.PlayerAbility;
 import core.constants.player.PlayerSkill;
 import core.db.DBManager;
 import core.gui.comp.entry.*;
+import core.gui.comp.table.HOTableModel;
 import core.gui.comp.table.PlayerCheckBoxColumn;
+import core.gui.comp.table.UserColumn;
 import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
@@ -34,8 +36,8 @@ import static core.model.player.IMatchRoleID.aPositionBehaviours;
 import static core.model.player.MatchRoleID.isFieldMatchRoleId;
 
 /**
- * User column factory creates {@link core.gui.comp.table.UserColumn} instances used in the
- * different {@link core.gui.comp.table.HOTableModel} table models.  Each column has a name,
+ * User column factory creates {@link UserColumn} instances used in the
+ * different {@link HOTableModel} table models.  Each column has a name,
  * an ID, and may have a preferred width.
  */
 public final class UserColumnFactory {
@@ -996,7 +998,24 @@ public final class UserColumnFactory {
             @Override
             public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
                 if ( !player.isInvalid()) {
-                    return new ColorLabelEntry(player.getWhenHealthy(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                    var text = "";
+                    var sortValue = 0L;
+                    if (player.getWhenHealthy() != null) {
+                        switch (player.getInjuryTypeOfEstimate()) {
+                            case OPTIMISTIC_ESTIMATE:
+                                sortValue = 1L;
+                                text += ">= ";
+                                break;
+                            case REALISTIC_ESTIMATE: break;
+                            case PESSIMISTIC_ESTIMATE:
+                                sortValue = -1L;
+                                text += "<= ";
+                                break;
+                        };
+                        text += player.getWhenHealthy().toLocaleDateTime();
+                        sortValue += player.getWhenHealthy().getInstant().getEpochSecond();
+                    }
+                    return new ColorLabelEntry(sortValue, text, ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                 }
                 String infinitySymbol = "∞";
                 return new ColorLabelEntry(infinitySymbol, ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);

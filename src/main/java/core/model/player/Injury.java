@@ -67,8 +67,12 @@ public class Injury {
         var healthMin = 0.9 - player.getInjuryWeeks() * 0.1;
         if (calculatedHealth < healthMin) {
             calculatedHealth = healthMin;
-        } else if (calculatedHealth > healthMin + 1) {
+            typeOfEstimate = TypeOfEstimate.PESSIMISTIC_ESTIMATE;
+        } else if (calculatedHealth >= healthMin + 0.1) {
             calculatedHealth = healthMin + 0.09;
+            typeOfEstimate = TypeOfEstimate.OPTIMISTIC_ESTIMATE;
+        } else {
+            typeOfEstimate = TypeOfEstimate.REALISTIC_ESTIMATE;
         }
 
         var clubData = DBManager.instance().getVerein(player.getHrfId());
@@ -139,6 +143,10 @@ public class Injury {
         return isInvalid;
     }
 
+    public TypeOfEstimate getTypeOfEstimate() {
+        return typeOfEstimate;
+    }
+
     /**
      * Date when player gets healthy
      * Date is null if player is healthy
@@ -154,4 +162,12 @@ public class Injury {
      * True if the player is an invalid (no recovery possible)
      */
     Boolean isInvalid = false;
+
+    public enum TypeOfEstimate {
+        REALISTIC_ESTIMATE,
+        OPTIMISTIC_ESTIMATE,
+        PESSIMISTIC_ESTIMATE,
+    }
+
+    TypeOfEstimate typeOfEstimate = TypeOfEstimate.REALISTIC_ESTIMATE;
 }

@@ -20,6 +20,7 @@
 * Fix error selecting players with the arrow keys (#2379)
 * Synchronize player selection in training and player overview modules (#2379)
 * Added the columns `Career Assists` and `Assists for the Team` to the overview and details panel. (#2254)
+* New columns "Recovered on" and "Slightly injured on" (#2363)
 
 ### Team Analyzer
 
@@ -86,19 +87,19 @@
 
 * Added the missing translation for the short text in the table for `Goals for the Team`.
 
-Reports by Contributors - October 19, 2025 - April 03, 2026
+Reports by Contributors - October 19, 2025 - May 31, 2026
 
 * Jösgall 1005
 * Ioannidouefty 459
-* wsbrenk 113
+* wsbrenk 122
 * Frankieorabona 73
+* Lidegand 72
 * \_KOHb\_ 54
 * Sebastian Reddig 35
 * Walter 28
-* Lidegand 24
 * Kristaps 11
 * Stefan Schenke 5
 * Mara 3
 * Joeri Roels 1
 
-Total 1711
+Total 1868
