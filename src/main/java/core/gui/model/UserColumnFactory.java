@@ -1011,7 +1011,7 @@ public final class UserColumnFactory {
                                 sortValue = -1L;
                                 text += "<= ";
                                 break;
-                        };
+                        }
                         text += player.getWhenHealthy().toLocaleDateTime();
                         sortValue += player.getWhenHealthy().getInstant().getEpochSecond();
                     }
