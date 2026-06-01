@@ -21,7 +21,6 @@ import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -30,8 +29,6 @@ import java.util.List;
  * Bietet Übersicht über alle Player
  */
 public class SpielerAnalysePanel extends LazyImagePanel {
-	@Serial
-	private static final long serialVersionUID = 7705544952029589545L;
 	private JComboBox playerComboBox;
 	private SpielerMatchesTable m_jtSpielerMatchesTable;
 	private SpielerPositionTable m_jtSpielerPositionTable;

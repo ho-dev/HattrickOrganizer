@@ -6,7 +6,6 @@ import core.gui.model.UserColumnFactory;
 
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,8 +36,6 @@ import javax.swing.table.TableModel;
  */
 public class TableSorter extends TableMap {
 
-	@Serial
-    private static final long serialVersionUID = 1132334126127788944L;
 	private final List<Integer> sortingColumns;
     private int[] indexes;
     private boolean ascending;

@@ -20,8 +20,6 @@ import static core.util.Helper.getTranslation;
  */
 class TeamPanel extends JPanel {
 
-	private static final long serialVersionUID = 358240701613667104L;
-
 	//~ Instance fields ----------------------------------------------------------------------------
 
 	private final ColorLabelEntry leagueLabel = new ColorLabelEntry("");

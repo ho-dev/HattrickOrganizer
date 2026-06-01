@@ -11,8 +11,6 @@ import javax.swing.UIManager;
 
 public final class HOTabbedPane extends JTabbedPane {
 
-	private static final long serialVersionUID = 1L;
-
 	public HOTabbedPane() {
 		super();
 	}

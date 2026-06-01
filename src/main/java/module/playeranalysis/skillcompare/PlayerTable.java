@@ -15,7 +15,6 @@ import java.awt.*;
  */
 class PlayerTable extends JTable{
 
-	private static final long serialVersionUID = 1453037819569111763L;
 	private int anzCols1;
 
 	PlayerTable(TableSorter tm)
@@ -24,11 +23,6 @@ class PlayerTable extends JTable{
 		anzCols1 = tm.getColumnCount();
 	    TableColumn col;
 	    setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
-
-			/**
-			 *
-			 */
-			private static final long serialVersionUID = 5342806852198198162L;
 
 			@Override
 			public Component getTableCellRendererComponent(JTable table, Object value,

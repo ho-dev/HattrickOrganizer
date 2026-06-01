@@ -16,7 +16,6 @@ import java.awt.event.ItemEvent;
 final class TabOptionenPanel extends ImagePanel implements java.awt.event.ItemListener {
     //~ Instance fields ----------------------------------------------------------------------------
 
-	private static final long serialVersionUID = 1L;
 //	private JCheckBox m_jchArenasizer;
     private JCheckBox m_jchAufstellung;
     private JCheckBox m_jchInformation;
