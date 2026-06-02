@@ -13,9 +13,11 @@ import java.time.temporal.ChronoUnit;
  */
 public class Injury {
 
+    private static final int NOT_INJURED = -1;
+
     Injury(Player player) {
         if (!player.isExternallyRecruitedCoach()) {
-            if (player.getInjuryWeeks() > -1) {
+            if (player.getInjuryWeeks() > NOT_INJURED) {
                 calculateRecovery(player);
             }
         }
@@ -28,7 +30,7 @@ public class Injury {
      * @param age double: Age of the player [17..]
      * @return double
      */
-    private double calcAgeFactor(double age) {
+    private static double calcAgeFactor(double age) {
         double x2Factor = 0.000016;
         double x1Factor = -0.002;
         double x0Factor = 0.0384;
@@ -42,20 +44,19 @@ public class Injury {
      * @param doctorLevel int [0..5]
      * @return double
      */
-    private double calcMedicianFactor(int doctorLevel) {
+    private static double calcMedicianFactor(int doctorLevel) {
         double x1Factor = 0.2124;
         double x0Factor = 1;
         return (x1Factor * (double) doctorLevel + x0Factor) / (x0Factor + 5 * x1Factor);
     }
 
-    private double calculateHealthIncrease(Player player, int doctorLevel, HODateTime dateTime) {
+    private static double calculateHealthIncrease(Player player, int doctorLevel, HODateTime dateTime) {
         var regainerFactor = player.getSpecialty() == Specialty.Regainer.getValue() ? 10. / 9. : 1.0;
         return regainerFactor * calcAgeFactor(player.getAgeAtDate(dateTime).toDouble()) * calcMedicianFactor(doctorLevel);
     }
 
     private void calculateRecovery(Player player) {
-
-        var formBeforeInjured = LoadFormBeforeInjured(player);
+        var formBeforeInjured = loadFormBeforeInjured(player);
         if (formBeforeInjured > player.getForm() + 1) {
             player.setSkillValue(PlayerSkill.FORM, player.getForm() + 0.99);
         } else if (formBeforeInjured >= player.getForm()) {
@@ -103,12 +104,12 @@ public class Injury {
         }
     }
 
-    private double LoadFormBeforeInjured(Player player) {
+    private double loadFormBeforeInjured(Player player) {
         var date = player.getHrfDate();
         while (true) {
             var playerBefore = DBManager.instance().getLatestPlayerDownloadBefore(player.getPlayerId(), date.toDbTimestamp());
             if (playerBefore != null) {
-                if (playerBefore.getInjuryWeeks() == -1) {
+                if (playerBefore.getInjuryWeeks() == NOT_INJURED) {
                     return playerBefore.getSkill(PlayerSkill.FORM);
                 }
                 date = playerBefore.getHrfDate();
@@ -139,7 +140,7 @@ public class Injury {
         return whenSlightlyInjured;
     }
 
-    public Boolean getIsInvalid() {
+    public boolean getIsInvalid() {
         return isInvalid;
     }
 
@@ -151,17 +152,17 @@ public class Injury {
      * Date when player gets healthy
      * Date is null if player is healthy
      */
-    HODateTime whenHealthy;
+    private HODateTime whenHealthy;
     /**
      * Date when player gets slightly injured
      * Date is null if player is healthy or slightly injured
      */
-    HODateTime whenSlightlyInjured;
+    private HODateTime whenSlightlyInjured;
 
     /**
      * True if the player is an invalid (no recovery possible)
      */
-    Boolean isInvalid = false;
+    private boolean isInvalid = false;
 
     public enum TypeOfEstimate {
         REALISTIC_ESTIMATE,
@@ -169,5 +170,5 @@ public class Injury {
         PESSIMISTIC_ESTIMATE,
     }
 
-    TypeOfEstimate typeOfEstimate = TypeOfEstimate.REALISTIC_ESTIMATE;
+    private TypeOfEstimate typeOfEstimate = TypeOfEstimate.REALISTIC_ESTIMATE;
 }

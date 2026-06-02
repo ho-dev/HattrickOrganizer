@@ -877,31 +877,27 @@ public class Player extends AbstractTable.Storable {
 
     private Injury injury = null;
 
-    public Injury.TypeOfEstimate getInjuryTypeOfEstimate() {
+    private Injury getInjury() {
         if (injury == null) {
             injury = new Injury(this);
         }
-        return injury.getTypeOfEstimate();
+        return injury;
     }
+
+    public Injury.TypeOfEstimate getInjuryTypeOfEstimate() {
+        return getInjury().getTypeOfEstimate();
+    }
+
     public Boolean isInvalid() {
-        if (injury == null) {
-            injury = new Injury(this);
-        }
-        return injury.getIsInvalid();
+        return getInjury().getIsInvalid();
     }
 
     public HODateTime getWhenHealthy() {
-        if (injury == null) {
-            injury = new Injury(this);
-        }
-        return injury.getWhenHealthy();
+        return getInjury().getWhenHealthy();
     }
 
     public HODateTime getWhenSlightlyInjured() {
-        if (injury == null) {
-            injury = new Injury(this);
-        }
-        return injury.getWhenSlightlyInjured();
+        return getInjury().getWhenSlightlyInjured();
     }
 
     static class PlayerPositionRating {
