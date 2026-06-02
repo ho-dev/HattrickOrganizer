@@ -109,7 +109,7 @@ public class TrainingPreviewPlayers implements Refreshable {
                 nextWeekWeek++;
             }
             var hattrickDate = HODateTime.fromHTWeek(new HODateTime.HTWeek(nextWeekSaison, nextWeekWeek));
-            var nextTraining = DBManager.instance().getFuturTraining(HODateTime.toDbTimestamp(hattrickDate));
+            var nextTraining = DBManager.instance().getFutureTraining(HODateTime.toDbTimestamp(hattrickDate));
             if ( nextTraining != null) {
                 nextWeekTraining = nextTraining.getTrainingType();
             }
@@ -177,14 +177,14 @@ public class TrainingPreviewPlayers implements Refreshable {
                     }
                 }
                 // If player receive training, don't display stamina icon
-                if (fullTrain == 0 && partialTrain == 0 && !fullFuturTrain && !partialFuturTrain && 
+                if (fullTrain == 0 && partialTrain == 0 && !fullFuturTrain && !partialFuturTrain &&
                         roleId.getId() < IMatchRoleID.substGK1) {
                     bEstimedStamina = true;
                 }
             }
         }
 
-        players.put(player,new TrainingPreviewPlayer(fullTrain, partialTrain, 
+        players.put(player,new TrainingPreviewPlayer(fullTrain, partialTrain,
                 fullFuturTrain, partialFuturTrain,
                 iStamina, bEstimedStamina));
     }

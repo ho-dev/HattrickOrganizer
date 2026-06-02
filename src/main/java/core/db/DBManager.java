@@ -403,7 +403,7 @@ public class DBManager implements PersistenceManager {
 
 	public Player getFirstPlayerDownloadAfter(int playerId, Timestamp before) {
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
-				.loadPlayerAfter(playerId, before);
+				.loadPlayerNotBefore(playerId, before);
 	}
 
 	public List<Player> getLatestPlayerDownloadBefore(String playerName, Timestamp before) {
@@ -413,7 +413,7 @@ public class DBManager implements PersistenceManager {
 
 	public List<Player> getFirstPlayerDownloadAfter(String playerName, Timestamp before) {
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
-				.loadPlayersAfter(playerName, before);
+				.loadPlayersNotBefore(playerName, before);
 	}
 
 	/**
@@ -1319,7 +1319,7 @@ public class DBManager implements PersistenceManager {
 	 */
 // ------------------------------- FutureTraining
 	// -------------------------------------------------
-	public TrainingPerWeek getFuturTraining(Timestamp trainingDate) {
+	public TrainingPerWeek getFutureTraining(Timestamp trainingDate) {
 		return ((FutureTrainingTable) getTable(FutureTrainingTable.TABLENAME)).loadFutureTrainings(trainingDate);
 	}
 
@@ -1697,7 +1697,7 @@ public class DBManager implements PersistenceManager {
 	 * Returns a list of PlayerMatchCBItems for given playerID
 	 *
 	 * @param playerID the player ID
-	 * @param officialOnly whether or not to select official game only
+	 * @param officialOnly whether to select official game only
 	 */
 	public Vector<PlayerMatchCBItem> getPlayerMatchCBItems(int playerID, boolean officialOnly) {
 		if(playerID == -1) return new Vector<>();

@@ -7,6 +7,7 @@ import org.apache.commons.lang3.math.NumberUtils;
 import java.sql.Timestamp;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
 public class XtraData extends AbstractTable.Storable {
@@ -209,9 +210,7 @@ public class XtraData extends AbstractTable.Storable {
         return this.hrfId;
     }
 
-    public void setHrfId(int hrfId) {
-        this.hrfId = hrfId;
-    }
+    public void setHrfId(int hrfId) { this.hrfId = hrfId; }
 
     /**
      * Get latest daily update date before next upcoming training
@@ -220,11 +219,11 @@ public class XtraData extends AbstractTable.Storable {
      */
     public HODateTime getLatestDailyUpdateDateBeforeTraining() {
         if (dailyUpdates != null && !dailyUpdates.isEmpty()) {
-            var update = dailyUpdates.stream().filter(i->i != null && i.isBefore(m_TrainingDate)).max(HODateTime::compareTo).orElse(null);
-            if ( update == null){
+            var update = dailyUpdates.stream().filter(i -> i != null && i.isBefore(m_TrainingDate)).max(HODateTime::compareTo).orElse(null);
+            if (update == null) {
                 // Latest update of current training date is already missed, try next one
                 var nextTrainingDate = m_TrainingDate.plus(7, ChronoUnit.DAYS);
-                update = dailyUpdates.stream().filter(i->i != null && i.isBefore(nextTrainingDate)).max(HODateTime::compareTo).orElse(null);
+                update = dailyUpdates.stream().filter(i -> i != null && i.isBefore(nextTrainingDate)).max(HODateTime::compareTo).orElse(null);
             }
             return update;
         }
@@ -235,17 +234,19 @@ public class XtraData extends AbstractTable.Storable {
      * Get the list of daily updates of the next 7 days
      * @return List of HODateTime
      */
-    public ArrayList<HODateTime> getDailyUpdates() {return dailyUpdates;}
+    public List<HODateTime> getDailyUpdates() {
+        return dailyUpdates;
+    }
 
     /**
      * Get one daily update time stamp
      * @param index Index of the update list [0..4]
      * @return Timestamp
      */
-    public Timestamp getDailyUpdate(int index){
-        if (dailyUpdates!=null && index > -1 && index < dailyUpdates.size()){
+    public Timestamp getDailyUpdate(int index) {
+        if (dailyUpdates != null && index > -1 && index < dailyUpdates.size()) {
             var dailyUpdate = dailyUpdates.get(index);
-            if ( dailyUpdate != null ) return dailyUpdate.toDbTimestamp();
+            if (dailyUpdate != null) return dailyUpdate.toDbTimestamp();
         }
         return null;
     }
@@ -256,7 +257,7 @@ public class XtraData extends AbstractTable.Storable {
      * @param v HODateTime
      */
     public void setDailyUpdate(int update, HODateTime v) {
-        if ( update < 5) {
+        if (update < 5) {
             if (dailyUpdates == null) {
                 dailyUpdates = new ArrayList<>();
                 for (int i = 0; i < 5; i++) {
