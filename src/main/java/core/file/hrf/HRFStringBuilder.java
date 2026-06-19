@@ -577,10 +577,11 @@ public class HRFStringBuilder {
             appendHRFLine(youthPlayersStringBuilder, player, "ArrivalDate");
             appendHRFLine(youthPlayersStringBuilder, player, "CanBePromotedIn");
             appendHRFLine(youthPlayersStringBuilder, player, "PlayerNumber");
-            appendHRFLine(youthPlayersStringBuilder, player, "Statement");
-            appendHRFLine(youthPlayersStringBuilder, player, "OwnerNotes");
-            appendHRFLine(youthPlayersStringBuilder, player, "PlayerCategoryID");
 
+            appendKeyValue(youthPlayersStringBuilder, "Statement", serializeMultiLine(player.get("Statement")));
+            appendKeyValue(youthPlayersStringBuilder, "OwnerNotes", serializeMultiLine(player.get("OwnerNotes")));
+
+            appendHRFLine(youthPlayersStringBuilder, player, "PlayerCategoryID");
             appendHRFLine(youthPlayersStringBuilder, player, "Cards");
             appendHRFLine(youthPlayersStringBuilder, player, "InjuryLevel");
             appendHRFLine(youthPlayersStringBuilder, player, "Specialty");

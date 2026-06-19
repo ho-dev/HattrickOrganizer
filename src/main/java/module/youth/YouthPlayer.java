@@ -264,7 +264,7 @@ public class YouthPlayer extends AbstractTable.Storable {
     }
 
     public void setOwnerNotes(String ownerNotes) {
-        this.ownerNotes = ownerNotes;
+        this.ownerNotes = ownerNotes.replace("<br>", "\n");
     }
 
     public PlayerCategory getPlayerCategory() {
@@ -944,7 +944,7 @@ public class YouthPlayer extends AbstractTable.Storable {
         canBePromotedIn = getInt(properties, "canbepromotedin", 0);
         playerNumber = properties.getProperty("playernumber", "");
         statement = properties.getProperty("statement", "");
-        ownerNotes = properties.getProperty("ownernotes", "");
+        ownerNotes = properties.getProperty("ownernotes", "").replace("<br>", "\n");
         playerCategory = PlayerCategory.fromId(getInt(properties, "playercategoryid", 0));
         cards = getInt(properties, "cards", 0);
         injuryLevel = getInt(properties, "injurylevel", 0);

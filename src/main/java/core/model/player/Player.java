@@ -457,7 +457,7 @@ public class Player extends AbstractTable.Storable {
 
         playerCategory = PlayerCategory.fromId(properties.getInt("playercategoryid", 0));
         playerStatement = properties.getProperty("statement", "");
-        ownerNotes = properties.getProperty("ownernotes", "");
+        ownerNotes = properties.getProperty("ownernotes", "").replace("<br>", "\n");
 
         //Subskills calculation
         //Called when saving the HRF because the necessary data is not available here
@@ -2214,7 +2214,7 @@ public class Player extends AbstractTable.Storable {
     }
 
     public void setOwnerNotes(String ownerNotes) {
-        this.ownerNotes = ownerNotes;
+        this.ownerNotes = ownerNotes.replace("<br>", "\n");
     }
 
     public Integer getLastMatchPosition() {
