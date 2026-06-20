@@ -1,11 +1,10 @@
 package core.util;
 
-import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
+import org.apache.commons.text.StringEscapeUtils;
 
 /**
  * Utility class for various String related operations.
- * 
  */
 public class StringUtils {
 
@@ -17,7 +16,6 @@ public class StringUtils {
 	 * Checks if a <code>String</code> contains digits only. This means that for
 	 * every character x in the given string <code>Character.isDigit(x)</code>
 	 * has to be <code>true</code>.
-	 * 
 	 * @param str
 	 *            the string to check.
 	 * @return <code>true</code> if the given string contains digits only,
@@ -41,7 +39,6 @@ public class StringUtils {
 	 * Checks if a given <code>String</code> is empty. This method is
 	 * <code>null</code>-safe which means that it will return <code>true</code>
 	 * if the given parameter is <code>null</code>.
-	 * 
 	 * @param str
 	 *            the string to check.
 	 * @return <code>true</code> if the given string is empty or
@@ -87,4 +84,9 @@ public class StringUtils {
 		return capitalizeWord.toString().trim();
 	}
 
+    public static String stringToHtml(String plainText) {
+        if ( plainText == null || plainText.isEmpty() ) {return null;}
+        String htmlEscaped = StringEscapeUtils.escapeHtml4(plainText);
+        return "<html>" + htmlEscaped.replaceAll("\\R", "<br>") + "</html>";
+    }
 }

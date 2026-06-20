@@ -32,6 +32,7 @@ import java.util.Optional;
 
 import static core.model.player.IMatchRoleID.aPositionBehaviours;
 import static core.model.player.MatchRoleID.isFieldMatchRoleId;
+import static core.util.StringUtils.stringToHtml;
 
 /**
  * User column factory creates {@link core.gui.comp.table.UserColumn} instances used in the
@@ -806,7 +807,7 @@ public final class UserColumnFactory {
             @Override
             public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
                 var ret = new ColorLabelEntry(player.getPlayerStatement(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
-                ret.setToolTipText("<html>"+player.getPlayerStatement().replace("\n", "<br>")+"</html>");
+                ret.setToolTipText(stringToHtml(player.getPlayerStatement()));
                 return ret;
             }
         };
@@ -814,7 +815,7 @@ public final class UserColumnFactory {
             @Override
             public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
                 var ret = new ColorLabelEntry(player.getOwnerNotes(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
-                ret.setToolTipText("<html>"+player.getOwnerNotes().replace("\n", "<br>")+"</html>");
+                ret.setToolTipText(stringToHtml(player.getOwnerNotes()));
                 return ret;
             }
         };

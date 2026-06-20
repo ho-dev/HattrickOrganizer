@@ -19,6 +19,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static core.util.StringUtils.stringToHtml;
 import static module.youth.YouthSkillInfo.getSkillName;
 
 
@@ -158,7 +159,7 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
             @Override
             public IHOTableCellEntry getTableEntry(YouthPlayer player) {
                 var ret =  new ColorLabelEntry(player.getOwnerNotes(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
-                ret.setToolTipText("<html>"+player.getOwnerNotes().replace("\n", "<br>")+"</html>");
+                ret.setToolTipText(stringToHtml(player.getOwnerNotes()));
                 return ret;
             }
         });
@@ -166,7 +167,7 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
             @Override
             public IHOTableCellEntry getTableEntry(YouthPlayer player) {
                 var ret =  new ColorLabelEntry(player.getStatement(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
-                ret.setToolTipText("<html>"+player.getStatement().replace("\n", "<br>")+"</html>");
+                ret.setToolTipText(stringToHtml(player.getStatement()));
                 return ret;
             }
         });
