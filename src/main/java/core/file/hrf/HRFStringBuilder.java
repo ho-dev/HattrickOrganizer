@@ -554,9 +554,16 @@ public class HRFStringBuilder {
         appendKeyValue(s, key, property);
     }
 
-    private String serializeMultiLine(String value){
+    public static String serializeMultiLine(String value){
         if ( value != null ){
             return value.replaceAll("\\R", "<br>");
+        }
+        return "";
+    }
+
+    public static String deserializeMultiLine(String value) {
+        if (value != null) {
+            return value.replace("<br>", "\n");
         }
         return "";
     }

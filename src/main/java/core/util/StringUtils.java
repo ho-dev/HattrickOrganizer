@@ -85,7 +85,9 @@ public class StringUtils {
 	}
 
     public static String stringToHtml(String plainText) {
-        if ( plainText == null || plainText.isEmpty() ) {return null;}
+        if (isEmpty(plainText)) {
+            return null;
+        }
         String htmlEscaped = StringEscapeUtils.escapeHtml4(plainText);
         return "<html>" + htmlEscaped.replaceAll("\\R", "<br>") + "</html>";
     }

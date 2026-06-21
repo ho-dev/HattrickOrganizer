@@ -3,6 +3,7 @@ package module.youth;
 import core.constants.player.PlayerSkill;
 import core.db.AbstractTable;
 import core.db.DBManager;
+import core.file.hrf.HRFStringBuilder;
 import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
 import core.model.player.CommentType;
@@ -264,7 +265,7 @@ public class YouthPlayer extends AbstractTable.Storable {
     }
 
     public void setOwnerNotes(String ownerNotes) {
-        this.ownerNotes = ownerNotes.replace("<br>", "\n");
+        this.ownerNotes = HRFStringBuilder.deserializeMultiLine(ownerNotes);
     }
 
     public PlayerCategory getPlayerCategory() {
@@ -944,7 +945,7 @@ public class YouthPlayer extends AbstractTable.Storable {
         canBePromotedIn = getInt(properties, "canbepromotedin", 0);
         playerNumber = properties.getProperty("playernumber", "");
         statement = properties.getProperty("statement", "");
-        ownerNotes = properties.getProperty("ownernotes", "").replace("<br>", "\n");
+        ownerNotes = HRFStringBuilder.deserializeMultiLine(properties.getProperty("ownernotes", ""));
         playerCategory = PlayerCategory.fromId(getInt(properties, "playercategoryid", 0));
         cards = getInt(properties, "cards", 0);
         injuryLevel = getInt(properties, "injurylevel", 0);
