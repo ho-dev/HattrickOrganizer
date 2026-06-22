@@ -17,6 +17,7 @@
 ### Player Overview
 
 * Fix error storing owner notes with length exceeding the column length (#2358)
+* Fix line feed handling in owner notes. Tooltip shows notes as multiline (#2455)
 * Fix error selecting players with the arrow keys (#2379)
 * Synchronize player selection in training and player overview modules (#2379)
 * Added the columns `Career Assists` and `Assists for the Team` to the overview and details panel. (#2254)
@@ -50,6 +51,7 @@
 ### Youth
 
 * Added support of all 13 **Player Categories** (#2418)
+* Fix line feed handling in owner notes. Tooltip shows notes as multiline (#2455)
 
 ### Special Events
 
@@ -86,7 +88,7 @@
 
 * Added the missing translation for the short text in the table for `Goals for the Team`.
 
-Reports by Contributors - October 19, 2025 - April 03, 2026
+Reports by Contributors - October 19, 2025 - June 19, 2026
 
 * Jösgall 1005
 * Ioannidouefty 459

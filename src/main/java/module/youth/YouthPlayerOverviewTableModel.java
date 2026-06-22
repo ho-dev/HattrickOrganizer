@@ -19,6 +19,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+import static core.util.StringUtils.stringToHtml;
 import static module.youth.YouthSkillInfo.getSkillName;
 
 
@@ -157,13 +158,17 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
         tmp.add(new YouthPlayerColumn("ls.player.ownernotes") {
             @Override
             public IHOTableCellEntry getTableEntry(YouthPlayer player) {
-                return new ColorLabelEntry(player.getOwnerNotes(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
+                var ret =  new ColorLabelEntry(player.getOwnerNotes(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                ret.setToolTipText(stringToHtml(player.getOwnerNotes()));
+                return ret;
             }
         });
         tmp.add(new YouthPlayerColumn("ls.player.statement") {
             @Override
             public IHOTableCellEntry getTableEntry(YouthPlayer player) {
-                return new ColorLabelEntry(player.getStatement(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
+                var ret =  new ColorLabelEntry(player.getStatement(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                ret.setToolTipText(stringToHtml(player.getStatement()));
+                return ret;
             }
         });
         tmp.add(new YouthPlayerColumn("ls.player.injurystatus") {

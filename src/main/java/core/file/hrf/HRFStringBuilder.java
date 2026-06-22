@@ -554,9 +554,16 @@ public class HRFStringBuilder {
         appendKeyValue(s, key, property);
     }
 
-    private String serializeMultiLine(String value){
+    public static String serializeMultiLine(String value){
         if ( value != null ){
             return value.replaceAll("\\R", "<br>");
+        }
+        return "";
+    }
+
+    public static String deserializeMultiLine(String value) {
+        if (value != null) {
+            return value.replace("<br>", "\n");
         }
         return "";
     }
@@ -577,10 +584,11 @@ public class HRFStringBuilder {
             appendHRFLine(youthPlayersStringBuilder, player, "ArrivalDate");
             appendHRFLine(youthPlayersStringBuilder, player, "CanBePromotedIn");
             appendHRFLine(youthPlayersStringBuilder, player, "PlayerNumber");
-            appendHRFLine(youthPlayersStringBuilder, player, "Statement");
-            appendHRFLine(youthPlayersStringBuilder, player, "OwnerNotes");
-            appendHRFLine(youthPlayersStringBuilder, player, "PlayerCategoryID");
 
+            appendKeyValue(youthPlayersStringBuilder, "Statement", serializeMultiLine(player.get("Statement")));
+            appendKeyValue(youthPlayersStringBuilder, "OwnerNotes", serializeMultiLine(player.get("OwnerNotes")));
+
+            appendHRFLine(youthPlayersStringBuilder, player, "PlayerCategoryID");
             appendHRFLine(youthPlayersStringBuilder, player, "Cards");
             appendHRFLine(youthPlayersStringBuilder, player, "InjuryLevel");
             appendHRFLine(youthPlayersStringBuilder, player, "Specialty");

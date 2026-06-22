@@ -32,6 +32,7 @@ import java.util.Optional;
 
 import static core.model.player.IMatchRoleID.aPositionBehaviours;
 import static core.model.player.MatchRoleID.isFieldMatchRoleId;
+import static core.util.StringUtils.stringToHtml;
 
 /**
  * User column factory creates {@link core.gui.comp.table.UserColumn} instances used in the
@@ -676,6 +677,7 @@ public final class UserColumnFactory {
                         new ColorLabelEntry(diff, ColorLabelEntry.BG_STANDARD));
             }
         };
+
         playerAdditionalArray[8] = new PlayerColumn(430, "ls.player.tsi", 0) {
             @Override
             public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
@@ -804,16 +806,19 @@ public final class UserColumnFactory {
         playerAdditionalArray[14] = new PlayerColumn(439, "ls.player.statement", "ls.player.statement", 25) {
             @Override
             public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
-                return new ColorLabelEntry(player.getPlayerStatement(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                var ret = new ColorLabelEntry(player.getPlayerStatement(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                ret.setToolTipText(stringToHtml(player.getPlayerStatement()));
+                return ret;
             }
         };
         playerAdditionalArray[15] = new PlayerColumn(441, "ls.player.ownernotes", "ls.player.ownernotes", 25) {
             @Override
             public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
-                return new ColorLabelEntry(player.getOwnerNotes(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                var ret = new ColorLabelEntry(player.getOwnerNotes(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                ret.setToolTipText(stringToHtml(player.getOwnerNotes()));
+                return ret;
             }
         };
-
 
         // Last match rating end of game column.
         playerAdditionalArray[16] = new PlayerColumn(891, "ls.player.ratingend", 60) {
@@ -821,16 +826,12 @@ public final class UserColumnFactory {
             public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
                 var lastMatchRatingEndOfGame = player.getLastMatchRatingEndOfGame();
                 if (lastMatchRatingEndOfGame != null && lastMatchRatingEndOfGame > 0) {
-//                    MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(player.getLastMatchId(), null);
-//                    if (info == null) {
-//                        return new RatingTableEntry((float) player.getLastMatchRating(), true);
-//                    } else {
                     return new RatingTableEntry(lastMatchRatingEndOfGame, true);
-//                    }
                 }
                 return new RatingTableEntry();
             }
         };
+
         //last match minutes played
         playerAdditionalArray[17] = new PlayerColumn(DURATION, "ls.player.lastminutes", 50) {
             @Override
