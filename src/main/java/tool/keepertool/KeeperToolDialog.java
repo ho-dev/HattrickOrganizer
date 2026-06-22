@@ -17,9 +17,7 @@ import java.awt.event.ActionListener;
  * @author draghetto
  */
 public class KeeperToolDialog extends JDialog implements ActionListener {
-	
-	private static final long serialVersionUID = -7475169046243634752L;
-	
+
     //~ Instance fields ----------------------------------------------------------------------------
 
 	private JPanel cards = new JPanel(new CardLayout());
@@ -135,15 +133,15 @@ public class KeeperToolDialog extends JDialog implements ActionListener {
 
         getContentPane().add(main, BorderLayout.CENTER);
     }
-    
+
 	@Override
-	public void setSize(int width, int height) {  
-	   super.setSize(width, height);  
-		    
-	   Dimension screenSize = getParent().getSize();  
-	   int x = (screenSize.width - getWidth()) / 2;  
-	   int y = (screenSize.height - getHeight()) / 2;  
-	    
-	   setLocation(getParent().getX()+x, getParent().getY()+y);     
+	public void setSize(int width, int height) {
+	   super.setSize(width, height);
+
+	   Dimension screenSize = getParent().getSize();
+	   int x = (screenSize.width - getWidth()) / 2;
+	   int y = (screenSize.height - getHeight()) / 2;
+
+	   setLocation(getParent().getX()+x, getParent().getY()+y);
 	}
 }

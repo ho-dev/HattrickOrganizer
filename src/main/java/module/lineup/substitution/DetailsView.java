@@ -12,15 +12,12 @@ import module.lineup.substitution.model.Substitution;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.Serial;
 import java.text.MessageFormat;
 
 public class DetailsView extends JPanel {
 
 	private static final Dimension COMPONENTENSIZE = new Dimension(Helper.calcCellWidth(300),
 			Helper.calcCellWidth(18));
-	@Serial
-	private static final long serialVersionUID = -8046083206070885556L;
 	private Substitution substitution;
 	private JLabel orderTypeEntry;
 	private JLabel firstPlayerEntry;

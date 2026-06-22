@@ -19,7 +19,6 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,9 +29,6 @@ import java.util.List;
  */
 public class SpielerTrainingsVergleichsPanel extends ImagePanel
     implements Refreshable, ListSelectionListener, ActionListener {
-
-	@Serial
-    private static final long serialVersionUID = 7090555271664890027L;
 
 	//~ Static fields/initializers -----------------------------------------------------------------
 

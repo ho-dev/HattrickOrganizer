@@ -2,7 +2,6 @@
 package module.teamanalyzer.ui.lineup;
 
 import java.awt.*;
-import java.io.Serial;
 
 
 /**
@@ -11,9 +10,6 @@ import java.io.Serial;
  * @author <a href=mailto:draghetto@users.sourceforge.net>Massimiliano Amato</a>
  */
 public class StandardLineupPanel extends LineupStylePanel {
-
-	@Serial
-    private static final long serialVersionUID = -4628631085016401394L;
 
 	/**
      * Constructor

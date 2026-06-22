@@ -14,7 +14,6 @@ import javax.swing.JTextArea;
 
 public class MessageBox extends JPanel {
 
-	private static final long serialVersionUID = -1157019524889199682L;
 	private JLabel iconLabel = new JLabel();
 	private JTextArea commentsTextArea;
 

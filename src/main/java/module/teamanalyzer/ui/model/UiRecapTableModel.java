@@ -17,11 +17,6 @@ import javax.swing.ImageIcon;
 public class UiRecapTableModel extends BaseTableModel {
     //~ Constructors -------------------------------------------------------------------------------
 
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = -5858488972549437663L;
-
 	/**
      * Creates a new UiRecapTableModel object.
      *

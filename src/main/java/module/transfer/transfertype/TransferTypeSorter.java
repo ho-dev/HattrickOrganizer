@@ -17,10 +17,6 @@ import javax.swing.table.TableModel;
 class TransferTypeSorter extends DefaultTableSorter {
     //~ Constructors -------------------------------------------------------------------------------
 
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = -4831786347484081536L;
 
 	/**
      * Create a TransferTypeSorter

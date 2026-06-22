@@ -13,10 +13,6 @@ import javax.swing.table.TableCellRenderer;
  */
 public class HrfTableCellRenderer extends JLabel implements TableCellRenderer
 {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -6661171826323106858L;
 	private JLabel label;
 	private Color grau = new Color (240,240,240);
 	private Color dunkelgrau = new Color (200,200,200);
@@ -31,7 +27,7 @@ public class HrfTableCellRenderer extends JLabel implements TableCellRenderer
 	private Color gelb = new Color(254,213,90);
 	private Color schwarz = new Color(0,0,0);
 	private Color weiss = new Color(254,254,254);
-	
+
 	public Component getTableCellRendererComponent(JTable table,
 			Object value,
 			boolean isSelected,
@@ -141,16 +137,16 @@ public class HrfTableCellRenderer extends JLabel implements TableCellRenderer
 			{
 				label.setForeground(table.getForeground());
 			}
-			
+
 		}
 		else
 		{
 			label.setIcon((ImageIcon)value);
 		}
-		
+
 		label.setHorizontalAlignment(CENTER);
 		label.setOpaque(true);
-		
+
 		return label;
 	}
 }

@@ -134,11 +134,6 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
        either C or R.
      */
 
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = -3520320698489212868L;
-
 	/** Default row/column size */
     protected static final double[][] defaultSize = {
             {  },
@@ -734,7 +729,7 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
         // Make sure position is valid
         if ((i < 0) || (i > crSpec[z].length)) {
             throw new IllegalArgumentException("Parameter i is invalid.  i = "
-                + i + ".  Valid range is [0, " //$NON-NLS-1$ 
+                + i + ".  Valid range is [0, " //$NON-NLS-1$
                 + crSpec[z].length + "]."); //$NON-NLS-1$
         }
 
@@ -1187,7 +1182,7 @@ public class TableLayout implements LayoutManager2, Serializable, TableLayoutCon
                 // or partially contained within this cr
                 ListIterator<Entry> iterator = list.listIterator(0);
 
-nextComponent: 
+nextComponent:
                 while (iterator.hasNext()) {
                     Entry entry = iterator.next();
 
@@ -1685,7 +1680,7 @@ nextComponent:
         // Make sure position is valid
         if ((i < 0) || (i >= crSpec[z].length)) {
             throw new IllegalArgumentException("Parameter i is invalid.  i = "
-                + i + ".  Valid range is [0, " //$NON-NLS-1$ 
+                + i + ".  Valid range is [0, " //$NON-NLS-1$
                 + (crSpec[z].length - 1) + "]."); //$NON-NLS-1$
         }
 

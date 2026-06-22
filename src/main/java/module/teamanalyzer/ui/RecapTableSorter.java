@@ -32,7 +32,6 @@ public class RecapTableSorter extends AbstractTableSorter {
 		}
 	}
 
-	private static final long serialVersionUID = -3606200720032237171L;
 	private List<String> skills;
 
     //~ Constructors -------------------------------------------------------------------------------
