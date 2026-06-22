@@ -7,6 +7,8 @@ import core.db.DBManager;
 import core.db.user.UserManager;
 import core.file.xml.XMLAvatarsParser;
 import core.gui.HOMainFrame;
+import core.gui.image.CachedUrlImageProvider;
+import core.gui.image.ImageProvider;
 import core.gui.theme.dark.DarculaDarkTheme;
 import core.gui.theme.dark.SolarizedDarkTheme;
 import core.gui.theme.gnome.GnomeTheme;
@@ -22,8 +24,11 @@ import core.util.HOLogger;
 import core.util.OSUtils;
 import tool.updater.UpdateHelper;
 
-import java.awt.Color;
-import java.awt.event.*;
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import javax.swing.text.DefaultEditorKit;
+import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -31,11 +36,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import javax.swing.text.*;
 
 /**
  * Manages all the HO Themes.
@@ -45,11 +48,10 @@ public final class ThemeManager {
 	/** Name of the default theme. */
 	public static final String DEFAULT_THEME_NAME = NimbusTheme.THEME_NAME;
 
-	private static final Path tempImgPath = Paths.get(UserManager.instance().getDbParentFolder() , "img");
-	private static final Path teamLogoPath = tempImgPath.resolve("clubLogos");
-	private static final File teamLogoDir = new File(String.valueOf(teamLogoPath));
-	private static final Path playerAvatarPath = tempImgPath.resolve("playersAvatar");
-	private static final File playerAvatarDir = new File(String.valueOf(playerAvatarPath));
+    private static final Path tempImgPath = Paths.get(UserManager.instance().getDbParentFolder(), "img");
+    private static final Path stadiumImagesPath = tempImgPath.resolve("stadiumImages");
+    private static final Path teamLogoPath = tempImgPath.resolve("clubLogos");
+    private static final Path playerAvatarPath = tempImgPath.resolve("playersAvatar");
 	private static final Map<String, Theme> themes = new LinkedHashMap<>();
 	private static final ThemeManager MANAGER = new ThemeManager();
 
@@ -76,21 +78,9 @@ public final class ThemeManager {
 			themes.put(GnomeTheme.THEME_NAME, new GnomeTheme());
 		}
 
-		if (!teamLogoDir.exists()) {
-			try {
-				Files.createDirectories(teamLogoPath);
-			} catch (IOException e) {
-				HOLogger.instance().log(this.getClass(),"Failed to create directory for team logos: " + e.getMessage());
-			}
-		}
-
-		if (!playerAvatarDir.exists()) {
-			try {
-				Files.createDirectories(playerAvatarPath);
-			} catch (IOException e) {
-				HOLogger.instance().log(this.getClass(),"Failed to create directory for player Avatars: " + e.getMessage());
-			}
-		}
+        createNonExistingDir(stadiumImagesPath);
+        createNonExistingDir(teamLogoPath);
+        createNonExistingDir(playerAvatarPath);
 
 		IconLoader.updateThemeStatus(new Object());
 
@@ -98,6 +88,20 @@ public final class ThemeManager {
 		LogUtil.getLogger(IconLoader.class).setLevel(Level.SEVERE);
 		Logger.getLogger("com.github.weisj.jsvg.parser.SVGLoader").setLevel(Level.SEVERE);
 	}
+
+    private static void createNonExistingDir(Path path) {
+        try {
+            Files.createDirectories(path);
+
+            if (!Files.isDirectory(path)) {
+                HOLogger.instance().error(ThemeManager.class,
+                    "Path exists but is not a directory: %s".formatted(path));
+            }
+        } catch (IOException e) {
+            HOLogger.instance().log(ThemeManager.class,
+                "Failed to create directory: %s: %s".formatted(path, e.getMessage()));
+        }
+    }
 
 	/**
 	 * Returns the list of registered themes.
@@ -426,4 +430,8 @@ public final class ThemeManager {
 		ThemeManager.instance().generateAllPlayerAvatar(playerAvatar, 1);
 		HOMainFrame.instance().resetInformation();
 	}
+
+    public static ImageProvider createStadiumImageProvider(String primaryUrl, String fallbackUrl) {
+        return new CachedUrlImageProvider(stadiumImagesPath, primaryUrl, fallbackUrl);
+    }
 }

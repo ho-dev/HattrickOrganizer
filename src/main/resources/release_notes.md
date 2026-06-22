@@ -78,6 +78,7 @@
 
 * Removed the superfluous space for the `Spectators` in braces at the end.
 * Added the image of the stadium and made the view better arranged. (#2140)
+* Added a local cache with TTL for stadium images and manual reload by clicking on the image. (#2440)
 
 ### Misc
 
