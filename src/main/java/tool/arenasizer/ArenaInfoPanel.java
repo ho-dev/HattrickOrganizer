@@ -1,6 +1,7 @@
 package tool.arenasizer;
 
-import core.gui.UrlImageLabel;
+import core.gui.AsyncImageLabel;
+import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
 import core.util.HODateTime;
@@ -19,7 +20,7 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 public class ArenaInfoPanel extends JPanel {
 
     private final JPanel stadiumCard;
-    private final UrlImageLabel imageLoader;
+    private final AsyncImageLabel imageLabel;
 	private final CapacityPanel currentCapacityPanel;
     private final JPanel renovationCard;
 	private final CapacityPanel expandedCapacityPanel;
@@ -33,16 +34,16 @@ public class ArenaInfoPanel extends JPanel {
         stadiumCard = new JPanel();
         stadiumCard.setLayout(new BoxLayout(stadiumCard, BoxLayout.Y_AXIS));
 
-        imageLoader = new UrlImageLabel();
-        imageLoader.setPreferredSize(new Dimension(220, 220));
-        imageLoader.setMinimumSize(new Dimension(220, 220));
-        imageLoader.setMaximumSize(new Dimension(220, 220));
-        imageLoader.setAlignmentX(Component.LEFT_ALIGNMENT);
+        imageLabel = new AsyncImageLabel();
+        imageLabel.setPreferredSize(new Dimension(220, 220));
+        imageLabel.setMinimumSize(new Dimension(220, 220));
+        imageLabel.setMaximumSize(new Dimension(220, 220));
+        imageLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         currentCapacityPanel = new CapacityPanel();
         currentCapacityPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        stadiumCard.add(imageLoader);
+        stadiumCard.add(imageLabel);
         stadiumCard.add(Box.createVerticalStrut(8));
         stadiumCard.add(currentCapacityPanel);
 
@@ -84,7 +85,7 @@ public class ArenaInfoPanel extends JPanel {
             BorderFactory.createTitledBorder(stadium.getStadiumName()),
             BorderFactory.createEmptyBorder(8, 8, 8, 8)
         ));
-        imageLoader.loadWithFallback(stadium.getArenaImage(), stadium.getArenaFallbackImage());
+        imageLabel.load(ThemeManager.createStadiumImageProvider(stadium.getArenaImage(), stadium.getArenaFallbackImage()));
 
 		final String notAvailableString = TranslationFacility.tr("ls.general_label.not_available_abbreviation");
 		final var numberformat = Helper.getNumberFormat( 0);

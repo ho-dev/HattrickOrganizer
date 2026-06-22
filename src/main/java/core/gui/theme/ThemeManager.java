@@ -7,6 +7,8 @@ import core.db.DBManager;
 import core.db.user.UserManager;
 import core.file.xml.XMLAvatarsParser;
 import core.gui.HOMainFrame;
+import core.gui.image.CachedUrlImageProvider;
+import core.gui.image.ImageProvider;
 import core.gui.theme.dark.DarculaDarkTheme;
 import core.gui.theme.dark.SolarizedDarkTheme;
 import core.gui.theme.gnome.GnomeTheme;
@@ -22,8 +24,11 @@ import core.util.HOLogger;
 import core.util.OSUtils;
 import tool.updater.UpdateHelper;
 
-import java.awt.Color;
-import java.awt.event.*;
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import javax.swing.text.DefaultEditorKit;
+import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -31,11 +36,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import javax.swing.text.*;
 
 /**
  * Manages all the HO Themes.
@@ -43,61 +46,62 @@ import javax.swing.text.*;
 public final class ThemeManager {
 
 	/** Name of the default theme. */
-	public static final String DEFAULT_THEME_NAME = NimbusTheme.THEME_NAME;
+    public static final String DEFAULT_THEME_NAME = NimbusTheme.THEME_NAME;
 
-	private static final Path tempImgPath = Paths.get(UserManager.instance().getDbParentFolder() , "img");
-	private static final Path teamLogoPath = tempImgPath.resolve("clubLogos");
-	private static final File teamLogoDir = new File(String.valueOf(teamLogoPath));
-	private static final Path playerAvatarPath = tempImgPath.resolve("playersAvatar");
-	private static final File playerAvatarDir = new File(String.valueOf(playerAvatarPath));
-	private static final Map<String, Theme> themes = new LinkedHashMap<>();
-	private static final ThemeManager MANAGER = new ThemeManager();
+    private static final Path tempImgPath = Paths.get(UserManager.instance().getDbParentFolder(), "img");
+    private static final Path stadiumImagesPath = tempImgPath.resolve("stadiumImages");
+    private static final Path teamLogoPath = tempImgPath.resolve("clubLogos");
+    private static final Path playerAvatarPath = tempImgPath.resolve("playersAvatar");
+    private static final Map<String, Theme> themes = new LinkedHashMap<>();
+    private static final ThemeManager MANAGER = new ThemeManager();
 
-	HOClassicSchema classicSchema = new HOClassicSchema();
-
-
-	private ThemeManager(){
-		initialize();
-	}
-
-	public static ThemeManager instance(){
-		return MANAGER;
-	}
+    HOClassicSchema classicSchema = new HOClassicSchema();
 
 
-	private void initialize() {
+    private ThemeManager() {
+        initialize();
+    }
 
-		themes.put(NimbusTheme.THEME_NAME, new NimbusTheme());
-		themes.put(DarculaDarkTheme.THEME_NAME, new DarculaDarkTheme());
-		themes.put(SolarizedDarkTheme.THEME_NAME, new SolarizedDarkTheme());
-		themes.put(SolarizedLightTheme.THEME_NAME, new SolarizedLightTheme());
+    public static ThemeManager instance() {
+        return MANAGER;
+    }
 
-		if (OSUtils.isLinux()) {
-			themes.put(GnomeTheme.THEME_NAME, new GnomeTheme());
-		}
 
-		if (!teamLogoDir.exists()) {
-			try {
-				Files.createDirectories(teamLogoPath);
-			} catch (IOException e) {
-				HOLogger.instance().log(this.getClass(),"Failed to create directory for team logos: " + e.getMessage());
-			}
-		}
+    private void initialize() {
 
-		if (!playerAvatarDir.exists()) {
-			try {
-				Files.createDirectories(playerAvatarPath);
-			} catch (IOException e) {
-				HOLogger.instance().log(this.getClass(),"Failed to create directory for player Avatars: " + e.getMessage());
-			}
-		}
+        themes.put(NimbusTheme.THEME_NAME, new NimbusTheme());
+        themes.put(DarculaDarkTheme.THEME_NAME, new DarculaDarkTheme());
+        themes.put(SolarizedDarkTheme.THEME_NAME, new SolarizedDarkTheme());
+        themes.put(SolarizedLightTheme.THEME_NAME, new SolarizedLightTheme());
 
-		IconLoader.updateThemeStatus(new Object());
+        if (OSUtils.isLinux()) {
+            themes.put(GnomeTheme.THEME_NAME, new GnomeTheme());
+        }
 
-		// TODO: Workaround some warnings which are issued incorrectly. To silence them you can call
-		LogUtil.getLogger(IconLoader.class).setLevel(Level.SEVERE);
-		Logger.getLogger("com.github.weisj.jsvg.parser.SVGLoader").setLevel(Level.SEVERE);
-	}
+        createNonExistingDir(stadiumImagesPath);
+        createNonExistingDir(teamLogoPath);
+        createNonExistingDir(playerAvatarPath);
+
+        IconLoader.updateThemeStatus(new Object());
+
+        // TODO: Workaround some warnings which are issued incorrectly. To silence them you can call
+        LogUtil.getLogger(IconLoader.class).setLevel(Level.SEVERE);
+        Logger.getLogger("com.github.weisj.jsvg.parser.SVGLoader").setLevel(Level.SEVERE);
+    }
+
+    private static void createNonExistingDir(Path path) {
+        try {
+            Files.createDirectories(path);
+
+            if (!Files.isDirectory(path)) {
+                HOLogger.instance().error(ThemeManager.class,
+                    "Path exists but is not a directory: %s".formatted(path));
+            }
+        } catch (IOException e) {
+            HOLogger.instance().log(ThemeManager.class,
+                "Failed to create directory: %s: %s".formatted(path, e.getMessage()));
+        }
+    }
 
 	/**
 	 * Returns the list of registered themes.
@@ -426,4 +430,8 @@ public final class ThemeManager {
 		ThemeManager.instance().generateAllPlayerAvatar(playerAvatar, 1);
 		HOMainFrame.instance().resetInformation();
 	}
+
+    public static ImageProvider createStadiumImageProvider(String primaryUrl, String fallbackUrl) {
+        return new CachedUrlImageProvider(stadiumImagesPath, primaryUrl, fallbackUrl);
+    }
 }
