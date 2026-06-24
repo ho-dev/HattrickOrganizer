@@ -78,6 +78,7 @@
 
 * Removed the superfluous space for the `Spectators` in braces at the end.
 * Added the image of the stadium and made the view better arranged. (#2140)
+* Added a local cache for stadium images to avoid downloading the same image again on each program start. (#2440)
 
 ### Misc
 
