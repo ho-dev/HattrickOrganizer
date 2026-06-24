@@ -7,6 +7,7 @@ import org.apache.commons.lang3.Strings;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -75,9 +76,12 @@ public class CachedUrlImageProvider implements ImageProvider {
             try (InputStream in = con.getInputStream()) {
                 return Optional.ofNullable(ImageIO.read(in));
             }
+        } catch (FileNotFoundException e) {
+            // Expected if the club has no custom stadium image.
+            return Optional.empty();
         } catch (IOException e) {
             HOLogger.instance().debug(CachedUrlImageProvider.class,
-                "Image could not be loaded from URL '%s': %s".formatted(urlString, e.getMessage()));
+                "Image could not be loaded from URL '%s': %s: %s".formatted(urlString, e.getClass().getSimpleName(), e.getMessage()));
             return Optional.empty();
         }
     }
