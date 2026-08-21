@@ -44,8 +44,12 @@ abstract class HOTableModel protected constructor(
      * @return UserColumn[]
      */
     /** All columns of this model  */
-    lateinit var columns: Array<UserColumn>
-        protected set
+    var columns: Array<UserColumn> = emptyArray()
+        protected set(arr)
+        {
+            field = arr
+            this._displayedColumns = null
+        }
 
     /** Only displayed columns  */
     protected var _displayedColumns: Array<UserColumn>? = null

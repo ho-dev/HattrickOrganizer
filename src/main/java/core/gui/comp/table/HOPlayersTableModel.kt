@@ -5,7 +5,7 @@ import core.model.HOVerwaltung
 import core.model.player.Player
 
 abstract class HOPlayersTableModel(id: ColumnModelId, name: String) : HOTableModel(id, name) {
-    fun refresh() {
+    open fun refresh() {
         refreshPlayers()
         initData()
     }

@@ -9,12 +9,12 @@ import core.util.StringUtils;
 public final class MatchesOverviewColumnModel extends HOTableModel {
 
 	private MatchesOverviewRow[] rows;
-	
+
 	public MatchesOverviewColumnModel(UserColumnController.ColumnModelId id){
 		super(id,"MatchesStatistics");
-		columns = createMatchesStatisticsArray();
+		setColumns(createMatchesStatisticsArray());
 	}
-	
+
 	private MatchesOverviewColumn[] createMatchesStatisticsArray(){
 		MatchesOverviewColumn[] columns = new MatchesOverviewColumn[6];
 		columns[0] = new MatchesOverviewColumn(701, " "," ",50);
@@ -25,10 +25,10 @@ public final class MatchesOverviewColumnModel extends HOTableModel {
 		columns[5] = new MatchesOverviewColumn(707, "Tore","Tore",50);
 		return columns;
 	}
-	
+
 	@Override
 	protected void initData() {
-		m_clData = new Object[rows.length][columns.length];
+		m_clData = new Object[rows.length][getColumns().length];
 		for (int i = 0; i < rows.length; i++) {
 			boolean title = rows[i].getType() == -1;
 			m_clData[i][0] = rows[i];
@@ -38,7 +38,7 @@ public final class MatchesOverviewColumnModel extends HOTableModel {
 			m_clData[i][4] = title?"":Integer.valueOf(rows[i].getLoss());
 			m_clData[i][5] = title?"": StringUtils.getResultString(rows[i].getHomeGoals(), rows[i].getAwayGoals(), "");
 		}
-		fireTableDataChanged();						
+		fireTableDataChanged();
 	}
 
     public void setValues(MatchesOverviewRow[] rows) {

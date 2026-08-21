@@ -30,7 +30,7 @@ public class TrainingSettingsTableModel extends HOTableModel {
     public TrainingSettingsTableModel(UserColumnController.ColumnModelId columnModelId, String name) {
         super(columnModelId, name);
 
-        columns = new ArrayList<>(List.of(
+        var newColumns = new ArrayList<>(List.of(
                 // 0
                 new TrainingColumn(nextId++, "ls.youth.player.training.date", 150) {
                     @Override
@@ -105,6 +105,7 @@ public class TrainingSettingsTableModel extends HOTableModel {
                     public boolean isEditable() {return true;}
                 }
         )).toArray(new TrainingColumn[0]);
+        setColumns(newColumns);
     }
 
     private String getCoachLevelDisplayText(int coachSkillLevel) {

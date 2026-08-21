@@ -12,6 +12,7 @@ import core.model.UserParameter;
 import core.model.player.MatchRoleID;
 import core.training.FutureTrainingManager;
 import core.training.TrainingPreviewPlayers;
+import core.util.HODateTime;
 import module.training.ui.model.TrainingColumn;
 import module.training.ui.model.FutureTrainingEntry;
 import module.training.ui.model.TrainingModel;
@@ -25,13 +26,17 @@ import java.util.List;
 
 public class TrainingPredictionTableModel  extends HOPlayersTableModel {
 
-
     private TrainingModel model;
+    protected HODateTime nextTrainingDate;
 
-    static int nextColumnId = 0;
     public TrainingPredictionTableModel(UserColumnController.ColumnModelId columnModelId) {
         super(columnModelId, "TrainingPrediction");
-        List<UserColumn> newColumns = new ArrayList<>(List.of(
+        initColumns();
+    }
+
+    private void initColumns() {
+        var nextColumnId = 0;
+        var newColumns = new ArrayList<UserColumn>(List.of(
                 new TrainingColumn(nextColumnId++, "Spieler", 150) {
                     @Override
                     public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
@@ -61,26 +66,20 @@ public class TrainingPredictionTableModel  extends HOPlayersTableModel {
                     }
                 }
         ));
-        var actualWeek = HOVerwaltung.instance().getModel().getBasics().getHattrickWeek();
 
-        // We are in the middle where season has not been updated!
-        try {
-            if (HOVerwaltung.instance().getModel().getXtraDaten().getNextTrainingDate()
-                    .isAfter(HOVerwaltung.instance().getModel().getXtraDaten().getSeriesMatchDate())) {
-                actualWeek = actualWeek.plus(7, ChronoUnit.DAYS);
-            }
-        } catch (Exception e1) {
-            // Null when first time HO is launched
-        }
-
+        this.nextTrainingDate = getDownloadedNextTrainingDate();
+        var nextWeek = nextTrainingDate;
         for (int i = 0; i < UserParameter.instance().futureWeeks; i++) {
-            var htweek = actualWeek.toLocaleHTWeek();
+            var htweek = nextWeek.toLocaleHTWeek();
             var column = new TrainingProgressColumn(nextColumnId++,htweek, i, 60);
             newColumns.add(column);
-            actualWeek = actualWeek.plus(7, ChronoUnit.DAYS);
+            nextWeek = nextWeek.plus(7, ChronoUnit.DAYS);
         }
+        setColumns(newColumns.toArray(new UserColumn[0]));
+    }
 
-        this.columns = newColumns.toArray(new UserColumn[0]);
+    private HODateTime getDownloadedNextTrainingDate() {
+        return HOVerwaltung.instance().getModel().getXtraDaten().getNextTrainingDate();
     }
 
     private Color getBackgroundColor(FutureTrainingEntry entry) {
@@ -95,6 +94,16 @@ public class TrainingPredictionTableModel  extends HOPlayersTableModel {
     }
 
     @Override
+    public void refresh(){
+        if (!getDownloadedNextTrainingDate().equals(this.nextTrainingDate)) {
+            // Downloaded data from next week
+            initColumns();
+            fireTableStructureChanged();
+        }
+        super.refresh();
+    }
+
+    @Override
     protected void initData() {
         var currentPlayers = getPlayers();
         m_clData = new Object[currentPlayers.size()][getDisplayedColumns().length];
@@ -102,11 +111,10 @@ public class TrainingPredictionTableModel  extends HOPlayersTableModel {
         for (var player : currentPlayers) {
             int column = 0;
             var training = new FutureTrainingEntry(new FutureTrainingManager(player, this.model.getFutureTrainings()));
-            for ( var col : getDisplayedColumns()){
-                if ( col instanceof  TrainingColumn trainingColumn) {
+            for (var col : getDisplayedColumns()) {
+                if (col instanceof TrainingColumn trainingColumn) {
                     m_clData[rownum][column] = trainingColumn.getTableEntry(training);
-                }
-                else if ( col instanceof  TrainingProgressColumn trainingProgressColumn){
+                } else if (col instanceof TrainingProgressColumn trainingProgressColumn) {
                     m_clData[rownum][column] = trainingProgressColumn.getTableEntry(training);
                 }
                 column++;

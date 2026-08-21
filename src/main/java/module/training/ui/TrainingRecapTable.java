@@ -12,27 +12,33 @@ public class TrainingRecapTable extends JScrollPane {
 
     private final FutureTrainingPrioPopup trainingPrioPopUp;
 
-    private final PlayersTable trainingPredictionTable;
+    private PlayersTable trainingPredictionTable;
 
-    public void storeUserSettings(){
-        var tableModel = (TrainingPredictionTableModel)trainingPredictionTable.getModel();
-        if ( tableModel != null) {
+    public void storeUserSettings() {
+        var tableModel = (TrainingPredictionTableModel) trainingPredictionTable.getModel();
+        if (tableModel != null) {
             tableModel.storeUserSettings();
         }
     }
 
     public void refresh() {
+        var tableModel = (TrainingPredictionTableModel) trainingPredictionTable.getModel();
+        this.trainingPredictionTable.setModel(tableModel);
         this.trainingPredictionTable.refresh();
     }
 
     /**
      * Creates a new TrainingRecapTable object.
      *
-     * @param model         training model
+     * @param model training model
      */
     public TrainingRecapTable(LazyImagePanel panel, TrainingModel model) {
         var tableModel = UserColumnController.instance().getTrainingPredictionTableModel();
         tableModel.setTrainingModel(model);
+        CreateTrainingPredictionTable(tableModel, model);
+    }
+
+    private void CreateTrainingPredictionTable(TrainingPredictionTableModel tableModel) {
         this.trainingPredictionTable = new PlayersTable(tableModel, 3);
         this.setViewportView(this.trainingPredictionTable.getContainerComponent());
         this.trainingPredictionTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
@@ -44,7 +50,7 @@ public class TrainingRecapTable extends JScrollPane {
                 if (trainingPredictionTable.getSelectedRow() < 0)
                     return;
 
-                if ( e.getComponent() instanceof JTable ) {
+                if (e.getComponent() instanceof JTable) {
                     var cols = trainingPredictionTable.getSelectedColumns();
                     trainingPrioPopUp.setSelectedColumns(cols);
                     trainingPrioPopUp.show(e.getComponent(), e.getX(), e.getY());

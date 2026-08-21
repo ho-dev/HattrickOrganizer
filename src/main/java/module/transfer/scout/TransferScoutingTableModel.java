@@ -45,7 +45,7 @@ public class TransferScoutingTableModel extends HOTableModel {
     public TransferScoutingTableModel() {
         super(UserColumnController.ColumnModelId.TRANSFERSCOUT, "TransferScout");
         int id = 0;
-        columns = new ArrayList<>(List.of(
+        var newColumns = new ArrayList<>(List.of(
                 new TransferScoutTableColumn(id++, "ls.player.id") {
                     @Override
                     public IHOTableCellEntry getTableEntry(ScoutEintrag scouting) {
@@ -394,13 +394,13 @@ public class TransferScoutingTableModel extends HOTableModel {
                     }
                 }
         )).toArray(new TransferScoutTableColumn[0]);
-
+        setColumns(newColumns);
     }
 
     @Override
     protected void initData() {
         UserColumn[] displayedColumns = getDisplayedColumns();
-        m_clData = new Object[m_vScoutEintraege.size()][columns.length];
+        m_clData = new Object[m_vScoutEintraege.size()][getColumns().length];
         int playernum = 0;
         for (var value : m_vScoutEintraege) {
             int columnnum = 0;

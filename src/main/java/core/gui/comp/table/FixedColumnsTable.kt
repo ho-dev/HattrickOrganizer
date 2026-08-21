@@ -14,7 +14,6 @@ import javax.swing.*
 import javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS
 import javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED
 import javax.swing.event.ListSelectionListener
-import javax.swing.event.TableModelEvent
 import javax.swing.table.TableCellRenderer
 import javax.swing.table.TableColumn
 import javax.swing.table.TableModel
@@ -50,7 +49,8 @@ open class FixedColumnsTable @JvmOverloads constructor(
     /**
      * Container component for split pane of fixed and scrollable tables
      */
-    private var containerComponent: JPanel
+    private lateinit var containerComponent: JPanel
+
 
     /**
      * Create a fixed columns table
@@ -59,6 +59,10 @@ open class FixedColumnsTable @JvmOverloads constructor(
      * Internally two tables are created, "fixed" for the left hand side, "scroll" for the right hand side
      */
     init {
+        setTableModel(tableModel)
+    }
+
+    fun setTableModel(tableModel: HOTableModel) {
         // Handle tool tips
         val header = getTableHeader().defaultRenderer
         getTableHeader().defaultRenderer =
