@@ -50,7 +50,7 @@ open class FixedColumnsTable @JvmOverloads constructor(
     /**
      * Container component for split pane of fixed and scrollable tables
      */
-    private lateinit var containerComponent: JPanel
+    private var containerComponent: JPanel
 
 
     /**
