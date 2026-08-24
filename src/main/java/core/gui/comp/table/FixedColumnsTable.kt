@@ -52,7 +52,6 @@ open class FixedColumnsTable @JvmOverloads constructor(
      */
     private var containerComponent: JPanel
 
-
     /**
      * Create a fixed columns table
      * Columns and header tooltips are taken from table model.
