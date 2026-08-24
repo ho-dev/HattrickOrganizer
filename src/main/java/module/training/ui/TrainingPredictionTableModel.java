@@ -23,6 +23,7 @@ import java.awt.*;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class TrainingPredictionTableModel  extends HOPlayersTableModel {
 
@@ -94,16 +95,6 @@ public class TrainingPredictionTableModel  extends HOPlayersTableModel {
     }
 
     @Override
-    public void refresh(){
-        if (!getDownloadedNextTrainingDate().equals(this.nextTrainingDate)) {
-            // Downloaded data from next week
-            initColumns();
-            fireTableStructureChanged();
-        }
-        super.refresh();
-    }
-
-    @Override
     protected void initData() {
         var currentPlayers = getPlayers();
         m_clData = new Object[currentPlayers.size()][getDisplayedColumns().length];
@@ -121,11 +112,22 @@ public class TrainingPredictionTableModel  extends HOPlayersTableModel {
             }
             rownum++;
         }
-        fireTableDataChanged();
+
+        if (isHeaderChanged()) {
+            initColumns();
+            writeUserColumnSettings(Objects.requireNonNull(getTable()));
+            fireTableStructureChanged();
+            readUserColumnSettings(getTable());
+        } else {
+            fireTableDataChanged();
+        }
     }
 
     public void setTrainingModel(TrainingModel model) {
         this.model = model;
     }
 
+    public boolean isHeaderChanged() {
+        return !getDownloadedNextTrainingDate().equals(this.nextTrainingDate);
+    }
 }

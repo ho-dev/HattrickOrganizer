@@ -14,6 +14,7 @@ import javax.swing.*
 import javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS
 import javax.swing.ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED
 import javax.swing.event.ListSelectionListener
+import javax.swing.event.TableModelEvent
 import javax.swing.table.TableCellRenderer
 import javax.swing.table.TableColumn
 import javax.swing.table.TableModel
@@ -59,24 +60,7 @@ open class FixedColumnsTable @JvmOverloads constructor(
      * Internally two tables are created, "fixed" for the left hand side, "scroll" for the right hand side
      */
     init {
-        setTableModel(tableModel)
-    }
-
-    fun setTableModel(tableModel: HOTableModel) {
-        // Handle tool tips
-        val header = getTableHeader().defaultRenderer
-        getTableHeader().defaultRenderer =
-            TableCellRenderer { table: JTable, value: Any?, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int ->
-                val tableCellRendererComponent =
-                    header.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
-                val tableColumn = table.columnModel.getColumn(column)
-                val model = table.model as HOTableModel
-                // Set header tool tip
-                val tooltipString = model.getDisplayedColumns()[tableColumn.modelIndex].getTooltip()
-                (tableCellRendererComponent as JComponent).toolTipText = tooltipString
-                tableCellRendererComponent
-            }
-
+        setTableHeaderTooltips()
         setAutoResizeMode(AUTO_RESIZE_OFF)
         setSelectionMode(ListSelectionModel.SINGLE_SELECTION)
         setSelectionBackground(HODefaultTableCellRenderer.SELECTION_BG)
@@ -88,21 +72,7 @@ open class FixedColumnsTable @JvmOverloads constructor(
             fixed!!.setSelectionModel(getSelectionModel())
             fixed!!.columnModel.selectionModel = getSelectionModel()
 
-            //  Remove the non-fixed columns from the fixed table
-            while (fixed!!.columnCount > fixedColumnsCount) {
-                val _columnModel = fixed!!.getColumnModel()
-                _columnModel.removeColumn(_columnModel.getColumn(fixedColumnsCount))
-            }
-            //  Remove the fixed columns from the main table
-            var width = 0
-            var i = 0
-            while (i < fixedColumnsCount) {
-                val _columnModel = getColumnModel()
-                val column = _columnModel.getColumn(0)
-                width += column.preferredWidth
-                _columnModel.removeColumn(column)
-                i++
-            }
+            var width = setColumns()
 
             // Sync scroll bars of both tables
             val fixedScrollPane = JScrollPane(fixed)
@@ -178,6 +148,40 @@ open class FixedColumnsTable @JvmOverloads constructor(
         }
     }
 
+    private fun setTableHeaderTooltips() {
+        val header = getTableHeader().defaultRenderer
+        getTableHeader().defaultRenderer =
+            TableCellRenderer { table: JTable, value: Any?, isSelected: Boolean, hasFocus: Boolean, row: Int, column: Int ->
+                val tableCellRendererComponent =
+                    header.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column)
+                val tableColumn = table.columnModel.getColumn(column)
+                val model = table.model as HOTableModel
+                // Set header tool tip
+                val tooltipString = model.getDisplayedColumns()[tableColumn.modelIndex].getTooltip()
+                (tableCellRendererComponent as JComponent).toolTipText = tooltipString
+                tableCellRendererComponent
+            }
+    }
+
+    private fun setColumns() : Int {
+        //  Remove the non-fixed columns from the fixed table
+        while (fixed!!.columnCount > fixedColumnsCount) {
+            val _columnModel = fixed!!.getColumnModel()
+            _columnModel.removeColumn(_columnModel.getColumn(fixedColumnsCount))
+        }
+        //  Remove the fixed columns from the main table
+        var width = 0
+        var i = 0
+        while (i < fixedColumnsCount) {
+            val _columnModel = getColumnModel()
+            val column = _columnModel.getColumn(0)
+            width += column.preferredWidth
+            _columnModel.removeColumn(column)
+            i++
+        }
+        return width
+    }
+
     /**
      * Show the horizontal scroll bar of the scroll pane when the other horizontal scroll bar appeared in case of pane resizing
      * @param scrollPane The scroll pane that has to be synchronized with the other scroll pane
@@ -246,6 +250,20 @@ open class FixedColumnsTable @JvmOverloads constructor(
     override fun setDefaultRenderer(columnClass: Class<*>?, renderer: TableCellRenderer?) {
         super.setDefaultRenderer(columnClass, renderer)
         fixed?.setDefaultRenderer(columnClass, renderer)
+    }
+
+    /**
+     * Handle table structure table change events
+     * Only when fixed table exists. Otherwise, the implementation of the super class is called,
+     */
+    override fun tableChanged(e: TableModelEvent?) {
+        if (fixed != null && e != null && e.firstRow == TableModelEvent.HEADER_ROW) {
+            fixed!!.tableChanged(e)
+            super.tableChanged(e)
+            setColumns()
+            return
+        }
+        super.tableChanged(e)
     }
 
     val selectedModelIndex: Int
@@ -326,5 +344,4 @@ open class FixedColumnsTable @JvmOverloads constructor(
         }
         return super.getColumnModel().getColumn(i - fixedColumnsCount)
     }
-
 }

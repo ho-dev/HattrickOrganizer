@@ -12,7 +12,7 @@ public class TrainingRecapTable extends JScrollPane {
 
     private final FutureTrainingPrioPopup trainingPrioPopUp;
 
-    private PlayersTable trainingPredictionTable;
+    private final PlayersTable trainingPredictionTable;
 
     public void storeUserSettings() {
         var tableModel = (TrainingPredictionTableModel) trainingPredictionTable.getModel();
@@ -22,8 +22,6 @@ public class TrainingRecapTable extends JScrollPane {
     }
 
     public void refresh() {
-        var tableModel = (TrainingPredictionTableModel) trainingPredictionTable.getModel();
-        this.trainingPredictionTable.setModel(tableModel);
         this.trainingPredictionTable.refresh();
     }
 
@@ -35,10 +33,6 @@ public class TrainingRecapTable extends JScrollPane {
     public TrainingRecapTable(LazyImagePanel panel, TrainingModel model) {
         var tableModel = UserColumnController.instance().getTrainingPredictionTableModel();
         tableModel.setTrainingModel(model);
-        CreateTrainingPredictionTable(tableModel, model);
-    }
-
-    private void CreateTrainingPredictionTable(TrainingPredictionTableModel tableModel) {
         this.trainingPredictionTable = new PlayersTable(tableModel, 3);
         this.setViewportView(this.trainingPredictionTable.getContainerComponent());
         this.trainingPredictionTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);

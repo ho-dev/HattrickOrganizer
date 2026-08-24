@@ -42,6 +42,7 @@
 ### Training
 
 * Add experience skill to training tables (#2283)
+* Update training prediction table structure on first download after training date (#2467)
 
 ### Transfer
 
