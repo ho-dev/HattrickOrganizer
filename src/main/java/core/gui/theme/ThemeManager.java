@@ -2,7 +2,6 @@ package core.gui.theme;
 
 import com.github.weisj.darklaf.properties.icons.DerivableImageIcon;
 import com.github.weisj.darklaf.properties.icons.IconLoader;
-import com.github.weisj.darklaf.util.LogUtil;
 import core.db.DBManager;
 import core.db.user.UserManager;
 import core.file.xml.XMLAvatarsParser;
@@ -31,8 +30,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.text.*;
