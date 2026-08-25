@@ -67,37 +67,33 @@ public final class ThemeManager {
 
 	private void initialize() {
 
-		themes.put(NimbusTheme.THEME_NAME, new NimbusTheme());
-		themes.put(DarculaDarkTheme.THEME_NAME, new DarculaDarkTheme());
-		themes.put(SolarizedDarkTheme.THEME_NAME, new SolarizedDarkTheme());
-		themes.put(SolarizedLightTheme.THEME_NAME, new SolarizedLightTheme());
+        themes.put(NimbusTheme.THEME_NAME, new NimbusTheme());
+        themes.put(DarculaDarkTheme.THEME_NAME, new DarculaDarkTheme());
+        themes.put(SolarizedDarkTheme.THEME_NAME, new SolarizedDarkTheme());
+        themes.put(SolarizedLightTheme.THEME_NAME, new SolarizedLightTheme());
 
-		if (OSUtils.isLinux()) {
-			themes.put(GnomeTheme.THEME_NAME, new GnomeTheme());
-		}
+        if (OSUtils.isLinux()) {
+            themes.put(GnomeTheme.THEME_NAME, new GnomeTheme());
+        }
 
-		if (!teamLogoDir.exists()) {
-			try {
-				Files.createDirectories(teamLogoPath);
-			} catch (IOException e) {
-				HOLogger.instance().log(this.getClass(),"Failed to create directory for team logos: " + e.getMessage());
-			}
-		}
+        if (!teamLogoDir.exists()) {
+            try {
+                Files.createDirectories(teamLogoPath);
+            } catch (IOException e) {
+                HOLogger.instance().log(this.getClass(), "Failed to create directory for team logos: " + e.getMessage());
+            }
+        }
 
-		if (!playerAvatarDir.exists()) {
-			try {
-				Files.createDirectories(playerAvatarPath);
-			} catch (IOException e) {
-				HOLogger.instance().log(this.getClass(),"Failed to create directory for player Avatars: " + e.getMessage());
-			}
-		}
+        if (!playerAvatarDir.exists()) {
+            try {
+                Files.createDirectories(playerAvatarPath);
+            } catch (IOException e) {
+                HOLogger.instance().log(this.getClass(), "Failed to create directory for player Avatars: " + e.getMessage());
+            }
+        }
 
-		IconLoader.updateThemeStatus(new Object());
-
-		// TODO: Workaround some warnings which are issued incorrectly. To silence them you can call
-		LogUtil.getLogger(IconLoader.class).setLevel(Level.SEVERE);
-		Logger.getLogger("com.github.weisj.jsvg.parser.SVGLoader").setLevel(Level.SEVERE);
-	}
+        IconLoader.updateThemeStatus(new Object());
+    }
 
 	/**
 	 * Returns the list of registered themes.
