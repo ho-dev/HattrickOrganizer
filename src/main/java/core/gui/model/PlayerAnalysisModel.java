@@ -33,7 +33,7 @@ public class PlayerAnalysisModel extends HOTableModel {
 	}
 
 	private void initialize() {
-        UserColumn[] columns = new UserColumn[67];
+        var columns = new UserColumn[67];
 
 		final UserColumn[] additionalArray =  UserColumnFactory.createPlayerAdditionalArray();
 		final MatchKurzInfoColumn [] matches = UserColumnFactory.createMatchesArray();
