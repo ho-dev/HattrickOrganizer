@@ -115,9 +115,9 @@ public class TrainingPredictionTableModel  extends HOPlayersTableModel {
 
         if (isHeaderChanged()) {
             initColumns();
-            writeUserColumnSettings(Objects.requireNonNull(getTable()));
+            readUserColumnSettingsFromTable(Objects.requireNonNull(getTable()));
             fireTableStructureChanged();
-            readUserColumnSettings(getTable());
+            writeUserColumnSettingsToTable(getTable());
         } else {
             fireTableDataChanged();
         }

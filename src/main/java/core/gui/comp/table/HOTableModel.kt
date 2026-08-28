@@ -351,7 +351,7 @@ abstract class HOTableModel protected constructor(
         table.rowSorter = rowSorter
         table.setDefaultRenderer(Any::class.java, HODefaultTableCellRenderer())
 
-        readUserColumnSettings(table)
+        writeUserColumnSettingsToTable(table)
     }
 
     private fun getTableColumn(table: JTable, i: Int): TableColumn {
@@ -380,10 +380,10 @@ abstract class HOTableModel protected constructor(
     }
 
     /**
-     * Read user column settings (sorting, position and width) from the table
+     * Write user column settings (sorting, position and width) to the table
      * @param table JTable
      */
-    fun readUserColumnSettings(table : JTable) {
+    fun writeUserColumnSettingsToTable(table : JTable) {
         val displayedColumns = getDisplayedColumns()
         var i = 0
         for (userColumn in displayedColumns) {
@@ -401,10 +401,10 @@ abstract class HOTableModel protected constructor(
     }
 
     /**
-     * Write user column settings (sorting, position and width) to the table
+     * Read user column settings (sorting, position and width) from the table
      * @param table JTable
      */
-    fun writeUserColumnSettings(table : JTable) {
+    fun readUserColumnSettingsFromTable(table : JTable) {
         val rowSorter = table.getRowSorter() as RowSorter<HOTableModel>
         setRowOrderSettings(rowSorter)
         setUserColumnSettings(table)
