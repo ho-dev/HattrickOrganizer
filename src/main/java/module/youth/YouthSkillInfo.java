@@ -6,6 +6,12 @@ import java.util.Objects;
 public class YouthSkillInfo {
 
     public static int UsefulTrainingThreshold = 4;
+    
+    /**
+     * Decimal precision for skill calculations (0.1)
+     * Skills are calculated with 1 decimal place precision
+     */
+    private static final double DECIMAL_PRECISION = 0.1;
 
     /**
      * Skill Id
@@ -333,6 +339,15 @@ public class YouthSkillInfo {
 
     public void setMaxLevelLimit(int i) {
         this.maxValueRange.lessThan(i+1);
+    }
+
+    /**
+     * Round a skill value to the nearest decimal precision (0.1)
+     * @param value the value to round
+     * @return rounded value with 0.1 precision
+     */
+    public static double roundToDecimal(double value) {
+        return Math.round(value * 10.0) / 10.0;
     }
 
     // Skill Range class

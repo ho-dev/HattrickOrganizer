@@ -134,6 +134,8 @@ public class YouthTraining extends AbstractTable.Storable {
             ret.setCurrentValue(value.getCurrentValue());
         } else {
             var newVal = value.getCurrentValue() + calcSkillIncrement(value, player, team);
+            // Round to decimal precision (0.1) for consistent skill calculations
+            newVal = YouthSkillInfo.roundToDecimal(newVal);
             ret.setCurrentValue(newVal);
             var adjustment = ret.getCurrentValue() - newVal;
             if (adjustment != 0) {
