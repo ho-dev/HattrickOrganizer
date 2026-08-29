@@ -300,6 +300,8 @@ public class DownloadDialog extends JDialog implements ActionListener {
             }
 
 			if (this.downloadFilter.isChecked(filterRoot.getCurrentMatches())) {
+				// YOUTH DATA: Only download essential youth player & training data, skip economy/stadium/transfer/news
+				// Youth players and training matches are downloaded separately via OnlineWorker.downloadMissingYouthMatchData()
 				// Only get lineups for own fixtures
 				HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.match_info"), progressIncrement);
 				bOK = (OnlineWorker.getMatches(teamId, false, true, true) != null);
