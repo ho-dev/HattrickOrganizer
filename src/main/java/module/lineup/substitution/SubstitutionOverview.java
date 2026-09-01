@@ -1,6 +1,5 @@
 package module.lineup.substitution;
 
-import core.constants.UIConstants;
 import core.gui.HOMainFrame;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
@@ -411,8 +410,8 @@ public class SubstitutionOverview extends JPanel {
 		// number of columns
 		public static final int COLUMN_COUNT = 8;
 
-		private List<TableRow> rows = new ArrayList<>();
-		private String[] columnNames;
+		private final List<TableRow> rows = new ArrayList<>();
+		private final String[] columnNames;
 		private Comparator<TableRow> rowComparator;
 
 		public SubstitutionsTableModel() {
@@ -474,28 +473,23 @@ public class SubstitutionOverview extends JPanel {
 		public Object getValueAt(int rowIndex, int columnIndex) {
 			Substitution sub = this.rows.get(rowIndex).getSubstitution();
 
-			switch (columnIndex) {
-			case ORDERTYPE_COL_IDX:
-				return LanguageStringLookup.getOrderType(sub.getOrderType());
-			case SUBJECTPLAYER_COL_IDX:
-				return sub.getSubjectPlayerName();
-			case ORDERTYPE_ICON_COL_IDX:
-				return sub.getBehaviour();
-			case OBJECTPLAYER_COL_IDX:
-				return sub.getObjectPlayerName();
-			case WHEN_COL_IDX:
-				if (sub.getMatchMinuteCriteria() > 0) {
-					return TranslationFacility.tr("subs.MinuteAfterX", (int) sub.getMatchMinuteCriteria());
-				}
-				return TranslationFacility.tr("subs.MinuteAnytime");
-			case STANDING_COL_IDX:
-				return LanguageStringLookup.getStanding(sub.getStanding());
-			case CARDS_COL_IDX:
-				return LanguageStringLookup.getRedCard(sub.getRedCardCriteria());
-			}
+            return switch (columnIndex) {
+                case ORDERTYPE_COL_IDX -> LanguageStringLookup.getOrderType(sub.getOrderType());
+                case SUBJECTPLAYER_COL_IDX -> sub.getSubjectPlayerName();
+                case ORDERTYPE_ICON_COL_IDX -> sub.getBehaviour();
+                case OBJECTPLAYER_COL_IDX -> sub.getObjectPlayerName();
+                case WHEN_COL_IDX -> {
+                    if (sub.getMatchMinuteCriteria() > 0) {
+                        yield TranslationFacility.tr("subs.MinuteAfterX", (int) sub.getMatchMinuteCriteria());
+                    }
+                    yield TranslationFacility.tr("subs.MinuteAnytime");
+                }
+                case STANDING_COL_IDX -> LanguageStringLookup.getStanding(sub.getStanding());
+                case CARDS_COL_IDX -> LanguageStringLookup.getRedCard(sub.getRedCardCriteria());
+                default -> "";
+            };
 
-			return "";
-		}
+        }
 
 		@Override
 		public String getColumnName(int column) {
@@ -682,7 +676,7 @@ public class SubstitutionOverview extends JPanel {
 		return false;
 	}
 
-	private class OrderTypeRenderer extends DefaultTableCellRenderer {
+	private static class OrderTypeRenderer extends DefaultTableCellRenderer {
 		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value,
 													   boolean isSelected, boolean hasFocus, int row, int column) {
@@ -702,7 +696,7 @@ public class SubstitutionOverview extends JPanel {
 		}
 	}
 
-	private class WarningRenderer extends DefaultTableCellRenderer {
+	private static class WarningRenderer extends DefaultTableCellRenderer {
 
 		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value,

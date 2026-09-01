@@ -40,31 +40,15 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 {
 	private List<MatchKurzInfo> m_kurzInfo;				// Adapter für Spieleinfos, u.a. ob Friendly oder Liga
 	// Members für Farben
-	private Color gruen = ThemeManager.getColor(HOColorName.HRF_GREEN_BG);
-	private Color hellblau = ThemeManager.getColor(HOColorName.HRF_LIGHTBLUE_BG);
-	private Color dunkelblau = ThemeManager.getColor(HOColorName.HRF_DARKBLUE_BG);
-	private Color rot = ThemeManager.getColor(HOColorName.HRF_RED_BG);
+	private final Color gruen = ThemeManager.getColor(HOColorName.HRF_GREEN_BG);
+	private final Color hellblau = ThemeManager.getColor(HOColorName.HRF_LIGHTBLUE_BG);
+	private final Color dunkelblau = ThemeManager.getColor(HOColorName.HRF_DARKBLUE_BG);
+	private final Color rot = ThemeManager.getColor(HOColorName.HRF_RED_BG);
 	private Color m_LineColor;
 
-	//Members für die GUI
-	private JSplitPane m_SplitPane_main = null;
-	private JSplitPane m_SplitPane_top = null;
-	private JSplitPane m_SplitPane_top_left = null;		// SplitPane für Calendar und Imports
+    private JScrollPane m_ScrollPane_Calendar = null;
 
-	private JScrollPane m_ScrollPane_Calendar = null;
-	private JScrollPane m_ScrollPane_FileTable = null;
-	private JScrollPane m_ScrollPane_Details = null;
-	private JScrollPane m_ScrollPane_Imports = null;	// nimmt die Tabelle für die zu importierenden Dateien auf
-
-	private JPanel m_Panel_Calendar_main = null;
-	private JPanel m_Panel_Calendar_main_north = null;
-	private JPanel m_Panel_Details_main = null;
-	private JPanel m_Panel_Details_north = null;
-	private JPanel m_Panel_FileTable_main = null;
-	private JPanel m_Panel_FileTable_main_north = null;
-	private JPanel m_Panel_Imports_main = null;			// CENTER=m_ScrollPane_Imports,NORTH=m_Button_ResetImports
-
-	private JButton m_Button_load_file = null;
+    private JButton m_Button_load_file = null;
 	private JButton m_Button_delete_file = null;
 	private JButton m_Button_delete_db = null;
 	private JButton m_Button_Delete_Row = null;
@@ -94,77 +78,45 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 	private HrfTableModel m_TableModel_Imports = null;
 
 
-	private HrfPanelCellRenderer m_renderer = new HrfPanelCellRenderer();
+	private final HrfPanelCellRenderer m_renderer = new HrfPanelCellRenderer();
 
 
 	private static int m_int_selectedMonth;				// int für den Monat im Calendar-Panel (0-11)
 	private static int m_int_selectedYear;				// int für das Jahr aus dem Calendar-Panel
 	private int m_int_firstYearInDB;					// int für das Jahr des ersten DB-Eintrages
-	private int m_int_actualYear;						// int für das aktuelle Jahr
 
-	private int m_int_Hoehe_DetailPanels;				// Höhe des Panels, in dem alle Details in der Detail-Tabelle stehen
-	private int m_int_Breite_Detail_Fixed = 130;		// Breite der 1. Spalte der Detail-Tabelle
-	private int m_int_Breite_Detail_Var = 140;			// Breite der weiteren Spalten der Detail-Tabelle
-	private int m_int_Hoehe_Label = 16;					// Höhe der Labels für die Details in der Detail-Tabelle
+    private int m_int_Hoehe_DetailPanels;				// Höhe des Panels, in dem alle Details in der Detail-Tabelle stehen
+	private final int m_int_Breite_Detail_Fixed = 130;		// Breite der 1. Spalte der Detail-Tabelle
+	private final int m_int_Breite_Detail_Var = 140;			// Breite der weiteren Spalten der Detail-Tabelle
+	private final int m_int_Hoehe_Label = 16;					// Höhe der Labels für die Details in der Detail-Tabelle
 
 	private int m_int_anz_DBEintraege = 0;				// Anzahl der HRF-Files in der DB
 	private int m_TeamID;								// Die TeamID
 
 	// Breiten der Spalten in der jeweiligen Tabelle
-	private int[] m_intAr_col_width_Filelist = {30,130,140,80,40,60,60,110,40,60};
-	private int[] m_intAr_col_width_Calendar = {40,40,40,40,40,40,40,40};
-	private int[] m_intAr_col_width_Details = {140};
+	private final int[] m_intAr_col_width_Filelist = {30,130,140,80,40,60,60,110,40,60};
+	private final int[] m_intAr_col_width_Calendar = {40,40,40,40,40,40,40,40};
+	private final int[] m_intAr_col_width_Details = {140};
 
 	private String m_Str_hrfPfad = "";					// Pfad aus UserSettings, dort werden normalerweise die hrf-files hingespeichert
 
-	private String[] m_Ar_Detail_Label_fix;				// Bezeichnungen in der 1.Spalte der Detail-Tabelle
 
-
-	//Variablen für Detailtabelle
-	@SuppressWarnings("unchecked")
-	private Vector m_V_Details_Header;
-	@SuppressWarnings("unchecked")
-	private Vector m_V_Details_Values;
-	//Variablen für Filelist-Tabelle
-	@SuppressWarnings("unchecked")
-	private Vector m_V_Filelist_Header;
-	@SuppressWarnings("unchecked")
-	private Vector m_V_Filelist_Values;
-//	Variablen für Calendar-Tabelle
-	@SuppressWarnings("unchecked")
-	private Vector m_V_Calendar_Header;
-	@SuppressWarnings("unchecked")
-	private Vector m_V_Calendar_Values;
-
-	private static String[] m_Ar_days = new String[7];
+    private static final String[] m_Ar_days = new String[7];
 	private static Vector<String> m_V_months = null;
-	@SuppressWarnings("unchecked")
-	private Vector m_V_Filelist_Keys = new Vector();
+	private final Vector m_V_Filelist_Keys = new Vector();
 
-	private File[] m_files;
-	private JFileChooser m_FileChooser_chooser;
-	private GregorianCalendar m_gc;
-	private ResultSet m_queryResult;
+    private ResultSet m_queryResult;
 	private ResultSet m_Result_SpecialEvent;
 
-	@SuppressWarnings("unchecked")
-	private static Hashtable m_HashTable_DayInDB = new Hashtable(40);		// KEY: Tag des gewählten Monats in Calendar, 		VALUE: HRF-ID für diesen Tag
-	@SuppressWarnings("unchecked")
-	private Hashtable m_HashTable_Details = new Hashtable(40);			// KEY: Pfad oder Datum eines HrfDetails-Objekt, 	VALUE: das HrfDetails-Objekt
-	@SuppressWarnings("unchecked")
-	private Hashtable m_HashTable_Details_ColHeader = new Hashtable(40);	// KEY: Datum eines HrfDetails-Objekt				VALUE: das HrfDetails-Objekt
-	@SuppressWarnings("unchecked")
-	private Hashtable m_HashTable_Columns = new Hashtable(40);			// KEY: Spaltenname der Detailtabelle				VALUE: Vector mit dem Inhalt einer Spalte der Detailtabelle
-	@SuppressWarnings("unchecked")
-	private static Hashtable m_HashTable_DatumKey = new Hashtable(40);	// KEY: Datum im Format YYYY-MM-DD					VALUE: Dateipfad
-	@SuppressWarnings("unchecked")
-	private Hashtable m_HashTable_Import = new Hashtable(40);				// KEY: Pfad der Dateien aus der Importtabelle		VALUE: ---
-	@SuppressWarnings("unchecked")
-	private static Hashtable m_HashTable_isEvent = new Hashtable(40);		// KEY: Tag des gewählten Monats in Calendar, 		VALUE: Matchtyp als String
-	@SuppressWarnings("unchecked")
-	private Hashtable m_HashTable_MatchTyp = new Hashtable(40);			// KEY: Match-ID, 									VALUE: Matchtyp
-	private static Hashtable<String,String> m_HashTable_EventInfo = new Hashtable<>(40);
-	@SuppressWarnings("unchecked")
+	private static final Hashtable m_HashTable_DayInDB = new Hashtable(40);		// KEY: Tag des gewählten Monats in Calendar, 		VALUE: HRF-ID für diesen Tag
+	private final Hashtable m_HashTable_Details = new Hashtable(40);			// KEY: Pfad oder Datum eines HrfDetails-Objekt, 	VALUE: das HrfDetails-Objekt
+	private final Hashtable m_HashTable_Details_ColHeader = new Hashtable(40);	// KEY: Datum eines HrfDetails-Objekt				VALUE: das HrfDetails-Objekt
+	private final Hashtable m_HashTable_Columns = new Hashtable(40);			// KEY: Spaltenname der Detailtabelle				VALUE: Vector mit dem Inhalt einer Spalte der Detailtabelle
+	private static final Hashtable m_HashTable_DatumKey = new Hashtable(40);	// KEY: Datum im Format YYYY-MM-DD					VALUE: Dateipfad
+	private final Hashtable m_HashTable_Import = new Hashtable(40);				// KEY: Pfad der Dateien aus der Importtabelle		VALUE: ---
+	private static final Hashtable m_HashTable_isEvent = new Hashtable(40);		// KEY: Tag des gewählten Monats in Calendar, 		VALUE: Matchtyp als String
+	private final Hashtable m_HashTable_MatchTyp = new Hashtable(40);			// KEY: Match-ID, 									VALUE: Matchtyp
+	private static final Hashtable<String,String> m_HashTable_EventInfo = new Hashtable<>(40);
 	private Hashtable m_HashTable_EventGUI = new Hashtable();			// KEY: Der Tag des Events							VALUE: Vector mit Zeit(sek) und Eventtyp
 
 	private final DBManager dbManager;
@@ -182,10 +134,11 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 		HOVerwaltung hoV = HOVerwaltung.instance();
 
 		// Aktuelles Datum ermitteln und in die Members schreiben
-		m_gc = new GregorianCalendar();
+        GregorianCalendar m_gc = new GregorianCalendar();
 		m_int_selectedMonth = m_gc.get(GregorianCalendar.MONTH);
 		m_int_selectedYear = m_gc.get(GregorianCalendar.YEAR);
-		m_int_actualYear = m_gc.get(GregorianCalendar.YEAR);
+        // int für das aktuelle Jahr
+        int m_int_actualYear = m_gc.get(GregorianCalendar.YEAR);
 
 		// TeamID setzen
 		m_TeamID = hoV.getModel().getBasics().getTeamId();
@@ -272,8 +225,8 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 		/*
          *Erstellen der Dummy Tabelle "Importliste"
          */
-		Vector importHeader = new Vector();
-		Vector importValues = new Vector();
+		Vector<String> importHeader = new Vector<>();
+		Vector<String> importValues = new Vector<>();
 
 		importHeader.add(TranslationFacility.tr("pfad"));
 
@@ -283,9 +236,9 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
         /*
          *Erstellen der Dummy Tabelle "Filelist"
          */
-        m_V_Filelist_Header = new Vector();
-        m_V_Filelist_Values = new Vector();
-        Vector tmpV = new Vector();
+        //Variablen für Filelist-Tabelle
+        Vector<String> m_V_Filelist_Header = new Vector<>();
+        Vector<String> m_V_Filelist_Values = new Vector<>();
 
         m_V_Filelist_Header.add("");
         m_V_Filelist_Header.add(TranslationFacility.tr("datname"));
@@ -305,8 +258,9 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
         /*
          *Erstellen der Dummy Tabelle "Calendar"
          */
-        m_V_Calendar_Header = new Vector();
-        m_V_Calendar_Values = new Vector();
+        //	Variablen für Calendar-Tabelle
+        Vector<String> m_V_Calendar_Header = new Vector<>();
+        Vector<String> m_V_Calendar_Values = new Vector<>();
 
         m_V_Calendar_Header.add(TranslationFacility.tr("kw"));
         m_V_Calendar_Header.add(TranslationFacility.tr("monkurz"));
@@ -327,7 +281,8 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
          *Erstellen der Dummy Tabelle "Details"
          */
         //Vorbereiten der fixen Labelbeschriftungen
-        m_Ar_Detail_Label_fix = new String[12];
+        // Bezeichnungen in der 1.Spalte der Detail-Tabelle
+        String[] m_Ar_Detail_Label_fix = new String[12];
         m_Ar_Detail_Label_fix[0] = TranslationFacility.tr("Liga");
         m_Ar_Detail_Label_fix[1] = TranslationFacility.tr("Season") + " / " +TranslationFacility.tr("Spieltag");
         m_Ar_Detail_Label_fix[2] = TranslationFacility.tr("Punkte") + " / " + TranslationFacility.tr("Tore");
@@ -343,8 +298,9 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 
 		m_int_Hoehe_DetailPanels = m_Ar_Detail_Label_fix.length * m_int_Hoehe_Label;	// Festlege der Gesamthöhe des Detailpanels
 
-        m_V_Details_Header = new Vector();
-        m_V_Details_Values = new Vector();
+        //Variablen für Detailtabelle
+        Vector<String> m_V_Details_Header = new Vector<>();
+        Vector<String> m_V_Details_Values = new Vector<>();
 
         m_TableModel_Details = new HrfTableModel(m_V_Details_Header, m_V_Details_Values);
         m_Table_Details = new HrfTable(m_TableModel_Details,m_intAr_col_width_Details, "details");
@@ -374,7 +330,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
     	JLabel emptyLabel = createLabel("",m_int_Breite_Detail_Fixed,m_int_Hoehe_Label,SwingConstants.CENTER,null);
     	emptyPanel.add(emptyLabel);
 
-        Vector fixedColumn = new Vector();
+        Vector<HrfPanel> fixedColumn = new Vector<>();
         fixedColumn.add(emptyPanel);
         fixedColumn.add(fixedPanel);
 
@@ -385,8 +341,6 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
     	m_Table_Details.setRowHeight(0,m_int_Hoehe_Label + 5);
     	TableColumn colFixed = m_Table_Details.getColumnModel().getColumn(0);
     	colFixed.setPreferredWidth(m_int_Breite_Detail_Fixed);
-
-
 
     	Border kante = BorderFactory.createBevelBorder(BevelBorder.RAISED,hellblau,dunkelblau);
 		m_Button_load_file = new JButton(TranslationFacility.tr("btLoadFile"));
@@ -449,7 +403,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
         m_CB_year.setBackground(hellblau);
         m_CB_year.addItemListener(this);
 
-        m_V_months = new Vector();
+        m_V_months = new Vector<>();
         setMonate();
 
         m_CB_month = new JComboBox(m_V_months);
@@ -459,8 +413,8 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 
 		setLayout(new BorderLayout());
 
-		m_Panel_Calendar_main = new JPanel(new BorderLayout());
-        m_Panel_Calendar_main_north = new JPanel(new GridLayout(2,3));
+        JPanel m_Panel_Calendar_main = new JPanel(new BorderLayout());
+        JPanel m_Panel_Calendar_main_north = new JPanel(new GridLayout(2, 3));
 
         m_ScrollPane_Calendar = new JScrollPane(m_Table_Calendar);
         m_Panel_Calendar_main_north.add(m_CB_month);
@@ -473,10 +427,10 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
         m_Panel_Calendar_main.add(m_Panel_Calendar_main_north,BorderLayout.NORTH);
         m_Panel_Calendar_main.add(m_ScrollPane_Calendar,BorderLayout.CENTER);
 
-		m_Panel_FileTable_main = new JPanel(new BorderLayout());
-        m_Panel_FileTable_main_north = new JPanel(new GridLayout(2,8));
+        JPanel m_Panel_FileTable_main = new JPanel(new BorderLayout());
+        JPanel m_Panel_FileTable_main_north = new JPanel(new GridLayout(2, 8));
 
-        m_ScrollPane_FileTable = new JScrollPane(m_Table_Filelist);
+        JScrollPane m_ScrollPane_FileTable = new JScrollPane(m_Table_Filelist);
 
         m_Panel_FileTable_main_north.add(m_Button_load_file);
         m_Panel_FileTable_main_north.add(m_Button_delete_file);
@@ -489,25 +443,29 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
         m_Panel_FileTable_main.add(m_Panel_FileTable_main_north,BorderLayout.NORTH);
         m_Panel_FileTable_main.add(m_ScrollPane_FileTable,BorderLayout.CENTER);
 
-		m_Panel_Details_main = new JPanel(new BorderLayout());
-        m_Panel_Details_north = new JPanel(new BorderLayout());
+        JPanel m_Panel_Details_main = new JPanel(new BorderLayout());
+        JPanel m_Panel_Details_north = new JPanel(new BorderLayout());
 
-        m_ScrollPane_Details = new JScrollPane(m_Table_Details);
+        JScrollPane m_ScrollPane_Details = new JScrollPane(m_Table_Details);
 
         m_Panel_Details_main.add(m_Panel_Details_north,BorderLayout.NORTH);
         m_Panel_Details_main.add(m_ScrollPane_Details,BorderLayout.CENTER);
         m_Panel_Details_north.add(m_Label_DetailHeader,BorderLayout.NORTH);
 
-		m_Panel_Imports_main = new JPanel(new BorderLayout());
+        // CENTER=m_ScrollPane_Imports,NORTH=m_Button_ResetImports
+        JPanel m_Panel_Imports_main = new JPanel(new BorderLayout());
 
-        m_ScrollPane_Imports = new JScrollPane(m_Table_Imports);
+        // nimmt die Tabelle für die zu importierenden Dateien auf
+        JScrollPane m_ScrollPane_Imports = new JScrollPane(m_Table_Imports);
 
         m_Panel_Imports_main.add(m_Button_ResetImports,BorderLayout.NORTH);
         m_Panel_Imports_main.add(m_ScrollPane_Imports,BorderLayout.CENTER);
 
-		m_SplitPane_top_left = new JSplitPane(JSplitPane.VERTICAL_SPLIT,m_Panel_Calendar_main,m_Panel_Imports_main);
-        m_SplitPane_top = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,m_SplitPane_top_left,m_Panel_FileTable_main);
-		m_SplitPane_main = new JSplitPane(JSplitPane.VERTICAL_SPLIT,m_SplitPane_top,m_Panel_Details_main);
+        // SplitPane für Calendar und Imports
+        JSplitPane m_SplitPane_top_left = new JSplitPane(JSplitPane.VERTICAL_SPLIT, m_Panel_Calendar_main, m_Panel_Imports_main);
+        JSplitPane m_SplitPane_top = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, m_SplitPane_top_left, m_Panel_FileTable_main);
+        //Members für die GUI
+        JSplitPane m_SplitPane_main = new JSplitPane(JSplitPane.VERTICAL_SPLIT, m_SplitPane_top, m_Panel_Details_main);
         m_SplitPane_main.setDividerLocation(350);
         m_SplitPane_top.setDividerLocation(340);
         m_SplitPane_top_left.setDividerLocation(220);
@@ -546,17 +504,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 		m_V_months.add(TranslationFacility.tr("dec"));
 	}
 
-	/******************
-	 * Gibt einen Vector zurück, der alle Monatsnamen enthält
-	 * @return Gibt den Vector m_V_months zurück
-	 ******************/
-	@SuppressWarnings("unchecked")
-	public static Vector getMonate()
-	{
-		return m_V_months;
-	}
-
-	/******************
+    /******************
 	 * Schreibt die Tagesnamen in der gewählten Sprache in das Array m_Ar_days
 	 ******************/
 	public void setTage()
@@ -631,28 +579,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 		 * alle benötigten Werte ermitteln,
 		 * Label erstellen
 		 */
-		int akt_Monat = m_int_selectedMonth;
-		int back_Monat;
-		int fw_Monat;
-		int anzRows = m_TableModel_Calendar.getRowCount();
-		int anzCols = m_TableModel_Calendar.getColumnCount();
-		if(m_int_selectedMonth - 1 < 0)
-		{
-			back_Monat = 11;
-		}
-		else
-		{
-			back_Monat = m_int_selectedMonth - 1;
-		}
-		if(m_int_selectedMonth + 1 > 11)
-		{
-			fw_Monat = 0;
-		}
-		else
-		{
-			fw_Monat = m_int_selectedMonth + 1;
-		}
-		m_Label_Monat.setText(m_V_months.get(m_int_selectedMonth) + " " + m_int_selectedYear);
+        m_Label_Monat.setText(m_V_months.get(m_int_selectedMonth) + " " + m_int_selectedYear);
 		m_Label_Monat.setHorizontalAlignment(JLabel.CENTER);
 		m_Label_Monat.setBackground(gruen);
 
@@ -668,11 +595,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 			{
 				m_queryResult.getObject(1);
 
-				if( m_queryResult.wasNull())
-				{
-					//debugWindow.append("Select war null");
-				}
-				else
+				if( !m_queryResult.wasNull())
 				{
 					Timestamp datum = m_queryResult.getTimestamp("DATUM");
 					int id = m_queryResult.getInt("HRF_ID");
@@ -686,7 +609,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 					}
 					else
 					{
-						Hashtable tmp = new Hashtable();
+						Hashtable<Integer, String> tmp = new Hashtable<>();
 						tmp.put(id,strDatum);
 						m_HashTable_DayInDB.put(tag,tmp);
 					}
@@ -722,8 +645,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 					Timestamp datum = m_queryResult.getTimestamp("SPIELDATUM");
 					int match_id = m_queryResult.getInt("MATCHID");
 					int tag = Integer.parseInt((datum.toString()).substring(8,10));
-					String strDatum = datum.toString().substring(0,19);
-					int matchTyp = (Integer) m_HashTable_MatchTyp.get(match_id);
+                    int matchTyp = (Integer) m_HashTable_MatchTyp.get(match_id);
 
 					if(matchTyp == MatchType.LEAGUE.getId())
 					{
@@ -767,7 +689,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 
 		while(actual_day <= last_day)
 		{
-			Vector tmp = new Vector();
+			Vector<String> tmp = new Vector<>();
 			GregorianCalendar gc_tmp = new GregorianCalendar(m_int_selectedYear,m_int_selectedMonth,actual_day);
 			tmp_kw = gc_tmp.get(GregorianCalendar.WEEK_OF_YEAR);
 			tmp.add(" " + tmp_kw);
@@ -857,7 +779,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 	    	entfernen.add(remove);
 
 	    	//Vector für die Objekte in der Detailtabelle
-	    	Vector details = new Vector();
+	    	Vector<HrfPanel> details = new Vector<>();
 	    	details.add(entfernen);
 	    	details.add(teamDetails);
 
@@ -887,10 +809,9 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 		{
 			m_HashTable_Columns.remove(colKey);
 
-			Enumeration enu = m_HashTable_Columns.keys();
-			Set keys = m_HashTable_Columns.keySet();
-			int menge = keys.size();
-			Object[] schluessel = keys.toArray();
+			var enu = m_HashTable_Columns.keys();
+			var keys = m_HashTable_Columns.keySet();
+            Object[] schluessel = keys.toArray();
 			int counter = 0;
 			while(enu.hasMoreElements())
 			{
@@ -939,8 +860,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 	 ******************/
 	public static boolean hrfForDay(int tag)
 	{
-		boolean return_value = m_HashTable_DayInDB.containsKey(tag);
-		return return_value;
+        return m_HashTable_DayInDB.containsKey(tag);
 	}
 
 	/******************
@@ -950,8 +870,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 	 ******************/
 	public static boolean isSpecialEvent(int tag)
 	{
-		boolean return_value = m_HashTable_isEvent.containsKey(tag);
-		return return_value;
+        return m_HashTable_isEvent.containsKey(tag);
 	}
 
 	/******************
@@ -970,7 +889,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 	 ******************/
 	public static String getNameForEvent(String event)
 	{
-		return (m_HashTable_EventInfo.get(event)).toString();
+		return (m_HashTable_EventInfo.get(event));
 	}
 
 
@@ -1015,13 +934,13 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 		 */
 		if(e.getSource().equals(m_Button_load_file))
 		{
-			m_FileChooser_chooser = new JFileChooser();
+            JFileChooser m_FileChooser_chooser = new JFileChooser();
 			m_FileChooser_chooser.setMultiSelectionEnabled(true);
 			m_FileChooser_chooser.setFileFilter(new ExampleFileFilter("hrf"));
 			m_FileChooser_chooser.setCurrentDirectory(new File(m_Str_hrfPfad));
 
 			int state = m_FileChooser_chooser.showOpenDialog(null);
-			m_files = m_FileChooser_chooser.getSelectedFiles();
+            File[] m_files = m_FileChooser_chooser.getSelectedFiles();
 
 			if(m_files != null && state == JFileChooser.APPROVE_OPTION)
 			{
@@ -1062,9 +981,8 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 							&& m_HashTable_DatumKey.containsValue(dateiPfad)
 							&& !m_HashTable_Import.containsKey(dateiPfad))
 					{
-						Vector tmp = new Vector();
+						Vector<String> tmp = new Vector<>();
 						tmp.add(dateiPfad);
-						//tmp.add(m_TableModel_Filelist.getValueAt(ii,m_TableModel_Filelist.getColumnCount()).toString());
 						m_HashTable_Import.put(dateiPfad,Boolean.FALSE);
 						m_TableModel_Imports.addRow(tmp);
 					}
@@ -1087,14 +1005,12 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 				{
 					Vector tmpV = (m_TableModel_Filelist.getDataVector()).elementAt(ii);
 					String delete_key = tmpV.elementAt(tmpV.size()-1).toString();
-					//String delete_key = "" + m_TableModel_Filelist.getValueAt(ii,m_TableModel_Filelist.getDataVector().capacity());
 					String rem_DatumKey = ((HrfDetails)m_HashTable_Details.get(delete_key)).getDatum().toHT();
 					String rem_DatumKeyJahr = rem_DatumKey.substring(0,10);
 					m_HashTable_Details.remove(delete_key);
 					m_HashTable_DatumKey.remove(rem_DatumKeyJahr);
 					m_HashTable_Details_ColHeader.remove(rem_DatumKey);
 					m_V_Filelist_Keys.remove(delete_key);
-					//m_V_Filelist_Keys.remove(m_TableModel_Filelist.getValueAt(ii,m_TableModel_Filelist.getDataVector().capacity()));
 					rebuildDetailTable(rem_DatumKey);
 					m_TableModel_Filelist.removeRow(ii);
 					ii--;
@@ -1254,17 +1170,11 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 	{
 		if(ie.getSource().equals(m_CB_year))
 		{
-			m_int_selectedYear = Integer.parseInt((String)m_CB_year.getSelectedItem());
+			m_int_selectedYear = Integer.parseInt((String) Objects.requireNonNull(m_CB_year.getSelectedItem()));
 		}
 		else if(ie.getSource().equals(m_CB_month))
 		{
-			String monat = "";
-			int sel_monat = m_CB_month.getSelectedIndex();
-			if(sel_monat < 10)
-			{
-				monat += "0";
-			}
-			m_int_selectedMonth = sel_monat;
+            m_int_selectedMonth = m_CB_month.getSelectedIndex();
 		}
 	}
 //	 *********** Ende der Listener-Methoden *********************
@@ -1284,7 +1194,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 			Vector TagesIDs = new Vector();
 			if (spalte != 0) {
 				Object tmpObj = m_TableModel_Calendar.getValueAt(zeile, spalte);
-				if (!tmpObj.toString().equals("")) {
+				if (!tmpObj.toString().isEmpty()) {
 					tag = Integer.parseInt(tmpObj.toString());
 					// id =((Integer)m_HashTable_DayInDB.get(new
 					// Integer(tag))).intValue();
@@ -1428,9 +1338,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 		m_HashTable_DatumKey.clear();
 		m_TableModel_Filelist.removeAllRows();
 
-		Vector tmp_Pfade = new Vector();
-		Vector tmp_IDs = new Vector();
-		//debugWindow.append("Anzahl Keys in m_V_Filelist_Keys: " + m_V_Filelist_Keys.size());
+        //debugWindow.append("Anzahl Keys in m_V_Filelist_Keys: " + m_V_Filelist_Keys.size());
 		for(int ii = 0; ii < m_V_Filelist_Keys.size(); ii++)
 		{
 			//debugWindow.append("Nummer: " + ii);

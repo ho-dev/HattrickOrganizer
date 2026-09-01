@@ -1,6 +1,5 @@
 package module.lineup.penalties;
 
-import core.constants.UIConstants;
 import core.constants.player.PlayerAbility;
 import core.gui.comp.table.RowNumberTable;
 import core.gui.theme.HOIconName;
