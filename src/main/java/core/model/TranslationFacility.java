@@ -34,4 +34,8 @@ public class TranslationFacility {
     public static String tr(String key, Object... values) {
         return translator.translate(key, values);
     }
+
+    public static String trSingularOrPlural(boolean singular, String keySingular, String keyPlural) {
+        return singular ? tr(keySingular) : tr(keyPlural);
+    }
 }

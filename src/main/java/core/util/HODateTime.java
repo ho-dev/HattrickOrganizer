@@ -10,6 +10,7 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.time.temporal.ChronoUnit;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class HODateTime implements Comparable<HODateTime> {
@@ -415,48 +416,6 @@ public class HODateTime implements Comparable<HODateTime> {
         final var nextDay = localDate.plusDays(1);
         final var newInstant = Instant.from(nextDay.atStartOfDay(ZoneId.systemDefault()));
         return new HODateTime(newInstant);
-    }
-
-    public static class HODuration implements Comparable<HODuration>{
-        public int seasons;
-        public int days;
-
-        public HODuration(int inSeasons, int inDays) {
-            this.seasons = inSeasons;
-            this.days = inDays;
-            while (days > 111) {
-                days -= 112;
-                seasons++;
-            }
-            while (days < 0) {
-                days += 112;
-                seasons--;
-            }
-        }
-
-        public static HODuration between(HODateTime from, HODateTime to) {
-            return new HODuration(0, (int) Duration.between(from.instant, to.instant).plus(12, ChronoUnit.HOURS).toDays());
-        }
-
-        public HODuration plus(HODuration diff) {
-            return new HODuration(this.seasons + diff.seasons, this.days + diff.days);
-        }
-
-        public HODuration minus(HODuration diff) {
-            return new HODuration(this.seasons - diff.seasons, this.days - diff.days);
-        }
-
-        public String toString(){
-            return seasons + " (" + days + ")";
-        }
-        public double toDouble() { return seasons + days/112.; }
-
-        @Override
-        public int compareTo(@NotNull HODateTime.HODuration o) {
-            int ret = Integer.compare(this.seasons, o.seasons);
-            if (ret==0) ret = Integer.compare(this.days, o.days);
-            return ret;
-        }
     }
 
     public String toString(){

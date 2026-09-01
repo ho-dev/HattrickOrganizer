@@ -10,6 +10,7 @@ import core.model.player.CommentType;
 import core.model.player.PlayerCategory;
 import core.model.player.Specialty;
 import core.util.HODateTime;
+import core.util.HODuration;
 import core.util.HOLogger;
 import lombok.Getter;
 import lombok.Setter;
@@ -726,8 +727,8 @@ public class YouthPlayer extends AbstractTable.Storable {
      */
     public int getAgeYearsAtDate(HODateTime t) {
         var hrfTime = HOVerwaltung.instance().getModel().getBasics().getDatum();
-        var diff = HODateTime.HODuration.between(hrfTime, t);
-        return new HODateTime.HODuration(this.getAgeYears(), this.getAgeDays()).plus(diff).seasons;
+        var diff = HODuration.betweenDays(hrfTime, t);
+        return toIntExact(new HODuration(this.getAgeYears(), this.getAgeDays()).plus(diff).getSeasons());
     }
 
     public YouthSkillsInfo getCurrentSkills() {
