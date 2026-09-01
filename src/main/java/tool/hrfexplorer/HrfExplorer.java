@@ -321,7 +321,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
         m_Table_Calendar = new HrfTable(m_TableModel_Calendar,m_intAr_col_width_Calendar, "calendar");
         m_Table_Calendar.addMouseListener(this);
         m_Table_Calendar.setIntercellSpacing(new Dimension(2,2));
-        m_Table_Calendar.setRowHeight(20);
+//        m_Table_Calendar.setRowHeight(20);
 
         /*
          *Erstellen der Dummy Tabelle "Details"
@@ -923,7 +923,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
     		{
     			breite = m_int_Breite_Detail_Var;
     		}
-    		col.setResizable(false);
+//    		col.setResizable(false);
 	    	col.setPreferredWidth( breite );
 	    	col.setMinWidth(breite);
     	}

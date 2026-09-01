@@ -180,7 +180,7 @@ public class SubstitutionOverview extends JPanel {
 	private void initComponents() {
 		setLayout(new BorderLayout());
 		this.substitutionTable = new JTable();
-		this.substitutionTable.setRowHeight(UIConstants.TABLE_ROW_HEIGHT);
+//		this.substitutionTable.setRowHeight(UIConstants.TABLE_ROW_HEIGHT);
 		this.substitutionTable.setModel(new SubstitutionsTableModel());
 		this.substitutionTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		TableColumn warningCol = this.substitutionTable.getColumnModel().getColumn(
