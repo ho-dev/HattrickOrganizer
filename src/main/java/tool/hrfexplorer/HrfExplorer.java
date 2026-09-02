@@ -226,7 +226,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
          *Erstellen der Dummy Tabelle "Importliste"
          */
 		Vector<String> importHeader = new Vector<>();
-		Vector<String> importValues = new Vector<>();
+		Vector<Vector<Object>> importValues = new Vector<>();
 
 		importHeader.add(TranslationFacility.tr("pfad"));
 
@@ -238,7 +238,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
          */
         //Variablen für Filelist-Tabelle
         Vector<String> m_V_Filelist_Header = new Vector<>();
-        Vector<String> m_V_Filelist_Values = new Vector<>();
+        Vector<Vector<Object>> m_V_Filelist_Values = new Vector<>();
 
         m_V_Filelist_Header.add("");
         m_V_Filelist_Header.add(TranslationFacility.tr("datname"));
@@ -260,7 +260,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
          */
         //	Variablen für Calendar-Tabelle
         Vector<String> m_V_Calendar_Header = new Vector<>();
-        Vector<String> m_V_Calendar_Values = new Vector<>();
+        Vector<Vector<Object>>  m_V_Calendar_Values = new Vector<>();
 
         m_V_Calendar_Header.add(TranslationFacility.tr("kw"));
         m_V_Calendar_Header.add(TranslationFacility.tr("monkurz"));
@@ -300,7 +300,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
 
         //Variablen für Detailtabelle
         Vector<String> m_V_Details_Header = new Vector<>();
-        Vector<String> m_V_Details_Values = new Vector<>();
+        Vector<Vector<Object>>  m_V_Details_Values = new Vector<>();
 
         m_TableModel_Details = new HrfTableModel(m_V_Details_Header, m_V_Details_Values);
         m_Table_Details = new HrfTable(m_TableModel_Details,m_intAr_col_width_Details, "details");

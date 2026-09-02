@@ -28,7 +28,7 @@ public class HrfTableModel extends DefaultTableModel {
 	@Override
 	public Class getColumnClass(int columnIndex) {
 		Object o = getValueAt(0, columnIndex);
-		Vector v = (Vector) dataVector.elementAt(0);
+		Vector v = dataVector.elementAt(0);
 		if (o == null) {
 			return Object.class;
 		}
