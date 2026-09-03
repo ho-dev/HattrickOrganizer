@@ -119,7 +119,6 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
     /**
      * Wird von HO aufgerufen, wenn das Tab aktiviert wird
      */
-    @SuppressWarnings("unchecked")
     private void initialize() {
 
         HOVerwaltung hoV = HOVerwaltung.instance();
@@ -220,7 +219,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
         /*
          * Erstellen der Dummy Tabelle "Calendar"
          */
-        //	Variablen für Calendar-Tabelle
+        // Variablen für Calendar-Tabelle
         Vector<String> m_V_Calendar_Header = new Vector<>();
         Vector<Vector<Object>> m_V_Calendar_Values = new Vector<>();
 
@@ -418,7 +417,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
         // SplitPane für Calendar und Imports
         JSplitPane m_SplitPane_top_left = new JSplitPane(JSplitPane.VERTICAL_SPLIT, m_Panel_Calendar_main, m_Panel_Imports_main);
         JSplitPane m_SplitPane_top = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, m_SplitPane_top_left, m_Panel_FileTable_main);
-        //Members für die GUI
+        // Members für die GUI
         JSplitPane m_SplitPane_main = new JSplitPane(JSplitPane.VERTICAL_SPLIT, m_SplitPane_top, m_Panel_Details_main);
         m_SplitPane_main.setDividerLocation(350);
         m_SplitPane_top.setDividerLocation(340);
@@ -487,7 +486,6 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
      * @param monat Der Monat für den die Tabelle erstellt wird
      * @param jahr Das Jahr für das die Tabelle erstellt wird
      ******************/
-    @SuppressWarnings("unchecked")
     public void createCalendarTable(int monat, int jahr) {
         String monat_Start;
         String jahr_Start;
@@ -517,7 +515,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
         // Holen der HRF-ID und des Datums der Einträge, die in dem gewählten Monat liegen
         doSelect("SELECT DATUM,HRF_ID FROM HRF where DATUM between '" + jahr_Start + "-" + monat_Start + "-01' and '" + jahr_Ende + "-" + monat_Ende + "-01'");
         //********************************************************************************************
-        //Leeren der Hashtables
+        // Leeren der Hashtables
         m_HashTable_DayInDB.clear();
         m_HashTable_isEvent.clear();
 
@@ -631,7 +629,6 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
      * Erstellt die Detail-Tabelle
      * @param hashwert Dieser Parameter ist der Key, mit dem das HrfDetails-Object aus der Hashtable m_HashTable_Details geholt wird
      ******************/
-    @SuppressWarnings("unchecked")
     public void createDetailTable(String hashwert) {
         HrfDetails selectedObject = (HrfDetails) m_HashTable_Details.get(hashwert);
         if (!m_HashTable_Details_ColHeader.containsKey(selectedObject.getDatum())) {
@@ -799,7 +796,6 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
      * Methode für die Behandlung von Mausklicks auf einen Button
      * @param e Wertet den Klick auf Buttons aus
      *****************/
-    @SuppressWarnings("unchecked")
     public void actionPerformed(ActionEvent e) {
         /*
          * Button LoadFile
@@ -885,7 +881,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
          * Button DeleteFile
          */
         else if (e.getSource().equals(m_Button_delete_file)) {
-            //Ein oder mehrere ausgewählte Files werden physikalisch von der Festplatte entfernt
+            // Ein oder mehrere ausgewählte Files werden physikalisch von der Festplatte entfernt
             int anzRows = m_TableModel_Filelist.getRowCount();
             for (int i = 0; i < anzRows; i++) {
                 if ((Boolean) m_TableModel_Filelist.getValueAt(i, 0) && !m_TableModel_Filelist.getValueAt(i, 1).equals("---")) {
@@ -895,9 +891,9 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
                     File tmp_File = new File(deletePath);
                     int option = JOptionPane.showConfirmDialog(null, TranslationFacility.tr("deletefile") + "\n" + deletePath, TranslationFacility.tr("deletefile"), JOptionPane.YES_NO_OPTION);
                     if (option == 0) {
-                        //Löschen der Datei von der Platte
+                        // Löschen der Datei von der Platte
                         tmp_File.delete();
-                        //Löschen der Datei aus der Hashtable Details
+                        // Löschen der Datei aus der Hashtable Details
                         m_HashTable_Details.remove(deletePath);
                         m_HashTable_DatumKey.remove(rem_DatumKey);
                         m_TableModel_Filelist.removeRow(i);
@@ -917,11 +913,11 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
             for (int i = 0; i < anzRows; i++) {
                 if ((Boolean) m_TableModel_Filelist.getValueAt(i, 0)
                     && m_TableModel_Filelist.getValueAt(i, 1).equals("---")) {
-                    //Holen der HRF_ID
+                    // Holen der HRF_ID
                     Vector tmpV = (m_TableModel_Filelist.getDataVector()).elementAt(i);
                     var deleteHRF_ID = (Integer) tmpV.elementAt(tmpV.size() - 1);
 
-                    //Tabelle und die Zählwerte anpassen
+                    // Tabelle und die Zählwerte anpassen
                     m_TableModel_Filelist.removeRow(i);
                     m_V_Filelist_Keys.remove(deleteHRF_ID);
                     anzRows = m_TableModel_Filelist.getRowCount();
@@ -1007,7 +1003,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
             m_int_selectedMonth = m_CB_month.getSelectedIndex();
         }
     }
-    @SuppressWarnings("unchecked")
+
     public void mouseClicked(MouseEvent e) {
         if (e.getSource().equals(m_Table_Calendar)) {
             int zeile = m_Table_Calendar.getSelectedRow();
@@ -1040,7 +1036,7 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
                 }
             }
         } else if (e.getSource().equals(m_Table_Filelist)) {
-            //Gewählte Zeile ermitteln
+            // Gewählte Zeile ermitteln
             int rowNr = m_Table_Filelist.getSelectedRow();
             // Key für die HashTable ermitteln
             Vector tmpV = (m_TableModel_Filelist.getDataVector()).elementAt(rowNr);
@@ -1103,15 +1099,13 @@ public class HrfExplorer extends ImagePanel implements ActionListener,ItemListen
         try {
             // FIXME Break coupling with connection manager.
             m_queryResult = dbManager.getConnectionManager().executeQuery(query);
-        } catch (Exception e) {
-            //debugWindow.append("FEHLER");
+        } catch (Exception ignored) {
         }
     }
 
     /**
      * Führt ein refresh für das Plugin durch
      */
-    @SuppressWarnings("unchecked")
     public void refresh() {
         createCalendarTable(m_int_selectedMonth, m_int_selectedYear);
 

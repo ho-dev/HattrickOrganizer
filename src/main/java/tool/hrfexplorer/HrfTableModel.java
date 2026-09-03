@@ -1,9 +1,7 @@
 package tool.hrfexplorer;
 
 import core.util.HOLogger;
-
 import java.util.Vector;
-
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -11,7 +9,6 @@ import javax.swing.table.DefaultTableModel;
  */
 public class HrfTableModel extends DefaultTableModel {
 
-	@SuppressWarnings("unchecked")
 	public HrfTableModel(Vector columns, Vector rows) {
 		dataVector = rows;
 		columnIdentifiers = columns;
@@ -48,7 +45,7 @@ public class HrfTableModel extends DefaultTableModel {
 		try {
 			dataVector.addElement(myRow);
 		} catch (Exception e) {
-			HOLogger.instance().error(this.getClass(), "Error in addrow: " + e.getMessage());
+			HOLogger.instance().error(this.getClass(), "Error in addRow: " + e.getMessage());
 		}
 
 	}
