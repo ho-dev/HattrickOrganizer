@@ -9,6 +9,8 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.util.HODateTime;
+import core.util.HOLogger;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.temporal.ChronoField;
@@ -71,8 +73,8 @@ class HrfDetails {
 							.substring(0, 19));
 				}
 			}
-		} catch (SQLException sexc) {
-			HrfExplorer.appendText("" + sexc);
+		} catch (SQLException e) {
+            HOLogger.instance().error(this.getClass(), "Error in createDates: " + e.getMessage());
 		}
 
 		try (ResultSet m_rs = dbManager.getConnectionManager().executePreparedQuery(minHrfDateSql, m_Datum.toDbTimestamp())) {
@@ -88,8 +90,8 @@ class HrfDetails {
 							.substring(0, 19));
 				}
 			}
-		} catch (SQLException sexc) {
-			HrfExplorer.appendText("" + sexc);
+		} catch (SQLException e) {
+            HOLogger.instance().error(this.getClass(), "Error in createDates: " + e.getMessage());
 		}
 
 		try (ResultSet m_rs = dbManager.getConnectionManager().executePreparedQuery(countHrfDateSql,m_Datum.toDbTimestamp())) {
@@ -102,8 +104,8 @@ class HrfDetails {
 					setBild(ImageUtilities.getRightArrowIcon(getColor(HOColorName.SHOW_MATCH)));
 				}
 			}
-		} catch (SQLException sexc) {
-			HrfExplorer.appendText("" + sexc);
+		} catch (SQLException e) {
+            HOLogger.instance().error(this.getClass(), "Error in createDates: " + e.getMessage());
 		}
 	}
 
