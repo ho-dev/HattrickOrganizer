@@ -88,8 +88,8 @@ public class HrfTableCellRenderer extends JLabel implements TableCellRenderer {
             label = new JLabel();
         }
 
-        if (value instanceof ImageIcon) {
-            label.setIcon((ImageIcon) value);
+        if (value instanceof ImageIcon imageIcon) {
+            label.setIcon(imageIcon);
         } else {
             label.setText(value.toString());
             label.setFont(table.getFont());

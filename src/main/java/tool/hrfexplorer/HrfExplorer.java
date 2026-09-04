@@ -30,12 +30,11 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.*;
 
-
 /**
  * @author KickMuck
  */
 
-public class HrfExplorer extends ImagePanel implements ActionListener,ItemListener,MouseListener,IRefreshable,TableColumnModelListener {
+public class HrfExplorer extends ImagePanel implements ActionListener, ItemListener, MouseListener, IRefreshable, TableColumnModelListener {
     private List<MatchKurzInfo> m_kurzInfo;                // Adapter für Spieleinfos, u.a. ob Friendly oder Liga
     // Members für Farben
     private final Color gruen = ThemeManager.getColor(HOColorName.HRF_GREEN_BG);

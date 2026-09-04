@@ -20,7 +20,7 @@ import java.time.*;
 
 class HrfDetails {
 
-	private String m_Str_DatumVorher;
+    private String m_Str_DatumVorher;
 	private String m_Str_DatumDanach;
 	private HODateTime m_Datum;
 	private String m_Wochentag;
@@ -60,56 +60,60 @@ class HrfDetails {
 	 * ob das File/der Eintrag in DB angelegt ist
 	 */
 	void createDates() {
-		try (ResultSet m_rs = dbManager.getConnectionManager().executePreparedQuery(maxHrfDateSql, m_Datum.toDbTimestamp())) {
-			while (true) {
-				assert m_rs != null;
-				if (!m_rs.next()) break;
-				m_rs.getTimestamp(1);
+        try (ResultSet m_rs = dbManager.getConnectionManager().executePreparedQuery(maxHrfDateSql, m_Datum.toDbTimestamp())) {
+            while (true) {
+                assert m_rs != null;
+                if (!m_rs.next()) break;
+                m_rs.getTimestamp(1);
 
-				if (m_rs.wasNull()) {
-					setStr_DatumVorher("---");
-				} else {
-					setStr_DatumVorher((m_rs.getTimestamp(1)).toString()
-							.substring(0, 19));
-				}
-			}
-		} catch (SQLException e) {
-            HOLogger.instance().error(this.getClass(), "Error in createDates: " + e.getMessage());
-		}
+                if (m_rs.wasNull()) {
+                    setStr_DatumVorher("---");
+                } else {
+                    setStr_DatumVorher((m_rs.getTimestamp(1)).toString()
+                        .substring(0, 19));
+                }
+            }
+        } catch (SQLException e) {
+            LogErrorInCreateDates(e);
+        }
 
-		try (ResultSet m_rs = dbManager.getConnectionManager().executePreparedQuery(minHrfDateSql, m_Datum.toDbTimestamp())) {
-			while (true) {
-				assert m_rs != null;
-				if (!m_rs.next()) break;
-				m_rs.getTimestamp(1);
+        try (ResultSet m_rs = dbManager.getConnectionManager().executePreparedQuery(minHrfDateSql, m_Datum.toDbTimestamp())) {
+            while (true) {
+                assert m_rs != null;
+                if (!m_rs.next()) break;
+                m_rs.getTimestamp(1);
 
-				if (m_rs.wasNull()) {
-					setStr_DatumDanach("---");
-				} else {
-					setStr_DatumDanach((m_rs.getTimestamp(1)).toString()
-							.substring(0, 19));
-				}
-			}
-		} catch (SQLException e) {
-            HOLogger.instance().error(this.getClass(), "Error in createDates: " + e.getMessage());
-		}
+                if (m_rs.wasNull()) {
+                    setStr_DatumDanach("---");
+                } else {
+                    setStr_DatumDanach((m_rs.getTimestamp(1)).toString()
+                        .substring(0, 19));
+                }
+            }
+        } catch (SQLException e) {
+            LogErrorInCreateDates(e);
+        }
 
-		try (ResultSet m_rs = dbManager.getConnectionManager().executePreparedQuery(countHrfDateSql,m_Datum.toDbTimestamp())) {
-			while (true) {
-				assert m_rs != null;
-				if (!m_rs.next()) break;
-				if (m_rs.getInt(1) == 0) {
-					setBild(ThemeManager.getIcon(HOIconName.REMOVE));
-				} else {
-					setBild(ImageUtilities.getRightArrowIcon(getColor(HOColorName.SHOW_MATCH)));
-				}
-			}
-		} catch (SQLException e) {
-            HOLogger.instance().error(this.getClass(), "Error in createDates: " + e.getMessage());
-		}
-	}
+        try (ResultSet m_rs = dbManager.getConnectionManager().executePreparedQuery(countHrfDateSql, m_Datum.toDbTimestamp())) {
+            while (true) {
+                assert m_rs != null;
+                if (!m_rs.next()) break;
+                if (m_rs.getInt(1) == 0) {
+                    setBild(ThemeManager.getIcon(HOIconName.REMOVE));
+                } else {
+                    setBild(ImageUtilities.getRightArrowIcon(getColor(HOColorName.SHOW_MATCH)));
+                }
+            }
+        } catch (SQLException e) {
+            LogErrorInCreateDates(e);
+        }
+    }
 
-	/*****************
+    private void LogErrorInCreateDates(SQLException exception) {
+        HOLogger.instance().error(this.getClass(), "Error in createDates: " + exception.getMessage());
+    }
+
+    /*****************
 	 * Berechnet diverse Datumswerte aus einem Timestamp-String
 	 *
 	 */
