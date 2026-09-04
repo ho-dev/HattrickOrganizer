@@ -6,6 +6,14 @@
 
 2. `src/main/resources/release_notes.md` ...
 
- - [ ] has been updated
- - [ ] does not require update
+- [ ] has been updated
+- [ ] does not require update
+
+
+3. After merge to master the [English translations](https://poeditor.com/projects/po_edit?id_language=43&per_page=20&id=206221)
+
+- [ ] has been updated
+- [ ] does not require update
+
+
 
