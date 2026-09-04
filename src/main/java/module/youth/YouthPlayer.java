@@ -489,7 +489,14 @@ public class YouthPlayer extends AbstractTable.Storable {
         var trainings = model.getYouthTrainingsAfter(this.getArrivalDate());
         for (var training : trainings) {
             var team = training.getTeam(teamId);
-            if (team != null && team.hasPlayerPlayed(this.id)) {
+            if (training.getMatchDate().isBefore(this.getArrivalDate())) {
+                HOLogger.instance().warning(this.getClass(), "Wrong training in list. Date " + training.getMatchDate().toLocaleDate() + " is before player arrival at " + this.getArrivalDate().toLocaleDate());
+            }
+            if(team == null) {
+                HOLogger.instance().warning(this.getClass(), "Team not found in list. Date " + training.getMatchDate().toLocaleDate());
+                continue;
+            }
+//            if (team.hasPlayerPlayed(this.id)) {
                 var trainingEntry = new YouthTrainingDevelopmentEntry(this, training);
                 var oldSkills = skills;
                 skills = trainingEntry.calcSkills(skills, getSkillsAt(training.getMatchDate()), team);
@@ -498,9 +505,9 @@ public class YouthPlayer extends AbstractTable.Storable {
                 trainingEntry.setIsSuspended(isSuspendedAt(training.getMatchDate()));
                 trainingDevelopment.put(training.getMatchDate(), trainingEntry);
                 checkIfSkillsAreKeeperSkills(skills);
-            } else {
-                progressLastMatch = 0;
-            }
+//            } else {
+//                progressLastMatch = 0;
+//            }
         }
         this.currentSkills = skills;
         DBManager.instance().storeYouthPlayer(this.hrfid, this);

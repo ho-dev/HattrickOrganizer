@@ -144,6 +144,7 @@ public class HOLinesChart implements IChart {
         }
 
         m_panel = new XChartPanel<>(m_chart);
+
     }
 
     private String toDatetimeString(Double x) {
