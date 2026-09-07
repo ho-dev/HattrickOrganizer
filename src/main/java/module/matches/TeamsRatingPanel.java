@@ -23,7 +23,6 @@ import java.util.stream.Stream;
  */
 class TeamsRatingPanel extends LazyImagePanel {
 
-    private static final int ROW_INDEX_INDIRECT_SET_PIECES = 7;
 	private final int RATING_BAR_WIDTH = 18 * UserParameter.instance().fontSize;
 	private final int RATING_BAR_HEIGHT = 4 * UserParameter.instance().fontSize;
 	private final int INSET = UserParameter.instance().fontSize;
@@ -59,18 +58,18 @@ class TeamsRatingPanel extends LazyImagePanel {
         CENTRAL_ATTACK(5, "ls.match.ratingsector.centralattack", Matchdetails::getHomeMidAtt, Matchdetails::getGuestMidAtt, Matchdetails::getGuestMidDef),
         LEFT_ATTACK(6, "ls.match.ratingsector.leftattack", Matchdetails::getHomeLeftAtt, Matchdetails::getGuestLeftAtt, Matchdetails::getGuestRightDef),
 
-        INDIRECT_SET_PIECES_ATTACK(ROW_INDEX_INDIRECT_SET_PIECES, "ls.match.ratingsector.indirect.setpieces.att", Matchdetails::getHomeRatingIndirectSetPiecesAtt, Matchdetails::getGuestRatingIndirectSetPiecesAtt, Matchdetails::getGuestRatingIndirectSetPiecesDef),
-        INDIRECT_SET_PIECES_DEFENSE(ROW_INDEX_INDIRECT_SET_PIECES + 1, "ls.match.ratingsector.indirect.setpieces.def", Matchdetails::getHomeRatingIndirectSetPiecesDef, Matchdetails::getGuestRatingIndirectSetPiecesDef, Matchdetails::getGuestRatingIndirectSetPiecesAtt);
+        INDIRECT_SET_PIECES_ATTACK(7, "ls.match.ratingsector.indirect.setpieces.att", Matchdetails::getHomeRatingIndirectSetPiecesAtt, Matchdetails::getGuestRatingIndirectSetPiecesAtt, Matchdetails::getGuestRatingIndirectSetPiecesDef),
+        INDIRECT_SET_PIECES_DEFENSE(8, "ls.match.ratingsector.indirect.setpieces.def", Matchdetails::getHomeRatingIndirectSetPiecesDef, Matchdetails::getGuestRatingIndirectSetPiecesDef, Matchdetails::getGuestRatingIndirectSetPiecesAtt);
 
-        private final int rowIndex;
+        private final int ratingSectorId;
         private final String labelTranslationKey;
         private final Function<Matchdetails, Integer> homeTeamFunction;
         private final Function<Matchdetails, Integer> guestTeamFunction;
         private final Function<Matchdetails, Integer> versusGuestTeamFunction;
 
-        public int getRowNumber() {
-            var ret = getRowIndex() + 1;
-            if (ret > ROW_INDEX_INDIRECT_SET_PIECES) {
+        public int getViewGridY() {
+            var ret = getRatingSectorId() + 1;
+            if (ret > INDIRECT_SET_PIECES_ATTACK.ratingSectorId) {
                 ret++;
             }
             return ret;
@@ -220,7 +219,7 @@ class TeamsRatingPanel extends LazyImagePanel {
         var indirectSetPiecesLabel = new JLabel(TranslationFacility.tr("ls.match.ratingsector.indirect.setpieces"));
         indirectSetPiecesLabel.setFont(generalFont);
         m_jgbcBottom.insets = new Insets(16, 8, 0, 8);
-        add(indirectSetPiecesLabel, 0,  ROW_INDEX_INDIRECT_SET_PIECES + 1);
+        add(indirectSetPiecesLabel, 0,  8);
         m_jgbcBottom.insets = new Insets(8, 8, 0, 8);
         Stream.of(RatingSector.values()).forEach(this::addRow);
 		m_jgbcBottom.insets = new Insets(8, 8, 8, 8);
@@ -251,11 +250,11 @@ class TeamsRatingPanel extends LazyImagePanel {
 
 	private void addRow(RatingSector ratingSector) {
         final String text = TranslationFacility.tr(ratingSector.getLabelTranslationKey());
-        final int row = ratingSector.getRowNumber();
+        final int row = ratingSector.getViewGridY();
 		JLabel label = new JLabel(text);
 		label.setFont(generalFont);
 		add(label, 0, row);
-        var barPair = barPairs.get(ratingSector.getRowIndex());
+        var barPair = barPairs.get(ratingSector.getRatingSectorId());
         add(barPair.progressBarHome(), 1, row);
         add(barPair.progressBarGuest(), 2, row);
 	}
@@ -292,7 +291,7 @@ class TeamsRatingPanel extends LazyImagePanel {
     }
 
 	private void setBarsValue(RatingSector ratingSector, Matchdetails matchdetails) {
-        var barPar = barPairs.get(ratingSector.getRowIndex());
+        var barPar = barPairs.get(ratingSector.getRatingSectorId());
         var homeValue = ratingSector.getHomeTeamValue(matchdetails);
         var guestValue = ratingSector.getGuestTeamValue(matchdetails);
         if (homeValue >= 0) {
