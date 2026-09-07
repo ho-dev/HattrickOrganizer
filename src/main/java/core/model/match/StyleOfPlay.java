@@ -66,4 +66,16 @@ public class StyleOfPlay {
         }
         return null;
     }
+
+    public boolean isNotAvailable() {
+        return value == null;
+    }
+
+    public boolean isNeutral() {
+        return value == 0;
+    }
+
+    public boolean isOffensive() {
+        return value > 0;
+    }
 }
