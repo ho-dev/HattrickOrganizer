@@ -57,9 +57,8 @@ class TeamsRatingPanel extends LazyImagePanel {
         RIGHT_ATTACK(4, "ls.match.ratingsector.rightattack", Matchdetails::getHomeRightAtt, Matchdetails::getGuestRightAtt, Matchdetails::getGuestLeftDef),
         CENTRAL_ATTACK(5, "ls.match.ratingsector.centralattack", Matchdetails::getHomeMidAtt, Matchdetails::getGuestMidAtt, Matchdetails::getGuestMidDef),
         LEFT_ATTACK(6, "ls.match.ratingsector.leftattack", Matchdetails::getHomeLeftAtt, Matchdetails::getGuestLeftAtt, Matchdetails::getGuestRightDef),
-
-        INDIRECT_SET_PIECES_ATTACK(7, "ls.match.ratingsector.indirect.setpieces.att", Matchdetails::getHomeRatingIndirectSetPiecesAtt, Matchdetails::getGuestRatingIndirectSetPiecesAtt, Matchdetails::getGuestRatingIndirectSetPiecesDef),
-        INDIRECT_SET_PIECES_DEFENSE(8, "ls.match.ratingsector.indirect.setpieces.def", Matchdetails::getHomeRatingIndirectSetPiecesDef, Matchdetails::getGuestRatingIndirectSetPiecesDef, Matchdetails::getGuestRatingIndirectSetPiecesAtt);
+        INDIRECT_SET_PIECES_DEFENSE(7, "ls.match.ratingsector.indirect.setpieces.def", Matchdetails::getHomeRatingIndirectSetPiecesDef, Matchdetails::getGuestRatingIndirectSetPiecesDef, Matchdetails::getGuestRatingIndirectSetPiecesAtt),
+        INDIRECT_SET_PIECES_ATTACK(8, "ls.match.ratingsector.indirect.setpieces.att", Matchdetails::getHomeRatingIndirectSetPiecesAtt, Matchdetails::getGuestRatingIndirectSetPiecesAtt, Matchdetails::getGuestRatingIndirectSetPiecesDef);
 
         private final int ratingSectorId;
         private final String labelTranslationKey;
@@ -69,7 +68,7 @@ class TeamsRatingPanel extends LazyImagePanel {
 
         public int getViewGridY() {
             var ret = getRatingSectorId() + 1;
-            if (ret > INDIRECT_SET_PIECES_ATTACK.ratingSectorId) {
+            if (ret > INDIRECT_SET_PIECES_DEFENSE.ratingSectorId) {
                 ret++;
             }
             return ret;
