@@ -13,7 +13,6 @@ import java.awt.Insets;
  * @author <a href=mailto:draghetto@users.sourceforge.net>Massimiliano Amato</a>
  */
 public class InfoPanel extends JPanel {
-	private static final long serialVersionUID = -983845737480059931L;
 
 	/**
      * Constructs a new instance.

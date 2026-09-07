@@ -13,7 +13,6 @@ import core.model.UserParameter;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.Serial;
 import java.util.List;
 import java.util.Vector;
 
@@ -22,8 +21,6 @@ import java.util.Vector;
  */
 public class PlayerComparePanel extends LazyImagePanel implements ItemListener, FocusListener {
 
-	@Serial
-	private static final long serialVersionUID = -1629490436656226196L;
 	// Members for Tables
 	private PlayerTable m_jTableTop; // Table for all players
 	private JTable m_jTableBottom; // Table for all compared players

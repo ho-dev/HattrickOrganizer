@@ -20,11 +20,6 @@ import java.awt.event.ActionListener;
 public class DeletePanel extends JPanel {
     //~ Instance fields ----------------------------------------------------------------------------
 
-    /**
-	 *
-	 */
-	private static final long serialVersionUID = 3360500719618041012L;
-
 	/** The Favourite Menu itself */
     FavouriteMenu menu;
 

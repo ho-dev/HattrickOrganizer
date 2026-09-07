@@ -24,13 +24,12 @@ import javax.swing.JScrollPane;
 
 /**
  * Backupmanagement dialog
- * 
+ *
  * @author Thorsten Dietz
- * 
+ *
  */
 public final class BackupDialog extends JDialog implements ActionListener {
 
-	private static final long serialVersionUID = 8021487086770633938L;
 	private JButton okButton = new JButton("Restore");
 	private JButton cancelButton = new JButton("Cancel");
 	private JList list;

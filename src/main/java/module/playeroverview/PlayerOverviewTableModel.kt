@@ -79,6 +79,8 @@ class PlayerOverviewTableModel(id: UserColumnController.ColumnModelId, name: Str
         columns[index++] = additionalArray[30]
         columns[index++] = goals[5]
         columns[index++] = goals[6]
+        columns[index++] = additionalArray[32]
+        columns[index++] = additionalArray[33]
 
         this.columns = columns.filterNotNull().toTypedArray()
         assert(this.columns.size == columns.size)

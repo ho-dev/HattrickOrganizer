@@ -103,8 +103,11 @@ public class HOModel {
     }
 
     public HOModel(int id) {
-        PersistenceManager dbManager = getPersistenceManager();
+        this(id, DBManager.instance());
+    }
 
+    public HOModel(int id, PersistenceManager dbManager) {
+        this.persistenceManager = dbManager;
         hrf = dbManager.loadHRF(id);
         if (hrf == null) {
             hrf = new HRF(id, HODateTime.now()); // initial start

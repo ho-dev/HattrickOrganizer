@@ -9,8 +9,6 @@ import core.model.TranslationFacility;
  */
 class UpdatePanel extends AbstractInjuryPanel {
 
-	private static final long serialVersionUID = -7495655025085036037L;
-
     //~ Instance fields ----------------------------------------------------------------------------
 
 	private String msg = TranslationFacility.tr("UpdatesNeeded");

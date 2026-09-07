@@ -1,6 +1,8 @@
 package tool.arenasizer;
 
-import core.gui.UrlImageLabel;
+import core.gui.AsyncImageLabel;
+import core.gui.image.ImageProvider;
+import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
 import core.util.HODateTime;
@@ -9,6 +11,8 @@ import core.util.HumanDuration;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.Optional;
@@ -19,7 +23,8 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 public class ArenaInfoPanel extends JPanel {
 
     private final JPanel stadiumCard;
-    private final UrlImageLabel imageLoader;
+    private final AsyncImageLabel imageLabel;
+    private ImageProvider stadiumImageProvider;
 	private final CapacityPanel currentCapacityPanel;
     private final JPanel renovationCard;
 	private final CapacityPanel expandedCapacityPanel;
@@ -33,16 +38,26 @@ public class ArenaInfoPanel extends JPanel {
         stadiumCard = new JPanel();
         stadiumCard.setLayout(new BoxLayout(stadiumCard, BoxLayout.Y_AXIS));
 
-        imageLoader = new UrlImageLabel();
-        imageLoader.setPreferredSize(new Dimension(220, 220));
-        imageLoader.setMinimumSize(new Dimension(220, 220));
-        imageLoader.setMaximumSize(new Dimension(220, 220));
-        imageLoader.setAlignmentX(Component.LEFT_ALIGNMENT);
+        imageLabel = new AsyncImageLabel();
+        imageLabel.setPreferredSize(new Dimension(220, 220));
+        imageLabel.setMinimumSize(new Dimension(220, 220));
+        imageLabel.setMaximumSize(new Dimension(220, 220));
+        imageLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+        imageLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+        imageLabel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (SwingUtilities.isLeftMouseButton(e) && stadiumImageProvider != null) {
+                    imageLabel.reload(stadiumImageProvider);
+                }
+            }
+        });
 
         currentCapacityPanel = new CapacityPanel();
         currentCapacityPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        stadiumCard.add(imageLoader);
+        stadiumCard.add(imageLabel);
         stadiumCard.add(Box.createVerticalStrut(8));
         stadiumCard.add(currentCapacityPanel);
 
@@ -84,7 +99,8 @@ public class ArenaInfoPanel extends JPanel {
             BorderFactory.createTitledBorder(stadium.getStadiumName()),
             BorderFactory.createEmptyBorder(8, 8, 8, 8)
         ));
-        imageLoader.loadWithFallback(stadium.getArenaImage(), stadium.getArenaFallbackImage());
+        stadiumImageProvider = ThemeManager.createStadiumImageProvider(stadium.getArenaImage(), stadium.getArenaFallbackImage());
+        imageLabel.load(stadiumImageProvider);
 
 		final String notAvailableString = TranslationFacility.tr("ls.general_label.not_available_abbreviation");
 		final var numberformat = Helper.getNumberFormat( 0);
@@ -173,6 +189,7 @@ public class ArenaInfoPanel extends JPanel {
 		futureCapacityPanel.setTranslation();
 		futureCapacityPanel.setTitle(TranslationFacility.tr("ArenaInfoPanel.future"));
 		futureCapacityPanel.label1.setText(TranslationFacility.tr("ArenaInfoPanel.available"));
+        imageLabel.setToolTipText(TranslationFacility.tr("ArenaInfoPanel.stadium_image.tooltip"));
 	}
 
 	private void updateExpansionFinishedLabel() {

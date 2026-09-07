@@ -14,12 +14,9 @@ import javax.swing.table.AbstractTableModel;
 import javax.swing.table.TableModel;
 import java.awt.*;
 import java.io.File;
-import java.io.Serial;
 
 public class UserAdministrationDialog extends JDialog {
 
-	@Serial
-	private static final long serialVersionUID = 3687310660515124201L;
 	private MyTable table;
 	private JButton newButton;
 	private JButton editButton;
@@ -225,9 +222,6 @@ public class UserAdministrationDialog extends JDialog {
 
 	private static class MyTable extends JTable {
 
-		@Serial
-		private static final long serialVersionUID = 7239292644198908535L;
-
 		public MyTable(TableModel dm) {
 			super(dm);
 		}
@@ -240,8 +234,6 @@ public class UserAdministrationDialog extends JDialog {
 
 	private static class MyTableModel extends AbstractTableModel {
 
-		@Serial
-		private static final long serialVersionUID = 1975023278731081088L;
 		private final String[] columnNames = new String[] {
 				TranslationFacility.tr("teamSelect.teamName"),
 				TranslationFacility.tr("db.options.dlg.label.dbName"),

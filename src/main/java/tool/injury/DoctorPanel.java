@@ -8,9 +8,7 @@ import core.model.TranslationFacility;
  * @author draghetto
  */
 public class DoctorPanel extends AbstractInjuryPanel {
-	
-	private static final long serialVersionUID = 1843273716445393647L;
-	
+
     //~ Instance fields ----------------------------------------------------------------------------
 
 	private String msg = TranslationFacility.tr("DoctorsNeeded");

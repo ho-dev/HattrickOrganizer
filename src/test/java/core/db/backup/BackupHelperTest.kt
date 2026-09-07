@@ -1,5 +1,6 @@
 package core.db.backup
 
+import core.db.user.UserManager
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -26,7 +27,7 @@ internal class BackupHelperTest {
 		return output ?: arrayOf<File>()
 	}
 
-	private fun zipFileName() = "db_user-${formatter.format(LocalDate.now())}.zip"
+	private fun zipFileName() = "db_${UserManager.instance().currentUser.teamName}-${formatter.format(LocalDate.now())}.zip"
 
 	private fun listFilesInZip(zipPath: String): List<String> {
 		return ZipFile(zipPath)

@@ -21,7 +21,6 @@ import java.util.List;
 
 public class FilterPanel extends JPanel {
 
-	private static final long serialVersionUID = 6299290138063653349L;
 	// matches
 	private JCheckBox onlySEMatchesCheckBox;
 	private JComboBox seasonComboBox;
@@ -482,7 +481,6 @@ public class FilterPanel extends JPanel {
 
 	private static class ComboBoxRenderer extends JLabel implements ListCellRenderer {
 
-		private static final long serialVersionUID = 1148438406134827829L;
 		private final ListCellRenderer delegate;
 
 		public ComboBoxRenderer(ListCellRenderer delegate) {
