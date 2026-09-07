@@ -10,8 +10,6 @@ import org.knowm.xchart.style.PieStyler;
 import org.knowm.xchart.style.Styler;
 import javax.swing.*;
 import java.awt.*;
-import java.text.NumberFormat;
-import java.util.Map;
 
 // Class that produce a panel containing 2 pie charts side by side
 public class HODoublePieChart implements IChart {
