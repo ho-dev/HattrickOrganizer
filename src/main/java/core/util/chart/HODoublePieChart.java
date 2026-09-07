@@ -95,9 +95,6 @@ public class HODoublePieChart implements IChart {
         String serieName;
         double value;
 
-        seriesL = m_chartL.getSeriesMap();
-        seriesR = m_chartR.getSeriesMap();
-
         // update Left Pie Chart
         if (m_modelsL != null) {
 
@@ -107,7 +104,8 @@ public class HODoublePieChart implements IChart {
                 value = model.getValue();
 
                 // Serie is removed
-                if (seriesL.containsKey(serieName)) {
+                var seriesL = m_chartL.getSeries(serieName);
+                if (seriesL != null) {
                     serie = m_chartL.removeSeries(serieName);
                     serie.setShowInLegend(false);
                 }
@@ -129,7 +127,8 @@ public class HODoublePieChart implements IChart {
                 value = model.getValue();
 
                 // Serie is removed
-                if (seriesR.containsKey(serieName)) {
+                var seriesR = m_chartR.getSeries(serieName);
+                if (seriesR != null) {
                     serie = m_chartR.removeSeries(serieName);
                     serie.setShowInLegend(false);
                 }
