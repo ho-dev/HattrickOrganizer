@@ -18,15 +18,9 @@ public class HODoublePieChart implements IChart {
 
     private PieChartDataModel @Nullable [] m_modelsL;
     private PieChartDataModel @Nullable [] m_modelsR;
-    private PieChart m_chartL;
-    private PieChart m_chartR;
-    private PieStyler m_stylerL;
-    private PieStyler m_stylerR;
-    private Map<String, PieSeries> seriesL;
-    private Map<String, PieSeries> seriesR;
-    private boolean bLegendVisible;
-    private JPanel m_panel;
-
+    private final PieChart m_chartL;
+    private final PieChart m_chartR;
+    private final JPanel m_panel;
 
     public HODoublePieChart(boolean _bLegendVisible){
         this(_bLegendVisible, PieStyler.LabelType.Percentage, PieStyler.LabelType.Percentage);
@@ -34,12 +28,10 @@ public class HODoublePieChart implements IChart {
 
     public HODoublePieChart(boolean _bLegendVisible, PieStyler.LabelType AnnotationTypeL, PieStyler.LabelType AnnotationTypeR){
 
-        bLegendVisible = _bLegendVisible;
-
         m_chartL = new PieChart(10, 10);
         m_chartR = new PieChart(10, 10);
-        m_stylerL = m_chartL.getStyler();
-        m_stylerR = m_chartR.getStyler();
+        PieStyler m_stylerL = m_chartL.getStyler();
+        PieStyler m_stylerR = m_chartR.getStyler();
 
         // General plot styling
         m_stylerL.setChartFontColor(ThemeManager.getColor(HOColorName.STAT_PANEL_FG));
@@ -58,9 +50,9 @@ public class HODoublePieChart implements IChart {
 
 
         // Legend
-        m_stylerL.setLegendVisible(bLegendVisible);
-        m_stylerR.setLegendVisible(bLegendVisible);
-        if (bLegendVisible){
+        m_stylerL.setLegendVisible(_bLegendVisible);
+        m_stylerR.setLegendVisible(_bLegendVisible);
+        if (_bLegendVisible){
             m_stylerL.setLegendBackgroundColor(ThemeManager.getColor(HOColorName.STAT_PANEL_BG));
             m_stylerR.setLegendBackgroundColor(ThemeManager.getColor(HOColorName.STAT_PANEL_BG));
             m_stylerL.setLegendPosition(Styler.LegendPosition.InsideSW);
@@ -157,16 +149,6 @@ public class HODoublePieChart implements IChart {
         updateGraph();
 
     }
-
-    @Deprecated
-    public final void setAllValues(LinesChartDataModel[] models, String[] xData,
-                                   NumberFormat y_axisFormat, String x_axisTitle, String y_axisTitle,
-                                   boolean hasLabels, boolean hasHelpLines){
-
-    }
-
-
-
 }
 
 
