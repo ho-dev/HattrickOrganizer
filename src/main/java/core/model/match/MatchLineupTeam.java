@@ -237,14 +237,13 @@ public class MatchLineupTeam extends AbstractTable.Storable {
         if (styleOfPlay.isNotAvailable()) {
             return TranslationFacility.tr("ls.team.styleofplay.na");
         }
-        String s;
         if (styleOfPlay.isNeutral()) {
             return TranslationFacility.tr("ls.team.styleofplay.neutral");
         } else {
-            s = (styleOfPlay.isOffensive()) ? TranslationFacility.tr("ls.team.styleofplay.offensive") :
+            var s = (styleOfPlay.isOffensive()) ? TranslationFacility.tr("ls.team.styleofplay.offensive") :
                 TranslationFacility.tr("ls.team.styleofplay.defensive");
+            return Math.abs(styleOfPlay.getValue() * 10) + "% " + s;
         }
-        return Math.abs(styleOfPlay.getValue() * 10) + "% " + s;
     }
 
 	/**

@@ -77,4 +77,8 @@ public class StyleOfPlay {
     public boolean isOffensive() {
         return value != null && value > NEUTRAL.value;
     }
+
+    public boolean isDefensive() {
+        return value != null && value < NEUTRAL.value;
+    }
 }
