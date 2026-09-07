@@ -3,16 +3,15 @@ package core.model.match;
 
 import core.util.HOLogger;
 
+import java.util.Objects;
+
 public class StyleOfPlay {
 
-    private static final int NEUTRAL_STYLE_OF_PLAY = 0;
-    private static final int MIN_DEFENSIVE_STYLE_OF_PLAY = -10;
-    private static final int MAX_OFFENSIVE_STYLE_OF_PLAY = 10;
     private static final int OLD_MATCHES_STYLE_OF_PLAY = -1000;
 
-    public static final StyleOfPlay NEUTRAL = new StyleOfPlay(NEUTRAL_STYLE_OF_PLAY);
-    public static final StyleOfPlay DEFENSIVE = new StyleOfPlay(MIN_DEFENSIVE_STYLE_OF_PLAY);
-    public static final StyleOfPlay OFFENSIVE = new StyleOfPlay(MAX_OFFENSIVE_STYLE_OF_PLAY);
+    public static final StyleOfPlay NEUTRAL = new StyleOfPlay(0);
+    public static final StyleOfPlay DEFENSIVE = new StyleOfPlay(-10);
+    public static final StyleOfPlay OFFENSIVE = new StyleOfPlay(10);
 
     /**
      * Possible values for style of play
@@ -50,7 +49,7 @@ public class StyleOfPlay {
     }
 
     public static StyleOfPlay fromInt(Integer value) {
-        if (value == null || value >= MIN_DEFENSIVE_STYLE_OF_PLAY && value <= MAX_OFFENSIVE_STYLE_OF_PLAY) {
+        if (value == null || value >= DEFENSIVE.value && value <= OFFENSIVE.value) {
             return new StyleOfPlay(value);
         }
         if (value == OLD_MATCHES_STYLE_OF_PLAY) { // old matches has -1000
@@ -72,10 +71,10 @@ public class StyleOfPlay {
     }
 
     public boolean isNeutral() {
-        return value == 0;
+        return Objects.equals(value, NEUTRAL.value);
     }
 
     public boolean isOffensive() {
-        return value > 0;
+        return value > NEUTRAL.value;
     }
 }
