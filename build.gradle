@@ -59,7 +59,7 @@ dependencies {
     implementation "com.github.weisj:darklaf-property-loader:3.1.1"
     implementation "org.javatuples:javatuples:1.2"
     implementation "org.apache.commons:commons-text:1.15.0"
-    implementation "org.knowm.xchart:xchart:3.8.8"
+    implementation "org.knowm.xchart:xchart:4.0.4"
     implementation "org.jsoup:jsoup:1.19.1"
     implementation "org.jetbrains:annotations:26.0.2"
     implementation "org.codehaus.groovy:groovy-all:3.0.24"

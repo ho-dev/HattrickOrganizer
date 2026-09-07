@@ -7,9 +7,7 @@ import core.gui.theme.ThemeManager;
 import core.model.UserParameter;
 import core.util.HODateTime;
 import org.jetbrains.annotations.Nullable;
-import org.knowm.xchart.XChartPanel;
-import org.knowm.xchart.XYChart;
-import org.knowm.xchart.XYSeries;
+import org.knowm.xchart.*;
 import org.knowm.xchart.style.AxesChartStyler;
 import org.knowm.xchart.style.Styler;
 import java.awt.*;
@@ -24,7 +22,7 @@ public class HOLinesChart implements IChart {
     List<?> m_xData;
     XYChart m_chart;
     AxesChartStyler m_axeStyler;
-    JPanel m_panel;
+    XChartPanel<XYChart> m_panel;
     Boolean m_hasLabels;
     Boolean m_hasHelpLines;
 
@@ -84,11 +82,9 @@ public class HOLinesChart implements IChart {
 
         m_chart.getStyler().setYAxisGroupTickLabelsColorMap(0, ThemeManager.getColor(HOColorName.STAT_PANEL_FG));
         m_chart.getStyler().setYAxisGroupTickMarksColorMap(0, ThemeManager.getColor(HOColorName.STAT_PANEL_FG));
-        m_chart.getStyler().setToolTipsEnabled(true);
-        m_chart.getStyler().setToolTipType(Styler.ToolTipType.yLabels);
+        m_chart.getStyler().setToolTipType(ToolTipType.yLabels);
         m_chart.getStyler().setDecimalPattern("#0.00");
 
-        m_chart.getStyler().setCursorEnabled(true);
         m_chart.getStyler().setCustomCursorXDataFormattingFunction(this::toDatetimeString);
 
         var font = m_chart.getStyler().getCursorFont().deriveFont((float) UserParameter.instance().fontSize);
@@ -180,7 +176,7 @@ public class HOLinesChart implements IChart {
     }
 
 
-    public final void updateGraph(){
+    public final void updateGraph() {
 
         XYSeries serie;
 
@@ -189,40 +185,38 @@ public class HOLinesChart implements IChart {
         m_chart.getStyler().setPlotGridLinesVisible(m_hasHelpLines);
         m_chart.getStyler().setToolTipsAlwaysVisible(m_hasLabels);
 
-        var series = m_chart.getSeriesMap();
         String serieName;
         List<Double> serieData;
         Boolean isVisibleLegend;
 
         if (m_models == null) return;
 
-       for(var model : m_models){
-           if (model == null) continue;
-           int yGroup = model.getY_axisGroup();
-           serieName = model.getName();
-           serieData = model.getlValues();
-           isVisibleLegend = model.getIsVisibleLegend();
+        for (var model : m_models) {
+            if (model == null) continue;
+            int yGroup = model.getY_axisGroup();
+            serieName = model.getName();
+            serieData = model.getlValues();
+            isVisibleLegend = model.getIsVisibleLegend();
 
-           // Serie is removed
-           if (series.containsKey(serieName))
-           {
-               serie =  m_chart.removeSeries(serieName);
-               serie.setShowInLegend(false);
-           }
+            var series = m_chart.getSeries(serieName);
+            if (series != null) {
+                serie = m_chart.removeSeries(serieName);
+                serie.setShowInLegend(false);
+            }
 
-           // Serie is added if should be shown and if contains data
-           if (model.isShow() && (!serieData.isEmpty()))
-           {
-               serie =  m_chart.addSeries(serieName, this.m_xData, serieData);
-               serie.setLineStyle(model.getLineStyle());
-               serie.setLineColor(model.getColor());
-               serie.setMarker(model.getMarkerStyle());
-               serie.setMarkerColor(model.getColor());
-               serie.setYAxisGroup(yGroup);
-               serie.setShowInLegend(isVisibleLegend);
-           }
+            // Serie is added if should be shown and if contains data
+            if (model.isShow() && (!serieData.isEmpty())) {
+                serie = m_chart.addSeries(serieName, this.m_xData, serieData);
+                serie.setLineStyle(model.getLineStyle());
+                serie.setLineColor(model.getColor());
+                serie.setMarker(model.getMarkerStyle());
+                serie.setMarkerColor(model.getColor());
+                serie.setYAxisGroup(yGroup);
+                serie.setShowInLegend(isVisibleLegend);
+            }
         }
-
+        m_panel.setToolTipsEnabled(true);
+        m_panel.setCursorEnabled(true);
         m_panel.repaint();
     }
 
