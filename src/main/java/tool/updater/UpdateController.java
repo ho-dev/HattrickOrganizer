@@ -56,8 +56,8 @@ public final class UpdateController {
                     }
                 }
                 // no break to check if there is a newer stable release
-            default:
             case "Stable":
+            default:
                 VersionInfo stableVersion = Connector.instance().getLatestStableVersion();
                 if (compareToCurrentVersions(stableVersion)) {
                     if (compareTwoVersions(stableVersion, updateVersion)) {
@@ -140,37 +140,32 @@ public final class UpdateController {
     }
 
     public static void updateHO(final VersionInfo versionInfo, String versionType) {
-        boolean manualUpdate = false;
         try {
             String mediaId = Variables.getCompilerVariable("mediaID");
             if (mediaId != null) {
                 // making update via install4J
                 Updater.instance().update();
                 return;
-            } else {
-                manualUpdate = true;
             }
         } catch (IOException e) {
             HOLogger.instance().warning(UpdateController.class, "Error retrieving compiler var mediaID: " +
                 e.getMessage());
-            manualUpdate = true;
         }
 
-        if (manualUpdate) {
-            String urlString = getHOZipDownloadUrl(versionInfo, versionType);
-            try {
-                HOLogger.instance().info(UpdateController.class,
-                    "Launching browser to download update manually: " + urlString);
-                BrowserLauncher.openURL(urlString);
-                JOptionPane.showMessageDialog(HOMainFrame.instance(),
-                    TranslationFacility.tr("update.downloaded.install.manually"),
-                        TranslationFacility.tr("ls.menu.file.update.downloaded"), JOptionPane.INFORMATION_MESSAGE);
+        // Manual update
+        String urlString = getHOZipDownloadUrl(versionInfo, versionType);
+        try {
+            HOLogger.instance().info(UpdateController.class,
+                "Launching browser to download update manually: " + urlString);
+            BrowserLauncher.openURL(urlString);
+            JOptionPane.showMessageDialog(HOMainFrame.instance(),
+                TranslationFacility.tr("update.downloaded.install.manually"),
+                TranslationFacility.tr("ls.menu.file.update.downloaded"), JOptionPane.INFORMATION_MESSAGE);
 
-                return;
-            } catch (Exception ee) {
-                HOLogger.instance().error(UpdateController.class, "Error opening URL: "
-                    + urlString + ": " + ee.getMessage());
-            }
+            return;
+        } catch (Exception ee) {
+            HOLogger.instance().error(UpdateController.class, "Error opening URL: "
+                + urlString + ": " + ee.getMessage());
         }
         JOptionPane.showMessageDialog(HOMainFrame.instance(),
             TranslationFacility.tr("update.error.see.log"),
