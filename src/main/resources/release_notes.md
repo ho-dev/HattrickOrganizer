@@ -56,6 +56,7 @@
 * The bug where the number `100` was displayed for the shirt number when the player had no shirt number has been fixed.
   Instead, nothing is shown now if no number assigned. (#2420)
 * Fix out of bound exception on download when youth player were removed during the week (#2442)
+* Fix player selection in youth player overview (#2452)
 
 ### Special Events
 
