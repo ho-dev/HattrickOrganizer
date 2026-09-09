@@ -171,7 +171,6 @@ public final class UpdateController {
             TranslationFacility.tr("update.error.see.log"),
             TranslationFacility.tr("ls.menu.file.update") + " - " +
                 TranslationFacility.tr("ls.menu.file.update.ho"), JOptionPane.ERROR_MESSAGE);
-
     }
 
     public static boolean compareTwoVersions(VersionInfo a, VersionInfo b) {
