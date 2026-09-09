@@ -14,7 +14,6 @@ import javax.swing.JLabel;
 
 public class FlagLabel extends JLabel {
 
-	private static final long serialVersionUID = 2988734870943038292L;
 	private String countryName;
 	private int countryId;
 	private boolean homeCountry;

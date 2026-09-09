@@ -1,15 +1,14 @@
 package core.db;
 
 import core.model.FactorObject;
-import core.model.FormulaFactors;
 import java.sql.Types;
+import java.util.List;
 
 
 public final class FaktorenTable extends AbstractTable {
 
-	/** tablename **/
 	public static final String TABLENAME = "FAKTOREN";
-	
+
 	FaktorenTable(ConnectionManager adapter){
 		super(TABLENAME, adapter);
 	}
@@ -40,15 +39,7 @@ public final class FaktorenTable extends AbstractTable {
 		}
 	}
 
-	void getFaktorenFromDB() {
-		var factors = load(FactorObject.class);
-		if (!factors.isEmpty()) {
-			for (var factor : factors) {
-				FormulaFactors.instance().setPositionFactor(factor.getPosition(), factor);
-			}
-		} else {
-			// use hardcoded values
-			FormulaFactors.instance().importDefaults();
-		}
+	public List<FactorObject> getFaktorenFromDB() {
+		return load(FactorObject.class);
 	}
 }

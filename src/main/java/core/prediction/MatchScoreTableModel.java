@@ -8,7 +8,6 @@ import javax.swing.*;
 
 public class MatchScoreTableModel extends AbstractMatchTableModel {
 	//~ Instance fields ----------------------------------------------------------------------------
-	private static final long serialVersionUID = -2007343001155380888L;
 	protected static String[] columnNames =
 		{
 			TranslationFacility.tr("Tore"),

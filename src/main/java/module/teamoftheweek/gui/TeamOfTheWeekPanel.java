@@ -19,13 +19,10 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.Serial;
 import java.util.List;
 
 public class TeamOfTheWeekPanel extends LazyPanel implements ChangeListener, ActionListener {
 
-	@Serial
-	private static final long serialVersionUID = 7990572479100871307L;
 	private LineupPanel bestOfWeek;
 	private LineupPanel bestOfYear;
 	private LineupPanel worstOfWeek;
@@ -44,7 +41,7 @@ public class TeamOfTheWeekPanel extends LazyPanel implements ChangeListener, Act
 	protected void update() {
 		// do nothing
 	}
-	
+
 	private void reloadData(boolean isSeason) {
 		int week = ((Number) weekSpinner.getValue()).intValue();
 		var sl = calcBestLineup(week, true);
@@ -209,7 +206,7 @@ public class TeamOfTheWeekPanel extends LazyPanel implements ChangeListener, Act
 		m_jpPanel.add(tab, BorderLayout.CENTER);
 		setLayout(new BorderLayout());
 		add(m_jpPanel, BorderLayout.CENTER);
-		
+
 		setWeekLimits();
 		reloadData(true);
 	}

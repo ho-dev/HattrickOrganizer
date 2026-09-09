@@ -9,9 +9,6 @@ import core.gui.model.UserColumnController;
 import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
-import module.playeroverview.PlayerOverviewTableModel;
-import module.playeroverview.SpielerTrainingsSimulatorPanel;
-import module.playeroverview.TeamSummaryPanel;
 
 import javax.swing.*;
 import java.awt.*;

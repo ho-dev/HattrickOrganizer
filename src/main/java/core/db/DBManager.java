@@ -298,7 +298,6 @@ public class DBManager implements PersistenceManager {
 	 *
 	 * @return the adapter
 	 */
-// Accessor
 	public ConnectionManager getConnectionManager() {
 		return connectionManager;
 	}
@@ -396,6 +395,14 @@ public class DBManager implements PersistenceManager {
 				.loadPlayersBefore(hrfId);
 	}
 
+    /**
+     * Returns the player situation before date
+     *
+     * @param playerId ID of the player.
+     * @param before Timestamp.
+     * @return Player – Player's status before given timestamp.  Null if not found.
+     */
+    @Override
 	public Player getLatestPlayerDownloadBefore(int playerId, Timestamp before) {
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
 				.loadPlayerBefore(playerId, before);
@@ -403,7 +410,7 @@ public class DBManager implements PersistenceManager {
 
 	public Player getFirstPlayerDownloadAfter(int playerId, Timestamp before) {
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
-				.loadPlayerAfter(playerId, before);
+				.loadPlayerNotBefore(playerId, before);
 	}
 
 	public List<Player> getLatestPlayerDownloadBefore(String playerName, Timestamp before) {
@@ -413,7 +420,7 @@ public class DBManager implements PersistenceManager {
 
 	public List<Player> getFirstPlayerDownloadAfter(String playerName, Timestamp before) {
 		return ((SpielerTable) getTable(SpielerTable.TABLENAME))
-				.loadPlayersAfter(playerName, before);
+				.loadPlayersNotBefore(playerName, before);
 	}
 
 	/**
@@ -740,10 +747,9 @@ public class DBManager implements PersistenceManager {
 	/**
 	 * Gets faktoren from db.
 	 */
-	public void getFaktorenFromDB() {
-		((FaktorenTable) getTable(FaktorenTable.TABLENAME)).getFaktorenFromDB();
+	public List<FactorObject> getFaktorenFromDB() {
+		return ((FaktorenTable) getTable(FaktorenTable.TABLENAME)).getFaktorenFromDB();
 	}
-
 
 	/**
 	 * Gets tournament details from db.
@@ -751,7 +757,6 @@ public class DBManager implements PersistenceManager {
 	 * @param tournamentId the tournament id
 	 * @return the tournament details from db
 	 */
-// Tournament Details
 	public TournamentDetails getTournamentDetailsFromDB(int tournamentId) {
 		TournamentDetails oTournamentDetails;
 		oTournamentDetails = ((TournamentDetailsTable) getTable(TournamentDetailsTable.TABLENAME)).getTournamentDetails(tournamentId);
@@ -1319,7 +1324,7 @@ public class DBManager implements PersistenceManager {
 	 */
 // ------------------------------- FutureTraining
 	// -------------------------------------------------
-	public TrainingPerWeek getFuturTraining(Timestamp trainingDate) {
+	public TrainingPerWeek getFutureTraining(Timestamp trainingDate) {
 		return ((FutureTrainingTable) getTable(FutureTrainingTable.TABLENAME)).loadFutureTrainings(trainingDate);
 	}
 
@@ -1371,7 +1376,8 @@ public class DBManager implements PersistenceManager {
 		HOConfigurationParameter.storeParameters();
 	}
 
-	public String loadHOConfigurationParameter(String key) {
+    @Override
+    public String loadHOConfigurationParameter(String key) {
 		UserConfigurationTable table = (UserConfigurationTable) getTable(UserConfigurationTable.TABLENAME);
 		return table.loadParameter(key);
 	}
@@ -1697,7 +1703,7 @@ public class DBManager implements PersistenceManager {
 	 * Returns a list of PlayerMatchCBItems for given playerID
 	 *
 	 * @param playerID the player ID
-	 * @param officialOnly whether or not to select official game only
+	 * @param officialOnly whether to select official game only
 	 */
 	public Vector<PlayerMatchCBItem> getPlayerMatchCBItems(int playerID, boolean officialOnly) {
 		if(playerID == -1) return new Vector<>();

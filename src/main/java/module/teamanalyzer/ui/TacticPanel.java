@@ -20,10 +20,6 @@ import javax.swing.table.DefaultTableModel;
 public class TacticPanel extends JPanel {
     //~ Instance fields ----------------------------------------------------------------------------
 
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = -5271524746410453832L;
 	private DefaultTableModel tableModel;
     private JTable table;
     private NumberFormat f = new DecimalFormat("#.#");

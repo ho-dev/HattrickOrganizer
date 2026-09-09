@@ -1,22 +1,18 @@
 package core.model;
 
+import core.db.DBManager;
 import core.file.FileLoader;
 import core.file.xml.XMLManager;
 import core.model.player.IMatchRoleID;
 import core.util.HOLogger;
 import java.io.InputStream;
-import java.util.Date;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 public class FormulaFactors {
-    //~ Static fields/initializers -----------------------------------------------------------------
 
-    /**
-     * singelton
-     */
     private static FormulaFactors m_clInstance;
 
     /**
@@ -24,14 +20,7 @@ public class FormulaFactors {
      */
     protected static final int NB_FORMULA_FACTORS = 20;
 
-    /**
-     * Last change date
-     */
-    private static Date lastChange = new Date();
-
-    //~ Instance fields ----------------------------------------------------------------------------
-
-    ////////////////////////////////AV//////////////////////////////////////////
+    /// /////////////////////////////AV//////////////////////////////////////////
     // wingback
     FactorObject foWB;
     // def wingback
@@ -41,7 +30,7 @@ public class FormulaFactors {
     // off wingback
     FactorObject foWB_OFF;
 
-    ////////////////////////////////AM//////////////////////////////////////////
+    /// /////////////////////////////AM//////////////////////////////////////////
     // normal winger
     FactorObject foWI;
     // def winger
@@ -51,7 +40,7 @@ public class FormulaFactors {
     // off winger
     FactorObject foWI_OFF;
 
-    ////////////////////////////////Central_DEF//////////////////////////////////////////
+    /// /////////////////////////////Central_DEF//////////////////////////////////////////
     // central defender
     FactorObject m_clInnenVerteidiger;
     // defender towards wing
@@ -59,7 +48,7 @@ public class FormulaFactors {
     // offensive defender
     FactorObject m_clInnenVerteidiger_OFF;
 
-    ////////////////////////////////MS//////////////////////////////////////////
+    /// /////////////////////////////MS//////////////////////////////////////////
     // normal forward
     FactorObject foFW;
     // defensive forward
@@ -69,11 +58,11 @@ public class FormulaFactors {
     // forward towards wing
     FactorObject foFW_TW;
 
-    ////////////////////////////////TW//////////////////////////////////////////
+    /// /////////////////////////////TW//////////////////////////////////////////
     // keeper
     FactorObject foGK;
 
-    ////////////////////////////////ZM//////////////////////////////////////////
+    /// /////////////////////////////ZM//////////////////////////////////////////
     // normal inner midfielder
     FactorObject foIM;
     // inner towards wing
@@ -83,16 +72,11 @@ public class FormulaFactors {
     // off inner
     FactorObject foIM_OFF;
 
-    //~ Constructors -------------------------------------------------------------------------------
-
     /**
      * Creates a new instance of FormulaFactors
      */
     private FormulaFactors() {
-        resetLastChange();
     }
-
-    //~ Methods ------------------------------------------------------------------------------------
 
     /**
      * Get the singleton FormulaFactors instance.
@@ -100,9 +84,16 @@ public class FormulaFactors {
     public static FormulaFactors instance() {
         if (m_clInstance == null) {
             m_clInstance = new FormulaFactors();
-            m_clInstance.importDefaults();
+            var factors = DBManager.instance().getFaktorenFromDB();
+            if (!factors.isEmpty()) {
+                for (var factor : factors) {
+                    m_clInstance.setPositionFactor(factor.getPosition(), factor);
+                }
+            } else {
+                // use hardcoded values
+                m_clInstance.importDefaults();
+            }
         }
-
         return m_clInstance;
     }
 
@@ -142,7 +133,6 @@ public class FormulaFactors {
         readFromXML("prediction/defaults.xml");
     }
 
-
     /**
      * Read an XML file with star formula configurations.
      *
@@ -150,10 +140,10 @@ public class FormulaFactors {
      */
     public void readFromXML(String defaults) {
 
-    	InputStream predictionIS = FileLoader.instance().getFileInputStream(new String[]{defaults, "prediction/defaults.xml"});
-    	
-    	if (predictionIS!=null) {
-    		Document doc = XMLManager.parseFile(predictionIS);
+        InputStream predictionIS = FileLoader.instance().getFileInputStream(new String[]{defaults, "prediction/defaults.xml"});
+
+        if (predictionIS != null) {
+            Document doc = XMLManager.parseFile(predictionIS);
             //Reading xml ==========================================
             final Element root = doc.getDocumentElement();
 
@@ -178,25 +168,19 @@ public class FormulaFactors {
                 foFW_DEF_TECH = readObject("FW_D_TECH", root);
                 foFW = readObject("FW", root);
                 foFW_TW = readObject("FW_W", root);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 HOLogger.instance().log(getClass(), "Error when parsing formula factors XML: " + e);
             }
-    	} else {
-    		HOLogger.instance().error(getClass(), "Error while loading prediction files (including prediction/defaults.xml)");
-    	}
-
-        resetLastChange();
-
+        } else {
+            HOLogger.instance().error(getClass(), "Error while loading prediction files (including prediction/defaults.xml)");
+        }
     }
-
 
     /**
      * Read the single skill contributions for a position.
      *
      * @param tagname tag name for a position
-     * @param root the XML root element
-     *
+     * @param root    the XML root element
      * @return the created FactorObject
      */
     public FactorObject readObject(String tagname, Element root) {
@@ -204,8 +188,6 @@ public class FormulaFactors {
         final FactorObject factorObject = new FactorObject();
         try {
             root = (Element) root.getElementsByTagName(tagname).item(0);
-
-            //Daten füllen
             ele = (Element) root.getElementsByTagName("Position").item(0);
             factorObject.setPosition(Byte.parseByte(XMLManager.getFirstChildNodeValue(ele)));
             ele = (Element) root.getElementsByTagName("defense").item(0);
@@ -225,16 +207,12 @@ public class FormulaFactors {
             ele = (Element) root.getElementsByTagName("normalization_factor").item(0);
             factorObject.setNormalizationFactor(Float.parseFloat(XMLManager.getFirstChildNodeValue(ele)));
         } catch (Exception e) {
-            HOLogger.instance().log(getClass(),"FormulaFactor.redxmlException gefangen: " + e);
-            HOLogger.instance().log(getClass(),e);
+            HOLogger.instance().log(getClass(), "FormulaFactor.redxmlException gefangen: " + e);
+            HOLogger.instance().log(getClass(), e);
         }
-
         return factorObject;
     }
 
-    /**
-     * gesaved
-     */
     public void save() {
         final FactorObject[] allFaktoren = getAllObj();
 
@@ -256,8 +234,6 @@ public class FormulaFactors {
             doc = builder.newDocument();
             tmpEle = doc.createElement("FormulaFactors");
             doc.appendChild(tmpEle);
-
-            //Objekte schreiben
             writeFaktorObj(doc, foGK, tmpEle, "KEEPER");
             writeFaktorObj(doc, m_clInnenVerteidiger, tmpEle, "DEFENSE");
             writeFaktorObj(doc, m_clInnenVerteidiger_OFF, tmpEle, "DEFENSE_O");
@@ -276,14 +252,12 @@ public class FormulaFactors {
             writeFaktorObj(doc, foWI, tmpEle, "WING");
             writeFaktorObj(doc, foFW_DEF, tmpEle, "FW_D");
             writeFaktorObj(doc, foFW_DEF_TECH, tmpEle, "FW_D_TECH");
-			writeFaktorObj(doc, foFW_TW, tmpEle, "FW_W");
+            writeFaktorObj(doc, foFW_TW, tmpEle, "FW_W");
             writeFaktorObj(doc, foFW, tmpEle, "FW");
-
-            //doc.appendChild ( ele );
             XMLManager.writeXML(doc, filename);
         } catch (Exception e) {
-            HOLogger.instance().log(getClass(),"XMLManager.writeXML: " + e);
-            HOLogger.instance().log(getClass(),e);
+            HOLogger.instance().log(getClass(), "XMLManager.writeXML: " + e);
+            HOLogger.instance().log(getClass(), e);
         }
     }
 
@@ -291,7 +265,7 @@ public class FormulaFactors {
      * Add data for a single position to the XML tree.
      */
     protected void writeFaktorObj(Document doc, FactorObject obj, Element root, String tagName) {
-        // TODO: fix this one setpieces and normlization factor  (unction that should be called (tbc)  rom the preference tab)
+        // TODO: fix this: setpieces and normalization factor  (function that should be called (tbc) from the preference tab)
         Element ele;
         Element tmpEle;
 
@@ -328,149 +302,128 @@ public class FormulaFactors {
     /**
      * Return a FactorObject for hoPosition
      *
-     * @author Thorsten Dietz
      * @param playerPosition
      * @return
+     * @author Thorsten Dietz
      */
-    public FactorObject getPositionFactor(byte playerPosition){
+    public FactorObject getPositionFactor(byte playerPosition) {
 
-    	switch (playerPosition) {
-	        case IMatchRoleID.KEEPER: 				    	return foGK;
-	        case IMatchRoleID.CENTRAL_DEFENDER:         	return m_clInnenVerteidiger;
-	        case IMatchRoleID.CENTRAL_DEFENDER_OFF:     	return m_clInnenVerteidiger_OFF;
-	        case IMatchRoleID.CENTRAL_DEFENDER_TOWING:		return m_clInnenVerteidiger_AUS;
-	        case IMatchRoleID.BACK_OFF:   	                return foWB_OFF;
-	        case IMatchRoleID.BACK_DEF:   	                return foWB_DEF;
-	        case IMatchRoleID.BACK_TOMID:    	            return foWB_TM;
-	        case IMatchRoleID.BACK:       	                return foWB;
-	        case IMatchRoleID.MIDFIELDER_DEF:        	    return foIM_DEF;
-	        case IMatchRoleID.MIDFIELDER_OFF:        	    return foIM_OFF;
-	        case IMatchRoleID.MIDFIELDER_TOWING:        	return foIM_TW;
-	        case IMatchRoleID.MIDFIELDER:	        	    return foIM;
-	        case IMatchRoleID.WINGER_DEF:        	        return foWI_DEF;
-	        case IMatchRoleID.WINGER_OFF:			        return foWI_OFF;
-	        case IMatchRoleID.WINGER_TOMID:			        return foWI_TM;
-	        case IMatchRoleID.WINGER:				        return foWI;
-	        case IMatchRoleID.FORWARD_DEF:				    return foFW_DEF;
-            case IMatchRoleID.FORWARD_DEF_TECH:             return foFW_DEF_TECH;
-	        case IMatchRoleID.FORWARD:					    return foFW;
-	        case IMatchRoleID.FORWARD_TOWING:				return foFW_TW;
-	        case IMatchRoleID.COACH:
-        default:
-            return null;
-    	}
+        return switch (playerPosition) {
+            case IMatchRoleID.KEEPER -> foGK;
+            case IMatchRoleID.CENTRAL_DEFENDER -> m_clInnenVerteidiger;
+            case IMatchRoleID.CENTRAL_DEFENDER_OFF -> m_clInnenVerteidiger_OFF;
+            case IMatchRoleID.CENTRAL_DEFENDER_TOWING -> m_clInnenVerteidiger_AUS;
+            case IMatchRoleID.BACK_OFF -> foWB_OFF;
+            case IMatchRoleID.BACK_DEF -> foWB_DEF;
+            case IMatchRoleID.BACK_TOMID -> foWB_TM;
+            case IMatchRoleID.BACK -> foWB;
+            case IMatchRoleID.MIDFIELDER_DEF -> foIM_DEF;
+            case IMatchRoleID.MIDFIELDER_OFF -> foIM_OFF;
+            case IMatchRoleID.MIDFIELDER_TOWING -> foIM_TW;
+            case IMatchRoleID.MIDFIELDER -> foIM;
+            case IMatchRoleID.WINGER_DEF -> foWI_DEF;
+            case IMatchRoleID.WINGER_OFF -> foWI_OFF;
+            case IMatchRoleID.WINGER_TOMID -> foWI_TM;
+            case IMatchRoleID.WINGER -> foWI;
+            case IMatchRoleID.FORWARD_DEF -> foFW_DEF;
+            case IMatchRoleID.FORWARD_DEF_TECH -> foFW_DEF_TECH;
+            case IMatchRoleID.FORWARD -> foFW;
+            case IMatchRoleID.FORWARD_TOWING -> foFW_TW;
+            default -> null;
+        };
     }
 
     /**
      * set factorObject for a hoPosition
      *
-     * @author Thorsten Dietz
      * @param pos
      * @param factorObject
+     * @author Thorsten Dietz
      */
-    public void setPositionFactor(int pos, FactorObject factorObject){
-    	switch(pos){
-        case IMatchRoleID.KEEPER:
-            this.foGK = factorObject;
-            break;
+    public void setPositionFactor(int pos, FactorObject factorObject) {
+        switch (pos) {
+            case IMatchRoleID.KEEPER:
+                this.foGK = factorObject;
+                break;
 
-        case IMatchRoleID.CENTRAL_DEFENDER:
-            this.m_clInnenVerteidiger = factorObject;
-            break;
+            case IMatchRoleID.CENTRAL_DEFENDER:
+                this.m_clInnenVerteidiger = factorObject;
+                break;
 
-        case IMatchRoleID.CENTRAL_DEFENDER_OFF:
-            this.m_clInnenVerteidiger_OFF = factorObject;
-            break;
+            case IMatchRoleID.CENTRAL_DEFENDER_OFF:
+                this.m_clInnenVerteidiger_OFF = factorObject;
+                break;
 
-        case IMatchRoleID.CENTRAL_DEFENDER_TOWING:
-            this.m_clInnenVerteidiger_AUS = factorObject;
-            break;
+            case IMatchRoleID.CENTRAL_DEFENDER_TOWING:
+                this.m_clInnenVerteidiger_AUS = factorObject;
+                break;
 
-        case IMatchRoleID.BACK:
-            this.foWB = factorObject;
-            break;
+            case IMatchRoleID.BACK:
+                this.foWB = factorObject;
+                break;
 
-        case IMatchRoleID.BACK_OFF:
-            this.foWB_OFF = factorObject;
-            break;
+            case IMatchRoleID.BACK_OFF:
+                this.foWB_OFF = factorObject;
+                break;
 
-        case IMatchRoleID.BACK_DEF:
-            this.foWB_DEF = factorObject;
-            break;
+            case IMatchRoleID.BACK_DEF:
+                this.foWB_DEF = factorObject;
+                break;
 
-        case IMatchRoleID.BACK_TOMID:
-            this.foWB_TM = factorObject;
-            break;
+            case IMatchRoleID.BACK_TOMID:
+                this.foWB_TM = factorObject;
+                break;
 
-        case IMatchRoleID.MIDFIELDER:
-            this.foIM = factorObject;
-            break;
+            case IMatchRoleID.MIDFIELDER:
+                this.foIM = factorObject;
+                break;
 
-        case IMatchRoleID.MIDFIELDER_OFF:
-            this.foIM_OFF = factorObject;
-            break;
+            case IMatchRoleID.MIDFIELDER_OFF:
+                this.foIM_OFF = factorObject;
+                break;
 
-        case IMatchRoleID.MIDFIELDER_DEF:
-            this.foIM_DEF = factorObject;
-            break;
+            case IMatchRoleID.MIDFIELDER_DEF:
+                this.foIM_DEF = factorObject;
+                break;
 
-        case IMatchRoleID.MIDFIELDER_TOWING:
-            this.foIM_TW = factorObject;
-            break;
+            case IMatchRoleID.MIDFIELDER_TOWING:
+                this.foIM_TW = factorObject;
+                break;
 
-        case IMatchRoleID.WINGER:
-            this.foWI = factorObject;
-            break;
+            case IMatchRoleID.WINGER:
+                this.foWI = factorObject;
+                break;
 
-        case IMatchRoleID.WINGER_OFF:
-            this.foWI_OFF = factorObject;
-            break;
+            case IMatchRoleID.WINGER_OFF:
+                this.foWI_OFF = factorObject;
+                break;
 
-        case IMatchRoleID.WINGER_DEF:
-            this.foWI_DEF = factorObject;
-            break;
+            case IMatchRoleID.WINGER_DEF:
+                this.foWI_DEF = factorObject;
+                break;
 
-        case IMatchRoleID.WINGER_TOMID:
-            this.foWI_TM = factorObject;
-            break;
+            case IMatchRoleID.WINGER_TOMID:
+                this.foWI_TM = factorObject;
+                break;
 
-        case IMatchRoleID.FORWARD:
-            this.foFW = factorObject;
-            break;
+            case IMatchRoleID.FORWARD:
+                this.foFW = factorObject;
+                break;
 
-        case IMatchRoleID.FORWARD_DEF:
-            this.foFW_DEF = factorObject;
-            break;
+            case IMatchRoleID.FORWARD_DEF:
+                this.foFW_DEF = factorObject;
+                break;
 
-		case IMatchRoleID.FORWARD_TOWING:
-            this.foFW_TW = factorObject;
-			break;
+            case IMatchRoleID.FORWARD_TOWING:
+                this.foFW_TW = factorObject;
+                break;
 
-		case IMatchRoleID.FORWARD_DEF_TECH:
-            this.foFW_DEF_TECH = factorObject;
-		    break;
+            case IMatchRoleID.FORWARD_DEF_TECH:
+                this.foFW_DEF_TECH = factorObject;
+                break;
 
-        default:
-            HOLogger.instance().log(getClass(),"Error in function setPositionFactor, position could not be recognized");
-
-    	}
-    	resetLastChange();
+            default:
+                HOLogger.instance().log(getClass(), "Error in function setPositionFactor, position could not be recognized");
+        }
     }
-
-    /**
-     * Get last change date
-     * 
-     * @return last change date
-     */
-	public static Date getLastChange() {
-		return lastChange;
-	}
-
-	/**
-	 * Reset last change date to now
-	 */
-	public static void resetLastChange() {
-//		System.out.println ("Resetting last change date in FormulaFactors");
-		lastChange = new Date();
-	}
 }

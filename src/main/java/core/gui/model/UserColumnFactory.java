@@ -4,7 +4,9 @@ import core.constants.player.PlayerAbility;
 import core.constants.player.PlayerSkill;
 import core.db.DBManager;
 import core.gui.comp.entry.*;
+import core.gui.comp.table.HOTableModel;
 import core.gui.comp.table.PlayerCheckBoxColumn;
+import core.gui.comp.table.UserColumn;
 import core.gui.theme.HOColorName;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
@@ -32,10 +34,11 @@ import java.util.Optional;
 
 import static core.model.player.IMatchRoleID.aPositionBehaviours;
 import static core.model.player.MatchRoleID.isFieldMatchRoleId;
+import static core.util.StringUtils.stringToHtml;
 
 /**
- * User column factory creates {@link core.gui.comp.table.UserColumn} instances used in the
- * different {@link core.gui.comp.table.HOTableModel} table models.  Each column has a name,
+ * User column factory creates {@link UserColumn} instances used in the
+ * different {@link HOTableModel} table models.  Each column has a name,
  * an ID, and may have a preferred width.
  */
 public final class UserColumnFactory {
@@ -518,7 +521,7 @@ public final class UserColumnFactory {
      * @return PlayerColumn[]
      */
     public static PlayerColumn[] createPlayerAdditionalArray() {
-        final PlayerColumn[] playerAdditionalArray = new PlayerColumn[32];
+        final PlayerColumn[] playerAdditionalArray = new PlayerColumn[34];
 
         playerAdditionalArray[0] = new PlayerColumn(10, "ls.player.shirtnumber.short", "ls.player.shirtnumber", 25) {
             @Override
@@ -676,6 +679,7 @@ public final class UserColumnFactory {
                         new ColorLabelEntry(diff, ColorLabelEntry.BG_STANDARD));
             }
         };
+
         playerAdditionalArray[8] = new PlayerColumn(430, "ls.player.tsi", 0) {
             @Override
             public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
@@ -804,16 +808,19 @@ public final class UserColumnFactory {
         playerAdditionalArray[14] = new PlayerColumn(439, "ls.player.statement", "ls.player.statement", 25) {
             @Override
             public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
-                return new ColorLabelEntry(player.getPlayerStatement(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                var ret = new ColorLabelEntry(player.getPlayerStatement(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                ret.setToolTipText(stringToHtml(player.getPlayerStatement()));
+                return ret;
             }
         };
         playerAdditionalArray[15] = new PlayerColumn(441, "ls.player.ownernotes", "ls.player.ownernotes", 25) {
             @Override
             public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
-                return new ColorLabelEntry(player.getOwnerNotes(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                var ret = new ColorLabelEntry(player.getOwnerNotes(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                ret.setToolTipText(stringToHtml(player.getOwnerNotes()));
+                return ret;
             }
         };
-
 
         // Last match rating end of game column.
         playerAdditionalArray[16] = new PlayerColumn(891, "ls.player.ratingend", 60) {
@@ -821,16 +828,12 @@ public final class UserColumnFactory {
             public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
                 var lastMatchRatingEndOfGame = player.getLastMatchRatingEndOfGame();
                 if (lastMatchRatingEndOfGame != null && lastMatchRatingEndOfGame > 0) {
-//                    MatchKurzInfo info = DBManager.instance().getMatchesKurzInfoByMatchID(player.getLastMatchId(), null);
-//                    if (info == null) {
-//                        return new RatingTableEntry((float) player.getLastMatchRating(), true);
-//                    } else {
                     return new RatingTableEntry(lastMatchRatingEndOfGame, true);
-//                    }
                 }
                 return new RatingTableEntry();
             }
         };
+
         //last match minutes played
         playerAdditionalArray[17] = new PlayerColumn(DURATION, "ls.player.lastminutes", 50) {
             @Override
@@ -995,6 +998,42 @@ public final class UserColumnFactory {
                 return true;
             }
 
+        };
+
+        playerAdditionalArray[32] = new PlayerColumn(906, "ls.player.when.healthy", 20) {
+            @Override
+            public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
+                if (!player.isSportsInvalid()) {
+                    var text = "";
+                    var sortValue = 0L;
+                    if (player.getWhenHealthy() != null) {
+                        switch (player.getInjuryTypeOfEstimate()) {
+                            case OPTIMISTIC_ESTIMATE:
+                                sortValue = 1L;
+                                text += ">= ";
+                                break;
+                            case REALISTIC_ESTIMATE:
+                                break;
+                            case PESSIMISTIC_ESTIMATE:
+                                sortValue = -1L;
+                                text += "<= ";
+                                break;
+                        }
+                        text += player.getWhenHealthy().toLocaleDateTime();
+                        sortValue += player.getWhenHealthy().getInstant().getEpochSecond();
+                    }
+                    return new ColorLabelEntry(sortValue, text, ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                }
+                String infinitySymbol = "∞";
+                return new ColorLabelEntry(infinitySymbol, ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+            }
+        };
+
+        playerAdditionalArray[33] = new PlayerColumn(907, "ls.player.when.slightlyinjured", 20) {
+            @Override
+            public IHOTableCellEntry getTableEntry(Player player, Player playerCompare) {
+                return new ColorLabelEntry(player.getWhenSlightlyInjured(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+            }
         };
         return playerAdditionalArray;
     }

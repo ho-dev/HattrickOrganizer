@@ -25,7 +25,6 @@ import javax.swing.plaf.FontUIResource;
  * @version 0.2a 28.08.01
  */
 public final class SplashFrame extends JFrame {
-	private static final long serialVersionUID = -4948885175460734368L;
 	private Image background;
 	private String m_sInfotext = "";
 	private String m_sVersionText = HO.getVersionString();

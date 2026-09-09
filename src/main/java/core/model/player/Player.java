@@ -5,6 +5,7 @@ import core.constants.player.PlayerSkill;
 import core.constants.player.Specialty;
 import core.db.AbstractTable;
 import core.db.DBManager;
+import core.file.hrf.HRFStringBuilder;
 import core.model.*;
 import core.model.enums.MatchType;
 import core.model.match.MatchLineupPosition;
@@ -457,7 +458,7 @@ public class Player extends AbstractTable.Storable {
 
         playerCategory = PlayerCategory.fromId(properties.getInt("playercategoryid", 0));
         playerStatement = properties.getProperty("statement", "");
-        ownerNotes = properties.getProperty("ownernotes", "");
+        ownerNotes = HRFStringBuilder.deserializeMultiLine(properties.getProperty("ownernotes", ""));
 
         //Subskills calculation
         //Called when saving the HRF because the necessary data is not available here
@@ -873,6 +874,31 @@ public class Player extends AbstractTable.Storable {
             latestPlayerInformation = DBManager.instance().loadLatestPlayerInfo(this.getPlayerId());
         }
         return latestPlayerInformation;
+    }
+
+    private Injury injury = null;
+
+    private Injury getInjury() {
+        if (injury == null) {
+            injury = new Injury(this);
+        }
+        return injury;
+    }
+
+    public TypeOfRecoveryEstimation getInjuryTypeOfEstimate() {
+        return getInjury().getTypeOfEstimate();
+    }
+
+    public boolean isSportsInvalid() {
+        return getInjury().isSportsInvalid();
+    }
+
+    public HODateTime getWhenHealthy() {
+        return getInjury().getWhenHealthy();
+    }
+
+    public HODateTime getWhenSlightlyInjured() {
+        return getInjury().getWhenSlightlyInjured();
     }
 
     static class PlayerPositionRating {
@@ -2214,7 +2240,7 @@ public class Player extends AbstractTable.Storable {
     }
 
     public void setOwnerNotes(String ownerNotes) {
-        this.ownerNotes = ownerNotes;
+        this.ownerNotes = HRFStringBuilder.deserializeMultiLine(ownerNotes);
     }
 
     public Integer getLastMatchPosition() {

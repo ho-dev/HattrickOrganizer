@@ -9,8 +9,6 @@ import javax.swing.JSeparator;
 
 public class Divider extends JPanel {
 
-	private static final long serialVersionUID = 4363337246058305684L;
-
 	public Divider(String text) {
 		setLayout(new GridBagLayout());
 
