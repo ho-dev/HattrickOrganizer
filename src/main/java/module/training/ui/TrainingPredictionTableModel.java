@@ -27,7 +27,7 @@ import java.util.Objects;
 public class TrainingPredictionTableModel  extends HOPlayersTableModel {
 
     private TrainingModel model;
-    protected HODateTime nextTrainingDate;
+    private HODateTime nextTrainingDate;
 
     public TrainingPredictionTableModel(UserColumnController.ColumnModelId columnModelId) {
         super(columnModelId, "TrainingPrediction");
@@ -67,11 +67,11 @@ public class TrainingPredictionTableModel  extends HOPlayersTableModel {
                 }
         ));
 
-        this.nextTrainingDate = getDownloadedNextTrainingDate();
+        nextTrainingDate = getDownloadedNextTrainingDate();
         var nextWeek = nextTrainingDate;
-        for (int i = 0; i < UserParameter.instance().futureWeeks; i++) {
-            var htweek = nextWeek.toLocaleHTWeek();
-            var column = new TrainingProgressColumn(nextColumnId++,htweek, i, 60);
+        for (int weekIndex = 0; weekIndex < UserParameter.instance().futureWeeks; weekIndex++) {
+            var htWeek = nextWeek.toLocaleHTWeek();
+            var column = new TrainingProgressColumn(nextColumnId++, htWeek, weekIndex, 60);
             newColumns.add(column);
             nextWeek = nextWeek.plusDaysAtSameLocalTime(7);
         }
@@ -127,6 +127,6 @@ public class TrainingPredictionTableModel  extends HOPlayersTableModel {
     }
 
     public boolean isHeaderChanged() {
-        return !getDownloadedNextTrainingDate().equals(this.nextTrainingDate);
+        return !Objects.equals(getDownloadedNextTrainingDate(), nextTrainingDate);
     }
 }
