@@ -30,7 +30,6 @@ class ModuleConfigPanelTable extends JTable implements ActionListener{
 
 	private void initialize() {
 		refresh();
-		setRowHeight(25);
 		setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
 		getTableHeader().setReorderingAllowed(false);
 	}
