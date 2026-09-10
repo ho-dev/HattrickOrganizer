@@ -7,12 +7,10 @@ import javax.swing.table.DefaultTableModel;
 
 /**
  * Base TableModel that creates a not editable table and manage the rendering
- * 
+ *
  * @author <a href=mailto:draghetto@users.sourceforge.net>Massimiliano Amato</a>
  */
 public class BaseTableModel extends DefaultTableModel {
-
-	private static final long serialVersionUID = -5658792494605688937L;
 
 	/**
 	 * Creates a new instance of BaseTableModel
@@ -23,7 +21,7 @@ public class BaseTableModel extends DefaultTableModel {
 
 	/**
 	 * Creates a new BaseTableModel object.
-	 * 
+	 *
 	 * @param data
 	 *            Vector with the data to be used to fill the table
 	 * @param columnNames
@@ -35,12 +33,12 @@ public class BaseTableModel extends DefaultTableModel {
 
 	/**
 	 * Method that returns if the cell if editable, false by default
-	 * 
+	 *
 	 * @param row
 	 *            the row index of the cell
 	 * @param column
 	 *            the column index of the cell
-	 * 
+	 *
 	 * @return true if editable, false if not
 	 */
 	@Override
@@ -50,10 +48,10 @@ public class BaseTableModel extends DefaultTableModel {
 
 	/**
 	 * Method the return the column class type
-	 * 
+	 *
 	 * @param column
 	 *            the column we want to know the class type
-	 * 
+	 *
 	 * @return Object is column is empty, or the type of object we have in the
 	 *         column
 	 */

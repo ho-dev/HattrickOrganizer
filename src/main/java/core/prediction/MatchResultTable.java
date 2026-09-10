@@ -9,9 +9,7 @@ import javax.swing.table.TableColumnModel;
 
 
 class MatchResultTable extends JTable {
-	
-	private static final long serialVersionUID = 8245352979596154576L;
-	
+
 	private MatchResultTableModel m_clTableModel;
 	private TableSorter m_clTableSorter;
 

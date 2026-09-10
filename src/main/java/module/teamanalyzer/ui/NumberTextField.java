@@ -14,10 +14,6 @@ import static java.lang.Double.parseDouble;
  * @author <a href=mailto:draghetto@users.sourceforge.net>Massimiliano Amato</a>
  */
 public class NumberTextField extends JTextField {
-    /**
-	 * 
-	 */
-	private static final long serialVersionUID = -8515843904965462011L;
 	private int _intDigits = 0;
     private int _maxDigits = 0;
     private short _decDigits = 0;
@@ -129,11 +125,6 @@ public class NumberTextField extends JTextField {
      * @author <a href=mailto:draghetto@users.sourceforge.net>Massimiliano Amato</a>
      */
     private class DecimalFieldDocument extends PlainDocument {
-        /**
-		 * 
-		 */
-		private static final long serialVersionUID = 5081324121361165478L;
-
 
         /**
          * Creates a new DecimalFieldDocument object.
@@ -141,7 +132,7 @@ public class NumberTextField extends JTextField {
          * @param length lenght of numbetr
          */
         public DecimalFieldDocument(short length) {
-            
+
         }
 
         /**
@@ -160,7 +151,7 @@ public class NumberTextField extends JTextField {
                 if (!_validateNumberString(str.trim(), offs)) {
                     throw new BadLocationException(null, offs);
                 }
-                
+
                super.insertString(offs, str.trim(), a);
 
             }

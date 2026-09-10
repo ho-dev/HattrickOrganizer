@@ -1,6 +1,7 @@
 package core.model;
 
 import core.db.DBManager;
+import core.db.PersistenceManager;
 import core.file.hrf.HRF;
 import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
@@ -88,10 +89,6 @@ public class HOVerwaltung {
 	public static HOVerwaltung instance() {
 		if (m_clInstance == null) {
 			m_clInstance = new HOVerwaltung();
-
-			// TODO This seems to have side effects other than loading
-			//   parameters from DB, this probably should be wrapped properly.
-			DBManager.instance().getFaktorenFromDB();
 		}
 		return m_clInstance;
 	}
@@ -211,6 +208,16 @@ public class HOVerwaltung {
 		return new HOModel(id);
 	}
 
+    public PersistenceManager getPersistenceManager() {
+        PersistenceManager ret = null;
+        if (this.getModel() != null){
+            ret = this.getModel().getPersistenceManager();
+        }
+        if (ret == null){
+            ret = DBManager.instance();
+        }
+        return ret;
+    }
 
 	/**
 	 * Returns the String connected to the active language file or connected to
@@ -220,7 +227,7 @@ public class HOVerwaltung {
 	 *
 	 * @param key
 	 *            Key to be searched in language files
-	 * 
+	 *
 	 * @return String connected to the key or !key! if nothing can be found in
 	 *         language files
 	 */

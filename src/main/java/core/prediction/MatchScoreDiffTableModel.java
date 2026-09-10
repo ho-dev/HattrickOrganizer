@@ -14,7 +14,6 @@ import javax.swing.*;
 
 public class MatchScoreDiffTableModel extends AbstractMatchTableModel {
 	//~ Instance fields ----------------------------------------------------------------------------
-	private static final long serialVersionUID = -2114489862284776054L;
 	protected static String[] columnNames =
 	{
 		TranslationFacility.tr("ls.match.result"),

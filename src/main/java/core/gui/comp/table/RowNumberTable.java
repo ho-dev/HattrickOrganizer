@@ -20,13 +20,12 @@ import javax.swing.table.TableColumn;
  *	Use a JTable as a renderer for row numbers of a given main table.
  *  This table must be added to the row header of the scrollpane that
  *  contains the main table.
- *  
+ *
  *  source: http://tips4java.wordpress.com/2008/11/18/row-number-table/
  */
 public class RowNumberTable extends JTable implements ChangeListener,
 		PropertyChangeListener {
 
-	private static final long serialVersionUID = -1935680720941413776L;
 	private JTable main;
 
 	public RowNumberTable(JTable table) {
@@ -124,8 +123,6 @@ public class RowNumberTable extends JTable implements ChangeListener,
 	 * Borrow the renderer from JDK1.4.2 table header
 	 */
 	private static class RowNumberRenderer extends DefaultTableCellRenderer {
-
-		private static final long serialVersionUID = 956188260335426310L;
 
 		public RowNumberRenderer() {
 			setHorizontalAlignment(JLabel.CENTER);

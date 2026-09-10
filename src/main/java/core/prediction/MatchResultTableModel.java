@@ -11,13 +11,10 @@ import core.model.TranslationFacility;
 import core.prediction.engine.MatchResult;
 
 import javax.swing.SwingConstants;
-import java.io.Serial;
 import javax.swing.*;
 
 public class MatchResultTableModel extends AbstractMatchTableModel {
 	//~ Instance fields ----------------------------------------------------------------------------
-	@Serial
-	private static final long serialVersionUID = 5568369952809628251L;
 	public static final String[] columnNames = {
 		TranslationFacility.tr("ls.match.result"),
 		TranslationFacility.tr("frequency"),

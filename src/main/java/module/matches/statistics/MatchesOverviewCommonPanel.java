@@ -15,7 +15,6 @@ import java.awt.*;
 
 public class MatchesOverviewCommonPanel extends ImagePanel {
 
-	private static final long serialVersionUID = -7478328578730608662L;
 	final GridBagLayout layout = new GridBagLayout();
     final GridBagConstraints constraints = new GridBagConstraints();
 	public static final int HighestVictory 		= 0;
@@ -27,16 +26,16 @@ public class MatchesOverviewCommonPanel extends ImagePanel {
 	public static final int TrailingHTWinningFT = 6;
 	public static final int LeadingHTLosingFT 	= 7;
 
-    
+
 	private int matchtypes;
 	private JLabel[] resultLabels = new JLabel[8];
 	private JLabel[] teamNames = new JLabel[2];
-	
+
     public MatchesOverviewCommonPanel(int matchtypes){
     	this.matchtypes = matchtypes;
 		initialize();
 	}
-	
+
 	private void initialize() {
 		for (int i = 0; i < resultLabels.length; i++) {
 			resultLabels[i] = new JLabel("0");
@@ -50,9 +49,9 @@ public class MatchesOverviewCommonPanel extends ImagePanel {
         constraints.weighty = 0.0;
         constraints.weightx = 1.0;
         constraints.insets = new Insets(5, 3, 2, 2);
-		
+
         setLayout(layout);
-        
+
         JLabel label = new JLabel(TranslationFacility.tr("HighestVictory"));
         constraints.anchor = GridBagConstraints.WEST;
         constraints.fill = GridBagConstraints.FIRST_LINE_START;
@@ -82,10 +81,10 @@ public class MatchesOverviewCommonPanel extends ImagePanel {
 //        add(resultLabels[YELLOW_CARDS],2,15,1);
 //        add(new JLabel(TranslationFacility.tr("highlight_redcard")),1,16,1);
 //        add(resultLabels[RED_CARDS],2,16,1);
-        
+
         refresh(matchtypes);
 	}
-	
+
 	private void add(JComponent comp,int x, int y, int width){
 		constraints.gridx = x;
         constraints.gridy = y;
@@ -95,8 +94,8 @@ public class MatchesOverviewCommonPanel extends ImagePanel {
         add(comp);
 	}
 
-	
-	
+
+
 	public void refresh(int matchtypes) {
 		 if(matchtypes == MatchesPanel.ALL_GAMES || matchtypes == MatchesPanel.OTHER_TEAM_GAMES){
 			 clear();
@@ -129,7 +128,7 @@ public class MatchesOverviewCommonPanel extends ImagePanel {
 		}
 
 	}
-	
+
 	private void clear(){
         for (JLabel resultLabel : resultLabels) {
             resultLabel.setText("0");

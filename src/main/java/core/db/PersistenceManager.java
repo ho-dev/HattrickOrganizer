@@ -122,6 +122,7 @@ public interface PersistenceManager {
      */
     List<Player> getSpieler(int hrfId);
 
+    String loadHOConfigurationParameter(String key);
 
     // Lineup
 
@@ -159,4 +160,13 @@ public interface PersistenceManager {
      * @return List<StaffMember> – Staff Members for <code>hrfId</code>.  Empty list if none found.
      */
     List<StaffMember> getStaffByHrfId(int hrfId);
+
+    /**
+     * Returns the player situation before date
+     *
+     * @param playerId ID of the player.
+     * @param before Timestamp.
+     * @return Player – Player's status before given timestamp.  Null if not found.
+     */
+    Player getLatestPlayerDownloadBefore(int playerId, Timestamp before);
 }

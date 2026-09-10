@@ -23,7 +23,6 @@ import org.w3c.dom.Element;
  */
 public class ConnTest {
 
-	private static final long serialVersionUID = 8532069037729446669L;
 	private static final String LS = System.getProperty("line.separator");
 	private static final String URL_NORMAL = "http://ho1.sourceforge.net/onlinefiles/version.htm";
 	private static final String URL_SERVERS = "https://www.hattrick.org/common/chppxml.axd?file=servers";

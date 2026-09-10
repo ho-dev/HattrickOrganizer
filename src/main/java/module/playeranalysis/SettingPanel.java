@@ -12,7 +12,6 @@ import java.awt.event.ActionEvent;
 class SettingPanel extends JPanel {
 
 	public static ModuleConfig config = ModuleConfig.instance();
-	private static final long serialVersionUID = -5721035453587068724L;
 	private JCheckBox skillsCheckbox = new JCheckBox();
 
 	SettingPanel() {
@@ -24,12 +23,12 @@ class SettingPanel extends JPanel {
 
 	/**
 	 * Create a new Panel
-	 * 
+	 *
 	 * @param string
 	 *            Label text
 	 * @param checkBox
 	 *            CheckBox
-	 * 
+	 *
 	 * @return a panel
 	 */
 	private JPanel createPanel(String string, JComponent checkBox) {

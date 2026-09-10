@@ -9,7 +9,6 @@ import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.io.Serial;
 
 import javax.swing.*;
 
@@ -20,8 +19,6 @@ import javax.swing.*;
 public class InfoPanel extends ImagePanel {
     //~ Static fields/initializers -----------------------------------------------------------------
 
-	@Serial
-    private static final long serialVersionUID = 4902186890362152556L;
 
 	// color for error messages
     public static final Color FEHLERFARBE = ThemeManager.getColor(HOColorName.LABEL_ERROR_FG); // Color.red

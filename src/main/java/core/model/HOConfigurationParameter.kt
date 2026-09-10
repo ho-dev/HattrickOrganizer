@@ -26,7 +26,8 @@ abstract class HOConfigurationParameter(
      */
     init {
         if (!parameters.contains(key)) {
-            var storedValue = DBManager.instance().loadHOConfigurationParameter(key)
+            val persistenceManager = HOVerwaltung.instance().persistenceManager
+            var storedValue = persistenceManager.loadHOConfigurationParameter(key)
             if (storedValue != null){
                 parameters[key] = convertToObject(storedValue)
             }

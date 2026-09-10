@@ -14,156 +14,171 @@ import javax.swing.*;
 import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.math.BigDecimal;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 final class ArenaPanel extends JPanel {
 
-	private final JTable m_jtArena = new JTable();
+    private static final String[] ROW_TRANSLATION_KEYS = {"ls.club.arena.terraces", "ls.club.arena.basicseating", "ls.club.arena.seatsunderroof", "ls.club.arena.seatsinvipboxes", "Gesamt", "Einnahmen", "Unterhalt", "Gewinn", "Baukosten"};
 
-	//Teststadium
-	private Stadium m_clStadium;
-	private final String[] UEBERSCHRIFT = {"", TranslationFacility.tr("Aktuell"), TranslationFacility.tr("Maximal"),
-		TranslationFacility.tr("Durchschnitt"), TranslationFacility.tr("Minimal")};
-	private Stadium[] m_clStadien;
-	private IHOTableCellEntry[][] values;
+    private static final int ROW_INDEX_TERRACES = 0;
+    private static final int ROW_INDEX_BASIC_SEATING = 1;
+    private static final int ROW_INDEX_SEATS_UNDER_ROOF = 2;
+    private static final int ROW_INDEX_VIP = 3;
+    private static final int ROW_INDEX_SUM = 4;
+    private static final int ROW_INDEX_REVENUE = 5;
+    private static final int ROW_INDEX_WEEKLY_COST = 6;
+    private static final int ROW_INDEX_PROFIT = 7;
+    private static final int ROW_INDEX_CONSTRUCTION_COST = 8;
+    private static final int NUMBER_OF_ROWS = 9;
 
-	ArenaPanel() {
-		setLayout(new BorderLayout());
-		add(new JScrollPane(m_jtArena));
-		m_jtArena.setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
-		m_jtArena.getTableHeader().setReorderingAllowed(false);
-		initTabelle();
-		reInit();
-	}
+    private static final String[] COLUMN_TRANSLATION_KEYS_TITLES = {null, "Aktuell", "Maximal", "Durchschnitt", "Minimal"};
 
-	public void reInit() {
-		HOModel model = HOVerwaltung.instance().getModel();
-        m_clStadium = model.getStadium();
-		m_clStadien = ArenaSizer.calcConstructionArenas(m_clStadium, model.getClub().getFans());
-		reinitTable();
-	}
+    private static final int COLUMN_INDEX_TITLE = 0;
+    private static final int COLUMN_INDEX_ACTUAL = 1;
+    private static final int COLUMN_INDEX_MAXIMUM = 2;
+    private static final int COLUMN_INDEX_AVERAGE = 3;
+    private static final int COLUMN_INDEX_MINIMUM = 4;
+    private static final int NUMBER_OF_COLUMNS = 5;
 
-	private void initTabelle() {
-		//Tablewerte setzen
-		values = new IHOTableCellEntry[9][5];
+    private final JTable jTable = new JTable();
 
-		String[] columnText = {"ls.club.arena.terraces", "ls.club.arena.basicseating", "ls.club.arena.seatsunderroof", "ls.club.arena.seatsinvipboxes", "Gesamt", "Einnahmen", "Unterhalt", "Gewinn", "Baukosten"};
-		for (int i = 0; i < columnText.length; i++) {
-			values[i][0] = new ColorLabelEntry(TranslationFacility.tr(columnText[i]),
-				ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_PLAYERSPOSITIONVALUES, SwingConstants.LEFT);
-		}
+    private Stadium currentStadium;
+    private Stadium[] stadiumsMaxAvgMin;
+    private IHOTableCellEntry[][] tableCellEntries;
 
-		//Platzwerte
-		for (int i = 0; i < 9; i++) {
-			for (int j = 1; j < 5; j++) {
-				if (i < 4)
-					values[i][j] = createDoppelLabelEntry(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
-				else if (i == 4)
-					values[i][j] = createDoppelLabelEntry(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
-				else values[i][j] = createDoppelLabelEntry(ColorLabelEntry.BG_SINGLEPLAYERVALUES);
-			}
+    ArenaPanel() {
+        setLayout(new BorderLayout());
+        add(new JScrollPane(jTable));
+        jTable.setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
+        jTable.getTableHeader().setReorderingAllowed(false);
+        initTable();
+        reInit();
+    }
 
-		}
+    public void reInit() {
+        HOModel model = HOVerwaltung.instance().getModel();
+        currentStadium = model.getStadium();
+        stadiumsMaxAvgMin = ArenaSizer.calcConstructionArenas(currentStadium, model.getClub().getFans());
+        reinitTable();
+    }
 
-		m_jtArena.setModel(new TableModel(values, UEBERSCHRIFT));
+    private void initTable() {
+        // set table values
+        tableCellEntries = new IHOTableCellEntry[NUMBER_OF_ROWS][NUMBER_OF_COLUMNS];
 
-		final TableColumnModel columnModel = m_jtArena.getColumnModel();
-		columnModel.getColumn(0).setMinWidth(Helper.calcCellWidth(150));
-		columnModel.getColumn(1).setMinWidth(Helper.calcCellWidth(160));
-		columnModel.getColumn(2).setMinWidth(Helper.calcCellWidth(160));
-		columnModel.getColumn(3).setMinWidth(Helper.calcCellWidth(160));
-		columnModel.getColumn(4).setMinWidth(Helper.calcCellWidth(160));
-	}
+        for (int rowIndex = 0; rowIndex < ROW_TRANSLATION_KEYS.length; rowIndex++) {
+            tableCellEntries[rowIndex][COLUMN_INDEX_TITLE] = new ColorLabelEntry(TranslationFacility.tr(ROW_TRANSLATION_KEYS[rowIndex]), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_PLAYERSPOSITIONVALUES, SwingConstants.LEFT);
+        }
 
-	/**
-	 * Create a new DoppelLabelEntry with default values
-	 *
-	 * @param background Color
-	 * @return DoubleLabelEntries
-	 */
-	private DoubleLabelEntries createDoppelLabelEntry(Color background) {
-		return new DoubleLabelEntries(new ColorLabelEntry("",
-			ColorLabelEntry.FG_STANDARD,
-			background, SwingConstants.RIGHT),
-			new ColorLabelEntry("",
-				ColorLabelEntry.FG_STANDARD,
-				background, SwingConstants.RIGHT));
-	}
-
-	void reinitArena(Stadium currentArena, int maxSupporter, int normalSupporter, int minSupporter) {
-        m_clStadium = currentArena;
-		m_clStadien = ArenaSizer.calcConstructionArenas(currentArena, maxSupporter, normalSupporter, minSupporter);
-		reinitTable();
-	}
-
-	private void reinitTable() {
-		final Stadium stadium = HOVerwaltung.instance().getModel().getStadium();
-		if (m_clStadium != null) {
-			((DoubleLabelEntries) values[0][1]).getLeft().setText(m_clStadium.getTerraces() + "");
-			((DoubleLabelEntries) values[0][1]).getRight().setSpecialNumber(m_clStadium.getTerraces() - stadium.getTerraces(), false);
-			((DoubleLabelEntries) values[1][1]).getLeft().setText(m_clStadium.getBasicSeating() + "");
-			((DoubleLabelEntries) values[1][1]).getRight().setSpecialNumber(m_clStadium.getBasicSeating() - stadium.getBasicSeating(), false);
-			((DoubleLabelEntries) values[2][1]).getLeft().setText(m_clStadium.getUnderRoofSeating() + "");
-			((DoubleLabelEntries) values[2][1]).getRight().setSpecialNumber(m_clStadium.getUnderRoofSeating() - stadium.getUnderRoofSeating(), false);
-			((DoubleLabelEntries) values[3][1]).getLeft().setText(m_clStadium.getVipBox() + "");
-			((DoubleLabelEntries) values[3][1]).getRight().setSpecialNumber(m_clStadium.getVipBox() - stadium.getVipBox(), false);
-			((DoubleLabelEntries) values[4][1]).getLeft().setText(m_clStadium.getTotalSize() + "");
-			((DoubleLabelEntries) values[4][1]).getRight().setSpecialNumber(m_clStadium.getTotalSize() - stadium.getTotalSize(), false);
-			((DoubleLabelEntries) values[5][1]).getLeft().setText(ArenaAdmission.calculateIncome(m_clStadium).toLocaleString());
-			((DoubleLabelEntries) values[5][1]).getRight().setText(ArenaAdmission.calculateIncome(m_clStadium).minus(ArenaAdmission.calculateIncome(stadium)).toLocaleString());
-			((DoubleLabelEntries) values[6][1]).getLeft().setText(ArenaMaintenance.calculateCosts(m_clStadium).times(BigDecimal.valueOf(-1)).toLocaleString());
-			((DoubleLabelEntries) values[6][1]).getRight().setText(ArenaMaintenance.calculateCosts(m_clStadium).minus(ArenaMaintenance.calculateCosts(stadium)).times(BigDecimal.valueOf(-1)).toLocaleString());
-			((DoubleLabelEntries) values[7][1]).getLeft().setText(ArenaAdmission.calculateIncome(m_clStadium).minus(ArenaMaintenance.calculateCosts(m_clStadium)).toLocaleString());
-			((DoubleLabelEntries) values[7][1]).getRight().setText(
-					ArenaAdmission.calculateIncome(m_clStadium)
-							.minus(ArenaMaintenance.calculateCosts(m_clStadium))
-							.minus(ArenaAdmission.calculateIncome(stadium))
-							.minus(ArenaMaintenance.calculateCosts(stadium))
-							.toLocaleString());
-			final int newTerraces = m_clStadium.getTerraces() - stadium.getTerraces();
-			final int newBasicSeating = m_clStadium.getBasicSeating() - stadium.getBasicSeating();
-			final int newUnderRoofSeating = m_clStadium.getUnderRoofSeating() - stadium.getUnderRoofSeating();
-			final int newVipBox = m_clStadium.getVipBox() - stadium.getVipBox();
-			((DoubleLabelEntries) values[8][1]).getLeft().setText(
-					ArenaRebuild.calculateCosts(newTerraces,
-							newBasicSeating,
-							newUnderRoofSeating,
-							newVipBox).toLocaleString());
-			((DoubleLabelEntries) values[8][1]).getRight().setText("");
-
-			for (int i = 2; i < 5; i++) {
-                ((DoubleLabelEntries) values[0][i]).getLeft().setText(m_clStadien[i - 2].getTerraces() + "");
-                ((DoubleLabelEntries) values[0][i]).getRight().setSpecialNumber(m_clStadien[i - 2].getTerraces() - m_clStadium.getTerraces(), false);
-                ((DoubleLabelEntries) values[1][i]).getLeft().setText(m_clStadien[i - 2].getBasicSeating() + "");
-                ((DoubleLabelEntries) values[1][i]).getRight().setSpecialNumber(m_clStadien[i - 2].getBasicSeating() - m_clStadium.getBasicSeating(), false);
-                ((DoubleLabelEntries) values[2][i]).getLeft().setText(m_clStadien[i - 2].getUnderRoofSeating() + "");
-                ((DoubleLabelEntries) values[2][i]).getRight().setSpecialNumber(m_clStadien[i - 2].getUnderRoofSeating() - m_clStadium.getUnderRoofSeating(), false);
-                ((DoubleLabelEntries) values[3][i]).getLeft().setText(m_clStadien[i - 2].getVipBox() + "");
-                ((DoubleLabelEntries) values[3][i]).getRight().setSpecialNumber(m_clStadien[i - 2].getVipBox() - m_clStadium.getVipBox(), false);
-                ((DoubleLabelEntries) values[4][i]).getLeft().setText(m_clStadien[i - 2].getTotalSize() + "");
-                ((DoubleLabelEntries) values[4][i]).getRight().setSpecialNumber(m_clStadien[i - 2].getTotalSize() - m_clStadium.getTotalSize(), false);
-                ((DoubleLabelEntries) values[5][i]).getLeft().setText(ArenaAdmission.calculateIncome(m_clStadien[i - 2]).toLocaleString());
-                ((DoubleLabelEntries) values[5][i]).getRight().setText(ArenaAdmission.calculateIncome(m_clStadien[i - 2]).minus(ArenaAdmission.calculateIncome(m_clStadium)).toLocaleString());
-                ((DoubleLabelEntries) values[6][i]).getLeft().setText(ArenaMaintenance.calculateCosts(m_clStadien[i - 2]).times(BigDecimal.valueOf(-1)).toLocaleString());
-                ((DoubleLabelEntries) values[6][i]).getRight().setText(ArenaMaintenance.calculateCosts(m_clStadien[i - 2]).minus(ArenaMaintenance.calculateCosts(m_clStadium)).times(BigDecimal.valueOf(-1)).toLocaleString());
-                ((DoubleLabelEntries) values[7][i]).getLeft().setText(ArenaAdmission.calculateIncome(m_clStadien[i - 2]).minus(ArenaMaintenance.calculateCosts(m_clStadien[i - 2])).toLocaleString());
-                ((DoubleLabelEntries) values[7][i]).getRight().setText(ArenaAdmission.calculateIncome(m_clStadien[i - 2])
-                        .minus(ArenaMaintenance.calculateCosts(m_clStadien[i - 2]))
-                        .minus(ArenaAdmission.calculateIncome(m_clStadium))
-                        .minus(ArenaMaintenance.calculateCosts(m_clStadium)).toLocaleString());
-                var expansionCosts = m_clStadien[i - 2].getExpansionCosts();
-                if (expansionCosts != null) {
-                    ((DoubleLabelEntries) values[8][i]).getLeft().setText(expansionCosts.times(BigDecimal.valueOf(-1)).toLocaleString());
+        // Placeholders
+        for (int row = ROW_INDEX_TERRACES; row < NUMBER_OF_ROWS; row++) {
+            for (int column = COLUMN_INDEX_ACTUAL; column < NUMBER_OF_COLUMNS; column++) {
+                if (row < COLUMN_INDEX_MINIMUM) {
+                    tableCellEntries[row][column] = createDoubleLabelEntries(ColorLabelEntry.BG_PLAYERSSUBPOSITIONVALUES);
+                } else if (row == COLUMN_INDEX_MINIMUM) {
+                    tableCellEntries[row][column] = createDoubleLabelEntries(ColorLabelEntry.BG_PLAYERSPOSITIONVALUES);
                 } else {
-                    ((DoubleLabelEntries) values[8][i]).getLeft().setText("");
+                    tableCellEntries[row][column] = createDoubleLabelEntries(ColorLabelEntry.BG_SINGLEPLAYERVALUES);
+                }
+            }
+        }
+
+        jTable.setModel(new TableModel(tableCellEntries, createColumnTitles()));
+
+        final TableColumnModel columnModel = jTable.getColumnModel();
+        columnModel.getColumn(COLUMN_INDEX_TITLE).setMinWidth(Helper.calcCellWidth(150));
+        columnModel.getColumn(COLUMN_INDEX_ACTUAL).setMinWidth(Helper.calcCellWidth(160));
+        columnModel.getColumn(COLUMN_INDEX_MAXIMUM).setMinWidth(Helper.calcCellWidth(160));
+        columnModel.getColumn(COLUMN_INDEX_AVERAGE).setMinWidth(Helper.calcCellWidth(160));
+        columnModel.getColumn(COLUMN_INDEX_MINIMUM).setMinWidth(Helper.calcCellWidth(160));
+    }
+
+    /**
+     * Create a new DoubleLabelEntries with default values
+     *
+     * @param background Color
+     * @return DoubleLabelEntries
+     */
+    private static DoubleLabelEntries createDoubleLabelEntries(Color background) {
+        return new DoubleLabelEntries(new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, background, SwingConstants.RIGHT), new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, background, SwingConstants.RIGHT));
+    }
+
+    void reinitArena(Stadium currentArena, int maxSupporter, int normalSupporter, int minSupporter) {
+        currentStadium = currentArena;
+        stadiumsMaxAvgMin = ArenaSizer.calcConstructionArenas(currentArena, maxSupporter, normalSupporter, minSupporter);
+        reinitTable();
+    }
+
+    private void reinitTable() {
+        final Stadium stadium = HOVerwaltung.instance().getModel().getStadium();
+        if (currentStadium != null) {
+            ((DoubleLabelEntries) tableCellEntries[ROW_INDEX_TERRACES][COLUMN_INDEX_ACTUAL]).getLeft().setText(formatNumber(currentStadium.getTerraces()));
+            ((DoubleLabelEntries) tableCellEntries[ROW_INDEX_TERRACES][COLUMN_INDEX_ACTUAL]).getRight().setSpecialNumber(currentStadium.getTerraces() - stadium.getTerraces(), false);
+            ((DoubleLabelEntries) tableCellEntries[ROW_INDEX_BASIC_SEATING][COLUMN_INDEX_ACTUAL]).getLeft().setText(formatNumber(currentStadium.getBasicSeating()));
+            ((DoubleLabelEntries) tableCellEntries[ROW_INDEX_BASIC_SEATING][COLUMN_INDEX_ACTUAL]).getRight().setSpecialNumber(currentStadium.getBasicSeating() - stadium.getBasicSeating(), false);
+            ((DoubleLabelEntries) tableCellEntries[ROW_INDEX_SEATS_UNDER_ROOF][COLUMN_INDEX_ACTUAL]).getLeft().setText(formatNumber(currentStadium.getUnderRoofSeating()));
+            ((DoubleLabelEntries) tableCellEntries[ROW_INDEX_SEATS_UNDER_ROOF][COLUMN_INDEX_ACTUAL]).getRight().setSpecialNumber(currentStadium.getUnderRoofSeating() - stadium.getUnderRoofSeating(), false);
+            ((DoubleLabelEntries) tableCellEntries[ROW_INDEX_VIP][COLUMN_INDEX_ACTUAL]).getLeft().setText(formatNumber(currentStadium.getVipBox()));
+            ((DoubleLabelEntries) tableCellEntries[ROW_INDEX_VIP][COLUMN_INDEX_ACTUAL]).getRight().setSpecialNumber(currentStadium.getVipBox() - stadium.getVipBox(), false);
+            ((DoubleLabelEntries) tableCellEntries[ROW_INDEX_SUM][COLUMN_INDEX_ACTUAL]).getLeft().setText(formatNumber(currentStadium.getTotalSize()));
+            ((DoubleLabelEntries) tableCellEntries[ROW_INDEX_SUM][COLUMN_INDEX_ACTUAL]).getRight().setSpecialNumber(currentStadium.getTotalSize() - stadium.getTotalSize(), false);
+            ((DoubleLabelEntries) tableCellEntries[ROW_INDEX_REVENUE][COLUMN_INDEX_ACTUAL]).getLeft().setText(ArenaAdmission.calculateIncome(currentStadium).toLocaleString());
+            ((DoubleLabelEntries) tableCellEntries[ROW_INDEX_REVENUE][COLUMN_INDEX_ACTUAL]).getRight().setText(ArenaAdmission.calculateIncome(currentStadium).minus(ArenaAdmission.calculateIncome(stadium)).toLocaleString());
+            ((DoubleLabelEntries) tableCellEntries[ROW_INDEX_WEEKLY_COST][COLUMN_INDEX_ACTUAL]).getLeft().setText(ArenaMaintenance.calculateCosts(currentStadium).times(BigDecimal.valueOf(-1)).toLocaleString());
+            ((DoubleLabelEntries) tableCellEntries[ROW_INDEX_WEEKLY_COST][COLUMN_INDEX_ACTUAL]).getRight().setText(ArenaMaintenance.calculateCosts(currentStadium).minus(ArenaMaintenance.calculateCosts(stadium)).times(BigDecimal.valueOf(-1)).toLocaleString());
+            ((DoubleLabelEntries) tableCellEntries[ROW_INDEX_PROFIT][COLUMN_INDEX_ACTUAL]).getLeft().setText(ArenaAdmission.calculateIncome(currentStadium).minus(ArenaMaintenance.calculateCosts(currentStadium)).toLocaleString());
+            ((DoubleLabelEntries) tableCellEntries[ROW_INDEX_PROFIT][COLUMN_INDEX_ACTUAL]).getRight().setText(ArenaAdmission.calculateIncome(currentStadium).minus(ArenaMaintenance.calculateCosts(currentStadium)).minus(ArenaAdmission.calculateIncome(stadium)).minus(ArenaMaintenance.calculateCosts(stadium)).toLocaleString());
+            final int newTerraces = currentStadium.getTerraces() - stadium.getTerraces();
+            final int newBasicSeating = currentStadium.getBasicSeating() - stadium.getBasicSeating();
+            final int newUnderRoofSeating = currentStadium.getUnderRoofSeating() - stadium.getUnderRoofSeating();
+            final int newVipBox = currentStadium.getVipBox() - stadium.getVipBox();
+            ((DoubleLabelEntries) tableCellEntries[ROW_INDEX_CONSTRUCTION_COST][COLUMN_INDEX_ACTUAL]).getLeft().setText(ArenaRebuild.calculateCosts(newTerraces, newBasicSeating, newUnderRoofSeating, newVipBox).toLocaleString());
+            ((DoubleLabelEntries) tableCellEntries[ROW_INDEX_CONSTRUCTION_COST][COLUMN_INDEX_ACTUAL]).getRight().setText("");
+
+            final int startColumn = COLUMN_INDEX_MAXIMUM;
+            for (int column = startColumn; column < NUMBER_OF_COLUMNS; column++) {
+                final int stadiumTypeIndex = column - startColumn;
+                final Stadium stadiumType = stadiumsMaxAvgMin[stadiumTypeIndex];
+                ((DoubleLabelEntries) tableCellEntries[ROW_INDEX_TERRACES][column]).getLeft().setText(formatNumber(stadiumType.getTerraces()));
+                ((DoubleLabelEntries) tableCellEntries[ROW_INDEX_TERRACES][column]).getRight().setSpecialNumber(stadiumType.getTerraces() - currentStadium.getTerraces(), false);
+                ((DoubleLabelEntries) tableCellEntries[ROW_INDEX_BASIC_SEATING][column]).getLeft().setText(formatNumber(stadiumType.getBasicSeating()));
+                ((DoubleLabelEntries) tableCellEntries[ROW_INDEX_BASIC_SEATING][column]).getRight().setSpecialNumber(stadiumType.getBasicSeating() - currentStadium.getBasicSeating(), false);
+                ((DoubleLabelEntries) tableCellEntries[ROW_INDEX_SEATS_UNDER_ROOF][column]).getLeft().setText(formatNumber(stadiumType.getUnderRoofSeating()));
+                ((DoubleLabelEntries) tableCellEntries[ROW_INDEX_SEATS_UNDER_ROOF][column]).getRight().setSpecialNumber(stadiumType.getUnderRoofSeating() - currentStadium.getUnderRoofSeating(), false);
+                ((DoubleLabelEntries) tableCellEntries[ROW_INDEX_VIP][column]).getLeft().setText(formatNumber(stadiumType.getVipBox()));
+                ((DoubleLabelEntries) tableCellEntries[ROW_INDEX_VIP][column]).getRight().setSpecialNumber(stadiumType.getVipBox() - currentStadium.getVipBox(), false);
+                ((DoubleLabelEntries) tableCellEntries[ROW_INDEX_SUM][column]).getLeft().setText(formatNumber(stadiumType.getTotalSize()));
+                ((DoubleLabelEntries) tableCellEntries[ROW_INDEX_SUM][column]).getRight().setSpecialNumber(stadiumType.getTotalSize() - currentStadium.getTotalSize(), false);
+                ((DoubleLabelEntries) tableCellEntries[ROW_INDEX_REVENUE][column]).getLeft().setText(ArenaAdmission.calculateIncome(stadiumType).toLocaleString());
+                ((DoubleLabelEntries) tableCellEntries[ROW_INDEX_REVENUE][column]).getRight().setText(ArenaAdmission.calculateIncome(stadiumType).minus(ArenaAdmission.calculateIncome(currentStadium)).toLocaleString());
+                ((DoubleLabelEntries) tableCellEntries[ROW_INDEX_WEEKLY_COST][column]).getLeft().setText(ArenaMaintenance.calculateCosts(stadiumType).times(BigDecimal.valueOf(-1)).toLocaleString());
+                ((DoubleLabelEntries) tableCellEntries[ROW_INDEX_WEEKLY_COST][column]).getRight().setText(ArenaMaintenance.calculateCosts(stadiumType).minus(ArenaMaintenance.calculateCosts(currentStadium)).times(BigDecimal.valueOf(-1)).toLocaleString());
+                ((DoubleLabelEntries) tableCellEntries[ROW_INDEX_PROFIT][column]).getLeft().setText(ArenaAdmission.calculateIncome(stadiumType).minus(ArenaMaintenance.calculateCosts(stadiumType)).toLocaleString());
+                ((DoubleLabelEntries) tableCellEntries[ROW_INDEX_PROFIT][column]).getRight().setText(ArenaAdmission.calculateIncome(stadiumType).minus(ArenaMaintenance.calculateCosts(stadiumType)).minus(ArenaAdmission.calculateIncome(currentStadium)).minus(ArenaMaintenance.calculateCosts(currentStadium)).toLocaleString());
+                var expansionCosts = stadiumType.getExpansionCosts();
+                if (expansionCosts != null) {
+                    ((DoubleLabelEntries) tableCellEntries[ROW_INDEX_CONSTRUCTION_COST][column]).getLeft().setText(expansionCosts.times(BigDecimal.valueOf(-1)).toLocaleString());
+                } else {
+                    ((DoubleLabelEntries) tableCellEntries[ROW_INDEX_CONSTRUCTION_COST][column]).getLeft().setText("");
                 }
             }
 
-			m_jtArena.setModel(new TableModel(values, UEBERSCHRIFT));
-			m_jtArena.getColumnModel().getColumn(0).setMinWidth(Helper.calcCellWidth(150));
-			m_jtArena.getColumnModel().getColumn(1).setMinWidth(Helper.calcCellWidth(160));
-			m_jtArena.getColumnModel().getColumn(2).setMinWidth(Helper.calcCellWidth(160));
-			m_jtArena.getColumnModel().getColumn(3).setMinWidth(Helper.calcCellWidth(160));
-			m_jtArena.getColumnModel().getColumn(4).setMinWidth(Helper.calcCellWidth(160));
-		}
-	}
+            jTable.setModel(new TableModel(tableCellEntries, createColumnTitles()));
+            jTable.getColumnModel().getColumn(COLUMN_INDEX_TITLE).setMinWidth(Helper.calcCellWidth(150));
+            jTable.getColumnModel().getColumn(COLUMN_INDEX_ACTUAL).setMinWidth(Helper.calcCellWidth(160));
+            jTable.getColumnModel().getColumn(COLUMN_INDEX_MAXIMUM).setMinWidth(Helper.calcCellWidth(160));
+            jTable.getColumnModel().getColumn(COLUMN_INDEX_AVERAGE).setMinWidth(Helper.calcCellWidth(160));
+            jTable.getColumnModel().getColumn(COLUMN_INDEX_MINIMUM).setMinWidth(Helper.calcCellWidth(160));
+        }
+    }
+
+    private static Object[] createColumnTitles() {
+        return Stream.of(COLUMN_TRANSLATION_KEYS_TITLES).map(key -> Optional.ofNullable(key).map(TranslationFacility::tr).orElse("")).toArray();
+    }
+
+    private static String formatNumber(int number) {
+        final var numberformat = Helper.getNumberFormat(0);
+        return numberformat.format(number);
+    }
 }

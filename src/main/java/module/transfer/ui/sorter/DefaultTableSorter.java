@@ -14,8 +14,6 @@ import javax.swing.table.TableModel;
 public class DefaultTableSorter extends AbstractTableSorter {
     //~ Constructors -------------------------------------------------------------------------------
 
-	private static final long serialVersionUID = -2329161467834277249L;
-
 	/**
      * Creates a new DefaultTableSorter object.
      */
