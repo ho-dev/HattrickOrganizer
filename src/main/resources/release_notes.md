@@ -23,6 +23,10 @@
 * Added the columns `Career Assists` and `Assists for the Team` to the overview and details panel. (#2254)
 * New columns "Recovered on" and "Slightly injured on" (#2363)
 
+### HO update
+
+* Portable version shows hint to install downloaded update manually (#2331)
+
 ### Series
 
 * Fix error in table calculation if more than one team is replaced at one match day (#2453)
@@ -58,6 +62,7 @@
 * The bug where the number `100` was displayed for the shirt number when the player had no shirt number has been fixed.
   Instead, nothing is shown now if no number assigned. (#2420)
 * Fix out of bound exception on download when youth player were removed during the week (#2442)
+* Fix player selection in youth player overview (#2452)
 
 ### Special Events
 
@@ -81,6 +86,7 @@
 * Removed the superfluous space for the `Spectators` in braces at the end.
 * Added the image of the stadium and made the view better arranged. (#2140)
 * Added a local cache with TTL for stadium images and manual reload by clicking on the image. (#2440)
+* Tab 'Arena': Display for all values now with the thousands separator.
 
 ### Misc
 
