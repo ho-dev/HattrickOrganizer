@@ -23,7 +23,9 @@
 * Added the columns `Career Assists` and `Assists for the Team` to the overview and details panel. (#2254)
 * New columns "Recovered on" and "Slightly injured on" (#2363)
 
-### Team Analyzer
+### HO update
+
+* Portable version shows hint to install downloaded update manually (#2331)
 
 ### Hall of fame
 
