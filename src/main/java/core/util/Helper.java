@@ -12,14 +12,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.Arrays;
 import java.util.Vector;
 
 /**
  * Helper class
  * Methods are used in several dialogs or panels
  */
-public class Helper {
+public final class Helper {
 
 	private Helper() {
 		throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
@@ -83,19 +82,19 @@ public class Helper {
 	 * Integer format
 	 * used by parser in parseFloat
 	 */
-	public static DecimalFormat INTEGERFORMAT = new DecimalFormat("#0");
+	public static final DecimalFormat INTEGERFORMAT = new DecimalFormat("#0");
 
 	/**
 	 * Decimal format
 	 * - 1 fraction digit
 	 */
-	public static DecimalFormat DEFAULTDEZIMALFORMAT = new DecimalFormat("#0.0");
+	public static final DecimalFormat DEFAULTDEZIMALFORMAT = new DecimalFormat("#0.0");
 
 	/**
 	 * Decimal format
 	 * - 2 fraction digits
 	 */
-	public static DecimalFormat DEZIMALFORMAT_2STELLEN = new DecimalFormat("#0.00");
+	public static final DecimalFormat DEZIMALFORMAT_2STELLEN = new DecimalFormat("#0.00");
 
 	/**
 	 * Prevent recursive displaying of message pane
