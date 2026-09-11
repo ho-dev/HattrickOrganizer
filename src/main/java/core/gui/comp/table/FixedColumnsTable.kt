@@ -162,22 +162,22 @@ open class FixedColumnsTable @JvmOverloads constructor(
             }
     }
 
-    private fun setColumns() : Int {
-        //  Remove the non-fixed columns from the fixed table
-        while (fixed!!.columnCount > fixedColumnsCount) {
-            val tableColumnModel = fixed!!.getColumnModel()
-            tableColumnModel.removeColumn(tableColumnModel.getColumn(fixedColumnsCount))
+    private fun setColumns(): Int {
+        // Remove the non-fixed columns from the fixed table
+        val fixedColumnModel = fixed!!.columnModel
+        while (fixedColumnModel.columnCount > fixedColumnsCount) {
+            fixedColumnModel.removeColumn(fixedColumnModel.getColumn(fixedColumnsCount))
         }
-        //  Remove the fixed columns from the main table
+
+        // Remove the fixed columns from the main table
+        val mainColumnModel = columnModel
         var width = 0
-        var i = 0
-        while (i < fixedColumnsCount) {
-            val tableColumnModel = getColumnModel()
-            val column = tableColumnModel.getColumn(0)
+        repeat(fixedColumnsCount) {
+            val column = mainColumnModel.getColumn(0)
             width += column.preferredWidth
-            tableColumnModel.removeColumn(column)
-            i++
+            mainColumnModel.removeColumn(column)
         }
+
         return width
     }
 
