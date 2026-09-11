@@ -71,9 +71,8 @@ public class OAuthDialog extends JDialog {
 	private void doAuthorize() {
 		try {
 			m_AccessToken = m_service.getAccessToken(m_RequestToken, m_jtfAuthString.getText().trim());
-			UserParameter.instance().AccessToken = HOEncryption.cryptString(m_AccessToken.getToken());
-			UserParameter.instance().TokenSecret = HOEncryption.cryptString(m_AccessToken.getTokenSecret());
-
+            UserParameter.instance().setEncryptedToken(HOEncryption.encryptString(m_AccessToken.getToken()));
+            UserParameter.instance().setEncryptedTokenSecret(HOEncryption.encryptString(m_AccessToken.getTokenSecret()));
 		} catch (Exception e) {
 			HOLogger.instance().error(getClass(),
 					"Exception in doAuthorize: " + e.getMessage());
