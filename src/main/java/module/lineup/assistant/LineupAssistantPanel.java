@@ -22,10 +22,9 @@ import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 
-import static core.util.Helper.getTranslation;
 import static module.lineup.LineupPanel.TITLE_FG;
 
 
@@ -37,8 +36,8 @@ public class LineupAssistantPanel extends JPanel implements Refreshable, ActionL
 	private final JCheckBox m_jcbxNotLast = new JCheckBox("",	userParameter.aufstellungsAssistentPanel_notLast);
 
 	private final CBItem[] INCLUDE_EXCLUDE = {
-			new CBItem(getTranslation("ls.module.lineup.exclude"), 0),
-			new CBItem(getTranslation("ls.module.lineup.include"), 1),
+			new CBItem(TranslationFacility.tr("ls.module.lineup.exclude"), 0),
+			new CBItem(TranslationFacility.tr("ls.module.lineup.include"), 1),
  };
 
 	private final JComboBox<CBItem> m_jcbIncludeExclude = new JComboBox<>(INCLUDE_EXCLUDE);
@@ -401,12 +400,12 @@ public class LineupAssistantPanel extends JPanel implements Refreshable, ActionL
 		// Line 1 ===================================================
 		constraints.gridx = 0;
 		constraints.gridy = 0;
-		JLabel label = new JLabel(getTranslation("NotLast_aufstellen"));
-		label.setToolTipText(getTranslation("tt_AufstellungsAssistent_NotLast"));
+		JLabel label = new JLabel(TranslationFacility.tr("NotLast_aufstellen"));
+		label.setToolTipText(TranslationFacility.tr("tt_AufstellungsAssistent_NotLast"));
 		addLabel(constraints, layout, label);
 
 		constraints.gridx = 1;
-		m_jcbxNotLast.setToolTipText(getTranslation("tt_AufstellungsAssistent_NotLast"));
+		m_jcbxNotLast.setToolTipText(TranslationFacility.tr("tt_AufstellungsAssistent_NotLast"));
 		m_jcbxNotLast.addActionListener(this);
 		layout.setConstraints(m_jcbxNotLast, constraints);
 		add(m_jcbxNotLast);
@@ -419,7 +418,7 @@ public class LineupAssistantPanel extends JPanel implements Refreshable, ActionL
 		constraints.gridx = 0;
 		constraints.gridy = 1;
 		constraints.weightx = 0.0;
-		addLabel(constraints, layout, new JLabel(getTranslation("ls.module.lineup.assistant.group")));
+		addLabel(constraints, layout, new JLabel(TranslationFacility.tr("ls.module.lineup.assistant.group")));
 
 		constraints.gridx = 1;
 		constraints.gridwidth = 3;
@@ -441,12 +440,12 @@ public class LineupAssistantPanel extends JPanel implements Refreshable, ActionL
 		constraints.gridy = 2;
 		constraints.gridwidth = 1;
 		constraints.anchor = GridBagConstraints.CENTER;
-		label = new JLabel(getTranslation("ls.module.lineup.sync_lineup_panel"));
-		label.setToolTipText(getTranslation("ls.module.lineup.sync_lineup_panel.tooltip"));
+		label = new JLabel(TranslationFacility.tr("ls.module.lineup.sync_lineup_panel"));
+		label.setToolTipText(TranslationFacility.tr("ls.module.lineup.sync_lineup_panel.tooltip"));
 		addLabel(constraints, layout, label);
 
 		constraints.gridx = 1;
-		m_jcbxFilterPlayerPositionCB.setToolTipText(getTranslation("ls.module.lineup.sync_lineup_panel.tooltip"));
+		m_jcbxFilterPlayerPositionCB.setToolTipText(TranslationFacility.tr("ls.module.lineup.sync_lineup_panel.tooltip"));
 		m_jcbxFilterPlayerPositionCB.addActionListener(this);
 		layout.setConstraints(m_jcbxFilterPlayerPositionCB, constraints);
 		add(m_jcbxFilterPlayerPositionCB);
@@ -459,56 +458,56 @@ public class LineupAssistantPanel extends JPanel implements Refreshable, ActionL
 		// Line 5 ===============================================
 		constraints.gridx = 0;
 		constraints.gridy = 4;
-		label = new JLabel(getTranslation("Form_beruecksichtigen"));
-		label.setToolTipText(getTranslation("tt_AufstellungsAssistent_Form"));
+		label = new JLabel(TranslationFacility.tr("Form_beruecksichtigen"));
+		label.setToolTipText(TranslationFacility.tr("tt_AufstellungsAssistent_Form"));
 		addLabel(constraints, layout, label);
 
 		constraints.gridx++;
-		m_jcbxConsiderForm.setToolTipText(getTranslation("tt_AufstellungsAssistent_Form"));
+		m_jcbxConsiderForm.setToolTipText(TranslationFacility.tr("tt_AufstellungsAssistent_Form"));
 		layout.setConstraints(m_jcbxConsiderForm, constraints);
 		add(m_jcbxConsiderForm);
 
 		constraints.gridx++;
-		label = new JLabel(getTranslation("Verletze_aufstellen"));
-		label.setToolTipText(getTranslation("tt_AufstellungsAssistent_Verletzte"));
+		label = new JLabel(TranslationFacility.tr("Verletze_aufstellen"));
+		label.setToolTipText(TranslationFacility.tr("tt_AufstellungsAssistent_Verletzte"));
 		addLabel(constraints, layout, label);
 
 		constraints.gridx++;
-		m_jcbxConsiderInjuredPlayers.setToolTipText(getTranslation("tt_AufstellungsAssistent_Verletzte"));
+		m_jcbxConsiderInjuredPlayers.setToolTipText(TranslationFacility.tr("tt_AufstellungsAssistent_Verletzte"));
 		layout.setConstraints(m_jcbxConsiderInjuredPlayers, constraints);
 		add(m_jcbxConsiderInjuredPlayers);
 
 		// Line 6 ===============================================
 		constraints.gridx = 0;
 		constraints.gridy++;
-		label = new JLabel(getTranslation("Gesperrte_aufstellen"));
-		label.setToolTipText(getTranslation("tt_AufstellungsAssistent_Gesperrte"));
+		label = new JLabel(TranslationFacility.tr("Gesperrte_aufstellen"));
+		label.setToolTipText(TranslationFacility.tr("tt_AufstellungsAssistent_Gesperrte"));
 		addLabel(constraints, layout, label);
 
 		constraints.gridx++;
-		m_jcbxConsiderSuspendedPlayers.setToolTipText(getTranslation("tt_AufstellungsAssistent_Gesperrte"));
+		m_jcbxConsiderSuspendedPlayers.setToolTipText(TranslationFacility.tr("tt_AufstellungsAssistent_Gesperrte"));
 		layout.setConstraints(m_jcbxConsiderSuspendedPlayers, constraints);
 		add(m_jcbxConsiderSuspendedPlayers);
 
 		constraints.gridx++;
-		label = new JLabel(getTranslation("Idealposition_zuerst"));
-		label.setToolTipText(getTranslation("tt_AufstellungsAssistent_Idealposition"));
+		label = new JLabel(TranslationFacility.tr("Idealposition_zuerst"));
+		label.setToolTipText(TranslationFacility.tr("tt_AufstellungsAssistent_Idealposition"));
 		addLabel(constraints, layout, label);
 
 		constraints.gridx++;
-		m_jcbxIdealPositionFirst.setToolTipText(getTranslation("tt_AufstellungsAssistent_Idealposition"));
+		m_jcbxIdealPositionFirst.setToolTipText(TranslationFacility.tr("tt_AufstellungsAssistent_Idealposition"));
 		layout.setConstraints(m_jcbxIdealPositionFirst, constraints);
 		add(m_jcbxIdealPositionFirst);
 
 		// Line 7 ===============================================
 		constraints.gridx = 0;
 		constraints.gridy++;
-		label = new JLabel(getTranslation("use_average_rating"));
-		label.setToolTipText(getTranslation("tt_use_average_rating"));
+		label = new JLabel(TranslationFacility.tr("use_average_rating"));
+		label.setToolTipText(TranslationFacility.tr("tt_use_average_rating"));
 		addLabel(constraints, layout, label);
 
 		constraints.gridx++;
-		isUsePlayerAverageRatingCheckbox.setToolTipText(getTranslation("tt_use_average_rating"));
+		isUsePlayerAverageRatingCheckbox.setToolTipText(TranslationFacility.tr("tt_use_average_rating"));
 		layout.setConstraints(isUsePlayerAverageRatingCheckbox, constraints);
 		add(isUsePlayerAverageRatingCheckbox);
 
@@ -520,13 +519,13 @@ public class LineupAssistantPanel extends JPanel implements Refreshable, ActionL
 		// Line 9 =============================================================================
 		constraints.gridx = 0;
 		constraints.gridy++;
-		addLabel(constraints, layout, new JLabel(getTranslation("ls.module.lineup.assistant.priority")));
+		addLabel(constraints, layout, new JLabel(TranslationFacility.tr("ls.module.lineup.assistant.priority")));
 
 		constraints.gridx++;
 		constraints.gridwidth = 2;
 		constraints.fill = GridBagConstraints.NONE;
 		constraints.anchor = GridBagConstraints.WEST;
-		m_jcbPriority.setToolTipText(getTranslation("tt_AufstellungsAssistent_Reihenfolge"));
+		m_jcbPriority.setToolTipText(TranslationFacility.tr("tt_AufstellungsAssistent_Reihenfolge"));
 		core.util.Helper.setComboBoxFromID(m_jcbPriority, userParameter.aufstellungsAssistentPanel_reihenfolge);
 		layout.setConstraints(m_jcbPriority, constraints);
 		m_jcbPriority.setBackground(ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER));
@@ -547,7 +546,7 @@ public class LineupAssistantPanel extends JPanel implements Refreshable, ActionL
 		String[] tooltips = new String[]{"Aufstellung_leeren", "Assistent_starten"};
 
 		for(int i = 0; i < buttons.length; i++){
-			buttons[i].setToolTipText(getTranslation(tooltips[i]));
+			buttons[i].setToolTipText(TranslationFacility.tr(tooltips[i]));
 			buttons[i].addActionListener(this);
 			buttons[i].setMargin(new Insets(6, 6, 6, 6));
 			buttons[i].setBackground(ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER));

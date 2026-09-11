@@ -1,20 +1,13 @@
 package module.training;
 
 import core.gui.comp.panel.LazyPanel;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
-import core.util.Helper;
-import module.training.ui.AnalyzerPanel;
-import module.training.ui.EffectPanel;
-import module.training.ui.OutputPanel;
-import module.training.ui.PlayerDetailPanel;
-import module.training.ui.TrainingDevelopmentPanel;
-import module.training.ui.TrainingPanel;
-import module.training.ui.TrainingPredictionPanel;
+import module.training.ui.*;
 import module.training.ui.model.TrainingModel;
-import java.awt.BorderLayout;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTabbedPane;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class TrainingModulePanel extends LazyPanel {
 
@@ -51,10 +44,10 @@ public class TrainingModulePanel extends LazyPanel {
 		UserParameter.instance().training_bottomSplitPane.init(bottomPanel);
 
 		JTabbedPane tabbedPane = new JTabbedPane();
-		tabbedPane.addTab(Helper.getTranslation("Training"), this.trainingProgressPanel);
-		tabbedPane.addTab(Helper.getTranslation("MainPanel.Prediction"), this.trainingPredictionPanel);
-		tabbedPane.addTab(Helper.getTranslation("MainPanel.Analyzer"), this.trainingAnalyzerPanel);
-		tabbedPane.addTab(Helper.getTranslation("MainPanel.Effect"), this.trainingEffectPanel);
+		tabbedPane.addTab(TranslationFacility.tr("Training"), this.trainingProgressPanel);
+		tabbedPane.addTab(TranslationFacility.tr("MainPanel.Prediction"), this.trainingPredictionPanel);
+		tabbedPane.addTab(TranslationFacility.tr("MainPanel.Analyzer"), this.trainingAnalyzerPanel);
+		tabbedPane.addTab(TranslationFacility.tr("MainPanel.Effect"), this.trainingEffectPanel);
 
 		JSplitPane splitPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT, tabbedPane, bottomPanel);
 		UserParameter.instance().training_mainSplitPane.init(splitPanel);

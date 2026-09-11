@@ -14,8 +14,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
-import static core.util.Helper.getTranslation;
-
 final class StaffPanel extends JPanel {
 
 	private final ColorLabelEntry assistantCoachesLabel = new ColorLabelEntry("");
@@ -58,7 +56,7 @@ final class StaffPanel extends JPanel {
 
 		this.setBackground(ThemeManager.getColor(HOColorName.PANEL_BG));
 
-		var title = getTranslation("Trainerstab");
+		var title = TranslationFacility.tr("Trainerstab");
 		var titledBorder = BorderFactory.createTitledBorder(title);
 		titledBorder.setTitleColor(ThemeManager.getColor(HOColorName.LINEUP_HIGHLIGHT_FG));
 		setBorder(titledBorder);
@@ -66,13 +64,13 @@ final class StaffPanel extends JPanel {
 		JLabel label;
 
 		setLayout(layout);
-		
+
 		List<StaffMember> staff = HOVerwaltung.instance().getModel().getStaff();
-		
+
 		int nextYvalue = 0;
-		
+
 		if (!staff.isEmpty()) {
-			
+
 			for (StaffMember staffMember : staff) {
                 if (staffMember.getStaffType() == StaffType.NONE) continue; // ignore trainer
 
@@ -86,15 +84,15 @@ final class StaffPanel extends JPanel {
 									": " + staffMember.getLevel();
 				constraints.gridx = 2;
 				add(new JLabel(levelText), constraints);
-				
+
 				nextYvalue++;
 			}
-			
+
 			constraints.gridx = 0;
 			constraints.gridy = nextYvalue;
 			constraints.gridwidth = 3;
-			
-			
+
+
 			add(new JLabel("------ "+ TranslationFacility.tr("ls.club.staff.stafflevels") + "------"), constraints);
 			nextYvalue++;
 		}
@@ -106,23 +104,23 @@ final class StaffPanel extends JPanel {
 		label = new JLabel(TranslationFacility.tr("ls.club.staff.medic"));
 		add(label,doctorsLabel.getComponent(false), nextYvalue);
 		nextYvalue++;
-		
+
 		label = new JLabel(TranslationFacility.tr("ls.club.staff.spokesperson"));
 		add(label,spokepersonsLabel.getComponent(false), nextYvalue);
 		nextYvalue++;
-		
+
 		label = new JLabel(TranslationFacility.tr("ls.club.staff.sportspsychologist"));
 		add(label,psychologistsLabel.getComponent(false), nextYvalue);
 		nextYvalue++;
-		
+
 		label = new JLabel(TranslationFacility.tr("ls.club.staff.formcoach"));
 		add(label,formCoachLabel.getComponent(false), nextYvalue);
 		nextYvalue++;
-		
+
 		label = new JLabel(TranslationFacility.tr("ls.club.staff.financialdirector"));
 		add(label,financialdirectorLabel.getComponent(false), nextYvalue);
 		nextYvalue++;
-		
+
 		label = new JLabel(TranslationFacility.tr("ls.club.staff.tacticalassistant"));
 		add(label,tacticalAssistantLabel.getComponent(false), nextYvalue);
 	}

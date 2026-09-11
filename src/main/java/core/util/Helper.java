@@ -308,7 +308,9 @@ public final class Helper {
 	 * Find translation string of key
 	 * @param key String (see poeditor)
 	 * @return String, translation
+     * @deprecated Please use {@link TranslationFacility#tr(String)}
 	 */
+    @Deprecated(since = "11.0", forRemoval = true)
 	public static String getTranslation(String key) {
 		return TranslationFacility.tr(key);
 	}
@@ -318,7 +320,9 @@ public final class Helper {
 	 * @param key String (see poeditor)
 	 * @param messageArguments place holder values
 	 * @return String translation
+     * @deprecated Please use {@link TranslationFacility#tr(String, Object...)}
 	 */
+    @Deprecated(since = "11.0", forRemoval = true)
 	public static String getTranslation(String key, Object... messageArguments) {
 		return TranslationFacility.tr(key, messageArguments);
 	}

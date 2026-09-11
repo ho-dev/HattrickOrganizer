@@ -209,7 +209,7 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 	}
 
 	public void setInformationCompleted() {
-		setInformation(Helper.getTranslation("ls.update_status.complete"), -100);
+		setInformation(TranslationFacility.tr("ls.update_status.complete"), -100);
 	}
 
 	public void setInformation(String information, int progress) {
@@ -472,7 +472,7 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 			var from = HODateTime.now().minus(128 * 7, ChronoUnit.DAYS);
 			if (JOptionPane.showConfirmDialog(this,
 				TranslationFacility.tr("Subskill.Recalc.Full") + "\n" + TranslationFacility.tr("subskill.Recalc.Start"),
-				Helper.getTranslation("ls.menu.file.subskillrecalculation"), JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
+                TranslationFacility.tr("ls.menu.file.subskillrecalculation"), JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
 				HOVerwaltung.instance().recalcSubskills(true, from.toDbTimestamp());
 			}
 		});
@@ -487,7 +487,7 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 					TranslationFacility.tr("subskill.Recalc.1stTrainingweek") + ": " +
 					from.toLocalHTWeek().getDisplayString() + "\n" +
 					TranslationFacility.tr("subskill.Recalc.Start"),
-				Helper.getTranslation("ls.menu.file.subskillrecalculation7weeks"), JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
+                TranslationFacility.tr("ls.menu.file.subskillrecalculation7weeks"), JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
 				HOVerwaltung.instance().recalcSubskills(true, from.toDbTimestamp());
 			}
 		});

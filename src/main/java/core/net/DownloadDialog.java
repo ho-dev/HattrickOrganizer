@@ -16,7 +16,6 @@ import core.module.ModuleManager;
 import core.net.login.ProxyDialog;
 import core.util.HODateTime;
 import core.util.HOLogger;
-import core.util.Helper;
 import module.nthrf.NtTeamChooser;
 import module.nthrf.NthrfUtil;
 import module.series.MatchFixtures;
@@ -27,8 +26,8 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 
 import static core.module.IModule.HALL_OF_FAME;
 import static core.module.IModule.STATUS_DEACTIVATED;
@@ -293,7 +292,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 
             // Check if Hall Of Fame module is active
             if ( ModuleManager.instance().getModule(HALL_OF_FAME).getStatus() != STATUS_DEACTIVATED){
-                HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.hall_of_fame"), progressIncrement);
+                HOMainFrame.instance().setInformation(TranslationFacility.tr("ls.update_status.hall_of_fame"), progressIncrement);
                 var hallOfFamesPlayer = OnlineWorker.downloadHallOfFame(teamId);
                 if (hallOfFamesPlayer != null) {
                     model.setHallOfFamesPlayers(hallOfFamesPlayer);
@@ -303,7 +302,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 
 			if (this.downloadFilter.isChecked(filterRoot.getCurrentMatches())) {
 				// Only get lineups for own fixtures
-				HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.match_info"), progressIncrement);
+				HOMainFrame.instance().setInformation(TranslationFacility.tr("ls.update_status.match_info"), progressIncrement);
 				bOK = (OnlineWorker.getMatches(teamId, false, true, true) != null);
 				if (bOK) {
 					OnlineWorker.getAllLineups(10);
@@ -318,7 +317,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 				}
 			}
 			if (bOK && m_jchMatchArchive.isSelected()) {
-				HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.match_info"), progressIncrement);
+				HOMainFrame.instance().setInformation(TranslationFacility.tr("ls.update_status.match_info"), progressIncrement);
 				var date = new HODateTime(m_clSpinnerModel.getDate().toInstant());
 				List<MatchKurzInfo> allmatches = OnlineWorker.getMatchArchive(teamId, date, false);
 				if (allmatches != null) {
@@ -332,7 +331,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 			if (bOK && UserParameter.instance().fixtures) {
 				// in the last week of a season the LeagueLevelUnitID switches to the next season's value (no fixtures are available then)
 				if (model.getBasics().getSpieltag() < 16) {
-					HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.fixtures"), progressIncrement);
+					HOMainFrame.instance().setInformation(TranslationFacility.tr("ls.update_status.fixtures"), progressIncrement);
 					var leagueId = model.getXtraDaten().getLeagueLevelUnitID();
 					var fixtures = OnlineWorker.downloadLeagueFixtures(-1, leagueId);
 					if (fixtures != null) {
@@ -385,12 +384,12 @@ public class DownloadDialog extends JDialog implements ActionListener {
 						selection.add(child.getUserObject());
 					}
 				}
-				HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.fixtures"), progressIncrement);
+				HOMainFrame.instance().setInformation(TranslationFacility.tr("ls.update_status.fixtures"), progressIncrement);
 				downloadOldFixtures(teamId, selection);
 			}
 
 			if (WorldDetailLeague.checkWorldDetailsDownload()) {
-				HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.world_details"), progressIncrement);
+				HOMainFrame.instance().setInformation(TranslationFacility.tr("ls.update_status.world_details"), progressIncrement);
 				var allLeagues = OnlineWorker.downloadWorldDetails();
 				DBManager.instance().storeWorldDetailLeagues(allLeagues);
 				WorldDetailsManager.instance().refresh();
@@ -398,7 +397,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 			}
 		}
 
-		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.calc_subskills"), progressIncrement);
+		HOMainFrame.instance().setInformation(TranslationFacility.tr("ls.update_status.calc_subskills"), progressIncrement);
 		model.calcSubskills();
 
 		HOMainFrame.instance().setInformationCompleted();

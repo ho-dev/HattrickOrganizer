@@ -72,7 +72,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         gbc.gridy = 0;
         gbc.fill = GridBagConstraints.NONE;
         gbc.anchor = GridBagConstraints.LINE_START;
-        addLabel(gbc, layout, Helper.getTranslation("ls.module.lineup.select_match"));
+        addLabel(gbc, layout, TranslationFacility.tr("ls.module.lineup.select_match"));
 
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -83,7 +83,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
 
         gbc.gridx = 0;
         gbc.gridy++;
-        addLabel(gbc, layout, Helper.getTranslation("ls.team.teamattitude"));
+        addLabel(gbc, layout, TranslationFacility.tr("ls.team.teamattitude"));
 
         gbc.gridx = 1;
         m_jcbTeamAttitude = new JComboBox<>(new CBItem[]{
@@ -99,7 +99,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
 
         gbc.gridx = 0;
         gbc.gridy++;
-        addLabel(gbc, layout, Helper.getTranslation("ls.team.tactic"));
+        addLabel(gbc, layout, TranslationFacility.tr("ls.team.tactic"));
 
         gbc.gridx = 1;
         m_jcbTactic = new JComboBox<>(new CBItem[]{
@@ -122,7 +122,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
 
         gbc.gridx = 0;
         gbc.gridy++;
-        addLabel(gbc, layout, Helper.getTranslation("ls.team.styleofPlay"));
+        addLabel(gbc, layout, TranslationFacility.tr("ls.team.styleofPlay"));
 
         gbc.gridx = 1;
         m_jcbStyleOfPlay = new JComboBox<>();
@@ -136,12 +136,12 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         gbc.fill = GridBagConstraints.HORIZONTAL;
         JPanel jpButtons = new JPanel(new FlowLayout());
 
-        m_jbUploadLineup = new JButton(Helper.getTranslation("lineup.upload.btn.upload"));
-        m_jbUploadLineup.setToolTipText(Helper.getTranslation("lineup.upload.btn.upload.tooltip"));
+        m_jbUploadLineup = new JButton(TranslationFacility.tr("lineup.upload.btn.upload"));
+        m_jbUploadLineup.setToolTipText(TranslationFacility.tr("lineup.upload.btn.upload.tooltip"));
         m_jbUploadLineup.setEnabled(m_clSelectedMatch != null);
 
-        m_jbDownloadLineup = new JButton(Helper.getTranslation("lineup.upload.btn.download"));
-        m_jbDownloadLineup.setToolTipText(Helper.getTranslation("lineup.upload.btn.download.tooltip"));
+        m_jbDownloadLineup = new JButton(TranslationFacility.tr("lineup.upload.btn.download"));
+        m_jbDownloadLineup.setToolTipText(TranslationFacility.tr("lineup.upload.btn.download.tooltip"));
         m_jbDownloadLineup.setEnabled((m_clSelectedMatch != null) && (m_clSelectedMatch.areOrdersSetInHT()));
 
         GUIUtils.equalizeComponentSizes(m_jbUploadLineup, m_jbDownloadLineup);
@@ -380,20 +380,20 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
                 success = Boolean.parseBoolean(successStr);
                 if (success) {
                     messageType = JOptionPane.PLAIN_MESSAGE;
-                    message = Helper.getTranslation("lineup.upload.success");
+                    message = TranslationFacility.tr("lineup.upload.success");
                 } else {
                     messageType = JOptionPane.ERROR_MESSAGE;
-                    message = Helper.getTranslation("lineup.upload.fail")
+                    message = TranslationFacility.tr("lineup.upload.fail")
                             + "\n" + XMLUtils.getTagData(doc, "Reason");
                 }
             } else {
                 messageType = JOptionPane.ERROR_MESSAGE;
-                message = Helper.getTranslation("lineup.upload.result.parseerror");
+                message = TranslationFacility.tr("lineup.upload.result.parseerror");
                 HOLogger.instance().log(getClass(), message + "\n" + result);
             }
         } catch (Exception e) {
             messageType = JOptionPane.ERROR_MESSAGE;
-            message = Helper.getTranslation("lineup.upload.result.parseerror");
+            message = TranslationFacility.tr("lineup.upload.result.parseerror");
             HOLogger.instance().log(getClass(), message + "\n" + result);
             HOLogger.instance().log(getClass(), e);
         }
@@ -420,7 +420,7 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
             }
         }
 
-        JOptionPane.showMessageDialog(instance(), message, Helper.getTranslation("lineup.upload.title"), messageType);
+        JOptionPane.showMessageDialog(instance(), message, TranslationFacility.tr("lineup.upload.title"), messageType);
     }
 
     @Override

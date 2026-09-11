@@ -2,6 +2,7 @@ package module.lineup.ratings;
 
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.util.Helper;
 import core.util.chart.HOLinesChart;
@@ -9,14 +10,12 @@ import core.util.chart.LinesChartDataModel;
 import org.knowm.xchart.style.lines.SeriesLines;
 import org.knowm.xchart.style.markers.SeriesMarkers;
 
+import javax.swing.*;
 import java.awt.*;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.awt.event.ItemEvent;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import javax.swing.JPanel;
-import javax.swing.JCheckBox;
 
 public final class MultipleRatingChartsPanel extends JPanel {
 
@@ -77,7 +76,7 @@ public final class MultipleRatingChartsPanel extends JPanel {
 	private final UserParameter userParameter = UserParameter.instance();
 	private final JPanel controlsPanel = new JPanel();
 	private final JPanel chartsPanel = new JPanel(new GridBagLayout());
-	private final JCheckBox showHelpLines = new JCheckBox(Helper.getTranslation("Hilflinien"), userParameter.MultipleRatingChartsPanel_HelpLines);
+	private final JCheckBox showHelpLines = new JCheckBox(TranslationFacility.tr("Hilflinien"), userParameter.MultipleRatingChartsPanel_HelpLines);
 	private final RatingChartData chartData;
 	private ArrayList<Integer> xAxisDataCaptions;
 	private SingleChart leftDefense;
@@ -109,42 +108,42 @@ public final class MultipleRatingChartsPanel extends JPanel {
 		gbc.fill =  GridBagConstraints.BOTH;
 		gbc.weightx = 1;
 		gbc.weighty = 1;
-		
-		leftDefense = new SingleChart(chartData.getLeftDefenceAvg(), chartData.getLeftDefence(), Helper.getTranslation("ls.match.ratingsector.leftdefence"));
+
+		leftDefense = new SingleChart(chartData.getLeftDefenceAvg(), chartData.getLeftDefence(), TranslationFacility.tr("ls.match.ratingsector.leftdefence"));
 		chartsPanel.add(leftDefense.getChartPanel(), gbc);
 
 		gbc.gridx = 1;
-		centralDefense = new SingleChart(chartData.getCentralDefenceAvg(), chartData.getCentralDefence(), Helper.getTranslation("ls.match.ratingsector.centraldefence"));
+		centralDefense = new SingleChart(chartData.getCentralDefenceAvg(), chartData.getCentralDefence(), TranslationFacility.tr("ls.match.ratingsector.centraldefence"));
 		chartsPanel.add(centralDefense.getChartPanel(), gbc);
 
 		gbc.gridx = 2;
-		rightDefense = new SingleChart(chartData.getRightDefenceAvg(), chartData.getRightDefence(), Helper.getTranslation("ls.match.ratingsector.rightdefence"));
+		rightDefense = new SingleChart(chartData.getRightDefenceAvg(), chartData.getRightDefence(), TranslationFacility.tr("ls.match.ratingsector.rightdefence"));
 		chartsPanel.add(rightDefense.getChartPanel(), gbc);
 
 		gbc.gridx = 0;
 		gbc.gridy = 1;
-		hatStats = new SingleChart(chartData.getHatStatsAvg(), chartData.getHatStats(), Helper.getTranslation("ls.match.ratingtype.hatstats"), true);
+		hatStats = new SingleChart(chartData.getHatStatsAvg(), chartData.getHatStats(), TranslationFacility.tr("ls.match.ratingtype.hatstats"), true);
 		chartsPanel.add(hatStats.getChartPanel(), gbc);
 
 		gbc.gridx = 1;
-		midfield = new SingleChart(chartData.getMidfieldAvg(), chartData.getMidfield(), Helper.getTranslation("ls.match.ratingsector.midfield"));
+		midfield = new SingleChart(chartData.getMidfieldAvg(), chartData.getMidfield(), TranslationFacility.tr("ls.match.ratingsector.midfield"));
 		chartsPanel.add(midfield.getChartPanel(), gbc);
 
 		gbc.gridx = 2;
-		loddar = new SingleChart(chartData.getLoddarAvg(), chartData.getLoddar(), Helper.getTranslation("ls.match.ratingtype.loddarstats"), true);
+		loddar = new SingleChart(chartData.getLoddarAvg(), chartData.getLoddar(), TranslationFacility.tr("ls.match.ratingtype.loddarstats"), true);
 		chartsPanel.add(loddar.getChartPanel(), gbc);
 
 		gbc.gridx = 0;
 		gbc.gridy = 2;
-		leftAttack = new SingleChart(chartData.getLeftAttackAvg(), chartData.getLeftAttack(), Helper.getTranslation("ls.match.ratingsector.leftattack"));
+		leftAttack = new SingleChart(chartData.getLeftAttackAvg(), chartData.getLeftAttack(), TranslationFacility.tr("ls.match.ratingsector.leftattack"));
 		chartsPanel.add(leftAttack.getChartPanel(), gbc);
 
 		gbc.gridx = 1;
-		centralAttack = new SingleChart(chartData.getCentralAttackAvg(), chartData.getCentralAttack(), Helper.getTranslation("ls.match.ratingsector.centralattack"));
+		centralAttack = new SingleChart(chartData.getCentralAttackAvg(), chartData.getCentralAttack(), TranslationFacility.tr("ls.match.ratingsector.centralattack"));
 		chartsPanel.add(centralAttack.getChartPanel(), gbc);
 
 		gbc.gridx = 2;
-		rightAttack = new SingleChart(chartData.getRightAttackAvg(), chartData.getRightAttack(),	Helper.getTranslation("ls.match.ratingsector.rightattack"));
+		rightAttack = new SingleChart(chartData.getRightAttackAvg(), chartData.getRightAttack(), TranslationFacility.tr("ls.match.ratingsector.rightattack"));
 		chartsPanel.add(rightAttack.getChartPanel(), gbc);
 	}
 

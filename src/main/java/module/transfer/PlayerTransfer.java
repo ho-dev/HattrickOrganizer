@@ -4,7 +4,11 @@ import core.db.AbstractTable;
 import core.db.DBManager;
 import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.player.Player;
+import core.util.AmountOfMoney;
+import core.util.HODateTime;
+import core.util.HOLogger;
 import core.util.*;
 
 import java.math.BigDecimal;
@@ -124,7 +128,7 @@ public class PlayerTransfer extends AbstractTable.Storable {
             if (transfers.isEmpty()) break;
             var i = 0;
             for (var transfer : transfers) {
-                HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.transfers") + (++i) + "/" + transfers.size(), 1);
+                HOMainFrame.instance().setInformation(TranslationFacility.tr("ls.update_status.transfers") + (++i) + "/" + transfers.size(), 1);
                 var inDB = db.loadPlayerTransfer(transfer.transferId);
                 if (inDB == null || transfer.getPrice() != inDB.getPrice() || inDB.getPlayerId()==0) {
                     updatePlayerTransfer(transfer);

@@ -7,8 +7,8 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.player.Player;
-import core.util.Helper;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -94,7 +94,7 @@ public final class AllTeamsPanel extends JPanel implements ActionListener {
     }
 
     private void makeGroupButton(JButton jbGroup, String tooltip) {
-        jbGroup.setToolTipText(Helper.getTranslation(tooltip));
+        jbGroup.setToolTipText(TranslationFacility.tr(tooltip));
         jbGroup.setPreferredSize(new Dimension(28, 28));
 //        jbGroup.setBorder(BorderFactory.createEmptyBorder());
         jbGroup.addActionListener(this);

@@ -8,7 +8,6 @@ import core.model.UserParameter;
 import core.model.enums.MatchType;
 import core.model.match.MatchKurzInfo;
 import core.model.match.MatchLineupTeam;
-import core.util.Helper;
 import module.teamanalyzer.ui.MatchComboBoxRenderer;
 import module.teamanalyzer.vo.Team;
 
@@ -53,7 +52,7 @@ public class LineupDatabasePanel extends JPanel implements Refreshable {
         gbc.gridy = 0;
         gbc.fill = GridBagConstraints.NONE;
         gbc.anchor = GridBagConstraints.LINE_START;
-        addLabel(gbc, layout, Helper.getTranslation("ls.module.lineup.load_lineup"));
+        addLabel(gbc, layout, TranslationFacility.tr("ls.module.lineup.load_lineup"));
 
         gbc.gridx = 1;
         m_jcbLoadLineup = new JComboBox<>();
@@ -65,7 +64,7 @@ public class LineupDatabasePanel extends JPanel implements Refreshable {
         gbc.gridx = 0;
         gbc.gridy++;
         gbc.fill = GridBagConstraints.NONE;
-        addLabel(gbc, layout, Helper.getTranslation("ls.module.lineup.includeHTO"));
+        addLabel(gbc, layout, TranslationFacility.tr("ls.module.lineup.includeHTO"));
         gbc.gridx = 1;
         includeHTIntegrated = new JCheckBox();
         includeHTIntegrated.setSelected(UserParameter.instance().includeHTOLineups);
@@ -74,7 +73,7 @@ public class LineupDatabasePanel extends JPanel implements Refreshable {
 
         gbc.gridx = 0;
         gbc.gridy++;
-        addLabel(gbc, layout, Helper.getTranslation("ls.module.lineup.templates"));
+        addLabel(gbc, layout, TranslationFacility.tr("ls.module.lineup.templates"));
         gbc.gridx = 1;
         includeTemplates = new JCheckBox();
         includeTemplates.setSelected(UserParameter.instance().includeLineupTemplates);
@@ -83,7 +82,7 @@ public class LineupDatabasePanel extends JPanel implements Refreshable {
 
         gbc.gridx = 0;
         gbc.gridy++;
-        addLabel(gbc, layout, Helper.getTranslation("ls.module.lineup.store.template"));
+        addLabel(gbc, layout, TranslationFacility.tr("ls.module.lineup.store.template"));
         gbc.gridx = 1;
         gbc.fill = GridBagConstraints.HORIZONTAL;
         templateName = new JTextField(getTemplateDefaultName());

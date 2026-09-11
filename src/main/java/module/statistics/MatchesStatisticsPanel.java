@@ -577,17 +577,17 @@ public class MatchesStatisticsPanel extends LazyImagePanel {
 
 	private CBItem[] getMatchFilterItems() {
 		return new CBItem[]{
-				new CBItem(Helper.getTranslation("AlleSpiele"), MatchesPanel.ALL_GAMES),
-				new CBItem(Helper.getTranslation("NurEigeneSpiele"), MatchesPanel.OWN_GAMES),
-				new CBItem(Helper.getTranslation("NurEigenePflichtspiele"), MatchesPanel.OWN_OFFICIAL_GAMES),
-				new CBItem(Helper.getTranslation("AllCupMatches"), MatchesPanel.OWN_CUP_GAMES),
-				new CBItem(Helper.getTranslation("NurEigenePokalspiele"), MatchesPanel.OWN_NATIONAL_CUP_GAMES),
-				new CBItem(Helper.getTranslation("OnlySecondaryCup"), MatchesPanel.OWN_SECONDARY_CUP_GAMES),
-				new CBItem(Helper.getTranslation("NurEigeneLigaspiele"), MatchesPanel.OWN_LEAGUE_GAMES),
-				new CBItem(Helper.getTranslation("OnlyQualificationMatches"), MatchesPanel.OWN_QUALIF_GAMES),
-				new CBItem(Helper.getTranslation("NurEigeneFreundschaftsspiele"), MatchesPanel.OWN_FRIENDLY_GAMES),
-				new CBItem(Helper.getTranslation("NurEigeneTournamentsspiele"), MatchesPanel.OWN_TOURNAMENT_GAMES),
-				new CBItem(Helper.getTranslation("NurFremdeSpiele"), MatchesPanel.OTHER_TEAM_GAMES)
+				new CBItem(TranslationFacility.tr("AlleSpiele"), MatchesPanel.ALL_GAMES),
+				new CBItem(TranslationFacility.tr("NurEigeneSpiele"), MatchesPanel.OWN_GAMES),
+				new CBItem(TranslationFacility.tr("NurEigenePflichtspiele"), MatchesPanel.OWN_OFFICIAL_GAMES),
+				new CBItem(TranslationFacility.tr("AllCupMatches"), MatchesPanel.OWN_CUP_GAMES),
+				new CBItem(TranslationFacility.tr("NurEigenePokalspiele"), MatchesPanel.OWN_NATIONAL_CUP_GAMES),
+				new CBItem(TranslationFacility.tr("OnlySecondaryCup"), MatchesPanel.OWN_SECONDARY_CUP_GAMES),
+				new CBItem(TranslationFacility.tr("NurEigeneLigaspiele"), MatchesPanel.OWN_LEAGUE_GAMES),
+				new CBItem(TranslationFacility.tr("OnlyQualificationMatches"), MatchesPanel.OWN_QUALIF_GAMES),
+				new CBItem(TranslationFacility.tr("NurEigeneFreundschaftsspiele"), MatchesPanel.OWN_FRIENDLY_GAMES),
+				new CBItem(TranslationFacility.tr("NurEigeneTournamentsspiele"), MatchesPanel.OWN_TOURNAMENT_GAMES),
+				new CBItem(TranslationFacility.tr("NurFremdeSpiele"), MatchesPanel.OTHER_TEAM_GAMES)
 		};
 	}
 

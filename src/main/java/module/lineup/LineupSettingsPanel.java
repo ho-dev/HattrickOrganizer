@@ -11,19 +11,21 @@ import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.HOModel;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.match.IMatchDetails;
 import core.model.match.Weather;
 import core.model.player.Player;
 import core.model.player.TrainerType;
 import core.util.Helper;
+
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.Map;
 import java.util.Objects;
-import javax.swing.*;
-import static core.util.Helper.getTranslation;
+
 import static module.lineup.LineupPanel.TITLE_FG;
 
 public final class LineupSettingsPanel extends ImagePanel implements Refreshable, ItemListener {
@@ -33,17 +35,17 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 	private final JComboBox<CBItem> m_jcbTeamConfidence = new JComboBox<>(TeamConfidence.ITEMS);
 
 	private final CBItem[] TRAINER_TYPES = {
-			new CBItem(getTranslation("ls.module.lineup.coachtype.defensive"), 0),
-			new CBItem(getTranslation("ls.module.lineup.coachtype.neutral"), 2),
-			new CBItem(getTranslation("ls.module.lineup.coachtype.offensive"), 1), };
+			new CBItem(TranslationFacility.tr("ls.module.lineup.coachtype.defensive"), 0),
+			new CBItem(TranslationFacility.tr("ls.module.lineup.coachtype.neutral"), 2),
+			new CBItem(TranslationFacility.tr("ls.module.lineup.coachtype.offensive"), 1), };
 
 	private final JComboBox<CBItem> m_jcbTrainerType = new JComboBox<>(TRAINER_TYPES);
 	private final JComboBox<CBItem> m_jcbMainTeamSpirit = new JComboBox<>(TeamSpirit.ITEMS);
 	private final CBItem[] SUB_TEAM_SPIRIT = {
-			new CBItem(getTranslation("verylow"), 0),
-			new CBItem(getTranslation("low"), 1),
-			new CBItem(getTranslation("high"), 2),
-			new CBItem(getTranslation("veryhigh"), 3) };
+			new CBItem(TranslationFacility.tr("verylow"), 0),
+			new CBItem(TranslationFacility.tr("low"), 1),
+			new CBItem(TranslationFacility.tr("high"), 2),
+			new CBItem(TranslationFacility.tr("veryhigh"), 3) };
 	private final JComboBox<CBItem> m_jcbSubTeamSpirit = new JComboBox<>(SUB_TEAM_SPIRIT);
 
 	/** weather combo boxes */
@@ -58,29 +60,29 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 	private final JComboBox<CBItem> m_jcbWeather = new JComboBox<>(WEATHER);
 
 	private final CBItem[] LOCATION = {
-			new CBItem(getTranslation("ls.module.lineup.matchlocation.home"),IMatchDetails.LOCATION_HOME),
-			new CBItem(getTranslation("ls.module.lineup.matchlocation.away"), IMatchDetails.LOCATION_AWAY),
-			new CBItem(getTranslation("ls.module.lineup.matchlocation.awayderby"),IMatchDetails.LOCATION_AWAYDERBY),
-			new CBItem(getTranslation("ls.module.lineup.matchlocation.tournament"),IMatchDetails.LOCATION_TOURNAMENT)
+			new CBItem(TranslationFacility.tr("ls.module.lineup.matchlocation.home"),IMatchDetails.LOCATION_HOME),
+			new CBItem(TranslationFacility.tr("ls.module.lineup.matchlocation.away"), IMatchDetails.LOCATION_AWAY),
+			new CBItem(TranslationFacility.tr("ls.module.lineup.matchlocation.awayderby"),IMatchDetails.LOCATION_AWAYDERBY),
+			new CBItem(TranslationFacility.tr("ls.module.lineup.matchlocation.tournament"),IMatchDetails.LOCATION_TOURNAMENT)
 	};
 	private final JComboBox<CBItem> m_jcbLocation = new JComboBox<>(LOCATION);
 
 	private final CBItem[] ManMarkingPositions = {
-			new CBItem(getTranslation("ls.module.lineup.manmarkingposition.none"),0),
-			new CBItem(getTranslation("ls.module.lineup.manmarkingposition.opposite"), Player.ManMarkingPosition.Opposite.getValue()),
-			new CBItem(getTranslation("ls.module.lineup.manmarkingposition.notopposite"), Player.ManMarkingPosition.NotOpposite.getValue()),
-			new CBItem(getTranslation("ls.module.lineup.manmarkingposition.notinlineup"), Player.ManMarkingPosition.NotInLineup.getValue())
+			new CBItem(TranslationFacility.tr("ls.module.lineup.manmarkingposition.none"),0),
+			new CBItem(TranslationFacility.tr("ls.module.lineup.manmarkingposition.opposite"), Player.ManMarkingPosition.Opposite.getValue()),
+			new CBItem(TranslationFacility.tr("ls.module.lineup.manmarkingposition.notopposite"), Player.ManMarkingPosition.NotOpposite.getValue()),
+			new CBItem(TranslationFacility.tr("ls.module.lineup.manmarkingposition.notinlineup"), Player.ManMarkingPosition.NotInLineup.getValue())
 	};
 	private final JComboBox<CBItem> m_jcbManMarkingPosition = new JComboBox<>(ManMarkingPositions);
 
 	private final CBItem[] PULLBACK_MINUTE = {
-			new CBItem(getTranslation("PullBack.None"), 90),
+			new CBItem(TranslationFacility.tr("PullBack.None"), 90),
 			new CBItem("85", 85), new CBItem("80", 80), new CBItem("75", 75), new CBItem("70", 70),
 			new CBItem("65", 65), new CBItem("60", 60), new CBItem("55", 55), new CBItem("50", 50),
 			new CBItem("45", 45), new CBItem("40", 40), new CBItem("35", 35), new CBItem("30", 30),
 			new CBItem("25", 25), new CBItem("20", 20), new CBItem("15", 15), new CBItem("10", 10),
 			new CBItem("5", 5),
-			new CBItem(getTranslation("PullBack.WholeGame"), 0) };
+			new CBItem(TranslationFacility.tr("PullBack.WholeGame"), 0) };
 
 	private final JComboBox<CBItem> m_jcbPullBackMinute = new JComboBox<>(PULLBACK_MINUTE);
 
@@ -94,7 +96,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 			new CBItem("4", 4),
 			new CBItem("5", 5)
 	};
-	
+
 	private final JComboBox<CBItem>   m_jcbTacticalAssistants = new JComboBox<>(TACTICAL_ASSISTANTS);
 
 	private final JButton m_jbReset = new JButton("");
@@ -318,11 +320,11 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		constraints.gridx = 1;
 		constraints.gridy = yPos;
 		constraints.gridwidth = 1;
-		initLabel(constraints, layout, new JLabel(getTranslation("Venue")), yPos);
+		initLabel(constraints, layout, new JLabel(TranslationFacility.tr("Venue")), yPos);
 
 		constraints.gridx = 2;
 		m_jcbLocation.setMaximumRowCount(4);
-		m_jcbLocation.setToolTipText(getTranslation("tt_AufstellungsDetails_Spielort"));
+		m_jcbLocation.setToolTipText(TranslationFacility.tr("tt_AufstellungsDetails_Spielort"));
 		m_jcbLocation.setOpaque(false);
 		m_jcbLocation.setBackground(ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER));
 		layout.setConstraints(m_jcbLocation, constraints);
@@ -336,8 +338,8 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 
 		// Weather ===============================
 		constraints.weightx = 0.0;
-		initLabel(constraints, layout, new JLabel(getTranslation("ls.match.weather")), yPos);
-		m_jcbWeather.setToolTipText(getTranslation("tt_AufstellungsAssistent_Wetter"));
+		initLabel(constraints, layout, new JLabel(TranslationFacility.tr("ls.match.weather")), yPos);
+		m_jcbWeather.setToolTipText(TranslationFacility.tr("tt_AufstellungsAssistent_Wetter"));
 		m_jcbWeather.setRenderer(new core.gui.comp.renderer.WeatherListCellRenderer());
 		m_jcbWeather.setBackground(ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER));
 		constraints.gridx = 2;
@@ -346,7 +348,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		add(m_jcbWeather);
 
 		yPos++;
-		initLabel(constraints, layout, new JLabel(getTranslation("ls.team.teamspirit")), yPos);
+		initLabel(constraints, layout, new JLabel(TranslationFacility.tr("ls.team.teamspirit")), yPos);
 		constraints.gridx = 2;
 		constraints.gridy = yPos;
 		m_jcbMainTeamSpirit.setMaximumRowCount(13);
@@ -355,7 +357,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		add(m_jcbMainTeamSpirit);
 
 		yPos++;
-		initLabel(constraints, layout,	new JLabel(getTranslation("lineup.teamspiritsub")), yPos);
+		initLabel(constraints, layout,	new JLabel(TranslationFacility.tr("lineup.teamspiritsub")), yPos);
 		constraints.gridx = 2;
 		constraints.gridy = yPos;
 		m_jcbSubTeamSpirit.setMaximumRowCount(5);
@@ -364,7 +366,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		add(m_jcbSubTeamSpirit);
 
 		yPos++;
-		initLabel(constraints, layout, new JLabel(getTranslation("ls.team.confidence")), yPos);
+		initLabel(constraints, layout, new JLabel(TranslationFacility.tr("ls.team.confidence")), yPos);
 		constraints.gridx = 2;
 		constraints.gridy = yPos;
 		m_jcbTeamConfidence.setMaximumRowCount(10);
@@ -373,7 +375,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		add(m_jcbTeamConfidence);
 
 		yPos++;
-		initLabel(constraints, layout, new JLabel(getTranslation("ls.team.coachtype")), yPos);
+		initLabel(constraints, layout, new JLabel(TranslationFacility.tr("ls.team.coachtype")), yPos);
 		constraints.gridx = 2;
 		constraints.gridy = yPos;
 		m_jcbTrainerType.setMaximumRowCount(3);
@@ -382,40 +384,40 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		add(m_jcbTrainerType);
 
 		yPos++;
-		initLabel(constraints, layout, new JLabel(getTranslation("ls.club.staff.tacticalassistant")), yPos);
+		initLabel(constraints, layout, new JLabel(TranslationFacility.tr("ls.club.staff.tacticalassistant")), yPos);
 		constraints.gridx = 2;
 		constraints.gridy = yPos;
 		m_jcbTacticalAssistants.setBackground(ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER));
 		layout.setConstraints(m_jcbTacticalAssistants, constraints);
 		add(m_jcbTacticalAssistants);
-		
+
 		yPos++;
-		initLabel(constraints, layout, new JLabel(getTranslation("PullBack.PullBackStartMinute")), yPos);
+		initLabel(constraints, layout, new JLabel(TranslationFacility.tr("PullBack.PullBackStartMinute")), yPos);
 		constraints.gridx = 2;
 		constraints.gridy = yPos;
 		constraints.gridwidth = 1;
-		m_jcbPullBackMinute.setToolTipText(getTranslation("PullBack.PullBackStartMinute.ToolTip"));
+		m_jcbPullBackMinute.setToolTipText(TranslationFacility.tr("PullBack.PullBackStartMinute.ToolTip"));
 		m_jcbPullBackMinute.setBackground(ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER));
 		layout.setConstraints(m_jcbPullBackMinute, constraints);
 		add(m_jcbPullBackMinute);
 
 		yPos++;
-		initLabel(constraints, layout, new JLabel(getTranslation("ls.module.lineup.manmarkingposition")), yPos);
+		initLabel(constraints, layout, new JLabel(TranslationFacility.tr("ls.module.lineup.manmarkingposition")), yPos);
 		constraints.gridx = 2;
 		constraints.gridy = yPos;
 		constraints.gridwidth = 1;
-		m_jcbManMarkingPosition.setToolTipText(getTranslation("ls.module.lineup.manmarkingposition.ToolTip"));
+		m_jcbManMarkingPosition.setToolTipText(TranslationFacility.tr("ls.module.lineup.manmarkingposition.ToolTip"));
 		m_jcbManMarkingPosition.setBackground(ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER));
 		layout.setConstraints(m_jcbManMarkingPosition, constraints);
 		add(m_jcbManMarkingPosition);
 
 		m_jcbPredictionModel = new JComboBox<>(getPredictionItems());
 		yPos++;
-		initLabel(constraints, layout, new JLabel(getTranslation("PredictionType")), yPos);
+		initLabel(constraints, layout, new JLabel(TranslationFacility.tr("PredictionType")), yPos);
 		constraints.gridx = 2;
 		constraints.gridy = yPos;
 		constraints.gridwidth = 1;
-		m_jcbPredictionModel.setToolTipText(getTranslation("Lineup.PredictionModel.ToolTip"));
+		m_jcbPredictionModel.setToolTipText(TranslationFacility.tr("Lineup.PredictionModel.ToolTip"));
 		m_jcbPredictionModel.setBackground(ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER));
 		layout.setConstraints(m_jcbPredictionModel, constraints);
 		add(m_jcbPredictionModel);
@@ -428,7 +430,7 @@ public final class LineupSettingsPanel extends ImagePanel implements Refreshable
 		constraints.gridy = yPos;
 		constraints.fill = GridBagConstraints.NONE;
 		constraints.anchor = GridBagConstraints.CENTER;
-		m_jbReset.setToolTipText(getTranslation("ls.module.lineup.reset_settings.tt"));
+		m_jbReset.setToolTipText(TranslationFacility.tr("ls.module.lineup.reset_settings.tt"));
 		m_jbReset.setIcon(ImageUtilities.getSvgIcon(HOIconName.RESET, Map.of("lineColor", HOColorName.RESET_COLOR), fontSize, fontSize));
 		m_jbReset.setBackground(ThemeManager.getColor(HOColorName.BACKGROUND_CONTAINER));
 

@@ -16,8 +16,6 @@ import java.awt.*;
 import java.text.DecimalFormat;
 import java.util.List;
 
-import static core.util.Helper.getTranslation;
-
 
 /**
  * Zeigt die Sonstige Informationen an
@@ -83,7 +81,7 @@ final class MiscPanel extends JPanel {
 
         this.setBackground(ThemeManager.getColor(HOColorName.PANEL_BG));
 
-        var title = getTranslation("Verschiedenes");
+        var title = TranslationFacility.tr("Verschiedenes");
         var titledBorder = BorderFactory.createTitledBorder(title);
         titledBorder.setTitleColor(ThemeManager.getColor(HOColorName.LINEUP_HIGHLIGHT_FG));
         setBorder(titledBorder);
@@ -94,16 +92,16 @@ final class MiscPanel extends JPanel {
 
         label = new JLabel(TranslationFacility.tr("Jugend"));
         add(label,m_jpJugend.getComponent(false),1);
- 
+
         label = new JLabel(TranslationFacility.tr("Fans"));
         add(label,m_jpFansAnzahl.getComponent(false),2);
- 
+
         label = new JLabel(TranslationFacility.tr("Fans"));
         add(label,m_jpFans.getComponent(false),3);
- 
+
         label = new JLabel(TranslationFacility.tr("Sponsoren"));
         add(label,m_jpSponsoren.getComponent(false),4);
- 
+
         label = new JLabel(TranslationFacility.tr("Ungeschlagen"));
         add(label,m_jpUngeschlagen.getComponent(false),5);
 
@@ -115,7 +113,7 @@ final class MiscPanel extends JPanel {
 
         label = new JLabel(TranslationFacility.tr("AverageTSI"));
         add(label,m_jpAvgTSI.getComponent(false),8);
- 
+
         label = new JLabel(TranslationFacility.tr("TotalTSI"));
         add(label,m_jpSumTSI.getComponent(false),9);
 
@@ -134,7 +132,7 @@ final class MiscPanel extends JPanel {
         label = new JLabel(TranslationFacility.tr("DurchschnittAlter"));
         add(label,m_jpDAlter.getComponent(false),14);
     }
-    
+
     private void add(JLabel label,Component comp, int y){
     	constraints.anchor = GridBagConstraints.WEST;
     	constraints.gridx = 0;
@@ -149,7 +147,7 @@ final class MiscPanel extends JPanel {
     	layout.setConstraints(comp, constraints);
     	add(comp);
     }
-    
+
     /**
      * Returns the average TSI
      *
