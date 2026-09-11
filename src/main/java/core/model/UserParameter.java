@@ -36,8 +36,24 @@ public final class UserParameter extends Configuration {
 
     //~ Instance fields ----------------------------------------------------------------------------
 
-    public String AccessToken = "";
-    public String TokenSecret = "";
+    private String cryptedToken;
+    private String cryptedTokenSecret;
+
+    public String getCryptedToken() {
+        return cryptedToken;
+    }
+
+    public void setCryptedToken(String cryptedToken) {
+        this.cryptedToken = cryptedToken;
+    }
+
+    public String getCryptedTokenSecret() {
+        return cryptedTokenSecret;
+    }
+
+    public void setCryptedTokenSecret(String cryptedTokenSecret) {
+        this.cryptedTokenSecret = cryptedTokenSecret;
+    }
 
     public String ProxyAuthName = "";
     public String ProxyAuthPassword = "";
@@ -415,8 +431,8 @@ public final class UserParameter extends Configuration {
     public Map<String, String> getValues() {
         Map<String, String> map = new HashMap<>();
 
-        map.put("AccessToken", String.valueOf(AccessToken));
-        map.put("TokenSecret", String.valueOf(TokenSecret));
+        map.put("AccessToken", String.valueOf(getCryptedToken()));
+        map.put("TokenSecret", String.valueOf(getCryptedTokenSecret()));
 
         map.put("ProxyAuthName", String.valueOf(ProxyAuthName));
         map.put("ProxyAuthPassword", String.valueOf(ProxyAuthPassword));
@@ -660,8 +676,8 @@ public final class UserParameter extends Configuration {
 
     @Override
     public void setValues(Map<String, String> values) {
-        AccessToken = getStringValue(values, "AccessToken");
-        TokenSecret = getStringValue(values, "TokenSecret");
+        setCryptedToken(getStringValue(values, "AccessToken"));
+        setCryptedTokenSecret(getStringValue(values, "TokenSecret"));
 
         ProxyAuthName = getStringValue(values, "ProxyAuthName");
         ProxyAuthPassword = getStringValue(values, "ProxyAuthPassword");
