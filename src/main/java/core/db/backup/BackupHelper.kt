@@ -1,9 +1,11 @@
 package core.db.backup
 
 import core.db.user.UserManager
+import core.util.HODateTime
 import core.util.HOLogger
 import java.io.File
 import java.text.SimpleDateFormat
+import java.time.Instant
 import java.util.*
 
 /**
@@ -52,19 +54,57 @@ object BackupHelper {
 	 * @param dbDirectory Directory where to find the zip files to be deleted.
 	 */
 	private fun deleteOldFiles(dbDirectory: File) {
-		val files = dbDirectory.listFiles { file: File ->
-			file.isFile && file.extension == HOZip.zipExt
+        val files = dbDirectory.listFiles { file: File ->
+            file.isFile && file.extension == HOZip.zipExt
+        }?.toList()
+        val deleteBackupList = getBackupFilesToDelete(files)
+        deleteBackupList.forEach { f -> f.delete() }
+    }
 
-		}?.toList()
+    /**
+     * Filter backup files from list that should be deleted
+     *  - The configured count of youngest backups are removed from the list
+     *  - If the backup file is younger than 112 days the latest file of each week is removed from the list
+     *  - If the backup file is older than 112 days the latest file of each season is removed from the list
+     *
+     *  At the end the user has one backup file for each previous season
+     *  and additionally one file for each week for the last 16 weeks
+     *  plus the latest 3 backups
+     */
+    private fun getBackupFilesToDelete(files: List<File>?) : List<File> {
+        var ret: List<File> = emptyList()
+        if (files != null) {
+            var keptBackupFileLastModifiedWeek: HODateTime.HTWeek? = null
+            val currentTimestamp = HODateTime.now()
+            files.sortedByDescending { f -> f.lastModified() }
+                .forEach { f ->
+                    val lastModified = HODateTime(Instant.ofEpochMilli(f.lastModified()))
+                    val lastModifiedWeek = lastModified.toHTWeek();
+                    if (ret.size < UserManager.instance().currentUser.numberOfBackups) {
+                        keptBackupFileLastModifiedWeek = lastModifiedWeek
+                    } else {
+                        val fileAgeInDays = HODateTime.between(lastModified, currentTimestamp).toDays();
+                        if (fileAgeInDays < 112) {
+                            if (lastModifiedWeek.equals(keptBackupFileLastModifiedWeek)) {
+                                ret.plus(f)
+                            }
+                            else {
+                                keptBackupFileLastModifiedWeek = lastModifiedWeek
+                            }
+                        }
+                        else if (lastModifiedWeek.season.equals(keptBackupFileLastModifiedWeek!!.season)) {
+                            ret.plus(f)
+                        }
+                        else {
+                            keptBackupFileLastModifiedWeek = lastModifiedWeek
+                        }
+                    }
+                }
+        }
+        return ret
+    }
 
-		if (files != null) {
-			files.sortedByDescending { f -> f.lastModified() }
-				.drop(UserManager.instance().currentUser.numberOfBackups)
-				.forEach { f -> f.delete() }
-		}
-	}
-
-	private fun getFilesToBackup(dbDirectory: File): Array<File> {
+    private fun getFilesToBackup(dbDirectory: File): Array<File> {
 		return dbDirectory.listFiles { file: File ->
 			file.isFile && extensions.any { suffix -> file.extension == suffix }
 		} ?: arrayOf()
