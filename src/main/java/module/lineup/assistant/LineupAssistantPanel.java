@@ -3,7 +3,6 @@ package module.lineup.assistant;
 import core.datatype.CBItem;
 import core.gui.HOMainFrame;
 import core.gui.Refreshable;
-import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.GroupTeamFactory;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ImageUtilities;
@@ -31,7 +30,7 @@ import static module.lineup.LineupPanel.TITLE_FG;
 
 
 //TODO check if it needs to implement Refreshable
-public class LineupAssistantPanel extends ImagePanel implements Refreshable, ActionListener, ItemListener {
+public class LineupAssistantPanel extends JPanel implements Refreshable, ActionListener, ItemListener {
 
 	UserParameter userParameter = core.model.UserParameter.instance();
 
@@ -71,7 +70,6 @@ public class LineupAssistantPanel extends ImagePanel implements Refreshable, Act
 			new CBItem(TranslationFacility.tr("ST-MF-AW"),
 					LineupAssistant.ST_MF_AW) };
 	private final JComboBox<CBItem> m_jcbPriority = new JComboBox<>(PRIORITIES);
-
 
 	private final JButton m_jbClearLineup = new JButton();
 	private final JButton m_jbStartAssistant = new JButton();
