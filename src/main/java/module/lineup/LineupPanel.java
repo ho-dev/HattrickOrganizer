@@ -114,9 +114,6 @@ public class LineupPanel extends core.gui.comp.panel.ImagePanel implements Refre
 
 		horizontalSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, false);
 		horizontalSplitPane.setLeftComponent(verticalSplitPane);
-//		var lineupRatingAssistantJScrollPane = new JScrollPane(lineupRatingAssistantPanel);
-//        lineupRatingAssistantJScrollPane.setWheelScrollingEnabled(true);
-//		lineupPositionJScrollPane.getViewport().add(lineupRatingAssistantPanel);
 		horizontalSplitPane.setRightComponent(new JScrollPane(lineupRatingAssistantPanel));
 
 		UserParameter param = UserParameter.instance();
