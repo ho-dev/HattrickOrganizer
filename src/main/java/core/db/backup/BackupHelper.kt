@@ -63,13 +63,13 @@ object BackupHelper {
 
     /**
      * Filter backup files from list that should be deleted
-     *  - The configured count of youngest backups are removed from the list
-     *  - If the backup file is younger than 112 days the latest file of each week is removed from the list
-     *  - If the backup file is older than 112 days the latest file of each season is removed from the list
+     *  - The configured count of youngest backups are removed from the list (not deleted)
+     *  - If the backup file is younger than 112 days the latest file of each week is removed
+     *  - If the backup file is older than 112 days the latest file of each season is removed
      *
      *  At the end the user has one backup file for each previous season
      *  and additionally one file for each week for the last 16 weeks
-     *  plus the latest 3 backups
+     *  plus the configured count of latest backups
      */
     private fun getBackupFilesToDelete(files: List<File>?) : List<File> {
         var ret: List<File> = emptyList()

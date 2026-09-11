@@ -10,6 +10,8 @@
 
 ### Database
 
+* New backup strategy. Hold more database backup files (#2484)
+
 ### Download
 
 * Fix null pointer exception in nt team download (#2314)
