@@ -135,26 +135,29 @@ public class LineupAssistantPanel extends JPanel implements Refreshable, ActionL
 		final HOMainFrame mainFrame = core.gui.HOMainFrame.instance();
 
 		if (actionEvent.getSource().equals(m_jbClearLineup)) {
-			// Empty all positions
-			var lineup = hoModel.getCurrentLineup();
-            lineup.resetStartingLineup();
-            lineup.resetPositionOrders();
-            lineup.resetSubstituteBench();
-            lineup.setKicker(0);
-            lineup.setCaptain(0);
-            HOMainFrame.instance().setInformation(TranslationFacility.tr("Aufstellung_geloescht"));
-            mainFrame.getLineupPanel().update();
+            var lineupPanel = mainFrame.getLineupPanel();
+            if (lineupPanel != null) {
+                // Empty all positions
+                var lineup = hoModel.getCurrentLineup();
+                lineup.resetStartingLineup();
+                lineup.resetPositionOrders();
+                lineup.resetSubstituteBench();
+                lineup.setKicker(0);
+                lineup.setCaptain(0);
+                HOMainFrame.instance().setInformation(TranslationFacility.tr("Aufstellung_geloescht"));
+                mainFrame.getLineupPanel().update();
+            }
         }
 		else if (actionEvent.getSource().equals(m_jbStartAssistant)) {
 			displayGUI();
 		}
 		else if (actionEvent.getSource().equals(m_jcbxFilterPlayerPositionCB) || actionEvent.getSource().equals(m_jcbxNotLast)) {
-			mainFrame.getLineupPanel().refreshLineupPositionsPanel();
+			Objects.requireNonNull(mainFrame.getLineupPanel()).refreshLineupPositionsPanel();
 		}
 		else if (actionEvent.getSource().equals(m_jcbGroups) || actionEvent.getSource().equals(m_jcbIncludeExclude)) {
 			// Only if filter active
 			if (m_jcbxFilterPlayerPositionCB.isSelected()) {
-				mainFrame.getLineupPanel().refreshLineupPositionsPanel();
+				Objects.requireNonNull(mainFrame.getLineupPanel()).refreshLineupPositionsPanel();
 			}
 		}
 		else if (actionEvent.getSource().equals(overlayOk)) {
@@ -193,13 +196,11 @@ public class LineupAssistantPanel extends JPanel implements Refreshable, ActionL
 
 	@Override
 	public final void itemStateChanged(ItemEvent e) {
-		if (e.getStateChange() == ItemEvent.SELECTED) {
-			// Wetter -> Refresh
-			core.gui.HOMainFrame.instance().getLineupPanel().update();
-
-			// gui.RefreshManager.instance ().doRefresh ();
-		}
-	}
+        if (e.getStateChange() == ItemEvent.SELECTED) {
+            // Wetter -> Refresh
+            Objects.requireNonNull(HOMainFrame.instance().getLineupPanel()).update();
+        }
+    }
 
 	public void addToAssistant(PlayerPositionPanel positionPanel) {
 		positions.put(positionPanel, null);
@@ -245,7 +246,7 @@ public class LineupAssistantPanel extends JPanel implements Refreshable, ActionL
 				.getLineup()
 				.optimizeLineup(
 						selectablePlayers,
-						(byte) ((CBItem)m_jcbPriority.getSelectedItem()).getId(),
+						(byte) ((CBItem) Objects.requireNonNull(m_jcbPriority.getSelectedItem())).getId(),
 						isConsiderForm(),
 						isIdealPositionZuerst(),
 						isIgnoreInjured(),
@@ -254,7 +255,7 @@ public class LineupAssistantPanel extends JPanel implements Refreshable, ActionL
 				);
 
 		mainFrame.setInformation(TranslationFacility.tr("Autoaufstellung_fertig"));
-		mainFrame.getLineupPanel().update();
+		Objects.requireNonNull(mainFrame.getLineupPanel()).update();
 
 		// gui.RefreshManager.instance ().doRefresh ();
 	}
@@ -289,6 +290,7 @@ public class LineupAssistantPanel extends JPanel implements Refreshable, ActionL
 		// Add two buttons and a label
 
 		var posPanel = HOMainFrame.instance().getLineupPanel();
+        if (posPanel == null) { return; }
 		GridBagConstraints constraints = new GridBagConstraints();
 		constraints.anchor = GridBagConstraints.CENTER;
 		constraints.fill = GridBagConstraints.BOTH;
@@ -337,22 +339,20 @@ public class LineupAssistantPanel extends JPanel implements Refreshable, ActionL
 	}
 
 	private void removeGUI() {
-		// Remove overlays
-		for (Map.Entry<PlayerPositionPanel, LineupAssistantSelectorOverlay> entry : positions
-				.entrySet()) {
-			entry.getKey().removeAssistantOverlay(entry.getValue());
-		}
+        // Remove overlays
+        for (Map.Entry<PlayerPositionPanel, LineupAssistantSelectorOverlay> entry : positions.entrySet()) {
+            entry.getKey().removeAssistantOverlay(entry.getValue());
+        }
 
-		// Remove buttons and labels
-		var pane = HOMainFrame.instance().getLineupPanel();
-
-		pane.removePositionComponent(infoLabel);
-		pane.removePositionComponent(overlayCancel);
-		pane.removePositionComponent(overlayOk);
-
-		HOMainFrame.instance().getLineupPanel().repaint();
-
-	}
+        // Remove buttons and labels
+        var pane = HOMainFrame.instance().getLineupPanel();
+        if (pane != null) {
+            pane.removePositionComponent(infoLabel);
+            pane.removePositionComponent(overlayCancel);
+            pane.removePositionComponent(overlayOk);
+            pane.repaint();
+        }
+    }
 
 	public Map<Integer, Boolean> getPositionsStatus() {
 		HashMap<Integer, Boolean> returnMap = new HashMap<>();
