@@ -2435,4 +2435,26 @@ public class DBManager implements PersistenceManager {
         var hallOfFamePlayersTable = ((HallOfFamePlayersTable) getTable(HallOfFamePlayersTable.TABLENAME));
         return hallOfFamePlayersTable.loadHallOfFame(hrfId);
     }
+
+    /**
+     * Load download info from HRF and XTRADATA table
+     * @return List<DownloadInfo>
+     */
+    public List<DownloadInfo> loadDownloadInfo() {
+        String sql = "SELECT hrf_id, datum, XTRADATA.dailyupdate1 from HRF join XTRADATA on xtradata.hrf_id = hrf.hrf_id order by hrf_id desc";
+        var ret = new ArrayList<DownloadInfo>();
+        assert connectionManager != null;
+        try (final ResultSet rs = connectionManager.executePreparedQuery(sql)) {
+            assert rs != null;
+            while (rs.next()) {
+                var hrf_id = rs.getInt(1);
+                var date = rs.getTimestamp(2);
+                var update = rs.getTimestamp(3);
+                ret.add(new DownloadInfo(hrf_id, HODateTime.fromDbTimestamp(date), HODateTime.fromDbTimestamp(update)));
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return ret;
+    }
 }

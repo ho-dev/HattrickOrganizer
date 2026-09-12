@@ -149,7 +149,7 @@ public class PlayerOverviewPanel extends ImagePanel implements Refreshable {
 	}
 
 	/*
-	 * Initialise the players tables
+	 * Initialize the players tables
 	 */
 	private Component initPlayersTable() {
 		JPanel overviewPanel = new JPanel();
