@@ -12,14 +12,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.Arrays;
 import java.util.Vector;
 
 /**
  * Helper class
  * Methods are used in several dialogs or panels
  */
-public class Helper {
+public final class Helper {
 
 	private Helper() {
 		throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
@@ -83,19 +82,19 @@ public class Helper {
 	 * Integer format
 	 * used by parser in parseFloat
 	 */
-	public static DecimalFormat INTEGERFORMAT = new DecimalFormat("#0");
+	public static final DecimalFormat INTEGERFORMAT = new DecimalFormat("#0");
 
 	/**
 	 * Decimal format
 	 * - 1 fraction digit
 	 */
-	public static DecimalFormat DEFAULTDEZIMALFORMAT = new DecimalFormat("#0.0");
+	public static final DecimalFormat DEFAULTDEZIMALFORMAT = new DecimalFormat("#0.0");
 
 	/**
 	 * Decimal format
 	 * - 2 fraction digits
 	 */
-	public static DecimalFormat DEZIMALFORMAT_2STELLEN = new DecimalFormat("#0.00");
+	public static final DecimalFormat DEZIMALFORMAT_2STELLEN = new DecimalFormat("#0.00");
 
 	/**
 	 * Prevent recursive displaying of message pane
@@ -263,75 +262,6 @@ public class Helper {
 		numFormat.setMinimumFractionDigits(nbDecimals);
 		numFormat.setMaximumFractionDigits(nbDecimals);
 		return numFormat;
-	}
-
-	/**
-	 * Decrypt string
-	 * encrypted by method crypt
-	 */
-	public static String decryptString(String text) {
-		byte[] encoded;
-
-		if (text == null) {
-			return "";
-		}
-
-		encoded = text.getBytes();
-
-		for (int i = 0; (i < encoded.length); ++i) {
-			//check ob Zeichen gleich ~ = 126 ?
-			if (encoded[i] == 126) {
-				//Dann mit tilde ersetzen slash = 92
-				encoded[i] = 92;
-			}
-
-			encoded[i] += 7;
-
-			if ((encoded[i] % 2) == 0) {
-				++encoded[i];
-			} else {
-				--encoded[i];
-			}
-		}
-
-		return new String(encoded);
-	}
-
-	/**
-	 * Encrypt a string consisting on numbers and characters only
-	 */
-	public static String cryptString(String text) {
-		byte[] encoded;
-
-		if (text == null) {
-			return "";
-		}
-
-		for (int j = 0; j < text.length(); j++) {
-			if (!Character.isLetterOrDigit(text.charAt(j))) {
-				return null;
-			}
-		}
-
-		encoded = text.getBytes();
-
-		for (int i = 0; (i < encoded.length); ++i) {
-			if ((encoded[i] % 2) == 0) {
-				++encoded[i];
-			} else {
-				--encoded[i];
-			}
-
-			encoded[i] -= 7;
-
-			//check for slash character = 92 ?
-			if (encoded[i] == 92) {
-				// replace it by  ~ = 126
-				encoded[i] = 126;
-			}
-		}
-
-		return new String(encoded);
 	}
 
 	/**
