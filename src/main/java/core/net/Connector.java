@@ -21,6 +21,7 @@ import core.net.login.OAuthDialog;
 import core.net.login.ProxyDialog;
 import core.net.login.ProxySettings;
 import core.util.*;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Document;
 import tool.updater.VersionInfo;
@@ -32,6 +33,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.function.Supplier;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
@@ -58,14 +60,36 @@ public class Connector {
 						.apiSecret(HOEncryption.decryptString(CONSUMER_SECRET))
 						.build(HattrickAPI.instance());
 
-
-		m_OAAccessToken = createOAAccessToken();
+		m_OAAccessToken = createOAuthAccessToken();
 	}
 
-	private OAuth1AccessToken createOAAccessToken() {
-		return new OAuth1AccessToken(HOEncryption.decryptString(UserParameter.instance().AccessToken),
-            HOEncryption.decryptString(UserParameter.instance().TokenSecret));
-	}
+    private static OAuth1AccessToken createOAuthAccessToken() {
+        var accessToken = createAccessToken();
+        return new OAuth1AccessToken(accessToken.getToken(), accessToken.getTokenSecret());
+    }
+
+    private static AccessToken createAccessToken() {
+        return AccessToken.ofEncryptedData(getEncryptedToken(), getEncryptedTokenSecret());
+    }
+
+    private static String getEncryptedToken() {
+        return getFromEnvOrElse("HO_ENCRYPTED_TOKEN", () -> UserParameter.instance().getEncryptedToken());
+    }
+
+    private static String getEncryptedTokenSecret() {
+        return getFromEnvOrElse("HO_ENCRYPTED_TOKEN_SECRET", () -> UserParameter.instance().getEncryptedTokenSecret());
+    }
+
+    private static String getFromEnvOrElse(String name, Supplier<String> supplier) {
+        final var value = System.getenv(name);
+        if (StringUtils.isNotBlank(value)) {
+            HOLogger.instance().info(
+                Connector.class,
+                "Found environment variable '%s' and used its value.".formatted(name));
+            return value;
+        }
+        return supplier.get();
+    }
 
 	/**
 	 * Get the Connector instance.
@@ -658,7 +682,7 @@ public class Connector {
 							}
 							m_OAAccessToken = authDialog.getAccessToken();
 							if (m_OAAccessToken == null) {
-								m_OAAccessToken = createOAAccessToken();
+								m_OAAccessToken = createOAuthAccessToken();
 							}
 						} else {
 							throw new RuntimeException("HTTP Response Code 401: CHPP Connection failed.");
@@ -740,7 +764,6 @@ public class Connector {
 	 */
 	public InputStream postWebFileWithBodyParameters(String surl, Map<String, String> bodyParas,
 													 boolean showErrorMessage, String scope) {
-
 		OAuthDialog authDialog = null;
 		Response response = null;
 		int iResponse;
@@ -777,9 +800,7 @@ public class Connector {
 						}
 						m_OAAccessToken = authDialog.getAccessToken();
 						if (m_OAAccessToken == null) {
-							m_OAAccessToken = new OAuth1AccessToken(
-                                HOEncryption.decryptString(UserParameter.instance().AccessToken),
-                                HOEncryption.decryptString(UserParameter.instance().TokenSecret));
+                            m_OAAccessToken = createOAuthAccessToken();
 						}
 					}
 					// Try again...
