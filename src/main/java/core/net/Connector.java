@@ -68,14 +68,14 @@ public class Connector {
     }
 
     private static AccessToken createAccessToken() {
-        return AccessToken.ofEncryptedData(getCryptedToken(), getCryptedTokenSecret());
+        return AccessToken.ofEncryptedData(getEncryptedToken(), getEncryptedTokenSecret());
     }
 
-    private static String getCryptedToken() {
+    private static String getEncryptedToken() {
         return fromEnvAndLogOrElseGet("HO_ENCRYPTED_TOKEN", () -> UserParameter.instance().getEncryptedToken());
     }
 
-    private static String getCryptedTokenSecret() {
+    private static String getEncryptedTokenSecret() {
         return fromEnvAndLogOrElseGet("HO_ENCRYPTED_TOKEN_SECRET", () -> UserParameter.instance().getEncryptedTokenSecret());
     }
 
