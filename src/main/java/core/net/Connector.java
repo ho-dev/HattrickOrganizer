@@ -21,6 +21,7 @@ import core.net.login.OAuthDialog;
 import core.net.login.ProxyDialog;
 import core.net.login.ProxySettings;
 import core.util.*;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Document;
 import tool.updater.VersionInfo;
@@ -72,18 +73,20 @@ public class Connector {
     }
 
     private static String getEncryptedToken() {
-        return fromEnvAndLogOrElseGet("HO_ENCRYPTED_TOKEN", () -> UserParameter.instance().getEncryptedToken());
+        return getFromEnvOrElse("HO_ENCRYPTED_TOKEN", () -> UserParameter.instance().getEncryptedToken());
     }
 
     private static String getEncryptedTokenSecret() {
-        return fromEnvAndLogOrElseGet("HO_ENCRYPTED_TOKEN_SECRET", () -> UserParameter.instance().getEncryptedTokenSecret());
+        return getFromEnvOrElse("HO_ENCRYPTED_TOKEN_SECRET", () -> UserParameter.instance().getEncryptedTokenSecret());
     }
 
-    private static String fromEnvAndLogOrElseGet(String name, Supplier<String> supplier) {
-        var env = Optional.ofNullable(System.getenv(name));
-        if (env.isPresent()) {
-            HOLogger.instance().info(Connector.class, "Found environment variable '%s' and used its value.".formatted(name));
-            return env.get();
+    private static String getFromEnvOrElse(String name, Supplier<String> supplier) {
+        final var value = System.getenv(name);
+        if (StringUtils.isNotBlank(value)) {
+            HOLogger.instance().info(
+                Connector.class,
+                "Found environment variable '%s' and used its value.".formatted(name));
+            return value;
         }
         return supplier.get();
     }
