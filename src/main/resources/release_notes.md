@@ -27,6 +27,10 @@
 
 * Portable version shows hint to install downloaded update manually (#2331)
 
+### Matches
+
+* Added indirect set pieces ratings to rating panel (#2433)
+
 ### Hall of fame
 
 * Added (#2296)

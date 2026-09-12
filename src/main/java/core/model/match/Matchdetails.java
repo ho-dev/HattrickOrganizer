@@ -122,8 +122,10 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
     private int soldVIP = -1;
 
     private Integer m_iRegionId;
-    private int ratingIndirectSetPiecesAtt = -1;
-    private int ratingIndirectSetPiecesDef = -1;
+    private int homeRatingIndirectSetPiecesAtt = -1;
+    private int homeRatingIndirectSetPiecesDef = -1;
+    private int guestRatingIndirectSetPiecesAtt = -1;
+    private int guestRatingIndirectSetPiecesDef = -1;
 
     public ArrayList<Injury> getM_Injuries() {
         return m_Injuries;
@@ -231,29 +233,51 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
 
     public static Matchdetails getMatchdetails(int matchId, MatchType type) {
         var ret = DBManager.instance().loadMatchDetails(type.getId(), matchId);
-        if ( ret != null) {
+        if (ret != null) {
             ret.setMatchID(matchId);
             ret.setMatchType(type);
         }
         return ret;
     }
 
-    public void setRatingIndirectSetPiecesAtt(Integer ratingIndirectSetPiecesAtt) {
-        if ( ratingIndirectSetPiecesAtt != null)
-            this.ratingIndirectSetPiecesAtt = ratingIndirectSetPiecesAtt;
+    public void setHomeRatingIndirectSetPiecesAtt(Integer ratingIndirectSetPiecesAtt) {
+        if (ratingIndirectSetPiecesAtt != null) {
+            homeRatingIndirectSetPiecesAtt = ratingIndirectSetPiecesAtt;
+        }
     }
 
-    public void setRatingIndirectSetPiecesDef(Integer ratingIndirectSetPiecesDef) {
-        if ( ratingIndirectSetPiecesDef != null)
-            this.ratingIndirectSetPiecesDef = ratingIndirectSetPiecesDef;
+    public void setHomeRatingIndirectSetPiecesDef(Integer ratingIndirectSetPiecesDef) {
+        if (ratingIndirectSetPiecesDef != null) {
+            homeRatingIndirectSetPiecesDef = ratingIndirectSetPiecesDef;
+        }
     }
 
-    public int getRatingIndirectSetPiecesDef() {
-        return ratingIndirectSetPiecesDef;
+    public int getHomeRatingIndirectSetPiecesDef() {
+        return homeRatingIndirectSetPiecesDef;
     }
 
-    public int getRatingIndirectSetPiecesAtt() {
-        return ratingIndirectSetPiecesAtt;
+    public int getHomeRatingIndirectSetPiecesAtt() {
+        return homeRatingIndirectSetPiecesAtt;
+    }
+
+    public void setGuestRatingIndirectSetPiecesAtt(Integer ratingIndirectSetPiecesAtt) {
+        if (ratingIndirectSetPiecesAtt != null) {
+            this.guestRatingIndirectSetPiecesAtt = ratingIndirectSetPiecesAtt;
+        }
+    }
+
+    public void setGuestRatingIndirectSetPiecesDef(Integer ratingIndirectSetPiecesDef) {
+        if (ratingIndirectSetPiecesDef != null) {
+            this.guestRatingIndirectSetPiecesDef = ratingIndirectSetPiecesDef;
+        }
+    }
+
+    public int getGuestRatingIndirectSetPiecesDef() {
+        return guestRatingIndirectSetPiecesDef;
+    }
+
+    public int getGuestRatingIndirectSetPiecesAtt() {
+        return guestRatingIndirectSetPiecesAtt;
     }
 
     public int getLastMinute() {
@@ -278,20 +302,20 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
         return guestGoalsInParts[matchPartId.getValue()];
     }
 
-    public void setHomeGoalsInPart(MatchEvent.MatchPartId part, Integer goals){
-        if ( homeGoalsInParts == null && goals != null) {
+    public void setHomeGoalsInPart(MatchEvent.MatchPartId part, Integer goals) {
+        if (homeGoalsInParts == null && goals != null) {
             homeGoalsInParts = new Integer[MatchEvent.MatchPartId.values().length];
         }
-        if ( homeGoalsInParts != null) {
+        if (homeGoalsInParts != null) {
             homeGoalsInParts[part.getValue()] = goals;
         }
     }
 
-    public void setGuestGoalsInPart(MatchEvent.MatchPartId part, Integer goals){
-        if ( guestGoalsInParts == null && goals != null) {
+    public void setGuestGoalsInPart(MatchEvent.MatchPartId part, Integer goals) {
+        if (guestGoalsInParts == null && goals != null) {
             guestGoalsInParts = new Integer[MatchEvent.MatchPartId.values().length];
         }
-        if ( guestGoalsInParts != null ) {
+        if (guestGoalsInParts != null) {
             guestGoalsInParts[part.getValue()] = goals;
         }
     }
