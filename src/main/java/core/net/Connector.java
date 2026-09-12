@@ -82,7 +82,7 @@ public class Connector {
     private static String fromEnvAndLogOrElseGet(String name, Supplier<String> supplier) {
         var env = Optional.ofNullable(System.getenv(name));
         if (env.isPresent()) {
-            HOLogger.instance().info(Connector.class, "Found environment variable '%s' and used its value".formatted(name));
+            HOLogger.instance().info(Connector.class, "Found environment variable '%s' and used its value.".formatted(name));
             return env.get();
         }
         return supplier.get();
