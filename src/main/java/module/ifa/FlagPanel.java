@@ -20,8 +20,6 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
-import static module.ifa.model.IfaModel.APACHE_LEAGUE_ID;
-
 public class FlagPanel extends JPanel {
 
 	private List<FlagLabel> flagLabels;
@@ -33,56 +31,56 @@ public class FlagPanel extends JPanel {
 	}
 
 	private void initialize(boolean away, IfaModel ifaModel, FlagDisplayModel flagDisplayModel) {
-		createFlagLabels(away, ifaModel, flagDisplayModel);
-		int totalCountryCount = flagLabels.size();
-		int playedCountryCount = (away) ? ifaModel.getVistedCountriesCount() : ifaModel
-				.getHostedCountriesCount();
+        createFlagLabels(away, ifaModel, flagDisplayModel);
+        int totalCountryCount = flagLabels != null ? flagLabels.size() : 0;
+        int playedCountryCount = (away) ? ifaModel.getVisitedCountriesCount() : ifaModel
+            .getHostedCountriesCount();
 
-		setLayout(new GridBagLayout());
-		setBackground(Color.white);
+        setLayout(new GridBagLayout());
+        setBackground(Color.white);
 
-		GridBagConstraints constraints = new GridBagConstraints();
-		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.anchor = GridBagConstraints.CENTER;
-		constraints.insets = new Insets(1, 1, 1, 1);
-		constraints.weightx = 1.0;
+        GridBagConstraints constraints = new GridBagConstraints();
+        constraints.fill = GridBagConstraints.HORIZONTAL;
+        constraints.anchor = GridBagConstraints.CENTER;
+        constraints.insets = new Insets(1, 1, 1, 1);
+        constraints.weightx = 1.0;
 
-		this.header = new JLabel("");
-		this.header.setForeground(new Color(2522928));
-		this.header.setHorizontalTextPosition(0);
-		constraints.gridx = 0;
-		constraints.gridy = 0;
-		constraints.gridwidth = flagDisplayModel.getFlagWidth();
-		add(this.header, constraints);
+        this.header = new JLabel("");
+        this.header.setForeground(new Color(2522928));
+        this.header.setHorizontalTextPosition(0);
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.gridwidth = flagDisplayModel.getFlagWidth();
+        add(this.header, constraints);
 
-		this.percentState = new JProgressBar();
-		this.percentState.setMaximum(totalCountryCount);
-		this.percentState.setValue(playedCountryCount);
-		this.percentState.setPreferredSize(new Dimension(100, 14));
-		this.percentState.setFont(new Font("Verdana", 1, 8));
-		this.percentState.setString(playedCountryCount + "/" + totalCountryCount + " ("
-				+ (int) (100.0D * this.percentState.getPercentComplete()) + "%)");
-		this.percentState.setStringPainted(true);
-		this.percentState.setBorder(BorderFactory.createLineBorder(Color.black));
-		constraints.insets = new Insets(1, 1, 5, 1);
-		constraints.gridy = 1;
-		add(this.percentState, constraints);
+        this.percentState = new JProgressBar();
+        this.percentState.setMaximum(totalCountryCount);
+        this.percentState.setValue(playedCountryCount);
+        this.percentState.setPreferredSize(new Dimension(100, 14));
+        this.percentState.setFont(new Font("Verdana", 1, 8));
+        this.percentState.setString(playedCountryCount + "/" + totalCountryCount + " ("
+            + (int) (100.0D * this.percentState.getPercentComplete()) + "%)");
+        this.percentState.setStringPainted(true);
+        this.percentState.setBorder(BorderFactory.createLineBorder(Color.black));
+        constraints.insets = new Insets(1, 1, 5, 1);
+        constraints.gridy = 1;
+        add(this.percentState, constraints);
 
-		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = new Insets(1, 1, 1, 1);
-		constraints.weightx = 0.0;
-		constraints.gridwidth = 1;
+        constraints.fill = GridBagConstraints.NONE;
+        constraints.insets = new Insets(1, 1, 1, 1);
+        constraints.weightx = 0.0;
+        constraints.gridwidth = 1;
 
-		if (this.flagLabels != null) {
-			int i = 0;
-			for (var flagLabel : this.flagLabels) {
-				constraints.gridx = i % flagDisplayModel.getFlagWidth();
-				constraints.gridy = 2 + i / flagDisplayModel.getFlagWidth();
-				add(flagLabel, constraints);
-				i++;
-			}
-		}
-	}
+        if (this.flagLabels != null) {
+            int i = 0;
+            for (var flagLabel : this.flagLabels) {
+                constraints.gridx = i % flagDisplayModel.getFlagWidth();
+                constraints.gridy = 2 + i / flagDisplayModel.getFlagWidth();
+                add(flagLabel, constraints);
+                i++;
+            }
+        }
+    }
 
 	void setHeaderText(String header) {
 		this.header.setText(header);
@@ -96,7 +94,7 @@ public class FlagPanel extends JPanel {
 	private void createFlagLabels(boolean away, IfaModel ifaModel, FlagDisplayModel flagDisplayModel) {
 		this.flagLabels = new ArrayList<>();
 		WorldDetailsManager.instance().getLeagues().stream()
-				.filter(l -> l.getLeagueId() != APACHE_LEAGUE_ID)
+				.filter(WorldDetailLeague::isNationalLeague)
 				.sorted((l1, l2) -> ObjectUtils.compare(l1.getCountryName(), l2.getCountryName()))
 				.forEach(l -> addFlagLabel(l, away, ifaModel, flagDisplayModel));
 	}

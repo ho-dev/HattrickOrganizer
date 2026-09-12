@@ -91,11 +91,15 @@ public enum MatchType implements IMatchType {
 		return List.of(FRIENDLYNORMAL, FRIENDLYCUPRULES, INTFRIENDLYNORMAL, INTFRIENDLYCUPRULES);
 	}
 
-	public boolean isFriendly() {
-		return MatchType.getFriendlyMatchTypes().contains(this);
-	}
+    public boolean isFriendly() {
+        return MatchType.getFriendlyMatchTypes().contains(this);
+    }
 
-	public static List<MatchType> getCupMatchTypes() {
+    public boolean isFriendlyOfNtTeam() {
+        return this == NATIONALFRIENDLY;
+    }
+
+    public static List<MatchType> getCupMatchTypes() {
 		return List.of(CUP);
 	}
 

@@ -74,6 +74,10 @@
 
 * Fixed a crash that occurred when not ticking `Only matches with SEs`.
 
+### International Friendly Analyzer
+
+* Statistics regarding team's country ID instead of league ID (#2249)
+
 ### Tools
 
 #### Arena Sizer

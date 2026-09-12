@@ -16,13 +16,9 @@ import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-
-import static module.ifa.model.IfaModel.APACHE_LEAGUE_ID;
 
 public class IfaOverviewDialog extends JDialog {
 
@@ -61,14 +57,7 @@ public class IfaOverviewDialog extends JDialog {
 				.setCellRenderer(new DoubleTableCellRenderer(0));
 
 		TableRowSorter<MyTableModel> sorter = new TableRowSorter<>(tblModel);
-		sorter.setComparator(MyTableModel.COL_COUNTRY, new Comparator<Country>() {
-
-			@Override
-			public int compare(Country o1, Country o2) {
-				return o1.getName().compareTo(o2.getName());
-			}
-
-		});
+		sorter.setComparator(MyTableModel.COL_COUNTRY, Comparator.comparing(Country::getName));
 		List<SortKey> sortKeys = new ArrayList<>();
 		sortKeys.add(new SortKey(MyTableModel.COL_COUNTRY, SortOrder.ASCENDING));
 		sorter.setSortKeys(sortKeys);
@@ -76,13 +65,7 @@ public class IfaOverviewDialog extends JDialog {
 
 		JButton closeButton = new JButton();
 		closeButton.setText(TranslationFacility.tr("ls.button.close"));
-		closeButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				dispose();
-			}
-		});
+		closeButton.addActionListener(e -> dispose());
 
 		getContentPane().setLayout(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
@@ -108,12 +91,11 @@ public class IfaOverviewDialog extends JDialog {
 		static final int COL_VISITED = 3;
 		static final int COL_HOSTED = 4;
 		private final List<Entry> list;
-		private String[] columns = { "Country", "Active users", "Coolness", "V", "H" };
 
-		MyTableModel() {
+        MyTableModel() {
 			this.list = new ArrayList<>();
 			WorldDetailsManager.instance().getLeagues().stream()
-					.filter(l->l.getLeagueId()!=APACHE_LEAGUE_ID).forEach(l->addEntry(l));
+					.filter(WorldDetailLeague::isNationalLeague).forEach(this::addEntry);
 		}
 
 		private void addEntry(WorldDetailLeague league) {
@@ -126,20 +108,14 @@ public class IfaOverviewDialog extends JDialog {
 
 		@Override
 		public String getColumnName(int columnIndex) {
-			switch (columnIndex) {
-			case COL_COUNTRY:
-				return TranslationFacility.tr("ifa.statisticsTable.col.country");
-			case COL_ACTIVE_USERS:
-				return TranslationFacility.tr("ifa.infoDialog.col.activeUsers");
-			case COL_COOLNESS:
-				return TranslationFacility.tr("ifa.statisticsTable.col.coolness");
-			case COL_VISITED:
-				return TranslationFacility.tr("ifa.infoDialog.col.visited");
-			case COL_HOSTED:
-				return TranslationFacility.tr("ifa.infoDialog.col.hosted");
-			default:
-				return super.getColumnName(columnIndex);
-			}
+            return switch (columnIndex) {
+                case COL_COUNTRY -> TranslationFacility.tr("ifa.statisticsTable.col.country");
+                case COL_ACTIVE_USERS -> TranslationFacility.tr("ifa.infoDialog.col.activeUsers");
+                case COL_COOLNESS -> TranslationFacility.tr("ifa.statisticsTable.col.coolness");
+                case COL_VISITED -> TranslationFacility.tr("ifa.infoDialog.col.visited");
+                case COL_HOSTED -> TranslationFacility.tr("ifa.infoDialog.col.hosted");
+                default -> super.getColumnName(columnIndex);
+            };
 		}
 
 		@Override
@@ -154,38 +130,26 @@ public class IfaOverviewDialog extends JDialog {
 
 		@Override
 		public Class<?> getColumnClass(int columnIndex) {
-			switch (columnIndex) {
-			case COL_COUNTRY:
-				return Country.class;
-			case COL_ACTIVE_USERS:
-				return Integer.class;
-			case COL_COOLNESS:
-				return Double.class;
-			case COL_VISITED:
-			case COL_HOSTED:
-				return Boolean.class;
-			default:
-				return super.getColumnClass(columnIndex);
-			}
+            return switch (columnIndex) {
+                case COL_COUNTRY -> Country.class;
+                case COL_ACTIVE_USERS -> Integer.class;
+                case COL_COOLNESS -> Double.class;
+                case COL_VISITED, COL_HOSTED -> Boolean.class;
+                default -> super.getColumnClass(columnIndex);
+            };
 		}
 
 		@Override
 		public Object getValueAt(int rowIndex, int columnIndex) {
 			Entry entry = this.list.get(rowIndex);
-			switch (columnIndex) {
-			case COL_COUNTRY:
-				return entry.country;
-			case COL_ACTIVE_USERS:
-				return entry.league.getActiveUsers();
-			case COL_COOLNESS:
-				return entry.coolness;
-			case COL_VISITED:
-				return IfaOverviewDialog.this.model.isVisited(entry.country.getCountryId());
-			case COL_HOSTED:
-				return IfaOverviewDialog.this.model.isHosted(entry.country.getCountryId());
-			default:
-				return null;
-			}
+            return switch (columnIndex) {
+                case COL_COUNTRY -> entry.country;
+                case COL_ACTIVE_USERS -> entry.league.getActiveUsers();
+                case COL_COOLNESS -> entry.coolness;
+                case COL_VISITED -> IfaOverviewDialog.this.model.isVisited(entry.country.getCountryId());
+                case COL_HOSTED -> IfaOverviewDialog.this.model.isHosted(entry.country.getCountryId());
+                default -> null;
+            };
 		}
 	}
 
