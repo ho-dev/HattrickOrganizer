@@ -28,7 +28,7 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
 
     public YouthPlayerOverviewTableModel(UserColumnController.ColumnModelId id) {
         super(id, "YouthPlayerOverview");
-        columns = initColumns();
+        setColumns(initColumns());
     }
 
     private YouthPlayerColumn[] initColumns() {
@@ -242,7 +242,7 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
     protected void initData() {
         UserColumn[] displayedColumns = getDisplayedColumns();
         var youthplayers = HOVerwaltung.instance().getModel().getCurrentYouthPlayers();
-        m_clData = new Object[youthplayers.size()][columns.length];
+        m_clData = new Object[youthplayers.size()][getColumns().length];
         int playernum = 0;
         for (var player : youthplayers) {
             int columnnum = 0;

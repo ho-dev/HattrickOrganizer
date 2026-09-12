@@ -24,7 +24,7 @@ public class RecapPanelTableModel extends HOTableModel {
 
     public RecapPanelTableModel(UserColumnController.ColumnModelId id) {
         super(id, "TeamAnalyzerRecap");
-        columns = initColumns();
+        setColumns(initColumns());
     }
 
     private RecapUserColumn[] initColumns() {
@@ -283,7 +283,7 @@ public class RecapPanelTableModel extends HOTableModel {
         // Empty model
         m_clData = null;
         if (teamReport.size() > 1) { // matches loaded
-            m_clData = new Object[teamReport.size()][columns.length];
+            m_clData = new Object[teamReport.size()][getColumns().length];
             for (int i = 0; i < teamReport.size(); i++) {
                 var lineup = teamReport.getTeamMatchReport(i);
                 int colNum = 0;

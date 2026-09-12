@@ -14,9 +14,9 @@ public class TrainingRecapTable extends JScrollPane {
 
     private final PlayersTable trainingPredictionTable;
 
-    public void storeUserSettings(){
-        var tableModel = (TrainingPredictionTableModel)trainingPredictionTable.getModel();
-        if ( tableModel != null) {
+    public void storeUserSettings() {
+        var tableModel = (TrainingPredictionTableModel) trainingPredictionTable.getModel();
+        if (tableModel != null) {
             tableModel.storeUserSettings();
         }
     }
@@ -28,7 +28,7 @@ public class TrainingRecapTable extends JScrollPane {
     /**
      * Creates a new TrainingRecapTable object.
      *
-     * @param model         training model
+     * @param model training model
      */
     public TrainingRecapTable(LazyImagePanel panel, TrainingModel model) {
         var tableModel = UserColumnController.instance().getTrainingPredictionTableModel();
@@ -44,7 +44,7 @@ public class TrainingRecapTable extends JScrollPane {
                 if (trainingPredictionTable.getSelectedRow() < 0)
                     return;
 
-                if ( e.getComponent() instanceof JTable ) {
+                if (e.getComponent() instanceof JTable) {
                     var cols = trainingPredictionTable.getSelectedColumns();
                     trainingPrioPopUp.setSelectedColumns(cols);
                     trainingPrioPopUp.show(e.getComponent(), e.getX(), e.getY());

@@ -44,8 +44,12 @@ abstract class HOTableModel protected constructor(
      * @return UserColumn[]
      */
     /** All columns of this model  */
-    lateinit var columns: Array<UserColumn>
-        protected set
+    var columns: Array<UserColumn> = emptyArray()
+        protected set(arr)
+        {
+            field = arr
+            this._displayedColumns = null
+        }
 
     /** Only displayed columns  */
     protected var _displayedColumns: Array<UserColumn>? = null
@@ -325,20 +329,6 @@ abstract class HOTableModel protected constructor(
             table.model = this
         }
 
-        // Copy user columns' identifiers to table's columns
-        val displayedColumns = getDisplayedColumns()
-        var i = 0
-        for (userColumn in displayedColumns) {
-            val tableColumn = getTableColumn(table, i++)
-            tableColumn.identifier = userColumn.getId()
-            if (userColumn.isHidden) {
-                tableColumn.preferredWidth = 0
-                tableColumn.minWidth = 0
-                tableColumn.maxWidth = 0
-            }
-        }
-        getUserColumnSettings(table)
-
         val rowSorter = TableRowSorter(this)
         rowSorter.addRowSorterListener { e: RowSorterEvent ->
             // Restore the previous selection when table rows were sorted
@@ -360,6 +350,8 @@ abstract class HOTableModel protected constructor(
         getRowOrderSettings(rowSorter)
         table.rowSorter = rowSorter
         table.setDefaultRenderer(Any::class.java, HODefaultTableCellRenderer())
+
+        writeUserColumnSettingsToTable(table)
     }
 
     private fun getTableColumn(table: JTable, i: Int): TableColumn {
@@ -385,6 +377,37 @@ abstract class HOTableModel protected constructor(
                 // if more than one table changes setting the first one is the winner
             }
         }
+    }
+
+    /**
+     * Write user column settings (sorting, position and width) to the table
+     * @param table JTable
+     */
+    fun writeUserColumnSettingsToTable(table : JTable) {
+        val displayedColumns = getDisplayedColumns()
+        var i = 0
+        for (userColumn in displayedColumns) {
+            val tableColumn = getTableColumn(table, i++)
+            tableColumn.identifier = userColumn.getId()
+            if (userColumn.isHidden) {
+                tableColumn.preferredWidth = 0
+                tableColumn.minWidth = 0
+                tableColumn.maxWidth = 0
+            }
+        }
+        getUserColumnSettings(table)
+        val rowSorter = table.getRowSorter() as RowSorter<HOTableModel>
+        getRowOrderSettings(rowSorter)
+    }
+
+    /**
+     * Read user column settings (sorting, position and width) from the table
+     * @param table JTable
+     */
+    fun readUserColumnSettingsFromTable(table : JTable) {
+        val rowSorter = table.getRowSorter() as RowSorter<HOTableModel>
+        setRowOrderSettings(rowSorter)
+        setUserColumnSettings(table)
     }
 
     /**

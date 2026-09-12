@@ -23,7 +23,7 @@ public class YouthPlayerDetailsTableModel extends HOTableModel {
 
     public YouthPlayerDetailsTableModel(UserColumnController.ColumnModelId id) {
         super(id,"YouthPlayerDetails");
-        columns =  initColumns();
+        setColumns(initColumns());
     }
 
     private YouthPlayerDetailsColumn[] initColumns() {
@@ -128,11 +128,11 @@ public class YouthPlayerDetailsTableModel extends HOTableModel {
     protected void initData() {
         if (youthPlayer != null) {
             var trainings = this.youthPlayer.getTrainingDevelopment().descendingMap();
-            m_clData = new Object[trainings.size()][columns.length];
+            m_clData = new Object[trainings.size()][getColumns().length];
             int rownum = 0;
             for (var training : trainings.values()) {
                 int columnnum = 0;
-                for (var col : columns) {
+                for (var col : getColumns()) {
                     m_clData[rownum][columnnum] = ((YouthPlayerDetailsColumn) col).getTableEntry(training);
                     columnnum++;
                 }
