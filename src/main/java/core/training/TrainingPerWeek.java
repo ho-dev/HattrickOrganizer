@@ -7,7 +7,6 @@ import core.model.HOVerwaltung;
 import core.model.enums.DBDataSource;
 import core.model.match.MatchKurzInfo;
 import core.util.HODateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 /**
@@ -23,9 +22,8 @@ public class TrainingPerWeek extends AbstractTable.Storable {
     private int o_TrainingAssistantsLevel;
     private HODateTime o_TrainingDate;
     private List<MatchKurzInfo> o_Matches;
-    private List<MatchKurzInfo> o_NTmatches;
+    private List<MatchKurzInfo> o_NTMatches;
     private DBDataSource o_Source;
-
 
     /**
      *
@@ -59,32 +57,26 @@ public class TrainingPerWeek extends AbstractTable.Storable {
      */
     public TrainingPerWeek(){}
 
-    public void loadMatches(){
-        var _firstMatchDate = o_TrainingDate.minus(7, ChronoUnit.DAYS);
-        var _lastMatchDate = o_TrainingDate.plus(23, ChronoUnit.HOURS);
+    public void loadMatches() {
+        var _firstMatchDate = o_TrainingDate.plusDaysAtSameLocalTime(-7);
+        var _lastMatchDate = o_TrainingDate;
         var teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
         o_Matches = DBManager.instance().loadOfficialMatchesBetween(teamId, _firstMatchDate, _lastMatchDate);
-        o_NTmatches = DBManager.instance().loadNTMatchesBetween(teamId,_firstMatchDate, _lastMatchDate);
+        o_NTMatches = DBManager.instance().loadNTMatchesBetween(teamId, _firstMatchDate, _lastMatchDate);
     }
 
     public List<MatchKurzInfo> getMatches() {
-        if ( o_Matches == null){
-            var _firstMatchDate = o_TrainingDate.minus(7, ChronoUnit.DAYS);
-            var _lastMatchDate = o_TrainingDate.plus(23, ChronoUnit.HOURS);
-            var teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-            o_Matches = DBManager.instance().loadOfficialMatchesBetween(teamId, _firstMatchDate, _lastMatchDate);
+        if (o_Matches == null) {
+            loadMatches();
         }
         return o_Matches;
     }
 
-    public List<MatchKurzInfo> getNTmatches() {
-        if ( o_NTmatches==null){
-            var _firstMatchDate = o_TrainingDate.minus(7, ChronoUnit.DAYS);
-            var _lastMatchDate = o_TrainingDate.plus(23, ChronoUnit.HOURS);
-            var teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-            o_NTmatches = DBManager.instance().loadNTMatchesBetween(teamId,_firstMatchDate, _lastMatchDate);
+    public List<MatchKurzInfo> getNTMatches() {
+        if (o_NTMatches == null) {
+            loadMatches();
         }
-        return o_NTmatches;
+        return o_NTMatches;
     }
 
     public HODateTime getTrainingDate() {

@@ -1809,7 +1809,7 @@ public class Player extends AbstractTable.Storable {
                 var id = this.getNationalTeamId();
                 if (id != null && id != 0 && id != myID) {
                     // TODO check if national matches are stored in database
-                    var nationalMatches = train.getNTmatches();
+                    var nationalMatches = train.getNTMatches();
                     for (var match : nationalMatches) {
                         MatchLineupTeam mlt = DBManager.instance().loadMatchLineupTeam(match.getMatchType().getId(), match.getMatchID(), this.getNationalTeamId());
                         var minutes = mlt.getTrainingMinutesPlayedInSectors(playerID, null, false);
@@ -2051,12 +2051,12 @@ public class Player extends AbstractTable.Storable {
      * Calculates skill status of the player
      *
      * @param previousID    Id of the previous download. Previous player status is loaded by this id.
-     * @param trainingWeeks List of training week information
+     * @param inTrainingWeeks List of training week information
      */
-    public void calcSubSkills(int previousID, List<TrainingPerWeek> trainingWeeks) {
-
+    public void calcSubSkills(int previousID, List<TrainingPerWeek> inTrainingWeeks) {
+        List<TrainingPerWeek> trainingWeeks = new ArrayList<>(inTrainingWeeks);
         var playerBefore = DBManager.instance().getSpieler(previousID).stream()
-                .filter(i -> i.getPlayerId() == this.getPlayerId()).findFirst().orElse(null);
+                .filter(player -> player.getPlayerId() == this.getPlayerId()).findFirst().orElse(null);
         if (playerBefore == null) {
             playerBefore = this.copyPlayer();
         }
@@ -2065,64 +2065,86 @@ public class Player extends AbstractTable.Storable {
         boolean experienceSubDone = this.getExperience() > playerBefore.getExperience(); // Do not calculate sub on experience skill up
         var experienceSub = experienceSubDone ? 0 : playerBefore.getSubExperience(); // set sub to 0 on skill up
         for (var skill : trainingSkills) {
-            var sub = playerBefore.getSub4Skill(skill);
-            var valueBeforeTraining = playerBefore.getValue4Skill(skill);
-            var valueAfterTraining = this.getValue4Skill(skill);
+            experienceSubDone = calcSubSkill(skill, playerBefore, trainingWeeks, experienceSub, experienceSubDone);
+            experienceSub = getSubExperience();
+        }
+        adjustFormSub();
+    }
 
-            if (!trainingWeeks.isEmpty()) {
-                for (var training : trainingWeeks) {
+    private boolean calcSubSkill(PlayerSkill skill, Player playerBefore, List<TrainingPerWeek> trainingWeeks, double experienceSub, boolean experienceSubDone) {
+        var sub = playerBefore.getSub4Skill(skill);
+        var valueBeforeTraining = playerBefore.getValue4Skill(skill);
+        var valueAfterTraining = this.getValue4Skill(skill);
 
-                    var trainingPerPlayer = calculateWeeklyTraining(training);
-                    if (trainingPerPlayer != null) {
-                        if (!this.hasTrainingBlock()) {// player training is not blocked (blocking is no longer possible)
-                            sub += trainingPerPlayer.calcSubskillIncrement(skill, valueBeforeTraining + sub, training.getTrainingDate());
-                            if (valueAfterTraining > valueBeforeTraining) {
-                                if (sub > 1) {
-                                    sub -= 1.;
-                                } else {
-                                    sub = 0.f;
-                                }
-                            } else if (valueAfterTraining < valueBeforeTraining) {
-                                if (sub < 0) {
-                                    sub += 1.f;
-                                } else {
-                                    sub = .99f;
-                                }
+        if (trainingWeeks.isEmpty() && valueBeforeTraining < valueAfterTraining) {
+            // Update may happen after previous hrf download, since trainings are lasting for some minutes.
+            // No training happened between previous download and current one.
+            // Find player status before last training
+            var nextTrainingDate = DBManager.instance().getXtraDaten(playerBefore.getHrfId()).getNextTrainingDate();
+            var lastTrainingDate = nextTrainingDate.plusDaysAtSameLocalTime(-7);
+            var hrfIdBeforeLastTraining = DBManager.instance().getHRFID4Date(lastTrainingDate.toDbTimestamp());
+            var player = DBManager.instance().getSpieler(hrfIdBeforeLastTraining).stream().filter(p -> p.getPlayerId() == this.getPlayerId()).findFirst().orElse(null);
+            if (player != null && !player.getHrfDate().isAfter(lastTrainingDate)) {
+                var trainings = TrainingManager.instance().getHistoricalTraining(lastTrainingDate);
+                if (!trainings.isEmpty()) {
+                    return calcSubSkill(skill, player, trainings, experienceSub, experienceSubDone);
+                }
+            }
+        }
+
+        if (!trainingWeeks.isEmpty()) {
+            for (var training : trainingWeeks) {
+
+                var trainingPerPlayer = calculateWeeklyTraining(training);
+                if (trainingPerPlayer != null) {
+                    if (!this.hasTrainingBlock()) {// player training is not blocked (blocking is no longer possible)
+                        sub += trainingPerPlayer.calcSubskillIncrement(skill, valueBeforeTraining + sub, training.getTrainingDate());
+                        if (valueAfterTraining > valueBeforeTraining) {
+                            if (sub > 1) {
+                                sub -= 1.;
                             } else {
-                                if (sub >= 1f) {
-                                    sub = 0.99f;
-                                } else if (sub < 0f) {
-                                    sub = 0f;
-                                }
+                                sub = 0.f;
                             }
-                            valueBeforeTraining = valueAfterTraining;
+                        } else if (valueAfterTraining < valueBeforeTraining) {
+                            if (sub < 0) {
+                                sub += 1.f;
+                            } else {
+                                sub = .99f;
+                            }
+                        } else {
+                            if (sub >= 1f) {
+                                sub = 0.99f;
+                            } else if (sub < 0f) {
+                                sub = 0f;
+                            }
                         }
+                        valueBeforeTraining = valueAfterTraining;
+                    }
 
-                        if (!experienceSubDone) {
-                            var inc = trainingPerPlayer.getExperienceSub();
-                            experienceSub += inc;
-                            if (experienceSub > 0.99) experienceSub = 0.99;
-                            var tp = trainingPerPlayer.getTrainingPair();
-                            if (tp == null) {
-                                HOLogger.instance().warning(getClass(), "no training info found");
-                            }
+                    if (!experienceSubDone) {
+                        var inc = trainingPerPlayer.getExperienceSub();
+                        experienceSub += inc;
+                        if (experienceSub > 0.99) experienceSub = 0.99;
+                        experienceSubDone = true;
+                        var tp = trainingPerPlayer.getTrainingPair();
+                        if (tp == null) {
+                            HOLogger.instance().warning(getClass(), "no training info found for " + this.getFullName());
                         }
                     }
                 }
-                experienceSubDone = true;
             }
-
-            if (valueAfterTraining < valueBeforeTraining) {
-                sub = .99f;
-            } else if (valueAfterTraining > valueBeforeTraining) {
-                sub = 0;
-                HOLogger.instance().error(getClass(), "skill up without training"); // missing training in database
-            }
-
-            this.setSubskill4PlayerSkill(skill, sub);
-            this.setSubExperience(experienceSub);
         }
-        adjustFormSub();
+
+        if (valueAfterTraining < valueBeforeTraining) {
+            sub = .99f;
+        } else if (valueAfterTraining > valueBeforeTraining) {
+            sub = 0;
+            HOLogger.instance().error(getClass(), "skill up without training"); // missing training in database
+        }
+
+        this.setSubskill4PlayerSkill(skill, sub);
+        this.setSubExperience(experienceSub);
+        return experienceSubDone;
     }
 
     /**

@@ -11,7 +11,6 @@ import core.model.enums.MatchType;
 import core.net.OnlineWorker;
 import core.util.HODateTime;
 import core.util.HOLogger;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -88,18 +87,6 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
         this.iMatchContextId = iMatchContextId;
     }
 
-    /**
-     * TournamentTypeID
-     */
-    private int iTournamentTypeID;
-
-    public int getTournamentTypeID() {
-        return iTournamentTypeID;
-    }
-
-    public void setTournamentTypeID(int iTournamentTypeID) {
-        this.iTournamentTypeID = iTournamentTypeID;
-    }
 
     /**
      * Spectators in category Terraces, is 0 if not our home match
@@ -1564,6 +1551,7 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
         }
         return isWalkoverMatchWin;
     }
+
     public boolean isTeamManMarking(int teamId){
         return this.getHighlights().stream().anyMatch(e-> e.getTeamID()==teamId && e.isManMarking());
     }
