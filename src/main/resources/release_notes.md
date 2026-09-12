@@ -90,6 +90,10 @@
 * Fix CVEs with HO dependencies
 * Update darklaf to most recent version.
 
+### Developer Tools
+
+* `Debug` / `SQL Editor`: Fixed that SQL statements were always executed in upper case. (#2491)
+
 ## Translations
 
 * Added the missing translation for the short text in the table for `Goals for the Team`.
