@@ -3,6 +3,7 @@ package module.lineup;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import core.db.DBManager;
 import core.model.HOVerwaltung;
@@ -15,6 +16,7 @@ import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.util.HOLogger;
+import core.util.JsonNullAsZeroAdapter;
 import core.util.StringUtils;
 import module.lineup.assistant.LineupAssistant;
 import module.lineup.substitution.model.GoalDiffCriteria;
@@ -125,8 +127,9 @@ public class Lineup{
 
 		/** Style of play */
 		@SerializedName("coachModifier")
+        @JsonAdapter(JsonNullAsZeroAdapter.class) // Apply only to this field, converts unknown style to neutral
 		@Expose
-		private int m_iStyleOfPlay;
+		private Integer m_iStyleOfPlay;
 
 		//NOTE: newLineup is required by HT - do not delete even if it seems unused !
 		@SerializedName("newLineup")
@@ -307,7 +310,7 @@ public class Lineup{
 
 	/**
 	 * Setter for property m_iAttitude.
-	 * 
+	 *
 	 * @param m_iAttitude
 	 *            New value of property m_iAttitude.
 	 */
@@ -318,13 +321,13 @@ public class Lineup{
 
 	/**
 	 * Getter for property m_iAttitude.
-	 * 
+	 *
 	 * @return Value of property m_iAttitude.
 	 */
 	public final int getAttitude() {
 		return settings.m_iAttitude;
 	}
-	
+
 	public String getAttitudeName(int attitude) {
 		return switch (attitude) {
 			case IMatchDetails.EINSTELLUNG_NORMAL -> TranslationFacility.tr("ls.team.teamattitude_short.normal");
@@ -334,12 +337,12 @@ public class Lineup{
 		};
 	}
 
-	public void setStyleOfPlay(int style) {
+	public void setStyleOfPlay(Integer style) {
 		ratingRevision++;
 		settings.m_iStyleOfPlay = style;
 	}
-	
-	public int getCoachModifier() {
+
+	public Integer getCoachModifier() {
 		return settings.m_iStyleOfPlay;
 	}
 
@@ -510,7 +513,7 @@ public class Lineup{
 
 	/**
 	 * Setter for property m_iKapitaen.
-	 * 
+	 *
 	 * @param m_iKapitaen
 	 *            New value of property m_iKapitaen.
 	 */
@@ -520,7 +523,7 @@ public class Lineup{
 
 	/**
 	 * Getter for property m_iKapitaen.
-	 * 
+	 *
 	 * @return Value of property m_iKapitaen.
 	 */
 	public final int getCaptain() {
@@ -529,7 +532,7 @@ public class Lineup{
 
 	/**
 	 * Setter for property m_iKicker.
-	 * 
+	 *
 	 * @param m_iKicker
 	 *            New value of property m_iKicker.
 	 */
@@ -539,7 +542,7 @@ public class Lineup{
 
 	/**
 	 * Getter for property m_iKicker.
-	 * 
+	 *
 	 * @return Value of property m_iKicker.
 	 */
 	public final int getKicker() {
@@ -593,7 +596,7 @@ public class Lineup{
 
 	/**
 	 * Setter for property m_sHeimspiel.
-	 * 
+	 *
 	 * @param location
 	 *            New value of property m_sHeimspiel.
 	 */
@@ -604,7 +607,7 @@ public class Lineup{
 
 	/**
 	 * Get the location constant for the match (home/away/awayderby)
-	 * 
+	 *
 	 * @return the location constant for the match
 	 */
 	public final short getLocation() {
@@ -1027,7 +1030,7 @@ public class Lineup{
 
 	/**
 	 * Setter for property m_iTacticType.
-	 * 
+	 *
 	 * @param m_iTacticType
 	 *            New value of property m_iTacticType.
 	 */
@@ -1038,7 +1041,7 @@ public class Lineup{
 
 	/**
 	 * Getter for property m_iTacticType.
-	 * 
+	 *
 	 * @return Value of property m_iTacticType.
 	 */
 	public final int getTacticType() {

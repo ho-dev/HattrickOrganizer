@@ -47,10 +47,6 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
 
     private @Nullable MatchOrdersCBItem m_clSelectedMatch;
 
-    final String offensive_sop = TranslationFacility.tr("ls.team.styleofplay.offensive");
-    final String defensive_sop = TranslationFacility.tr("ls.team.styleofplay.defensive");
-    final String neutral_sop = TranslationFacility.tr("ls.team.styleofplay.neutral");
-
     public MatchOrdersCBItem getSelectedMatch() {
         return m_clSelectedMatch;
     }
@@ -447,15 +443,8 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         List<Integer> legalValues = getValidStyleOfPlayValues();
         m_jcbStyleOfPlay.removeAllItems();
         for (int value : legalValues) {
-            CBItem cbItem;
-            if (value == 0) {
-                cbItem = new CBItem(neutral_sop, value);
-            } else if (value > 0) {
-                cbItem = new CBItem((value * 10) + "% " + offensive_sop, value);
-            } else {
-                cbItem = new CBItem((Math.abs(value) * 10) + "% " + defensive_sop, value);
-            }
-            m_jcbStyleOfPlay.addItem(cbItem);
+            var text = MatchLineupTeam.getStyleOfPlayName(StyleOfPlay.fromInt(value));
+            m_jcbStyleOfPlay.addItem(new CBItem(text, value));
         }
 
         // Set trainer default value
@@ -500,8 +489,12 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         return IntStream.rangeClosed(min, max).boxed().collect(Collectors.toList());
     }
 
-    public void setStyleOfPlay(StyleOfPlay style){
-        Helper.setComboBoxFromID(m_jcbStyleOfPlay, StyleOfPlay.toInt(style));
+    public void setStyleOfPlay(StyleOfPlay style) {
+        var id = StyleOfPlay.toInt(style);
+        if (id == null) {
+            id = StyleOfPlay.NEUTRAL.getValue();
+        }
+        Helper.setComboBoxFromID(m_jcbStyleOfPlay, id);
     }
 
     private StyleOfPlay getDefaultTrainerStyleOfPlay() {
@@ -509,13 +502,13 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         try {
             trainer = HOVerwaltung.instance().getModel().getTrainer().getTrainerType();
         } catch (Exception e) {
-            return StyleOfPlay.Neutral();  // Happens for instance with empty db
+            return StyleOfPlay.NEUTRAL;  // Happens for instance with empty db
         }
 
         return switch (trainer) {
-            case Defensive -> StyleOfPlay.Defensive(); // Defensive
-            case Offensive -> StyleOfPlay.Offensive(); // Offensive
-            default -> StyleOfPlay.Neutral();  // Neutral
+            case Defensive -> StyleOfPlay.DEFENSIVE; // Defensive
+            case Offensive -> StyleOfPlay.OFFENSIVE; // Offensive
+            default -> StyleOfPlay.NEUTRAL;  // Neutral
         };
     }
 

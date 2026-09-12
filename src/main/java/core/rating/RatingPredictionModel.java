@@ -1228,28 +1228,29 @@ public class RatingPredictionModel {
     /**
      * Calculate the factor of the coach modifier
      *
-     * @param s             Rating sector
-     * @param coachModifier Integer value representing the style of play the team will use in the match. The value ranges from -10 (100% defensive) to 10 (100% offensive).
+     * @param s Rating sector
+     * @param styleOfPlay Integer value representing the style of play the team will use in the match. The value ranges from -10 (100% defensive) to 10 (100% offensive).
      * @return Double
      */
-    protected double calcTrainer(@NotNull RatingSector s, int coachModifier) {
+    protected double calcTrainer(@NotNull RatingSector s, Integer styleOfPlay) {
+        var factor = styleOfPlay != null ? styleOfPlay : 0;
         switch (s) {
             case DEFENCE_LEFT, DEFENCE_RIGHT, DEFENCE_CENTRAL -> {
-                if (coachModifier <= 0) {
+                if (factor <= 0) {
                     // Balanced or Defensive
-                    return 1.02 - coachModifier * (1.15 - 1.02) / 10.;
+                    return 1.02 - factor * (1.15 - 1.02) / 10.;
                 } else {
                     // Offensive
-                    return 1.02 - coachModifier * (1.02 - 0.9) / 10.;
+                    return 1.02 - factor * (1.02 - 0.9) / 10.;
                 }
             }
             case ATTACK_CENTRAL, ATTACK_LEFT, ATTACK_RIGHT -> {
-                if (coachModifier <= 0) {
+                if (factor <= 0) {
                     // Balanced or Defensive
-                    return 1.02 - coachModifier * (0.9 - 1.02) / 10.;
+                    return 1.02 - factor * (0.9 - 1.02) / 10.;
                 } else {
                     // Offensive
-                    return 1.02 - coachModifier * (1.02 - 1.1) / 10.;
+                    return 1.02 - factor * (1.02 - 1.1) / 10.;
                 }
             }
         }

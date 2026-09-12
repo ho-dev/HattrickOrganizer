@@ -90,7 +90,7 @@ public class MatchLineupTeam extends AbstractTable.Storable {
 
 	/**
 	 * Setter for property lineup.
-	 * 
+	 *
 	 * @param lineup new Lineup
 	 */
 	public final void setLineup(Lineup lineup) {
@@ -100,7 +100,7 @@ public class MatchLineupTeam extends AbstractTable.Storable {
 
 	/**
 	 * Getter for property m_vAufstellung.
-	 * 
+	 *
 	 * @return Value of property m_vAufstellung.
 	 */
 	public final @NotNull Lineup getLineup() {
@@ -115,7 +115,7 @@ public class MatchLineupTeam extends AbstractTable.Storable {
 
 	/**
 	 * Setter for property m_vSubstitutions.
-	 * 
+	 *
 	 * @param substitutions
 	 *            New value of property m_vSubstitutions.
 	 */
@@ -145,7 +145,7 @@ public class MatchLineupTeam extends AbstractTable.Storable {
 
 	/**
 	 * Getter for property m_vSubstitutions.
-	 * 
+	 *
 	 * @return Value of property m_vSubstitutions.
 	 */
 	public final List<Substitution> getSubstitutions() {
@@ -154,7 +154,7 @@ public class MatchLineupTeam extends AbstractTable.Storable {
 
 	/**
 	 * Setter for property m_iErfahrung.
-	 * 
+	 *
 	 * @param m_iErfahrung
 	 *            New value of property m_iErfahrung.
 	 */
@@ -164,7 +164,7 @@ public class MatchLineupTeam extends AbstractTable.Storable {
 
 	/**
 	 * Getter for property m_iErfahrung.
-	 * 
+	 *
 	 * @return Value of property m_iErfahrung.
 	 */
 	public final int getExperience() {
@@ -174,10 +174,10 @@ public class MatchLineupTeam extends AbstractTable.Storable {
 	/**
 	 * Returns a player by ID, players in captain and set piece positions are
 	 * ignored.
-	 * 
+	 *
 	 * @param playerId
 	 *            The spielerId of the player
-	 * 
+	 *
 	 * @return The object matching the criteria, or null if none found
 	 */
 	public final MatchLineupPosition getPlayerByID(int playerId, boolean includeRemovedPlayers) {
@@ -199,7 +199,7 @@ public class MatchLineupTeam extends AbstractTable.Storable {
 
 	/**
 	 * Setter for property m_iStyleOfPlay.
-	 * 
+	 *
 	 * @param m_iStyleOfPlay
 	 *            New value of property m_iStyleOfPlay.
 	 */
@@ -224,30 +224,31 @@ public class MatchLineupTeam extends AbstractTable.Storable {
 
 	/**
 	 * Getter for property m_iStyleOfPlay.
-	 * 
+	 *
 	 * @return Value of property m_iStyleOfPlay.
 	 */
 	public final StyleOfPlay getStyleOfPlay() {
 		return StyleOfPlay.fromInt(this.lineup.getCoachModifier());
 	}
-	
+
 	// returns offensive, defensive or neutral depending on styleOfPlay
 	// e.g. -3 is 30% defensive, 10 is 100% offensive
 	public static String getStyleOfPlayName(StyleOfPlay styleOfPlay) {
-		String s;
-		var style = StyleOfPlay.toInt(styleOfPlay);
-		if (style == 0) {
-			return TranslationFacility.tr("ls.team.styleofplay.neutral");
-		} else {
-			s = (style > 0) ? TranslationFacility.tr("ls.team.styleofplay.offensive") :
-				TranslationFacility.tr("ls.team.styleofplay.defensive"); 
-		}
-		return Math.abs(style * 10) + "% " + s;
-	}
-	
+        if (styleOfPlay.isNotAvailable()) {
+            return TranslationFacility.tr("ls.team.styleofplay.na");
+        }
+        if (styleOfPlay.isNeutral()) {
+            return TranslationFacility.tr("ls.team.styleofplay.neutral");
+        } else {
+            var s = (styleOfPlay.isOffensive()) ? TranslationFacility.tr("ls.team.styleofplay.offensive") :
+                TranslationFacility.tr("ls.team.styleofplay.defensive");
+            return Math.abs(styleOfPlay.getValue() * 10) + "% " + s;
+        }
+    }
+
 	/**
 	 * Setter for property m_iTeamID.
-	 * 
+	 *
 	 * @param m_iTeamID
 	 *            New value of property m_iTeamID.
 	 */
@@ -257,7 +258,7 @@ public class MatchLineupTeam extends AbstractTable.Storable {
 
 	/**
 	 * Getter for property m_iTeamID.
-	 * 
+	 *
 	 * @return Value of property m_iTeamID.
 	 */
 	public final int getTeamID() {
@@ -266,7 +267,7 @@ public class MatchLineupTeam extends AbstractTable.Storable {
 
 	/**
 	 * Setter for property m_sTeamName.
-	 * 
+	 *
 	 * @param m_sTeamName
 	 *            New value of property m_sTeamName.
 	 */
@@ -276,7 +277,7 @@ public class MatchLineupTeam extends AbstractTable.Storable {
 
 	/**
 	 * Getter for property m_sTeamName.
-	 * 
+	 *
 	 * @return Value of property m_sTeamName.
 	 */
 	public final String getTeamName() {
