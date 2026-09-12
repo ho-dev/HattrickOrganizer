@@ -36,6 +36,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.Optional;
 
 import static core.gui.theme.HOIconName.GOTOANALYSEBOTTOM;
@@ -53,7 +54,8 @@ import static core.util.Helper.INTEGERFORMAT;
  */
 public final class PlayerDetailsPanel extends ImagePanel implements Refreshable, ItemListener, ActionListener {
 
-    private final int MATCH_HISTORY_LENGTH = 3;
+    private static final long SECONDS_PER_WEEK = 7 * 24 * 60 * 60;
+    private static final int MATCH_HISTORY_LENGTH = 3;
     private static final Icon iconStar = ImageUtilities.getStarIcon(ThemeManager.getColor(HOColorName.PLAYER_DETAILS_STARS_FILL));
 
     private final Color BGcolor = ThemeManager.getColor(HOColorName.PANEL_BG);
@@ -93,6 +95,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
     private final JComboBox m_jcbInformation = new JComboBox(SMILEYS);
     private final PlayerStatusLabelEntry m_jpStatus = new PlayerStatusLabelEntry(BGcolor, true);
     private final DoubleLabelEntries m_jllWage = new DoubleLabelEntries(new ColorLabelEntry("", FGcolor, BGcolor, SwingConstants.LEFT), new ColorLabelEntry("", FGcolor, BGcolor, SwingConstants.RIGHT));
+    private final JLabel totalWageLabel = new JLabel("");
     private final DoubleLabelEntries m_jllTSI = new DoubleLabelEntries(new ColorLabelEntry("", FGcolor, BGcolor, SwingConstants.LEFT), new ColorLabelEntry("", FGcolor, BGcolor, SwingConstants.RIGHT));
     private final JComboBox m_jcbUserBestPosition = new JComboBox(MatchRoleID.POSITIONEN);
     private final JButton m_jbStatistics = new JButton(getSvgIcon(GOTOSTATISTIK));
@@ -135,7 +138,10 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
     public void actionPerformed(java.awt.event.ActionEvent actionevent) {
         if (actionevent.getSource().equals(m_jbStatistics)) {
             HOMainFrame.instance().showTab(IModule.STATISTICS);
-            ((StatistikMainPanel) HOMainFrame.instance().getTabbedPane().getModulePanel(IModule.STATISTICS)).setShowSpieler(m_clPlayer.getPlayerId());
+            var statisticsPanel = ((StatistikMainPanel) HOMainFrame.instance().getTabbedPane().getModulePanel(IModule.STATISTICS));
+            if (statisticsPanel != null) {
+                statisticsPanel.setShowSpieler(m_clPlayer.getPlayerId());
+            }
         } else if (actionevent.getSource().equals(m_jbAnalysisTop)) {
             HOMainFrame.instance().showTab(IModule.PLAYERANALYSIS);
             HOMainFrame.instance().getSpielerAnalyseMainPanel().setSpieler4Top(m_clPlayer.getPlayerId());
@@ -144,8 +150,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
             HOMainFrame.instance().getSpielerAnalyseMainPanel().setSpieler4Bottom(m_clPlayer.getPlayerId());
         } else if (actionevent.getSource().equals(m_jbOffsets)) {
             new PlayerSubskillOffsetDialog(HOMainFrame.instance(), m_clPlayer).setVisible(true);
-        }
-        else if ( actionevent.getSource().equals(jlPlayerAvatar)){
+        } else if (actionevent.getSource().equals(jlPlayerAvatar)) {
             ThemeManager.instance().downloadPlayerAvatar(m_clPlayer.getPlayerId());
             refresh();
         }
@@ -156,12 +161,12 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         if (itemEvent.getStateChange() == java.awt.event.ItemEvent.SELECTED) {
             if (m_clPlayer != null) {
                 if (itemEvent.getSource().equals(m_jcbSquad)) {
-                    m_clPlayer.setTeamInfoSmilie(m_jcbSquad.getSelectedItem().toString());
+                    m_clPlayer.setTeamInfoSmilie(Objects.requireNonNull(m_jcbSquad.getSelectedItem()).toString());
                 } else if (itemEvent.getSource().equals(m_jcbInformation)) {
-                    m_clPlayer.setManuellerSmilie(m_jcbInformation.getSelectedItem().toString());
+                    m_clPlayer.setManuellerSmilie(Objects.requireNonNull(m_jcbInformation.getSelectedItem()).toString());
                 } else if (itemEvent.getSource().equals(m_jcbUserBestPosition)) {
-                    m_clPlayer.setUserPosFlag((byte) ((core.datatype.CBItem) m_jcbUserBestPosition
-                            .getSelectedItem()).getId());
+                    m_clPlayer.setUserPosFlag((byte) ((core.datatype.CBItem) Objects.requireNonNull(m_jcbUserBestPosition
+                        .getSelectedItem())).getId());
                 }
                 HOMainFrame.instance().getSpielerUebersichtPanel().update();
             }
@@ -203,12 +208,12 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         Helper.setComboBoxFromID(m_jcbUserBestPosition, m_clPlayer.getUserPosFlag());
         m_jcbUserBestPosition.addItemListener(this);
         final var salary = m_clPlayer.getWage();
-        final String salarytext = salary.toLocaleString();
-        final String tsitext = Helper.getNumberFormat( 0).format(m_clPlayer.getTsi());
+        final String salaryLocaleString = salary.toLocaleString();
+        final String tsiString = Helper.getNumberFormat(0).format(m_clPlayer.getTsi());
         if (m_clComparisonPlayer == null) {
-            m_jllWage.getLeft().setText(salarytext);
+            m_jllWage.getLeft().setText(salaryLocaleString);
             m_jllWage.getRight().clear();
-            m_jllTSI.getLeft().setText(tsitext);
+            m_jllTSI.getLeft().setText(tsiString);
             m_jllTSI.getRight().clear();
             m_jclFormChange.clear();
 
@@ -223,13 +228,12 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
             m_jclSPchange.clear();
 
             m_jclSCchange.clear();
-
         }
         else {
             final var previousSalary =m_clComparisonPlayer.getWage();
-            m_jllWage.getLeft().setText(salarytext);
+            m_jllWage.getLeft().setText(salaryLocaleString);
             m_jllWage.getRight().setSpecialNumber(salary.minus(previousSalary).toLocale().floatValue(), true);
-            m_jllTSI.getLeft().setText(tsitext);
+            m_jllTSI.getLeft().setText(tsiString);
             m_jllTSI.getRight().setSpecialNumber(m_clPlayer.getTsi() - m_clComparisonPlayer.getTsi(), false);
             m_jclFormChange.setGraphicalChangeValue(m_clPlayer.getForm()
                     - m_clComparisonPlayer.getForm(), !m_clComparisonPlayer.isGoner(), true);
@@ -277,6 +281,8 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
 
         }
 
+        final var totalSalary = m_clPlayer.getSumOfWage(m_clPlayer.getArrivalDate(), HODateTime.now());
+        totalWageLabel.setText(totalSalary.toLocaleString());
         m_jlCareerGoals.setText(String.valueOf(m_clPlayer.getTotalGoals()));
         m_jlTeamGoals.setText(String.valueOf(m_clPlayer.getCurrentTeamGoals()));
         m_jlHattricks.setText(String.valueOf(m_clPlayer.getHatTricks()));
@@ -301,9 +307,9 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         }
         m_jlSpecialty.setIcon(ImageUtilities.getSmallPlayerSpecialtyIcon(HOIconName.SPECIALTIES[iSpecialty]));
 
-        String playerDescription = "<html>" + Helper.getTranslation("ls.player_details.desc1", PlayerAgreeability.toString(m_clPlayer.getGentleness()), PlayerAggressiveness.toString(m_clPlayer.getAggressivity()), PlayerHonesty.toString(m_clPlayer.getHonesty()));
+        String playerDescription = "<html>" + TranslationFacility.tr("ls.player_details.desc1", PlayerAgreeability.toString(m_clPlayer.getGentleness()), PlayerAggressiveness.toString(m_clPlayer.getAggressivity()), PlayerHonesty.toString(m_clPlayer.getHonesty()));
         playerDescription += "<br>";
-        playerDescription += Helper.getTranslation("ls.player_details.desc2", PlayerAbility.getNameForSkill(m_clPlayer.getExperience(), true, false, 0), PlayerAbility.getNameForSkill(m_clPlayer.getLeadership(), true, false, 0), PlayerAbility.getNameForSkill(m_clPlayer.getLoyalty(), true, false, 0));
+        playerDescription += TranslationFacility.tr("ls.player_details.desc2", PlayerAbility.getNameForSkill(m_clPlayer.getExperience(), true, false, 0), PlayerAbility.getNameForSkill(m_clPlayer.getLeadership(), true, false, 0), PlayerAbility.getNameForSkill(m_clPlayer.getLoyalty(), true, false, 0));
         playerDescription += "</html>";
         m_jlPlayerDescription.setText(playerDescription);
 
@@ -312,8 +318,9 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
 
         var arrival = m_clPlayer.getArrivalDate();
         if ( arrival != null ) {
-            String arrivalDate = arrival.toLocaleDateTime();
-            m_jlInTeamSince.setText(Helper.getTranslation("ImTeamSeit") + " " + arrivalDate);
+            var weeks = HODateTime.between(arrival, HODateTime.now()).getSeconds() / SECONDS_PER_WEEK;
+            String arrivalDate = arrival.toLocaleDateTime() + " (" + weeks + " " + TranslationFacility.tr("Wochen") + ")";
+            m_jlInTeamSince.setText(TranslationFacility.tr("ImTeamSeit") + " " + arrivalDate);
         }
         else {
             m_jlInTeamSince.setText("");
@@ -445,7 +452,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         JLabel label = createLabel("Status");
         constraintsPlayerGeneralPanel.gridy = 1;
         constraintsPlayerGeneralPanel.weighty = 0.0;
-        constraintsPlayerGeneralPanel.insets = new Insets(0,10,5,0);
+        constraintsPlayerGeneralPanel.insets = new Insets(0, 10, 5, 0);
         layoutPlayerGeneralPanel.setConstraints(label, constraintsPlayerGeneralPanel);
         jpPlayerGeneral.add(label);
 
@@ -458,6 +465,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         constraintsPlayerGeneralPanel.gridx = 1;
         constraintsPlayerGeneralPanel.gridy = 2;
         layoutPlayerGeneralPanel.setConstraints(label, constraintsPlayerGeneralPanel);
+        constraintsPlayerGeneralPanel.insets = new Insets(0, 3, 5, 0); // It looks like DoubleLabelEntries is adding its own left inset
         jpPlayerGeneral.add(label);
 
         constraintsPlayerGeneralPanel.gridx = 2;
@@ -476,40 +484,52 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         layoutPlayerGeneralPanel.setConstraints(m_jllWage.getComponent(false), constraintsPlayerGeneralPanel);
         jpPlayerGeneral.add(m_jllWage.getComponent(false));
 
-        label = createLabel("ls.player.speciality");
+        label = createLabel("ls.player.sumofwage");
         constraintsPlayerGeneralPanel.gridx = 1;
         constraintsPlayerGeneralPanel.gridy = 4;
+        constraintsPlayerGeneralPanel.insets = new Insets(0, 10, 5, 0);
         layoutPlayerGeneralPanel.setConstraints(label, constraintsPlayerGeneralPanel);
         jpPlayerGeneral.add(label);
 
         constraintsPlayerGeneralPanel.gridx = 2;
         constraintsPlayerGeneralPanel.gridy = 4;
+        layoutPlayerGeneralPanel.setConstraints(totalWageLabel, constraintsPlayerGeneralPanel);
+        jpPlayerGeneral.add(totalWageLabel);
+
+        label = createLabel("ls.player.speciality");
+        constraintsPlayerGeneralPanel.gridx = 1;
+        constraintsPlayerGeneralPanel.gridy = 5;
+        layoutPlayerGeneralPanel.setConstraints(label, constraintsPlayerGeneralPanel);
+        jpPlayerGeneral.add(label);
+
+        constraintsPlayerGeneralPanel.gridx = 2;
+        constraintsPlayerGeneralPanel.gridy = 5;
         layoutPlayerGeneralPanel.setConstraints(m_jlSpecialty, constraintsPlayerGeneralPanel);
         jpPlayerGeneral.add(m_jlSpecialty);
 
         label = createLabel("ls.player.form");
         constraintsPlayerGeneralPanel.gridx = 1;
-        constraintsPlayerGeneralPanel.gridy = 5;
+        constraintsPlayerGeneralPanel.gridy = 6;
         layoutPlayerGeneralPanel.setConstraints(label, constraintsPlayerGeneralPanel);
         jpPlayerGeneral.add(label);
 
         jpbForm = createBar(8);
         constraintsPlayerGeneralPanel.gridx = 2;
-        constraintsPlayerGeneralPanel.gridy = 5;
+        constraintsPlayerGeneralPanel.gridy = 6;
         layoutPlayerGeneralPanel.setConstraints(jpbForm, constraintsPlayerGeneralPanel);
         jpPlayerGeneral.add(jpbForm);
 
-        constraintsPlayerGeneralPanel.insets = new Insets(0,10,0,0);
+        constraintsPlayerGeneralPanel.insets = new Insets(0, 10, 0, 0);
 
         label = createLabel("ls.player.skill.stamina");
         constraintsPlayerGeneralPanel.gridx = 1;
-        constraintsPlayerGeneralPanel.gridy = 6;
+        constraintsPlayerGeneralPanel.gridy = 7;
         layoutPlayerGeneralPanel.setConstraints(label, constraintsPlayerGeneralPanel);
         jpPlayerGeneral.add(label);
 
         jpbStamina = createBar(9);
         constraintsPlayerGeneralPanel.gridx = 2;
-        constraintsPlayerGeneralPanel.gridy = 6;
+        constraintsPlayerGeneralPanel.gridy = 7;
         layoutPlayerGeneralPanel.setConstraints(jpbStamina, constraintsPlayerGeneralPanel);
         jpPlayerGeneral.add(jpbStamina);
 
@@ -525,7 +545,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         constraintsPlayerSkillPanel.fill = GridBagConstraints.BOTH;
         jpPlayerSkill.setLayout(layoutPlayerSkilllPanel);
 
-        constraintsPlayerSkillPanel.insets = new Insets(0,10,5,0);
+        constraintsPlayerSkillPanel.insets = new Insets(0, 10, 5, 0);
 
         label = createLabel("ls.player.skill.keeper");
         constraintsPlayerSkillPanel.gridx = 0;
@@ -621,7 +641,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         jpPlayerSkill.add(m_jclSCchange);
 
 
-        constraintsPlayerSkillPanel.insets = new Insets(0,10,0,0);
+        constraintsPlayerSkillPanel.insets = new Insets(0, 10, 0, 0);
 
         label = createLabel("ls.player.skill.setpieces");
         constraintsPlayerSkillPanel.gridx = 0;
@@ -648,11 +668,11 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         final GridBagLayout layoutPlayerGoalsStatsPanel = new GridBagLayout();
         final GridBagConstraints constraintsPlayerGoalsStatsPanel = new GridBagConstraints();
         constraintsPlayerGoalsStatsPanel.fill = GridBagConstraints.BOTH;
-        constraintsPlayerGoalsStatsPanel.insets = new Insets(0,10,5,0);
+        constraintsPlayerGoalsStatsPanel.insets = new Insets(0, 10, 5, 0);
 
         jpPlayerGoalsStats.setLayout(layoutPlayerGoalsStatsPanel);
 
-        String title = "⚽ " + Helper.getTranslation("ls.module.player_analysis.stats");
+        String title = "⚽ " + TranslationFacility.tr("ls.module.player_analysis.stats");
         TitledBorder titledBorder = BorderFactory.createTitledBorder(title.toUpperCase());
         titledBorder.setTitleFont(new Font(Font.DIALOG, Font.PLAIN, 18));
         titledBorder.setTitleColor(ThemeManager.getColor(HOColorName.LINEUP_HIGHLIGHT_FG));
@@ -736,13 +756,13 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         jpPlayerGoalsStats.add(m_jlAssistsCurrentTeam);
 
 
-        label = new JLabel(Helper.getTranslation("ls.module.player_analysis.goals_stats_disclaimer"));
+        label = new JLabel(TranslationFacility.tr("ls.module.player_analysis.goals_stats_disclaimer"));
         Font newLabelFont = new Font(label.getFont().getName(), Font.ITALIC, label.getFont().getSize());
         label.setFont(newLabelFont);
 
         constraintsPlayerGoalsStatsPanel.gridx = 0;
         constraintsPlayerGoalsStatsPanel.gridy = 7;
-        constraintsPlayerGoalsStatsPanel.insets = new Insets(10,10,7,0);
+        constraintsPlayerGoalsStatsPanel.insets = new Insets(10, 10, 7, 0);
         layoutPlayerGoalsStatsPanel.setConstraints(label, constraintsPlayerGoalsStatsPanel);
         jpPlayerGoalsStats.add(label);
 
@@ -754,13 +774,13 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         final GridBagLayout layoutPlayerOtherInfos = new GridBagLayout();
         final GridBagConstraints constraintsPlayerOtherInfos = new GridBagConstraints();
         constraintsPlayerOtherInfos.fill = GridBagConstraints.HORIZONTAL;
-        constraintsPlayerOtherInfos.insets = new Insets(0,10,5,0);
+        constraintsPlayerOtherInfos.insets = new Insets(0, 10, 5, 0);
         jpPlayerOtherInfos.setLayout(layoutPlayerOtherInfos);
 
         label = createLabel("Gruppe");
         constraintsPlayerOtherInfos.gridx = 0;
         constraintsPlayerOtherInfos.gridy = 0;
-        constraintsPlayerOtherInfos.insets = new Insets(0,10,5,0);
+        constraintsPlayerOtherInfos.insets = new Insets(0, 10, 5, 0);
         layoutPlayerOtherInfos.setConstraints(label, constraintsPlayerOtherInfos);
         jpPlayerOtherInfos.add(label);
 
@@ -896,6 +916,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         m_jcbSquad.setSelectedItem("");
         m_jcbInformation.setSelectedItem("");
         m_jllWage.clear();
+        totalWageLabel.setText("");
         m_jllTSI.clear();
         m_jclFormChange.clear();
         m_jclStaminaChange.clear();
@@ -986,7 +1007,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
     }
 
     private JLabel createLabel(String i18nText){
-        JLabel _label = new JLabel(Helper.getTranslation(i18nText), SwingConstants.RIGHT);
+        JLabel _label = new JLabel(TranslationFacility.tr(i18nText), SwingConstants.RIGHT);
         _label.setFont(Helper.getLabelFontAsBold(_label));
         return _label;
     }
@@ -1098,7 +1119,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
                     }
                 });
 
-                label.setToolTipText(Helper.getTranslation("ls.module.player_analysis.match_label_tooltip"));
+                label.setToolTipText(TranslationFacility.tr("ls.module.player_analysis.match_label_tooltip"));
                 layout.setConstraints(label, constraints);
                 add(label);
                 lMatchLabel.add(label);

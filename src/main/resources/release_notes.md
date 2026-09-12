@@ -35,6 +35,7 @@
 
 * Added support of all 13 **Player Categories** (#2418)
 * Fix world details constraints error (#2444)
+* Player details show the total salary and the weeks of team membership (#2449)
 
 ### Lineup
 
