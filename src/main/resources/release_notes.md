@@ -40,6 +40,7 @@
 
 * Fix empty list of upcoming games in Lineup panel after first download.
 * Added support of all 13 **Player Categories** (#2418)
+* Fix scroll behavior of lineup rating panel (#2365)
 
 ### Training
 
@@ -92,11 +93,12 @@
 
 * Added the missing translation for the short text in the table for `Goals for the Team`.
 
-Reports by Contributors - October 19, 2025 - June 19, 2026
+Reports by Contributors - October 19, 2025 - September 11, 2026
 
 * Jösgall 1005
 * Ioannidouefty 459
-* wsbrenk 122
+* Lukasz 418
+* wsbrenk 130
 * Frankieorabona 73
 * Lidegand 72
 * \_KOHb\_ 54
@@ -107,4 +109,5 @@ Reports by Contributors - October 19, 2025 - June 19, 2026
 * Mara 3
 * Joeri Roels 1
 
-Total 1868
+Total 2294
+
