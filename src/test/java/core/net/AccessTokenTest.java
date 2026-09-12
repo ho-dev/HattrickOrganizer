@@ -17,17 +17,17 @@ class AccessTokenTest {
     @Test
     void constructor() {
         var accessToken = new AccessToken(ENCRYPTED_TOKEN, ENCRYPTED_TOKEN_SECRET);
-        assertThat(accessToken.cryptedToken()).isEqualTo(ENCRYPTED_TOKEN);
-        assertThat(accessToken.cryptedTokenSecret()).isEqualTo(ENCRYPTED_TOKEN_SECRET);
+        assertThat(accessToken.encryptedToken()).isEqualTo(ENCRYPTED_TOKEN);
+        assertThat(accessToken.encryptedTokenSecret()).isEqualTo(ENCRYPTED_TOKEN_SECRET);
     }
 
     @Test
-    void ofCryptedData() {
-        var accessToken = AccessToken.ofCryptedData(ENCRYPTED_TOKEN, ENCRYPTED_TOKEN_SECRET);
+    void ofEncryptedData() {
+        var accessToken = AccessToken.ofEncryptedData(ENCRYPTED_TOKEN, ENCRYPTED_TOKEN_SECRET);
         assertThat(accessToken.getToken()).isEqualTo(TOKEN);
         assertThat(accessToken.getTokenSecret()).isEqualTo(TOKEN_SECRET);
-        assertThat(accessToken.cryptedToken()).isEqualTo(ENCRYPTED_TOKEN);
-        assertThat(accessToken.cryptedTokenSecret()).isEqualTo(ENCRYPTED_TOKEN_SECRET);
+        assertThat(accessToken.encryptedToken()).isEqualTo(ENCRYPTED_TOKEN);
+        assertThat(accessToken.encryptedTokenSecret()).isEqualTo(ENCRYPTED_TOKEN_SECRET);
     }
 
     @Test
@@ -35,8 +35,8 @@ class AccessTokenTest {
         var accessToken = AccessToken.ofData(TOKEN, TOKEN_SECRET);
         assertThat(accessToken.getToken()).isEqualTo(TOKEN);
         assertThat(accessToken.getTokenSecret()).isEqualTo(TOKEN_SECRET);
-        assertThat(accessToken.cryptedToken()).isEqualTo(ENCRYPTED_TOKEN);
-        assertThat(accessToken.cryptedTokenSecret()).isEqualTo(ENCRYPTED_TOKEN_SECRET);
+        assertThat(accessToken.encryptedToken()).isEqualTo(ENCRYPTED_TOKEN);
+        assertThat(accessToken.encryptedTokenSecret()).isEqualTo(ENCRYPTED_TOKEN_SECRET);
     }
 
     @Test

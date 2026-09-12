@@ -68,15 +68,15 @@ public class Connector {
     }
 
     private static AccessToken createAccessToken() {
-        return AccessToken.ofCryptedData(getCryptedToken(), getCryptedTokenSecret());
+        return AccessToken.ofEncryptedData(getCryptedToken(), getCryptedTokenSecret());
     }
 
     private static String getCryptedToken() {
-        return fromEnvAndLogOrElseGet("HO_CRYPTED_TOKEN", () -> UserParameter.instance().getCryptedToken());
+        return fromEnvAndLogOrElseGet("HO_ENCRYPTED_TOKEN", () -> UserParameter.instance().getEncryptedToken());
     }
 
     private static String getCryptedTokenSecret() {
-        return fromEnvAndLogOrElseGet("HO_CRYPTED_TOKEN_SECRET", () -> UserParameter.instance().getCryptedTokenSecret());
+        return fromEnvAndLogOrElseGet("HO_ENCRYPTED_TOKEN_SECRET", () -> UserParameter.instance().getEncryptedTokenSecret());
     }
 
     private static String fromEnvAndLogOrElseGet(String name, Supplier<String> supplier) {

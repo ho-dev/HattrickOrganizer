@@ -34,25 +34,38 @@ public final class UserParameter extends Configuration {
     private static final String LANGUAGE_DEUTSCH_OBSOLETE = "Deutsch";
     private static final String LANGUAGE_GERMAN = "German";
 
+    /**
+     * The key for the encrypted Token.
+     * For historical reasons the name of the key is missing the information that it is encrypted and was named
+     * with the prefix 'Access'.
+     */
+    private static final String KEY_ENCRYPTED_TOKEN = "AccessToken";
+
+    /**
+     * The key for the encrypted Token Secret.
+     * For historical reasons the name of the key is missing the information that it is encrypted.
+     */
+    private static final String KEY_ENCRYPTED_TOKEN_SECRET = "TokenSecret";
+
     //~ Instance fields ----------------------------------------------------------------------------
 
-    private String cryptedToken;
-    private String cryptedTokenSecret;
+    private String encryptedToken;
+    private String encryptedTokenSecret;
 
-    public String getCryptedToken() {
-        return cryptedToken;
+    public String getEncryptedToken() {
+        return encryptedToken;
     }
 
-    public void setCryptedToken(String cryptedToken) {
-        this.cryptedToken = cryptedToken;
+    public void setEncryptedToken(String encryptedToken) {
+        this.encryptedToken = encryptedToken;
     }
 
-    public String getCryptedTokenSecret() {
-        return cryptedTokenSecret;
+    public String getEncryptedTokenSecret() {
+        return encryptedTokenSecret;
     }
 
-    public void setCryptedTokenSecret(String cryptedTokenSecret) {
-        this.cryptedTokenSecret = cryptedTokenSecret;
+    public void setEncryptedTokenSecret(String encryptedTokenSecret) {
+        this.encryptedTokenSecret = encryptedTokenSecret;
     }
 
     public String ProxyAuthName = "";
@@ -431,8 +444,8 @@ public final class UserParameter extends Configuration {
     public Map<String, String> getValues() {
         Map<String, String> map = new HashMap<>();
 
-        map.put("AccessToken", String.valueOf(getCryptedToken()));
-        map.put("TokenSecret", String.valueOf(getCryptedTokenSecret()));
+        map.put(KEY_ENCRYPTED_TOKEN, String.valueOf(getEncryptedToken()));
+        map.put(KEY_ENCRYPTED_TOKEN_SECRET, String.valueOf(getEncryptedTokenSecret()));
 
         map.put("ProxyAuthName", String.valueOf(ProxyAuthName));
         map.put("ProxyAuthPassword", String.valueOf(ProxyAuthPassword));
@@ -676,8 +689,8 @@ public final class UserParameter extends Configuration {
 
     @Override
     public void setValues(Map<String, String> values) {
-        setCryptedToken(getStringValue(values, "AccessToken"));
-        setCryptedTokenSecret(getStringValue(values, "TokenSecret"));
+        setEncryptedToken(getStringValue(values, KEY_ENCRYPTED_TOKEN));
+        setEncryptedTokenSecret(getStringValue(values, KEY_ENCRYPTED_TOKEN_SECRET));
 
         ProxyAuthName = getStringValue(values, "ProxyAuthName");
         ProxyAuthPassword = getStringValue(values, "ProxyAuthPassword");

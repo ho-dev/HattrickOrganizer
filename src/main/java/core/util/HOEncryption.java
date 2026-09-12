@@ -7,8 +7,11 @@ public final class HOEncryption {
     }
 
     /**
-     * Decrypt string
-     * encrypted by method crypt
+     * Decrypts the string {@code text} that was encrypted with {@link #encryptString(String)}.
+     *
+     * @param text encrypted text that shall be decrypted
+     * @return encrypted text
+     * @see #encryptString(String)
      */
     public static String decryptString(String text) {
         byte[] encoded;
@@ -39,9 +42,26 @@ public final class HOEncryption {
     }
 
     /**
-     * Encrypt a string consisting on numbers and characters only
+     * Provided for convenience and is the same as {@link #encryptString(String)}.
+     *
+     * @param text the text that shall be encrypted
+     * @return encrypted text
+     * @deprecated Provided for for convenience. Please use {@link #encryptString(String)} instead. Can be removed
+     * in a later version.
      */
+    @Deprecated(since = "10.0")
     public static String cryptString(String text) {
+        return encryptString(text);
+    }
+
+    /**
+     * Encrypts the string {@code text} consisting on numbers and characters only.
+     *
+     * @param text the text that shall be encrypted
+     * @return encrypted text
+     * @see #decryptString(String)
+     */
+    public static String encryptString(String text) {
         byte[] encoded;
 
         if (text == null) {
