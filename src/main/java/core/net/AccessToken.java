@@ -3,8 +3,13 @@ package core.net;
 import core.util.HOEncryption;
 
 public record AccessToken(String cryptedToken, String cryptedTokenSecret) {
+
     public static AccessToken ofCryptedData(String cryptedToken, String cryptedTokenSecret) {
         return new AccessToken(cryptedToken, cryptedTokenSecret);
+    }
+
+    public static AccessToken ofData(String token, String tokenSecret) {
+        return new AccessToken(HOEncryption.cryptString(token), HOEncryption.cryptString(tokenSecret));
     }
 
     public String getToken() {
