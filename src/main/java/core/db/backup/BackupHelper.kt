@@ -72,32 +72,24 @@ object BackupHelper {
      *  plus the configured count of latest backups
      */
     private fun getBackupFilesToDelete(files: List<File>?) : List<File> {
-        var ret: List<File> = emptyList()
+        var ret = mutableListOf<File>()
         if (files != null) {
             var keptBackupFileLastModifiedWeek: HODateTime.HTWeek? = null
+            var keptFiles = 0
             val currentTimestamp = HODateTime.now()
             files.sortedByDescending { f -> f.lastModified() }
                 .forEach { f ->
                     val lastModified = HODateTime(Instant.ofEpochMilli(f.lastModified()))
                     val lastModifiedWeek = lastModified.toHTWeek();
-                    if (ret.size < UserManager.instance().currentUser.numberOfBackups) {
+                    val fileAgeInDays = HODateTime.between(lastModified, currentTimestamp).toDays();
+                    if (keptFiles < UserManager.instance().currentUser.numberOfBackups ||
+                        fileAgeInDays < 112 && !lastModifiedWeek.equals(keptBackupFileLastModifiedWeek) ||
+                        fileAgeInDays >= 112 && !lastModifiedWeek.season.equals(keptBackupFileLastModifiedWeek!!.season)
+                    ) {
                         keptBackupFileLastModifiedWeek = lastModifiedWeek
+                        keptFiles++
                     } else {
-                        val fileAgeInDays = HODateTime.between(lastModified, currentTimestamp).toDays();
-                        if (fileAgeInDays < 112) {
-                            if (lastModifiedWeek.equals(keptBackupFileLastModifiedWeek)) {
-                                ret.plus(f)
-                            }
-                            else {
-                                keptBackupFileLastModifiedWeek = lastModifiedWeek
-                            }
-                        }
-                        else if (lastModifiedWeek.season.equals(keptBackupFileLastModifiedWeek!!.season)) {
-                            ret.plus(f)
-                        }
-                        else {
-                            keptBackupFileLastModifiedWeek = lastModifiedWeek
-                        }
+                        ret.add(f)
                     }
                 }
         }
