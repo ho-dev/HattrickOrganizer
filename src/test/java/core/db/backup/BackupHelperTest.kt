@@ -2,6 +2,8 @@ package core.db.backup
 
 import core.db.user.UserManager
 import core.util.HODateTime
+import core.util.HODuration
+import core.util.HOLogger
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -100,34 +102,48 @@ internal class BackupHelperTest {
     fun testBackupStrategy() {
         val dbDir = File(testResourcesDir, "db")
 
-        var expectedLastModifiedDates = mutableListOf<HODateTime>()
         val currentDate = HODateTime.now()
-        val currentWeek = currentDate.toHTWeek()
-        (1..3).forEach { i ->
-            val date = currentDate.minus(i, ChronoUnit.DAYS)
-            createBackupFile(date)
-            expectedLastModifiedDates.add(date)
-            if (!date.toHTWeek().equals(currentWeek)) {
-                expectedLastModifiedDates.add(date)
+        var expectedLastModifiedDates = mutableListOf<HODateTime>(currentDate)
+
+        repeat(2){days->
+            run {
+                val date = currentDate.minus(days+1, ChronoUnit.DAYS)
+                expectedLastModifiedDates.add(date) // Will not be deleted (are within the latest 3 backups)
+                createBackupFile(date)
             }
         }
 
-        val oldFileDate = HODateTime.fromHT("2026-09-01 11:00:00")
-        expectedLastModifiedDates.add(oldFileDate)
-        createBackupFile(oldFileDate)
-        createBackupFile(oldFileDate.minus(1, ChronoUnit.DAYS))
+        var date = currentDate.minus(3, ChronoUnit.DAYS)
+        if (!date.toHTWeek().equals(expectedLastModifiedDates.get(expectedLastModifiedDates.size-1).toHTWeek())) expectedLastModifiedDates.add(date)
+        createBackupFile(date) // Will be deleted (not in the three latest backups, but not if in the previous week)
 
-        repeat(16) { weeks -> createBackupFile(oldFileDate.minus(7 * weeks + 8, ChronoUnit.DAYS)) }
-        repeat(2) { seasons -> createBackupFile(oldFileDate.minus(112 * seasons + 113, ChronoUnit.DAYS)) }
+        repeat(15) {weeks-> run {
+            val date = currentDate.minus(7*weeks + 8  , ChronoUnit.DAYS)
+            if (!date.toHTWeek().equals(expectedLastModifiedDates.get(expectedLastModifiedDates.size-1).toHTWeek())) expectedLastModifiedDates.add(date)
+            createBackupFile(date)
+        }}
+
+        date = currentDate.minus(7*15+8  , ChronoUnit.DAYS)
+        if (!date.toHTWeek().season.equals(expectedLastModifiedDates.get(expectedLastModifiedDates.size-1).toHTWeek().season)) expectedLastModifiedDates.add(date)
+        createBackupFile(date)
+
+        repeat(3) {seasons-> run {
+            val date = currentDate.minus(112 * seasons + 114  , ChronoUnit.DAYS)
+            if (!date.toHTWeek().season.equals(expectedLastModifiedDates.get(expectedLastModifiedDates.size-1).toHTWeek().season)) expectedLastModifiedDates.add(date)
+            createBackupFile(date)
+        }}
 
         BackupHelper.backup(dbDir)
 
         val zips = listZipInDir(dbDir.absolutePath)
         Assertions.assertNotNull(zips)
+        zips.sortByDescending { it.lastModified() }
         Assertions.assertEquals(expectedLastModifiedDates.size, zips.size)
-
-        repeat(expectedLastModifiedDates.size) { fileNumber -> Assertions.assertEquals(expectedLastModifiedDates[fileNumber],
-            HODateTime.fromEpochSecond(zips[fileNumber].lastModified()/1000)) }
+        repeat(expectedLastModifiedDates.size) { fileNumber -> run {
+            val expected = HODuration.between(HODateTime.HT_START, expectedLastModifiedDates[fileNumber]).toAgeString()
+            val actual = HODuration.between(HODateTime.HT_START, HODateTime.fromEpochSecond(zips[fileNumber].lastModified()/1000)).toAgeString()
+            Assertions.assertEquals(expected, actual)
+        }}
     }
 
     private fun createBackupFile(date: HODateTime) {
