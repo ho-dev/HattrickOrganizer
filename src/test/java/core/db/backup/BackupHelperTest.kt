@@ -3,7 +3,6 @@ package core.db.backup
 import core.db.user.UserManager
 import core.util.HODateTime
 import core.util.HODuration
-import core.util.HOLogger
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -11,14 +10,10 @@ import java.io.File
 import java.nio.file.Files
 import java.nio.file.attribute.FileTime
 import java.time.LocalDate
-import java.time.LocalDateTime
-import java.time.ZoneOffset
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.zip.ZipFile
 import kotlin.time.ExperimentalTime
-import kotlin.time.Instant
-
 
 internal class BackupHelperTest {
 
@@ -103,7 +98,7 @@ internal class BackupHelperTest {
         val dbDir = File(testResourcesDir, "db")
 
         val currentDate = HODateTime.now()
-        var expectedLastModifiedDates = mutableListOf<HODateTime>(currentDate)
+        val expectedLastModifiedDates = mutableListOf<HODateTime>(currentDate)
 
         repeat(2){days->
             run {
