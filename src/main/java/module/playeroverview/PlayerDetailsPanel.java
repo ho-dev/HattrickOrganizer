@@ -55,7 +55,6 @@ import static core.util.Helper.INTEGERFORMAT;
  */
 public final class PlayerDetailsPanel extends ImagePanel implements Refreshable, ItemListener, ActionListener {
 
-    private static final long SECONDS_PER_WEEK = 7 * 24 * 60 * 60;
     private static final int MATCH_HISTORY_LENGTH = 3;
     private static final Icon iconStar = ImageUtilities.getStarIcon(ThemeManager.getColor(HOColorName.PLAYER_DETAILS_STARS_FILL));
 
