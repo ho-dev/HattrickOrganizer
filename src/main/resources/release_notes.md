@@ -1,6 +1,7 @@
 ## Highlights
 
 * New hall of fame module
+* New database backup strategy
 
 ## [Detailed Changelog](https://github.com/ho-dev/HattrickOrganizer/milestone/27)
 
@@ -10,7 +11,7 @@
 
 ### Database
 
-* New backup strategy. Hold more database backup files (#2484)
+* New backup strategy: Keep latest backup per week for the latest 16 weeks and one per season for time before  (#2484)
 
 ### Download
 
