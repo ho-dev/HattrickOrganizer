@@ -3,7 +3,7 @@ package module.matches.statistics;
 import core.gui.comp.table.HOTableModel;
 import core.gui.model.UserColumnController;
 import core.model.match.MatchesOverviewRow;
-import core.util.StringUtils;
+import core.model.match.MatchResultFormatter;
 
 
 public final class MatchesOverviewColumnModel extends HOTableModel {
@@ -36,7 +36,7 @@ public final class MatchesOverviewColumnModel extends HOTableModel {
 			m_clData[i][2] = title?"":Integer.valueOf(rows[i].getWin());
 			m_clData[i][3] = title?"":Integer.valueOf(rows[i].getDraw());
 			m_clData[i][4] = title?"":Integer.valueOf(rows[i].getLoss());
-			m_clData[i][5] = title?"": StringUtils.getResultString(rows[i].getHomeGoals(), rows[i].getAwayGoals(), "");
+			m_clData[i][5] = title?"": MatchResultFormatter.format(rows[i].getHomeGoals(), rows[i].getAwayGoals(), "");
 		}
 		fireTableDataChanged();						
 	}
