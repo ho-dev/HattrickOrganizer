@@ -83,12 +83,4 @@ public class StringUtils {
 		}
 		return capitalizeWord.toString().trim();
 	}
-
-    public static String stringToHtml(String plainText) {
-        if (isEmpty(plainText)) {
-            return null;
-        }
-        String htmlEscaped = StringEscapeUtils.escapeHtml4(plainText);
-        return "<html>" + htmlEscaped.replaceAll("\\R", "<br>") + "</html>";
-    }
 }
