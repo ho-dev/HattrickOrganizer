@@ -400,7 +400,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         setLayout(new BorderLayout());
 
         Font f = new JLabel("").getFont();
-        f = f.deriveFont(f.getStyle() | Font.BOLD);
+        f.deriveFont(f.getStyle() | Font.BOLD);
 
         final JPanel panel = new ImagePanel();
         final GridBagLayout layout = new GridBagLayout();
