@@ -1,7 +1,5 @@
 package core.util;
 
-import core.model.TranslationFacility;
-
 /**
  * Utility class for various String related operations.
  */
@@ -45,30 +43,5 @@ public class StringUtils {
 	 */
 	public static boolean isEmpty(String str) {
 		return (str == null || str.isEmpty());
-	}
-
-	private static String _separator = null;
-	private static String getSeparator(){
-		if (_separator==null ) {
-			_separator = " " + TranslationFacility.tr("ls.match.result.separation") + " ";
-		}
-		return _separator;
-	}
-
-	public static String getResultString(int homeGoals, int awayGoals, String resultExtensionAbbreviation) {
-		if (homeGoals < 0 || awayGoals < 0)
-			return "  "+ getSeparator();
-
-		final StringBuilder buffer = new StringBuilder();
-		if (homeGoals < 10) {
-			buffer.append(" ");
-		}
-		buffer.append(homeGoals);
-		buffer.append(getSeparator());
-		buffer.append(awayGoals);
-		if(! resultExtensionAbbreviation.isEmpty()){
-			buffer.append(" ").append(resultExtensionAbbreviation);
-		}
-		return buffer.toString();
 	}
 }
