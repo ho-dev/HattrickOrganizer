@@ -24,16 +24,15 @@ public class TrainingProgressColumn extends UserColumn {
     private final int trainingWeekIndex;
 
     public TrainingProgressColumn(int id, HODateTime.HTWeek htweek, int trainingWeekIndex, int minWidth) {
-        super(id,htweek.season + " " + htweek.week);
+        super(id, htweek.season + " " + htweek.week);
         this.trainingWeekIndex = trainingWeekIndex;
         this.translateColumnName = false;
         this.translateColumnTooltip = false;
         this.htWeek = htweek;
-        this.index= this.getId();
+        this.index = this.getId();
         this.minWidth = minWidth;
         preferredWidth = minWidth;
         this.setDisplay(true);
-
     }
 
     public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {

@@ -74,7 +74,8 @@ public class PlayerOverviewPanel extends ImagePanel implements Refreshable {
 	public final void refreshHRFComparison() {
 		var playerTableModel = (PlayerOverviewTableModel)playerOverviewTable.getModel();
 		playerTableModel.reInitData();
-	}
+        playerDetailsPanel.refresh();
+    }
 
 	/**
 	 * Refreshes the table here and in the lineup panel when the groups / info has been changed
@@ -106,7 +107,7 @@ public class PlayerOverviewPanel extends ImagePanel implements Refreshable {
 	}
 
 	/*
-	 * Initialise the players details
+	 * Initialize the players details
 	 */
 	private Component initSpielerDetail() {
 		JTabbedPane tabbedPane = new JTabbedPane();
@@ -127,7 +128,7 @@ public class PlayerOverviewPanel extends ImagePanel implements Refreshable {
 	}
 
 	/*
-	 * Initialise the players history
+	 * Initialize the players history
 	 */
 	private Component initSpielerHistory() {
 		JPanel panel = new ImagePanel();

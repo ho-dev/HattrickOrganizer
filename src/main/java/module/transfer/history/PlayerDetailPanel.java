@@ -12,6 +12,7 @@ import core.model.UserParameter;
 import core.model.player.Player;
 import core.util.AmountOfMoney;
 import core.util.HODateTime;
+import core.util.HODuration;
 import module.transfer.PlayerRetriever;
 import module.transfer.PlayerTransfer;
 import module.transfer.XMLParser;
@@ -342,9 +343,9 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
                     }
                 }
 
-                var activeDuration = HODateTime.HODuration.between(arrivalDate, to);
-                if (activeDuration.seasons >= 0) {
-                    lengthOfStayInTeam.setText(activeDuration.toString());
+                var activeDuration = HODuration.betweenDays(arrivalDate, to);
+                if (activeDuration.getSeasons() >= 0) {
+                    lengthOfStayInTeam.setText(activeDuration.toAgeString());
                 }
                 var sum = this.player.getSumOfWage(arrivalDate, to);
                 sumOfWage.setText(sum.toLocaleString());
