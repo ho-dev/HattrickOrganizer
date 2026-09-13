@@ -22,6 +22,7 @@ import core.model.player.Player;
 import core.module.IModule;
 import core.net.HattrickLink;
 import core.util.HODateTime;
+import core.util.HODuration;
 import core.util.Helper;
 import module.statistics.StatistikMainPanel;
 
@@ -318,7 +319,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
 
         var arrival = m_clPlayer.getArrivalDate();
         if ( arrival != null ) {
-            var weeks = HODateTime.between(arrival, HODateTime.now()).getSeconds() / SECONDS_PER_WEEK;
+            var weeks = HODuration.between(arrival, HODateTime.now()).getTotalWeeks();
             String arrivalDate = arrival.toLocaleDateTime() + " (" + weeks + " " + TranslationFacility.tr("Wochen") + ")";
             m_jlInTeamSince.setText(TranslationFacility.tr("ImTeamSeit") + " " + arrivalDate);
         }
