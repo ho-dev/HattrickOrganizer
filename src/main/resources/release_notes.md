@@ -22,6 +22,7 @@
 * Synchronize player selection in training and player overview modules (#2379)
 * Added the columns `Career Assists` and `Assists for the Team` to the overview and details panel. (#2254)
 * New columns "Recovered on" and "Slightly injured on" (#2363)
+* Hrf list shows next daily update (#2459)
 
 ### HO update
 
