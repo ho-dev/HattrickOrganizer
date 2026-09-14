@@ -59,7 +59,6 @@ public class PlayerPerformance {
         return matchLineupPosition.getSortId();
     }
 
-
     /**
      * Gets the ID of the player.
      *
@@ -130,5 +129,4 @@ public class PlayerPerformance {
     public byte getBehaviour() {
         return matchLineupPosition.getBehaviour();
     }
-
 }
