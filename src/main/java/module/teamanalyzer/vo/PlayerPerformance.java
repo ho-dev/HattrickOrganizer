@@ -1,6 +1,7 @@
 package module.teamanalyzer.vo;
 
 import core.model.match.MatchLineupPosition;
+import lombok.Getter;
 import module.teamanalyzer.manager.PlayerDataManager;
 
 /**
@@ -12,9 +13,11 @@ public class PlayerPerformance {
     //~ Instance fields ----------------------------------------------------------------------------
 
     /** Wrapped object */
+    @Getter
     private final MatchLineupPosition matchLineupPosition;
 
     /** Status of the player on the team. injured, sold etc */
+    @Getter
     private int status;
     private int injuryStatus = 0;
     private int bookingStatus = 0;
@@ -113,10 +116,6 @@ public class PlayerPerformance {
         this.transferListedStatus= digit;
     }
 
-    public int getStatus() {
-        return status;
-    }
-
     public String getStatusAsText() {
         switch (status){
             default:
@@ -132,5 +131,4 @@ public class PlayerPerformance {
         return matchLineupPosition.getBehaviour();
     }
 
-    public MatchLineupPosition getMatchLineupPosition() { return this.matchLineupPosition;}
 }
