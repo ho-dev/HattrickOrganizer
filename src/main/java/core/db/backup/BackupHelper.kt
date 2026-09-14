@@ -72,7 +72,7 @@ object BackupHelper {
      *  plus the configured count of latest backups
      */
     private fun getBackupFilesToDelete(files: List<File>?) : List<File> {
-        var ret = mutableListOf<File>()
+        val ret = mutableListOf<File>()
         if (files != null) {
             var keptBackupFileLastModifiedWeek: HODateTime.HTWeek? = null
             var keptFiles = 0
@@ -80,8 +80,8 @@ object BackupHelper {
             files.sortedByDescending { f -> f.lastModified() }
                 .forEach { f ->
                     val lastModified = HODateTime(Instant.ofEpochMilli(f.lastModified()))
-                    val lastModifiedWeek = lastModified.toHTWeek();
-                    val fileAgeInDays = HODateTime.between(lastModified, currentTimestamp).toDays();
+                    val lastModifiedWeek = lastModified.toHTWeek()
+                    val fileAgeInDays = HODateTime.between(lastModified, currentTimestamp).toDays()
                     val DAYS_PER_SEASON = 112
                     if (keptFiles < UserManager.instance().currentUser.numberOfBackups ||
                         fileAgeInDays < DAYS_PER_SEASON && !lastModifiedWeek.equals(keptBackupFileLastModifiedWeek) ||
