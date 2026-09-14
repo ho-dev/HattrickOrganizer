@@ -13,7 +13,6 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.zip.ZipFile
-import kotlin.time.ExperimentalTime
 
 internal class BackupHelperTest {
 
@@ -73,17 +72,18 @@ internal class BackupHelperTest {
     @Test
     fun testBackupOnlyKeepsMaxNumber() {
         val dbDir = File(testResourcesDir, "db")
-
         var fileFromPreviousWeek = 0
         val currentDate = HODateTime.now()
-        val currentWeek = currentDate.toHTWeek()
+        var htWeek = currentDate.toHTWeek()
         (1..5).forEach { i ->
             val date = currentDate.minus(i, ChronoUnit.DAYS)
             val f = File(testResourcesDir, "db/db_user-${formatter.format(date.localDateTime)}.zip")
             Assertions.assertDoesNotThrow { f.createNewFile() }
             Files.setLastModifiedTime(f.toPath(), FileTime.from(date.instant))
-            if (i == 4 && !date.toHTWeek().equals(currentWeek)) {
+            if (i == 4 && !date.toHTWeek().equals(htWeek)) {
                 fileFromPreviousWeek = 1
+            } else {
+                htWeek = date.toHTWeek()
             }
         }
 
@@ -94,7 +94,6 @@ internal class BackupHelperTest {
         Assertions.assertEquals(3 + fileFromPreviousWeek, zips.size)
     }
 
-    @OptIn(ExperimentalTime::class)
     @Test
     fun testBackupStrategy() {
         val dbDir = File(testResourcesDir, "db")
