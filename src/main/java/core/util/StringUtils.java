@@ -1,7 +1,6 @@
 package core.util;
 
 import core.model.TranslationFacility;
-import org.apache.commons.text.StringEscapeUtils;
 
 /**
  * Utility class for various String related operations.
@@ -71,16 +70,5 @@ public class StringUtils {
 			buffer.append(" ").append(resultExtensionAbbreviation);
 		}
 		return buffer.toString();
-	}
-
-	public static String capitalizeWord(String str){
-		String[] words =str.split("\\s");
-		StringBuilder capitalizeWord= new StringBuilder();
-		for(String w:words){
-			String first=w.substring(0,1);
-			String afterfirst=w.substring(1);
-			capitalizeWord.append(first.toUpperCase()).append(afterfirst).append(" ");
-		}
-		return capitalizeWord.toString().trim();
 	}
 }
