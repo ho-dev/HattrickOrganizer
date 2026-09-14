@@ -95,7 +95,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
     private final JComboBox m_jcbInformation = new JComboBox(SMILEYS);
     private final PlayerStatusLabelEntry m_jpStatus = new PlayerStatusLabelEntry(BGcolor, true);
     private final DoubleLabelEntries m_jllWage = new DoubleLabelEntries(new ColorLabelEntry("", FGcolor, BGcolor, SwingConstants.LEFT), new ColorLabelEntry("", FGcolor, BGcolor, SwingConstants.RIGHT));
-    private final JLabel totalWageLabel = new JLabel("");
+    private final JLabel totalWagesLabel = new JLabel("");
     private final DoubleLabelEntries m_jllTSI = new DoubleLabelEntries(new ColorLabelEntry("", FGcolor, BGcolor, SwingConstants.LEFT), new ColorLabelEntry("", FGcolor, BGcolor, SwingConstants.RIGHT));
     private final JComboBox m_jcbUserBestPosition = new JComboBox(MatchRoleID.POSITIONEN);
     private final JButton m_jbStatistics = new JButton(getSvgIcon(GOTOSTATISTIK));
@@ -207,11 +207,11 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         }
         Helper.setComboBoxFromID(m_jcbUserBestPosition, m_clPlayer.getUserPosFlag());
         m_jcbUserBestPosition.addItemListener(this);
-        final var salary = m_clPlayer.getWage();
-        final String salaryLocaleString = salary.toLocaleString();
+        final var wage = m_clPlayer.getWage();
+        final String wageAsLocaleString = wage.toLocaleString();
         final String tsiString = Helper.getNumberFormat(0).format(m_clPlayer.getTsi());
         if (m_clComparisonPlayer == null) {
-            m_jllWage.getLeft().setText(salaryLocaleString);
+            m_jllWage.getLeft().setText(wageAsLocaleString);
             m_jllWage.getRight().clear();
             m_jllTSI.getLeft().setText(tsiString);
             m_jllTSI.getRight().clear();
@@ -231,8 +231,8 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         }
         else {
             final var previousSalary =m_clComparisonPlayer.getWage();
-            m_jllWage.getLeft().setText(salaryLocaleString);
-            m_jllWage.getRight().setSpecialNumber(salary.minus(previousSalary).toLocale().floatValue(), true);
+            m_jllWage.getLeft().setText(wageAsLocaleString);
+            m_jllWage.getRight().setSpecialNumber(wage.minus(previousSalary).toLocale().floatValue(), true);
             m_jllTSI.getLeft().setText(tsiString);
             m_jllTSI.getRight().setSpecialNumber(m_clPlayer.getTsi() - m_clComparisonPlayer.getTsi(), false);
             m_jclFormChange.setGraphicalChangeValue(m_clPlayer.getForm()
@@ -281,8 +281,8 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
 
         }
 
-        final var totalSalary = m_clPlayer.getSumOfWage(m_clPlayer.getArrivalDate(), HODateTime.now());
-        totalWageLabel.setText(totalSalary.toLocaleString());
+        final var sumOfWage = m_clPlayer.getSumOfWage(m_clPlayer.getArrivalDate(), HODateTime.now());
+        totalWagesLabel.setText(sumOfWage.toLocaleString());
         m_jlCareerGoals.setText(String.valueOf(m_clPlayer.getTotalGoals()));
         m_jlTeamGoals.setText(String.valueOf(m_clPlayer.getCurrentTeamGoals()));
         m_jlHattricks.setText(String.valueOf(m_clPlayer.getHatTricks()));
@@ -399,9 +399,6 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
     private void initComponents() {
         setLayout(new BorderLayout());
 
-        Font f = new JLabel("").getFont();
-        f.deriveFont(f.getStyle() | Font.BOLD);
-
         final JPanel panel = new ImagePanel();
         final GridBagLayout layout = new GridBagLayout();
         final GridBagConstraints constraints = new GridBagConstraints();
@@ -493,8 +490,8 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
 
         constraintsPlayerGeneralPanel.gridx = 2;
         constraintsPlayerGeneralPanel.gridy = 4;
-        layoutPlayerGeneralPanel.setConstraints(totalWageLabel, constraintsPlayerGeneralPanel);
-        jpPlayerGeneral.add(totalWageLabel);
+        layoutPlayerGeneralPanel.setConstraints(totalWagesLabel, constraintsPlayerGeneralPanel);
+        jpPlayerGeneral.add(totalWagesLabel);
 
         label = createLabel("ls.player.speciality");
         constraintsPlayerGeneralPanel.gridx = 1;
@@ -916,7 +913,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         m_jcbSquad.setSelectedItem("");
         m_jcbInformation.setSelectedItem("");
         m_jllWage.clear();
-        totalWageLabel.setText("");
+        totalWagesLabel.setText("");
         m_jllTSI.clear();
         m_jclFormChange.clear();
         m_jclStaminaChange.clear();
