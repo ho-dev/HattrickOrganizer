@@ -34,7 +34,7 @@ import java.util.Optional;
 
 import static core.model.player.IMatchRoleID.aPositionBehaviours;
 import static core.model.player.MatchRoleID.isFieldMatchRoleId;
-import static core.util.StringUtils.stringToHtml;
+import static core.util.HtmlUtils.stringToHtml;
 
 /**
  * User column factory creates {@link UserColumn} instances used in the
