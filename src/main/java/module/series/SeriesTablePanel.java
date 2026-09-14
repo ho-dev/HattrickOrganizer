@@ -148,34 +148,34 @@ class SeriesTablePanel extends ImagePanel {
 
 	private void initComponents() {
 
-		final GridBagLayout layout = new GridBagLayout();
-		final GridBagConstraints constraints = new GridBagConstraints();
-		final JPanel panel = new JPanel(layout);
+        final GridBagLayout layout = new GridBagLayout();
+        final GridBagConstraints constraints = new GridBagConstraints();
+        final JPanel panel = new JPanel(layout);
 
-		// combobox
-		constraints.gridx = 0;
-		constraints.gridy = 0;
-		constraints.insets = new Insets(4, 0, 4, 100);
-		constraints.anchor = GridBagConstraints.LINE_END;
-		m_jcbStatsAggType = new JComboBox(new String[]{"Max", "Avg"});
-		m_jcbStatsAggType.addActionListener(e -> populateSerieTableStatsOnly());
+        // combobox
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.insets = new Insets(4, 0, 4, 100);
+        constraints.anchor = GridBagConstraints.LINE_END;
+        m_jcbStatsAggType = new JComboBox(new String[]{"Max", "Avg"});
+        m_jcbStatsAggType.addActionListener(e -> populateSerieTableStatsOnly());
 
 
-		var fontSize = UserParameter.instance().fontSize;
-		layout.setConstraints(m_jcbStatsAggType, constraints);
-		panel.add(m_jcbStatsAggType);
+        var fontSize = UserParameter.instance().fontSize;
+        layout.setConstraints(m_jcbStatsAggType, constraints);
+        panel.add(m_jcbStatsAggType);
 
-		// serie Table
-		constraints.gridy = 1;
-		constraints.insets = new Insets(0, 4, 4, 4);
-		seriesTable.setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
-		seriesTable.setRowHeight(2 * fontSize);
-		layout.setConstraints(seriesTable, constraints);
-		panel.add(seriesTable);
+        // serie Table
+        constraints.gridy = 1;
+        constraints.insets = new Insets(0, 4, 4, 4);
+        seriesTable.setDefaultRenderer(Object.class, new HODefaultTableCellRenderer());
+        seriesTable.setRowHeight(2 * fontSize);
+        layout.setConstraints(seriesTable, constraints);
+        panel.add(seriesTable);
 
-		setLayout(new BorderLayout());
-		add(panel);
-	}
+        setLayout(new BorderLayout());
+        add(panel);
+    }
 
 	//  Init from the HRF-XML
 	private void initSeriesTable() {
@@ -278,7 +278,7 @@ class SeriesTablePanel extends ImagePanel {
 						((ColorLabelEntry) tableValues[j][7]).setText(entry.getGoalsFor() + "");
 						((ColorLabelEntry) tableValues[j][8]).setText(entry.getGoalsAgainst() + "");
 						((ColorLabelEntry) tableValues[j][9]).setSpecialNumber(entry.getGoalsDiff(), false);
-						
+
 						FormLabel formLabel = new FormLabel(entry.getSerie());
 						formLabel.setBgColor(getColor4Row(j));
 						tableValues[j][10] = formLabel;

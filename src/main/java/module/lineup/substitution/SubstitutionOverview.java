@@ -1,6 +1,5 @@
 package module.lineup.substitution;
 
-import core.constants.UIConstants;
 import core.gui.HOMainFrame;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
@@ -180,7 +179,6 @@ public class SubstitutionOverview extends JPanel {
 	private void initComponents() {
 		setLayout(new BorderLayout());
 		this.substitutionTable = new JTable();
-		this.substitutionTable.setRowHeight(UIConstants.TABLE_ROW_HEIGHT);
 		this.substitutionTable.setModel(new SubstitutionsTableModel());
 		this.substitutionTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		TableColumn warningCol = this.substitutionTable.getColumnModel().getColumn(
@@ -400,112 +398,107 @@ public class SubstitutionOverview extends JPanel {
 	 */
 	private static class SubstitutionsTableModel extends AbstractTableModel {
 
-		public static final int WARNING_COL_IDX = 0;
-		public static final int ORDERTYPE_COL_IDX = 1;
-		public static final int SUBJECTPLAYER_COL_IDX = 2;
-		public static final int ORDERTYPE_ICON_COL_IDX = 3;
-		public static final int OBJECTPLAYER_COL_IDX = 4;
-		public static final int WHEN_COL_IDX = 5;
-		public static final int STANDING_COL_IDX = 6;
-		public static final int CARDS_COL_IDX = 7;
-		// number of columns
-		public static final int COLUMN_COUNT = 8;
+        public static final int WARNING_COL_IDX = 0;
+        public static final int ORDERTYPE_COL_IDX = 1;
+        public static final int SUBJECTPLAYER_COL_IDX = 2;
+        public static final int ORDERTYPE_ICON_COL_IDX = 3;
+        public static final int OBJECTPLAYER_COL_IDX = 4;
+        public static final int WHEN_COL_IDX = 5;
+        public static final int STANDING_COL_IDX = 6;
+        public static final int CARDS_COL_IDX = 7;
+        // number of columns
+        public static final int COLUMN_COUNT = 8;
 
-		private List<TableRow> rows = new ArrayList<>();
-		private String[] columnNames;
-		private Comparator<TableRow> rowComparator;
+        private final List<TableRow> rows = new ArrayList<>();
+        private final String[] columnNames;
+        private Comparator<TableRow> rowComparator;
 
-		public SubstitutionsTableModel() {
-			this.columnNames = new String[COLUMN_COUNT];
-			this.columnNames[WARNING_COL_IDX] = "";
-			this.columnNames[ORDERTYPE_COL_IDX] = TranslationFacility.tr(
-					"subs.orders.colheadline.order");
-			this.columnNames[SUBJECTPLAYER_COL_IDX] = TranslationFacility.tr(
-					"subs.orders.colheadline.player1");
-			this.columnNames[ORDERTYPE_ICON_COL_IDX] = "";
-			this.columnNames[OBJECTPLAYER_COL_IDX] = TranslationFacility.tr(
-					"subs.orders.colheadline.player2");
-			this.columnNames[WHEN_COL_IDX] = TranslationFacility.tr(
-					"subs.orders.colheadline.when");
-			this.columnNames[STANDING_COL_IDX] = TranslationFacility.tr(
-					"subs.orders.colheadline.standing");
-			this.columnNames[CARDS_COL_IDX] = TranslationFacility.tr(
-					"subs.orders.colheadline.cards");
-		}
+        public SubstitutionsTableModel() {
+            this.columnNames = new String[COLUMN_COUNT];
+            this.columnNames[WARNING_COL_IDX] = "";
+            this.columnNames[ORDERTYPE_COL_IDX] = TranslationFacility.tr(
+                "subs.orders.colheadline.order");
+            this.columnNames[SUBJECTPLAYER_COL_IDX] = TranslationFacility.tr(
+                "subs.orders.colheadline.player1");
+            this.columnNames[ORDERTYPE_ICON_COL_IDX] = "";
+            this.columnNames[OBJECTPLAYER_COL_IDX] = TranslationFacility.tr(
+                "subs.orders.colheadline.player2");
+            this.columnNames[WHEN_COL_IDX] = TranslationFacility.tr(
+                "subs.orders.colheadline.when");
+            this.columnNames[STANDING_COL_IDX] = TranslationFacility.tr(
+                "subs.orders.colheadline.standing");
+            this.columnNames[CARDS_COL_IDX] = TranslationFacility.tr(
+                "subs.orders.colheadline.cards");
+        }
 
-		public void sort() {
-			if (this.rowComparator == null) {
-				this.rowComparator = (o1, o2) -> {
-					Substitution s1 = o1.getSubstitution();
-					Substitution s2 = o2.getSubstitution();
+        public void sort() {
+            if (this.rowComparator == null) {
+                this.rowComparator = (o1, o2) -> {
+                    Substitution s1 = o1.getSubstitution();
+                    Substitution s2 = o2.getSubstitution();
 
-					int ret = s1.getMatchMinuteCriteria() - s2.getMatchMinuteCriteria();
-					if (ret == 0) {
-						ret = s1.getPlayerOrderId() - s2.getPlayerOrderId();
-					}
-					return ret;
-				};
-			}
-			this.rows.sort(this.rowComparator);
-			fireTableDataChanged();
-		}
+                    int ret = s1.getMatchMinuteCriteria() - s2.getMatchMinuteCriteria();
+                    if (ret == 0) {
+                        ret = s1.getPlayerOrderId() - s2.getPlayerOrderId();
+                    }
+                    return ret;
+                };
+            }
+            this.rows.sort(this.rowComparator);
+            fireTableDataChanged();
+        }
 
-		public void setData(List<Substitution> data) {
-			this.rows.clear();
-			for (Substitution sub : data) {
-				TableRow row = new TableRow();
-				row.setSub(sub);
-				this.rows.add(row);
-			}
-			fireTableDataChanged();
-		}
+        public void setData(List<Substitution> data) {
+            this.rows.clear();
+            for (Substitution sub : data) {
+                TableRow row = new TableRow();
+                row.setSub(sub);
+                this.rows.add(row);
+            }
+            fireTableDataChanged();
+        }
 
-		@Override
-		public int getRowCount() {
-			return this.rows.size();
-		}
+        @Override
+        public int getRowCount() {
+            return this.rows.size();
+        }
 
-		@Override
-		public int getColumnCount() {
-			return this.columnNames.length;
-		}
+        @Override
+        public int getColumnCount() {
+            return this.columnNames.length;
+        }
 
-		@Override
-		public Object getValueAt(int rowIndex, int columnIndex) {
-			Substitution sub = this.rows.get(rowIndex).getSubstitution();
+        @Override
+        public Object getValueAt(int rowIndex, int columnIndex) {
+            Substitution sub = this.rows.get(rowIndex).getSubstitution();
 
-			switch (columnIndex) {
-			case ORDERTYPE_COL_IDX:
-				return LanguageStringLookup.getOrderType(sub.getOrderType());
-			case SUBJECTPLAYER_COL_IDX:
-				return sub.getSubjectPlayerName();
-			case ORDERTYPE_ICON_COL_IDX:
-				return sub.getBehaviour();
-			case OBJECTPLAYER_COL_IDX:
-				return sub.getObjectPlayerName();
-			case WHEN_COL_IDX:
-				if (sub.getMatchMinuteCriteria() > 0) {
-					return TranslationFacility.tr("subs.MinuteAfterX", (int) sub.getMatchMinuteCriteria());
-				}
-				return TranslationFacility.tr("subs.MinuteAnytime");
-			case STANDING_COL_IDX:
-				return LanguageStringLookup.getStanding(sub.getStanding());
-			case CARDS_COL_IDX:
-				return LanguageStringLookup.getRedCard(sub.getRedCardCriteria());
-			}
+            return switch (columnIndex) {
+                case ORDERTYPE_COL_IDX -> LanguageStringLookup.getOrderType(sub.getOrderType());
+                case SUBJECTPLAYER_COL_IDX -> sub.getSubjectPlayerName();
+                case ORDERTYPE_ICON_COL_IDX -> sub.getBehaviour();
+                case OBJECTPLAYER_COL_IDX -> sub.getObjectPlayerName();
+                case WHEN_COL_IDX -> {
+                    if (sub.getMatchMinuteCriteria() > 0) {
+                        yield TranslationFacility.tr("subs.MinuteAfterX", sub.getMatchMinuteCriteria());
+                    }
+                    yield TranslationFacility.tr("subs.MinuteAnytime");
+                }
+                case STANDING_COL_IDX -> LanguageStringLookup.getStanding(sub.getStanding());
+                case CARDS_COL_IDX -> LanguageStringLookup.getRedCard(sub.getRedCardCriteria());
+                default -> "";
+            };
 
-			return "";
-		}
+        }
 
-		@Override
-		public String getColumnName(int column) {
-			return this.columnNames[column];
-		}
+        @Override
+        public String getColumnName(int column) {
+            return this.columnNames[column];
+        }
 
-		public TableRow getRow(int rowIndex) {
-			return this.rows.get(rowIndex);
-		}
-	}
+        public TableRow getRow(int rowIndex) {
+            return this.rows.get(rowIndex);
+        }
+    }
 
 	/*
 	 * This class is a simple container for row data.
@@ -682,7 +675,7 @@ public class SubstitutionOverview extends JPanel {
 		return false;
 	}
 
-	private class OrderTypeRenderer extends DefaultTableCellRenderer {
+	private static class OrderTypeRenderer extends DefaultTableCellRenderer {
 		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value,
 													   boolean isSelected, boolean hasFocus, int row, int column) {
@@ -702,7 +695,7 @@ public class SubstitutionOverview extends JPanel {
 		}
 	}
 
-	private class WarningRenderer extends DefaultTableCellRenderer {
+	private static class WarningRenderer extends DefaultTableCellRenderer {
 
 		@Override
 		public Component getTableCellRendererComponent(JTable table, Object value,

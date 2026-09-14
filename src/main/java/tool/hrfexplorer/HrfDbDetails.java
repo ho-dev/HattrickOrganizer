@@ -30,7 +30,6 @@ class HrfDbDetails extends HrfDetails {
 			while(m_result != null && m_result.next())	{
 				m_result.getObject(1);
 				if( !m_result.wasNull())	{
-					HrfExplorer.appendText("Query war nicht NULL");
 					setName();
 					setDatum(HODateTime.fromDbTimestamp(m_result.getTimestamp("DATUM")));
 					createDates();
@@ -57,11 +56,11 @@ class HrfDbDetails extends HrfDetails {
 		}
 		catch(SQLException ignored)
 		{
-			
+
 		}
 		calcDatum();
 	}
-	
+
 	/**
 	 * @return Returns all needed Values as Vector
 	 */
@@ -79,7 +78,7 @@ class HrfDbDetails extends HrfDetails {
 		daten.add(getTrInt());
 		daten.add(getBild());
 		daten.add(getHrf_ID());
-		
+
 		return daten;
 	}
 	/**

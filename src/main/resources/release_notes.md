@@ -22,9 +22,12 @@
 * Synchronize player selection in training and player overview modules (#2379)
 * Added the columns `Career Assists` and `Assists for the Team` to the overview and details panel. (#2254)
 * New columns "Recovered on" and "Slightly injured on" (#2363)
+* Hrf list shows next daily update (#2459)
 * Fix subskill recalculation overlooks trainings if downloads happened during training (#2149)
 
-### Team Analyzer
+### HO update
+
+* Portable version shows hint to install downloaded update manually (#2331)
 
 ### Hall of fame
 
@@ -34,6 +37,7 @@
 
 * Added support of all 13 **Player Categories** (#2418)
 * Fix world details constraints error (#2444)
+* Player details show the total salary and the weeks of team membership (#2449)
 
 ### Lineup
 
@@ -54,6 +58,10 @@
 
 * Added support of all 13 **Player Categories** (#2418)
 * Fix line feed handling in owner notes. Tooltip shows notes as multiline (#2455)
+* The bug where the number `100` was displayed for the shirt number when the player had no shirt number has been fixed.
+  Instead, nothing is shown now if no number assigned. (#2420)
+* Fix out of bound exception on download when youth player were removed during the week (#2442)
+* Fix player selection in youth player overview (#2452)
 
 ### Special Events
 
@@ -63,16 +71,11 @@
 ### Option setting
 
 * Add option to select currency setting (#2288)
+* Adjusting various tables to large user font settings (#2306)
 
 ### Special Events
 
 * Fixed a crash that occurred when not ticking `Only matches with SEs`.
-
-### Youth
-
-* The bug where the number `100` was displayed for the shirt number when the player had no shirt number has been fixed.
-  Instead, nothing is shown now if no number assigned. (#2420)
-* Fix out of bound exception on download when youth player were removed during the week (#2442)
 
 ### Tools
 
@@ -81,6 +84,7 @@
 * Removed the superfluous space for the `Spectators` in braces at the end.
 * Added the image of the stadium and made the view better arranged. (#2140)
 * Added a local cache with TTL for stadium images and manual reload by clicking on the image. (#2440)
+* Tab 'Arena': Display for all values now with the thousands separator.
 
 ### Misc
 
