@@ -17,8 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static core.util.StringUtils.getResultString;
-
 public class MatchKurzInfo extends AbstractTable.Storable implements Comparable<Object> {
 
 	/** Name des Teams zu dem die Matchinfo gehört */
@@ -505,7 +503,7 @@ public class MatchKurzInfo extends AbstractTable.Storable implements Comparable<
 
 	public String getResultLong() {
 		if ( this.m_iMatchStatus != FINISHED){
-			return getResultString(-1,-1,"");
+			return MatchResultFormatter.format(-1,-1,"");
 		}
 		return getMatchdetails().getResultLong();
 	}

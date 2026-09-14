@@ -70,13 +70,13 @@ class HOEncryptionTest {
 
     @ParameterizedTest
     @MethodSource("data")
-    void cryptString(String cleartext, String ciphertext) {
-        assertThat(HOEncryption.cryptString(cleartext)).isEqualTo(ciphertext);
+    void encryptString(String cleartext, String ciphertext) {
+        assertThat(HOEncryption.encryptString(cleartext)).isEqualTo(ciphertext);
     }
 
     @Test
-    void cryptString_with_null_result_is_empty() {
-        assertThat(HOEncryption.cryptString(null)).isEqualTo(StringUtils.EMPTY);
+    void encryptString_with_null_result_is_empty() {
+        assertThat(HOEncryption.encryptString(null)).isEqualTo(StringUtils.EMPTY);
     }
 
     @ParameterizedTest
@@ -92,8 +92,8 @@ class HOEncryptionTest {
 
     @ParameterizedTest
     @MethodSource("notEncryptableCharacters")
-    void cryptString_not_allowed_characters_result_is_null(String notAllowedCharacter) {
+    void encryptString_not_allowed_characters_result_is_null(String notAllowedCharacter) {
         assertThat(StringUtils.length(notAllowedCharacter)).isEqualTo(1);
-        assertThat(HOEncryption.cryptString(notAllowedCharacter)).isNull();
+        assertThat(HOEncryption.encryptString(notAllowedCharacter)).isNull();
     }
 }

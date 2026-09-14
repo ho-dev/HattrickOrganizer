@@ -1,8 +1,5 @@
 package core.util;
 
-import core.model.TranslationFacility;
-import org.apache.commons.text.StringEscapeUtils;
-
 /**
  * Utility class for various String related operations.
  */
@@ -46,41 +43,5 @@ public class StringUtils {
 	 */
 	public static boolean isEmpty(String str) {
 		return (str == null || str.isEmpty());
-	}
-
-	private static String _separator = null;
-	private static String getSeparator(){
-		if (_separator==null ) {
-			_separator = " " + TranslationFacility.tr("ls.match.result.separation") + " ";
-		}
-		return _separator;
-	}
-
-	public static String getResultString(int homeGoals, int awayGoals, String resultExtensionAbbreviation) {
-		if (homeGoals < 0 || awayGoals < 0)
-			return "  "+ getSeparator();
-
-		final StringBuilder buffer = new StringBuilder();
-		if (homeGoals < 10) {
-			buffer.append(" ");
-		}
-		buffer.append(homeGoals);
-		buffer.append(getSeparator());
-		buffer.append(awayGoals);
-		if(! resultExtensionAbbreviation.isEmpty()){
-			buffer.append(" ").append(resultExtensionAbbreviation);
-		}
-		return buffer.toString();
-	}
-
-	public static String capitalizeWord(String str){
-		String[] words =str.split("\\s");
-		StringBuilder capitalizeWord= new StringBuilder();
-		for(String w:words){
-			String first=w.substring(0,1);
-			String afterfirst=w.substring(1);
-			capitalizeWord.append(first.toUpperCase()).append(afterfirst).append(" ");
-		}
-		return capitalizeWord.toString().trim();
 	}
 }
