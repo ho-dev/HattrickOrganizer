@@ -36,7 +36,7 @@ public class Report {
     public Report(PlayerPerformance pp) {
         this.spot = pp.getRoleId();
         this.position = pp.getRoleId();
-        this.playerId = pp.getSpielerId();
+        this.playerId = pp.getPlayerId();
     }
 
     /**
