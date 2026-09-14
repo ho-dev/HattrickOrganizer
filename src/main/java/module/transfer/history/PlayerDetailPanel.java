@@ -279,7 +279,7 @@ public class PlayerDetailPanel extends JPanel implements ActionListener {
                 String ageText = "";
                 var hrfDate = this.player.getHrfDate();
                 if (hrfDate != null) {
-                    ageText = this.player.getAgeAtDate(this.player.getHrfDate()).toString();
+                    ageText = this.player.getAgeAtDate(this.player.getHrfDate()).toAgeString();
                 }
                 age.setText(ageText);
 
