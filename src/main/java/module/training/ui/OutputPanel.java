@@ -12,9 +12,9 @@ import core.net.OnlineWorker;
 import core.training.TrainingManager;
 import core.util.Helper;
 import core.util.HelperWrapper;
-import core.util.StringUtils;
 import module.training.ui.model.TrainingModel;
 import module.training.ui.renderer.OutputTableRenderer;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import java.awt.*;

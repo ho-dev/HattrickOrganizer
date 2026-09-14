@@ -23,8 +23,8 @@ import core.model.player.Player;
 import core.model.player.PlayerCategory;
 import core.util.HODateTime;
 import core.util.Helper;
-import core.util.StringUtils;
 import module.playeroverview.PlayerStatusLabelEntry;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
