@@ -43,6 +43,10 @@
 * Fix empty list of upcoming games in Lineup panel after first download.
 * Added support of all 13 **Player Categories** (#2418)
 
+### Matches
+
+* Player Detail Dialog: The days of the age of a player is now displayed in braces after the years.
+
 ### Training
 
 * Add experience skill to training tables (#2283)
