@@ -90,7 +90,7 @@ class HODateTimeTest {
         assertThat(HODateTime.fromEpochSecond(1600644600L)).isEqualTo(dti);
     }
 
-    static Stream<Arguments> testEpochSeconds() {
+    private static Stream<Arguments> testEpochSeconds() {
         return Stream.of(
             Arguments.of("1970-01-01 00:00:00", -3600L),
             Arguments.of("1970-01-01 01:00:00", 0L),

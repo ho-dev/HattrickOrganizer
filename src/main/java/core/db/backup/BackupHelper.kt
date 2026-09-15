@@ -61,7 +61,14 @@ object BackupHelper {
         if (files != null && files.isNotEmpty()) {
             val fileList = files.toList()
             val deleteBackupList = getBackupFilesToDelete(fileList)
-            deleteBackupList.forEach { file -> file.delete() }
+            deleteBackupList.forEach { file ->
+                if ( file.delete() ) {
+                    HOLogger.instance().info(this.javaClass, "Deleted old backup file: ${file.name}")
+                }
+                else {
+                    HOLogger.instance().error(this.javaClass, "Failed to delete old backup file: ${file.name}")
+                }
+            }
         } else {
             HOLogger.instance().warning(this.javaClass, "No files to delete in directory $dbDirectory")
         }
@@ -69,11 +76,11 @@ object BackupHelper {
 
     /**
      * Filter backup files from list that should be deleted
-     *  - The configured count of youngest backups are removed from the list (not deleted)
-     *  - If the backup file is younger than 112 days the latest file of each week is removed
-     *  - If the backup file is older than 112 days the latest file of each season is removed
+     *  - The configured count of youngest backups are not included to the result (not deleted)
+     *  - If the backup file is younger than 112 days the latest file of each week is not included
+     *  - If the backup file is older than 112 days the latest file of each season is not included
      *
-     *  At the end the user has one backup file for each previous season
+     *  In addition, the user has one backup file for each previous season
      *  and additionally one file for each week for the last 16 weeks
      *  plus the configured count of latest backups
      */
