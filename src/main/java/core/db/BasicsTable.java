@@ -18,7 +18,7 @@ final class BasicsTable extends AbstractTable {
 				ColumnDescriptor.Builder.newInstance().setColumnName("Manager").setGetter((b)->((Basics)b).getManager()).setSetter((b, v)->((Basics)b).setManager((String)v)).setType(Types.VARCHAR).setLength(127).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("TeamID").setGetter((b)->((Basics)b).getTeamId()).setSetter((b, v)->((Basics)b).setTeamId((int)v)).setType(Types.INTEGER).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("TeamName").setGetter((b)->((Basics)b).getTeamName()).setSetter((b, v)->((Basics)b).setTeamName((String)v)).setType(Types.VARCHAR).setLength(127).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("Land").setGetter((b)->((Basics)b).getLand()).setSetter((b, v)->((Basics)b).setLand((int)v)).setType(Types.INTEGER).isNullable(false).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("Land").setGetter((b)->((Basics)b).getCountryId()).setSetter((b, v)->((Basics)b).setCountryId((int)v)).setType(Types.INTEGER).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("Liga").setGetter((b)->((Basics)b).getLiga()).setSetter((b, v)->((Basics)b).setLiga((int)v)).setType(Types.INTEGER).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("Saison").setGetter((b)->((Basics)b).getSeason()).setSetter((b, v)->((Basics)b).setSeason((int)v)).setType(Types.INTEGER).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("Spieltag").setGetter((b)->((Basics)b).getSpieltag()).setSetter((b, v)->((Basics)b).setSpieltag((int)v)).setType(Types.INTEGER).isNullable(false).build(),

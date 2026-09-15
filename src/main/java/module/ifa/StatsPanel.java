@@ -36,13 +36,7 @@ public class StatsPanel extends JPanel {
 	}
 
 	private void addListeners() {
-		this.model.addModelChangeListener(new ModelChangeListener() {
-
-			@Override
-			public void modelChanged() {
-				setHeaderTexts();
-			}
-		});
+		this.model.addModelChangeListener(this::setHeaderTexts);
 	}
 
 	private void initComponents() {
@@ -177,16 +171,12 @@ public class StatsPanel extends JPanel {
 	    infoButton.setPreferredSize(new Dimension(28, 28));
 	    add(infoButton, gbc);
 
-		infoButton.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				IfaOverviewDialog dlg = new IfaOverviewDialog(model, HOMainFrame.instance());
-				GUIUtils.decorateWithDisposeOnESC(dlg);
-				GUIUtils.setLocationCenteredToComponent(dlg, HOMainFrame.instance());
-				dlg.setVisible(true);
-			}
-		});
+		infoButton.addActionListener(e -> {
+            IfaOverviewDialog dlg = new IfaOverviewDialog(model, HOMainFrame.instance());
+            GUIUtils.decorateWithDisposeOnESC(dlg);
+            GUIUtils.setLocationCenteredToComponent(dlg, HOMainFrame.instance());
+            dlg.setVisible(true);
+        });
 	}
 
 	private void setHeaderTexts() {
@@ -195,8 +185,7 @@ public class StatsPanel extends JPanel {
 		doubleFormat.setMinimumFractionDigits(2);
 
 		int totalCountries = this.model.getTotalCountries();
-		String txt = "";
-		this.visitedValueLabel.setText(String.valueOf(this.model.getVistedCountriesCount()));
+        this.visitedValueLabel.setText(String.valueOf(this.model.getVisitedCountriesCount()));
 		this.hostedValueLabel.setText(String.valueOf(this.model.getHostedCountriesCount()));
 		this.countriesTotalValueLabel.setText(String.valueOf(totalCountries));
 		this.countriesTotalValueLabel2.setText(String.valueOf(totalCountries));

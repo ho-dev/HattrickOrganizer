@@ -8,8 +8,9 @@ import java.util.List;
 public class WorldDetailLeague  extends AbstractTable.Storable {
 
 	private static final HOConfigurationStringParameter latestDownload = new HOConfigurationStringParameter("LatestWorldDetailsDownload", null);
+    public static final int HATTRICK_INTERNATIONAL_LEAGUE_ID = 1000;
 
-	private int leagueId;
+    private int leagueId;
 	private int countryId;
 	private String countryName;
 	private int activeUsers;
@@ -105,7 +106,7 @@ public class WorldDetailLeague  extends AbstractTable.Storable {
 	}
 
 	public boolean isComplete() {
-		return this.currencyRate != null;
+		return this.currencyRate != null || this.leagueId >= HATTRICK_INTERNATIONAL_LEAGUE_ID;
 	}
 
 	public String getCurrencyName() {
@@ -162,4 +163,8 @@ public class WorldDetailLeague  extends AbstractTable.Storable {
 		}
 		return null;
 	}
+
+    public boolean isNationalLeague() {
+        return leagueId < HATTRICK_INTERNATIONAL_LEAGUE_ID && leagueId > 0;
+    }
 }
