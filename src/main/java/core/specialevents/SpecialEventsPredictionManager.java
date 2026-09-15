@@ -226,9 +226,9 @@ public class SpecialEventsPredictionManager {
             if (playerPerformance.getStatus() <= PlayerDataManager.AVAILABLE) {     // if status is UNKNOWN user has to download players info
                 this.opponentLineup.setPosition(playerPerformance.getMatchLineupPosition());
                 // playerPerformance -> Player
-                OpponentPlayer player = (OpponentPlayer) this.opponentPlayerInLineup.get(playerPerformance.getSpielerId());
+                OpponentPlayer player = (OpponentPlayer) this.opponentPlayerInLineup.get(playerPerformance.getPlayerId());
                 if (player == null) {
-                    PlayerInfo latestPlayerInfo = PlayerDataManager.getLatestPlayerInfo(playerPerformance.getSpielerId());
+                    PlayerInfo latestPlayerInfo = PlayerDataManager.getLatestPlayerInfo(playerPerformance.getPlayerId());
                     int age = latestPlayerInfo.getAge();
                     var wage = latestPlayerInfo.getSalary();
                     int tsi = latestPlayerInfo.getTsi();
@@ -237,8 +237,8 @@ public class SpecialEventsPredictionManager {
                     int spec = latestPlayerInfo.getSpecialEvent();
                     int role = playerPerformance.getMatchLineupPosition().getPosition();
                     player = oppPlayerSkillEstimator.calcPlayer(age, wage, tsi, form, stamina, spec, role, -1);
-                    player.setPlayerId(playerPerformance.getSpielerId());
-                    player.setLastName(playerPerformance.getSpielerName());
+                    player.setPlayerId(playerPerformance.getPlayerId());
+                    player.setLastName(playerPerformance.getLastName());
                     player.setHomeGrown(latestPlayerInfo.isMotherClubBonus());
                     player.setLoyalty(latestPlayerInfo.getLoyalty());
                     player.setExperience(latestPlayerInfo.getExperience());
@@ -268,7 +268,7 @@ public class SpecialEventsPredictionManager {
 //                    );
 //                    HOLogger.instance().debug(getClass(), pInfo);
 
-                    this.opponentPlayerInLineup.put(playerPerformance.getSpielerId(), player);
+                    this.opponentPlayerInLineup.put(playerPerformance.getPlayerId(), player);
                 }
 
                 int positionId = playerPerformance.getPosition();
@@ -281,7 +281,7 @@ public class SpecialEventsPredictionManager {
                 //m_cOppPlayerSkillEstimator.CalculateSkillsForPlayer(player);
             } else {
                 // PLayer SOLD, SUSPENDED or INJURED
-                OpponentPlayer player = (OpponentPlayer) opponentPlayerInLineup.get(playerPerformance.getSpielerId());
+                OpponentPlayer player = (OpponentPlayer) opponentPlayerInLineup.get(playerPerformance.getPlayerId());
                 if (player != null) {
                     opponentPlayerInLineup.remove(player.getPlayerId());
                 }
