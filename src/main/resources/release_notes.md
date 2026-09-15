@@ -22,6 +22,7 @@
 * Synchronize player selection in training and player overview modules (#2379)
 * Added the columns `Career Assists` and `Assists for the Team` to the overview and details panel. (#2254)
 * New columns "Recovered on" and "Slightly injured on" (#2363)
+* Hrf list shows next daily update (#2459)
 
 ### HO update
 
@@ -39,11 +40,16 @@
 
 * Added support of all 13 **Player Categories** (#2418)
 * Fix world details constraints error (#2444)
+* Player details show the total salary and the weeks of team membership (#2449)
 
 ### Lineup
 
 * Fix empty list of upcoming games in Lineup panel after first download.
 * Added support of all 13 **Player Categories** (#2418)
+
+### Matches
+
+* Player Detail Dialog: The days of the age of a player is now displayed in braces after the years.
 
 ### Training
 
@@ -91,6 +97,10 @@
 
 * Fix CVEs with HO dependencies
 * Update darklaf to most recent version.
+
+### Developer Tools
+
+* `Debug` / `SQL Editor`: Fixed that SQL statements were always executed in upper case. (#2491)
 
 ## Translations
 

@@ -3,6 +3,7 @@ package module.halloffame;
 import core.db.DBManager;
 import core.model.player.Player;
 import core.util.HODateTime;
+import core.util.HODuration;
 import org.w3c.dom.Element;
 import java.util.List;
 
@@ -63,9 +64,11 @@ public class HallOfFamePlayer extends Player {
      * Get durcation of trainer career
      * @return HODuration, null if player was trainer
      */
-    public HODateTime.HODuration getTrainerDuration() {
+    public HODuration getTrainerDuration() {
         getHistory();
-        if (trainerTo != null && trainerFrom != null) return HODateTime.HODuration.between(trainerFrom, trainerTo);
+        if (trainerTo != null && trainerFrom != null) {
+            return HODuration.betweenDays(trainerFrom, trainerTo);
+        }
         return null;
     }
 

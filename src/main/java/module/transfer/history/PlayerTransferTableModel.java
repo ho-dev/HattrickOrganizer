@@ -89,7 +89,7 @@ public class PlayerTransferTableModel extends HOTableModel {
                             if (player != null) {
                                 var age = player.getAgeAtDate(transfer.getDate());
                                 if (age != null) {
-                                    text = age.toString();
+                                    text = age.toAgeString();
                                     sortValue = age.toDouble();
                                 }
                             }

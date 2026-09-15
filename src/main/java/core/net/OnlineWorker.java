@@ -10,20 +10,20 @@ import core.gui.HOMainFrame;
 import core.gui.InfoPanel;
 import core.gui.theme.ThemeManager;
 import core.model.*;
-import core.model.tournament.TournamentDetails;
 import core.model.enums.MatchType;
 import core.model.enums.MatchTypeExtended;
 import core.model.match.*;
 import core.model.misc.Regiondetails;
 import core.model.player.Player;
+import core.model.tournament.TournamentDetails;
 import core.util.HODateTime;
 import core.util.HOLogger;
 import core.util.Helper;
-import core.util.StringUtils;
 import module.halloffame.HallOfFamePlayer;
 import module.lineup.Lineup;
 import module.nthrf.NtTeamDetails;
 import module.series.MatchFixtures;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.jetbrains.annotations.Nullable;
 
@@ -32,8 +32,8 @@ import java.awt.*;
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 
 /**
  * @author thomas.werth
