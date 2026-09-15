@@ -17,7 +17,6 @@ import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.util.HOLogger;
 import core.util.JsonNullAsZeroAdapter;
-import core.util.StringUtils;
 import module.lineup.assistant.LineupAssistant;
 import module.lineup.substitution.model.GoalDiffCriteria;
 import module.lineup.substitution.model.MatchOrderType;
