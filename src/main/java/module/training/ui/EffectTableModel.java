@@ -29,7 +29,7 @@ public class EffectTableModel extends HOTableModel {
     public EffectTableModel(UserColumnController.ColumnModelId columnModelId) {
         super(columnModelId, "ls.module.training.effect");
 
-        columns = new ArrayList<>(List.of(
+        var newColumns = new ArrayList<>(List.of(
                 new TrainingColumn(nextId++, "Season", 60) {
                     @Override
                     public IHOTableCellEntry getTableEntry(TrainWeekEffect entry) {
@@ -84,13 +84,13 @@ public class EffectTableModel extends HOTableModel {
                     }
                 }
         )).toArray(new TrainingColumn[0]);
-
+        setColumns(newColumns);
     }
 
     @Override
     protected void initData() {
         var values = EffectDAO.getTrainEffect();
-        m_clData = new Object[values.size()][columns.length];
+        m_clData = new Object[values.size()][getDisplayedColumns().length];
         int rownum=0;
         for ( var effects: values) {
             int column=0;

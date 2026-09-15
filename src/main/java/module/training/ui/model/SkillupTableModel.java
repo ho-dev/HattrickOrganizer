@@ -27,7 +27,7 @@ public class SkillupTableModel extends HOTableModel {
 
 	public SkillupTableModel(UserColumnController.@NotNull ColumnModelId id) {
 		super(id, "ls.module.training.skillUps");
-		columns = new ArrayList<>(List.of(
+		var newColumns = new ArrayList<>(List.of(
 				new TrainingColumn(nextId++, "ls.player.skill", 150) {
 					@Override
 					public IHOTableCellEntry getTableEntry(PlayerSkillChange entry) {
@@ -72,6 +72,7 @@ public class SkillupTableModel extends HOTableModel {
 					}
 				}
 		)).toArray(new TrainingColumn[0]);
+        setColumns(newColumns);
 	}
 
 	private Color getForegroundColor(PlayerSkillChange entry) {

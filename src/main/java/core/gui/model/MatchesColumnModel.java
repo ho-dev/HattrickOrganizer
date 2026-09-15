@@ -20,7 +20,7 @@ public final class MatchesColumnModel extends HOTableModel {
 	}
 
 	private void initialize() {
-		columns = UserColumnFactory.createMatchesArray();
+		setColumns(UserColumnFactory.createMatchesArray());
 
 		if (m_clMatches != null)
 			initData();

@@ -24,7 +24,7 @@ public class YouthTrainingViewTableModel extends HOTableModel {
 
     public YouthTrainingViewTableModel(UserColumnController.ColumnModelId id) {
         super(id,"YouthTrainingView");
-        columns =  initColumns();
+        setColumns(initColumns());
     }
 
     private YouthTrainingColumn[] initColumns() {
@@ -82,11 +82,11 @@ public class YouthTrainingViewTableModel extends HOTableModel {
                 .stream()
                 .sorted( (i1, i2) -> compare(i2.getMatchDate(), i1.getMatchDate()))
                 .collect(Collectors.toList());
-        m_clData = new Object[youthTrainings.size()][columns.length];
+        m_clData = new Object[youthTrainings.size()][getColumns().length];
         int rownum=0;
         for ( var youthTraining: youthTrainings ) {
             int columnnum=0;
-            for (var col: columns){
+            for (var col: getColumns()){
                 m_clData[rownum][columnnum] = ((YouthTrainingColumn)col).getTableEntry(youthTraining);
                 columnnum++;
             }
