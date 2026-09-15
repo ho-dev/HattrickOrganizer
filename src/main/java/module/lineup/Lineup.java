@@ -3,6 +3,7 @@ package module.lineup;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.JsonAdapter;
 import com.google.gson.annotations.SerializedName;
 import core.db.DBManager;
 import core.model.HOVerwaltung;
@@ -15,6 +16,7 @@ import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.util.HOLogger;
+import core.util.JsonNullAsZeroAdapter;
 import module.lineup.assistant.LineupAssistant;
 import module.lineup.substitution.model.GoalDiffCriteria;
 import module.lineup.substitution.model.MatchOrderType;
@@ -125,8 +127,9 @@ public class Lineup{
 
 		/** Style of play */
 		@SerializedName("coachModifier")
+        @JsonAdapter(JsonNullAsZeroAdapter.class) // Apply only to this field, converts unknown style to neutral
 		@Expose
-		private int m_iStyleOfPlay;
+		private Integer m_iStyleOfPlay;
 
 		//NOTE: newLineup is required by HT - do not delete even if it seems unused !
 		@SerializedName("newLineup")
@@ -334,12 +337,12 @@ public class Lineup{
 		};
 	}
 
-	public void setStyleOfPlay(int style) {
+	public void setStyleOfPlay(Integer style) {
 		ratingRevision++;
 		settings.m_iStyleOfPlay = style;
 	}
 
-	public int getCoachModifier() {
+	public Integer getCoachModifier() {
 		return settings.m_iStyleOfPlay;
 	}
 
