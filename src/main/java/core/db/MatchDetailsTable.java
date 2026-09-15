@@ -19,7 +19,7 @@ final class MatchDetailsTable extends AbstractTable {
 		super(TABLENAME, adapter);
 		idColumns = 2;
 	}
-	
+
 	@Override
 	protected void initColumns() {
 		columns = new ColumnDescriptor[] {
@@ -88,7 +88,7 @@ final class MatchDetailsTable extends AbstractTable {
 			"  PRIMARY KEY (MATCHID, MATCHTYP)"
 		};
 	}
-	
+
 	@Override
 	protected String[] getCreateIndexStatement() {
 		return new String[] {

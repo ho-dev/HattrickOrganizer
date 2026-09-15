@@ -23,6 +23,7 @@
 * Added the columns `Career Assists` and `Assists for the Team` to the overview and details panel. (#2254)
 * New columns "Recovered on" and "Slightly injured on" (#2363)
 * Hrf list shows next daily update (#2459)
+* Fix subskill recalculation overlooks trainings if downloads happened during training (#2149)
 
 ### HO update
 
@@ -102,7 +103,8 @@ Reports by Contributors - October 19, 2025 - June 19, 2026
 
 * Jösgall 1005
 * Ioannidouefty 459
-* wsbrenk 122
+* Lukasz 418
+* wsbrenk 124
 * Frankieorabona 73
 * Lidegand 72
 * \_KOHb\_ 54
@@ -113,4 +115,4 @@ Reports by Contributors - October 19, 2025 - June 19, 2026
 * Mara 3
 * Joeri Roels 1
 
-Total 1868
+Total 2288

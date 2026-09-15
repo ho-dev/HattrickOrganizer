@@ -579,12 +579,9 @@ public class HOModel {
      */
     public final void calcSubskills(HODateTime from, HODateTime to) {
         var trainingWeeks = TrainingManager.instance().getHistoricalTrainingsBetweenDates(from, to);
-        for (var player : this.getCurrentPlayers()) {
-            player.calcSubSkills(this.getPreviousID(), trainingWeeks);
-        }
+        getCurrentPlayers().forEach(player -> player.calcSubSkills(getPreviousID(), trainingWeeks));
         // store new values of current players
-        DBManager.instance().saveSpieler(getCurrentPlayers());
-
+        DBManager.instance().saveSpieler(players);
         // push recent training to historical training table
         TrainingManager.instance().updateHistoricalTrainings();
     }
@@ -671,24 +668,6 @@ public class HOModel {
                 .filter(i -> i.getMatchDate() != null && i.getMatchDate().isAfter(date))
                 .sorted(Comparator.comparing(YouthTraining::getMatchDate))
                 .collect(Collectors.toList());
-    }
-
-    /**
-     * League id of user's premier team
-     *
-     * @return league id of premier team, if available
-     * otherwise of the current team
-     */
-    public int getLeagueIdPremierTeam() {
-        var xtra = getXtraDaten();
-        if (xtra != null) {
-            var countryId = xtra.getCountryId();
-            if (countryId != null) {
-                var ret = getLeagueId(countryId);
-                if (ret != null) return ret;
-            }
-        }
-        return getBasics().getLiga(); // should no longer happen
     }
 
     /**
