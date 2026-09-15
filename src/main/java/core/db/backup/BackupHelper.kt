@@ -1,9 +1,11 @@
 package core.db.backup
 
 import core.db.user.UserManager
+import core.util.HODateTime
 import core.util.HOLogger
 import java.io.File
 import java.text.SimpleDateFormat
+import java.time.Instant
 import java.util.*
 
 /**
@@ -14,6 +16,7 @@ import java.util.*
 object BackupHelper {
 	private val sdf = SimpleDateFormat("yyyy-MM-dd")
 	private val extensions = listOf("script", "data", "backup", "log", "properties")
+    private const val DAYS_PER_SEASON = 112
 
 	// zip and delete db
 	@JvmStatic
@@ -52,19 +55,59 @@ object BackupHelper {
 	 * @param dbDirectory Directory where to find the zip files to be deleted.
 	 */
 	private fun deleteOldFiles(dbDirectory: File) {
-		val files = dbDirectory.listFiles { file: File ->
-			file.isFile && file.extension == HOZip.zipExt
+        val files = dbDirectory.listFiles { file: File ->
+            file.isFile && file.extension == HOZip.zipExt
+        }
+        if (files != null && files.isNotEmpty()) {
+            val fileList = files.toList()
+            val deleteBackupList = getBackupFilesToDelete(fileList)
+            deleteBackupList.forEach { file ->
+                if ( file.delete() ) {
+                    HOLogger.instance().info(this.javaClass, "Deleted old backup file: ${file.name}")
+                }
+                else {
+                    HOLogger.instance().error(this.javaClass, "Failed to delete old backup file: ${file.name}")
+                }
+            }
+        } else {
+            HOLogger.instance().warning(this.javaClass, "No files to delete in directory $dbDirectory")
+        }
+    }
 
-		}?.toList()
+    /**
+     * Filter backup files from list that should be deleted
+     *  - The configured count of youngest backups are not included to the result (not deleted)
+     *  - If the backup file is younger than 112 days the latest file of each week is not included
+     *  - If the backup file is older than 112 days the latest file of each season is not included
+     *
+     * When the returned files are deleted, the user has a backup file for each previous season
+     * and also a file for each week of the last 16 weeks, plus the configured number of the most recent backups.
+     */
+    private fun getBackupFilesToDelete(files: List<File>) : List<File> {
+        val ret = mutableListOf<File>()
+        val numberOfBackups = UserManager.instance().currentUser.numberOfBackups
+        var keptBackupFileLastModifiedWeek: HODateTime.HTWeek? = null
+        var keptFiles = 0
+        val currentTimestamp = HODateTime.now()
+        files.sortedByDescending { file -> file.lastModified() }
+            .forEach { file ->
+                val lastModified = HODateTime(Instant.ofEpochMilli(file.lastModified()))
+                val lastModifiedWeek = lastModified.toHTWeek()
+                val fileAgeInDays = HODateTime.between(lastModified, currentTimestamp).toDays()
+                if (keptFiles < numberOfBackups ||
+                    fileAgeInDays < DAYS_PER_SEASON && !lastModifiedWeek.equals(keptBackupFileLastModifiedWeek) ||
+                    fileAgeInDays >= DAYS_PER_SEASON && lastModifiedWeek.season != keptBackupFileLastModifiedWeek!!.season
+                ) {
+                    keptBackupFileLastModifiedWeek = lastModifiedWeek
+                    keptFiles++
+                } else {
+                    ret.add(file)
+                }
+            }
+        return ret
+    }
 
-		if (files != null) {
-			files.sortedByDescending { f -> f.lastModified() }
-				.drop(UserManager.instance().currentUser.numberOfBackups)
-				.forEach { f -> f.delete() }
-		}
-	}
-
-	private fun getFilesToBackup(dbDirectory: File): Array<File> {
+    private fun getFilesToBackup(dbDirectory: File): Array<File> {
 		return dbDirectory.listFiles { file: File ->
 			file.isFile && extensions.any { suffix -> file.extension == suffix }
 		} ?: arrayOf()
