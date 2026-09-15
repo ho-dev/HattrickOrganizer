@@ -80,9 +80,8 @@ object BackupHelper {
      *  - If the backup file is younger than 112 days the latest file of each week is not included
      *  - If the backup file is older than 112 days the latest file of each season is not included
      *
-     *  In addition, the user has one backup file for each previous season
-     *  and additionally one file for each week for the last 16 weeks
-     *  plus the configured count of latest backups
+     * When the returned files are deleted, the user has a backup file for each previous season
+     * and also a file for each week of the last 16 weeks, plus the configured number of the most recent backups.
      */
     private fun getBackupFilesToDelete(files: List<File>) : List<File> {
         val ret = mutableListOf<File>()
