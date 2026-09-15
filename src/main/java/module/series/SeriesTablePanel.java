@@ -106,44 +106,44 @@ class SeriesTablePanel extends ImagePanel {
 		final TableColumnModel columnModel = seriesTable.getColumnModel();
 
 		// Place
-		columnModel.getColumn(0).setPreferredWidth(Helper.calcCellWidth(45));
+		columnModel.getColumn(0).setPreferredWidth(Helper.calcCellWidth(54));
 
 		// Club
-		columnModel.getColumn(1).setPreferredWidth(Helper.calcCellWidth(200));
+		columnModel.getColumn(1).setPreferredWidth(Helper.calcCellWidth(240));
 
 		// Points
-		columnModel.getColumn(2).setPreferredWidth(Helper.calcCellWidth(30));
+		columnModel.getColumn(2).setPreferredWidth(Helper.calcCellWidth(42));
 
 		// # Played matches
-		columnModel.getColumn(3).setPreferredWidth(Helper.calcCellWidth(25));
+		columnModel.getColumn(3).setPreferredWidth(Helper.calcCellWidth(42));
 
 		// # Victories
-		columnModel.getColumn(4).setPreferredWidth(Helper.calcCellWidth(25));
+		columnModel.getColumn(4).setPreferredWidth(Helper.calcCellWidth(42));
 
 		// # Draws
-		columnModel.getColumn(5).setPreferredWidth(Helper.calcCellWidth(25));
+		columnModel.getColumn(5).setPreferredWidth(Helper.calcCellWidth(42));
 
 		// # Losses
-		columnModel.getColumn(6).setPreferredWidth(Helper.calcCellWidth(25));
+		columnModel.getColumn(6).setPreferredWidth(Helper.calcCellWidth(42));
 
 		// Goals For
-		columnModel.getColumn(7).setPreferredWidth(Helper.calcCellWidth(30));
+		columnModel.getColumn(7).setPreferredWidth(Helper.calcCellWidth(42));
 
 		// Goals Against
-		columnModel.getColumn(8).setPreferredWidth(Helper.calcCellWidth(30));
+		columnModel.getColumn(8).setPreferredWidth(Helper.calcCellWidth(42));
 
 		// Goals Difference
-		columnModel.getColumn(9).setPreferredWidth(Helper.calcCellWidth(30));
+		columnModel.getColumn(9).setPreferredWidth(Helper.calcCellWidth(42));
 
 		// Serie
-		columnModel.getColumn(10).setPreferredWidth(Helper.calcCellWidth(90));
+		columnModel.getColumn(10).setPreferredWidth(Helper.calcCellWidth(110));
 
 		// Statistics
-		columnModel.getColumn(11).setPreferredWidth(Helper.calcCellWidth(50));
-		columnModel.getColumn(12).setPreferredWidth(Helper.calcCellWidth(50));
-		columnModel.getColumn(13).setPreferredWidth(Helper.calcCellWidth(50));
-		columnModel.getColumn(14).setPreferredWidth(Helper.calcCellWidth(50));
-		columnModel.getColumn(15).setPreferredWidth(Helper.calcCellWidth(50));
+		columnModel.getColumn(11).setPreferredWidth(Helper.calcCellWidth(60));
+		columnModel.getColumn(12).setPreferredWidth(Helper.calcCellWidth(60));
+		columnModel.getColumn(13).setPreferredWidth(Helper.calcCellWidth(60));
+		columnModel.getColumn(14).setPreferredWidth(Helper.calcCellWidth(60));
+		columnModel.getColumn(15).setPreferredWidth(Helper.calcCellWidth(60));
 	}
 
 	private void initComponents() {
