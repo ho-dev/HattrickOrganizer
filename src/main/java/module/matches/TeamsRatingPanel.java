@@ -56,16 +56,22 @@ class TeamsRatingPanel extends LazyImagePanel {
         LEFT_DEFENSE(3, "ls.match.ratingsector.leftdefence", Matchdetails::getHomeLeftDef, Matchdetails::getGuestLeftDef, Matchdetails::getGuestRightAtt),
         RIGHT_ATTACK(4, "ls.match.ratingsector.rightattack", Matchdetails::getHomeRightAtt, Matchdetails::getGuestRightAtt, Matchdetails::getGuestLeftDef),
         CENTRAL_ATTACK(5, "ls.match.ratingsector.centralattack", Matchdetails::getHomeMidAtt, Matchdetails::getGuestMidAtt, Matchdetails::getGuestMidDef),
-        LEFT_ATTACK(6, "ls.match.ratingsector.leftattack", Matchdetails::getHomeLeftAtt, Matchdetails::getGuestLeftAtt, Matchdetails::getGuestRightDef);
+        LEFT_ATTACK(6, "ls.match.ratingsector.leftattack", Matchdetails::getHomeLeftAtt, Matchdetails::getGuestLeftAtt, Matchdetails::getGuestRightDef),
+        INDIRECT_SET_PIECES_DEFENSE(7, "ls.match.ratingsector.indirect.setpieces.def", Matchdetails::getHomeRatingIndirectSetPiecesDef, Matchdetails::getGuestRatingIndirectSetPiecesDef, Matchdetails::getGuestRatingIndirectSetPiecesAtt),
+        INDIRECT_SET_PIECES_ATTACK(8, "ls.match.ratingsector.indirect.setpieces.att", Matchdetails::getHomeRatingIndirectSetPiecesAtt, Matchdetails::getGuestRatingIndirectSetPiecesAtt, Matchdetails::getGuestRatingIndirectSetPiecesDef);
 
-        private final int rowIndex;
+        private final int ratingSectorId;
         private final String labelTranslationKey;
         private final Function<Matchdetails, Integer> homeTeamFunction;
         private final Function<Matchdetails, Integer> guestTeamFunction;
         private final Function<Matchdetails, Integer> versusGuestTeamFunction;
 
-        public int getRowNumber() {
-            return getRowIndex() + 1;
+        public int getViewGridY() {
+            var ret = getRatingSectorId() + 1;
+            if (ret > INDIRECT_SET_PIECES_DEFENSE.ratingSectorId) {
+                ret++;
+            }
+            return ret;
         }
 
         public int getHomeTeamValue(Matchdetails matchdetails) {
@@ -209,6 +215,11 @@ class TeamsRatingPanel extends LazyImagePanel {
 		m_jgbcBottom.gridx = 2;
 		m_jpBottom.add(m_jlGuestTeamName, m_jgbcBottom);
 
+        var indirectSetPiecesLabel = new JLabel(TranslationFacility.tr("ls.match.ratingsector.indirect.setpieces"));
+        indirectSetPiecesLabel.setFont(generalFont);
+        m_jgbcBottom.insets = new Insets(16, 8, 0, 8);
+        add(indirectSetPiecesLabel, 0,  8);
+        m_jgbcBottom.insets = new Insets(8, 8, 0, 8);
         Stream.of(RatingSector.values()).forEach(this::addRow);
 		m_jgbcBottom.insets = new Insets(8, 8, 8, 8);
 
@@ -238,11 +249,11 @@ class TeamsRatingPanel extends LazyImagePanel {
 
 	private void addRow(RatingSector ratingSector) {
         final String text = TranslationFacility.tr(ratingSector.getLabelTranslationKey());
-        final int row = ratingSector.getRowNumber();
+        final int row = ratingSector.getViewGridY();
 		JLabel label = new JLabel(text);
 		label.setFont(generalFont);
 		add(label, 0, row);
-        var barPair = barPairs.get(ratingSector.getRowIndex());
+        var barPair = barPairs.get(ratingSector.getRatingSectorId());
         add(barPair.progressBarHome(), 1, row);
         add(barPair.progressBarGuest(), 2, row);
 	}
@@ -279,10 +290,20 @@ class TeamsRatingPanel extends LazyImagePanel {
     }
 
 	private void setBarsValue(RatingSector ratingSector, Matchdetails matchdetails) {
-        var barPar = barPairs.get(ratingSector.getRowIndex());
-        setBarValue(barPar.progressBarHome(), ratingSector.getHomeTeamValue(matchdetails));
-        setBarValue(barPar.progressBarGuest(), ratingSector.getGuestTeamValue(matchdetails));
-	}
+        var barPar = barPairs.get(ratingSector.getRatingSectorId());
+        var homeValue = ratingSector.getHomeTeamValue(matchdetails);
+        var guestValue = ratingSector.getGuestTeamValue(matchdetails);
+        if (homeValue >= 0) {
+            setBarValue(barPar.progressBarHome(), homeValue);
+        } else {
+            resetProgressBar(barPar.progressBarHome());
+        }
+        if (guestValue >= 0) {
+            setBarValue(barPar.progressBarGuest(), guestValue);
+        } else {
+            resetProgressBar(barPar.progressBarGuest());
+        }
+    }
 
     private static void setBarValue(JProgressBar progressBar, int value) {
         double htValue = calcHtValue(value);

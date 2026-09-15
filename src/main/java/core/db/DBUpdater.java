@@ -99,62 +99,68 @@ final class DBUpdater {
 		}
 	}
 
-	private void updateDBv1000(int dbVersion) throws  SQLException{
+	private void updateDBv1000(int dbVersion) throws  SQLException {
 
         var economyTable = dbManager.getTable(EconomyTable.TABLENAME);
-        for (var column : economyTable.getColumns()){
-            if ( column.getType() == Types.DECIMAL){
+        for (var column : economyTable.getColumns()) {
+            if (column.getType() == Types.DECIMAL) {
                 if (economyTable.columnHasDataType(column.getColumnName(), "DECIMAL")) break; // already done
                 economyTable.tryChangeColumnDataType(column.getColumnName(), "INTEGER", "DECIMAL");
             }
         }
 
-		// Add all available file infos to the world details table, especially the currency information
-		var worldDetailsTable  = dbManager.getTable(WorldDetailsTable.TABLENAME);
-		if ( worldDetailsTable.tryAddColumn("COUNTRY_CODE", "VARCHAR(128)") ) {
-			worldDetailsTable.tryAddColumn("CURRENCY_NAME", "VARCHAR(128)");
-			worldDetailsTable.tryAddColumn("CURRENCY_RATE", "VARCHAR(128)");
-			worldDetailsTable.tryAddColumn("DATE_FORMAT", "VARCHAR(128)");
-			worldDetailsTable.tryAddColumn("TIME_FORMAT", "VARCHAR(128)");
-		}
+        // Add all available file infos to the world details table, especially the currency information
+        var worldDetailsTable = dbManager.getTable(WorldDetailsTable.TABLENAME);
+        if (worldDetailsTable.tryAddColumn("COUNTRY_CODE", "VARCHAR(128)")) {
+            worldDetailsTable.tryAddColumn("CURRENCY_NAME", "VARCHAR(128)");
+            worldDetailsTable.tryAddColumn("CURRENCY_RATE", "VARCHAR(128)");
+            worldDetailsTable.tryAddColumn("DATE_FORMAT", "VARCHAR(128)");
+            worldDetailsTable.tryAddColumn("TIME_FORMAT", "VARCHAR(128)");
+        }
 
-		// Change all amount of money columns to big decimal type
-		var playerTable = dbManager.getTable(SpielerTable.TABLENAME);
-		if ( playerTable.tryChangeColumnDataType("GEHALT", "INTEGER", "DECIMAL") ) {
+        // Change all amount of money columns to big decimal type
+        var playerTable = dbManager.getTable(SpielerTable.TABLENAME);
+        if (playerTable.tryChangeColumnDataType("GEHALT", "INTEGER", "DECIMAL")) {
 
-			var scoutTable = dbManager.getTable(ScoutTable.TABLENAME);
-			scoutTable.tryChangeColumnDataType("PRICE", "INTEGER", "DECIMAL");
-			scoutTable.tryChangeColumnDataType("baseWage", "INTEGER", "DECIMAL");
+            var scoutTable = dbManager.getTable(ScoutTable.TABLENAME);
+            scoutTable.tryChangeColumnDataType("PRICE", "INTEGER", "DECIMAL");
+            scoutTable.tryChangeColumnDataType("baseWage", "INTEGER", "DECIMAL");
 
-			var transferTable = dbManager.getTable(TransferTable.TABLENAME);
-			transferTable.tryChangeColumnDataType("PRICE", "INTEGER", "DECIMAL");
-			transferTable.tryChangeColumnDataType("MOTHERCLUBFEE", "INTEGER", "DECIMAL");
-			transferTable.tryChangeColumnDataType("previousclubcommission", "INTEGER", "DECIMAL");
+            var transferTable = dbManager.getTable(TransferTable.TABLENAME);
+            transferTable.tryChangeColumnDataType("PRICE", "INTEGER", "DECIMAL");
+            transferTable.tryChangeColumnDataType("MOTHERCLUBFEE", "INTEGER", "DECIMAL");
+            transferTable.tryChangeColumnDataType("previousclubcommission", "INTEGER", "DECIMAL");
 
-			var squadInfoTable = dbManager.getTable(SquadInfoTable.TABLENAME);
-			squadInfoTable.tryChangeColumnDataType("SALARY", "INTEGER", "DECIMAL");
+            var squadInfoTable = dbManager.getTable(SquadInfoTable.TABLENAME);
+            squadInfoTable.tryChangeColumnDataType("SALARY", "INTEGER", "DECIMAL");
 
-			var taPlayerTable = dbManager.getTable(TAPlayerTable.TABLENAME);
-			taPlayerTable.tryChangeColumnDataType("SALARY", "INTEGER", "DECIMAL");
+            var taPlayerTable = dbManager.getTable(TAPlayerTable.TABLENAME);
+            taPlayerTable.tryChangeColumnDataType("SALARY", "INTEGER", "DECIMAL");
 
-			var stadiumTable = dbManager.getTable(StadionTable.TABLENAME);
-			stadiumTable.tryChangeColumnDataType("AusbauKosten", "INTEGER", "DECIMAL");
-		}
+            var stadiumTable = dbManager.getTable(StadionTable.TABLENAME);
+            stadiumTable.tryChangeColumnDataType("AusbauKosten", "INTEGER", "DECIMAL");
+        }
 
         // #2254: Career Assists and Assists for the Team
         playerTable.tryAddColumn("CareerAssists", "INTEGER");
         playerTable.tryAddColumn("AssistsCurrentTeam", "INTEGER");
 
-		var stadiumTable = dbManager.getTable(StadionTable.TABLENAME);
-		stadiumTable.tryChangeColumn("AusbauKosten", "NULL");
+        var stadiumTable = dbManager.getTable(StadionTable.TABLENAME);
+        stadiumTable.tryChangeColumn("AusbauKosten", "NULL");
         stadiumTable.tryAddColumn("ARENA_IMAGE", "VARCHAR(256)");
         stadiumTable.tryAddColumn("ARENA_FALLBACK_IMAGE", "VARCHAR(256)");
 
         var hofTable = dbManager.getTable(HallOfFamePlayersTable.TABLENAME);
         hofTable.createTable();
 
-		updateDBVersion(dbVersion, 1000);
-	}
+        var matchDetailsTable = dbManager.getTable(MatchDetailsTable.TABLENAME);
+        if (matchDetailsTable.tryAddColumn("GuestRatingIndirectSetPiecesAtt", "INTEGER")) {
+            matchDetailsTable.tryAddColumn("GuestRatingIndirectSetPiecesDef", "INTEGER");
+            matchDetailsTable.tryRenameColumn("RatingIndirectSetPiecesDef", "HomeRatingIndirectSetPiecesDef");
+            matchDetailsTable.tryRenameColumn("RatingIndirectSetPiecesAtt", "HomeRatingIndirectSetPiecesAtt");
+        }
+        updateDBVersion(dbVersion, 1000);
+    }
 
     private void updateDBv901(int dbVersion) throws SQLException {
 
