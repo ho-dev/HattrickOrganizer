@@ -21,7 +21,8 @@ object BackupHelper {
 	// zip and delete db
 	@JvmStatic
 	fun backup(dbDirectory: File) {
-		if (!dbDirectory.exists()) {
+        val numberOfBackups = UserManager.instance().currentUser.numberOfBackups
+        if (!dbDirectory.exists() || numberOfBackups < 1) {
 			return
 		}
 
@@ -46,7 +47,7 @@ object BackupHelper {
 			HOLogger.instance().log(BackupHelper::class.java, e)
 		}
 
-		deleteOldFiles(dbDirectory)
+		deleteOldFiles(dbDirectory, numberOfBackups)
 	}
 
 	/**
@@ -54,23 +55,22 @@ object BackupHelper {
 	 *
 	 * @param dbDirectory Directory where to find the zip files to be deleted.
 	 */
-	private fun deleteOldFiles(dbDirectory: File) {
+	private fun deleteOldFiles(dbDirectory: File, numberOfBackups: Int) {
         val files = dbDirectory.listFiles { file: File ->
             file.isFile && file.extension == HOZip.zipExt
         }
-        if (files != null && files.isNotEmpty()) {
+        if (files == null) {
+            HOLogger.instance().error(this.javaClass, "Cannot access backup directory $dbDirectory")
+        } else if (files.isNotEmpty()) {
             val fileList = files.toList()
-            val deleteBackupList = getBackupFilesToDelete(fileList)
+            val deleteBackupList = getBackupFilesToDelete(fileList, numberOfBackups)
             deleteBackupList.forEach { file ->
-                if ( file.delete() ) {
+                if (file.delete()) {
                     HOLogger.instance().info(this.javaClass, "Deleted old backup file: ${file.name}")
-                }
-                else {
+                } else {
                     HOLogger.instance().error(this.javaClass, "Failed to delete old backup file: ${file.name}")
                 }
             }
-        } else {
-            HOLogger.instance().warning(this.javaClass, "No files to delete in directory $dbDirectory")
         }
     }
 
@@ -83,27 +83,28 @@ object BackupHelper {
      * When the returned files are deleted, the user has a backup file for each previous season
      * and also a file for each week of the last 16 weeks, plus the configured number of the most recent backups.
      */
-    private fun getBackupFilesToDelete(files: List<File>) : List<File> {
+    private fun getBackupFilesToDelete(files: List<File>, numberOfBackups : Int) : List<File> {
         val ret = mutableListOf<File>()
-        val numberOfBackups = UserManager.instance().currentUser.numberOfBackups
-        var keptBackupFileLastModifiedWeek: HODateTime.HTWeek? = null
-        var keptFiles = 0
-        val currentTimestamp = HODateTime.now()
-        files.sortedByDescending { file -> file.lastModified() }
-            .forEach { file ->
-                val lastModified = HODateTime(Instant.ofEpochMilli(file.lastModified()))
-                val lastModifiedWeek = lastModified.toHTWeek()
-                val fileAgeInDays = HODateTime.between(lastModified, currentTimestamp).toDays()
-                if (keptFiles < numberOfBackups ||
-                    fileAgeInDays < DAYS_PER_SEASON && !lastModifiedWeek.equals(keptBackupFileLastModifiedWeek) ||
-                    fileAgeInDays >= DAYS_PER_SEASON && lastModifiedWeek.season != keptBackupFileLastModifiedWeek!!.season
-                ) {
-                    keptBackupFileLastModifiedWeek = lastModifiedWeek
-                    keptFiles++
-                } else {
-                    ret.add(file)
+        if (numberOfBackups > 0) {
+            var keptBackupFileLastModifiedWeek: HODateTime.HTWeek? = null
+            var keptFiles = 0
+            val currentTimestamp = HODateTime.now()
+            files.sortedByDescending { file -> file.lastModified() }
+                .forEach { file ->
+                    val lastModified = HODateTime(Instant.ofEpochMilli(file.lastModified()))
+                    val lastModifiedWeek = lastModified.toHTWeek()
+                    val fileAgeInDays = HODateTime.between(lastModified, currentTimestamp).toDays()
+                    if (keptFiles < numberOfBackups || keptBackupFileLastModifiedWeek == null ||
+                        fileAgeInDays < DAYS_PER_SEASON && !lastModifiedWeek.equals(keptBackupFileLastModifiedWeek) ||
+                        fileAgeInDays >= DAYS_PER_SEASON && lastModifiedWeek.season != keptBackupFileLastModifiedWeek!!.season
+                    ) {
+                        keptBackupFileLastModifiedWeek = lastModifiedWeek
+                        keptFiles++
+                    } else {
+                        ret.add(file)
+                    }
                 }
-            }
+        }
         return ret
     }
 
