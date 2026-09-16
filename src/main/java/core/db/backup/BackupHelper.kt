@@ -23,32 +23,28 @@ object BackupHelper {
 	fun backup(dbDirectory: File) {
         val numberOfBackups = UserManager.instance().currentUser.numberOfBackups
         if (!dbDirectory.exists() || numberOfBackups < 1) {
-			return
-		}
+            return
+        }
 
-		val filesToBackup = getFilesToBackup(dbDirectory)
-		if (filesToBackup.isEmpty()) {
-			return
-		}
+        val filesToBackup = getFilesToBackup(dbDirectory)
+        if (filesToBackup.isEmpty()) {
+            return
+        }
 
-		val zOut: HOZip
-		try {
-
-			zOut = HOZip(
-				"""$dbDirectory${File.separator}db_${UserManager.instance().currentUser.teamName}-${sdf.format(Date())}.${HOZip.zipExt}"""
-			)
-
-			for (file in filesToBackup) {
-				zOut.addFile(file)
-			}
-
-			zOut.closeArchive()
-		} catch (e: Exception) {
-			HOLogger.instance().log(BackupHelper::class.java, e)
-		}
-
-		deleteOldFiles(dbDirectory, numberOfBackups)
-	}
+        val zOut: HOZip
+        try {
+            zOut = HOZip(
+                """$dbDirectory${File.separator}db_${UserManager.instance().currentUser.teamName}-${sdf.format(Date())}.${HOZip.zipExt}"""
+            )
+            for (file in filesToBackup) {
+                zOut.addFile(file)
+            }
+            zOut.closeArchive()
+            deleteOldFiles(dbDirectory, numberOfBackups)
+        } catch (e: Exception) {
+            HOLogger.instance().log(BackupHelper::class.java, e)
+        }
+    }
 
 	/**
 	 * Deletes old zip files in the directory <code>dbDirectory</code>.
