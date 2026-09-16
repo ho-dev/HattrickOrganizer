@@ -70,16 +70,6 @@ public class PlayerPerformance {
         return matchLineupPosition.getPlayerId();
     }
 
-    /**
-     * Gets the last name of the player.
-     *
-     * @deprecated Please use {@link #getPlayerName()} instead.
-     */
-    @Deprecated(since = "10.0", forRemoval = true)
-    public String getSpielerName() {
-        return getPlayerName();
-    }
-
     public String getPlayerName() {
         return matchLineupPosition.getSpielerName();
     }
