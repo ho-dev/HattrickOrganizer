@@ -197,7 +197,7 @@ public class LineupAssistantPanel extends JPanel implements Refreshable, ActionL
 	@Override
 	public final void itemStateChanged(ItemEvent e) {
         if (e.getStateChange() == ItemEvent.SELECTED) {
-            // Wetter -> Refresh
+            // Weather -> Refresh
             Objects.requireNonNull(HOMainFrame.instance().getLineupPanel()).update();
         }
     }
@@ -256,14 +256,11 @@ public class LineupAssistantPanel extends JPanel implements Refreshable, ActionL
 
 		mainFrame.setInformation(TranslationFacility.tr("Autoaufstellung_fertig"));
 		Objects.requireNonNull(mainFrame.getLineupPanel()).update();
-
-		// gui.RefreshManager.instance ().doRefresh ();
 	}
 
 	private void displayGUI() {
 
 		// Add overlays to player panels
-
 		for (Map.Entry<PlayerPositionPanel, LineupAssistantSelectorOverlay> entry : positions.entrySet()) {
 			if (entry.getValue() == null) {
 				boolean selected = true;
@@ -340,9 +337,7 @@ public class LineupAssistantPanel extends JPanel implements Refreshable, ActionL
 
 	private void removeGUI() {
         // Remove overlays
-        for (Map.Entry<PlayerPositionPanel, LineupAssistantSelectorOverlay> entry : positions.entrySet()) {
-            entry.getKey().removeAssistantOverlay(entry.getValue());
-        }
+        positions.forEach(PlayerPositionPanel::removeAssistantOverlay);
 
         // Remove buttons and labels
         var pane = HOMainFrame.instance().getLineupPanel();
