@@ -96,7 +96,7 @@ object BackupHelper {
                     val fileAgeInDays = HODateTime.between(lastModified, currentTimestamp).toDays()
                     if (keptFiles < numberOfBackups || keptBackupFileLastModifiedWeek == null ||
                         fileAgeInDays < DAYS_PER_SEASON && !lastModifiedWeek.equals(keptBackupFileLastModifiedWeek) ||
-                        fileAgeInDays >= DAYS_PER_SEASON && lastModifiedWeek.season != keptBackupFileLastModifiedWeek!!.season
+                        fileAgeInDays >= DAYS_PER_SEASON && lastModifiedWeek.season != keptBackupFileLastModifiedWeek.season
                     ) {
                         keptBackupFileLastModifiedWeek = lastModifiedWeek
                         keptFiles++
