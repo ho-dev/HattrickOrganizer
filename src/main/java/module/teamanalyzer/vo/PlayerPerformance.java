@@ -1,6 +1,7 @@
 package module.teamanalyzer.vo;
 
 import core.model.match.MatchLineupPosition;
+import core.model.player.Player;
 import lombok.Getter;
 import module.teamanalyzer.manager.PlayerDataManager;
 
@@ -39,10 +40,6 @@ public class PlayerPerformance {
         return matchLineupPosition.getRoleId();
     }
 
-    public String getNickName() {
-        return matchLineupPosition.getNickName();
-    }
-
     public byte getPosition() {
         return matchLineupPosition.getPosition();
     }
@@ -76,29 +73,19 @@ public class PlayerPerformance {
     /**
      * Gets the last name of the player.
      *
-     * @deprecated Please use {@link #getLastName()} instead.
+     * @deprecated Please use {@link #getPlayerName()} instead.
      */
     @Deprecated(since = "10.0", forRemoval = true)
     public String getSpielerName() {
-        return getLastName();
+        return getPlayerName();
     }
 
-    public String getLastName() {
+    public String getPlayerName() {
         return matchLineupPosition.getSpielerName();
     }
 
-    /**
-     * Gets the first name of the player.
-     *
-     * @deprecated Please use {@link #getFirstName()} instead.
-     */
-    @Deprecated(since = "10.0", forRemoval = true)
-    public String getSpielerVName() {
-        return getFirstName();
-    }
-
-    public String getFirstName() {
-        return matchLineupPosition.getSpielerVName();
+    public Player getPlayer() {
+        return matchLineupPosition.getPlayer();
     }
 
     public void setStatus(int i) {

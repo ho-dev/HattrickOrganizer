@@ -61,7 +61,7 @@ public class SpotReport extends Report {
      * @param pp
      */
     private void updatePlayerAppearance(PlayerPerformance pp) {
-        String name = "" + pp.getLastName();
+        String name = "" + pp.getPlayerName();
 
         name = name.replaceAll(" ", "");
 
@@ -70,7 +70,7 @@ public class SpotReport extends Report {
         if (playerApperance == null) {
             playerApperance = new PlayerAppearance();
             playerApperance.setPlayerId(pp.getPlayerId());
-            playerApperance.setName(pp.getLastName());
+            playerApperance.setName(pp.getPlayerName());
 
             playerApperance.setStatus(pp.getStatus());
             players.put(name, playerApperance);
