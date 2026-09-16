@@ -14,12 +14,12 @@ import core.model.match.StyleOfPlay;
 import core.model.player.IMatchRoleID;
 import core.util.HODateTime;
 import core.util.HOLogger;
-import core.util.StringUtils;
 import hattrickdata.Arena;
 import hattrickdata.Capacity;
 import hattrickdata.ExpandedCapacity;
 import module.lineup.substitution.model.Substitution;
 import module.youth.YouthPlayer;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import java.util.List;
