@@ -129,7 +129,6 @@ public final class LineupRatingPanel extends RasenPanel implements core.gui.Refr
     private final JPanel m_jpFormationStats = new JPanel(new BorderLayout());
     private final NumberFormat m_clFormat;
     private final JButton m_jbCopyRatingButton = new JButton();
-//    private final JButton m_jbFeedbackButton = new JButton();
     private final JLabel copyrights = new JLabel("", SwingConstants.CENTER);
 
     private final Dimension SIZE = new Dimension(Helper.calcCellWidth(120), Helper.calcCellWidth(40));

@@ -6,8 +6,8 @@ import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
 import core.util.HODateTime;
+import core.util.HODuration;
 import core.util.Helper;
-import core.util.HumanDuration;
 
 import javax.swing.*;
 import java.awt.*;
@@ -217,6 +217,6 @@ public class ArenaInfoPanel extends JPanel {
 	}
 
 	private static String toDurationString(HODateTime hoDateTime) {
-		return HumanDuration.of(HODateTime.between(HODateTime.now(), hoDateTime)).toHumanString();
+		return HODuration.of(HODateTime.between(HODateTime.now(), hoDateTime)).toHumanString();
 	}
 }
