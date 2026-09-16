@@ -6,10 +6,10 @@ import core.gui.theme.ImageUtilities;
 import core.model.HOVerwaltung;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
-import core.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.SwingConstants;
+import javax.swing.*;
 
 
 /**

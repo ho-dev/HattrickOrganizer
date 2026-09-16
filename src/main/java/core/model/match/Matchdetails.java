@@ -18,8 +18,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static core.util.StringUtils.getResultString;
-
 
 public class Matchdetails extends AbstractTable.Storable implements core.model.match.IMatchDetails {
 
@@ -154,7 +152,7 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
                     guest += guestGoalsInParts[p];
                 }
             }
-            return getResultString(home, guest, "");
+            return MatchResultFormatter.format(home, guest, "");
         }
         if (part == MatchEvent.MatchPartId.SECOND_HALF && this.getLastMinute() < 110 ||
                 part == MatchEvent.MatchPartId.OVERTIME && this.getLastMinute() < 121 ||
@@ -166,9 +164,9 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
 
     public String getResult() {
         if (this.getFetchDatum() != null) {
-            return getResultString(this.m_iHomeGoals, this.m_iGuestGoals, "");
+            return MatchResultFormatter.format(this.m_iHomeGoals, this.m_iGuestGoals, "");
         }
-        return getResultString(-1, -1, "");
+        return MatchResultFormatter.format(-1, -1, "");
     }
 
     // Return match result extension information as abbreviation string
@@ -201,7 +199,7 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
 
     // results like : 2 - 4 a.p.
     public String getResultEx() {
-        return getResultString(this.m_iHomeGoals, this.m_iGuestGoals, getResultExtensionAbbreviation());
+        return MatchResultFormatter.format(this.m_iHomeGoals, this.m_iGuestGoals, getResultExtensionAbbreviation());
     }
 
     // results like : 1 - 1 (2 - 4 a.p.)

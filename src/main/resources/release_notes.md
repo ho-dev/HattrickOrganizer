@@ -45,6 +45,11 @@
 
 * Fix empty list of upcoming games in Lineup panel after first download.
 * Added support of all 13 **Player Categories** (#2418)
+* Fix scroll behavior of lineup rating panel (#2365)
+
+### Matches
+
+* Player Detail Dialog: The days of the age of a player is now displayed in braces after the years.
 
 ### Training
 
@@ -92,6 +97,10 @@
 
 * Fix CVEs with HO dependencies
 * Update darklaf to most recent version.
+
+### Developer Tools
+
+* `Debug` / `SQL Editor`: Fixed that SQL statements were always executed in upper case. (#2491)
 
 ## Translations
 
