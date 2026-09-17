@@ -56,16 +56,6 @@ public class PlayerPerformance {
         return matchLineupPosition.getSortId();
     }
 
-    /**
-     * Gets the ID of the player.
-     *
-     * @deprecated Please use {@link #getPlayerId()} instead.
-     */
-    @Deprecated(since = "10.0", forRemoval = true)
-    public int getSpielerId() {
-        return getPlayerId();
-    }
-
     public int getPlayerId() {
         return matchLineupPosition.getPlayerId();
     }
