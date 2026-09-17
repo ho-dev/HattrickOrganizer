@@ -1,6 +1,7 @@
 ## Highlights
 
 * New hall of fame module
+* New database backup strategy
 
 ## [Detailed Changelog](https://github.com/ho-dev/HattrickOrganizer/milestone/27)
 
@@ -9,6 +10,8 @@
 * Add exit confirmation dialog (#2348)
 
 ### Database
+
+* New backup strategy: Keep latest backup per week for the latest 16 weeks and one per season for time before  (#2484)
 
 ### Download
 
@@ -103,12 +106,12 @@
 
 * Added the missing translation for the short text in the table for `Goals for the Team`.
 
-Reports by Contributors - October 19, 2025 - September 11, 2026
+Reports by Contributors - October 19, 2025 - September 13, 2026
 
 * Jösgall 1005
 * Ioannidouefty 459
 * Lukasz 418
-* wsbrenk 130
+* wsbrenk 158
 * Frankieorabona 73
 * Lidegand 72
 * \_KOHb\_ 54
@@ -119,5 +122,4 @@ Reports by Contributors - October 19, 2025 - September 11, 2026
 * Mara 3
 * Joeri Roels 1
 
-Total 2294
-
+Total 2322

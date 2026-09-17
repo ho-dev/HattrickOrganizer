@@ -74,6 +74,49 @@ class HODateTimeTest {
         assertThat(dti.toHTWeek().week).isEqualTo(1);
     }
 
+    private static Stream<Arguments> testToEpochSecond() {
+        return Stream.of(
+            Arguments.of(HODateTime.fromHT("1970-01-01 00:00:00"), -3600L),
+            Arguments.of(HODateTime.fromHT("1970-01-01 01:00:00"), 0L),
+            Arguments.of(HODateTime.fromHT("2022-02-19 23:11:00"), 1645308660L),
+            Arguments.of(HODateTime.fromHT("2021-02-14 23:11:00"), 1613340660L),
+            Arguments.of(HODateTime.fromHT("2020-06-27 00:00:00"), 1593208800L),
+            Arguments.of(HODateTime.fromHT("2018-05-10 00:00:00"), 1525903200L),
+            Arguments.of(HODateTime.fromHT("2009-05-28 00:00:00"), 1243461600L),
+            Arguments.of(HODateTime.fromHT("2020-09-07 00:00:00"), 1599429600L),
+            Arguments.of(HODateTime.fromHT("2020-09-14 00:00:00"), 1600034400L),
+            Arguments.of(HODateTime.fromHT("2020-09-21 01:30:00"), 1600644600L)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource
+    void testToEpochSecond(HODateTime date, long epochSeconds) {
+        assertThat(HODateTime.toEpochSecond(date)).isEqualTo(epochSeconds);
+    }
+
+    private static Stream<Arguments> testFromEpochSecond() {
+        return Stream.of(
+            Arguments.of(HODateTime.fromHT("1970-01-01 00:00:00"), -3600L),
+            Arguments.of(HODateTime.fromHT("1970-01-01 01:00:00"), 0L),
+            Arguments.of(HODateTime.fromHT("2022-02-19 23:11:00"), 1645308660L),
+            Arguments.of(HODateTime.fromHT("2021-02-14 23:11:00"), 1613340660L),
+            Arguments.of(HODateTime.fromHT("2020-06-27 00:00:00"), 1593208800L),
+            Arguments.of(HODateTime.fromHT("2018-05-10 00:00:00"), 1525903200L),
+            Arguments.of(HODateTime.fromHT("2009-05-28 00:00:00"), 1243461600L),
+            Arguments.of(HODateTime.fromHT("2020-09-07 00:00:00"), 1599429600L),
+            Arguments.of(HODateTime.fromHT("2020-09-14 00:00:00"), 1600034400L),
+            Arguments.of(HODateTime.fromHT("2020-09-21 01:30:00"), 1600644600L)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource
+    void testFromEpochSecond(HODateTime date, long epochSeconds) {
+        assertThat(HODateTime.fromEpochSecond(epochSeconds)).isEqualTo(date);
+    }
+
+
     static Stream<Arguments> equals() {
         return Stream.of(
                 Arguments.of(HODateTime.fromHT("2024-10-30 20:00:00"), HODateTime.fromHT("2025-10-30 20:00:00"), false),

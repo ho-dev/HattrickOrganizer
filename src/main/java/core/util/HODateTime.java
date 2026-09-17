@@ -10,7 +10,6 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.time.temporal.ChronoUnit;
-import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class HODateTime implements Comparable<HODateTime> {
@@ -129,6 +128,10 @@ public class HODateTime implements Comparable<HODateTime> {
     public static long toEpochSecond(HODateTime ts) {
         if (ts != null) return ts.instant.getEpochSecond();
         return 0L;
+    }
+
+    public static HODateTime fromEpochSecond(long epochSecond) {
+        return new HODateTime(Instant.ofEpochSecond(epochSecond));
     }
 
     /**
