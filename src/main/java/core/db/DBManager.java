@@ -2441,15 +2441,28 @@ public class DBManager implements PersistenceManager {
      * @return List<DownloadInfo>
      */
     public List<DownloadInfo> loadDownloadInfo() {
-        String sql = "SELECT hrf_id, datum, XTRADATA.dailyupdate1 from HRF join XTRADATA on xtradata.hrf_id = hrf.hrf_id order by hrf_id desc";
+        String sql = "select HRF_ID,DATE,HRF.DATUM  FROM" +
+            " (select HRF_ID,MIN(x.a) date FROM" +
+            "    (SELECT HRF_ID,dailyupdate1 a FROM  XTRADATA" +
+            "      UNION" +
+            "      SELECT HRF_ID,dailyupdate2 a FROM  XTRADATA" +
+            "      UNION" +
+            "      SELECT HRF_ID,dailyupdate3 a FROM  XTRADATA" +
+            "      UNION" +
+            "      SELECT HRF_ID,dailyupdate4 a FROM  XTRADATA" +
+            "      UNION" +
+            "      SELECT HRF_ID,dailyupdate5 a FROM  XTRADATA) x" +
+            "    GROUP BY HRF_ID) xtra" +
+            " JOIN HRF on xtra.hrf_id = HRF.hrf_id" +
+            " ORDER BY HRF_ID desc";
         var ret = new ArrayList<DownloadInfo>();
         assert connectionManager != null;
         try (final ResultSet rs = connectionManager.executePreparedQuery(sql)) {
             assert rs != null;
             while (rs.next()) {
                 var hrf_id = rs.getInt(1);
-                var date = rs.getTimestamp(2);
-                var update = rs.getTimestamp(3);
+                var update = rs.getTimestamp(2);
+                var date = rs.getTimestamp(3);
                 ret.add(new DownloadInfo(hrf_id, HODateTime.fromDbTimestamp(date), HODateTime.fromDbTimestamp(update)));
             }
         } catch (SQLException e) {
