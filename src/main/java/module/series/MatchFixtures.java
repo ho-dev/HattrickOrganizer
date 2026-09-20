@@ -611,10 +611,9 @@ public class MatchFixtures extends AbstractTable.Storable {
     }
 
     /**
-     * Check if the current teams are mapped to the correct slots
-     * Checks if the correct matches of the last 3 match days will be created by the current mapping
+     * Check if the mapping of the current teams will result in correct fixtures of the last 3 match days
      * @param teamSlots TeamSlots
-     * @param matchDay Match day [1..14]
+     * @param matchDay Match day [1..14], At the moment, this feature is only being called for match days 12, 13, and 14
      * @return true, if mapping is oK
      */
     private boolean checkTeamSlotMapping(TeamSlots teamSlots, int matchDay) {
@@ -642,11 +641,17 @@ public class MatchFixtures extends AbstractTable.Storable {
         return true;
     }
 
-    private static @NotNull TeamSlots getTeamSlotMapping(List<Paarung> fixturesOfMatchDay, int[] arr) {
+    /**
+     * Get team slots resulting from given permutation of the fixtures of the last match day
+     * @param fixturesOfLastMatchDay Fixtures of the last match day
+     * @param fixturePermutation Permutation of the fixtures
+     * @return Team slots resulting from the given permutation
+     */
+    private static @NotNull TeamSlots getTeamSlotMapping(List<Paarung> fixturesOfLastMatchDay, int[] fixturePermutation) {
         var teamSlots = new TeamSlots();
         var fixtureIndicesOfRound14 = fixtureEntryIndices.get(0); // First round (same as round 14, but home and guest swapped
-        for (int k = 0; k < fixturesOfMatchDay.size(); k++) {
-            var pair = fixturesOfMatchDay.get(arr[k]);
+        for (int k = 0; k < fixturesOfLastMatchDay.size(); k++) {
+            var pair = fixturesOfLastMatchDay.get(fixturePermutation[k]);
             var fixtureIndexPair = fixtureIndicesOfRound14.get(k);
             var teamSlot = fixtureIndexPair.getValue0();
             var awayTeamId = pair.getGastId();
@@ -659,7 +664,12 @@ public class MatchFixtures extends AbstractTable.Storable {
         return teamSlots;
     }
 
-    // Swap helper method
+    /**
+     * Swap helper method
+     * @param arr Integer array
+     * @param a First entry to be swapped
+     * @param b Second entry to be swapped
+     */
     private static void swap(int[] arr, int a, int b) {
         int temp = arr[a];
         arr[a] = arr[b];
@@ -907,6 +917,7 @@ public class MatchFixtures extends AbstractTable.Storable {
 
     /**
      * Add a list of fixtures
+     * See unwritten manual: <a href="https://www88.hattrick.org/Forum/Read.aspx?t=17665541&n=47&v=0&mr=0">...</a>
      * @param fixtures List<Paarung>
      */
     public void addFixtures(List<Paarung> fixtures) {
