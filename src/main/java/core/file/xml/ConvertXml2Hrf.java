@@ -93,7 +93,7 @@ public class ConvertXml2Hrf {
                 System.exit(0);
             }
         }
-        var initTeamId = teamId <= 0 || isDatabaseFromOtherTeam;
+        var initTeamId = teamId <= 0;
 		if (initTeamId || youthTeamId == null) {
 			// We have no team selected or the youth team information is never downloaded before
 			if (teamInfoList.size() == 1) {
