@@ -219,8 +219,8 @@ public class DBManager implements PersistenceManager {
 	}
 
     public static File getDbFolder() {
-        var current_user = UserManager.instance().getCurrentUser();
-        var dbFolderName = current_user.getDbFolder();
+        var currentUser = UserManager.instance().getCurrentUser();
+        var dbFolderName = currentUser.getDbFolder();
         return new File(dbFolderName);
     }
 
