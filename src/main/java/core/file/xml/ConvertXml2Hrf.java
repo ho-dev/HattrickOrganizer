@@ -12,6 +12,7 @@ import core.gui.CursorToolkit;
 import core.gui.HOMainFrame;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.match.*;
 import core.model.player.PlayerAvatar;
 import core.model.player.TrainerStatus;
@@ -24,6 +25,8 @@ import core.module.config.ModuleConfig;
 import hattrickdata.Arena;
 import module.transfer.PlayerTransfer;
 import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
 import java.io.IOException;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
@@ -47,7 +50,7 @@ public class ConvertXml2Hrf {
 	/**
 	 * Create the HRF data and return it in one string.
 	 */
-	public static @Nullable String createHrf() throws IOException {
+	public static @Nullable String createHrf(JDialog parent) throws IOException {
 		int progressIncrement = 3;
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.connection"), progressIncrement);
 		final Connector mc = Connector.instance();
@@ -63,7 +66,34 @@ public class ConvertXml2Hrf {
 		var teamInfoList = XMLTeamDetailsParser.getTeamInfoFromString(teamDetails);
 		var usersPremierTeamInfo = teamInfoList.stream().filter(TeamInfo::isPrimaryTeam).findFirst().orElse(teamInfoList.stream().findFirst().orElseThrow());
 		var usersPremierTeamId = usersPremierTeamInfo.getTeamId();
-		var initTeamId = teamId <=0;
+        int finalTeamId1 = teamId;
+        var isDatabaseFromOtherTeam = teamId > 0 && teamInfoList.stream().noneMatch(team->team.getTeamId() == finalTeamId1);
+        if (isDatabaseFromOtherTeam) {
+            // Ask user if old database should be deleted
+            var message = TranslationFacility.tr("ls.download.replace.old.database");
+            var title = TranslationFacility.tr("ls.download.database.of.other.team");
+            int choice = JOptionPane.showConfirmDialog(parent, message, title, JOptionPane.OK_CANCEL_OPTION);
+            if (choice == JOptionPane.OK_OPTION) {
+                if (!DBManager.deleteDatabaseOfPreviousTeam(teamId)){
+                    // Backup of old database cannot be created
+                    message = "<html>" +
+                        TranslationFacility.tr("ls.download.cannot.save.old.database") + "<br>" +
+                        TranslationFacility.tr("ls.download.remove.database") + " " + DBManager.getDbFolder().getAbsolutePath() + "<br>" +
+                        TranslationFacility.tr("ls.download.restart") +
+                        "</html>";
+                    JOptionPane.showMessageDialog(parent, message, title, JOptionPane.ERROR_MESSAGE);
+                    System.exit(1);
+                }
+                // Forget the old team id
+                teamId = 0;
+                HOVerwaltung.instance().getModel().getBasics().setTeamId(0);
+            }
+            else {
+                // Terminate HO. User has to remove database folder manually
+                System.exit(0);
+            }
+        }
+        var initTeamId = teamId <= 0 || isDatabaseFromOtherTeam;
 		if (initTeamId || youthTeamId == null) {
 			// We have no team selected or the youth team information is never downloaded before
 			if (teamInfoList.size() == 1) {
