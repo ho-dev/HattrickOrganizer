@@ -224,6 +224,16 @@ public class DBManager implements PersistenceManager {
         return new File(dbFolderName);
     }
 
+    /**
+     * Removes the database of the previous team from active use.
+     * <p>
+     * The database files are not physically deleted. Instead, the database folder
+     * is renamed to {@code <database-folder>-old-<teamId>} to keep a backup for the user.
+     *
+     * @param teamId the id of the previous team
+     * @return {@code true} if no database exists or if the database was successfully moved
+     *         to the backup location; {@code false} otherwise
+     */
     public static boolean deleteDatabaseOfPreviousTeam(int teamId) {
         var dbFolder = getDbFolder();
         if (dbFolder.exists()) {

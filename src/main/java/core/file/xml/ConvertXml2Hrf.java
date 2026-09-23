@@ -66,33 +66,7 @@ public class ConvertXml2Hrf {
 		var teamInfoList = XMLTeamDetailsParser.getTeamInfoFromString(teamDetails);
 		var usersPremierTeamInfo = teamInfoList.stream().filter(TeamInfo::isPrimaryTeam).findFirst().orElse(teamInfoList.stream().findFirst().orElseThrow());
 		var usersPremierTeamId = usersPremierTeamInfo.getTeamId();
-        int finalTeamId1 = teamId;
-        var isDatabaseFromOtherTeam = teamId > 0 && teamInfoList.stream().noneMatch(team->team.getTeamId() == finalTeamId1);
-        if (isDatabaseFromOtherTeam) {
-            // Ask user if old database should be deleted
-            var message = TranslationFacility.tr("ls.download.replace.old.database");
-            var title = TranslationFacility.tr("ls.download.database.of.other.team");
-            int choice = JOptionPane.showConfirmDialog(parent, message, title, JOptionPane.OK_CANCEL_OPTION);
-            if (choice == JOptionPane.OK_OPTION) {
-                if (!DBManager.deleteDatabaseOfPreviousTeam(teamId)){
-                    // Backup of old database cannot be created
-                    message = "<html>" +
-                        TranslationFacility.tr("ls.download.cannot.save.old.database") + "<br>" +
-                        TranslationFacility.tr("ls.download.remove.database") + " " + DBManager.getDbFolder().getAbsolutePath() + "<br>" +
-                        TranslationFacility.tr("ls.download.restart") +
-                        "</html>";
-                    JOptionPane.showMessageDialog(parent, message, title, JOptionPane.ERROR_MESSAGE);
-                    System.exit(1);
-                }
-                // Forget the old team id
-                teamId = 0;
-                HOVerwaltung.instance().getModel().getBasics().setTeamId(0);
-            }
-            else {
-                // Terminate HO. User has to remove database folder manually
-                System.exit(0);
-            }
-        }
+        teamId = checkDatabase(parent, teamId, teamInfoList);
         var initTeamId = teamId <= 0;
 		if (initTeamId || youthTeamId == null) {
 			// We have no team selected or the youth team information is never downloaded before
@@ -290,7 +264,40 @@ public class ConvertXml2Hrf {
 		return hrfSgtringBuilder.createHRF().toString();
 	}
 
-	/**
+    /**
+     * Check if the database is still valid
+     * If the contained team is not a team from the current user, the user is asked if the database should be
+     * replaced with a new one. A backup of the previous database is created and the team id is reset to 0.
+     * @param parent Parent dialog for message dialogs
+     * @param teamId Team id found in the database
+     * @param teamInfoList Teams downloaded from hattrick
+     * @return team id (0 if the database was replaced with a new one)
+     */
+    private static int checkDatabase(JDialog parent, int teamId, List<TeamInfo> teamInfoList) {
+        int finalTeamId1 = teamId;
+        final var isDatabaseFromOtherTeam = teamId > 0 && teamInfoList.stream().noneMatch(team -> team.getTeamId() == finalTeamId1);
+        if (isDatabaseFromOtherTeam) {
+            // Ask user if old database should be deleted
+            final var title = TranslationFacility.tr("ls.download.database.of.other.team");
+            final int choice = JOptionPane.showConfirmDialog(parent, TranslationFacility.tr("ls.download.replace.old.database"), title, JOptionPane.YES_NO_OPTION);
+            if (choice == JOptionPane.YES_OPTION) {
+                if (!DBManager.deleteDatabaseOfPreviousTeam(teamId)) {
+                    // Backup of old database cannot be created
+                    JOptionPane.showMessageDialog(parent, TranslationFacility.tr("ls.download.cannot.save.old.database"), title, JOptionPane.ERROR_MESSAGE);
+                    System.exit(1);
+                }
+                // Forget the old team id
+                teamId = 0;
+                HOVerwaltung.instance().getModel().getBasics().setTeamId(0);
+            } else {
+                // Terminate HO. User has to remove database folder manually
+                System.exit(0);
+            }
+        }
+        return teamId;
+    }
+
+    /**
 	 * Check if transfer sums of economy data are registered in transfer table
 	 * @param economyDataMap Economy map
 	 * @return true if stored transfers are not fitting to economy data
