@@ -283,7 +283,8 @@ public class ConvertXml2Hrf {
             if (choice == JOptionPane.YES_OPTION) {
                 if (!DBManager.deleteDatabaseOfPreviousTeam(teamId)) {
                     // Backup of old database cannot be created
-                    JOptionPane.showMessageDialog(parent, TranslationFacility.tr("ls.download.cannot.save.old.database"), title, JOptionPane.ERROR_MESSAGE);
+                    var message = String.format(TranslationFacility.tr("ls.download.database.of.database"), DBManager.getDbFolder().getAbsolutePath());
+                    JOptionPane.showMessageDialog(parent, message, title, JOptionPane.ERROR_MESSAGE);
                     System.exit(1);
                 }
                 // Forget the old team id
