@@ -4,7 +4,6 @@ import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import module.training.ui.TrainingProgressTableModel;
-import module.training.ui.comp.PlayerNameCell;
 import module.training.ui.comp.VerticalIndicator;
 
 import java.awt.*;
@@ -15,14 +14,12 @@ import javax.swing.table.DefaultTableCellRenderer;
  * TableCellRenderer for the training results table in the Training tab.
  */
 public class OutputTableRenderer extends DefaultTableCellRenderer {
-    private final boolean isFixed;
 
     private static final Color TABLE_BG = ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
     private static final Color SELECTION_BG = ThemeManager.getColor(HOColorName.TABLE_SELECTION_BG);
     private static final Color TABLE_FG = ThemeManager.getColor(HOColorName.TABLEENTRY_FG);
 
-    public OutputTableRenderer(boolean isFixed){
-        this.isFixed=isFixed;
+    public OutputTableRenderer(){
     }
 
     @Override

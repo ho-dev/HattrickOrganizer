@@ -31,7 +31,7 @@ public class TransferTableModel extends HOTableModel {
     public TransferTableModel() {
         super(UserColumnController.ColumnModelId.TEAMTRANSFER, "TeamTransfers");
         int id = 0;
-        columns = new ArrayList<>(List.of(
+        var newColumns = new ArrayList<>(List.of(
                 new TransferTableColumn(id++,"Datum") {
                     @Override
                     public IHOTableCellEntry getTableEntry(PlayerTransfer transfer) {
@@ -240,6 +240,7 @@ public class TransferTableModel extends HOTableModel {
                     }
                 }
         )).toArray(new TransferTableColumn[0]);
+        setColumns(newColumns);
     }
 
     private ColorLabelEntry createPlayerInfoLabelEntry(int value, Color backgroundColor) {
@@ -257,7 +258,7 @@ public class TransferTableModel extends HOTableModel {
     @Override
     protected void initData() {
         UserColumn[] displayedColumns = getDisplayedColumns();
-        m_clData = new Object[values.size()][columns.length];
+        m_clData = new Object[values.size()][getColumns().length];
         int playernum = 0;
         for (var value : values) {
             int columnnum = 0;
