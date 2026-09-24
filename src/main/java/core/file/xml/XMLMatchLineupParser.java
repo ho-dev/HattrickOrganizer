@@ -17,11 +17,11 @@ import org.w3c.dom.NodeList;
 
 
 /**
- * 
+ *
  * @author thomas.werth
  */
 public class XMLMatchLineupParser {
-	
+
 	/**
 	 * Utility class - private constructor enforces noninstantiability.
 	 */
@@ -73,7 +73,7 @@ public class XMLMatchLineupParser {
 		return ml;
 	}
 
-	private static MatchLineupPosition createPlayer(MatchType matchType, Element ele) {
+	private static MatchLineupPosition createPlayer(Element ele) {
 		int roleID = -1;
 		int behavior = 0;
 		double rating = -1.0d;
@@ -92,7 +92,7 @@ public class XMLMatchLineupParser {
 		// older ones, what is necessary is to check for old reposition values in the
 		// Behaviour.
 		// We do move all repositions to central slot, and go happily belly up
-		// if we find more than one repositioning to the same position 
+		// if we find more than one repositioning to the same position
 		// (old setup where more than 3 forwards was possible)
 
 		// if (roleID == 17 || roleID == 14) {
@@ -195,6 +195,7 @@ public class XMLMatchLineupParser {
 		tmp = (Element) ele.getElementsByTagName("TeamName").item(0);
 		String teamName = tmp.getFirstChild().getNodeValue();
 		MatchLineupTeam team = new MatchLineupTeam(matchType, matchID, teamName, teamId, erfahrung);
+        team.setStyleOfPlay(StyleOfPlay.fromInt(styleOfPlay));
 
 		Element starting = (Element) ele.getElementsByTagName("StartingLineup").item(0);
 		Element subs = (Element) ele.getElementsByTagName("Substitutions").item(0);
@@ -213,7 +214,7 @@ public class XMLMatchLineupParser {
 			// substituted
 			// players are always last in the API, there are at least signs of a
 			// fixed order.
-			MatchLineupPosition player = createPlayer(matchType, (Element) list.item(i));
+			MatchLineupPosition player = createPlayer((Element) list.item(i));
 			if (team.getPlayerByID(player.getPlayerId()) != null) {
 				if ((player.getRoleId() >= IMatchRoleID.FirstPlayerReplaced)
 						&& (player.getRoleId() <= IMatchRoleID.ThirdPlayerReplaced)) {
@@ -230,7 +231,7 @@ public class XMLMatchLineupParser {
 		list = starting.getElementsByTagName("Player");
 
 		for (int i = 0; i < list.getLength(); i++) {
-			MatchLineupPosition startPlayer = createPlayer(matchType, (Element) list.item(i));
+			MatchLineupPosition startPlayer = createPlayer((Element) list.item(i));
 			startPlayer.setStartPosition(startPlayer.getRoleId()); // it is the role id
 			startPlayer.setStartBehavior(startPlayer.getBehaviour());
 
