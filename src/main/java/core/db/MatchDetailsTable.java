@@ -19,7 +19,7 @@ final class MatchDetailsTable extends AbstractTable {
 		super(TABLENAME, adapter);
 		idColumns = 2;
 	}
-	
+
 	@Override
 	protected void initColumns() {
 		columns = new ColumnDescriptor[] {
@@ -65,8 +65,10 @@ final class MatchDetailsTable extends AbstractTable {
 				ColumnDescriptor.Builder.newInstance().setColumnName("soldBasic").setGetter((o) -> ((Matchdetails) o).getSoldBasic()).setSetter((o, v) -> ((Matchdetails) o).setSoldBasic((int) v)).setType(Types.INTEGER).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("soldRoof").setGetter((o) -> ((Matchdetails) o).getSoldRoof()).setSetter((o, v) -> ((Matchdetails) o).setSoldRoof((int) v)).setType(Types.INTEGER).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("soldVIP").setGetter((o) -> ((Matchdetails) o).getSoldVIP()).setSetter((o, v) -> ((Matchdetails) o).setSoldVIP((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("RatingIndirectSetPiecesDef").setGetter((o) -> ((Matchdetails) o).getRatingIndirectSetPiecesDef()).setSetter((o, v) -> ((Matchdetails) o).setRatingIndirectSetPiecesDef((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("RatingIndirectSetPiecesAtt").setGetter((o) -> ((Matchdetails) o).getRatingIndirectSetPiecesAtt()).setSetter((o, v) -> ((Matchdetails) o).setRatingIndirectSetPiecesAtt((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+            ColumnDescriptor.Builder.newInstance().setColumnName("HomeRatingIndirectSetPiecesDef").setGetter((o) -> ((Matchdetails) o).getHomeRatingIndirectSetPiecesDef()).setSetter((o, v) -> ((Matchdetails) o).setHomeRatingIndirectSetPiecesDef((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+            ColumnDescriptor.Builder.newInstance().setColumnName("HomeRatingIndirectSetPiecesAtt").setGetter((o) -> ((Matchdetails) o).getHomeRatingIndirectSetPiecesAtt()).setSetter((o, v) -> ((Matchdetails) o).setHomeRatingIndirectSetPiecesAtt((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+            ColumnDescriptor.Builder.newInstance().setColumnName("GuestRatingIndirectSetPiecesDef").setGetter((o) -> ((Matchdetails) o).getGuestRatingIndirectSetPiecesDef()).setSetter((o, v) -> ((Matchdetails) o).setGuestRatingIndirectSetPiecesDef((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+            ColumnDescriptor.Builder.newInstance().setColumnName("GuestRatingIndirectSetPiecesAtt").setGetter((o) -> ((Matchdetails) o).getGuestRatingIndirectSetPiecesAtt()).setSetter((o, v) -> ((Matchdetails) o).setGuestRatingIndirectSetPiecesAtt((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("HomeGoal0").setGetter((o) -> ((Matchdetails) o).getHomeGoalsInPart(MatchEvent.MatchPartId.BEFORE_THE_MATCH_STARTED)).setSetter((o, v) -> ((Matchdetails) o).setHomeGoalsInPart(MatchEvent.MatchPartId.BEFORE_THE_MATCH_STARTED, (Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("HomeGoal1").setGetter((o) -> ((Matchdetails) o).getHomeGoalsInPart(MatchEvent.MatchPartId.FIRST_HALF)).setSetter((o, v) -> ((Matchdetails) o).setHomeGoalsInPart(MatchEvent.MatchPartId.FIRST_HALF, (Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("HomeGoal2").setGetter((o) -> ((Matchdetails) o).getHomeGoalsInPart(MatchEvent.MatchPartId.SECOND_HALF)).setSetter((o, v) -> ((Matchdetails) o).setHomeGoalsInPart(MatchEvent.MatchPartId.SECOND_HALF, (Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
@@ -88,7 +90,7 @@ final class MatchDetailsTable extends AbstractTable {
 			"  PRIMARY KEY (MATCHID, MATCHTYP)"
 		};
 	}
-	
+
 	@Override
 	protected String[] getCreateIndexStatement() {
 		return new String[] {
