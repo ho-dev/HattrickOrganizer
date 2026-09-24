@@ -2091,7 +2091,7 @@ public class DBManager implements PersistenceManager {
 	 * @param home the home
 	 * @return the ifa match [ ]
 	 */
-	public IfaMatch[] getIFAMatches(boolean home) {
+	public List<IfaMatch> getIFAMatches(boolean home) {
 		return ((IfaMatchTable) getTable(IfaMatchTable.TABLENAME))
 				.getMatches(home);
 	}

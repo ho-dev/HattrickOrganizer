@@ -410,7 +410,7 @@ public class OnlineWorker {
 	private static void downloadTeamRatings(int matchID, MatchType matchType, int teamID) {
 		try {
 			var xml = Connector.instance().getTeamDetails(teamID);
-			var teamrating = new MatchTeamRating(matchID, matchType, XMLTeamDetailsParser.parseTeamdetailsFromString(xml, teamID));
+			var teamrating = new MatchTeamRating(matchID, matchType, XMLTeamDetailsParser.parseTeamDetailsFromString(xml, teamID));
 			DBManager.instance().storeTeamRatings(teamrating);
 		} catch (Exception e) {
 			String msg = getLangString("Downloadfehler") + " : Error fetching Team ratings :";
@@ -423,7 +423,7 @@ public class OnlineWorker {
 
 	public static Map<String, String> getTeam(int teamId) {
 		String str = Connector.instance().getTeamDetails(teamId);
-		return XMLTeamDetailsParser.parseTeamdetailsFromString(str, teamId);
+		return XMLTeamDetailsParser.parseTeamDetailsFromString(str, teamId);
 	}
 
 	private static int getRegionId(Map<String, String> team) {

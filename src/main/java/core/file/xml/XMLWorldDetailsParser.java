@@ -167,11 +167,6 @@ public class XMLWorldDetailsParser {
 					ele = (Element) root.getElementsByTagName("CountryID").item(0);
 					map.put("CountryID", (XMLManager.getFirstChildNodeValue(ele)));
 
-					// Remove for ugly second team fix
-
-//					ele = (Element) root.getElementsByTagName("CurrencyRate").item(0);
-//					map.put("CurrencyRate", (XMLManager.getFirstChildNodeValue(ele)));
-
 					XMLManager.xmlValue2Hash(map, root, "CountryCode");
 					XMLManager.xmlValue2Hash(map, root, "CurrencyName");
 					XMLManager.xmlValue2Hash(map, root, "CurrencyRate");
@@ -188,22 +183,22 @@ public class XMLWorldDetailsParser {
 
 		return map;
 	}
-	
+
 	public static TeamInfo updateTeamInfoWithCurrency(TeamInfo info, String input) {
-		
+
 		Document doc = XMLManager.parseString(input);
-		
+
 		Element root = doc.getDocumentElement();
 		root = (Element) root.getElementsByTagName("LeagueList").item(0);
 		root = (Element) root.getElementsByTagName("Country").item(0);
-		
+
 		Element ele = (Element) root.getElementsByTagName("CurrencyRate").item(0);
 		info.setCurrencyRate(XMLManager.getFirstChildNodeValue(ele));
 
 		ele = (Element) root.getElementsByTagName("CountryID").item(0);
-		info.setCountryId(XMLManager.getFirstChildNodeValue(ele));
+		info.setCountryId(Integer.parseInt(XMLManager.getFirstChildNodeValue(ele)));
 
 		return info;
 	}
-	
+
 }

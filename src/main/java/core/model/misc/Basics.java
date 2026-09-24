@@ -37,7 +37,7 @@ public final class Basics extends AbstractTable.Storable {
     private HODateTime m_tActivationDate = HODateTime.HT_START;
 
     /** Land */
-    private int m_iLand;
+    private int countryId;
 
     /** The globally unique LeagueID. */
     private int m_iLiga;
@@ -59,9 +59,9 @@ public final class Basics extends AbstractTable.Storable {
 
     /** Region Id */
     private int m_iRegionId;
-    
+
     private boolean m_bHasSupporter;
-    
+
     //~ Constructors -------------------------------------------------------------------------------
 
     /**
@@ -87,7 +87,7 @@ public final class Basics extends AbstractTable.Storable {
         catch (DateTimeParseException ex){
             HOLogger.instance().debug(getClass(), "No activation date in hrf file " + ex);
         }
-        m_iLand = getInt(properties, "countryid", 0);
+        countryId = getInt(properties, "countryid", 0);
         m_iLiga = getInt(properties, "leagueid", 0);
         m_iSeason = getInt(properties, "season", 0);
         m_iSeasonOffset = getInt(properties, "seasonoffset", 0);
@@ -157,8 +157,8 @@ public final class Basics extends AbstractTable.Storable {
      *
      * @param m_iLand New value of property m_iLand.
      */
-    public void setLand(int m_iLand) {
-        this.m_iLand = m_iLand;
+    public void setCountryId(int m_iLand) {
+        this.countryId = m_iLand;
     }
 
     /**
@@ -166,8 +166,8 @@ public final class Basics extends AbstractTable.Storable {
      *
      * @return Value of property m_iLand.
      */
-    public int getLand() {
-        return m_iLand;
+    public int getCountryId() {
+        return countryId;
     }
 
     /**
@@ -309,16 +309,16 @@ public final class Basics extends AbstractTable.Storable {
     public String getTeamName() {
         return m_sTeamName;
     }
-    
+
     /**
      * Sets the Region ID
-     * 
+     *
      * @param regionId	new value
      */
     public void setRegionId (int regionId) {
     	this.m_iRegionId = regionId;
     }
-    
+
     /**
      * Gets the Region ID
      * @return	the region id

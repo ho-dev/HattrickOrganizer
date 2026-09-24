@@ -64,7 +64,7 @@ public class DownloadCountryDetails {
 
         try {
             String details = mc.getTeamDetails(teamId);
-            return XMLTeamDetailsParser.parseTeamdetailsFromString(details, teamId);
+            return XMLTeamDetailsParser.parseTeamDetailsFromString(details, teamId);
         } catch (Exception e) {
             HOLogger.instance().log(DownloadCountryDetails.class, e);
         }
