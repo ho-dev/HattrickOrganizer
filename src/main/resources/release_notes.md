@@ -32,6 +32,10 @@
 
 * Portable version shows hint to install downloaded update manually (#2331)
 
+### Series
+
+* Fix error in table calculation if more than one team is replaced at one match day (#2453)
+
 ### Hall of fame
 
 * Added (#2296)
@@ -75,6 +79,7 @@
 
 * Fixed the missing translation for the home/away `Tactic` and `Details` column and displaying the abbreviation of the
   tactic now in the corresponding column.
+* Fixed a crash that occurred when not ticking `Only matches with SEs`.
 
 ### Option setting
 
