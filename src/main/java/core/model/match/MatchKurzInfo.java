@@ -402,7 +402,7 @@ public class MatchKurzInfo extends AbstractTable.Storable implements Comparable<
 	 * Merges the data from the given <code>MatchKurzInfo</code> into this
 	 * <code>MatchKurzInfo</code>. This method should be used e.g. when a model
 	 * has to be updated with data from a different <code>MatchKurzInfo</code>
-	 * instance but and object identity has to be preserved.
+	 * instance but object identity has to be preserved.
 	 *
 	 * @param match
 	 *            the <code>MatchKurzInfo</code> to get the data from.
