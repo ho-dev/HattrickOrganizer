@@ -120,24 +120,19 @@ public class DBManager implements PersistenceManager {
 
 			String errorMsg = null;
 			try {
-				User current_user = UserManager.instance().getCurrentUser();
-				String dbFolder = current_user.getDbFolder();
-
-				File dbfolder = new File(dbFolder);
-
-				if (!dbfolder.exists()) {
+                File dbFolder = getDbFolder();
+				if (!dbFolder.exists()) {
 					File parentFolder = new File(UserManager.instance().getDbParentFolder());
-
 					boolean dbDirectoryCreated = false;
 					if (!parentFolder.exists() || parentFolder.canWrite()) {
-						dbDirectoryCreated = dbfolder.mkdirs();
+						dbDirectoryCreated = dbFolder.mkdirs();
 					} else {
 						errorMsg = "Could not initialize the database folder.";
 						errorMsg += "No writing rights to the following directory\n" + parentFolder.getAbsolutePath() + "\n";
 						errorMsg += "You can report this error by opening a new bug ticket on GitHub";
 					}
 					if (!dbDirectoryCreated) {
-						errorMsg = "Could not create the database folder: " + dbfolder.getAbsolutePath();
+						errorMsg = "Could not create the database folder: " + dbFolder.getAbsolutePath();
 					}
 				}
 
@@ -222,6 +217,40 @@ public class DBManager implements PersistenceManager {
 		}
 		return m_clInstance;
 	}
+
+    public static File getDbFolder() {
+        var current_user = UserManager.instance().getCurrentUser();
+        var dbFolderName = current_user.getDbFolder();
+        return new File(dbFolderName);
+    }
+
+    /**
+     * Removes the database of the previous team from active use.
+     * <p>
+     * The database files are not physically deleted. Instead, the database folder
+     * is renamed to {@code <database-folder>-old-<teamId>} to keep a backup for the user.
+     *
+     * @param teamId the id of the previous team
+     * @return {@code true} if no database exists or if the database was successfully moved
+     *         to the backup location; {@code false} otherwise
+     */
+    public static boolean deleteDatabaseOfPreviousTeam(int teamId) {
+        var dbFolder = getDbFolder();
+        if (dbFolder.exists()) {
+            if (m_clInstance != null) {
+                m_clInstance.disconnect(); // Close db connection
+            }
+            var backupFolder = new File(dbFolder.getAbsolutePath() + "-old-" + teamId);
+            if (dbFolder.renameTo(backupFolder)) {
+                HOLogger.instance().info(DBManager.class, "Old database files are saved as " + backupFolder.getAbsolutePath());
+                return true;
+            }
+            HOLogger.instance().error(DBManager.class, "Cannot rename old database files to " + backupFolder.getAbsolutePath());
+            return false;
+        }
+        HOLogger.instance().info(DBManager.class, "No old database files exists at " + dbFolder.getAbsolutePath());
+        return true; // no database exists
+    }
 
 	public static double getDBConfigVersion() {
 		return DBConfigVersion;
