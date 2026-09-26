@@ -21,6 +21,8 @@ import core.net.login.OAuthDialog;
 import core.net.login.ProxyDialog;
 import core.net.login.ProxySettings;
 import core.util.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Document;
@@ -48,7 +50,13 @@ public class Connector {
 	private ProxySettings proxySettings;
 	private final OAuth10aService m_OAService;
 	private OAuth1AccessToken m_OAAccessToken;
-	private static boolean DEBUGSAVE = false;
+
+    /**
+     * Property that controls if downloaded CHPP files (XMO) are saved.
+     */
+    @Getter
+    @Setter
+    private static boolean saveDownloadedXml = false;
 
 	private boolean silentDownload = false;
 
@@ -101,18 +109,7 @@ public class Connector {
 		return m_clInstance;
 	}
 
-	/**
-	 * Sets the DEBUGSAVE flag. Setting the flag to true will save downloaded
-	 * CHPP files.
-	 *
-	 * @param debugSave
-	 *            true to save downloaded CHPP files, false otherwise.
-	 */
-	public static void setDebugSave(boolean debugSave) {
-		DEBUGSAVE = debugSave;
-	}
-
-	/**
+    /**
 	 * Fetch a specific arena
 	 *
 	 * @param arenaId
@@ -647,7 +644,7 @@ public class Connector {
 					case 200, 201 -> {
 						// We are done!
 						returnString = readStream(getResultStream(response));
-						if (DEBUGSAVE) {
+						if (isSaveDownloadedXml()) {
 							saveCHPP(surl, returnString);
 						}
 						String sError = XMLCHPPPreParser.getError(returnString);
