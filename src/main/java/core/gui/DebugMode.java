@@ -6,7 +6,7 @@ import core.net.Connector;
 import javax.swing.*;
 import java.awt.event.ItemEvent;
 
-public class DebugMode {
+public final class DebugMode {
 
 	private DebugMode() {
 		throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
@@ -14,27 +14,27 @@ public class DebugMode {
 
 	public static JMenu getDeveloperMenu() {
 		JMenu menu = new JMenu("Debug");
-		menu.add(getSQLDialogMenuItem());
-		menu.add(getLookAndFeelDialogMenuItem());
-		menu.add(getSaveXMLMenuItem());
+		menu.add(createSqlDialogMenuItem());
+		menu.add(createLookAndFeelDialogMenuItem());
+		menu.add(createSaveDownloadedXmlMenuItem());
 		return menu;
 	}
 
-	private static JMenuItem getLookAndFeelDialogMenuItem() {
+	private static JMenuItem createLookAndFeelDialogMenuItem() {
 		JMenuItem newItem = new JMenuItem("Look and Feel");
 		newItem.addActionListener(e -> new LookAndFeelDialog().setVisible(true));
 		return newItem;
 	}
 
-	private static JMenuItem getSQLDialogMenuItem() {
+	private static JMenuItem createSqlDialogMenuItem() {
 		JMenuItem newItem = new JMenuItem("SQL Editor");
 		newItem.addActionListener(e -> new SQLDialog().setVisible(true));
 		return newItem;
 	}
 
-	private static JMenuItem getSaveXMLMenuItem() {
-		JMenuItem newItem = new JCheckBoxMenuItem("Save downloaded XML");
-		newItem.addItemListener(e -> Connector.setDebugSave(e.getStateChange() == ItemEvent.SELECTED));
+	private static JMenuItem createSaveDownloadedXmlMenuItem() {
+		JMenuItem newItem = new JCheckBoxMenuItem("Save downloaded XML", Connector.isSaveDownloadedXml());
+		newItem.addItemListener(e -> Connector.setSaveDownloadedXml(e.getStateChange() == ItemEvent.SELECTED));
 		return newItem;
 	}
 }

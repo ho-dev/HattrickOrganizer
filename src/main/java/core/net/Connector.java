@@ -21,6 +21,8 @@ import core.net.login.OAuthDialog;
 import core.net.login.ProxyDialog;
 import core.net.login.ProxySettings;
 import core.util.*;
+import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Document;
@@ -48,7 +50,13 @@ public class Connector {
 	private ProxySettings proxySettings;
 	private final OAuth10aService m_OAService;
 	private OAuth1AccessToken m_OAAccessToken;
-	private static boolean DEBUGSAVE = false;
+
+    /**
+     * Property that controls if downloaded CHPP files (XMO) are saved.
+     */
+    @Getter
+    @Setter
+    private static boolean saveDownloadedXml = false;
 
 	private boolean silentDownload = false;
 
@@ -73,22 +81,23 @@ public class Connector {
     }
 
     private static String getEncryptedToken() {
-        return getFromEnvOrElse("HO_ENCRYPTED_TOKEN", () -> UserParameter.instance().getEncryptedToken());
+        return getFromEnvOrElse(HOEnvironmentVariable.HO_ENCRYPTED_TOKEN, () -> UserParameter.instance().getEncryptedToken());
     }
 
     private static String getEncryptedTokenSecret() {
-        return getFromEnvOrElse("HO_ENCRYPTED_TOKEN_SECRET", () -> UserParameter.instance().getEncryptedTokenSecret());
+        return getFromEnvOrElse(HOEnvironmentVariable.HO_ENCRYPTED_TOKEN_SECRET, () -> UserParameter.instance().getEncryptedTokenSecret());
     }
 
-    private static String getFromEnvOrElse(String name, Supplier<String> supplier) {
-        final var value = System.getenv(name);
-        if (StringUtils.isNotBlank(value)) {
-            HOLogger.instance().info(
-                Connector.class,
-                "Found environment variable '%s' and used its value.".formatted(name));
-            return value;
-        }
-        return supplier.get();
+    private static String getFromEnvOrElse(HOEnvironmentVariable environmentVariable, Supplier<String> supplier) {
+        return environmentVariable.value()
+            .filter(StringUtils::isNotBlank)
+            .map(value -> {
+                HOLogger.instance().info(
+                    Connector.class,
+                    "Found environment variable '%s' and used its value.".formatted(environmentVariable));
+                return value;
+            })
+            .orElseGet(supplier);
     }
 
 	/**
@@ -101,18 +110,7 @@ public class Connector {
 		return m_clInstance;
 	}
 
-	/**
-	 * Sets the DEBUGSAVE flag. Setting the flag to true will save downloaded
-	 * CHPP files.
-	 *
-	 * @param debugSave
-	 *            true to save downloaded CHPP files, false otherwise.
-	 */
-	public static void setDebugSave(boolean debugSave) {
-		DEBUGSAVE = debugSave;
-	}
-
-	/**
+    /**
 	 * Fetch a specific arena
 	 *
 	 * @param arenaId
@@ -647,7 +645,7 @@ public class Connector {
 					case 200, 201 -> {
 						// We are done!
 						returnString = readStream(getResultStream(response));
-						if (DEBUGSAVE) {
+						if (isSaveDownloadedXml()) {
 							saveCHPP(surl, returnString);
 						}
 						String sError = XMLCHPPPreParser.getError(returnString);
