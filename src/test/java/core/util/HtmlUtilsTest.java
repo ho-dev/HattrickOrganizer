@@ -1,5 +1,6 @@
 package core.util;
 
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -11,7 +12,7 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 class HtmlUtilsTest {
 
-    private static Stream<Arguments> stringToHtml() {
+    private static Stream<Arguments> test_stringToHtml() {
         return Stream.of(
             arguments(null, null),
             arguments("", null), arguments("Hello World", "<html>Hello World</html>"),
@@ -22,8 +23,20 @@ class HtmlUtilsTest {
     }
 
     @ParameterizedTest
-    @MethodSource("stringToHtml")
-    void stringToHtml(String plainText, String expected) {
+    @MethodSource
+    void test_stringToHtml(String plainText, String expected) {
         assertThat(HtmlUtils.stringToHtml(plainText)).isEqualTo(expected);
+    }
+
+    @Test
+    void test_toBold() {
+        final var text = "Text";
+        assertThat(HtmlUtils.toBold(text)).isEqualTo("<b>" + text + "</b>");
+    }
+
+    @Test
+    void test_toHtml() {
+        final var text = "Text";
+        assertThat(HtmlUtils.toHtml(text)).isEqualTo("<html>" + text + "</html>");
     }
 }
