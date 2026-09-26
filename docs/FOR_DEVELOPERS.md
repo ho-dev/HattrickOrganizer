@@ -2,7 +2,7 @@
 
 ## Force a specific Token and Token Secret
 
-The Token and Token Secret can be overriden by environment variables.
+The Token and Token Secret can be overridden by environment variables.
 
 | Environment Variable        | Description                    |
 |-----------------------------|--------------------------------|
@@ -39,3 +39,21 @@ they are prior used to the values from the database (especially when there is no
    export HO_ENCRYPTED_TOKEN_SECRET="[CONFIG_VALUE_FOR_TOKEN_SECRET]"
    ```
 
+## Activate the "Save Downloaded XML" on startup
+
+The `Save downloaded XML` option can be controlled on startup using an environment variable.
+
+| Environment Variable     | Description                                  |
+|--------------------------|----------------------------------------------|
+| `HO_SAVE_DOWNLOADED_XML` | `true` (case-insensitive) or `1` to activate |
+
+If the environment variable is set to `true` (case-insensitive) or `1`, the `Debug` / `Save downloaded XML` option is
+activated on startup.
+
+Any other value deactivates the option. If the environment variable is not set, the option is not changed.
+
+Example:
+
+```
+export HO_SAVE_DOWNLOADED_XML=true
+```

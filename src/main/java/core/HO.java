@@ -12,9 +12,10 @@ import core.jmx.StatementCacheMonitor;
 import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
+import core.net.Connector;
 import core.training.TrainingManager;
-import core.util.AmountOfMoney;
 import core.util.ExceptionHandler;
+import core.util.HOEnvironmentVariable;
 import core.util.HOLogger;
 import core.util.OSUtils;
 
@@ -127,6 +128,8 @@ public class HO {
         	VERSION = 0d;
         	versionType = "DEV";
         }
+
+        evaluateEnvironmentVariables();
 
 		// Login selection in case of multi-users DB
 		try {
@@ -298,4 +301,12 @@ public class HO {
 		return (JOptionPane) ret;
 	}
 
+    private static void evaluateEnvironmentVariables() {
+        HOLogger.instance().info(HO.class, "Evaluating environment variables.");
+
+        HOEnvironmentVariable.HO_SAVE_DOWNLOADED_XML.valueAsBoolean().ifPresent(saveDownloadedXml -> {
+            Connector.setSaveDownloadedXml(saveDownloadedXml);
+            HOLogger.instance().info(HO.class, "Setting saving of downloaded XML files to '%s'".formatted(saveDownloadedXml));
+        });
+    }
 }
