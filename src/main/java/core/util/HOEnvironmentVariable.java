@@ -3,6 +3,8 @@ package core.util;
 import java.util.Optional;
 
 public enum HOEnvironmentVariable {
+    HO_ENCRYPTED_TOKEN,
+    HO_ENCRYPTED_TOKEN_SECRET,
     HO_SAVE_DOWNLOADED_XML,
     ;
 

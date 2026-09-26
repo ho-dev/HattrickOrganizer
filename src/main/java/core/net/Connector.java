@@ -81,22 +81,23 @@ public class Connector {
     }
 
     private static String getEncryptedToken() {
-        return getFromEnvOrElse("HO_ENCRYPTED_TOKEN", () -> UserParameter.instance().getEncryptedToken());
+        return getFromEnvOrElse(HOEnvironmentVariable.HO_ENCRYPTED_TOKEN, () -> UserParameter.instance().getEncryptedToken());
     }
 
     private static String getEncryptedTokenSecret() {
-        return getFromEnvOrElse("HO_ENCRYPTED_TOKEN_SECRET", () -> UserParameter.instance().getEncryptedTokenSecret());
+        return getFromEnvOrElse(HOEnvironmentVariable.HO_ENCRYPTED_TOKEN_SECRET, () -> UserParameter.instance().getEncryptedTokenSecret());
     }
 
-    private static String getFromEnvOrElse(String name, Supplier<String> supplier) {
-        final var value = System.getenv(name);
-        if (StringUtils.isNotBlank(value)) {
-            HOLogger.instance().info(
-                Connector.class,
-                "Found environment variable '%s' and used its value.".formatted(name));
-            return value;
-        }
-        return supplier.get();
+    private static String getFromEnvOrElse(HOEnvironmentVariable environmentVariable, Supplier<String> supplier) {
+        return environmentVariable.value()
+            .filter(StringUtils::isNotBlank)
+            .map(value -> {
+                HOLogger.instance().info(
+                    Connector.class,
+                    "Found environment variable '%s' and used its value.".formatted(environmentVariable));
+                return value;
+            })
+            .orElseGet(supplier);
     }
 
 	/**
