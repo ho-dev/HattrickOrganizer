@@ -102,6 +102,7 @@
 ### Developer Tools
 
 * `Debug` / `SQL Editor`: Fixed that SQL statements were always executed in upper case. (#2491)
+* `Debug` / `Save downloaded XML`: Added environment variable `HO_SAVE_DOWNLOADED_XML` to control that option. (#2506)
 
 ## Translations
 
