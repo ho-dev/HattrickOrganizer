@@ -215,7 +215,7 @@ public class XMLMatchdetailsParser {
             		}
             	}
 
-            	//generate MatchHighlight and add to list
+            	//generate MatchEvent and add to list
             	final MatchEvent myHighlight = new MatchEvent();
             	myHighlight.setMatchEventIndex(n+1);
             	myHighlight.setMatchEventID(iMatchEventID);

@@ -10,14 +10,28 @@ import core.model.enums.MatchType;
 import core.model.player.Specialty;
 import core.util.HODateTime;
 import core.util.HOLogger;
+import core.util.StreamUtils;
 
 import javax.swing.*;
 import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static core.model.match.MatchEvent.MatchEventID.SPECTATORS_OR_VENUE_RAIN;
 
 public class MatchEvent extends AbstractTable.Storable {
+
+    private static final Set<MatchEventID> OWN_GOAL_GOAL_EVENTS =
+        Set.of(MatchEventID.SE_GOAL_UNPREDICTABLE_OWN_GOAL);
+
+    private static final Set<MatchEventID> OWN_GOAL_NO_GOAL_EVENTS =
+        Set.of(MatchEventID.SE_NO_GOAL_UNPREDICTABLE_OWN_GOAL_ALMOST);
+
+    private static final Set<MatchEventID> OWN_GOAL_EVENTS =
+        StreamUtils.concat(OWN_GOAL_GOAL_EVENTS.stream(), OWN_GOAL_NO_GOAL_EVENTS.stream()).collect(Collectors.toSet());
+
+    private static final Set<MatchEventID> PENALTY_CONTEXT_ADDITIONAL_EVENTS =
+        Set.of(MatchEventID.PENALTY_CONTEST_AFTER_EXTENSION, MatchEventID.AFTER_22_PENALTIES_TOSSING_COIN);
 
     private String m_sEventText = "";
 
@@ -194,14 +208,15 @@ public class MatchEvent extends AbstractTable.Storable {
         }
 
         public static MatchEventID fromMatchEventID(int iMatchEventID) {
-            MatchEventID ret = lookup.get(iMatchEventID);
-            if (ret == null) {
-                ret = UNKNOWN_MATCHEVENT;
+            return findMatchEventId(iMatchEventID).orElseGet(() -> {
                 HOLogger.instance().log(MatchEventID.class, "UNKNOWN_MATCHEVENT: " + iMatchEventID);
-            }
-            return ret;
+                return UNKNOWN_MATCHEVENT;
+            });
         }
 
+        public static Optional<MatchEventID> findMatchEventId(int matchEventId) {
+            return Optional.ofNullable(lookup.get(matchEventId));
+        }
     }
 
     public enum MatchPartId {
@@ -260,7 +275,7 @@ public class MatchEvent extends AbstractTable.Storable {
     public Matchdetails.eInjuryType m_eInjuryType;
 
     /**
-     * Creates a new instance of MatchHighlight
+     * Creates a new instance of MatchEvent
      */
     public MatchEvent() {
     }
@@ -281,6 +296,24 @@ public class MatchEvent extends AbstractTable.Storable {
 
     public boolean isBooked() {
         return (isYellowCard() || isRedCard());
+    }
+
+    /**
+     * Identifies events that are events during a penalty contest.
+     *
+     * @return {@code true} when event for that case, otherwise {@code false}
+     */
+    public boolean isPenaltyContestEvent() {
+        return isPenaltyContestEventGoalAndNoGoalEvent() || PENALTY_CONTEXT_ADDITIONAL_EVENTS.contains(this.m_matchEventID);
+    }
+
+    /**
+     * Identifies events that are events during a penalty contest and can result in a goal.
+     *
+     * @return {@code true} when event for that case, otherwise {@code false}
+     */
+    public boolean isPenaltyContestEventGoalAndNoGoalEvent() {
+        return isPenaltyContestGoalEvent() || isPenaltyContestNoGoalEvent();
     }
 
     public boolean isPenaltyContestGoalEvent() {
@@ -306,6 +339,30 @@ public class MatchEvent extends AbstractTable.Storable {
 
     public boolean isNonGoalEvent() {
         return ((this.m_iMatchEventID >= 200) && (this.m_iMatchEventID < 300));
+    }
+
+    public boolean isOwnGoalEvent() {
+        return isOwnGoalEvent(m_iMatchEventID);
+    }
+
+    public static boolean isOwnGoalEvent(int matchEventID) {
+        return MatchEventID.findMatchEventId(matchEventID).map(OWN_GOAL_EVENTS::contains).orElse(false);
+    }
+
+    public boolean isOwnGoalGoalEvent() {
+        return isOwnGoalGoalEvent(m_iMatchEventID);
+    }
+
+    public static boolean isOwnGoalGoalEvent(int matchEventID) {
+        return MatchEventID.findMatchEventId(matchEventID).map(OWN_GOAL_GOAL_EVENTS::contains).orElse(false);
+    }
+
+    public boolean isOwnGoalNoGoalEvent() {
+        return isOwnGoalNoGoalEvent(m_iMatchEventID);
+    }
+
+    public static boolean isOwnGoalNoGoalEvent(int matchEventID) {
+        return MatchEventID.findMatchEventId(matchEventID).map(OWN_GOAL_NO_GOAL_EVENTS::contains).orElse(false);
     }
 
     public boolean isNeutralEvent() {
@@ -775,6 +832,10 @@ public class MatchEvent extends AbstractTable.Storable {
 
     public String getEventTextDescription() {
         return getEventTextDescription(m_matchEventID.value);
+    }
+
+    public static String getEventTextDescription(MatchEventID matchEventID) {
+        return getEventTextDescription(matchEventID.getValue());
     }
 
     public static String getEventTextDescription(int iMatchEventID) {
