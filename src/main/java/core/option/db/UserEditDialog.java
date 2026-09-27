@@ -4,7 +4,7 @@ import core.db.user.User;
 import core.gui.comp.NumericDocument;
 import core.model.TranslationFacility;
 import core.util.GUIUtils;
-import core.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;

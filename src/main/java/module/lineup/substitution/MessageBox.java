@@ -1,16 +1,9 @@
 package module.lineup.substitution;
 
-import core.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
-import java.awt.Color;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-
-import javax.swing.Icon;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextArea;
+import javax.swing.*;
+import java.awt.*;
 
 public class MessageBox extends JPanel {
 

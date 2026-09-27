@@ -5,7 +5,8 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.match.MatchesHighlightsStat;
 import core.model.match.MatchesOverviewRow;
-import core.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
+
 import java.awt.Component;
 import javax.swing.JTable;
 import javax.swing.SwingConstants;
@@ -21,14 +22,14 @@ class MatchesOverviewRenderer extends DefaultTableCellRenderer {
 		setText(value.toString());
 		setIcon(null);
 		setHorizontalAlignment(SwingConstants.CENTER);
-		
+
 		if(StringUtils.isEmpty(value.toString()))
 			setBackground(ThemeManager.getColor(HOColorName.TABLEENTRY_BG));
 		else
 			setBackground(ThemeManager.getColor(HOColorName.MATCHTYPE_LEAGUE_BG));
-		
+
 		setForeground(ThemeManager.getColor(HOColorName.TABLEENTRY_FG));
-		
+
 		if(value instanceof MatchesOverviewRow){
 			MatchesOverviewRow mrow = (MatchesOverviewRow)value;
 			setHorizontalAlignment(SwingConstants.LEFT);
@@ -44,8 +45,8 @@ class MatchesOverviewRenderer extends DefaultTableCellRenderer {
 			if(mrow.isTitle())
 				setBackground(ThemeManager.getColor(HOColorName.TABLEENTRY_BG));
 		}
-		
-		
+
+
 		return this;
 	}
 

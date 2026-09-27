@@ -23,8 +23,8 @@ import core.model.player.Player;
 import core.model.player.PlayerCategory;
 import core.util.HODateTime;
 import core.util.Helper;
-import core.util.StringUtils;
 import module.playeroverview.PlayerStatusLabelEntry;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
@@ -34,7 +34,7 @@ import java.util.Optional;
 
 import static core.model.player.IMatchRoleID.aPositionBehaviours;
 import static core.model.player.MatchRoleID.isFieldMatchRoleId;
-import static core.util.StringUtils.stringToHtml;
+import static core.util.HtmlUtils.stringToHtml;
 
 /**
  * User column factory creates {@link UserColumn} instances used in the

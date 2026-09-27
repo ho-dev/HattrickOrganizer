@@ -14,7 +14,7 @@ import core.net.OnlineWorker;
 import core.util.HODateTime;
 import core.util.HOLogger;
 import core.util.Helper;
-import core.util.StringUtils;
+import core.model.match.MatchResultFormatter;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -203,7 +203,7 @@ final class MatchDayPanel extends JPanel implements ActionListener {
         visitorTeam.setBackground(getColor(HOColorName.LEAGUE_PANEL_BG));
         result.setBackground(getColor(HOColorName.LEAGUE_PANEL_BG));
         if ((paarung.getToreHeim() > -1) && (paarung.getToreGast() > -1)) {
-            result.setText(StringUtils.getResultString(paarung.getToreHeim(), paarung.getToreGast(), ""));
+            result.setText(MatchResultFormatter.format(paarung.getToreHeim(), paarung.getToreGast(), ""));
 
             // HomeVictory
             if (paarung.getToreHeim() > paarung.getToreGast()) {
@@ -234,7 +234,7 @@ final class MatchDayPanel extends JPanel implements ActionListener {
                 }
             }
         } else {
-            result.setText(StringUtils.getResultString(-1, -1, ""));
+            result.setText(MatchResultFormatter.format(-1, -1, ""));
         }
 
         markMyTeam(homeTeam, paarung.getHeimId(), myTeamID);

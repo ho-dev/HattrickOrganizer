@@ -2,6 +2,7 @@ package module.playeroverview;
 
 import core.datatype.CBItem;
 import core.db.DBManager;
+import core.db.DownloadInfo;
 import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
 import core.gui.Refreshable;
@@ -10,7 +11,6 @@ import core.gui.model.AufstellungsListRenderer;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.player.Player;
-
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -22,7 +22,6 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
  * Panel that displays the list of stored HRFs, which can be selected to perform
  * comparisons with current team.
@@ -30,19 +29,13 @@ import java.util.List;
 public class SpielerTrainingsVergleichsPanel extends ImagePanel
     implements Refreshable, ListSelectionListener, ActionListener {
 
-	//~ Static fields/initializers -----------------------------------------------------------------
-
     private static List<Player> vergleichsPlayer = new ArrayList<>();
     private static Integer hrfId;
     private static boolean vergleichsMarkierung;
 
-    //~ Instance fields ----------------------------------------------------------------------------
-
     private final JButton m_jbLoeschen = new JButton(TranslationFacility.tr("ls.button.delete"));
     private final JList<CBItem> m_jlHRFs = new JList<>();
     private final List<ChangeListener> changeListeners = new ArrayList<>();
-
-    //~ Constructors -------------------------------------------------------------------------------
 
     /**
      * Creates a new SpielerTrainingsVergleichsPanel object.
@@ -53,7 +46,6 @@ public class SpielerTrainingsVergleichsPanel extends ImagePanel
         loadHRFListe(true);
     }
 
-    //~ Methods ------------------------------------------------------------------------------------
     public static boolean isDevelopmentStageSelected() {
         return vergleichsMarkierung;
     }
@@ -169,30 +161,38 @@ public class SpielerTrainingsVergleichsPanel extends ImagePanel
 	}
 
     /**
-     * load all hrf file entries and creates a list of combo box items
+     * Load all hrf file entries, join next daily update date and create a list of combo box items
+     * @return List<CBItem>
      */
     List<CBItem> loadCBItemHRFList() {
-        var hrfs = DBManager.instance().loadAllHRFs(false);
-        var cbitems = new ArrayList<CBItem>();
-
-        for (var hrf : hrfs) {
-            var date = hrf.getDatum();
-            var trainingWeek = date.toTrainingWeek();
-            cbitems.add(
-                    new core.datatype.CBItem(
-                            date.toLocaleDateTime()
-                                    + " ( "
-                                    + TranslationFacility.tr("Season")
-                                    + " "
-                                    + trainingWeek.season
-                                    + "  "
-                                    + TranslationFacility.tr("ls.training.week")
-                                    + " "
-                                    + trainingWeek.week
-                                    + " )",
-                            hrf.getHrfId()));
+        var downloadInfo = DBManager.instance().loadDownloadInfo();
+        var items = new ArrayList<CBItem>();
+        for (var info : downloadInfo) {
+            items.add(new CBItem(createDownloadInformationString(info), info.hrfId()));
         }
-        return cbitems;
+        return items;
+    }
+
+    /**
+     * Create combo box string from downloadInfo record
+     * @param info DownloadInfo
+     * @return String
+     */
+    private static String createDownloadInformationString(DownloadInfo info) {
+        var date = info.date();
+        var update = info.nextDailyUpdate();
+        var trainingWeek = date.toTrainingWeek();
+        var string = date.toLocaleDateTime()
+            + " ( " + TranslationFacility.tr("Season")
+            + " " + trainingWeek.season
+            + " " + TranslationFacility.tr("ls.training.week")
+            + " " + trainingWeek.week;
+        if (update != null) {
+            string += "; " + TranslationFacility.tr("ls.next.daily.update")
+                + ": " + update.toLocaleDateTime();
+        }
+        string += " )";
+        return string;
     }
 
     private void loadHRFListe(boolean init) {

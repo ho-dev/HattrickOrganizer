@@ -1,7 +1,6 @@
 // %1126721330041:hoplugins.transfers.dao%
 package module.transfer;
 
-
 import core.db.DBManager;
 import core.file.xml.XMLManager;
 import core.model.HOVerwaltung;
@@ -9,16 +8,15 @@ import core.model.player.Player;
 import core.net.Connector;
 import core.util.AmountOfMoney;
 import core.util.HODateTime;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
-
-import core.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Vector;
 
 /**
  * XML Parser used to parse HT xml for tansfer information.
