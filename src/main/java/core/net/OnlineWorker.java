@@ -58,7 +58,7 @@ public class OnlineWorker {
 			HOVerwaltung hov = HOVerwaltung.instance();
 			String hrf = null;
 			try {
-				hrf = ConvertXml2Hrf.createHrf();
+				hrf = ConvertXml2Hrf.createHrf(parent);
 				if (hrf == null) {
 					return false;
 				}

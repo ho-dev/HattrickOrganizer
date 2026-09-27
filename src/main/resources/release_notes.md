@@ -1,6 +1,7 @@
 ## Highlights
 
 * New hall of fame module
+* New database backup strategy
 
 ## [Detailed Changelog](https://github.com/ho-dev/HattrickOrganizer/milestone/27)
 
@@ -10,9 +11,12 @@
 
 ### Database
 
+* New backup strategy: Keep latest backup per week for the latest 16 weeks and one per season for time before  (#2484)
+
 ### Download
 
 * Fix null pointer exception in nt team download (#2314)
+* Download can replace database of old team automatically (#2310)
 
 ### Player Overview
 
@@ -27,6 +31,10 @@
 ### HO update
 
 * Portable version shows hint to install downloaded update manually (#2331)
+
+### Series
+
+* Fix error in table calculation if more than one team is replaced at one match day (#2453)
 
 ### Matches
 
@@ -46,6 +54,7 @@
 
 * Fix empty list of upcoming games in Lineup panel after first download.
 * Added support of all 13 **Player Categories** (#2418)
+* Fix scroll behavior of lineup rating panel (#2365)
 
 ### Matches
 
@@ -74,6 +83,7 @@
 
 * Fixed the missing translation for the home/away `Tactic` and `Details` column and displaying the abbreviation of the
   tactic now in the corresponding column.
+* Fixed a crash that occurred when not ticking `Only matches with SEs`.
 
 ### Option setting
 
@@ -106,11 +116,12 @@
 
 * Added the missing translation for the short text in the table for `Goals for the Team`.
 
-Reports by Contributors - October 19, 2025 - June 19, 2026
+Reports by Contributors - October 19, 2025 - September 13, 2026
 
 * Jösgall 1005
 * Ioannidouefty 459
-* wsbrenk 122
+* Lukasz 418
+* wsbrenk 158
 * Frankieorabona 73
 * Lidegand 72
 * \_KOHb\_ 54
@@ -121,4 +132,4 @@ Reports by Contributors - October 19, 2025 - June 19, 2026
 * Mara 3
 * Joeri Roels 1
 
-Total 1868
+Total 2322
