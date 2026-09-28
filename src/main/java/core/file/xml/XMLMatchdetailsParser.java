@@ -356,7 +356,6 @@ public class XMLMatchdetailsParser {
 					oTournamentDetails = getTournamentDetails(tournamentId); // download info about tournament from HT
 					DBManager.instance().storeTournamentDetailsIntoDB(oTournamentDetails); // store tournament details into DB
 				}
-				md.setTournamentTypeID(oTournamentDetails.getTournamentType());
 			}
 
             ele = (Element) root.getElementsByTagName("MatchID").item(0);

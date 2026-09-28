@@ -27,6 +27,7 @@
 * Added the columns `Career Assists` and `Assists for the Team` to the overview and details panel. (#2254)
 * New columns "Recovered on" and "Slightly injured on" (#2363)
 * Hrf list shows next daily update (#2459)
+* Fix subskill recalculation overlooks trainings if downloads happened during training (#2149)
 
 ### HO update
 
