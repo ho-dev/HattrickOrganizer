@@ -158,6 +158,12 @@ final class DBUpdater {
             ifaMatchTable.tryAddColumn("AWAY_COUNTRYID", "INTEGER");
         }
 
+        var matchDetailsTable = dbManager.getTable(MatchDetailsTable.TABLENAME);
+        if (matchDetailsTable.tryAddColumn("GuestRatingIndirectSetPiecesAtt", "INTEGER")) {
+            matchDetailsTable.tryAddColumn("GuestRatingIndirectSetPiecesDef", "INTEGER");
+            matchDetailsTable.tryRenameColumn("RatingIndirectSetPiecesDef", "HomeRatingIndirectSetPiecesDef");
+            matchDetailsTable.tryRenameColumn("RatingIndirectSetPiecesAtt", "HomeRatingIndirectSetPiecesAtt");
+        }
         updateDBVersion(dbVersion, 1000);
     }
 

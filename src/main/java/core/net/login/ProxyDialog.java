@@ -8,7 +8,7 @@ import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.net.Connector;
 import core.util.GUIUtils;
-import core.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;

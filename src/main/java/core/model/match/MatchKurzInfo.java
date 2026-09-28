@@ -17,8 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import static core.util.StringUtils.getResultString;
-
 public class MatchKurzInfo extends AbstractTable.Storable implements Comparable<Object> {
 
 	/** Name des Teams zu dem die Matchinfo gehört */
@@ -122,7 +120,7 @@ public class MatchKurzInfo extends AbstractTable.Storable implements Comparable<
 	/**
 	 * Setter for the ordersGiven property which indicates if orders for this
 	 * match are given or not.
-	 * 
+	 *
 	 * @param ordersGiven
 	 *            <code>true</code> if orders for this match are given,
 	 *            <code>false</code> otherwise.
@@ -134,7 +132,7 @@ public class MatchKurzInfo extends AbstractTable.Storable implements Comparable<
 	/**
 	 * Indicates if orders are given for this match. From HT only supplied for
 	 * upcoming matches (haven't started yet).
-	 * 
+	 *
 	 * @return <code>true</code> if orders for this match are given,
 	 *         <code>false</code> otherwise.
 	 */
@@ -152,7 +150,7 @@ public class MatchKurzInfo extends AbstractTable.Storable implements Comparable<
 
 	/**
 	 * Setter for property m_sGastName.
-	 * 
+	 *
 	 * @param m_sGastName
 	 *            New value of property m_sGastName.
 	 */
@@ -162,7 +160,7 @@ public class MatchKurzInfo extends AbstractTable.Storable implements Comparable<
 
 	/**
 	 * Getter for property m_sGastName.
-	 * 
+	 *
 	 * @return Value of property m_sGastName.
 	 */
 	public final String getGuestTeamName() {
@@ -184,7 +182,7 @@ public class MatchKurzInfo extends AbstractTable.Storable implements Comparable<
 
 	/**
 	 * Setter for property m_iGastTore.
-	 * 
+	 *
 	 * @param m_iGastTore
 	 *            New value of property m_iGastTore.
 	 */
@@ -194,7 +192,7 @@ public class MatchKurzInfo extends AbstractTable.Storable implements Comparable<
 
 	/**
 	 * Getter for property m_iGastTore.
-	 * 
+	 *
 	 * @return Value of property m_iGastTore.
 	 */
 	public final int getGuestTeamGoals() {
@@ -211,7 +209,7 @@ public class MatchKurzInfo extends AbstractTable.Storable implements Comparable<
 
 	/**
 	 * Setter for property m_sHeimName.
-	 * 
+	 *
 	 * @param m_sHeimName
 	 *            New value of property m_sHeimName.
 	 */
@@ -221,7 +219,7 @@ public class MatchKurzInfo extends AbstractTable.Storable implements Comparable<
 
 	/**
 	 * Getter for property m_sHeimName.
-	 * 
+	 *
 	 * @return Value of property m_sHeimName.
 	 */
 	public final String getHomeTeamName() {
@@ -230,7 +228,7 @@ public class MatchKurzInfo extends AbstractTable.Storable implements Comparable<
 
 	/**
 	 * Setter for property m_iHeimTore.
-	 * 
+	 *
 	 * @param m_iHeimTore
 	 *            New value of property m_iHeimTore.
 	 */
@@ -240,7 +238,7 @@ public class MatchKurzInfo extends AbstractTable.Storable implements Comparable<
 
 	/**
 	 * Getter for property m_iHeimTore.
-	 * 
+	 *
 	 * @return Value of property m_iHeimTore.
 	 */
 	public final int getHomeTeamGoals() {
@@ -261,7 +259,7 @@ public class MatchKurzInfo extends AbstractTable.Storable implements Comparable<
 
 	/**
 	 * Setter for property m_iMatchID.
-	 * 
+	 *
 	 * @param m_iMatchID
 	 *            New value of property m_iMatchID.
 	 */
@@ -275,7 +273,7 @@ public class MatchKurzInfo extends AbstractTable.Storable implements Comparable<
 
 	/**
 	 * Getter for property m_iMatchID.
-	 * 
+	 *
 	 * @return Value of property m_iMatchID.
 	 */
 	public int getMatchID() {
@@ -284,7 +282,7 @@ public class MatchKurzInfo extends AbstractTable.Storable implements Comparable<
 
 	/**
 	 * Setter for property m_iMatchStatus.
-	 * 
+	 *
 	 * @param m_iMatchStatus
 	 *            New value of property m_iMatchStatus.
 	 */
@@ -294,7 +292,7 @@ public class MatchKurzInfo extends AbstractTable.Storable implements Comparable<
 
 	/**
 	 * Getter for property m_iMatchStatus.
-	 * 
+	 *
 	 * @return Value of property m_iMatchStatus.
 	 */
 	public final int getMatchStatus() {
@@ -303,7 +301,7 @@ public class MatchKurzInfo extends AbstractTable.Storable implements Comparable<
 
 	/**
 	 * Setter for property m_iMatchTyp.
-	 * 
+	 *
 	 * @param matchTyp
 	 *            New value of property m_iMatchTyp.
 	 */
@@ -313,7 +311,7 @@ public class MatchKurzInfo extends AbstractTable.Storable implements Comparable<
 
 	/**
 	 * Getter for property m_iMatchTyp.
-	 * 
+	 *
 	 * @return Value of property m_iMatchTyp.
 	 */
 	public MatchType getMatchType() {
@@ -405,7 +403,7 @@ public class MatchKurzInfo extends AbstractTable.Storable implements Comparable<
 	 * <code>MatchKurzInfo</code>. This method should be used e.g. when a model
 	 * has to be updated with data from a different <code>MatchKurzInfo</code>
 	 * instance but and object identity has to be preserved.
-	 * 
+	 *
 	 * @param match
 	 *            the <code>MatchKurzInfo</code> to get the data from.
 	 */
@@ -505,7 +503,7 @@ public class MatchKurzInfo extends AbstractTable.Storable implements Comparable<
 
 	public String getResultLong() {
 		if ( this.m_iMatchStatus != FINISHED){
-			return getResultString(-1,-1,"");
+			return MatchResultFormatter.format(-1,-1,"");
 		}
 		return getMatchdetails().getResultLong();
 	}

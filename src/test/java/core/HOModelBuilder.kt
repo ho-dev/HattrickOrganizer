@@ -15,6 +15,7 @@ import core.model.misc.Verein
 import core.model.player.Player
 import core.model.series.Liga
 import core.util.HODateTime
+import core.util.HODuration
 import module.series.MatchFixtures
 import tool.arenasizer.Stadium
 import java.sql.Timestamp
@@ -71,9 +72,9 @@ class PlayerBuilder {
         val ret = Player()
         ret.hrfId = hrfId
         val hrfDate = hrfs[hrfId]?.datum
-        val age = HODateTime.HODuration.between(this.birthday, hrfDate)
-        ret.age = age.seasons
-        ret.ageDays = age.days
+        val age = HODuration.betweenDays(this.birthday, hrfDate)
+        ret.age = age.seasons.toInt()
+        ret.ageDays = age.daysInSeason.toInt()
         ret.injuryWeeks = injuryLevel
         ret.tsi = tsi
         ret.playerId = playerId
@@ -180,16 +181,16 @@ class TestPersistenceManager : PersistenceManager {
 
     private fun TestPlayers43(): List<Player> {
         val ret = TestPlayers42()
-        val downloadTimeInterval = HODateTime.HODuration.between(hrfs[42]?.datum, hrfs[43]?.datum)
+        val downloadTimeInterval = HODuration.betweenDays(hrfs[42]?.datum, hrfs[43]?.datum)
         var injuryLevel = 0
         ret.forEach { p ->
             run {
-                val age = HODateTime.HODuration(p.age, p.ageDays).plus(downloadTimeInterval)
+                val age = HODuration(p.age.toLong(), p.ageDays.toLong()).plus(downloadTimeInterval)
                 p.injuryWeeks = injuryLevel++
                 p.tsi = (p.tsi * (1.0 - 0.19 * p.injuryWeeks)).toInt()
                 p.hrfId = 43
-                p.age = age.seasons
-                p.ageDays = age.days
+                p.age = age.seasons.toInt()
+                p.ageDays = age.daysInSeason.toInt()
             }
         }
         return ret
