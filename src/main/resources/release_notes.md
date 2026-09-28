@@ -38,6 +38,7 @@
 
 ### Matches
 
+* Added indirect set pieces ratings to rating panel (#2433)
 * Fix download of style of play. Old matches has to be reloaded (#2432)
 
 ### Hall of fame
@@ -63,8 +64,6 @@
 ### Training
 
 * Add experience skill to training tables (#2283)
-
-### Transfer
 
 ### Statistics
 
@@ -94,9 +93,7 @@
 
 * Fixed a crash that occurred when not ticking `Only matches with SEs`.
 
-### Tools
-
-#### Arena Sizer
+### Arena Sizer
 
 * Removed the superfluous space for the `Spectators` in braces at the end.
 * Added the image of the stadium and made the view better arranged. (#2140)
@@ -114,22 +111,20 @@
 
 ## Translations
 
-* Added the missing translation for the short text in the table for `Goals for the Team`.
-
-Reports by Contributors - October 19, 2025 - September 13, 2026
+Reports by Contributors - October 19, 2025 - September 28, 2026
 
 * Jösgall 1005
 * Ioannidouefty 459
 * Lukasz 418
-* wsbrenk 158
+* wsbrenk 172
 * Frankieorabona 73
 * Lidegand 72
 * \_KOHb\_ 54
-* Sebastian Reddig 35
+* Sebastian Reddig 36
 * Walter 28
 * Kristaps 11
 * Stefan Schenke 5
 * Mara 3
 * Joeri Roels 1
 
-Total 2322
+Total 2337
