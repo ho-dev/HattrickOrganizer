@@ -36,6 +36,10 @@
 
 * Fix error in table calculation if more than one team is replaced at one match day (#2453)
 
+### Matches
+
+* Added indirect set pieces ratings to rating panel (#2433)
+
 ### Hall of fame
 
 * Added (#2296)
