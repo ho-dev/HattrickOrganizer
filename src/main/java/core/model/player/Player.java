@@ -665,7 +665,7 @@ public class Player extends AbstractTable.Storable {
     public int getBonus() {
         int bonus = 0;
 
-        if (countryId != HOVerwaltung.instance().getModel().getBasics().getLand()) {
+        if (countryId != HOVerwaltung.instance().getModel().getBasics().getCountryId()) {
             bonus = 20;
         }
 

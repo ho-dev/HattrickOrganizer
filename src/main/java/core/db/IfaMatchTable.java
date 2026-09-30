@@ -7,6 +7,7 @@ import module.ifa.IfaMatch;
 import java.sql.ResultSet;
 import java.sql.Timestamp;
 import java.sql.Types;
+import java.util.List;
 
 public class IfaMatchTable extends AbstractTable {
 
@@ -27,8 +28,10 @@ public class IfaMatchTable extends AbstractTable {
 				ColumnDescriptor.Builder.newInstance().setColumnName("AWAYTEAMID").setGetter((o) -> ((IfaMatch) o).getAwayTeamId()).setSetter((o, v) -> ((IfaMatch) o).setAwayTeamId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("HOMETEAMGOALS").setGetter((o) -> ((IfaMatch) o).getHomeTeamGoals()).setSetter((o, v) -> ((IfaMatch) o).setHomeTeamGoals((int) v)).setType(Types.INTEGER).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("AWAYTEAMGOALS").setGetter((o) -> ((IfaMatch) o).getAwayTeamGoals()).setSetter((o, v) -> ((IfaMatch) o).setAwayTeamGoals((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("HOME_LEAGUEID").setGetter((o) -> ((IfaMatch) o).getHomeLeagueId()).setSetter((o, v) -> ((IfaMatch) o).setHomeLeagueId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("AWAY_LEAGUEID").setGetter((o) -> ((IfaMatch) o).getAwayLeagueId()).setSetter((o, v) -> ((IfaMatch) o).setAwayLeagueId((int) v)).setType(Types.INTEGER).isNullable(false).build()
+            ColumnDescriptor.Builder.newInstance().setColumnName("HOME_LEAGUEID").setGetter((o) -> ((IfaMatch) o).getHomeLeagueId()).setSetter((o, v) -> ((IfaMatch) o).setHomeLeagueId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.newInstance().setColumnName("AWAY_LEAGUEID").setGetter((o) -> ((IfaMatch) o).getAwayLeagueId()).setSetter((o, v) -> ((IfaMatch) o).setAwayLeagueId((int) v)).setType(Types.INTEGER).isNullable(false).build(),
+            ColumnDescriptor.Builder.newInstance().setColumnName("HOME_COUNTRYID").setGetter((o) -> ((IfaMatch) o).getHomeCountryId()).setSetter((o, v) -> ((IfaMatch) o).setHomeCountryId((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+            ColumnDescriptor.Builder.newInstance().setColumnName("AWAY_COUNTRYID").setGetter((o) -> ((IfaMatch) o).getAwayCountryId()).setSetter((o, v) -> ((IfaMatch) o).setAwayCountryId((Integer) v)).setType(Types.INTEGER).isNullable(true).build()
 		};
 	}
 
@@ -58,12 +61,11 @@ public class IfaMatchTable extends AbstractTable {
 	private final String getHomeMatchesSql = createSelectStatement("WHERE HOMETEAMID=? ORDER BY AWAY_LEAGUEID ASC");
 	private final String getAwayMatchesSql = createSelectStatement("WHERE AWAYTEAMID=? ORDER BY HOME_LEAGUEID ASC");
 
-	IfaMatch[] getMatches(boolean home) {
-		var list = load(IfaMatch.class,
-				connectionManager.executePreparedQuery(home? getHomeMatchesSql: getAwayMatchesSql,
-						HOVerwaltung.instance().getModel().getBasics().getTeamId()));
-		return list.toArray(new IfaMatch[0]);
-	}
+	List<IfaMatch> getMatches(boolean home) {
+        return load(IfaMatch.class,
+            connectionManager.executePreparedQuery(home ? getHomeMatchesSql : getAwayMatchesSql,
+                HOVerwaltung.instance().getModel().getBasics().getTeamId()));
+    }
 
 	void insertMatch(IfaMatch match) {
 		store(match);

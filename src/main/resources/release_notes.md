@@ -65,8 +65,6 @@
 
 * Add experience skill to training tables (#2283)
 
-### Transfer
-
 ### Statistics
 
 * Fix background color of terraces income column (#2356)
@@ -95,7 +93,9 @@
 
 * Fixed a crash that occurred when not ticking `Only matches with SEs`.
 
-### Tools
+### International Friendly Analyzer
+
+* Statistics regarding team's country ID instead of league ID (#2249)
 
 #### Arena Sizer
 
@@ -115,22 +115,20 @@
 
 ## Translations
 
-* Added the missing translation for the short text in the table for `Goals for the Team`.
-
-Reports by Contributors - October 19, 2025 - September 13, 2026
+Reports by Contributors - October 19, 2025 - September 27, 2026
 
 * Jösgall 1005
 * Ioannidouefty 459
 * Lukasz 418
-* wsbrenk 158
+* wsbrenk 166
 * Frankieorabona 73
 * Lidegand 72
 * \_KOHb\_ 54
-* Sebastian Reddig 35
+* Sebastian Reddig 36
 * Walter 28
 * Kristaps 11
 * Stefan Schenke 5
 * Mara 3
 * Joeri Roels 1
 
-Total 2322
+Total 2331
