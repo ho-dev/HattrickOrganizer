@@ -27,6 +27,7 @@
 * Added the columns `Career Assists` and `Assists for the Team` to the overview and details panel. (#2254)
 * New columns "Recovered on" and "Slightly injured on" (#2363)
 * Hrf list shows next daily update (#2459)
+* Fix subskill recalculation overlooks trainings if downloads happened during training (#2149)
 
 ### HO update
 
@@ -93,6 +94,10 @@
 
 * Fixed a crash that occurred when not ticking `Only matches with SEs`.
 
+### International Friendly Analyzer
+
+* Statistics regarding team's country ID instead of league ID (#2249)
+
 ### Arena Sizer
 
 * Removed the superfluous space for the `Spectators` in braces at the end.
@@ -111,7 +116,7 @@
 
 ## Translations
 
-Reports by Contributors - October 19, 2025 - September 28, 2026
+Reports by Contributors - October 19, 2025 - September 27, 2026
 
 * Jösgall 1005
 * Ioannidouefty 459

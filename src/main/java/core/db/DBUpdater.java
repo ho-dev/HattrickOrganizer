@@ -153,6 +153,11 @@ final class DBUpdater {
         var hofTable = dbManager.getTable(HallOfFamePlayersTable.TABLENAME);
         hofTable.createTable();
 
+        var ifaMatchTable = dbManager.getTable(IfaMatchTable.TABLENAME);
+        if (ifaMatchTable.tryAddColumn("HOME_COUNTRYID", "INTEGER")) {
+            ifaMatchTable.tryAddColumn("AWAY_COUNTRYID", "INTEGER");
+        }
+
         var matchDetailsTable = dbManager.getTable(MatchDetailsTable.TABLENAME);
         if (matchDetailsTable.tryAddColumn("GuestRatingIndirectSetPiecesAtt", "INTEGER")) {
             matchDetailsTable.tryAddColumn("GuestRatingIndirectSetPiecesDef", "INTEGER");
