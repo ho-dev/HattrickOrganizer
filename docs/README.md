@@ -48,8 +48,8 @@
 <tr>
   <td>Lines of code</td>
   <td>
-   <a href='https://github.com/Aaronepower/tokei'>
-   <img src='https://tokei.rs/b1/github/ho-dev/hattrickorganizer?category=code' alt='Lines of code' />
+   <a href='https://github.com/kojix2/tokei-api'>
+   <img src='https://img.shields.io/endpoint?url=https%3A%2F%2Ftokei.kojix2.net%2Fbadge%2Fgithub%2Fho-dev%2FHattrickOrganizer%2Flines' alt='Lines of code' />
   </a>
 </td>
 </tr>
