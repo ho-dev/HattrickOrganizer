@@ -38,6 +38,7 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
     private final YouthSkillInfoEditor[] playerSkillInfoEditors;
     private final JEditorPane playerScoutCommentField;
     private final YouthPlayerDetailsTableModel playerDetailsTableModel;
+    private YouthPlayer selectedPlayer;
 
     public YouthPlayerView() {
         super();
@@ -150,15 +151,18 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
 
     private boolean isRefreshingPlayerOverview=false;
     private void refreshPlayerOverview() {
-        if ( isRefreshingPlayerOverview) return;
+        if (isRefreshingPlayerOverview) {
+            return;
+        }
         try {
             isRefreshingPlayerOverview = true;
-            var selection = this.playerOverviewTable.getSelectedModelIndex();
+            var selected = this.selectedPlayer;
             playerOverviewTableModel.initData();
-            SwingUtilities.invokeLater(() -> this.playerOverviewTable.selectModelIndex(selection));
-        }
-        finally {
-            isRefreshingPlayerOverview=false;
+            if (selected != null) {
+                selectPlayer(selected);
+            }
+        } finally {
+            isRefreshingPlayerOverview = false;
         }
     }
 
@@ -235,7 +239,11 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
             if (player == null) {
                 // reset previous selection
                 player = playerDetailsTableModel.getYouthPlayer();
-                if (player != null) setSelectedPlayer(player);
+                if (player != null) {
+                    playerOverviewTable.getSelectionModel().setValueIsAdjusting(true);
+                    selectPlayer(player);
+                    playerOverviewTable.getSelectionModel().setValueIsAdjusting(false);
+                }
             }
             if (player != null) {
                 playerNameLabel.setText(player.getFullName());
@@ -245,13 +253,12 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
                     playerSkillInfoEditors[i].setSkillInfo(player.getSkillInfo(skillId));
                     chartDataModels[i] = new LinesChartDataModel(player.getSkillDevelopment(skillId), skillId.getLanguageString(), true, skillIDColorMap.get(skillId));
                 }
-                youthSkillChart.setAllValues(chartDataModels, player.getSkillDevelopmentDates(), Helper.DEFAULTDEZIMALFORMAT, TranslationFacility.tr("Wochen"), "",false, true);
+                youthSkillChart.setAllValues(chartDataModels, player.getSkillDevelopmentDates(), Helper.DEFAULTDEZIMALFORMAT, TranslationFacility.tr("Wochen"), "", false, true);
                 playerScoutCommentField.setText(getScoutComment(player));
                 playerDetailsTableModel.setYouthPlayer(player);
                 playerDetailsTableModel.initData();
             }
-        }
-        finally {
+        } finally {
             isRefreshingPlayerDetails = false;
         }
     }
@@ -276,44 +283,53 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
 
     private YouthPlayer getSelectedPlayer() {
         var row = this.playerOverviewTable.getSelectedRow();
-        if ( row < 0 && this.playerOverviewTable.getRowCount() > 0){
+        if (row < 0 && this.playerOverviewTable.getRowCount() > 0) {
             row = 0;
+            if (this.selectedPlayer != null) {
+                var modelIndex = HOVerwaltung.instance().getModel().getCurrentYouthPlayers().indexOf(this.selectedPlayer);
+                if (modelIndex >= 0) {
+                    row = playerOverviewTable.convertRowIndexToModel(modelIndex);
+                }
+            }
             initSelection(row);
         }
-        if ( row > -1) {
-            var index = playerOverviewTable.getSelectedModelIndex();
+        if (row > -1) {
+            var index = playerOverviewTable.convertRowIndexToModel(row);
             var currentPlayers = HOVerwaltung.instance().getModel().getCurrentYouthPlayers();
             if (currentPlayers != null && currentPlayers.size() > index) {
-                return currentPlayers.get(index);
+                this.selectedPlayer = currentPlayers.get(index);
             }
         }
-        return null;
+        return this.selectedPlayer;
     }
 
-    private void setSelectedPlayer(YouthPlayer selectedPlayer) {
+    private void selectPlayer(YouthPlayer player) {
+        if (player == null) {
+            return;
+        }
         var currentPlayers = HOVerwaltung.instance().getModel().getCurrentYouthPlayers();
-        for (int row=0; row<currentPlayers.size(); row++){
-            var index = playerOverviewTable.getSelectedModelIndex();
-            var player = currentPlayers.get(index);
-            if ( player != null && player.getId() == selectedPlayer.getId()){
-                this.playerOverviewTable.setRowSelectionInterval(row,row);
-                break;
-            }
+        var selected = currentPlayers.stream().filter(p -> p.getId() == player.getId()).findFirst();
+        if (selected.isPresent()) {
+            this.selectedPlayer = selected.get();
+            var index = currentPlayers.indexOf(this.selectedPlayer);
+            var row = this.playerOverviewTable.convertRowIndexToView(index);
+            initSelection(row);
         }
     }
 
-    private boolean isSelectionInitialized=false;
     private void initSelection(int row) {
-        isSelectionInitialized=true;
-        this.playerOverviewTable.setRowSelectionInterval(row,row);
-        isSelectionInitialized=false;
+        if (row < 0 || row > this.playerOverviewTable.getRowCount()) {
+            return;
+        }
+        this.playerOverviewTable.setRowSelectionInterval(row, row);
     }
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
-        if (!isSelectionInitialized) {
-            refreshPlayerDetails();
+        if (e.getValueIsAdjusting()) {
+            return;
         }
+        refreshPlayerDetails();
     }
 
     public void storeUserSettings() {

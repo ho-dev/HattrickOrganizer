@@ -19,7 +19,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import static core.util.StringUtils.stringToHtml;
+import static core.util.HtmlUtils.stringToHtml;
 import static module.youth.YouthSkillInfo.getSkillName;
 
 

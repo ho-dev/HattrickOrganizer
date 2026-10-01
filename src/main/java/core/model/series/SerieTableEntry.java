@@ -215,7 +215,7 @@ public class SerieTableEntry implements Comparable<SerieTableEntry> {
     }
 
     /////////////////////////////////////////////////////////////////////////////////
-    // EXTENDED Funcs    
+    // EXTENDED Funcs
     ////////////////////////////////////////////////////////////////////////////////7
     public final int getGoalsDiff() {
         return (m_iToreFuer - m_iToreGegen);
@@ -450,9 +450,6 @@ public class SerieTableEntry implements Comparable<SerieTableEntry> {
         return 0;
     }
 
-    /////////////////////////////////////////////////////////////////////////////////
-    //Overwrite
-    ////////////////////////////////////////////////////////////////////////////////7    
     @Override
 	public final boolean equals(Object obj) {
         SerieTableEntry lte;
@@ -461,11 +458,11 @@ public class SerieTableEntry implements Comparable<SerieTableEntry> {
             lte = (SerieTableEntry) obj;
 
             return (lte.getAnzSpiele() == m_iAnzSpiele)
-                    && (lte.getPosition() == m_iPosition)
-                    && (lte.getPoints() == m_iPunkte)
-                    && (lte.getTeamName().equals(m_sTeamName))
-                    && (lte.getGoalsFor() == m_iToreFuer)
-                    && (lte.getGoalsAgainst() == m_iToreGegen);
+                && (lte.getPosition() == m_iPosition)
+                && (lte.getPoints() == m_iPunkte)
+                && (lte.getTeamId() == m_iTeamId)
+                && (lte.getGoalsFor() == m_iToreFuer)
+                && (lte.getGoalsAgainst() == m_iToreGegen);
         }
 
         return false;

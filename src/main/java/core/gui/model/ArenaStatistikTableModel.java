@@ -7,10 +7,10 @@ import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
 import core.model.TranslationFacility;
 import core.model.match.MatchKurzInfo;
+import core.model.match.MatchResultFormatter;
 import core.model.misc.Economy;
 import core.util.HOLogger;
 import core.util.Helper;
-import core.util.StringUtils;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -247,7 +247,7 @@ public class ArenaStatistikTableModel extends AbstractTableModel {
 			    //Gast
 			    m_clData[i][colIndex++] = new ColorLabelEntry(match.getGastName(), ColorLabelEntry.FG_STANDARD,	background, SwingConstants.LEFT);
 			    //Ergebnis
-			    m_clData[i][colIndex] = new ColorLabelEntry(StringUtils.getResultString(match.getHeimTore(), match.getGastTore(), ""), ColorLabelEntry.FG_STANDARD, background, SwingConstants.CENTER);
+			    m_clData[i][colIndex] = new ColorLabelEntry(MatchResultFormatter.format(match.getHeimTore(), match.getGastTore(), ""), ColorLabelEntry.FG_STANDARD, background, SwingConstants.CENTER);
 			    // Stars for the winner in the same column (do not increment the column index)
 			    if (match.getMatchStatus() != MatchKurzInfo.FINISHED) {
 			        ((ColorLabelEntry) m_clData[i][colIndex++]).setIcon(ImageUtilities.NOIMAGEICON);

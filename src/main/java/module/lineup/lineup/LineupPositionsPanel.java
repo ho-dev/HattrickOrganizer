@@ -202,7 +202,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 	private void initComponents() {
 		setLayout(new BorderLayout());
 
-		centerPanel = new javax.swing.JLayeredPane();
+		centerPanel = new JLayeredPane();
 		centerPanel.setOpaque(false);
 
 		final GridBagLayout layout = new GridBagLayout();

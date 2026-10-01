@@ -380,7 +380,7 @@ public class RatingPredictionModel {
      *
      * @param player              Player
      * @param roleId              the lineup position of the player
-     * @param behaviour           the behaviour, orientation of the player (offensive, defensive, towards middle, towards wing)
+     * @param behaviour           the behavior, orientation of the player (offensive, defensive, towards middle, towards wing)
      * @param sector              rating sector
      * @param minute              match minute
      * @param startMinute         player's match start minute (0 or substitution time)
@@ -389,10 +389,6 @@ public class RatingPredictionModel {
      */
     protected double getPositionContribution(Player player, int roleId, byte behaviour, RatingSector sector, int minute, int startMinute, double overcrowdingPenalty) {
         if (player == null) return 0.;
-//        var isRightHandSidePosition = isRightHandSidePosition(roleId);
-//        var p = isRightHandSidePosition?togglePositionSide(roleId):roleId;
-//        var s = isRightHandSidePosition?toggleRatingSectorSide(sector):sector;
-
         var contribution = contributionCache.get(player, sector, roleId, behaviour);
         if (contribution > 0) {
             contribution *= overcrowdingPenalty;
@@ -400,21 +396,6 @@ public class RatingPredictionModel {
             contribution += exp;
             contribution *= weatherCache.get(Specialty.getSpecialty(player.getSpecialty()), weather);
             contribution *= staminaCache.get((double) player.getStamina(), minute, startMinute, tacticType);
-
-//            if ( minute == 0) {
-//                HOLogger.instance().debug(getClass(), "getPositionContribution " + player.getFullName()
-//                        + " " + MatchRoleID.getNameForPosition(MatchRoleID.getPosition(roleId, behaviour))
-//                        + " " + weather.toString()
-//                        + " " + tacticType
-//                        + " " + sector.toString()
-//                        + " minute " + minute
-//                        + " k(P)=" + overcrowdingPenalty
-//                        + " (S+L)*K(F)*C=" + c
-//                        + " (S+L)*K(F)*C*K(P)=" + p
-//                        + " +Exp " + exp
-//                        + "= " + contribution
-//                );
-//            }
         }
         return contribution;
     }
@@ -490,14 +471,6 @@ public class RatingPredictionModel {
                                         var strength = calcStrength(player, skillType);
                                         var res = strength * c;
                                         ret += res;
-//                                        HOLogger.instance().debug(getClass(), "calcContribution " + player.getFullName()
-//                                                + " " + s.toString()
-//                                                + " " + PlayerSkill.toString(skillType)
-//                                                + " (S+L)*K(F)=" + strength
-//                                                + " C=" + c
-//                                                + " (S+L)*K(F)*C=" + res
-//                                                + " Sum=" + ret
-//                                        );
                                     }
                                 }
                             }
@@ -544,7 +517,7 @@ public class RatingPredictionModel {
      * the rating contribution parameters (Side defense, central defense, midfield, side attack, central attack)
      * the skill types
      * the side restriction (none, this side only, middle only, opposite side only)
-     * the player's behaviour (normal, offensive, defensive, towards middle, towards wing)
+     * the player's behavior (normal, offensive, defensive, towards middle, towards wing)
      * the player's specialty (none, powerful, ...)
      * the contribution factor
      */
@@ -1228,28 +1201,29 @@ public class RatingPredictionModel {
     /**
      * Calculate the factor of the coach modifier
      *
-     * @param s             Rating sector
-     * @param coachModifier Integer value representing the style of play the team will use in the match. The value ranges from -10 (100% defensive) to 10 (100% offensive).
+     * @param s Rating sector
+     * @param styleOfPlay Integer value representing the style of play the team will use in the match. The value ranges from -10 (100% defensive) to 10 (100% offensive).
      * @return Double
      */
-    protected double calcTrainer(@NotNull RatingSector s, int coachModifier) {
+    protected double calcTrainer(@NotNull RatingSector s, Integer styleOfPlay) {
+        var factor = styleOfPlay != null ? styleOfPlay : 0;
         switch (s) {
             case DEFENCE_LEFT, DEFENCE_RIGHT, DEFENCE_CENTRAL -> {
-                if (coachModifier <= 0) {
+                if (factor <= 0) {
                     // Balanced or Defensive
-                    return 1.02 - coachModifier * (1.15 - 1.02) / 10.;
+                    return 1.02 - factor * (1.15 - 1.02) / 10.;
                 } else {
                     // Offensive
-                    return 1.02 - coachModifier * (1.02 - 0.9) / 10.;
+                    return 1.02 - factor * (1.02 - 0.9) / 10.;
                 }
             }
             case ATTACK_CENTRAL, ATTACK_LEFT, ATTACK_RIGHT -> {
-                if (coachModifier <= 0) {
+                if (factor <= 0) {
                     // Balanced or Defensive
-                    return 1.02 - coachModifier * (0.9 - 1.02) / 10.;
+                    return 1.02 - factor * (0.9 - 1.02) / 10.;
                 } else {
                     // Offensive
-                    return 1.02 - coachModifier * (1.02 - 1.1) / 10.;
+                    return 1.02 - factor * (1.02 - 1.1) / 10.;
                 }
             }
         }

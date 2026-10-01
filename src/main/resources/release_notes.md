@@ -1,6 +1,7 @@
 ## Highlights
 
 * New hall of fame module
+* New database backup strategy
 
 ## [Detailed Changelog](https://github.com/ho-dev/HattrickOrganizer/milestone/27)
 
@@ -10,9 +11,12 @@
 
 ### Database
 
+* New backup strategy: Keep latest backup per week for the latest 16 weeks and one per season for time before  (#2484)
+
 ### Download
 
 * Fix null pointer exception in nt team download (#2314)
+* Download can replace database of old team automatically (#2310)
 
 ### Player Overview
 
@@ -22,8 +26,21 @@
 * Synchronize player selection in training and player overview modules (#2379)
 * Added the columns `Career Assists` and `Assists for the Team` to the overview and details panel. (#2254)
 * New columns "Recovered on" and "Slightly injured on" (#2363)
+* Hrf list shows next daily update (#2459)
+* Fix subskill recalculation overlooks trainings if downloads happened during training (#2149)
 
-### Team Analyzer
+### HO update
+
+* Portable version shows hint to install downloaded update manually (#2331)
+
+### Series
+
+* Fix error in table calculation if more than one team is replaced at one match day (#2453)
+
+### Matches
+
+* Added indirect set pieces ratings to rating panel (#2433)
+* Fix download of style of play. Old matches has to be reloaded (#2432)
 
 ### Hall of fame
 
@@ -33,17 +50,21 @@
 
 * Added support of all 13 **Player Categories** (#2418)
 * Fix world details constraints error (#2444)
+* Player details show the total salary and the weeks of team membership (#2449)
 
 ### Lineup
 
 * Fix empty list of upcoming games in Lineup panel after first download.
 * Added support of all 13 **Player Categories** (#2418)
+* Fix scroll behavior of lineup rating panel (#2365)
+
+### Matches
+
+* Player Detail Dialog: The days of the age of a player is now displayed in braces after the years.
 
 ### Training
 
 * Add experience skill to training tables (#2283)
-
-### Transfer
 
 ### Statistics
 
@@ -56,11 +77,13 @@
 * The bug where the number `100` was displayed for the shirt number when the player had no shirt number has been fixed.
   Instead, nothing is shown now if no number assigned. (#2420)
 * Fix out of bound exception on download when youth player were removed during the week (#2442)
+* Fix player selection in youth player overview (#2452)
 
 ### Special Events
 
 * Fixed the missing translation for the home/away `Tactic` and `Details` column and displaying the abbreviation of the
   tactic now in the corresponding column.
+* Fixed a crash that occurred when not ticking `Only matches with SEs`.
 
 ### Option setting
 
@@ -71,9 +94,11 @@
 
 * Fixed a crash that occurred when not ticking `Only matches with SEs`.
 
-### Tools
+### International Friendly Analyzer
 
-#### Arena Sizer
+* Statistics regarding team's country ID instead of league ID (#2249)
+
+### Arena Sizer
 
 * Removed the superfluous space for the `Spectators` in braces at the end.
 * Added the image of the stadium and made the view better arranged. (#2140)
@@ -85,23 +110,26 @@
 * Fix CVEs with HO dependencies
 * Update darklaf to most recent version.
 
+### Developer Tools
+
+* `Debug` / `SQL Editor`: Fixed that SQL statements were always executed in upper case. (#2491)
+
 ## Translations
 
-* Added the missing translation for the short text in the table for `Goals for the Team`.
-
-Reports by Contributors - October 19, 2025 - June 19, 2026
+Reports by Contributors - October 19, 2025 - September 27, 2026
 
 * Jösgall 1005
 * Ioannidouefty 459
-* wsbrenk 122
+* Lukasz 418
+* wsbrenk 172
 * Frankieorabona 73
 * Lidegand 72
 * \_KOHb\_ 54
-* Sebastian Reddig 35
+* Sebastian Reddig 36
 * Walter 28
 * Kristaps 11
 * Stefan Schenke 5
 * Mara 3
 * Joeri Roels 1
 
-Total 1868
+Total 2337

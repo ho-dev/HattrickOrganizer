@@ -1,6 +1,6 @@
 package core.gui.comp;
 
-import core.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.text.AttributeSet;
 import javax.swing.text.BadLocationException;

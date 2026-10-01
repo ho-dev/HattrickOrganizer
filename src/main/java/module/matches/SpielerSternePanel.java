@@ -14,7 +14,7 @@ import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.util.Helper;
-import core.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;

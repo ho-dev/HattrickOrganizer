@@ -1,6 +1,6 @@
 package module.lineup.substitution;
 
-import core.util.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
