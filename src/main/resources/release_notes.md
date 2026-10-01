@@ -40,6 +40,7 @@
 ### Matches
 
 * Added indirect set pieces ratings to rating panel (#2433)
+* Fix download of style of play. Old matches has to be reloaded (#2432)
 
 ### Hall of fame
 
@@ -97,7 +98,7 @@
 
 * Statistics regarding team's country ID instead of league ID (#2249)
 
-#### Arena Sizer
+### Arena Sizer
 
 * Removed the superfluous space for the `Spectators` in braces at the end.
 * Added the image of the stadium and made the view better arranged. (#2140)
@@ -120,7 +121,7 @@ Reports by Contributors - October 19, 2025 - September 27, 2026
 * Jösgall 1005
 * Ioannidouefty 459
 * Lukasz 418
-* wsbrenk 166
+* wsbrenk 172
 * Frankieorabona 73
 * Lidegand 72
 * \_KOHb\_ 54
@@ -131,4 +132,4 @@ Reports by Contributors - October 19, 2025 - September 27, 2026
 * Mara 3
 * Joeri Roels 1
 
-Total 2331
+Total 2337
