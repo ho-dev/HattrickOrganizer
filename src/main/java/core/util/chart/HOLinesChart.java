@@ -49,7 +49,6 @@ public class HOLinesChart implements IChart {
         m_axeStyler.setYAxisMax(yAxisGroup-1, value);
     }
 
-
     public HOLinesChart(boolean second_axis, String y1_axisName, String y2_axisName, String y1_axisFormat, String y2_axisFormat,
                         @Nullable Double y1_axisMin, @Nullable Double y1_axisMax, @Nullable Double y2_axisMin, @Nullable Double y2_axisMax, boolean bLegendVisible) {
 
@@ -164,54 +163,46 @@ public class HOLinesChart implements IChart {
         }
     }
 
-
     public JPanel getPanel() {
         return m_panel;
     }
-
 
     public void setTitle(String chartTitle){
         m_chart.setTitle(chartTitle);
     }
 
-
     public final void updateGraph() {
-
-        XYSeries serie;
-
-        // TODO: setHasAnnotations not defined in XYChart style
-        //m_chart.getStyler().setHasAnnotations(m_hasLabels);
         m_chart.getStyler().setPlotGridLinesVisible(m_hasHelpLines);
         m_chart.getStyler().setToolTipsAlwaysVisible(m_hasLabels);
 
-        String serieName;
-        List<Double> serieData;
-        Boolean isVisibleLegend;
-
-        if (m_models == null) return;
+        if (m_models == null) {
+            return;
+        }
 
         for (var model : m_models) {
-            if (model == null) continue;
+            if (model == null) {
+                continue;
+            }
             int yGroup = model.getY_axisGroup();
-            serieName = model.getName();
-            serieData = model.getlValues();
-            isVisibleLegend = model.getIsVisibleLegend();
+            final var seriesName = model.getName();
+            final var seriesData = model.getlValues();
+            final var isVisibleLegend = model.getIsVisibleLegend();
 
-            var series = m_chart.getSeries(serieName);
+            var series = m_chart.getSeries(seriesName);
             if (series != null) {
-                serie = m_chart.removeSeries(serieName);
+                var serie = m_chart.removeSeries(seriesName);
                 serie.setShowInLegend(false);
             }
 
-            // Serie is added if should be shown and if contains data
-            if (model.isShow() && (!serieData.isEmpty())) {
-                serie = m_chart.addSeries(serieName, this.m_xData, serieData);
+            // Serie is added if it should be shown and if it contains data
+            if (model.isShow() && !seriesData.isEmpty()) {
+                var serie = m_chart.addSeries(seriesName, m_xData, seriesData);
                 serie.setLineStyle(model.getLineStyle());
                 serie.setLineColor(model.getColor());
                 serie.setMarker(model.getMarkerStyle());
                 serie.setMarkerColor(model.getColor());
                 serie.setYAxisGroup(yGroup);
-                serie.setShowInLegend(isVisibleLegend);
+                serie.setShowInLegend(Boolean.TRUE.equals(isVisibleLegend));
             }
         }
         m_panel.setToolTipsEnabled(true);

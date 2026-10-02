@@ -24,7 +24,7 @@ public class HODoublePieChart implements IChart {
         this(_bLegendVisible, PieStyler.LabelType.Percentage, PieStyler.LabelType.Percentage);
     }
 
-    public HODoublePieChart(boolean _bLegendVisible, PieStyler.LabelType AnnotationTypeL, PieStyler.LabelType AnnotationTypeR){
+    public HODoublePieChart(boolean _bLegendVisible, PieStyler.LabelType AnnotationTypeL, PieStyler.LabelType AnnotationTypeR) {
 
         m_chartL = new PieChart(10, 10);
         m_chartR = new PieChart(10, 10);
@@ -42,15 +42,14 @@ public class HODoublePieChart implements IChart {
         m_stylerR.setLabelType(AnnotationTypeR);
 
         Font cFont = m_stylerL.getAnnotationTextFont();
-        cFont = cFont.deriveFont(Font.BOLD, cFont.getSize()+3);
+        cFont = cFont.deriveFont(Font.BOLD, cFont.getSize() + 3);
         m_stylerL.setAnnotationTextFont(cFont);
         m_stylerR.setAnnotationTextFont(cFont);
-
 
         // Legend
         m_stylerL.setLegendVisible(_bLegendVisible);
         m_stylerR.setLegendVisible(_bLegendVisible);
-        if (_bLegendVisible){
+        if (_bLegendVisible) {
             m_stylerL.setLegendBackgroundColor(ThemeManager.getColor(HOColorName.STAT_PANEL_BG));
             m_stylerR.setLegendBackgroundColor(ThemeManager.getColor(HOColorName.STAT_PANEL_BG));
             m_stylerL.setLegendPosition(Styler.LegendPosition.InsideSW);
@@ -59,25 +58,21 @@ public class HODoublePieChart implements IChart {
             m_stylerR.setLegendLayout(Styler.LegendLayout.Horizontal);
 
             cFont = m_stylerL.getLegendFont();
-            cFont = cFont.deriveFont(Font.BOLD, cFont.getSize()+3);
+            cFont = cFont.deriveFont(Font.BOLD, cFont.getSize() + 3);
             m_stylerL.setLegendFont(cFont);
             m_stylerR.setLegendFont(cFont);
         }
 
-
-        m_panel= new JPanel(new GridLayout(1,2));
+        m_panel = new JPanel(new GridLayout(1, 2));
         JPanel left = new XChartPanel<>(m_chartL);
         JPanel right = new XChartPanel<>(m_chartR);
         m_panel.add(left);
         m_panel.add(right);
     }
 
-
-
     public JPanel getPanel() {
         return m_panel;
     }
-
 
     public final void updateGraph(){
 
