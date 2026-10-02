@@ -18,7 +18,7 @@ import java.util.List;
 
 /**
  * TableModel representing skill changes for individual players.
- * 
+ *
  * @author NetHyperon
  */
 public class ChangesTableModel extends HOPlayersTableModel {
@@ -28,7 +28,7 @@ public class ChangesTableModel extends HOPlayersTableModel {
 
     public ChangesTableModel(UserColumnController.@NotNull ColumnModelId id) {
         super(id, "TrainingAnalysis");
-        columns = new ArrayList<>(List.of(
+        var newColumns = new ArrayList<>(List.of(
                 new TrainingColumn(nextColumnId++, "Week", 50) {
                     @Override
                     public IHOTableCellEntry getTableEntry(PlayerSkillChange entry) {
@@ -68,6 +68,7 @@ public class ChangesTableModel extends HOPlayersTableModel {
                     }
                 }
                 )).toArray(new TrainingColumn[0]);
+        setColumns(newColumns);
     }
 
 	public void setChanges(List<PlayerSkillChange> values) {

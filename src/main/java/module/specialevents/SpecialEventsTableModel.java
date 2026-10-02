@@ -32,7 +32,7 @@ public class SpecialEventsTableModel extends HOTableModel {
 	 */
 	public SpecialEventsTableModel(UserColumnController.ColumnModelId id) {
 		super(id, "SpecialEvents");
-		this.columns = new ArrayList<>(List.of(
+		var newColumns = new ArrayList<>(List.of(
 				new SpecialEventsColumn("SpieleDetails") {
 					@Override
 					public IHOTableCellEntry getTableEntry(MatchRow entry) {
@@ -130,6 +130,7 @@ public class SpecialEventsTableModel extends HOTableModel {
 					}
 				}
 		)).toArray(new SpecialEventsColumn[0]);
+        setColumns(newColumns);
 	}
 
 	private static Icon getTacticIcon(int tacticId) {
@@ -152,7 +153,7 @@ public class SpecialEventsTableModel extends HOTableModel {
 	@Override
 	protected void initData() {
 		UserColumn[] displayedColumns = getDisplayedColumns();
-		m_clData = new Object[data.size()][columns.length];
+		m_clData = new Object[data.size()][getColumns().length];
 		int rownum = 0;
 		for (var row : data) {
 			int columnnum = 0;

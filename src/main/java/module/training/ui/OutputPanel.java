@@ -123,7 +123,7 @@ public class OutputPanel extends LazyImagePanel {
 
         this.trainingProgressTableModel.setModel(this.trainingModel);
         this.trainingProgressTable = new PlayersTable(this.trainingProgressTableModel);
-        this.trainingProgressTable.setDefaultRenderer(Object.class, new OutputTableRenderer(false));
+        this.trainingProgressTable.setDefaultRenderer(Object.class, new OutputTableRenderer());
         add(this.trainingProgressTable.getContainerComponent(), BorderLayout.CENTER);
 
         JPanel buttonPanel = new JPanel(new GridBagLayout());

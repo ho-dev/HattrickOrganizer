@@ -40,7 +40,7 @@ public class TrainingProgressTableModel extends HOPlayersTableModel {
      */
     public TrainingProgressTableModel(UserColumnController.ColumnModelId columnModelId) {
         super(columnModelId, "ls.module.training.overview");
-        columns = new ArrayList<>(List.of(
+        var newColumns = new ArrayList<>(List.of(
                 new TrainingColumn(nextId++, "Spieler", 150) {
                     @Override
                     public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
@@ -139,6 +139,7 @@ public class TrainingProgressTableModel extends HOPlayersTableModel {
                     }
                 }
         )).toArray(new TrainingColumn[0]);
+        setColumns(newColumns);
     }
 
     /**

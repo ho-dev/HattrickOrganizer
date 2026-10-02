@@ -18,7 +18,7 @@ public class HallOfFameTableModel extends HOPlayersTableModel {
     public HallOfFameTableModel(UserColumnController.ColumnModelId columnModelId) {
         super(columnModelId, "ls.hof");
 
-        this.columns = new ArrayList<>(List.of(
+        var newColumns = new ArrayList<>(List.of(
             new HallOfFameColumn("ls.player.name") {
                 @Override
                 public IHOTableCellEntry getTableEntry(HallOfFamePlayer player) {
@@ -119,6 +119,7 @@ public class HallOfFameTableModel extends HOPlayersTableModel {
                 }
             }
         )).toArray(new HallOfFameColumn[0]);
+        setColumns(newColumns);
     }
 
     @Override
