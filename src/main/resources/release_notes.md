@@ -61,6 +61,12 @@
 ### Matches
 
 * Player Detail Dialog: The days of the age of a player is now displayed in braces after the years.
+* Tab `Highlights`:
+  * Own goals are now counted for the right team. (#2508)
+  * Penalty contest:
+    * The minute is now displayed when it starts and when a player scored or missed to score.
+    * If the penalty contest does not produce a winner, the match is decided by a coin toss (a very rare case), and this
+      is now also mentioned.
 
 ### Training
 

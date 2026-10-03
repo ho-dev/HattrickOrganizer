@@ -17,4 +17,12 @@ public final class HtmlUtils {
         String htmlEscaped = StringEscapeUtils.escapeHtml4(plainText);
         return "<html>" + htmlEscaped.replaceAll("\\R", "<br>") + "</html>";
     }
+
+    public static String toBold(String text) {
+        return "<b>" + text + "</b>";
+    }
+
+    public static String toHtml(String text) {
+        return "<html>" + text + "</html>";
+    }
 }
