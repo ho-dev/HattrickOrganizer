@@ -96,7 +96,7 @@ class Injury {
                     return; // No recovery possible
                 }
                 calculatedHealth += increase;
-                HOLogger.instance().info(this.getClass(), "UpDate " + futureUpdate.toLocaleDateTime() + " Health: " + calculatedHealth);
+                HOLogger.instance().debug(this.getClass(), "UpDate " + futureUpdate.toLocaleDateTime() + " Health: " + calculatedHealth);
                 if (this.whenSlightlyInjured == null && calculatedHealth >= 0.9 && player.getInjuryWeeks() > 0) {
                     this.whenSlightlyInjured = futureUpdate;
                 }
