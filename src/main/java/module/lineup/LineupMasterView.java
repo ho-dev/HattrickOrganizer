@@ -18,9 +18,9 @@ import java.util.List;
 /**
  * Top-Level Container for the Lineups (contains a tab for the lineup, a tab for
  * the match orders...)
- * 
+ *
  * @author kruescho
- * 
+ *
  */
 public class LineupMasterView extends JPanel {
 
@@ -59,8 +59,8 @@ public class LineupMasterView extends JPanel {
 	}
 
 	private void addListeners() {
-		this.lineupPanel.addUpdateable(this::refreshView);
-		
+		this.lineupPanel.addUpdatable(this::refreshView);
+
 		this.tabbedPane.addChangeListener(e -> {
             // if penalty takers tab is left, update the lineup
             if (oldTabIndex == tabbedPane.indexOfComponent(penaltyTakersView) )	{
@@ -68,22 +68,22 @@ public class LineupMasterView extends JPanel {
             }
             oldTabIndex = tabbedPane.getSelectedIndex();
         });
-		
+
 		RefreshManager.instance().registerRefreshable(new Refreshable() {
-			
+
 			@Override
 			public void refresh() {
 				refreshView();
-				
+
 			}
-			
+
 			@Override
 			public void reInit() {
 				refreshView();
 			}
 		});
 	}
-	
+
 	private void updatePenaltyTakersInLineup() {
 		List<PenaltyTaker> takers = this.penaltyTakersView.getPenaltyTakers();
 		List<MatchLineupPosition>  list = new ArrayList<>(takers.size());
@@ -93,7 +93,7 @@ public class LineupMasterView extends JPanel {
 		}
 		HOVerwaltung.instance().getModel().getCurrentLineup().setPenaltyTakers(list);
 	}
-	
+
 	private void refreshView() {
 		this.substitutionOverview.setLineup(HOVerwaltung.instance().getModel().getCurrentLineup());
 		this.penaltyTakersView.setPlayers(HOVerwaltung.instance().getModel().getCurrentPlayers());
