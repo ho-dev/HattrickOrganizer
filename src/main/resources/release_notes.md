@@ -36,6 +36,7 @@
 ### Series
 
 * Fix error in table calculation if more than one team is replaced at one match day (#2453)
+* Fix power rating download. It's no longer just downloading the value of the Premier team (#2517)
 
 ### Matches
 

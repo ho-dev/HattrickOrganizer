@@ -1,0 +1,726 @@
+<?xml version="1.0" encoding="utf-8"?>
+<HattrickData>
+  <FileName>teamdetails.xml</FileName>
+  <Version>3.6</Version>
+  <UserID>1757369</UserID>
+  <FetchedDate>2026-10-03 18:12:24</FetchedDate>
+  <User>
+    <UserID>1757369</UserID>
+    <Language>
+      <LanguageID>3</LanguageID>
+      <LanguageName>Deutsch</LanguageName>
+    </Language>
+    <SupporterTier>diamond</SupporterTier>
+    <Loginname>wsbrenk</Loginname>
+    <Name>HIDDEN</Name>
+    <ICQ></ICQ>
+    <SignupDate>2004-09-15 20:22:57</SignupDate>
+    <ActivationDate>2004-09-25 02:57:00</ActivationDate>
+    <LastLoginDate>2026-10-03 18:07:11</LastLoginDate>
+    <HasManagerLicense>True</HasManagerLicense>
+    <NationalTeams />
+  </User>
+  <Teams>
+    <Team>
+      <TeamID>520472</TeamID>
+      <TeamName>Juventus Brenk</TeamName>
+      <ShortTeamName>Juventus</ShortTeamName>
+      <IsPrimaryClub>True</IsPrimaryClub>
+      <FoundedDate>2004-09-25 02:57:00</FoundedDate>
+      <Arena>
+        <ArenaID>520472</ArenaID>
+        <ArenaName>Ali-Jans-Arena</ArenaName>
+      </Arena>
+      <League>
+        <LeagueID>3</LeagueID>
+        <LeagueName>Deutschland</LeagueName>
+      </League>
+      <Country>
+        <CountryID>3</CountryID>
+        <CountryName>Deutschland</CountryName>
+      </Country>
+      <Region>
+        <RegionID>238</RegionID>
+        <RegionName>Rheinland-Pfalz</RegionName>
+      </Region>
+      <Trainer>
+        <PlayerID>438940596</PlayerID>
+      </Trainer>
+      <HomePage></HomePage>
+      <DressURI>//res.hattrick.org/kits/16/155/1543/1542781/matchKitSmall.png</DressURI>
+      <DressAlternateURI>//res.hattrick.org/kits/2/13/130/129787/matchKitSmall.png</DressAlternateURI>
+      <LeagueLevelUnit>
+        <LeagueLevelUnitID>6253</LeagueLevelUnitID>
+        <LeagueLevelUnitName>V.162</LeagueLevelUnitName>
+        <LeagueLevel>5</LeagueLevel>
+      </LeagueLevelUnit>
+      <BotStatus>
+        <IsBot>False</IsBot>
+      </BotStatus>
+      <Cup />
+      <PowerRating>
+        <GlobalRanking>17151</GlobalRanking>
+        <LeagueRanking>1203</LeagueRanking>
+        <RegionRanking>52</RegionRanking>
+        <PowerRating>1002</PowerRating>
+      </PowerRating>
+      <FriendlyTeamID />
+      <NumberOfVictories />
+      <NumberOfUndefeated />
+      <TeamRank />
+      <Fanclub>
+        <FanclubID>94162</FanclubID>
+        <FanclubName>MGV "Hardchor" Brenk</FanclubName>
+        <FanclubSize>2537</FanclubSize>
+      </Fanclub>
+      <LogoURL>//res.hattrick.org/teamlogo/6/53/521/520472/520472.JPG</LogoURL>
+      <Guestbook>
+        <NumberOfGuestbookItems>694</NumberOfGuestbookItems>
+      </Guestbook>
+      <PressAnnouncement>
+        <Subject>Siegmar Kopplin, 100 Jahre</Subject>
+        <Body>sucht nach beliebigen Spielertypen.</Body>
+        <SendDate>2021-01-30 01:10:00</SendDate>
+      </PressAnnouncement>
+      <TeamColors />
+      <YouthTeamID>76155</YouthTeamID>
+      <YouthTeamName>Brenk Street Boys</YouthTeamName>
+      <NumberOfVisits>0</NumberOfVisits>
+      <TrophyList>
+        <Trophy>
+          <TrophyTypeId>17</TrophyTypeId>
+          <TrophySeason>92</TrophySeason>
+          <LeagueLevel>6</LeagueLevel>
+          <LeagueLevelUnitId>15708</LeagueLevelUnitId>
+          <LeagueLevelUnitName>VI.366</LeagueLevelUnitName>
+          <GainedDate>2025-11-29 00:17:00</GainedDate>
+          <ImageUrl>/App_Themes/Standard/Images/Trophies/vi.png</ImageUrl>
+          <CupLeagueLevel></CupLeagueLevel>
+          <CupLevel></CupLevel>
+          <CupLevelIndex></CupLevelIndex>
+        </Trophy>
+        <Trophy>
+          <TrophyTypeId>17</TrophyTypeId>
+          <TrophySeason>83</TrophySeason>
+          <LeagueLevel>6</LeagueLevel>
+          <LeagueLevelUnitId>16006</LeagueLevelUnitId>
+          <LeagueLevelUnitName>VI.664</LeagueLevelUnitName>
+          <GainedDate>2023-02-25 00:49:00</GainedDate>
+          <ImageUrl>/App_Themes/Standard/Images/Trophies/vi.png</ImageUrl>
+          <CupLeagueLevel></CupLeagueLevel>
+          <CupLevel></CupLevel>
+          <CupLevelIndex></CupLevelIndex>
+        </Trophy>
+        <Trophy>
+          <TrophyTypeId>17</TrophyTypeId>
+          <TrophySeason>79</TrophySeason>
+          <LeagueLevel>6</LeagueLevel>
+          <LeagueLevelUnitId>15428</LeagueLevelUnitId>
+          <LeagueLevelUnitName>VI.86</LeagueLevelUnitName>
+          <GainedDate>2021-12-04 00:18:00</GainedDate>
+          <ImageUrl>/App_Themes/Standard/Images/Trophies/vi.png</ImageUrl>
+          <CupLeagueLevel></CupLeagueLevel>
+          <CupLevel></CupLevel>
+          <CupLevelIndex></CupLevelIndex>
+        </Trophy>
+        <Trophy>
+          <TrophyTypeId>17</TrophyTypeId>
+          <TrophySeason>75</TrophySeason>
+          <LeagueLevel>6</LeagueLevel>
+          <LeagueLevelUnitId>16358</LeagueLevelUnitId>
+          <LeagueLevelUnitName>VI.1016</LeagueLevelUnitName>
+          <GainedDate>2020-09-12 00:43:00</GainedDate>
+          <ImageUrl>/App_Themes/Standard/Images/Trophies/vi.png</ImageUrl>
+          <CupLeagueLevel></CupLeagueLevel>
+          <CupLevel></CupLevel>
+          <CupLevelIndex></CupLevelIndex>
+        </Trophy>
+        <Trophy>
+          <TrophyTypeId>17</TrophyTypeId>
+          <TrophySeason>72</TrophySeason>
+          <LeagueLevel>6</LeagueLevel>
+          <LeagueLevelUnitId>16091</LeagueLevelUnitId>
+          <LeagueLevelUnitName>VI.749</LeagueLevelUnitName>
+          <GainedDate>2019-10-12 00:54:00</GainedDate>
+          <ImageUrl>/App_Themes/Standard/Images/Trophies/vi.png</ImageUrl>
+          <CupLeagueLevel></CupLeagueLevel>
+          <CupLevel></CupLevel>
+          <CupLevelIndex></CupLevelIndex>
+        </Trophy>
+        <Trophy>
+          <TrophyTypeId>17</TrophyTypeId>
+          <TrophySeason>70</TrophySeason>
+          <LeagueLevel>6</LeagueLevel>
+          <LeagueLevelUnitId>16197</LeagueLevelUnitId>
+          <LeagueLevelUnitName>VI.855</LeagueLevelUnitName>
+          <GainedDate>2019-03-02 00:50:00</GainedDate>
+          <ImageUrl>/App_Themes/Standard/Images/Trophies/vi.png</ImageUrl>
+          <CupLeagueLevel></CupLeagueLevel>
+          <CupLevel></CupLevel>
+          <CupLevelIndex></CupLevelIndex>
+        </Trophy>
+        <Trophy>
+          <TrophyTypeId>17</TrophyTypeId>
+          <TrophySeason>67</TrophySeason>
+          <LeagueLevel>6</LeagueLevel>
+          <LeagueLevelUnitId>15380</LeagueLevelUnitId>
+          <LeagueLevelUnitName>VI.38</LeagueLevelUnitName>
+          <GainedDate>2018-03-31 00:56:00</GainedDate>
+          <ImageUrl>/App_Themes/Standard/Images/Trophies/vi.png</ImageUrl>
+          <CupLeagueLevel></CupLeagueLevel>
+          <CupLevel></CupLevel>
+          <CupLevelIndex></CupLevelIndex>
+        </Trophy>
+        <Trophy>
+          <TrophyTypeId>17</TrophyTypeId>
+          <TrophySeason>60</TrophySeason>
+          <LeagueLevel>5</LeagueLevel>
+          <LeagueLevelUnitId>6337</LeagueLevelUnitId>
+          <LeagueLevelUnitName>V.246</LeagueLevelUnitName>
+          <GainedDate>2016-02-06 01:06:00</GainedDate>
+          <ImageUrl>/App_Themes/Standard/Images/Trophies/v.png</ImageUrl>
+          <CupLeagueLevel></CupLeagueLevel>
+          <CupLevel></CupLevel>
+          <CupLevelIndex></CupLevelIndex>
+        </Trophy>
+        <Trophy>
+          <TrophyTypeId>17</TrophyTypeId>
+          <TrophySeason>58</TrophySeason>
+          <LeagueLevel>5</LeagueLevel>
+          <LeagueLevelUnitId>6337</LeagueLevelUnitId>
+          <LeagueLevelUnitName>V.246</LeagueLevelUnitName>
+          <GainedDate>2015-06-27 00:35:00</GainedDate>
+          <ImageUrl>/App_Themes/Standard/Images/Trophies/v.png</ImageUrl>
+          <CupLeagueLevel></CupLeagueLevel>
+          <CupLevel></CupLevel>
+          <CupLevelIndex></CupLevelIndex>
+        </Trophy>
+        <Trophy>
+          <TrophyTypeId>17</TrophyTypeId>
+          <TrophySeason>57</TrophySeason>
+          <LeagueLevel>5</LeagueLevel>
+          <LeagueLevelUnitId>6337</LeagueLevelUnitId>
+          <LeagueLevelUnitName>V.246</LeagueLevelUnitName>
+          <GainedDate>2015-03-07 00:47:00</GainedDate>
+          <ImageUrl>/App_Themes/Standard/Images/Trophies/v.png</ImageUrl>
+          <CupLeagueLevel></CupLeagueLevel>
+          <CupLevel></CupLevel>
+          <CupLevelIndex></CupLevelIndex>
+        </Trophy>
+        <Trophy>
+          <TrophyTypeId>17</TrophyTypeId>
+          <TrophySeason>54</TrophySeason>
+          <LeagueLevel>5</LeagueLevel>
+          <LeagueLevelUnitId>6174</LeagueLevelUnitId>
+          <LeagueLevelUnitName>V.83</LeagueLevelUnitName>
+          <GainedDate>2014-04-05 00:20:00</GainedDate>
+          <ImageUrl>/App_Themes/Standard/Images/Trophies/v.png</ImageUrl>
+          <CupLeagueLevel></CupLeagueLevel>
+          <CupLevel></CupLevel>
+          <CupLevelIndex></CupLevelIndex>
+        </Trophy>
+        <Trophy>
+          <TrophyTypeId>103</TrophyTypeId>
+          <TrophySeason>1</TrophySeason>
+          <LeagueLevel>3</LeagueLevel>
+          <LeagueLevelUnitId>518388</LeagueLevelUnitId>
+          <LeagueLevelUnitName>Ehninger Super-Cup</LeagueLevelUnitName>
+          <GainedDate>2012-10-15 22:58:00</GainedDate>
+          <CupLeagueLevel></CupLeagueLevel>
+          <CupLevel></CupLevel>
+          <CupLevelIndex></CupLevelIndex>
+        </Trophy>
+        <Trophy>
+          <TrophyTypeId>103</TrophyTypeId>
+          <TrophySeason>1</TrophySeason>
+          <LeagueLevel>2</LeagueLevel>
+          <LeagueLevelUnitId>233234</LeagueLevelUnitId>
+          <LeagueLevelUnitName>IRON-BOWL II</LeagueLevelUnitName>
+          <GainedDate>2012-06-25 21:18:00</GainedDate>
+          <CupLeagueLevel></CupLeagueLevel>
+          <CupLevel></CupLevel>
+          <CupLevelIndex></CupLevelIndex>
+        </Trophy>
+        <Trophy>
+          <TrophyTypeId>17</TrophyTypeId>
+          <TrophySeason>48</TrophySeason>
+          <LeagueLevel>4</LeagueLevel>
+          <LeagueLevelUnitId>457</LeagueLevelUnitId>
+          <LeagueLevelUnitName>IV.10</LeagueLevelUnitName>
+          <GainedDate>2012-06-02 00:22:00</GainedDate>
+          <ImageUrl>/App_Themes/Standard/Images/Trophies/iv.png</ImageUrl>
+          <CupLeagueLevel></CupLeagueLevel>
+          <CupLevel></CupLevel>
+          <CupLevelIndex></CupLevelIndex>
+        </Trophy>
+        <Trophy>
+          <TrophyTypeId>103</TrophyTypeId>
+          <TrophySeason>1</TrophySeason>
+          <LeagueLevel>3</LeagueLevel>
+          <LeagueLevelUnitId>83368</LeagueLevelUnitId>
+          <LeagueLevelUnitName>Allet-Jute-Cup 1</LeagueLevelUnitName>
+          <GainedDate>2012-04-24 01:39:00</GainedDate>
+          <CupLeagueLevel></CupLeagueLevel>
+          <CupLevel></CupLevel>
+          <CupLevelIndex></CupLevelIndex>
+        </Trophy>
+        <Trophy>
+          <TrophyTypeId>17</TrophyTypeId>
+          <TrophySeason>45</TrophySeason>
+          <LeagueLevel>5</LeagueLevel>
+          <LeagueLevelUnitId>6335</LeagueLevelUnitId>
+          <LeagueLevelUnitName>V.244</LeagueLevelUnitName>
+          <GainedDate>2011-07-02 02:20:00</GainedDate>
+          <ImageUrl>/App_Themes/Standard/Images/Trophies/v.png</ImageUrl>
+          <CupLeagueLevel></CupLeagueLevel>
+          <CupLevel></CupLevel>
+          <CupLevelIndex></CupLevelIndex>
+        </Trophy>
+        <Trophy>
+          <TrophyTypeId>17</TrophyTypeId>
+          <TrophySeason>39</TrophySeason>
+          <LeagueLevel>6</LeagueLevel>
+          <LeagueLevelUnitId>15765</LeagueLevelUnitId>
+          <LeagueLevelUnitName>VI.423</LeagueLevelUnitName>
+          <GainedDate>2009-08-29 01:00:00</GainedDate>
+          <ImageUrl>/App_Themes/Standard/Images/Trophies/vi.png</ImageUrl>
+          <CupLeagueLevel></CupLeagueLevel>
+          <CupLevel></CupLevel>
+          <CupLevelIndex></CupLevelIndex>
+        </Trophy>
+        <Trophy>
+          <TrophyTypeId>17</TrophyTypeId>
+          <TrophySeason>36</TrophySeason>
+          <LeagueLevel>5</LeagueLevel>
+          <LeagueLevelUnitId>6330</LeagueLevelUnitId>
+          <LeagueLevelUnitName>V.239</LeagueLevelUnitName>
+          <GainedDate>2008-09-27 01:01:00</GainedDate>
+          <ImageUrl>/App_Themes/Standard/Images/Trophies/v.png</ImageUrl>
+          <CupLeagueLevel></CupLeagueLevel>
+          <CupLevel></CupLevel>
+          <CupLevelIndex></CupLevelIndex>
+        </Trophy>
+        <Trophy>
+          <TrophyTypeId>17</TrophyTypeId>
+          <TrophySeason>34</TrophySeason>
+          <LeagueLevel>6</LeagueLevel>
+          <LeagueLevelUnitId>16008</LeagueLevelUnitId>
+          <LeagueLevelUnitName>VI.666</LeagueLevelUnitName>
+          <GainedDate>2008-02-16 04:16:00</GainedDate>
+          <ImageUrl>/App_Themes/Standard/Images/Trophies/vi.png</ImageUrl>
+          <CupLeagueLevel></CupLeagueLevel>
+          <CupLevel></CupLevel>
+          <CupLevelIndex></CupLevelIndex>
+        </Trophy>
+        <Trophy>
+          <TrophyTypeId>17</TrophyTypeId>
+          <TrophySeason>31</TrophySeason>
+          <LeagueLevel>6</LeagueLevel>
+          <LeagueLevelUnitId>15792</LeagueLevelUnitId>
+          <LeagueLevelUnitName>VI.450</LeagueLevelUnitName>
+          <GainedDate>2007-03-17 01:30:00</GainedDate>
+          <ImageUrl>/App_Themes/Standard/Images/Trophies/vi.png</ImageUrl>
+          <CupLeagueLevel></CupLeagueLevel>
+          <CupLevel></CupLevel>
+          <CupLevelIndex></CupLevelIndex>
+        </Trophy>
+        <Trophy>
+          <TrophyTypeId>17</TrophyTypeId>
+          <TrophySeason>30</TrophySeason>
+          <LeagueLevel>7</LeagueLevel>
+          <LeagueLevelUnitId>41882</LeagueLevelUnitId>
+          <LeagueLevelUnitName>VII.774</LeagueLevelUnitName>
+          <GainedDate>2006-11-25 02:31:00</GainedDate>
+          <ImageUrl>/App_Themes/Standard/Images/Trophies/vii.png</ImageUrl>
+          <CupLeagueLevel></CupLeagueLevel>
+          <CupLevel></CupLevel>
+          <CupLevelIndex></CupLevelIndex>
+        </Trophy>
+        <Trophy>
+          <TrophyTypeId>17</TrophyTypeId>
+          <TrophySeason>26</TrophySeason>
+          <LeagueLevel>8</LeagueLevel>
+          <LeagueLevelUnitId>64660</LeagueLevelUnitId>
+          <LeagueLevelUnitName>VIII.293</LeagueLevelUnitName>
+          <GainedDate>2005-09-03 00:26:00</GainedDate>
+          <ImageUrl>/App_Themes/Standard/Images/Trophies/viii.png</ImageUrl>
+          <CupLeagueLevel></CupLeagueLevel>
+          <CupLevel></CupLevel>
+          <CupLevelIndex></CupLevelIndex>
+        </Trophy>
+      </TrophyList>
+      <PossibleToChallengeMidweek>False</PossibleToChallengeMidweek>
+      <PossibleToChallengeWeekend>False</PossibleToChallengeWeekend>
+    </Team>
+    <Team>
+      <TeamID>1242154</TeamID>
+      <TeamName>Juventus Brenk 2</TeamName>
+      <ShortTeamName>Juventus</ShortTeamName>
+      <IsPrimaryClub>False</IsPrimaryClub>
+      <FoundedDate>2013-05-06 16:49:00</FoundedDate>
+      <Arena>
+        <ArenaID>1238716</ArenaID>
+        <ArenaName>Juventus Brenk 2 Arena</ArenaName>
+      </Arena>
+      <League>
+        <LeagueID>3</LeagueID>
+        <LeagueName>Deutschland</LeagueName>
+      </League>
+      <Country>
+        <CountryID>3</CountryID>
+        <CountryName>Deutschland</CountryName>
+      </Country>
+      <Region>
+        <RegionID>238</RegionID>
+        <RegionName>Rheinland-Pfalz</RegionName>
+      </Region>
+      <Trainer>
+        <PlayerID>453014817</PlayerID>
+      </Trainer>
+      <HomePage></HomePage>
+      <DressURI>//res.hattrick.org/kits/1/1/1/1/matchKitSmall.png</DressURI>
+      <DressAlternateURI>//res.hattrick.org/kits/1/1/1/2/matchKitSmall.png</DressAlternateURI>
+      <LeagueLevelUnit>
+        <LeagueLevelUnitID>6195</LeagueLevelUnitID>
+        <LeagueLevelUnitName>V.104</LeagueLevelUnitName>
+        <LeagueLevel>5</LeagueLevel>
+      </LeagueLevelUnit>
+      <BotStatus>
+        <IsBot>False</IsBot>
+      </BotStatus>
+      <Cup />
+      <PowerRating>
+        <GlobalRanking>14867</GlobalRanking>
+        <LeagueRanking>1022</LeagueRanking>
+        <RegionRanking>42</RegionRanking>
+        <PowerRating>1011</PowerRating>
+      </PowerRating>
+      <FriendlyTeamID />
+      <NumberOfVictories />
+      <NumberOfUndefeated />
+      <TeamRank />
+      <Fanclub>
+        <FanclubID>354292</FanclubID>
+        <FanclubName>Brenker Karnevalsmafia</FanclubName>
+        <FanclubSize>2448</FanclubSize>
+      </Fanclub>
+      <LogoURL>//res.hattrick.org/teamlogo/13/125/1243/1242154/1242154.png</LogoURL>
+      <Guestbook>
+        <NumberOfGuestbookItems>7</NumberOfGuestbookItems>
+      </Guestbook>
+      <PressAnnouncement>
+        <Subject>Rainer Z. aus S.</Subject>
+        <Body>bestimmt zunehmend die Ergebnisse des Juventus Brenk 2. Hattrick Experte Hermann Dreikredits ermittelt seit vielen Wochen, dass das erlebte Ergebnis das absolut unwahrscheinlichste der Statistiklehre ist. Mal schauen, wie das Management das auf Dauer verkraftet.</Body>
+        <SendDate>2019-08-31 22:47:00</SendDate>
+      </PressAnnouncement>
+      <TeamColors>
+        <BackgroundColor>0c69b0</BackgroundColor>
+        <Color>ffffff</Color>
+      </TeamColors>
+      <YouthTeamID>2325763</YouthTeamID>
+      <YouthTeamName>Brenk Street Boys 2</YouthTeamName>
+      <NumberOfVisits>0</NumberOfVisits>
+      <TrophyList>
+        <Trophy>
+          <TrophyTypeId>17</TrophyTypeId>
+          <TrophySeason>93</TrophySeason>
+          <LeagueLevel>5</LeagueLevel>
+          <LeagueLevelUnitId>6293</LeagueLevelUnitId>
+          <LeagueLevelUnitName>V.202</LeagueLevelUnitName>
+          <GainedDate>2026-03-21 00:18:00</GainedDate>
+          <ImageUrl>/App_Themes/Standard/Images/Trophies/v.png</ImageUrl>
+          <CupLeagueLevel></CupLeagueLevel>
+          <CupLevel></CupLevel>
+          <CupLevelIndex></CupLevelIndex>
+        </Trophy>
+        <Trophy>
+          <TrophyTypeId>17</TrophyTypeId>
+          <TrophySeason>87</TrophySeason>
+          <LeagueLevel>6</LeagueLevel>
+          <LeagueLevelUnitId>15982</LeagueLevelUnitId>
+          <LeagueLevelUnitName>VI.640</LeagueLevelUnitName>
+          <GainedDate>2024-05-18 00:18:00</GainedDate>
+          <ImageUrl>/App_Themes/Standard/Images/Trophies/vi.png</ImageUrl>
+          <CupLeagueLevel></CupLeagueLevel>
+          <CupLevel></CupLevel>
+          <CupLevelIndex></CupLevelIndex>
+        </Trophy>
+        <Trophy>
+          <TrophyTypeId>17</TrophyTypeId>
+          <TrophySeason>81</TrophySeason>
+          <LeagueLevel>5</LeagueLevel>
+          <LeagueLevelUnitId>6096</LeagueLevelUnitId>
+          <LeagueLevelUnitName>V.5</LeagueLevelUnitName>
+          <GainedDate>2022-07-16 00:35:00</GainedDate>
+          <ImageUrl>/App_Themes/Standard/Images/Trophies/v.png</ImageUrl>
+          <CupLeagueLevel></CupLeagueLevel>
+          <CupLevel></CupLevel>
+          <CupLevelIndex></CupLevelIndex>
+        </Trophy>
+        <Trophy>
+          <TrophyTypeId>17</TrophyTypeId>
+          <TrophySeason>78</TrophySeason>
+          <LeagueLevel>6</LeagueLevel>
+          <LeagueLevelUnitId>15882</LeagueLevelUnitId>
+          <LeagueLevelUnitName>VI.540</LeagueLevelUnitName>
+          <GainedDate>2021-08-14 00:47:00</GainedDate>
+          <ImageUrl>/App_Themes/Standard/Images/Trophies/vi.png</ImageUrl>
+          <CupLeagueLevel></CupLeagueLevel>
+          <CupLevel></CupLevel>
+          <CupLevelIndex></CupLevelIndex>
+        </Trophy>
+        <Trophy>
+          <TrophyTypeId>17</TrophyTypeId>
+          <TrophySeason>66</TrophySeason>
+          <LeagueLevel>6</LeagueLevel>
+          <LeagueLevelUnitId>15513</LeagueLevelUnitId>
+          <LeagueLevelUnitName>VI.171</LeagueLevelUnitName>
+          <GainedDate>2017-12-09 01:29:00</GainedDate>
+          <ImageUrl>/App_Themes/Standard/Images/Trophies/vi.png</ImageUrl>
+          <CupLeagueLevel></CupLeagueLevel>
+          <CupLevel></CupLevel>
+          <CupLevelIndex></CupLevelIndex>
+        </Trophy>
+        <Trophy>
+          <TrophyTypeId>17</TrophyTypeId>
+          <TrophySeason>60</TrophySeason>
+          <LeagueLevel>7</LeagueLevel>
+          <LeagueLevelUnitId>41552</LeagueLevelUnitId>
+          <LeagueLevelUnitName>VII.444</LeagueLevelUnitName>
+          <GainedDate>2016-02-06 01:16:00</GainedDate>
+          <ImageUrl>/App_Themes/Standard/Images/Trophies/vii.png</ImageUrl>
+          <CupLeagueLevel></CupLeagueLevel>
+          <CupLevel></CupLevel>
+          <CupLevelIndex></CupLevelIndex>
+        </Trophy>
+        <Trophy>
+          <TrophyTypeId>17</TrophyTypeId>
+          <TrophySeason>56</TrophySeason>
+          <LeagueLevel>8</LeagueLevel>
+          <LeagueLevelUnitId>142683</LeagueLevelUnitId>
+          <LeagueLevelUnitName>VIII.2004</LeagueLevelUnitName>
+          <GainedDate>2014-11-15 00:25:00</GainedDate>
+          <ImageUrl>/App_Themes/Standard/Images/Trophies/viii.png</ImageUrl>
+          <CupLeagueLevel></CupLeagueLevel>
+          <CupLevel></CupLevel>
+          <CupLevelIndex></CupLevelIndex>
+        </Trophy>
+      </TrophyList>
+      <PossibleToChallengeMidweek>False</PossibleToChallengeMidweek>
+      <PossibleToChallengeWeekend>False</PossibleToChallengeWeekend>
+    </Team>
+    <Team>
+      <TeamID>1136288</TeamID>
+      <TeamName>Juventus Brenk III</TeamName>
+      <ShortTeamName>Juventus</ShortTeamName>
+      <IsPrimaryClub>False</IsPrimaryClub>
+      <FoundedDate>2018-11-14 18:54:00</FoundedDate>
+      <Arena>
+        <ArenaID>1132850</ArenaID>
+        <ArenaName>Juventus Brenk III Arena</ArenaName>
+      </Arena>
+      <League>
+        <LeagueID>3</LeagueID>
+        <LeagueName>Deutschland</LeagueName>
+      </League>
+      <Country>
+        <CountryID>3</CountryID>
+        <CountryName>Deutschland</CountryName>
+      </Country>
+      <Region>
+        <RegionID>238</RegionID>
+        <RegionName>Rheinland-Pfalz</RegionName>
+      </Region>
+      <Trainer>
+        <PlayerID>445292433</PlayerID>
+      </Trainer>
+      <HomePage></HomePage>
+      <DressURI>//res.hattrick.org/kits/1/1/1/1/matchKitSmall.png</DressURI>
+      <DressAlternateURI>//res.hattrick.org/kits/1/1/1/2/matchKitSmall.png</DressAlternateURI>
+      <LeagueLevelUnit>
+        <LeagueLevelUnitID>6179</LeagueLevelUnitID>
+        <LeagueLevelUnitName>V.88</LeagueLevelUnitName>
+        <LeagueLevel>5</LeagueLevel>
+      </LeagueLevelUnit>
+      <BotStatus>
+        <IsBot>False</IsBot>
+      </BotStatus>
+      <Cup />
+      <PowerRating>
+        <GlobalRanking>3054</GlobalRanking>
+        <LeagueRanking>161</LeagueRanking>
+        <RegionRanking>8</RegionRanking>
+        <PowerRating>1110</PowerRating>
+      </PowerRating>
+      <FriendlyTeamID />
+      <NumberOfVictories />
+      <NumberOfUndefeated />
+      <TeamRank />
+      <Fanclub>
+        <FanclubID>0</FanclubID>
+        <FanclubName></FanclubName>
+        <FanclubSize>2491</FanclubSize>
+      </Fanclub>
+      <LogoURL>//res.hattrick.org/teamlogo/12/114/1137/1136288/1136288.png</LogoURL>
+      <Guestbook>
+        <NumberOfGuestbookItems>1</NumberOfGuestbookItems>
+      </Guestbook>
+      <PressAnnouncement>
+        <Subject>Presseerklärung</Subject>
+        <Body>Dieser Verein hat aktuell keine Presseerklärung herausgegeben.</Body>
+        <SendDate>2019-05-31 10:29:00</SendDate>
+      </PressAnnouncement>
+      <TeamColors>
+        <BackgroundColor>cc5669</BackgroundColor>
+        <Color>ffffff</Color>
+      </TeamColors>
+      <YouthTeamID>2730774</YouthTeamID>
+      <YouthTeamName>Brenk Street Boys 3</YouthTeamName>
+      <NumberOfVisits>0</NumberOfVisits>
+      <TrophyList>
+        <Trophy>
+          <TrophyTypeId>17</TrophyTypeId>
+          <TrophySeason>93</TrophySeason>
+          <LeagueLevel>6</LeagueLevel>
+          <LeagueLevelUnitId>16320</LeagueLevelUnitId>
+          <LeagueLevelUnitName>VI.978</LeagueLevelUnitName>
+          <GainedDate>2026-03-21 00:18:00</GainedDate>
+          <ImageUrl>/App_Themes/Standard/Images/Trophies/vi.png</ImageUrl>
+          <CupLeagueLevel></CupLeagueLevel>
+          <CupLevel></CupLevel>
+          <CupLevelIndex></CupLevelIndex>
+        </Trophy>
+        <Trophy>
+          <TrophyTypeId>17</TrophyTypeId>
+          <TrophySeason>86</TrophySeason>
+          <LeagueLevel>5</LeagueLevel>
+          <LeagueLevelUnitId>6141</LeagueLevelUnitId>
+          <LeagueLevelUnitName>V.50</LeagueLevelUnitName>
+          <GainedDate>2024-01-27 00:18:00</GainedDate>
+          <ImageUrl>/App_Themes/Standard/Images/Trophies/v.png</ImageUrl>
+          <CupLeagueLevel></CupLeagueLevel>
+          <CupLevel></CupLevel>
+          <CupLevelIndex></CupLevelIndex>
+        </Trophy>
+        <Trophy>
+          <TrophyTypeId>17</TrophyTypeId>
+          <TrophySeason>81</TrophySeason>
+          <LeagueLevel>6</LeagueLevel>
+          <LeagueLevelUnitId>15343</LeagueLevelUnitId>
+          <LeagueLevelUnitName>VI.1</LeagueLevelUnitName>
+          <GainedDate>2022-07-16 00:34:00</GainedDate>
+          <ImageUrl>/App_Themes/Standard/Images/Trophies/vi.png</ImageUrl>
+          <CupLeagueLevel></CupLeagueLevel>
+          <CupLevel></CupLevel>
+          <CupLevelIndex></CupLevelIndex>
+        </Trophy>
+        <Trophy>
+          <TrophyTypeId>17</TrophyTypeId>
+          <TrophySeason>79</TrophySeason>
+          <LeagueLevel>6</LeagueLevel>
+          <LeagueLevelUnitId>15343</LeagueLevelUnitId>
+          <LeagueLevelUnitName>VI.1</LeagueLevelUnitName>
+          <GainedDate>2021-12-04 00:19:00</GainedDate>
+          <ImageUrl>/App_Themes/Standard/Images/Trophies/vi.png</ImageUrl>
+          <CupLeagueLevel></CupLeagueLevel>
+          <CupLevel></CupLevel>
+          <CupLevelIndex></CupLevelIndex>
+        </Trophy>
+        <Trophy>
+          <TrophyTypeId>17</TrophyTypeId>
+          <TrophySeason>73</TrophySeason>
+          <LeagueLevel>7</LeagueLevel>
+          <LeagueLevelUnitId>41760</LeagueLevelUnitId>
+          <LeagueLevelUnitName>VII.652</LeagueLevelUnitName>
+          <GainedDate>2020-02-01 01:05:00</GainedDate>
+          <ImageUrl>/App_Themes/Standard/Images/Trophies/vii.png</ImageUrl>
+          <CupLeagueLevel></CupLeagueLevel>
+          <CupLevel></CupLevel>
+          <CupLevelIndex></CupLevelIndex>
+        </Trophy>
+      </TrophyList>
+      <PossibleToChallengeMidweek>False</PossibleToChallengeMidweek>
+      <PossibleToChallengeWeekend>False</PossibleToChallengeWeekend>
+    </Team>
+    <Team>
+      <TeamID>2230994</TeamID>
+      <TeamName>Juventus Brenk IV</TeamName>
+      <ShortTeamName>Juventus</ShortTeamName>
+      <IsPrimaryClub>False</IsPrimaryClub>
+      <FoundedDate>2024-09-16 18:52:00</FoundedDate>
+      <Arena>
+        <ArenaID>2227736</ArenaID>
+        <ArenaName>Juventus Stadium</ArenaName>
+      </Arena>
+      <League>
+        <LeagueID>3</LeagueID>
+        <LeagueName>Deutschland</LeagueName>
+      </League>
+      <Country>
+        <CountryID>3</CountryID>
+        <CountryName>Deutschland</CountryName>
+      </Country>
+      <Region>
+        <RegionID>238</RegionID>
+        <RegionName>Rheinland-Pfalz</RegionName>
+      </Region>
+      <Trainer>
+        <PlayerID>391305821</PlayerID>
+      </Trainer>
+      <HomePage></HomePage>
+      <DressURI>//res.hattrick.org/kits/1/1/1/1/matchKitSmall.png</DressURI>
+      <DressAlternateURI>//res.hattrick.org/kits/1/1/1/2/matchKitSmall.png</DressAlternateURI>
+      <LeagueLevelUnit>
+        <LeagueLevelUnitID>15446</LeagueLevelUnitID>
+        <LeagueLevelUnitName>VI.104</LeagueLevelUnitName>
+        <LeagueLevel>6</LeagueLevel>
+      </LeagueLevelUnit>
+      <BotStatus>
+        <IsBot>False</IsBot>
+      </BotStatus>
+      <Cup />
+      <PowerRating>
+        <GlobalRanking>105260</GlobalRanking>
+        <LeagueRanking>8407</LeagueRanking>
+        <RegionRanking>372</RegionRanking>
+        <PowerRating>838</PowerRating>
+      </PowerRating>
+      <FriendlyTeamID />
+      <NumberOfVictories />
+      <NumberOfUndefeated />
+      <TeamRank />
+      <Fanclub>
+        <FanclubID>692328</FanclubID>
+        <FanclubName>24 - mal was anderes als 42</FanclubName>
+        <FanclubSize>1877</FanclubSize>
+      </Fanclub>
+      <LogoURL>https://res.hattrick.org/teamlogo/23/224/2231/2230994/638621100989598166.png</LogoURL>
+      <Guestbook>
+        <NumberOfGuestbookItems>0</NumberOfGuestbookItems>
+      </Guestbook>
+      <TeamColors>
+        <BackgroundColor>a89832</BackgroundColor>
+        <Color>ffffff</Color>
+      </TeamColors>
+      <YouthTeamID>3142093</YouthTeamID>
+      <YouthTeamName>Brenk Street Boys IV</YouthTeamName>
+      <NumberOfVisits>0</NumberOfVisits>
+      <TrophyList>
+        <Trophy>
+          <TrophyTypeId>17</TrophyTypeId>
+          <TrophySeason>94</TrophySeason>
+          <LeagueLevel>7</LeagueLevel>
+          <LeagueLevelUnitId>41358</LeagueLevelUnitId>
+          <LeagueLevelUnitName>VII.250</LeagueLevelUnitName>
+          <GainedDate>2026-07-11 00:49:00</GainedDate>
+          <ImageUrl>/App_Themes/Standard/Images/Trophies/vii.png</ImageUrl>
+          <CupLeagueLevel></CupLeagueLevel>
+          <CupLevel></CupLevel>
+          <CupLevelIndex></CupLevelIndex>
+        </Trophy>
+      </TrophyList>
+      <PossibleToChallengeMidweek>False</PossibleToChallengeMidweek>
+      <PossibleToChallengeWeekend>False</PossibleToChallengeWeekend>
+    </Team>
+  </Teams>
+</HattrickData>

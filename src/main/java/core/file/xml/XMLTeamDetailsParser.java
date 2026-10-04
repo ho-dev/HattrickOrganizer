@@ -103,11 +103,11 @@ public class XMLTeamDetailsParser {
 			xmlValue2Hash(hash, team, "BotSince");
 
 			// Power Rating
-			Element PowerRating = (Element)doc.getDocumentElement().getElementsByTagName("PowerRating").item(0);
-			xmlValue2Hash(hash, PowerRating, "GlobalRanking");
-			xmlValue2Hash(hash, PowerRating, "LeagueRanking");
-			xmlValue2Hash(hash, PowerRating, "RegionRanking");
-			xmlValue2Hash(hash, PowerRating, "PowerRating");
+			var powerRating = (Element)team.getElementsByTagName("PowerRating").item(0);
+			xmlValue2Hash(hash, powerRating, "GlobalRanking");
+			xmlValue2Hash(hash, powerRating, "LeagueRanking");
+			xmlValue2Hash(hash, powerRating, "RegionRanking");
+			xmlValue2Hash(hash, powerRating, "PowerRating");
 
 			if (team.getElementsByTagName("TeamRank").getLength() > 0) {
 				hash.put("TeamRank", team.getElementsByTagName("TeamRank").item(0).getTextContent());
