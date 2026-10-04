@@ -1,31 +1,20 @@
 package core.file.xml;
 
-import core.model.match.MatchResultFormatter;
-import core.util.HODateTime;
-import core.util.HOLogger;
 import core.util.ResourceUtils;
 import hattrickdata.*;
-import org.apache.commons.lang3.tuple.Pair;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Stream;
 
-import static core.file.xml.XMLManager.xmlValue2Hash;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.of;
 
 class XMLTeamDetailsParserTest {
-
-    private static final String FILENAME = "teamdetails.xml";
-    private static final String VERSION = "3.6";
 
     private static Map<String, String> createTeamJuventusBrenk() {
         var ret = new HashMap<String, String>();
