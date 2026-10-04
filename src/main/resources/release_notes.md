@@ -28,6 +28,9 @@
 * New columns "Recovered on" and "Slightly injured on" (#2363)
 * Hrf list shows next daily update (#2459)
 * Fix subskill recalculation overlooks trainings if downloads happened during training (#2149)
+* Added support of all 13 **Player Categories** (#2418)
+* Fix world details constraints error (#2444)
+* Player details show the total salary and the weeks of team membership (#2449)
 
 ### HO update
 
@@ -42,16 +45,17 @@
 
 * Added indirect set pieces ratings to rating panel (#2433)
 * Fix download of style of play. Old matches has to be reloaded (#2432)
+* Player Detail Dialog: The days of the age of a player is now displayed in braces after the years.
+* Tab `Highlights`:
+    * Own goals are now counted for the right team. (#2508)
+    * Penalty contest:
+        * The minute is now displayed when it starts and when a player scored or missed to score.
+        * If the penalty contest does not produce a winner, the match is decided by a coin toss (a very rare case), and this
+          is now also mentioned.
 
 ### Hall of fame
 
 * Added (#2296)
-
-### Squad
-
-* Added support of all 13 **Player Categories** (#2418)
-* Fix world details constraints error (#2444)
-* Player details show the total salary and the weeks of team membership (#2449)
 
 ### Lineup
 
@@ -59,16 +63,6 @@
 * Added support of all 13 **Player Categories** (#2418)
 * Fix scroll behavior of lineup rating panel (#2365)
 * Fix refresh of player table after download (#2515)
-
-### Matches
-
-* Player Detail Dialog: The days of the age of a player is now displayed in braces after the years.
-* Tab `Highlights`:
-  * Own goals are now counted for the right team. (#2508)
-  * Penalty contest:
-    * The minute is now displayed when it starts and when a player scored or missed to score.
-    * If the penalty contest does not produce a winner, the match is decided by a coin toss (a very rare case), and this
-      is now also mentioned.
 
 ### Training
 
