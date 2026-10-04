@@ -99,10 +99,6 @@
 * Add option to select currency setting (#2288)
 * Adjusting various tables to large user font settings (#2306)
 
-### Special Events
-
-* Fixed a crash that occurred when not ticking `Only matches with SEs`.
-
 ### International Friendly Analyzer
 
 * Statistics regarding team's country ID instead of league ID (#2249)
