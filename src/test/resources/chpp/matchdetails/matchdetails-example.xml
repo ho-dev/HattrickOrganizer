@@ -1,0 +1,637 @@
+<?xml version="1.0" encoding="utf-8"?>
+<HattrickData>
+    <FileName>matchdetails.xml</FileName>
+    <Version>3.0</Version>Kaffee
+    <UserID>2192218</UserID>
+    <FetchedDate>2026-10-08 12:36:42</FetchedDate>
+    <UserSupporterTier>gold</UserSupporterTier>
+    <SourceSystem>Hattrick</SourceSystem>
+    <Match>
+        <MatchID>771794947</MatchID>
+        <MatchType>4</MatchType>
+        <MatchContextId>0</MatchContextId>
+        <MatchRuleId>0</MatchRuleId>
+        <CupLevel>0</CupLevel>
+        <CupLevelIndex>0</CupLevelIndex>
+        <MatchDate>2026-10-06 18:15:00</MatchDate>
+        <FinishedDate>2026-10-06 20:03:00</FinishedDate>
+        <AddedMinutes>3</AddedMinutes>
+        <HomeTeam>
+            <HomeTeamID>2157350</HomeTeamID>
+            <HomeTeamName>Kaffee-Junkies Hannover</HomeTeamName>
+            <DressURI>//res.hattrick.org/kits/34/338/3376/3375881/matchKitSmall.png</DressURI>
+            <Formation>4-4-2</Formation>
+            <HomeGoals>7</HomeGoals>
+            <TacticType>7</TacticType>
+            <TacticSkill>11</TacticSkill>
+            <RatingMidfield>22</RatingMidfield>
+            <RatingRightDef>29</RatingRightDef>
+            <RatingMidDef>31</RatingMidDef>
+            <RatingLeftDef>28</RatingLeftDef>
+            <RatingRightAtt>16</RatingRightAtt>
+            <RatingMidAtt>18</RatingMidAtt>
+            <RatingLeftAtt>21</RatingLeftAtt>
+            <TeamAttitude>0</TeamAttitude>
+            <RatingIndirectSetPiecesDef>22</RatingIndirectSetPiecesDef>
+            <RatingIndirectSetPiecesAtt>18</RatingIndirectSetPiecesAtt>
+        </HomeTeam>
+        <AwayTeam>
+            <AwayTeamID>128206</AwayTeamID>
+            <AwayTeamName>SSC Napoli-Köpenick</AwayTeamName>
+            <DressURI>//res.hattrick.org/kits/1/1/1/2/matchKitSmall.png</DressURI>
+            <Formation>4-5-1</Formation>
+            <AwayGoals>0</AwayGoals>
+            <TacticType>0</TacticType>
+            <TacticSkill>0</TacticSkill>
+            <RatingMidfield>18</RatingMidfield>
+            <RatingRightDef>15</RatingRightDef>
+            <RatingMidDef>16</RatingMidDef>
+            <RatingLeftDef>10</RatingLeftDef>
+            <RatingRightAtt>25</RatingRightAtt>
+            <RatingMidAtt>17</RatingMidAtt>
+            <RatingLeftAtt>35</RatingLeftAtt>
+            <RatingIndirectSetPiecesDef>15</RatingIndirectSetPiecesDef>
+            <RatingIndirectSetPiecesAtt>18</RatingIndirectSetPiecesAtt>
+        </AwayTeam>
+        <Arena>
+            <ArenaID>2154092</ArenaID>
+            <ArenaName>Alte Rösterei</ArenaName>
+            <WeatherID>1</WeatherID>
+            <SoldTotal>1648</SoldTotal>
+            <SoldTerraces>938</SoldTerraces>
+            <SoldBasic>390</SoldBasic>
+            <SoldRoof>280</SoldRoof>
+            <SoldVIP>40</SoldVIP>
+        </Arena>
+        <MatchOfficials>
+            <Referee>
+                <RefereeId>428327644</RefereeId>
+                <RefereeName>Jean Rezende</RefereeName>
+                <RefereeCountryId>16</RefereeCountryId>
+                <RefereeCountryName>Brasil</RefereeCountryName>
+                <RefereeTeamId>92594</RefereeTeamId>
+                <RefereeTeamname>The Mended Drum</RefereeTeamname>
+            </Referee>
+            <RefereeAssistant1>
+                <RefereeId>447281075</RefereeId>
+                <RefereeName>Adam Mettler</RefereeName>
+                <RefereeCountryId>8</RefereeCountryId>
+                <RefereeCountryName>USA</RefereeCountryName>
+                <RefereeTeamId>221928</RefereeTeamId>
+                <RefereeTeamname>Fenian FC Boston</RefereeTeamname>
+            </RefereeAssistant1>
+            <RefereeAssistant2>
+                <RefereeId>424270487</RefereeId>
+                <RefereeName>Guillermo Riquelme</RefereeName>
+                <RefereeCountryId>36</RefereeCountryId>
+                <RefereeCountryName>España</RefereeCountryName>
+                <RefereeTeamId>663326</RefereeTeamId>
+                <RefereeTeamname>team_KK</RefereeTeamname>
+            </RefereeAssistant2>
+        </MatchOfficials>
+        <Scorers>
+            <Goal Index="0">
+                <ScorerPlayerID>456920840</ScorerPlayerID>
+                <ScorerPlayerName>Klaus Mahler</ScorerPlayerName>
+                <ScorerTeamID>2157350</ScorerTeamID>
+                <ScorerHomeGoals>1</ScorerHomeGoals>
+                <ScorerAwayGoals>0</ScorerAwayGoals>
+                <ScorerMinute>8</ScorerMinute>
+                <MatchPart>1</MatchPart>
+            </Goal>
+            <Goal Index="1">
+                <ScorerPlayerID>462788780</ScorerPlayerID>
+                <ScorerPlayerName>Daniel Stendel</ScorerPlayerName>
+                <ScorerTeamID>2157350</ScorerTeamID>
+                <ScorerHomeGoals>2</ScorerHomeGoals>
+                <ScorerAwayGoals>0</ScorerAwayGoals>
+                <ScorerMinute>25</ScorerMinute>
+                <MatchPart>1</MatchPart>
+            </Goal>
+            <Goal Index="2">
+                <ScorerPlayerID>485463818</ScorerPlayerID>
+                <ScorerPlayerName>Derk Lerf</ScorerPlayerName>
+                <ScorerTeamID>2157350</ScorerTeamID>
+                <ScorerHomeGoals>3</ScorerHomeGoals>
+                <ScorerAwayGoals>0</ScorerAwayGoals>
+                <ScorerMinute>33</ScorerMinute>
+                <MatchPart>1</MatchPart>
+            </Goal>
+            <Goal Index="3">
+                <ScorerPlayerID>462788780</ScorerPlayerID>
+                <ScorerPlayerName>Daniel Stendel</ScorerPlayerName>
+                <ScorerTeamID>2157350</ScorerTeamID>
+                <ScorerHomeGoals>4</ScorerHomeGoals>
+                <ScorerAwayGoals>0</ScorerAwayGoals>
+                <ScorerMinute>37</ScorerMinute>
+                <MatchPart>1</MatchPart>
+            </Goal>
+            <Goal Index="4">
+                <ScorerPlayerID>456920840</ScorerPlayerID>
+                <ScorerPlayerName>Klaus Mahler</ScorerPlayerName>
+                <ScorerTeamID>2157350</ScorerTeamID>
+                <ScorerHomeGoals>5</ScorerHomeGoals>
+                <ScorerAwayGoals>0</ScorerAwayGoals>
+                <ScorerMinute>52</ScorerMinute>
+                <MatchPart>2</MatchPart>
+            </Goal>
+            <Goal Index="5">
+                <ScorerPlayerID>462788780</ScorerPlayerID>
+                <ScorerPlayerName>Daniel Stendel</ScorerPlayerName>
+                <ScorerTeamID>2157350</ScorerTeamID>
+                <ScorerHomeGoals>6</ScorerHomeGoals>
+                <ScorerAwayGoals>0</ScorerAwayGoals>
+                <ScorerMinute>63</ScorerMinute>
+                <MatchPart>2</MatchPart>
+            </Goal>
+            <Goal Index="6">
+                <ScorerPlayerID>473360703</ScorerPlayerID>
+                <ScorerPlayerName>Sergio Pinto</ScorerPlayerName>
+                <ScorerTeamID>2157350</ScorerTeamID>
+                <ScorerHomeGoals>7</ScorerHomeGoals>
+                <ScorerAwayGoals>0</ScorerAwayGoals>
+                <ScorerMinute>84</ScorerMinute>
+                <MatchPart>2</MatchPart>
+            </Goal>
+        </Scorers>
+        <Bookings>
+            <Booking Index="0">
+                <BookingPlayerID>502246230</BookingPlayerID>
+                <BookingPlayerName>Felix Klaus</BookingPlayerName>
+                <BookingTeamID>2157350</BookingTeamID>
+                <BookingType>1</BookingType>
+                <BookingMinute>42</BookingMinute>
+                <MatchPart>1</MatchPart>
+            </Booking>
+        </Bookings>
+        <Injuries />
+        <PossessionFirstHalfHome>55</PossessionFirstHalfHome>
+        <PossessionFirstHalfAway>45</PossessionFirstHalfAway>
+        <PossessionSecondHalfHome>53</PossessionSecondHalfHome>
+        <PossessionSecondHalfAway>47</PossessionSecondHalfAway>
+        <EventList>
+            <Event Index="0">
+                <Minute>0</Minute>
+                <SubjectPlayerID>2154092</SubjectPlayerID>
+                <SubjectTeamID>50000</SubjectTeamID>
+                <ObjectPlayerID>1648</ObjectPlayerID>
+                <MatchPart>0</MatchPart>
+                <EventTypeID>31</EventTypeID>
+                <EventVariation>5</EventVariation>
+                <EventText>&lt;a href="/Club/Stadium/?stadiumId=2154092"&gt;Alte Rösterei&lt;/a&gt; - 1648 ZuschauerInnen blickten angesichts der dunklen Wolken besorgt in den Himmel, aber der befürchtete Regen blieb aus. &lt;a href="/Club/HallOfFame/Player.aspx?playerId=455444108"&gt;Sultan Hafeeth Al-Buayqy&lt;/a&gt; wurde als Schiedsrichter angesetzt, Unterstützung erhielt er von seinen Assistenten &lt;a href="/Club/HallOfFame/Player.aspx?playerId=474275056"&gt;Bill Matthews&lt;/a&gt; und &lt;a href="/Club/HallOfFame/Player.aspx?playerId=459237940"&gt;Idar Åkesson&lt;/a&gt;.</EventText>
+            </Event>
+            <Event Index="1">
+                <Minute>0</Minute>
+                <SubjectPlayerID>0</SubjectPlayerID>
+                <SubjectTeamID>0</SubjectTeamID>
+                <ObjectPlayerID>0</ObjectPlayerID>
+                <MatchPart>0</MatchPart>
+                <EventTypeID>19</EventTypeID>
+                <EventVariation>1</EventVariation>
+                <EventText></EventText>
+            </Event>
+            <Event Index="2">
+                <Minute>0</Minute>
+                <SubjectPlayerID>0</SubjectPlayerID>
+                <SubjectTeamID>2157350</SubjectTeamID>
+                <ObjectPlayerID>0</ObjectPlayerID>
+                <MatchPart>0</MatchPart>
+                <EventTypeID>21</EventTypeID>
+                <EventVariation>4</EventVariation>
+                <EventText>Folgende Spieler begannen: &lt;a href="/Club/Players/Player.aspx?playerId=473025501" title="Sievers" class="homeplayer"&gt;Sievers&lt;/a&gt; - &lt;a href="/Club/Players/Player.aspx?playerId=497733968" title="Eggimann" class="homeplayer"&gt;Eggimann&lt;/a&gt;, &lt;a href="/Club/Players/Player.aspx?playerId=480433526" title="Br&amp;#252;ggemann" class="homeplayer"&gt;Brüggemann&lt;/a&gt;, &lt;a href="/Club/Players/Player.aspx?playerId=456920840" title="Mahler" class="homeplayer"&gt;Mahler&lt;/a&gt;, &lt;a href="/Club/Players/Player.aspx?playerId=503053978" title="Cherundolo" class="homeplayer"&gt;Cherundolo&lt;/a&gt; - &lt;a href="/Club/Players/Player.aspx?playerId=502246230" title="Klaus" class="homeplayer"&gt;Klaus&lt;/a&gt;, &lt;a href="/Club/Players/Player.aspx?playerId=473360703" title="Pinto" class="homeplayer"&gt;Pinto&lt;/a&gt;, &lt;a href="/Club/Players/Player.aspx?playerId=457053654" title="Leopold" class="homeplayer"&gt;Leopold&lt;/a&gt;, &lt;a href="/Club/Players/Player.aspx?playerId=511385914" title="Maina" class="homeplayer"&gt;Maina&lt;/a&gt; - &lt;a href="/Club/Players/Player.aspx?playerId=485463818" title="Lerf" class="homeplayer"&gt;Lerf&lt;/a&gt;, &lt;a href="/Club/Players/Player.aspx?playerId=462788780" title="Stendel" class="homeplayer"&gt;Stendel&lt;/a&gt;.&lt;br /&gt;&lt;br /&gt;</EventText>
+            </Event>
+            <Event Index="3">
+                <Minute>0</Minute>
+                <SubjectPlayerID>0</SubjectPlayerID>
+                <SubjectTeamID>128206</SubjectTeamID>
+                <ObjectPlayerID>0</ObjectPlayerID>
+                <MatchPart>0</MatchPart>
+                <EventTypeID>21</EventTypeID>
+                <EventVariation>1</EventVariation>
+                <EventText>Es liefen auf: &lt;a href="/Club/Players/Player.aspx?playerId=472120229" title="Schlegelmilch" class="awayplayer"&gt;Schlegelmilch&lt;/a&gt; - &lt;a href="/Club/Players/Player.aspx?playerId=489791494" title="Masciadri" class="awayplayer"&gt;Masciadri&lt;/a&gt;, &lt;a href="/Club/Players/Player.aspx?playerId=496877677" title="Gierer" class="awayplayer"&gt;Gierer&lt;/a&gt;, &lt;a href="/Club/Players/Player.aspx?playerId=472291599" title="Rutherford" class="awayplayer"&gt;Rutherford&lt;/a&gt;, &lt;a href="/Club/Players/Player.aspx?playerId=483281921" title="Parmendola" class="awayplayer"&gt;Parmendola&lt;/a&gt; - &lt;a href="/Club/Players/Player.aspx?playerId=490747950" title="Rajs" class="awayplayer"&gt;Rajs&lt;/a&gt;, &lt;a href="/Club/Players/Player.aspx?playerId=490797976" title="Hultflod" class="awayplayer"&gt;Hultflod&lt;/a&gt;, &lt;a href="/Club/Players/Player.aspx?playerId=474503458" title="Foltea" class="awayplayer"&gt;Foltea&lt;/a&gt;, &lt;a href="/Club/Players/Player.aspx?playerId=472214265" title="Sellinger" class="awayplayer"&gt;Sellinger&lt;/a&gt;, &lt;a href="/Club/Players/Player.aspx?playerId=492622921" title="Adderton" class="awayplayer"&gt;Adderton&lt;/a&gt; - &lt;a href="/Club/Players/Player.aspx?playerId=472437980" title="Schichta" class="awayplayer"&gt;Schichta&lt;/a&gt;.&lt;br /&gt;&lt;br /&gt;</EventText>
+            </Event>
+            <Event Index="4">
+                <Minute>0</Minute>
+                <SubjectPlayerID>1040402</SubjectPlayerID>
+                <SubjectTeamID>0</SubjectTeamID>
+                <ObjectPlayerID>1040501</ObjectPlayerID>
+                <MatchPart>0</MatchPart>
+                <EventTypeID>24</EventTypeID>
+                <EventVariation>2</EventVariation>
+                <EventText>&lt;span class="hometeam"&gt;Kaffee-Junkies Hannover&lt;/span&gt; lief in einem 4-4-2 auf,  &lt;span class="awayteam"&gt;SSC Napoli-Köpenick&lt;/span&gt; entschied sich für ein 4-5-1. </EventText>
+            </Event>
+            <Event Index="5">
+                <Minute>0</Minute>
+                <SubjectPlayerID>0</SubjectPlayerID>
+                <SubjectTeamID>0</SubjectTeamID>
+                <ObjectPlayerID>0</ObjectPlayerID>
+                <MatchPart>0</MatchPart>
+                <EventTypeID>598</EventTypeID>
+                <EventVariation>2</EventVariation>
+                <EventText></EventText>
+            </Event>
+            <Event Index="6">
+                <Minute>0</Minute>
+                <SubjectPlayerID>151</SubjectPlayerID>
+                <SubjectTeamID>2157350</SubjectTeamID>
+                <ObjectPlayerID>0</ObjectPlayerID>
+                <MatchPart>1</MatchPart>
+                <EventTypeID>335</EventTypeID>
+                <EventVariation>4</EventVariation>
+                <EventText>&lt;span class="hometeam"&gt;KJH&lt;/span&gt; befleißigte sich einer kreativen Spielweise. Sieht &lt;a href="/Help/Rules/AppDenominations.aspx?lt=skill&amp;amp;ll=11#skill" class="skill"&gt;brillant&lt;/a&gt; aus, was die Taktikstärke angeht. </EventText>
+            </Event>
+            <Event Index="7">
+                <Minute>5</Minute>
+                <SubjectPlayerID>0</SubjectPlayerID>
+                <SubjectTeamID>2157350</SubjectTeamID>
+                <ObjectPlayerID>1040402</ObjectPlayerID>
+                <MatchPart>1</MatchPart>
+                <EventTypeID>481</EventTypeID>
+                <EventVariation>5</EventVariation>
+                <EventText></EventText>
+            </Event>
+            <Event Index="8">
+                <Minute>8</Minute>
+                <SubjectPlayerID>456920840</SubjectPlayerID>
+                <SubjectTeamID>2157350</SubjectTeamID>
+                <ObjectPlayerID>472120229</ObjectPlayerID>
+                <MatchPart>1</MatchPart>
+                <EventTypeID>121</EventTypeID>
+                <EventVariation>1</EventVariation>
+                <EventText>Ein ohrenbetäubendes Vuvuzela-Konzert brach in der 8. Minute auf den Tribünen aus, nachdem &lt;a href="/Club/Players/Player.aspx?playerId=456920840" title="Klaus Mahler" class="homeplayer"&gt;Klaus Mahler&lt;/a&gt; zentral vor dem Tor abgezogen und einen Treffer für &lt;span class="hometeam"&gt;KJH&lt;/span&gt; markiert hatte. Es stand nun 1 - 0.</EventText>
+            </Event>
+            <Event Index="9">
+                <Minute>11</Minute>
+                <SubjectPlayerID>95</SubjectPlayerID>
+                <SubjectTeamID>2157350</SubjectTeamID>
+                <ObjectPlayerID>0</ObjectPlayerID>
+                <MatchPart>1</MatchPart>
+                <EventTypeID>61</EventTypeID>
+                <EventVariation>1</EventVariation>
+                <EventText>Bei &lt;span class="hometeam"&gt;KJH&lt;/span&gt; schien nach 11 Minuten keiner wirklich zu wissen, wo er zu stehen hat. Die Mannschaft war &lt;a href="/Help/Rules/AppDenominations.aspx?lt=skill&amp;amp;ll=7#skill" class="skill"&gt;gut&lt;/a&gt; organisiert.</EventText>
+            </Event>
+            <Event Index="10">
+                <Minute>13</Minute>
+                <SubjectPlayerID>59</SubjectPlayerID>
+                <SubjectTeamID>2157350</SubjectTeamID>
+                <ObjectPlayerID>0</ObjectPlayerID>
+                <MatchPart>1</MatchPart>
+                <EventTypeID>471</EventTypeID>
+                <EventVariation>4</EventVariation>
+                <EventText></EventText>
+            </Event>
+            <Event Index="11">
+                <Minute>15</Minute>
+                <SubjectPlayerID>511385914</SubjectPlayerID>
+                <SubjectTeamID>2157350</SubjectTeamID>
+                <ObjectPlayerID>503221197</ObjectPlayerID>
+                <MatchPart>1</MatchPart>
+                <EventTypeID>352</EventTypeID>
+                <EventVariation>5</EventVariation>
+                <EventText>Vollkommen überrascht war &lt;a href="/Club/Players/Player.aspx?playerId=511385914" title="Linton Maina" class="homeplayer"&gt;Linton Maina&lt;/a&gt; von seiner Auswechslung in der 15. Minute. Bei &lt;span class="hometeam"&gt;KJH&lt;/span&gt; betrat an seiner Stelle &lt;a href="/Club/Players/Player.aspx?playerId=503221197" title="Leonardo &amp;#39;Leo&amp;#39; Bittencourt" class="homeplayer"&gt;Leonardo 'Leo' Bittencourt&lt;/a&gt; den Rasen.</EventText>
+            </Event>
+            <Event Index="12">
+                <Minute>15</Minute>
+                <SubjectPlayerID>79</SubjectPlayerID>
+                <SubjectTeamID>2157350</SubjectTeamID>
+                <ObjectPlayerID>0</ObjectPlayerID>
+                <MatchPart>1</MatchPart>
+                <EventTypeID>61</EventTypeID>
+                <EventVariation>2</EventVariation>
+                <EventText>&lt;span class="hometeam"&gt;KJH&lt;/span&gt; hatte offensichtlich Probleme mit den taktischen Anweisungen. Die Mannschaft war in der 15. Minute nur noch &lt;a href="/Help/Rules/AppDenominations.aspx?lt=skill&amp;amp;ll=4#skill" class="skill"&gt;schwach&lt;/a&gt; organisiert.</EventText>
+            </Event>
+            <Event Index="13">
+                <Minute>17</Minute>
+                <SubjectPlayerID>485463818</SubjectPlayerID>
+                <SubjectTeamID>2157350</SubjectTeamID>
+                <ObjectPlayerID>0</ObjectPlayerID>
+                <MatchPart>1</MatchPart>
+                <EventTypeID>489</EventTypeID>
+                <EventVariation>5</EventVariation>
+                <EventText></EventText>
+            </Event>
+            <Event Index="14">
+                <Minute>20</Minute>
+                <SubjectPlayerID>502246230</SubjectPlayerID>
+                <SubjectTeamID>2157350</SubjectTeamID>
+                <ObjectPlayerID>483281921</ObjectPlayerID>
+                <MatchPart>1</MatchPart>
+                <EventTypeID>289</EventTypeID>
+                <EventVariation>2</EventVariation>
+                <EventText>&lt;a href="/Club/Players/Player.aspx?playerId=483281921" title="Cesare Parmendola" class="awayplayer"&gt;Cesare Parmendola&lt;/a&gt; erntete in der 20. Minute tosenden Applaus, als er einen Pfau einfing, der plötzlich durch seinen Strafraum stolzierte. Das Tier war bei den nahen Dreharbeiten zu "Bauer sucht Pfau" stiften gegangen. Diese spektakuläre Aktion war noch lange in aller Munde. Dass &lt;a href="/Club/Players/Player.aspx?playerId=483281921" title="Cesare Parmendola" class="awayplayer"&gt;Cesare Parmendola&lt;/a&gt; noch in der gleichen Minute &lt;span class="hometeam"&gt;KJH&lt;/span&gt;-Flitzer &lt;a href="/Club/Players/Player.aspx?playerId=502246230" title="Felix Klaus" class="homeplayer"&gt;Felix Klaus&lt;/a&gt; den Ball vom Fuß spitzelte und so einen Gegentreffer verhinderte, ging dabei fast unter.</EventText>
+            </Event>
+            <Event Index="15">
+                <Minute>22</Minute>
+                <SubjectPlayerID>472120229</SubjectPlayerID>
+                <SubjectTeamID>128206</SubjectTeamID>
+                <ObjectPlayerID>100</ObjectPlayerID>
+                <MatchPart>1</MatchPart>
+                <EventTypeID>452</EventTypeID>
+                <EventVariation>3</EventVariation>
+                <EventText></EventText>
+            </Event>
+            <Event Index="16">
+                <Minute>25</Minute>
+                <SubjectPlayerID>462788780</SubjectPlayerID>
+                <SubjectTeamID>2157350</SubjectTeamID>
+                <ObjectPlayerID>472120229</ObjectPlayerID>
+                <MatchPart>1</MatchPart>
+                <EventTypeID>131</EventTypeID>
+                <EventVariation>1</EventVariation>
+                <EventText>Nach 25 Minuten kam es für die Gäste noch schlimmer, als &lt;a href="/Club/Players/Player.aspx?playerId=462788780" title="Daniel Stendel" class="homeplayer"&gt;Daniel Stendel&lt;/a&gt; es ohne große Widerstände durch die Abwehrmitte vor das Tor schaffte und zum 2 - 0 traf.</EventText>
+            </Event>
+            <Event Index="17">
+                <Minute>33</Minute>
+                <SubjectPlayerID>485463818</SubjectPlayerID>
+                <SubjectTeamID>2157350</SubjectTeamID>
+                <ObjectPlayerID>503221197</ObjectPlayerID>
+                <MatchPart>1</MatchPart>
+                <EventTypeID>116</EventTypeID>
+                <EventVariation>3</EventVariation>
+                <EventText>&lt;span class="hometeam"&gt;KJH&lt;/span&gt;-Akteur &lt;a href="/Club/Players/Player.aspx?playerId=503221197" title="Leonardo &amp;#39;Leo&amp;#39; Bittencourt" class="homeplayer"&gt;Leonardo 'Leo' Bittencourt&lt;/a&gt; konnte sich in der 33. Minute dank seiner Schnelligkeit mühelos von seinem Gegenspieler absetzen. &lt;a href="/Club/Players/Player.aspx?playerId=485463818" title="Derk Lerf" class="homeplayer"&gt;Derk Lerf&lt;/a&gt; hatte keinerlei Schwierigkeit, die scharfe Hereingabe am herausstürzenden Torwart vorbei zum 3 - 0 zu verwandeln.</EventText>
+            </Event>
+            <Event Index="18">
+                <Minute>34</Minute>
+                <SubjectPlayerID>457053654</SubjectPlayerID>
+                <SubjectTeamID>2157350</SubjectTeamID>
+                <ObjectPlayerID>472120229</ObjectPlayerID>
+                <MatchPart>1</MatchPart>
+                <EventTypeID>231</EventTypeID>
+                <EventVariation>2</EventVariation>
+                <EventText>Eine wundervolle Kombination im Angriffszentrum hätte nach 34 Minuten fast zu einem weiteren Tor für &lt;span class="hometeam"&gt;KJH&lt;/span&gt; geführt, doch &lt;a href="/Club/Players/Player.aspx?playerId=472120229" title="Friederich Schlegelmilch" class="awayplayer"&gt;Friederich Schlegelmilch&lt;/a&gt; war bei diesem Schuss von &lt;a href="/Club/Players/Player.aspx?playerId=457053654" title="Enzo Leopold" class="homeplayer"&gt;Enzo Leopold&lt;/a&gt; auf dem Posten.</EventText>
+            </Event>
+            <Event Index="19">
+                <Minute>37</Minute>
+                <SubjectPlayerID>462788780</SubjectPlayerID>
+                <SubjectTeamID>2157350</SubjectTeamID>
+                <ObjectPlayerID>472120229</ObjectPlayerID>
+                <MatchPart>1</MatchPart>
+                <EventTypeID>134</EventTypeID>
+                <EventVariation>2</EventVariation>
+                <EventText>&lt;span class="hometeam"&gt;KJH&lt;/span&gt; wurde in der 37. Minute ein Strafstoß zugesprochen. &lt;a href="/Club/Players/Player.aspx?playerId=462788780" title="Daniel Stendel" class="homeplayer"&gt;Daniel Stendel&lt;/a&gt; ließ sich die Chance nicht entgehen und verwandelte mit einem Lächeln auf dem Gesicht zum 4 - 0 für das Heimteam.</EventText>
+            </Event>
+            <Event Index="20">
+                <Minute>40</Minute>
+                <SubjectPlayerID>502246230</SubjectPlayerID>
+                <SubjectTeamID>2157350</SubjectTeamID>
+                <ObjectPlayerID>462788780</ObjectPlayerID>
+                <MatchPart>1</MatchPart>
+                <EventTypeID>218</EventTypeID>
+                <EventVariation>1</EventVariation>
+                <EventText>&lt;a href="/Club/Players/Player.aspx?playerId=462788780" title="Daniel Stendel" class="homeplayer"&gt;Daniel Stendel&lt;/a&gt; schlug nach 40 Minuten einen raffiniert herein gezogenen Eckball, doch &lt;a href="/Club/Players/Player.aspx?playerId=502246230" title="Felix Klaus" class="homeplayer"&gt;Felix Klaus&lt;/a&gt; war zu überrascht, den Ball zu bekommen, und verstolperte die Chance für &lt;span class="hometeam"&gt;KJH&lt;/span&gt;.</EventText>
+            </Event>
+            <Event Index="21">
+                <Minute>41</Minute>
+                <SubjectPlayerID>497733968</SubjectPlayerID>
+                <SubjectTeamID>2157350</SubjectTeamID>
+                <ObjectPlayerID>472120229</ObjectPlayerID>
+                <MatchPart>1</MatchPart>
+                <EventTypeID>232</EventTypeID>
+                <EventVariation>3</EventVariation>
+                <EventText>Nach einer Flanke von links spitzelte &lt;a href="/Club/Players/Player.aspx?playerId=497733968" title="Mario Eggimann" class="homeplayer"&gt;Mario Eggimann&lt;/a&gt; den Ball in Richtung Glück und Seligkeit, doch der Außenpfosten verhinderte ein weiteres Tor für &lt;span class="hometeam"&gt;KJH&lt;/span&gt;. Da fiel dem Präsidium des gegnerischen Teams auf der Tribüne sichtlich ein Stein vom Herzen, dass diese Situation in der 41. Minute ein gutes Ende nahm. </EventText>
+            </Event>
+            <Event Index="22">
+                <Minute>42</Minute>
+                <SubjectPlayerID>502246230</SubjectPlayerID>
+                <SubjectTeamID>2157350</SubjectTeamID>
+                <ObjectPlayerID>0</ObjectPlayerID>
+                <MatchPart>1</MatchPart>
+                <EventTypeID>510</EventTypeID>
+                <EventVariation>4</EventVariation>
+                <EventText>&lt;span class="hometeam"&gt;KJH&lt;/span&gt;-Spieler &lt;a href="/Club/Players/Player.aspx?playerId=502246230" title="Felix Klaus" class="homeplayer"&gt;Felix Klaus&lt;/a&gt; hatte es bei seiner Attacke in der 42. Minute nur auf die Beine des Gegenspielers abgesehen. Folgerichtig sah er die Gelbe Karte.</EventText>
+            </Event>
+            <Event Index="23">
+                <Minute>43</Minute>
+                <SubjectPlayerID>472291599</SubjectPlayerID>
+                <SubjectTeamID>128206</SubjectTeamID>
+                <ObjectPlayerID>0</ObjectPlayerID>
+                <MatchPart>1</MatchPart>
+                <EventTypeID>360</EventTypeID>
+                <EventVariation>3</EventVariation>
+                <EventText>Spielminute 43: Um das Team noch auf die Siegerstraße zu bringen, richtete der &lt;span class="awayteam"&gt;Napoli-Köpenick&lt;/span&gt;-Trainer seine Mannen taktisch neu aus.</EventText>
+            </Event>
+            <Event Index="24">
+                <Minute>44</Minute>
+                <SubjectPlayerID>496877677</SubjectPlayerID>
+                <SubjectTeamID>128206</SubjectTeamID>
+                <ObjectPlayerID>0</ObjectPlayerID>
+                <MatchPart>1</MatchPart>
+                <EventTypeID>360</EventTypeID>
+                <EventVariation>5</EventVariation>
+                <EventText>Bei &lt;span class="awayteam"&gt;Napoli-Köpenick&lt;/span&gt; war man über den Rückstand verständlicherweise nicht erfreut, daher formierten sich die Spieler nach 44 Minuten auf Anweisung ihres Trainers neu.</EventText>
+            </Event>
+            <Event Index="25">
+                <Minute>45</Minute>
+                <SubjectPlayerID>0</SubjectPlayerID>
+                <SubjectTeamID>0</SubjectTeamID>
+                <ObjectPlayerID>0</ObjectPlayerID>
+                <MatchPart>1</MatchPart>
+                <EventTypeID>45</EventTypeID>
+                <EventVariation>3</EventVariation>
+                <EventText>Zur Halbzeit stand es 4 - 0.</EventText>
+            </Event>
+            <Event Index="26">
+                <Minute>45</Minute>
+                <SubjectPlayerID>0</SubjectPlayerID>
+                <SubjectTeamID>2157350</SubjectTeamID>
+                <ObjectPlayerID>55</ObjectPlayerID>
+                <MatchPart>1</MatchPart>
+                <EventTypeID>40</EventTypeID>
+                <EventVariation>4</EventVariation>
+                <EventText>&lt;span class="hometeam"&gt;KJH&lt;/span&gt; war in dieser Halbzeit das dominierende Team - die Spieler brachten den Ballbesitz auf 55 Prozent.&lt;br /&gt;&lt;br /&gt;</EventText>
+            </Event>
+            <Event Index="27">
+                <Minute>46</Minute>
+                <SubjectPlayerID>0</SubjectPlayerID>
+                <SubjectTeamID>0</SubjectTeamID>
+                <ObjectPlayerID>0</ObjectPlayerID>
+                <MatchPart>2</MatchPart>
+                <EventTypeID>597</EventTypeID>
+                <EventVariation>3</EventVariation>
+                <EventText></EventText>
+            </Event>
+            <Event Index="28">
+                <Minute>46</Minute>
+                <SubjectPlayerID>456933528</SubjectPlayerID>
+                <SubjectTeamID>2157350</SubjectTeamID>
+                <ObjectPlayerID>94</ObjectPlayerID>
+                <MatchPart>2</MatchPart>
+                <EventTypeID>64</EventTypeID>
+                <EventVariation>4</EventVariation>
+                <EventText>Ein erneuter Blick auf die Taktiktafel in der Pause sorgte dafür, dass die Spieler von &lt;span class="hometeam"&gt;KJH&lt;/span&gt; nun &lt;a href="/Help/Rules/AppDenominations.aspx?lt=skill&amp;amp;ll=6#skill" class="skill"&gt;passabel&lt;/a&gt; organisiert waren.</EventText>
+            </Event>
+            <Event Index="29">
+                <Minute>46</Minute>
+                <SubjectPlayerID>473360703</SubjectPlayerID>
+                <SubjectTeamID>2157350</SubjectTeamID>
+                <ObjectPlayerID>0</ObjectPlayerID>
+                <MatchPart>2</MatchPart>
+                <EventTypeID>361</EventTypeID>
+                <EventVariation>3</EventVariation>
+                <EventText>Zufrieden mit dem Spielstand verordnete der &lt;span class="hometeam"&gt;KJH&lt;/span&gt;-Trainer seiner Mannschaft in der 46. Minute eine neue taktische Ausrichtung.</EventText>
+            </Event>
+            <Event Index="31">
+                <Minute>51</Minute>
+                <SubjectPlayerID>0</SubjectPlayerID>
+                <SubjectTeamID>2157350</SubjectTeamID>
+                <ObjectPlayerID>1040303</ObjectPlayerID>
+                <MatchPart>2</MatchPart>
+                <EventTypeID>481</EventTypeID>
+                <EventVariation>2</EventVariation>
+                <EventText></EventText>
+            </Event>
+            <Event Index="32">
+                <Minute>52</Minute>
+                <SubjectPlayerID>456920840</SubjectPlayerID>
+                <SubjectTeamID>2157350</SubjectTeamID>
+                <ObjectPlayerID>472120229</ObjectPlayerID>
+                <MatchPart>2</MatchPart>
+                <EventTypeID>132</EventTypeID>
+                <EventVariation>3</EventVariation>
+                <EventText>&lt;span class="hometeam"&gt;KJH&lt;/span&gt; baute in der 52. Minute die Führung auf 5 - 0 aus, nachdem ein Verteidiger der Gäste den Ball leichtfertig an &lt;a href="/Club/Players/Player.aspx?playerId=456920840" title="Klaus Mahler" class="homeplayer"&gt;Klaus Mahler&lt;/a&gt; verloren hatte. Dieser drang über links in den Strafraum ein und spielte dann noch gekonnt den Torwart aus, bevor er das Leder lässig über die Linie schob.</EventText>
+            </Event>
+            <Event Index="33">
+                <Minute>56</Minute>
+                <SubjectPlayerID>0</SubjectPlayerID>
+                <SubjectTeamID>0</SubjectTeamID>
+                <ObjectPlayerID>1648</ObjectPlayerID>
+                <MatchPart>2</MatchPart>
+                <EventTypeID>464</EventTypeID>
+                <EventVariation>2</EventVariation>
+                <EventText></EventText>
+            </Event>
+            <Event Index="34">
+                <Minute>60</Minute>
+                <SubjectPlayerID>457053654</SubjectPlayerID>
+                <SubjectTeamID>2157350</SubjectTeamID>
+                <ObjectPlayerID>461796896</ObjectPlayerID>
+                <MatchPart>2</MatchPart>
+                <EventTypeID>352</EventTypeID>
+                <EventVariation>4</EventVariation>
+                <EventText>Darauf hatte &lt;a href="/Club/Players/Player.aspx?playerId=461796896" title="Lars Stindl" class="homeplayer"&gt;Lars Stindl&lt;/a&gt; schon länger gewartet. Nach 60 Minuten war es soweit, er kam zu seinem Einsatz für &lt;span class="hometeam"&gt;KJH&lt;/span&gt;. Im Gegenzug verließ &lt;a href="/Club/Players/Player.aspx?playerId=457053654" title="Enzo Leopold" class="homeplayer"&gt;Enzo Leopold&lt;/a&gt; den Platz.</EventText>
+            </Event>
+            <Event Index="35">
+                <Minute>62</Minute>
+                <SubjectPlayerID>75</SubjectPlayerID>
+                <SubjectTeamID>2157350</SubjectTeamID>
+                <ObjectPlayerID>0</ObjectPlayerID>
+                <MatchPart>2</MatchPart>
+                <EventTypeID>61</EventTypeID>
+                <EventVariation>4</EventVariation>
+                <EventText>Spielminute 62: Bei &lt;span class="hometeam"&gt;KJH&lt;/span&gt; herrschte ein ziemliches Durcheinander auf dem Feld - die Spieler hatten Probleme, ihre Positionen zu halten, und waren &lt;a href="/Help/Rules/AppDenominations.aspx?lt=skill&amp;amp;ll=3#skill" class="skill"&gt;armselig&lt;/a&gt; organisiert.</EventText>
+            </Event>
+            <Event Index="36">
+                <Minute>63</Minute>
+                <SubjectPlayerID>462788780</SubjectPlayerID>
+                <SubjectTeamID>2157350</SubjectTeamID>
+                <ObjectPlayerID>472120229</ObjectPlayerID>
+                <MatchPart>2</MatchPart>
+                <EventTypeID>132</EventTypeID>
+                <EventVariation>2</EventVariation>
+                <EventText>Ein schnell vorgetragener Angriff von &lt;span class="hometeam"&gt;KJH&lt;/span&gt; über die linke Seite des Feldes wurde in der 63. Minute mit einem weiteren Tor zum 6 - 0 gekrönt. &lt;a href="/Club/Players/Player.aspx?playerId=462788780" title="Daniel Stendel" class="homeplayer"&gt;Daniel Stendel&lt;/a&gt; hatte aus spitzem Winkel abgezogen. Ein wichtiger Pass zum richtigen Zeitpunkt: &lt;a href="/Club/Players/Player.aspx?playerId=503221197" title="Leonardo &amp;#39;Leo&amp;#39; Bittencourt" class="homeplayer"&gt;Leonardo 'Leo' Bittencourt&lt;/a&gt; bereitete das Tor exzellent vor.</EventText>
+            </Event>
+            <Event Index="37">
+                <Minute>63</Minute>
+                <SubjectPlayerID>462788780</SubjectPlayerID>
+                <SubjectTeamID>2157350</SubjectTeamID>
+                <ObjectPlayerID>0</ObjectPlayerID>
+                <MatchPart>2</MatchPart>
+                <EventTypeID>46</EventTypeID>
+                <EventVariation>1</EventVariation>
+                <EventText>Damit konnte sich &lt;a href="/Club/Players/Player.aspx?playerId=462788780" title="Daniel Stendel" class="homeplayer"&gt;Daniel Stendel&lt;/a&gt; als Hattrickschütze notieren lassen.</EventText>
+            </Event>
+            <Event Index="38">
+                <Minute>74</Minute>
+                <SubjectPlayerID>0</SubjectPlayerID>
+                <SubjectTeamID>128206</SubjectTeamID>
+                <ObjectPlayerID>0</ObjectPlayerID>
+                <MatchPart>2</MatchPart>
+                <EventTypeID>494</EventTypeID>
+                <EventVariation>1</EventVariation>
+                <EventText></EventText>
+            </Event>
+            <Event Index="39">
+                <Minute>83</Minute>
+                <SubjectPlayerID>472291599</SubjectPlayerID>
+                <SubjectTeamID>128206</SubjectTeamID>
+                <ObjectPlayerID>473025501</ObjectPlayerID>
+                <MatchPart>2</MatchPart>
+                <EventTypeID>251</EventTypeID>
+                <EventVariation>4</EventVariation>
+                <EventText>83 Minuten waren gespielt, als &lt;a href="/Club/Players/Player.aspx?playerId=472291599" title="Raven Rutherford" class="awayplayer"&gt;Raven Rutherford&lt;/a&gt; sich in der Mitte prima durchsetzte und nur noch &lt;a href="/Club/Players/Player.aspx?playerId=473025501" title="J&amp;#246;rg &amp;#39;Colt&amp;#39; Sievers" class="homeplayer"&gt;Jörg 'Colt' Sievers&lt;/a&gt; vor sich hatte. Der blieb lange stehen und wehrte den Schuss ab. Es blieb beim 6 - 0.</EventText>
+            </Event>
+            <Event Index="40">
+                <Minute>84</Minute>
+                <SubjectPlayerID>473360703</SubjectPlayerID>
+                <SubjectTeamID>2157350</SubjectTeamID>
+                <ObjectPlayerID>472120229</ObjectPlayerID>
+                <MatchPart>2</MatchPart>
+                <EventTypeID>133</EventTypeID>
+                <EventVariation>4</EventVariation>
+                <EventText>Eine schöne Ballstafette auf dem rechten Flügel der Gastgeber konnte von der gegnerischen Abwehr nicht unterbunden werden. So gelangte das Objekt der Begierde schließlich zu
+                    &lt;a href="/Club/Players/Player.aspx?playerId=473360703" title="Sergio Pinto" class="homeplayer"&gt;Sergio Pinto&lt;/a&gt;, der ein weiteres Tor für &lt;span class="hometeam"&gt;KJH&lt;/span&gt; erzielte. Die Führung erhöhte sich dadurch in der 84. Minute auf 7 - 0.
+                    Ein wichtiger Pass zum richtigen Zeitpunkt: &lt;a href="/Club/Players/Player.aspx?playerId=503221197" title="Leonardo &amp;#39;Leo&amp;#39; Bittencourt" class="homeplayer"&gt;Leonardo 'Leo' Bittencourt&lt;/a&gt; bereitete das Tor exzellent vor.</EventText>
+            </Event>
+            <Event Index="41">
+                <Minute>89</Minute>
+                <SubjectPlayerID>0</SubjectPlayerID>
+                <SubjectTeamID>0</SubjectTeamID>
+                <ObjectPlayerID>0</ObjectPlayerID>
+                <MatchPart>2</MatchPart>
+                <EventTypeID>75</EventTypeID>
+                <EventVariation>5</EventVariation>
+                <EventText>Die Nachspielzeit beträgt 3 Minute(n).</EventText>
+            </Event>
+            <Event Index="42">
+                <Minute>93</Minute>
+                <SubjectPlayerID>0</SubjectPlayerID>
+                <SubjectTeamID>0</SubjectTeamID>
+                <ObjectPlayerID>0</ObjectPlayerID>
+                <MatchPart>2</MatchPart>
+                <EventTypeID>599</EventTypeID>
+                <EventVariation>3</EventVariation>
+                <EventText>Die Begegnung endete 7 - 0.</EventText>
+            </Event>
+            <Event Index="43">
+                <Minute>93</Minute>
+                <SubjectPlayerID>0</SubjectPlayerID>
+                <SubjectTeamID>2157350</SubjectTeamID>
+                <ObjectPlayerID>0</ObjectPlayerID>
+                <MatchPart>2</MatchPart>
+                <EventTypeID>601</EventTypeID>
+                <EventVariation>3</EventVariation>
+                <EventText></EventText>
+            </Event>
+            <Event Index="44">
+                <Minute>93</Minute>
+                <SubjectPlayerID>0</SubjectPlayerID>
+                <SubjectTeamID>2157350</SubjectTeamID>
+                <ObjectPlayerID>53</ObjectPlayerID>
+                <MatchPart>2</MatchPart>
+                <EventTypeID>40</EventTypeID>
+                <EventVariation>1</EventVariation>
+                <EventText>&lt;span class="hometeam"&gt;KJH&lt;/span&gt; erreichte laut HT-Datenbank 53 Prozent Ballbesitz.&lt;br /&gt;&lt;br /&gt;</EventText>
+            </Event>
+            <Event Index="45">
+                <Minute>93</Minute>
+                <SubjectPlayerID>462788780</SubjectPlayerID>
+                <SubjectTeamID>2157350</SubjectTeamID>
+                <ObjectPlayerID>0</ObjectPlayerID>
+                <MatchPart>2</MatchPart>
+                <EventTypeID>41</EventTypeID>
+                <EventVariation>2</EventVariation>
+                <EventText>Der beste Spieler von &lt;span class="hometeam"&gt;KJH&lt;/span&gt; war ohne jeden Zweifel &lt;a href="/Club/Players/Player.aspx?playerId=462788780" title="Daniel Stendel" class="homeplayer"&gt;Daniel Stendel&lt;/a&gt;.</EventText>
+            </Event>
+            <Event Index="46">
+                <Minute>93</Minute>
+                <SubjectPlayerID>483281921</SubjectPlayerID>
+                <SubjectTeamID>128206</SubjectTeamID>
+                <ObjectPlayerID>0</ObjectPlayerID>
+                <MatchPart>2</MatchPart>
+                <EventTypeID>41</EventTypeID>
+                <EventVariation>3</EventVariation>
+                <EventText>Nach diesem Spiel forderten die Fans von &lt;span class="awayteam"&gt;Napoli-Köpenick&lt;/span&gt; eine "&lt;a href="/Club/Players/Player.aspx?playerId=483281921" title="Cesare Parmendola" class="awayplayer"&gt;Cesare Parmendola&lt;/a&gt;-Straße" - er hatte eine herausragende Leistung abgeliefert.</EventText>
+            </Event>
+        </EventList>
+    </Match>
+</HattrickData>
