@@ -231,7 +231,7 @@ public class XMLMatchdetailsParser {
             	myHighlight.setMatchPartId(MatchEvent.MatchPartId.fromMatchPartId(iMatchPart));
             	myHighlight.setEventVariation(iEventVariation);
 
-				if ( myHighlight.getMatchEventID() == MatchEvent.MatchEventID.UNKNOWN_MATCHEVENT ){
+				if ( myHighlight.getMatchEventID() == MatchEventID.UNKNOWN_MATCHEVENT ){
 					HOLogger.instance().warning(XMLMatchdetailsParser.class, "Unknown event id found in match " +
 							md.getHomeTeamName() + "-" + md.getGuestTeamName() +
 							" in minute " + myHighlight.getMinute() +

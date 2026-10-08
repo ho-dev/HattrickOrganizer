@@ -436,9 +436,9 @@ public class MatchLineupTeam extends AbstractTable.Storable {
 		var hls = getMatchdetails().downloadHighlightsIfMissing(); // DBManager.instance().getMatchDetails(matchId).downloadHighlightsIfMissing();
 		if ( hls != null ) {
 			for (MatchEvent hl : hls) {
-				MatchEvent.MatchEventID me = MatchEvent.MatchEventID.fromMatchEventID(hl.getiMatchEventID());
-				if (me == MatchEvent.MatchEventID.MATCH_FINISHED ||
-						me == MatchEvent.MatchEventID.PENALTY_CONTEST_AFTER_EXTENSION) {
+				MatchEventID me = MatchEventID.fromMatchEventID(hl.getiMatchEventID());
+				if (me == MatchEventID.MATCH_FINISHED ||
+						me == MatchEventID.PENALTY_CONTEST_AFTER_EXTENSION) {
 					return hl.getMinute();
 				} else if (hl.getPlayerId() == spielerId) {
 					if (hl.isInjured() || hl.isRedCard()) {
@@ -655,7 +655,7 @@ public class MatchLineupTeam extends AbstractTable.Storable {
 				if (leavingPlayerIsSetPiecesTaker) {
 					// Find the new set pieces taker
 					var matchEvents = this.getMatchdetails().downloadHighlightsIfMissing().stream()
-							.filter(i -> i.getMatchEventID() == MatchEvent.MatchEventID.NEW_SET_PIECES_TAKER &&
+							.filter(i -> i.getMatchEventID() == MatchEventID.NEW_SET_PIECES_TAKER &&
 									i.getMinute() == substitution.getMatchMinuteCriteria()).toList();
 					for (var event : matchEvents) {
 						var newSetPiecesTaker = this.getPlayerByID(event.getAssistingPlayerId(), true);
