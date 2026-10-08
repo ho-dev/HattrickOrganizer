@@ -7,16 +7,12 @@ import org.apache.commons.lang3.tuple.Pair;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-public class XMLArenaParser {
+public final class XMLArenaParser {
 
     public static final String HATTRICK_DATA_VERSION = "1.7";
     public static final String HATTRICK_DATA_BASE_FILE_NAME = "arenadetails";
     private static final String HATTRICK_DATA_FILE_NAME = HATTRICK_DATA_BASE_FILE_NAME + ".xml";
 
-    private static final String ELEMENT_NAME_FILE_NAME = "FileName";
-    private static final String ELEMENT_NAME_VERSION = "Version";
-    private static final String ELEMENT_NAME_USER_ID = "UserID";
-    private static final String ELEMENT_NAME_FETCHED_DATE = "FetchedDate";
     private static final String ELEMENT_NAME_ARENA = "Arena";
     private static final String ELEMENT_NAME_ARENA_ID = "ArenaID";
     private static final String ELEMENT_NAME_ARENA_NAME = "ArenaName";
@@ -58,41 +54,21 @@ public class XMLArenaParser {
         }
 
         try {
-            var hattrickDataInfoBuilder = HattrickDataInfo.builder();
-
             Element root = doc.getDocumentElement();
 
-            // FileName
-            Element element = (Element) root.getElementsByTagName(ELEMENT_NAME_FILE_NAME).item(0);
-            final var fileName = XMLManager.getFirstChildNodeValue(element);
-            hattrickDataInfoBuilder.fileName(fileName);
+            final var hattrickDataInfo = XMLHattrickDataInfoParser.parse(doc);
 
-            if (!HATTRICK_DATA_FILE_NAME.equals(fileName)) {
-                throw new UnsupportedHattrickDataFileNameException(HATTRICK_DATA_FILE_NAME, fileName);
+            if (!HATTRICK_DATA_FILE_NAME.equals(hattrickDataInfo.fileName())) {
+                throw new UnsupportedHattrickDataFileNameException(HATTRICK_DATA_FILE_NAME, hattrickDataInfo.fileName());
             }
 
-            // Version
-            element = (Element) root.getElementsByTagName(ELEMENT_NAME_VERSION).item(0);
-
-            final var version = XMLManager.getFirstChildNodeValue(element);
-            hattrickDataInfoBuilder.version(version);
-
-            if (!HATTRICK_DATA_VERSION.equals(version)) {
-                throw new UnsupportedHattrickDataVersionException(HATTRICK_DATA_FILE_NAME, HATTRICK_DATA_VERSION, version);
+            if (!HATTRICK_DATA_VERSION.equals(hattrickDataInfo.version())) {
+                throw new UnsupportedHattrickDataVersionException(HATTRICK_DATA_FILE_NAME, HATTRICK_DATA_VERSION, hattrickDataInfo.version());
             }
-
-            // UserId
-            element = (Element) root.getElementsByTagName(ELEMENT_NAME_USER_ID).item(0);
-            hattrickDataInfoBuilder.userId(Integer.parseInt(XMLManager.getFirstChildNodeValue(element)));
-            // FetchedDate
-            element = (Element) root.getElementsByTagName(ELEMENT_NAME_FETCHED_DATE).item(0);
-            hattrickDataInfoBuilder.fetchedDate(HODateTime.fromHT(XMLManager.getFirstChildNodeValue(element)));
-
-            final var hattrickDataInfo = hattrickDataInfoBuilder.build();
 
             // change Root
             root = (Element) root.getElementsByTagName(ELEMENT_NAME_ARENA).item(0);
-            element = (Element) root.getElementsByTagName(ELEMENT_NAME_ARENA_ID).item(0);
+            Element element = (Element) root.getElementsByTagName(ELEMENT_NAME_ARENA_ID).item(0);
 
             // Arena
             var arenaBuilder = Arena.builder();

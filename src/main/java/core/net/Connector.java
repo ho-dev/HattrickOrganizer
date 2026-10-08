@@ -1,6 +1,5 @@
 package core.net;
 
-
 import com.github.scribejava.core.builder.ServiceBuilder;
 import com.github.scribejava.core.model.OAuth1AccessToken;
 import com.github.scribejava.core.model.OAuthRequest;
@@ -10,6 +9,7 @@ import com.github.scribejava.core.oauth.OAuth10aService;
 import core.HO;
 import core.file.xml.XMLArenaParser;
 import core.file.xml.XMLCHPPPreParser;
+import core.file.xml.XMLHattrickDataInfoParser;
 import core.gui.CursorToolkit;
 import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
@@ -25,7 +25,6 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.Nullable;
-import org.w3c.dom.Document;
 import tool.updater.VersionInfo;
 
 import javax.swing.*;
@@ -33,7 +32,11 @@ import java.io.*;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.function.Supplier;
 import java.util.zip.GZIPInputStream;
@@ -51,8 +54,13 @@ public class Connector {
 	private final OAuth10aService m_OAService;
 	private OAuth1AccessToken m_OAAccessToken;
 
+    private static final HOLogger log = HOLogger.instance();
+
+    private static final DateTimeFormatter FILE_TIMESTAMP_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss-SSS");
+    private static final DateTimeFormatter LOG_TIMESTAMP_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd, HH:mm:ss.SSS");
+
     /**
-     * Property that controls if downloaded CHPP files (XMO) are saved.
+     * Property that controls if downloaded CHPP files (XML) are saved.
      */
     @Getter
     @Setter
@@ -875,51 +883,40 @@ public class Connector {
 		}
 	}
 
-	/**
-	 * Save downloaded data to a temp-file for debugging purposes.
-	 *
-	 * @param url
-	 *            the url where the content was downloaded from
-	 * @param content
-	 *            the content to save
-	 */
-	private void saveCHPP(String url, String content) {
-		File outDir = new File("tmp");
-		if (!outDir.exists()) {
-			outDir.mkdirs();
-		}
+    /**
+     * Save downloaded CHPP data to the 'tmp' folder for debugging purposes.
+     *
+     * @param url     the url where the content was downloaded from
+     * @param content the content to save
+     */
+    private static void saveCHPP(String url, String content) {
+        final var hattrickDataFileName = XMLHattrickDataInfoParser.tryParseFileName(content)
+            .map(name -> StringUtils.substringBeforeLast(name, "."))
+            .orElse(null);
 
-		String xmlName = null;
-		try {
-			Document doc = XMLUtils.createDocument(content);
-			xmlName = XMLUtils.getTagData(doc, "FileName");
-			if (xmlName != null && xmlName.indexOf('.') != -1) {
-				xmlName = xmlName.substring(0, xmlName.lastIndexOf('.'));
-			}
-		} catch (Exception ex) {
-			HOLogger.instance().error(getClass(), ex);
-		}
+        final var downloadDate = LocalDateTime.now();
+        final String outFileName = createOutFileName(hattrickDataFileName, downloadDate);
 
-		Date downloadDate = new Date();
-		SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd-HHmmss-S");
-		String outFileName = df.format(downloadDate) + ".txt";
-		if (!StringUtils.isEmpty(xmlName)) {
-			outFileName = xmlName + "_" + outFileName;
-		}
-		File outFile = new File(outDir, outFileName);
+        try {
+            Path outDir = Files.createDirectories(Path.of("tmp"));
+            File outFile = new File(outDir.toFile(), outFileName);
 
-		df = new SimpleDateFormat("yyyy-MM-dd, HH:mm:ss");
-		StringBuilder builder = new StringBuilder();
-		builder.append("Downloaded at ").append(df.format(downloadDate)).append('\n');
-		builder.append("From ").append(url).append("\n\n");
-		builder.append(content);
+            IOUtils.writeToFile(content, outFile, "UTF-8");
 
-		try {
-			IOUtils.writeToFile(builder.toString(), outFile, "UTF-8");
-		} catch (Exception e) {
-			HOLogger.instance().error(Connector.class, e);
-		}
-	}
+            log.debug(Connector.class, "Saved downloaded CHPP XML '%s' at %s from '%s'"
+                .formatted(outFileName, LOG_TIMESTAMP_FORMATTER.format(downloadDate), url));
+        } catch (Exception e) {
+            log.error(Connector.class, e);
+        }
+    }
+
+    private static String createOutFileName(String xmlFileName, LocalDateTime localDateTime) {
+        String outFileName = FILE_TIMESTAMP_FORMATTER.format(localDateTime) + ".xml";
+        if (StringUtils.isNotEmpty(xmlFileName)) {
+            outFileName = xmlFileName + "_" + outFileName;
+        }
+        return outFileName;
+    }
 
 	public boolean isSilentDownload() {
 		return silentDownload;
