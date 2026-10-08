@@ -1,6 +1,7 @@
 package module.matches;
 
 import core.model.match.MatchEvent;
+import core.model.match.MatchEventID;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,7 +54,7 @@ public final class MatchEventsAnalyser {
 
     private static boolean isHighlightInPenaltyContest(MatchEvent matchEvent) {
         return matchEvent.isPenaltyContestEvent() ||
-            matchEvent.getMatchEventID() == MatchEvent.MatchEventID.PENALTY_CONTEST_AFTER_EXTENSION;
+            matchEvent.getMatchEventID() == MatchEventID.PENALTY_CONTEST_AFTER_EXTENSION;
     }
 
     private static MatchHighlightsRegularAndExtraTime createRegularAndExtraTimeHighlights(int homeTeamId, List<MatchEvent> regularAndExtraTimeMatchEvents) {
