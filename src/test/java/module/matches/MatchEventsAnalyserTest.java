@@ -1,7 +1,7 @@
 package module.matches;
 
 import core.model.match.MatchEvent;
-import core.model.match.MatchEvent.MatchEventID;
+import core.model.match.MatchEventID;
 import core.util.StreamUtils;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
