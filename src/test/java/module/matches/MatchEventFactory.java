@@ -1,6 +1,7 @@
 package module.matches;
 
 import core.model.match.MatchEvent;
+import core.model.match.MatchEventID;
 
 import java.util.Set;
 
@@ -8,9 +9,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public record MatchEventFactory(int homeTeamId, int guestTeamId) {
 
-    private static final Set<MatchEvent.MatchEventID> OWN_GOAL_EVENTS = Set.of(
-        MatchEvent.MatchEventID.SE_GOAL_UNPREDICTABLE_OWN_GOAL,
-        MatchEvent.MatchEventID.SE_NO_GOAL_UNPREDICTABLE_OWN_GOAL_ALMOST
+    private static final Set<MatchEventID> OWN_GOAL_EVENTS = Set.of(
+        MatchEventID.SE_GOAL_UNPREDICTABLE_OWN_GOAL,
+        MatchEventID.SE_NO_GOAL_UNPREDICTABLE_OWN_GOAL_ALMOST
     );
 
     public static MatchEventFactory of(int homeTeamId, int guestTeamId) {
@@ -21,19 +22,19 @@ public record MatchEventFactory(int homeTeamId, int guestTeamId) {
         assertThat(homeTeamId).as("homeTeamId and guestTeamId must be different").isNotEqualTo(guestTeamId);
     }
 
-    public MatchEvent createOwnGoalEvent(MatchEvent.MatchEventID matchEventID, Player jinxPlayer, Player assistingPlayer) {
+    public MatchEvent createOwnGoalEvent(MatchEventID matchEventID, Player jinxPlayer, Player assistingPlayer) {
         assertThat(matchEventID).isIn(OWN_GOAL_EVENTS);
         return createTwoPlayerEvent(matchEventID, jinxPlayer, assistingPlayer);
     }
 
-    public MatchEvent createGoalEventAssistedByOpponent(MatchEvent.MatchEventID matchEventID, Player player, Player assistingPlayer) {
+    public MatchEvent createGoalEventAssistedByOpponent(MatchEventID matchEventID, Player player, Player assistingPlayer) {
         assertThat(assistingPlayer.teamId())
             .as("assistingPlayer must play for the opposing team")
             .isNotEqualTo(player.teamId());
         return createTwoPlayerEvent(matchEventID, player, assistingPlayer);
     }
 
-    public MatchEvent createSinglePlayerEvent(MatchEvent.MatchEventID matchEventID, Player player) {
+    public MatchEvent createSinglePlayerEvent(MatchEventID matchEventID, Player player) {
         checkPlaysForHomeOrGuestTeam("player", player);
 
         final var matchEvent = createMatchEvent(matchEventID);
@@ -44,7 +45,7 @@ public record MatchEventFactory(int homeTeamId, int guestTeamId) {
     }
 
     private MatchEvent createTwoPlayerEvent(
-        MatchEvent.MatchEventID matchEventID,
+        MatchEventID matchEventID,
         Player player,
         Player assistingPlayer) {
 
@@ -91,7 +92,7 @@ public record MatchEventFactory(int homeTeamId, int guestTeamId) {
         matchEvent.setGehilfeHeim(true);
     }
 
-    private static MatchEvent createMatchEvent(MatchEvent.MatchEventID matchEventID) {
+    private static MatchEvent createMatchEvent(MatchEventID matchEventID) {
         MatchEvent matchEvent = new MatchEvent();
         matchEvent.setMatchEventID(matchEventID.getValue());
         return matchEvent;
