@@ -151,7 +151,7 @@ class MatchesOverviewQuery  {
 		}
 	}
 
-	private static StringBuilder createSubTypePlaceholders(List<MatchEvent.MatchEventID> subtypes, List<Object> params) {
+	private static StringBuilder createSubTypePlaceholders(List<MatchEventID> subtypes, List<Object> params) {
 		var sep = "";
 		var placeholders = new StringBuilder();
 		for (var id : subtypes) {

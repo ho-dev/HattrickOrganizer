@@ -1,6 +1,7 @@
 package module.matches;
 
 import core.model.match.MatchEvent;
+import core.model.match.MatchEventID;
 
 import javax.swing.*;
 import java.util.List;
@@ -11,7 +12,7 @@ record MatchHighlightFromEvent(int homeTeamId,
                                boolean guestScored,
                                MatchEvent matchEvent) implements MatchHighlight {
 
-    public MatchEvent.MatchEventID getMatchEventID() {
+    public MatchEventID getMatchEventID() {
         return matchEvent.getMatchEventID();
     }
 
@@ -36,11 +37,11 @@ record MatchHighlightFromEvent(int homeTeamId,
     }
 
     public boolean isPenaltyContestStartEvent() {
-        return matchEvent.getMatchEventID() == MatchEvent.MatchEventID.PENALTY_CONTEST_AFTER_EXTENSION;
+        return matchEvent.getMatchEventID() == MatchEventID.PENALTY_CONTEST_AFTER_EXTENSION;
     }
 
     public boolean isPenaltyContestDecisionByCoinToss() {
-        return matchEvent.getMatchEventID() == MatchEvent.MatchEventID.AFTER_22_PENALTIES_TOSSING_COIN;
+        return matchEvent.getMatchEventID() == MatchEventID.AFTER_22_PENALTIES_TOSSING_COIN;
     }
 
     public boolean isPenaltyContestGoalEvent() {
