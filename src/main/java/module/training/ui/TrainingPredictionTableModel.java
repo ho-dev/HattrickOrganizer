@@ -95,6 +95,11 @@ public class TrainingPredictionTableModel  extends HOPlayersTableModel {
 
     @Override
     protected void initData() {
+        var headerChanged = isHeaderChanged();
+        if (headerChanged) {
+            initColumns();
+        }
+
         var currentPlayers = getPlayers();
         m_clData = new Object[currentPlayers.size()][getDisplayedColumns().length];
         int rownum = 0;
@@ -112,8 +117,7 @@ public class TrainingPredictionTableModel  extends HOPlayersTableModel {
             rownum++;
         }
 
-        if (isHeaderChanged()) {
-            initColumns();
+        if (headerChanged) {
             readUserColumnSettingsFromTable(Objects.requireNonNull(getTable()));
             fireTableStructureChanged();
             writeUserColumnSettingsToTable(getTable());
