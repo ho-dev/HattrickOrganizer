@@ -115,7 +115,7 @@ final class MatchDetailsTable extends AbstractTable {
 		}
 	}
 
-	private final String isMatchIFKRatingAvailableSql = "SELECT RatingIndirectSetPiecesDef FROM " + getTableName() + " WHERE MatchId=?";
+	private final String isMatchIFKRatingAvailableSql = "SELECT HomeRatingIndirectSetPiecesDef FROM " + getTableName() + " WHERE MatchId=?";
 
 	public boolean isMatchIFKRatingAvailable(int matchId){
 		try (final ResultSet rs = connectionManager.executePreparedQuery(isMatchIFKRatingAvailableSql, matchId)) {

@@ -1,145 +1,69 @@
 ## Highlights
 
-* New hall of fame module
-* New database backup strategy
 
-## [Detailed Changelog](https://github.com/ho-dev/HattrickOrganizer/milestone/27)
+## [Detailed Changelog](https://github.com/ho-dev/HattrickOrganizer/milestone/28)
 
 ### Application shell
 
-* Add exit confirmation dialog (#2348)
 
 ### Database
 
-* New backup strategy: Keep latest backup per week for the latest 16 weeks and one per season for time before  (#2484)
 
 ### Download
 
-* Fix null pointer exception in nt team download (#2314)
-* Download can replace database of old team automatically (#2310)
 
 ### Player Overview
 
-* Fix error storing owner notes with length exceeding the column length (#2358)
-* Fix line feed handling in owner notes. Tooltip shows notes as multiline (#2455)
-* Fix error selecting players with the arrow keys (#2379)
-* Synchronize player selection in training and player overview modules (#2379)
-* Added the columns `Career Assists` and `Assists for the Team` to the overview and details panel. (#2254)
-* New columns "Recovered on" and "Slightly injured on" (#2363)
-* Hrf list shows next daily update (#2459)
-* Fix subskill recalculation overlooks trainings if downloads happened during training (#2149)
 
 ### HO update
 
-* Portable version shows hint to install downloaded update manually (#2331)
 
 ### Series
 
-* Fix error in table calculation if more than one team is replaced at one match day (#2453)
-* Fix power rating download. It's no longer just downloading the value of the Premier team (#2517)
-
 ### Matches
-
-* Added indirect set pieces ratings to rating panel (#2433)
-* Fix download of style of play. Old matches has to be reloaded (#2432)
 
 ### Hall of fame
 
-* Added (#2296)
 
 ### Squad
 
-* Added support of all 13 **Player Categories** (#2418)
-* Fix world details constraints error (#2444)
-* Player details show the total salary and the weeks of team membership (#2449)
 
 ### Lineup
 
-* Fix empty list of upcoming games in Lineup panel after first download.
-* Added support of all 13 **Player Categories** (#2418)
-* Fix scroll behavior of lineup rating panel (#2365)
-* Fix refresh of player table after download (#2515)
-
 ### Matches
 
-* Player Detail Dialog: The days of the age of a player is now displayed in braces after the years.
-* Tab `Highlights`:
-  * Own goals are now counted for the right team. (#2508)
-  * Penalty contest:
-    * The minute is now displayed when it starts and when a player scored or missed to score.
-    * If the penalty contest does not produce a winner, the match is decided by a coin toss (a very rare case), and this
-      is now also mentioned.
 
 ### Training
 
-* Add experience skill to training tables (#2283)
-* Update training prediction table structure on first download after training date (#2467)
 
 ### Statistics
 
-* Fix background color of terraces income column (#2356)
 
 ### Youth
 
-* Added support of all 13 **Player Categories** (#2418)
-* Fix line feed handling in owner notes. Tooltip shows notes as multiline (#2455)
-* The bug where the number `100` was displayed for the shirt number when the player had no shirt number has been fixed.
-  Instead, nothing is shown now if no number assigned. (#2420)
-* Fix out of bound exception on download when youth player were removed during the week (#2442)
-* Fix player selection in youth player overview (#2452)
-
 ### Special Events
 
-* Fixed the missing translation for the home/away `Tactic` and `Details` column and displaying the abbreviation of the
-  tactic now in the corresponding column.
-* Fixed a crash that occurred when not ticking `Only matches with SEs`.
 
 ### Option setting
 
-* Add option to select currency setting (#2288)
-* Adjusting various tables to large user font settings (#2306)
 
 ### Special Events
 
-* Fixed a crash that occurred when not ticking `Only matches with SEs`.
-
 ### International Friendly Analyzer
 
-* Statistics regarding team's country ID instead of league ID (#2249)
 
 ### Arena Sizer
 
-* Removed the superfluous space for the `Spectators` in braces at the end.
-* Added the image of the stadium and made the view better arranged. (#2140)
-* Added a local cache with TTL for stadium images and manual reload by clicking on the image. (#2440)
-* Tab 'Arena': Display for all values now with the thousands separator.
 
 ### Misc
 
-* Fix CVEs with HO dependencies
-* Update darklaf to most recent version.
 
 ### Developer Tools
 
-* `Debug` / `SQL Editor`: Fixed that SQL statements were always executed in upper case. (#2491)
-* `Debug` / `Save downloaded XML`: Added environment variable `HO_SAVE_DOWNLOADED_XML` to control that option. (#2506)
-
 ## Translations
 
-Reports by Contributors - October 19, 2025 - October 01, 2026
+Reports by Contributors - October 09, 2026 - October 09, 2026
 
-* Jösgall 1005
-* Ioannidouefty 459
-* Lukasz 418
-* wsbrenk 174
-* Frankieorabona 73
-* Lidegand 72
-* \_KOHb\_ 54
-* Sebastian Reddig 36
-* Walter 28
-* Kristaps 11
-* Stefan Schenke 5
-* Mara 3
-* Joeri Roels 1
+* J
 
-Total 2339
+Total 0
