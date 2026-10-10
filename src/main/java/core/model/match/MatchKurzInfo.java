@@ -483,13 +483,13 @@ public class MatchKurzInfo extends AbstractTable.Storable implements Comparable<
 			if (getDuration() == 0) {
 				// Duration of walk over matches is 0 minutes
 				for (var e : getMatchdetails().downloadHighlightsIfMissing()) {
-					if ( e.getMatchEventID() == MatchEvent.MatchEventID.AWAY_TEAM_WALKOVER ) {
+					if ( e.getMatchEventID() == MatchEventID.AWAY_TEAM_WALKOVER ) {
 						if (this.isHomeMatch()) {
 							isWalkoverMatch = true;
 						}
 						break;
 					}
-					else if ( e.getMatchEventID() == MatchEvent.MatchEventID.HOME_TEAM_WALKOVER){
+					else if ( e.getMatchEventID() == MatchEventID.HOME_TEAM_WALKOVER){
 						if (!this.isHomeMatch()){
 							isWalkoverMatch = true;
 						}

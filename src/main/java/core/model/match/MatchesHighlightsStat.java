@@ -9,9 +9,9 @@ public class MatchesHighlightsStat {
 	private final String description;
 	private int noGoals;
 	private int goals;
-	private final List<MatchEvent.MatchEventID> subtypes;
-	
-	public MatchesHighlightsStat(String key,List<MatchEvent.MatchEventID> subtypes){
+	private final List<MatchEventID> subtypes;
+
+	public MatchesHighlightsStat(String key,List<MatchEventID> subtypes){
 		description = TranslationFacility.tr(key);
 		this.subtypes = subtypes;
 		goals=-1;
@@ -30,7 +30,7 @@ public class MatchesHighlightsStat {
 	public void setGoals(int goals) {
 		this.goals = goals;
 	}
-	public List<MatchEvent.MatchEventID> getSubtyps() {
+	public List<MatchEventID> getSubtyps() {
 		return subtypes;
 	}
 
@@ -39,10 +39,10 @@ public class MatchesHighlightsStat {
 			return "";
 		if(goals>-1)
 			return String.valueOf((goals+noGoals));
-		
+
 		return noGoals+"";
 	}
-	
+
 	public String getGoalsString(){
 		if(isTitle())
 			return "";
@@ -59,7 +59,7 @@ public class MatchesHighlightsStat {
 	public boolean isTitle() {
 		return goals==-1&&noGoals==-1;
 	}
-	
+
 	@Override
 	public String toString(){
 		return getDescription();

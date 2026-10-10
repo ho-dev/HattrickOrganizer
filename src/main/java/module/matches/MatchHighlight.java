@@ -1,6 +1,6 @@
 package module.matches;
 
-import core.model.match.MatchEvent;
+import core.model.match.MatchEventID;
 
 import javax.swing.*;
 import java.util.List;
@@ -10,7 +10,7 @@ public interface MatchHighlight {
     MatchScore score();
     boolean homeScored();
     boolean guestScored();
-    MatchEvent.MatchEventID getMatchEventID();
+    MatchEventID getMatchEventID();
     boolean isHomeAction();
     boolean isGoalEvent();
     boolean isSubstitution();
