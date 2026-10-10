@@ -161,7 +161,7 @@ public class OnlineWorker {
 				}
 
 				HOMainFrame.instance().setInformation(TranslationFacility.tr("ls.update_status.match_info"), 20);
-				List<MatchKurzInfo> matches = XMLMatchArchivParser
+				List<MatchKurzInfo> matches = XMLMatchArchiveParser
 						.parseMatchesFromString(matchesString);
 
 				// Add the new matches to the list of all matches
@@ -508,7 +508,7 @@ public class OnlineWorker {
 		}
 
 		if (!StringUtils.isEmpty(tournamentString)) {
-			oTournamentDetails = XMLTournamentDetailsParser.parseTournamentDetailsFromString(tournamentString);  // TODO: create function parseTournamentDetailsFromString
+			oTournamentDetails = XMLTournamentDetailsParser.parseTournamentDetailsFromString(tournamentString);
 		}
 
 		return oTournamentDetails;
@@ -1149,7 +1149,7 @@ public class OnlineWorker {
 	public static List<MatchKurzInfo> downloadMatchesOfSeason(int teamId, int season){
 		try{
 			var xml = Connector.instance().getMatchesOfSeason(teamId, season);
-			return XMLMatchArchivParser.parseMatchesFromString(xml);
+			return XMLMatchArchiveParser.parseMatchesFromString(xml);
 		}
 		catch (Exception exception) {
 			HOLogger.instance().error(OnlineWorker.class,"downloadMatchData:  Error in downloading matches of season: " + exception);
@@ -1176,7 +1176,7 @@ public class OnlineWorker {
 			var mc = Connector.instance();
 			try {
 				var xml = mc.getMatchesArchive(SourceSystem.YOUTH, youthteamid, dateSince, dateUntil);
-				var youthMatches = XMLMatchArchivParser.parseMatchesFromString(xml);
+				var youthMatches = XMLMatchArchiveParser.parseMatchesFromString(xml);
 				for ( var match: youthMatches){
 					MatchLineup lineup = downloadMatchlineup(match.getMatchID(), match.getMatchType(), match.getHomeTeamID(), match.getGuestTeamID());
 					if (lineup != null) {
@@ -1325,5 +1325,16 @@ public class OnlineWorker {
     public static List<HallOfFamePlayer> downloadHallOfFame(int teamId) {
         String xmlString = Connector.instance().downloadHallOfFamePlayers(teamId);
         return XMLPlayersParser.parseHallOfFamesPlayersFromString(xmlString);
+    }
+
+    public static void downloadTournamentDetails(MatchKurzInfo matchKurzInfo) {
+        var tournamentId = matchKurzInfo.getMatchContextId();
+        TournamentDetails oTournamentDetails = DBManager.instance().getTournamentDetailsFromDB(tournamentId);
+        if (oTournamentDetails == null)
+        {
+            oTournamentDetails = getTournamentDetails(tournamentId); // download info about tournament from HT
+            DBManager.instance().storeTournamentDetailsIntoDB(oTournamentDetails); // store tournament details into DB
+        }
+        matchKurzInfo.setTournamentTypeID(oTournamentDetails.getTournamentType());
     }
 }

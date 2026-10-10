@@ -321,9 +321,12 @@ public class DownloadDialog extends JDialog implements ActionListener {
 				List<MatchKurzInfo> allmatches = OnlineWorker.getMatchArchive(teamId, date, false);
 				if (allmatches != null) {
 					allmatches = OnlineWorker.FilterUserSelection(allmatches);
-					for (MatchKurzInfo i : allmatches) {
-						OnlineWorker.downloadMatchData(i, true);
-					}
+					for (MatchKurzInfo matchKurzInfo : allmatches) {
+                        OnlineWorker.downloadMatchData(matchKurzInfo, true);
+                        if (matchKurzInfo.getMatchType().isTournament()) {
+                            OnlineWorker.downloadTournamentDetails(matchKurzInfo);
+                        }
+                    }
 				}
 			}
 
@@ -416,6 +419,7 @@ public class DownloadDialog extends JDialog implements ActionListener {
 					// download matches of the season to get the league id of own team
 					var matches = OnlineWorker.downloadMatchesOfSeason(teamId, seasonId);
 					if (matches != null) {
+                        // TODO: Load tournament details
 						DBManager.instance().storeMatchKurzInfos(matches);
 						var leagueMatch = matches.stream()
 								.filter(i -> i.getMatchType() == MatchType.LEAGUE && i.getMatchStatus() == MatchKurzInfo.FINISHED).findFirst();

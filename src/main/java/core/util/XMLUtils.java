@@ -3,6 +3,7 @@ package core.util;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.NoSuchElementException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -26,16 +27,16 @@ public class XMLUtils {
 	 * <tag>xyz</tag> the string xyz would be returned. If there are multiple
 	 * nodes with the specified tag name, the data of the first node found will
 	 * be returned.
-	 * 
+	 *
 	 * @param doc
 	 *            a document.
-	 * @param tagname
+	 * @param tagName
 	 *            the name of the tag.
 	 * @return the data of the tag or <code>null</code> if no node with the
 	 *         specified tag name could be found.
 	 */
-	public static String getTagData(Document doc, String tagname) {
-		Node node = getNode(doc, tagname);
+	public static String getTagData(Document doc, String tagName) {
+		Node node = getNode(doc, tagName);
 		if (node != null) {
 			Node child = node.getFirstChild();
 			if (child != null) {
@@ -47,7 +48,7 @@ public class XMLUtils {
 
 	/**
 	 * Creates a document from an XML string.
-	 * 
+	 *
 	 * @param xmlSource
 	 *            the xml source as a string.
 	 * @return the document created from the given xml string.
@@ -70,7 +71,7 @@ public class XMLUtils {
 	 * Finds a node in a document and returns the value from an attribute of
 	 * this node. If there are multiple nodes with the specified tag name, the
 	 * attribute value of the first node found will be returned.
-	 * 
+	 *
 	 * @param document
 	 *            the document.
 	 * @param nodeName
@@ -95,7 +96,7 @@ public class XMLUtils {
 
 	/**
 	 * Gets the value from a node's attribute.
-	 * 
+	 *
 	 * @param node
 	 *            the node.
 	 * @param attributeName
@@ -113,7 +114,7 @@ public class XMLUtils {
 	 * Gets the first node with the specified tag name from the given document.
 	 * If there are multiple nodes with the specified tag name, the first node
 	 * found will be returned.
-	 * 
+	 *
 	 * @param doc
 	 *            the document
 	 * @param tagname
@@ -133,37 +134,39 @@ public class XMLUtils {
 	 * Gets the first child element with the specified tag name from the given
 	 * parent element. If there are multiple elements with the specified tag
 	 * name, the first element found will be returned.
-	 * 
+	 *
 	 * @param parent
 	 *            the parent element
-	 * @param tagname
+	 * @param tagName
 	 *            the tag name of the element to find.
-	 * @return the first element found with the specified tag name or
-	 *         <code>null</code> if no element with that name could be found.
+	 * @return the first element found with the specified tag name
+     * @exception NoSuchElementException
+     *                When the element is not found.
 	 */
-	public static Element getElement(Element parent, String tagname) {
-		NodeList nl = parent.getElementsByTagName(tagname);
-		if (!isEmpty(nl)) {
-			return (Element) nl.item(0);
-		}
-		return null;
-	}
+	public static Element getElement(Element parent, String tagName) {
+        NodeList nl = parent.getElementsByTagName(tagName);
+        if (!isEmpty(nl)) {
+            return (Element) nl.item(0);
+        }
+        throw new NoSuchElementException("No element with tag name " + tagName);
+    }
 
 	/**
 	 * Gets the value from the first descendant of a given ancestor, where the
 	 * descendant has the specified name.
-	 * 
+	 *
 	 * @param ancestor
 	 *            the ancestor element
-	 * @param tagname
+	 * @param tagName
 	 *            the tag name of the descendant to find.
-	 * @return the value of the descendant or <code>null</code> if no descendant
+	 * @return the value of the descendant
+     * @exception NoSuchElementException if no descendant
 	 *         with that name could be found or the descendant found has no
 	 *         value.
 	 */
-	public static String getValueFromDescendant(Element ancestor, String tagname) {
+	public static String getValue(Element ancestor, String tagName) {
 		if (ancestor != null) {
-			NodeList nl = ancestor.getElementsByTagName(tagname);
+			NodeList nl = ancestor.getElementsByTagName(tagName);
 			if (!isEmpty(nl)) {
 				Element e = (Element) nl.item(0);
 				Node c = e.getFirstChild();
@@ -172,16 +175,16 @@ public class XMLUtils {
 				}
 			}
 		}
-		return null;
+		throw new NoSuchElementException("No element with tag name " + tagName);
 	}
 
 	/**
 	 * Gets the value from the first descendant of a given ancestor, where the
 	 * descendant has the specified name.
-	 * 
+	 *
 	 * @param ancestor
 	 *            the ancestor element
-	 * @param tagname
+	 * @param tagName
 	 *            the tag name of the descendant to find.
 	 * @param defaultString
 	 *            a default string to return if the value found is
@@ -190,15 +193,18 @@ public class XMLUtils {
 	 *         with that name could be found or the descendant found has no
 	 *         value.
 	 */
-	public static String getValueFromDescendant(Element ancestor,
-			String tagname, String defaultString) {
-		String val = getValueFromDescendant(ancestor, tagname);
-		return (val != null) ? val : defaultString;
-	}
+	public static String getValue(Element ancestor, String tagName, String defaultString) {
+        try {
+            return getValue(ancestor, tagName);
+        }
+        catch (NoSuchElementException ignored) {
+        }
+        return defaultString;
+    }
 
 	/**
 	 * Null-safe check if a nodelist is empty.
-	 * 
+	 *
 	 * @param nodeList
 	 *            the nodelist to check.
 	 * @return <code>true</code> if the given nodelist is <code>null</code> or
@@ -207,4 +213,39 @@ public class XMLUtils {
 	public static boolean isEmpty(NodeList nodeList) {
 		return nodeList == null || nodeList.getLength() == 0;
 	}
+
+    /**
+     * Gets an integer value from the first child element of a given parent element
+     * @param element Parent element
+     * @param tagName Child tag name
+     * @return int value
+     * @exception NumberFormatException Value is not a number
+     * @exception NoSuchElementException Child not found
+     */
+    public static int getIntValue(Element element, String tagName) {
+        var value = getValue(element, tagName);
+        return Integer.parseInt(value);
+    }
+
+    public static int getIntValue(Element element, String tagName, int defaultValue) {
+        try {
+            var value = getValue(element, tagName);
+            return Integer.parseInt(value);
+        } catch (Exception ignored) {
+        }
+        return defaultValue;
+    }
+
+    public static Integer getIntegerValue(Element element, String tagName) {
+        try {
+            var value = getValue(element, tagName);
+            return Integer.parseInt(value);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static boolean getBooleanValue(Element element, String tagName) {
+        return Boolean.parseBoolean(getValue(element, tagName));
+    }
 }

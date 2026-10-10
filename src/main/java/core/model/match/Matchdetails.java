@@ -112,12 +112,12 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
     private int guestRatingIndirectSetPiecesAtt = -1;
     private int guestRatingIndirectSetPiecesDef = -1;
 
-    public ArrayList<Injury> getM_Injuries() {
+    public ArrayList<Injury> getInjuries() {
         return m_Injuries;
     }
 
-    public void setM_Injuries(ArrayList<Injury> m_Injuries) {
-        this.m_Injuries = m_Injuries;
+    public void setInjuries(ArrayList<Injury> injuries) {
+        this.m_Injuries = injuries;
     }
 
     public ArrayList<Injury> m_Injuries = new ArrayList<>();

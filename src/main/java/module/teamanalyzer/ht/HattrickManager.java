@@ -49,6 +49,11 @@ public class HattrickManager {
         if (matches != null) {
             Collections.reverse(matches); // Newest first
             for (MatchKurzInfo match : matches) {
+
+                if (match.getMatchType().isTournament()) {
+                    OnlineWorker.downloadTournamentDetails(match);
+                }
+
                 if (match.getMatchStatus() != MatchKurzInfo.FINISHED) {
                     continue;
                 }
