@@ -77,14 +77,12 @@ public class XMLMatchdetailsParser {
 	 *
 	 */
 	private static void readInjuries(Document doc, Matchdetails md) {
-		final ArrayList<Matchdetails.Injury> mdInjuries = new ArrayList<>();
+        final ArrayList<Matchdetails.Injury> mdInjuries = new ArrayList<>();
         try {
-            //get Injuries element
             var root = doc.getDocumentElement();
-            var injuriesElement = XMLUtils.getElement(root, "Injuries");
-            if (injuriesElement != null) {
+            if (XMLUtils.hasElement(root, "Injuries")) {
+                var injuriesElement = XMLUtils.getElement(root, "Injuries");
                 var injuryList = injuriesElement.getElementsByTagName("Injury");
-                //now go through the injuries
                 for (int n = 0; n < injuryList.getLength(); n++) {
                     var injuryELement = (Element) injuryList.item(n);
                     var injuryPlayerID = XMLUtils.getIntValue(injuryELement, "InjuryPlayerID");
@@ -97,13 +95,11 @@ public class XMLMatchdetailsParser {
                 }
                 md.setInjuries(mdInjuries);
             }
+        } catch (Exception e) {
+            HOLogger.instance().log(XMLMatchdetailsParser.class, e);
         }
+    }
 
-		catch (Exception e) {
-			HOLogger.instance().log(XMLMatchdetailsParser.class, e);
-		}
-
-	}
     /**
      * read the match highlights from XML
      *
@@ -132,7 +128,7 @@ public class XMLMatchdetailsParser {
                 var iMatchPart = XMLUtils.getIntValue(eventNode, "MatchPart");
                 var iEventVariation = XMLUtils.getIntValue(eventNode, "EventVariation");
 
-                var eventtext = XMLUtils.getValue(eventNode, "EventText");
+                var eventtext = XMLUtils.getValue(eventNode, "EventText", "");
                 eventtext = eventtext.replaceAll("&lt;", "<");
                 eventtext = eventtext.replaceAll("&gt;", ">");
                 eventtext = eventtext.replaceAll("/>", ">");
@@ -314,21 +310,21 @@ public class XMLMatchdetailsParser {
             var root = doc.getDocumentElement();
             var matchElement = core.util.XMLUtils.getElement(root, "Match");
             var awayTeamElement = XMLUtils.getElement(matchElement, "AwayTeam");
-            md.setAwayFormation(XMLUtils.getValue(awayTeamElement, "Formation"));
+            md.setAwayFormation(XMLUtils.getValue(awayTeamElement, "Formation", ""));
             md.setGastId(XMLUtils.getIntValue(awayTeamElement, "AwayTeamID"));
             md.setGastName(XMLUtils.getValue(awayTeamElement, "AwayTeamName"));
-            md.setGuestGoals(XMLUtils.getIntValue(awayTeamElement, "AwayGoals"));
-            md.setGuestTacticType(XMLUtils.getIntValue(awayTeamElement, "TacticType"));
-            md.setGuestTacticSkill(XMLUtils.getIntValue(awayTeamElement, "TacticSkill"));
-            md.setGuestMidfield(XMLUtils.getIntValue(awayTeamElement, "RatingMidfield"));
-            md.setGuestRightDef(XMLUtils.getIntValue(awayTeamElement, "RatingRightDef"));
-            md.setGuestMidDef(XMLUtils.getIntValue(awayTeamElement, "RatingMidDef"));
-            md.setGuestLeftDef(XMLUtils.getIntValue(awayTeamElement, "RatingLeftDef"));
-            md.setGuestRightAtt(XMLUtils.getIntValue(awayTeamElement, "RatingRightAtt"));
-            md.setGuestMidAtt(XMLUtils.getIntValue(awayTeamElement, "RatingMidAtt"));
-            md.setGuestLeftAtt(XMLUtils.getIntValue(awayTeamElement, "RatingLeftAtt"));
-            md.setGuestRatingIndirectSetPiecesAtt(XMLUtils.getIntValue(awayTeamElement, "RatingIndirectSetPiecesAtt"));
-            md.setGuestRatingIndirectSetPiecesDef(XMLUtils.getIntValue(awayTeamElement, "RatingIndirectSetPiecesDef"));
+            md.setGuestGoals(XMLUtils.getIntValue(awayTeamElement, "AwayGoals", -1));
+            md.setGuestTacticType(XMLUtils.getIntValue(awayTeamElement, "TacticType", -1));
+            md.setGuestTacticSkill(XMLUtils.getIntValue(awayTeamElement, "TacticSkill", -1));
+            md.setGuestMidfield(XMLUtils.getIntValue(awayTeamElement, "RatingMidfield", -1));
+            md.setGuestRightDef(XMLUtils.getIntValue(awayTeamElement, "RatingRightDef", -1));
+            md.setGuestMidDef(XMLUtils.getIntValue(awayTeamElement, "RatingMidDef", -1));
+            md.setGuestLeftDef(XMLUtils.getIntValue(awayTeamElement, "RatingLeftDef", -1));
+            md.setGuestRightAtt(XMLUtils.getIntValue(awayTeamElement, "RatingRightAtt", -1));
+            md.setGuestMidAtt(XMLUtils.getIntValue(awayTeamElement, "RatingMidAtt", -1));
+            md.setGuestLeftAtt(XMLUtils.getIntValue(awayTeamElement, "RatingLeftAtt", -1));
+            md.setGuestRatingIndirectSetPiecesAtt(XMLUtils.getIntValue(awayTeamElement, "RatingIndirectSetPiecesAtt", -1));
+            md.setGuestRatingIndirectSetPiecesDef(XMLUtils.getIntValue(awayTeamElement, "RatingIndirectSetPiecesDef", -1));
             md.setGuestEinstellung(XMLUtils.getIntValue(awayTeamElement, "TeamAttitude", Matchdetails.EINSTELLUNG_UNBEKANNT));
         } catch (Exception e) {
             HOLogger.instance().log(XMLMatchdetailsParser.class, e);
@@ -340,21 +336,21 @@ public class XMLMatchdetailsParser {
             var root = doc.getDocumentElement();
             var matchElement = core.util.XMLUtils.getElement(root, "Match");
             var homeTeamElement = XMLUtils.getElement(matchElement, "HomeTeam");
-            md.setHomeFormation(XMLUtils.getValue(homeTeamElement, "Formation"));
+            md.setHomeFormation(XMLUtils.getValue(homeTeamElement, "Formation", ""));
             md.setHeimId(XMLUtils.getIntValue(homeTeamElement, "HomeTeamID"));
             md.setHeimName(XMLUtils.getValue(homeTeamElement, "HomeTeamName"));
-            md.setHomeGoals(XMLUtils.getIntValue(homeTeamElement, "HomeGoals"));
-            md.setHomeTacticType(XMLUtils.getIntValue(homeTeamElement, "TacticType"));
-            md.setHomeTacticSkill(XMLUtils.getIntValue(homeTeamElement, "TacticSkill"));
-            md.setHomeMidfield(XMLUtils.getIntValue(homeTeamElement, "RatingMidfield"));
-            md.setHomeRightDef(XMLUtils.getIntValue(homeTeamElement, "RatingRightDef"));
-            md.setHomeMidDef(XMLUtils.getIntValue(homeTeamElement, "RatingMidDef"));
-            md.setHomeLeftDef(XMLUtils.getIntValue(homeTeamElement, "RatingLeftDef"));
-            md.setHomeRightAtt(XMLUtils.getIntValue(homeTeamElement, "RatingRightAtt"));
-            md.setHomeMidAtt(XMLUtils.getIntValue(homeTeamElement, "RatingMidAtt"));
-            md.setHomeLeftAtt(XMLUtils.getIntValue(homeTeamElement, "RatingLeftAtt"));
-            md.setHomeRatingIndirectSetPiecesAtt(XMLUtils.getIntValue(homeTeamElement, "RatingIndirectSetPiecesAtt"));
-            md.setHomeRatingIndirectSetPiecesDef(XMLUtils.getIntValue(homeTeamElement, "RatingIndirectSetPiecesDef"));
+            md.setHomeGoals(XMLUtils.getIntValue(homeTeamElement, "HomeGoals", -1));
+            md.setHomeTacticType(XMLUtils.getIntValue(homeTeamElement, "TacticType", -1));
+            md.setHomeTacticSkill(XMLUtils.getIntValue(homeTeamElement, "TacticSkill", -1));
+            md.setHomeMidfield(XMLUtils.getIntValue(homeTeamElement, "RatingMidfield", -1));
+            md.setHomeRightDef(XMLUtils.getIntValue(homeTeamElement, "RatingRightDef", -1));
+            md.setHomeMidDef(XMLUtils.getIntValue(homeTeamElement, "RatingMidDef", -1));
+            md.setHomeLeftDef(XMLUtils.getIntValue(homeTeamElement, "RatingLeftDef", -1));
+            md.setHomeRightAtt(XMLUtils.getIntValue(homeTeamElement, "RatingRightAtt", -1));
+            md.setHomeMidAtt(XMLUtils.getIntValue(homeTeamElement, "RatingMidAtt", -1));
+            md.setHomeLeftAtt(XMLUtils.getIntValue(homeTeamElement, "RatingLeftAtt", -1));
+            md.setHomeRatingIndirectSetPiecesAtt(XMLUtils.getIntValue(homeTeamElement, "RatingIndirectSetPiecesAtt", -1));
+            md.setHomeRatingIndirectSetPiecesDef(XMLUtils.getIntValue(homeTeamElement, "RatingIndirectSetPiecesDef", -1));
             md.setHomeEinstellung(XMLUtils.getIntValue(homeTeamElement, "TeamAttitude", Matchdetails.EINSTELLUNG_UNBEKANNT));
         } catch (Exception e) {
             HOLogger.instance().log(XMLMatchdetailsParser.class, e);

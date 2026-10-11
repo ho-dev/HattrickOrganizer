@@ -143,12 +143,17 @@ public class XMLUtils {
      * @exception NoSuchElementException
      *                When the element is not found.
 	 */
-	public static Element getElement(Element parent, String tagName) {
+    public static Element getElement(Element parent, String tagName) {
         NodeList nl = parent.getElementsByTagName(tagName);
         if (!isEmpty(nl)) {
             return (Element) nl.item(0);
         }
         throw new NoSuchElementException("No element with tag name " + tagName);
+    }
+
+    public static boolean hasElement(Element parent, String tagName) {
+        NodeList nl = parent.getElementsByTagName(tagName);
+        return !isEmpty(nl);
     }
 
 	/**

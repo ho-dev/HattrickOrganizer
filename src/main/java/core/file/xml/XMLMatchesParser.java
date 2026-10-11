@@ -45,9 +45,6 @@ public class XMLMatchesParser {
 		return -1;
 	}
 
-	/**
-	 * erstellt das MAtchlineup Objekt
-	 */
 	private static List<MatchKurzInfo> createMatches(Document doc) {
 		MatchKurzInfo match;
 		List<MatchKurzInfo> liste = new ArrayList<>();
@@ -74,7 +71,7 @@ public class XMLMatchesParser {
 					iMatchType = Integer.parseInt(tmp.getFirstChild().getNodeValue());
 					match.setMatchType(MatchType.getById(iMatchType));
 
-					if (iMatchType == 3) {
+					if (match.getMatchType() == MatchType.CUP) {
 						tmp = (Element) ele.getElementsByTagName("CupLevel").item(0);
 						iCupLevel = Integer.parseInt(tmp.getFirstChild().getNodeValue());
 						match.setCupLevel(CupLevel.fromInt(iCupLevel));
@@ -83,19 +80,19 @@ public class XMLMatchesParser {
 						iCupLevelIndex = Integer.parseInt(tmp.getFirstChild().getNodeValue());
 						match.setCupLevelIndex(CupLevelIndex.fromInt(iCupLevelIndex));
 					}
-					else if (iMatchType == 50) {
-						tmp = (Element) ele.getElementsByTagName("MatchContextId").item(0);
-						int tournamentId = Integer.parseInt(tmp.getFirstChild().getNodeValue());
-						match.setMatchContextId(tournamentId);
-
-						TournamentDetails oTournamentDetails = DBManager.instance().getTournamentDetailsFromDB(tournamentId);
-						if (oTournamentDetails == null)
-						{
-							oTournamentDetails = getTournamentDetails(tournamentId); // download info about tournament from HT
-							DBManager.instance().storeTournamentDetailsIntoDB(oTournamentDetails); // store tournament details into DB
-						}
-						match.setTournamentTypeID(oTournamentDetails.getTournamentType());
-					}
+//					else if (iMatchType == 50) {
+//						tmp = (Element) ele.getElementsByTagName("MatchContextId").item(0);
+//						int tournamentId = Integer.parseInt(tmp.getFirstChild().getNodeValue());
+//						match.setMatchContextId(tournamentId);
+//
+//						TournamentDetails oTournamentDetails = DBManager.instance().getTournamentDetailsFromDB(tournamentId);
+//						if (oTournamentDetails == null)
+//						{
+//							oTournamentDetails = getTournamentDetails(tournamentId); // download info about tournament from HT
+//							DBManager.instance().storeTournamentDetailsIntoDB(oTournamentDetails); // store tournament details into DB
+//						}
+//						match.setTournamentTypeID(oTournamentDetails.getTournamentType());
+//					}
 
 
 					tmp = (Element) ele.getElementsByTagName("HomeTeam").item(0);

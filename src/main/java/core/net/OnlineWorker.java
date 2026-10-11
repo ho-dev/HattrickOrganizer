@@ -456,7 +456,6 @@ public class OnlineWorker {
 		List<MatchKurzInfo> matches = getMatches(teamId, matchDate.plus(1, ChronoUnit.MINUTES));
 		for (MatchKurzInfo m : matches) {
 			if (m.getMatchID() == match.getMatchID()) {
-				//DBManager.instance().updateMatchKurzInfo(m);
 				return m;
 			}
 		}
