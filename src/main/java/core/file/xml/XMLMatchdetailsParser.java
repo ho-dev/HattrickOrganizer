@@ -126,7 +126,7 @@ public class XMLMatchdetailsParser {
                 var iMatchPart = XMLUtils.getIntValue(eventNode, "MatchPart");
                 var iEventVariation = XMLUtils.getIntValue(eventNode, "EventVariation");
 
-                var eventtext = XMLUtils.getValue(eventNode, "EventText", "");
+                var eventtext = XMLUtils.getStringValue(eventNode, "EventText", "");
                 eventtext = eventtext.replaceAll("&lt;", "<");
                 eventtext = eventtext.replaceAll("&gt;", ">");
                 eventtext = eventtext.replaceAll("/>", ">");
@@ -259,7 +259,7 @@ public class XMLMatchdetailsParser {
 
             try {
                 md.setArenaID(XMLUtils.getIntValue(arenaElement, "ArenaID"));
-                md.setArenaName(XMLUtils.getValue(arenaElement, "ArenaName"));
+                md.setArenaName(XMLUtils.getStringValue(arenaElement, "ArenaName"));
             } catch (Exception e) {
                 // This fails at tournament matches - ignore
             }
@@ -285,7 +285,7 @@ public class XMLMatchdetailsParser {
         Element root = doc.getDocumentElement();
 
         try {
-            md.setFetchDatumFromString(XMLUtils.getValue(root, "FetchedDate"));
+            md.setFetchDatumFromString(XMLUtils.getStringValue(root, "FetchedDate"));
 
             var matchElement = XMLUtils.getElement(root, "Match");
             var iMatchType = XMLUtils.getIntValue(matchElement, "MatchType");
@@ -297,7 +297,7 @@ public class XMLMatchdetailsParser {
                 md.setCupLevelIndex(CupLevelIndex.fromInt(XMLUtils.getIntValue(matchElement, "CupLevelIndex")));
             }
             md.setMatchID(XMLUtils.getIntValue(matchElement, "MatchID"));
-            md.setSpielDatumFromString(XMLUtils.getValue(matchElement, "MatchDate"));
+            md.setSpielDatumFromString(XMLUtils.getStringValue(matchElement, "MatchDate"));
         } catch (Exception e) {
             HOLogger.instance().log(XMLMatchdetailsParser.class, e);
         }
@@ -308,9 +308,9 @@ public class XMLMatchdetailsParser {
             var root = doc.getDocumentElement();
             var matchElement = core.util.XMLUtils.getElement(root, "Match");
             var awayTeamElement = XMLUtils.getElement(matchElement, "AwayTeam");
-            md.setAwayFormation(XMLUtils.getValue(awayTeamElement, "Formation", ""));
+            md.setAwayFormation(XMLUtils.getStringValue(awayTeamElement, "Formation", ""));
             md.setGastId(XMLUtils.getIntValue(awayTeamElement, "AwayTeamID"));
-            md.setGastName(XMLUtils.getValue(awayTeamElement, "AwayTeamName"));
+            md.setGastName(XMLUtils.getStringValue(awayTeamElement, "AwayTeamName"));
             md.setGuestGoals(XMLUtils.getIntValue(awayTeamElement, "AwayGoals", -1));
             md.setGuestTacticType(XMLUtils.getIntValue(awayTeamElement, "TacticType", -1));
             md.setGuestTacticSkill(XMLUtils.getIntValue(awayTeamElement, "TacticSkill", -1));
@@ -334,9 +334,9 @@ public class XMLMatchdetailsParser {
             var root = doc.getDocumentElement();
             var matchElement = core.util.XMLUtils.getElement(root, "Match");
             var homeTeamElement = XMLUtils.getElement(matchElement, "HomeTeam");
-            md.setHomeFormation(XMLUtils.getValue(homeTeamElement, "Formation", ""));
+            md.setHomeFormation(XMLUtils.getStringValue(homeTeamElement, "Formation", ""));
             md.setHeimId(XMLUtils.getIntValue(homeTeamElement, "HomeTeamID"));
-            md.setHeimName(XMLUtils.getValue(homeTeamElement, "HomeTeamName"));
+            md.setHeimName(XMLUtils.getStringValue(homeTeamElement, "HomeTeamName"));
             md.setHomeGoals(XMLUtils.getIntValue(homeTeamElement, "HomeGoals", -1));
             md.setHomeTacticType(XMLUtils.getIntValue(homeTeamElement, "TacticType", -1));
             md.setHomeTacticSkill(XMLUtils.getIntValue(homeTeamElement, "TacticSkill", -1));

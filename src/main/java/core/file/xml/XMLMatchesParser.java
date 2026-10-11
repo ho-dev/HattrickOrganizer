@@ -51,7 +51,7 @@ public class XMLMatchesParser {
                 for (int i = 0; i < list.getLength(); i++) {
                     var match = new MatchKurzInfo();
                     var matchElement = (Element) list.item(i);
-                    match.setMatchSchedule(HODateTime.fromHT(XMLUtils.getValue(matchElement, "MatchDate")));
+                    match.setMatchSchedule(HODateTime.fromHT(XMLUtils.getStringValue(matchElement, "MatchDate")));
                     match.setMatchID(XMLUtils.getIntValue(matchElement, "MatchID"));
                     match.setMatchType(MatchType.getById(XMLUtils.getIntValue(matchElement, "MatchType")));
 
@@ -62,13 +62,13 @@ public class XMLMatchesParser {
 
                     var homeTeamElement = XMLUtils.getElement(matchElement, "HomeTeam");
                     match.setHomeTeamID(XMLUtils.getIntValue(homeTeamElement, "HomeTeamID"));
-                    match.setHomeTeamName(XMLUtils.getValue(matchElement, "HomeTeamName"));
+                    match.setHomeTeamName(XMLUtils.getStringValue(matchElement, "HomeTeamName"));
 
                     var awayTeamElement = XMLUtils.getElement(matchElement, "AwayTeam");
                     match.setGuestTeamID(XMLUtils.getIntValue(awayTeamElement, "AwayTeamID"));
-                    match.setGuestTeamName(XMLUtils.getValue(awayTeamElement, "AwayTeamName"));
+                    match.setGuestTeamName(XMLUtils.getStringValue(awayTeamElement, "AwayTeamName"));
 
-                    match.setMatchStatus(getStatus(XMLUtils.getValue(matchElement, "Status")));
+                    match.setMatchStatus(getStatus(XMLUtils.getStringValue(matchElement, "Status")));
                     if (match.getMatchStatus() == MatchKurzInfo.FINISHED) {
                         match.setHomeTeamGoals(XMLUtils.getIntValue(matchElement, "HomeGoals"));
                         match.setGuestTeamGoals(XMLUtils.getIntValue(matchElement, "AwayGoals"));

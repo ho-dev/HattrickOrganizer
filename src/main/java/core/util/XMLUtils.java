@@ -168,7 +168,7 @@ public class XMLUtils {
 	 *         with that name could be found or the descendant found has no
 	 *         value.
 	 */
-	public static String getValue(Element ancestor, String tagName) {
+	public static String getStringValue(Element ancestor, String tagName) {
 		if (ancestor != null) {
 			NodeList nl = ancestor.getElementsByTagName(tagName);
 			if (!isEmpty(nl)) {
@@ -197,9 +197,9 @@ public class XMLUtils {
 	 *         with that name could be found or the descendant found has no
 	 *         value.
 	 */
-	public static String getValue(Element ancestor, String tagName, String defaultString) {
+	public static String getStringValue(Element ancestor, String tagName, String defaultString) {
         try {
-            return getValue(ancestor, tagName);
+            return getStringValue(ancestor, tagName);
         }
         catch (NoSuchElementException ignored) {
         }
@@ -227,13 +227,13 @@ public class XMLUtils {
      * @exception NoSuchElementException Child not found
      */
     public static int getIntValue(Element element, String tagName) {
-        var value = getValue(element, tagName);
+        var value = getStringValue(element, tagName);
         return Integer.parseInt(value);
     }
 
     public static int getIntValue(Element element, String tagName, int defaultValue) {
         try {
-            var value = getValue(element, tagName);
+            var value = getStringValue(element, tagName);
             return Integer.parseInt(value);
         } catch (Exception ignored) {
         }
@@ -242,7 +242,7 @@ public class XMLUtils {
 
     public static Integer getIntegerValue(Element element, String tagName) {
         try {
-            var value = getValue(element, tagName);
+            var value = getStringValue(element, tagName);
             return Integer.parseInt(value);
         } catch (Exception e) {
             return null;
@@ -250,6 +250,6 @@ public class XMLUtils {
     }
 
     public static boolean getBooleanValue(Element element, String tagName) {
-        return Boolean.parseBoolean(getValue(element, tagName));
+        return Boolean.parseBoolean(getStringValue(element, tagName));
     }
 }

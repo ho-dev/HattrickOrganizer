@@ -1329,8 +1329,7 @@ public class OnlineWorker {
     public static void downloadTournamentDetails(MatchKurzInfo matchKurzInfo) {
         var tournamentId = matchKurzInfo.getMatchContextId();
         TournamentDetails oTournamentDetails = DBManager.instance().getTournamentDetailsFromDB(tournamentId);
-        if (oTournamentDetails == null)
-        {
+        if (oTournamentDetails == null) {
             oTournamentDetails = getTournamentDetails(tournamentId); // download info about tournament from HT
             DBManager.instance().storeTournamentDetailsIntoDB(oTournamentDetails); // store tournament details into DB
         }

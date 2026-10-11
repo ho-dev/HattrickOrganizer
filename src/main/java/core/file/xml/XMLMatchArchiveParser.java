@@ -52,7 +52,7 @@ public class XMLMatchArchiveParser {
 			for (int i = 0; i < nodeList.getLength(); i++) {
 				var match = new MatchKurzInfo();
 				var matchElement = (Element) nodeList.item(i);
-                match.setMatchSchedule(HODateTime.fromHT(XMLUtils.getValue(matchElement, "MatchDate")));
+                match.setMatchSchedule(HODateTime.fromHT(XMLUtils.getStringValue(matchElement, "MatchDate")));
                 match.setMatchID(XMLUtils.getIntValue(matchElement, "MatchID"));
                 var matchType = XMLUtils.getIntValue(matchElement, "MatchType", MatchType.YOUTHLEAGUE.getId());
 				if( matchType == MatchType.YOUTHLEAGUE.getId() && !isYouth)
@@ -69,11 +69,11 @@ public class XMLMatchArchiveParser {
 
 				var homeTeamElement = XMLUtils.getElement(matchElement, "HomeTeam");
 				match.setHomeTeamID(XMLUtils.getIntValue(homeTeamElement, "HomeTeamID"));
-				match.setHomeTeamName(XMLUtils.getValue(homeTeamElement, "HomeTeamName"));
+				match.setHomeTeamName(XMLUtils.getStringValue(homeTeamElement, "HomeTeamName"));
 
 				var awayTeamElement = XMLUtils.getElement(matchElement, "AwayTeam");
 				match.setGuestTeamID(XMLUtils.getIntValue(awayTeamElement, "AwayTeamID"));
-				match.setGuestTeamName(XMLUtils.getValue(awayTeamElement, "AwayTeamName"));
+				match.setGuestTeamName(XMLUtils.getStringValue(awayTeamElement, "AwayTeamName"));
 				match.setHomeTeamGoals(XMLUtils.getIntValue(matchElement, "HomeGoals" ));
 				match.setGuestTeamGoals(XMLUtils.getIntValue(matchElement, "AwayGoals"));
 				match.setOrdersGiven(true);
