@@ -18,7 +18,7 @@ class XMLArenaParserTest {
     @Test
     void parseArenaFromString_noExpansion() throws IOException {
         // given
-        final var content = ResourceUtils.getResourceFileAsString("arenaDetails_noExpansion.xml");
+        final var content = ResourceUtils.getResourceFileAsString("chpp/arenadetails/arenaDetails_noExpansion.xml");
 
         final var expected = Pair.of(
             HattrickDataInfo.builder()
@@ -56,7 +56,7 @@ class XMLArenaParserTest {
     @Test
     void parseArenaFromString_withExpansion() throws IOException {
         // given
-        final var content = ResourceUtils.getResourceFileAsString("arenaDetails_withExpansion.xml");
+        final var content = ResourceUtils.getResourceFileAsString("chpp/arenadetails/arenaDetails_withExpansion.xml");
 
         final var expected = Pair.of(
             HattrickDataInfo.builder()

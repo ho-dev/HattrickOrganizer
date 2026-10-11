@@ -168,7 +168,7 @@ class XMLTeamDetailsParserTest {
     @MethodSource
     void parseString(int teamId, Map<String, String> expected) throws IOException {
         // given
-        final var content = ResourceUtils.getResourceFileAsString("teamDetails_Juventus.xml");
+        final var content = ResourceUtils.getResourceFileAsString("chpp/teamdetails/teamDetails_Juventus.xml");
 
         // when
         final var result = XMLTeamDetailsParser.parseTeamDetailsFromString(content, teamId);
