@@ -1,4 +1,3 @@
-// %2347050307:de.hattrickorganizer.logik.xml%
 /*
  * xmlMatchArchivParser.java
  *
@@ -22,16 +21,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-
 /**
  * @author TheTom
  */
-public class XMLMatchArchiveParser {
+public final class XMLMatchArchiveParser {
 
-	/**
-	 * Utility class - private constructor enforces noninstantiability.
-	 */
 	private XMLMatchArchiveParser() {
+        throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
 	}
 
 	public static List<MatchKurzInfo> parseMatchesFromString(String input) {

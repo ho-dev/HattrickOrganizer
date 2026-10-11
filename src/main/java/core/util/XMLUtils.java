@@ -3,6 +3,7 @@ package core.util;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.InputMismatchException;
 import java.util.NoSuchElementException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -130,24 +131,24 @@ public class XMLUtils {
 	}
 
 	/**
-	 * Gets the first child element with the specified tag name from the given
-	 * parent element. If there are multiple elements with the specified tag
-	 * name, the first element found will be returned.
-	 *
-	 * @param parent
+	 * Gets the child element with the specified tag name from the given
+	 * parent element.
+     *
+ 	 * @param parent
 	 *            the parent element
 	 * @param tagName
 	 *            the tag name of the element to find.
 	 * @return the first element found with the specified tag name
-     * @exception NoSuchElementException
-     *                When the element is not found.
+     * @exception NoSuchElementException When the element is not found.
+     * @exception InputMismatchException When more than one element are found.
 	 */
     public static Element getElement(Element parent, String tagName) {
         NodeList nl = parent.getElementsByTagName(tagName);
-        if (!isEmpty(nl)) {
-            return (Element) nl.item(0);
-        }
-        throw new NoSuchElementException("No element with tag name " + tagName);
+        return switch (nl.getLength()) {
+            case 1 -> (Element) nl.item(0);
+            case 0 -> throw new NoSuchElementException("No element with tag name '%s'.".formatted(tagName));
+            default -> throw new InputMismatchException("More than one element found with name '%s'.".formatted(tagName));
+        };
     }
 
     public static boolean hasElement(Element parent, String tagName) {
@@ -201,9 +202,9 @@ public class XMLUtils {
         try {
             return getStringValue(ancestor, tagName);
         }
-        catch (NoSuchElementException ignored) {
+        catch (NoSuchElementException e) {
+            return defaultString;
         }
-        return defaultString;
     }
 
 	/**
@@ -235,9 +236,9 @@ public class XMLUtils {
         try {
             var value = getStringValue(element, tagName);
             return Integer.parseInt(value);
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            return defaultValue;
         }
-        return defaultValue;
     }
 
     public static Integer getIntegerValue(Element element, String tagName) {
