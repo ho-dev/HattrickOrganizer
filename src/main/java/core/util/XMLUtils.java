@@ -58,7 +58,6 @@ public class XMLUtils {
 	public static Document createDocument(String xmlSource) throws SAXException {
 		Reader xml = new StringReader(xmlSource);
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		Document doc;
 		try {
 			DocumentBuilder db = dbf.newDocumentBuilder();
 			return db.parse(new InputSource(xml));
