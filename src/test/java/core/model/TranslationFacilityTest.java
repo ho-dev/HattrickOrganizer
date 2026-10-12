@@ -1,15 +1,28 @@
 package core.model;
 
-import org.apache.commons.lang3.NotImplementedException;
-import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.*;
+import java.util.Map;
+import java.util.MissingResourceException;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 class TranslationFacilityTest {
+
+    private Translator originalTranslator;
+
+    @BeforeEach
+    void rememberTranslator() {
+        originalTranslator = TranslationFacility.getTranslator();
+    }
+
+    @AfterEach
+    void restoreTranslator() {
+        TranslationFacility.setTranslator(originalTranslator);
+    }
 
     @Test
     void getTranslator() {
@@ -68,7 +81,7 @@ class TranslationFacilityTest {
         // given
         final var key = "key";
         final var expectedTranslation = "value";
-        Translator translator = createTranslator("Custom", Map.ofEntries(Map.entry(key, expectedTranslation)));
+        Translator translator = ResourceBundleFromMap.createTranslator("Custom", Map.ofEntries(Map.entry(key, expectedTranslation)));
         TranslationFacility.setTranslator(translator);
 
         // when
@@ -85,7 +98,7 @@ class TranslationFacilityTest {
         final var keyPlural = "plural";
         final var expectedTranslationSingular = "person";
         final var expectedTranslationPlural = "people";
-        Translator translator = createTranslator("Custom",
+        Translator translator = ResourceBundleFromMap.createTranslator("Custom",
             Map.ofEntries(Map.entry(keySingular, expectedTranslationSingular), Map.entry(keyPlural, expectedTranslationPlural)));
         TranslationFacility.setTranslator(translator);
 
@@ -108,27 +121,5 @@ class TranslationFacilityTest {
 
         // then
         assertThat(translation).isEqualTo("since EVER");
-    }
-
-    @SuppressWarnings("SameParameterValue")
-    private static Translator createTranslator(String language, Map<String, String > translations) {
-        return new Translator(language, new ResourceBundleFromMap(translations));
-    }
-
-    private static final class ResourceBundleFromMap extends ResourceBundle {
-        private final Map<String, String> translations;
-        public ResourceBundleFromMap(Map<String, String> translations) {
-            super();
-            this.translations = translations;
-        }
-        @Override
-        protected Object handleGetObject(@NotNull String key) {
-            return Optional.ofNullable(translations.get(key)).orElseThrow();
-        }
-
-        @Override
-        public @NotNull Enumeration<String> getKeys() {
-            throw new NotImplementedException();
-        }
     }
 }
