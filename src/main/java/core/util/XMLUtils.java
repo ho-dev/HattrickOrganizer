@@ -3,13 +3,13 @@ package core.util;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
-import java.util.InputMismatchException;
-import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import core.file.xml.XMLParseException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -139,15 +139,14 @@ public class XMLUtils {
 	 * @param tagName
 	 *            the tag name of the element to find.
 	 * @return the first element found with the specified tag name
-     * @exception NoSuchElementException When the element is not found.
-     * @exception InputMismatchException When more than one element are found.
+     * @exception XMLParseException When the element is not found or more than one exists
 	 */
     public static Element getElement(Element parent, String tagName) {
         NodeList nl = parent.getElementsByTagName(tagName);
         return switch (nl.getLength()) {
             case 1 -> (Element) nl.item(0);
-            case 0 -> throw new NoSuchElementException("No element with tag name '%s'.".formatted(tagName));
-            default -> throw new InputMismatchException("More than one element found with name '%s'.".formatted(tagName));
+            case 0 -> throw new XMLParseException("No element with tag name '%s'.".formatted(tagName));
+            default -> throw new XMLParseException("More than one element found with name '%s'.".formatted(tagName));
         };
     }
 
@@ -165,7 +164,7 @@ public class XMLUtils {
 	 * @param tagName
 	 *            the tag name of the descendant to find.
 	 * @return the value of the descendant
-     * @exception NoSuchElementException if no descendant
+     * @exception XMLParseException if no descendant
 	 *         with that name could be found or the descendant found has no
 	 *         value.
 	 */
@@ -180,7 +179,7 @@ public class XMLUtils {
 				}
 			}
 		}
-		throw new NoSuchElementException("No element with tag name " + tagName);
+		throw new XMLParseException("No element with tag name " + tagName);
 	}
 
 	/**
@@ -202,7 +201,7 @@ public class XMLUtils {
         try {
             return getStringValue(ancestor, tagName);
         }
-        catch (NoSuchElementException e) {
+        catch (XMLParseException e) {
             return defaultString;
         }
     }
@@ -225,7 +224,7 @@ public class XMLUtils {
      * @param tagName Child tag name
      * @return int value
      * @exception NumberFormatException Value is not a number
-     * @exception NoSuchElementException Child not found
+     * @exception XMLParseException Child not found
      */
     public static int getIntValue(Element element, String tagName) {
         var value = getStringValue(element, tagName);
@@ -241,12 +240,12 @@ public class XMLUtils {
         }
     }
 
-    public static Integer getIntegerValue(Element element, String tagName) {
+    public static Optional<Integer> findIntegerValue(Element element, String tagName) {
         try {
             var value = getStringValue(element, tagName);
-            return Integer.parseInt(value);
+            return Optional.of(Integer.parseInt(value));
         } catch (Exception e) {
-            return null;
+            return Optional.empty();
         }
     }
 

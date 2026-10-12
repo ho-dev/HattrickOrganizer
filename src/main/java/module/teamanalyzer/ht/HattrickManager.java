@@ -37,34 +37,27 @@ public class HattrickManager {
      * @param filter the match filter object.
      */
     public static void downloadMatches(final int teamId, Filter filter) {
-   		int limit = Math.min(filter.getNumber(), 50);
+        int limit = Math.min(filter.getNumber(), 50);
 
-   		// If on manual, disable all filters, and download 30 matches.
-   		if (!filter.isAutomatic()) {
-   			limit = 30;
-   		}
+        // If on manual, disable all filters, and download 30 matches.
+        if (!filter.isAutomatic()) {
+            limit = 30;
+        }
 
-        var start = HODateTime.now().minus(8*30, ChronoUnit.DAYS);
-	    List<MatchKurzInfo> matches = OnlineWorker.getMatchArchive(teamId, start, false);
+        var start = HODateTime.now().minus(8 * 30, ChronoUnit.DAYS);
+        List<MatchKurzInfo> matches = OnlineWorker.getMatchArchive(teamId, start, false);
         if (matches != null) {
             Collections.reverse(matches); // Newest first
             for (MatchKurzInfo match : matches) {
-
-                if (match.getMatchType().isTournament()) {
-                    OnlineWorker.downloadTournamentDetails(match);
-                }
-
                 if (match.getMatchStatus() != MatchKurzInfo.FINISHED) {
                     continue;
                 }
-
                 boolean refresh = DBManager.instance().matchLineupIsNotStored(match.getMatchType(), match.getMatchID())
-                        || !DBManager.instance().isMatchIFKRatingInDB(match.getMatchID());
+                    || !DBManager.instance().isMatchIFKRatingInDB(match.getMatchID());
                 var accepted = filter.isAcceptedMatch(new Match(match));
                 if (!filter.isAutomatic() || (accepted && refresh)) {
                     OnlineWorker.downloadMatchData(match, refresh);
                 }
-
                 if (accepted) limit--;
                 if (limit < 1) {
                     break;
@@ -72,11 +65,11 @@ public class HattrickManager {
             }
         }
 
-	    // Look for tournament matches if they are included in filter.
-	    if (!filter.isAutomatic() || filter.isTournament()) {
-		    // Current matches includes tournament matches
-	    	matches = OnlineWorker.getMatches(teamId, true, false, false);
-            if ( matches != null) {
+        // Look for tournament matches if they are included in filter.
+        if (!filter.isAutomatic() || filter.isTournament()) {
+            // Current matches includes tournament matches
+            matches = OnlineWorker.getMatches(teamId, true, false, false);
+            if (matches != null) {
                 // newest first
                 Collections.reverse(matches);
 
@@ -86,13 +79,13 @@ public class HattrickManager {
                         continue;
                     }
                     if (filter.isAcceptedMatch(new Match(match))
-                            && match.getMatchType().isTournament()
-                            && DBManager.instance().matchLineupIsNotStored(match.getMatchType(), match.getMatchID())) {
+                        && match.getMatchType().isTournament()
+                        && DBManager.instance().matchLineupIsNotStored(match.getMatchType(), match.getMatchID())) {
                         OnlineWorker.downloadMatchData(match.getMatchID(), match.getMatchType(), false);
                     }
                 }
             }
-	    }
+        }
     }
 
     /**

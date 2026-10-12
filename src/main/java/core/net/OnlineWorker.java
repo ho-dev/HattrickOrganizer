@@ -163,6 +163,7 @@ public class OnlineWorker {
 				HOMainFrame.instance().setInformation(TranslationFacility.tr("ls.update_status.match_info"), 20);
 				List<MatchKurzInfo> matches = XMLMatchArchiveParser
 						.parseMatchesFromString(matchesString);
+                matches.stream().filter(i->i.getMatchType().isTournament()).forEach(OnlineWorker::downloadTournamentDetails);
 
 				// Add the new matches to the list of all matches
 				allMatches.addAll(matches);
@@ -562,7 +563,10 @@ public class OnlineWorker {
 
 				// Automatically download additional match infos (lineup + arena)
 				for (MatchKurzInfo match : matches) {
-					int curMatchId = match.getMatchID();
+                    if (match.getMatchType().isTournament()) {
+                        OnlineWorker.downloadTournamentDetails(match);
+                    }
+                    int curMatchId = match.getMatchID();
 					boolean refresh = !DBManager.instance().isMatchInDB(curMatchId, match.getMatchType())
 							|| (match.getMatchStatus() != MatchKurzInfo.FINISHED && DBManager.instance().hasUnsureWeatherForecast(curMatchId))
 							|| DBManager.instance().matchLineupIsNotStored(match.getMatchType(), curMatchId);

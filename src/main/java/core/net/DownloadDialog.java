@@ -323,9 +323,6 @@ public class DownloadDialog extends JDialog implements ActionListener {
 					allmatches = OnlineWorker.FilterUserSelection(allmatches);
 					for (MatchKurzInfo matchKurzInfo : allmatches) {
                         OnlineWorker.downloadMatchData(matchKurzInfo, true);
-                        if (matchKurzInfo.getMatchType().isTournament()) {
-                            OnlineWorker.downloadTournamentDetails(matchKurzInfo);
-                        }
                     }
 				}
 			}

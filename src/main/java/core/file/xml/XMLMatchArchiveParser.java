@@ -28,7 +28,7 @@ public final class XMLMatchArchiveParser {
 
 	private XMLMatchArchiveParser() {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
-	}
+    }
 
 	public static List<MatchKurzInfo> parseMatchesFromString(String input) {
 		return createMatches(XMLManager.parseString(input));

@@ -264,14 +264,14 @@ public class XMLMatchdetailsParser {
                 // This fails at tournament matches - ignore
             }
 
-            var integerValue = XMLUtils.getIntegerValue(arenaElement, "WeatherID");
-            if (integerValue != null) md.setWetterId(integerValue);
-            integerValue = XMLUtils.getIntegerValue(arenaElement, "SoldTotal");
-            if (integerValue != null) md.setZuschauer(integerValue);
+            var integerValue = XMLUtils.findIntegerValue(arenaElement, "WeatherID");
+            integerValue.ifPresent(integer -> md.setWetterId(integer));
+            integerValue = XMLUtils.findIntegerValue(arenaElement, "SoldTotal");
+            integerValue.ifPresent(integer -> md.setZuschauer(integer));
             // Get spectator distribution, if available
-            var soldTerraces = XMLUtils.getIntegerValue(arenaElement, "SoldTerraces");
-            if (soldTerraces != null) {
-                md.setSoldTerraces(soldTerraces);
+            var soldTerraces = XMLUtils.findIntegerValue(arenaElement, "SoldTerraces");
+            if (soldTerraces.isPresent()) {
+                md.setSoldTerraces(soldTerraces.get());
                 md.setSoldBasic(XMLUtils.getIntValue(arenaElement, "SoldBasic"));
                 md.setSoldRoof(XMLUtils.getIntValue(arenaElement, "SoldRoof"));
                 md.setSoldVIP(XMLUtils.getIntValue(arenaElement, "SoldVIP"));
