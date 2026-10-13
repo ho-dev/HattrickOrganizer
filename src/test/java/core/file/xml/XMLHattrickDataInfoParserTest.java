@@ -3,9 +3,13 @@ package core.file.xml;
 import core.util.XMLUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.junit.jupiter.params.provider.NullAndEmptySource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.w3c.dom.Document;
+
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -119,18 +123,26 @@ class XMLHattrickDataInfoParserTest {
             .hasMessage("XML document is null");
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = {
-        "<HattrickData/>",
-        "<HattrickData><FileName/></HattrickData>",
-        "<HattrickData><FileName></FileName></HattrickData>",
-        "<HattrickData><FileName>   </FileName></HattrickData>"
-    })
-    void test_parseFileName_missingOrEmptyFileName(String xml) {
+    private static Stream<Arguments> test_parseFileName_throwsExceptionWithExpectedMessage() {
+        return Stream.of(
+            Arguments.of("<HattrickDat/>", "Expected 1 element with name 'HattrickData' but found none.", "Invalid root element"),
+            Arguments.of("<HattrickData/>", "Expected 1 element with name 'FileName' but found none.", "Missing FileName element"),
+            Arguments.of("<HattrickData><FileNam/></HattrickData>", "Expected 1 element with name 'FileName' but found none.", "Misspelled FileName element"),
+            Arguments.of("<HattrickData><FileName/></HattrickData>", "Empty element 'FileName'.", "Self-closing FileName element"),
+            Arguments.of("<HattrickData><FileName></FileName></HattrickData>", "Empty element 'FileName'.", "Empty FileName element"),
+            Arguments.of("<HattrickData><FileName>FileName1</FileName><FileName>FileName2</FileName></HattrickData>", "Expected 1 element with name 'FileName' but found 2 with that name.", "Duplicate FileName elements"),
+            Arguments.of("<HattrickData><FileName>   </FileName></HattrickData>", "Empty element 'FileName'.", "Whitespace-only FileName element"),
+            Arguments.of("<HattrickData><Nested><FileName>arenadetails.xml</FileName></Nested></HattrickData>", "Expected 1 element with name 'FileName' but found none.", "Nested FileName element")
+        );
+    }
+
+    @ParameterizedTest(name = "[{index}] {2}: {1}")
+    @MethodSource
+    void test_parseFileName_throwsExceptionWithExpectedMessage(String xml, String expectedMessage, String testName) {
         assertThatThrownBy(
             () -> XMLHattrickDataInfoParser.parseFileName(xml))
             .isInstanceOf(XMLParseException.class)
-            .hasMessageContaining("Missing or empty XML element");
+            .hasMessageContaining(expectedMessage);
     }
 
     @Test
@@ -172,5 +184,27 @@ class XMLHattrickDataInfoParserTest {
 
         // when / then
         assertThat(XMLHattrickDataInfoParser.tryParseFileName(xml)).contains("matchdetails.xml");
+    }
+
+    private static Stream<Arguments> test_parse_missingMetadata() {
+        return Stream.of(
+            Arguments.of("FileName", "<FileName>arenadetails.xml</FileName>"),
+            Arguments.of("Version", "<Version>1.7</Version>"),
+            Arguments.of("UserID", "<UserID>2192218</UserID>"),
+            Arguments.of("FetchedDate", "<FetchedDate>2024-08-31 10:06:22</FetchedDate>")
+        );
+    }
+
+    @ParameterizedTest(name = "[{index}] Missing {0} element")
+    @MethodSource
+    void test_parse_missingMetadata(String elementName, String elementToRemove) throws Exception {
+        // given
+        String xml = VALID_XML.replace(elementToRemove, "");
+        Document doc = XMLUtils.createDocument(xml);
+
+        // when / then
+        assertThatThrownBy(() -> XMLHattrickDataInfoParser.parse(doc))
+            .isInstanceOf(XMLParseException.class)
+            .hasMessage("Expected 1 element with name '%s' but found none.".formatted(elementName));
     }
 }
