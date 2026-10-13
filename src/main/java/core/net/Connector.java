@@ -43,7 +43,6 @@ import java.util.zip.InflaterInputStream;
 
 public class Connector {
 	private static final String htUrl = "https://chpp.hattrick.org/chppxml.ashx";
-	public static String m_sIDENTIFIER = "HO! Hattrick Organizer V" + HO.VERSION;
 	private static Connector m_clInstance;
 	private static final String CONSUMER_KEY = ">Ij-pDTDpCq+TDrKA^nnE9";
 	private static final String CONSUMER_SECRET = "2/Td)Cprd/?q`nAbkAL//F+eGD@KnnCc>)dQgtP,p+p";
@@ -864,7 +863,7 @@ public class Connector {
 //		request.setConnectTimeout(60, TimeUnit.SECONDS);
 		request.addHeader("accept", "image/gif, image/x-xbitmap, image/jpeg, image/pjpeg, */*");
 		request.addHeader("accept-encoding", "gzip, deflate");
-		request.addHeader("user-agent", m_sIDENTIFIER);
+		request.addHeader("user-agent", getIdentifier());
 
 		// ProxyAuth hier einbinden da diese Funk immer aufgerufen wird
 		if (this.proxySettings != null && this.proxySettings.isAuthenticationNeeded()) {
@@ -874,6 +873,10 @@ public class Connector {
 			request.addHeader("Proxy-Authorization", "Basic " + epw);
 		}
 	}
+
+    private static String getIdentifier() {
+        return "HO! Hattrick Organizer V" + HO.getHoVersion().getVersionShort();
+    }
 
 	/**
 	 * Save downloaded data to a temp-file for debugging purposes.

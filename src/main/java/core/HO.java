@@ -14,60 +14,40 @@ import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.net.Connector;
 import core.training.TrainingManager;
-import core.util.ExceptionHandler;
-import core.util.HOEnvironmentVariable;
-import core.util.HOLogger;
-import core.util.OSUtils;
+import core.util.*;
+import lombok.Getter;
 
 import javax.imageio.ImageIO;
 import javax.management.*;
 import javax.swing.*;
 import java.io.File;
 import java.lang.management.ManagementFactory;
-import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Locale;
+import java.util.Optional;
 
 import static java.awt.event.KeyEvent.VK_1;
 
 public class HO {
 
-    public static double VERSION;  // Version is set in build.gradle and exposed to HO via the manifest
-	public static int RevisionNumber;
-    private static String versionType;
+    @Getter
+    private static HOVersion hoVersion = null;
 	private static OSUtils.OS platform;
 	private static boolean portable_version; // Used to determine the location of the DB
-	public static String getVersionType() {
-		return versionType;
-	}
-	public static int getRevisionNumber() {
-		return RevisionNumber;
-	}
 	public static OSUtils.OS getPlatform() {return platform; }
 	public static boolean isDevelopment() {
-		return "DEV".equalsIgnoreCase(versionType);
+        return Optional.ofNullable(hoVersion).map(HOVersion::isDevelopment).orElse(false);
 	}
 	public static boolean isBeta() {
-		return "BETA".equalsIgnoreCase(versionType);
+		return Optional.ofNullable(hoVersion).map(HOVersion::isBeta).orElse(false);
 	}
 	public static boolean isRelease() {
-		return "RELEASE".equalsIgnoreCase(versionType);
+        return Optional.ofNullable(hoVersion).map(HOVersion::isRelease).orElse(false);
 	}
 
 	public static String getVersionString() {
-		NumberFormat nf = NumberFormat.getInstance(Locale.US);
-		nf.setMinimumFractionDigits(1);
-		String txt = nf.format(VERSION);
-
-		if (isBeta()) {
-			txt += " BETA (r" + RevisionNumber + ")";
-		}
-		else if (isDevelopment()) {
-			txt += " DEV (r" + RevisionNumber + ")";
-		}
-
-		return txt;
+        // TODO: Revision or build number in the string?
+        return hoVersion.getVersionString();
 	}
 
 	public static boolean isPortableVersion() {
@@ -111,23 +91,8 @@ public class HO {
 		}
 
 		// Get HO version from manifest
-		String sVERSION = HO.class.getPackage().getImplementationVersion();
-		if (sVERSION != null) {
-			String[] aVersion = sVERSION.split("\\.");
-
-			VERSION = Double.parseDouble(aVersion[0] + "." + aVersion[1]);
-			RevisionNumber = Integer.parseInt(aVersion[2]);
-			switch (aVersion[3]) {
-				case "0" -> versionType = "DEV";
-				case "1" -> versionType = "BETA";
-				default -> versionType = "RELEASE";
-			}
-			HOLogger.instance().info(HO.class, "VERSION: " + VERSION + "   versionType:  " + versionType + "   RevisionNumber: " + RevisionNumber );
-        } else {
-        	HOLogger.instance().error(HO.class, "Launched from IDE otherwise there is a bug !");
-        	VERSION = 0d;
-        	versionType = "DEV";
-        }
+        hoVersion = createHoVersion();
+        HOLogger.instance().info(HO.class, "HO-Version: %s".formatted(hoVersion.getVersionString()));
 
         evaluateEnvironmentVariables();
 
@@ -239,6 +204,38 @@ public class HO {
 			interruptionWindow.dispose();
 		});
 	}
+
+    private static HOVersion createHoVersion() {
+        try {
+            return Optional.ofNullable(HO.class.getPackage().getImplementationVersion())
+                .map(HO::createHoVersionFromImplementationVersion)
+                .orElseGet(HO::createHoVersionFromBuildInfo);
+        } catch (RuntimeException e) {
+            HOLogger.instance().error(HO.class, "Cannot create HOVersion from implementation version and build info: " + e);
+            return new HOVersion(0, 0, 0, HOVersion.Stage.DEV);
+        }
+    }
+
+    private static HOVersion createHoVersionFromImplementationVersion(String implementationVersion) {
+        if (implementationVersion.matches("\\d+\\.\\d+") ) {
+            final var newImplementationVersion = createVersionStringForLocalBuild(implementationVersion);
+            HOLogger.instance().debug(HO.class, "Adjusted implementation version '%s' to '%s'."
+                .formatted(implementationVersion, newImplementationVersion));
+            return HOVersion.parseFromImplementationVersion(newImplementationVersion);
+        }
+        return HOVersion.parseFromImplementationVersion(implementationVersion);
+    }
+
+    private static String createVersionStringForLocalBuild(String majorMinor) {
+        return "%s.-1.%s".formatted(majorMinor, BuildInfo.devStageStr());
+    }
+
+    private static HOVersion createHoVersionFromBuildInfo() {
+        final String syntheticImplementationVersion = createVersionStringForLocalBuild(BuildInfo.versionStr());
+        HOLogger.instance().warning(HO.class,
+            "Implementation-Version not found in manifest. Expected when launched from an IDE; otherwise, check build configuration.");
+        return HOVersion.parseFromImplementationVersion(syntheticImplementationVersion);
+    }
 
 	private static void initJmxSupport() {
 		if (HO.isDevelopment()) {
