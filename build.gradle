@@ -246,6 +246,7 @@ tasks.register("createVersion") {
         Properties versionProps = new Properties()
         def buildNumber = System.getenv("RUN_NUMBER") ?: "0"
 
+        project.ext.originalVersion = project.version.toString()
         project.version = "${major}.${minor}.${buildNumber}.${developmentStage}".toString()
         // Version in jar extension is set eagerly, override after computing version.
         jar.manifest {
@@ -264,6 +265,39 @@ tasks.register("createVersion") {
 
         println "Project:  $project.name $project.version ....................."
     }
+}
+
+tasks.register('generateBuildInfo') {
+    group = 'build'
+    description = 'Generates build-info.properties with version information.'
+
+    mustRunAfter tasks.named('createVersion')
+
+    def outputDir = layout.buildDirectory.dir('generated/resources/build-info')
+
+    outputs.dir(outputDir)
+    outputs.upToDateWhen { false }
+
+    doLast {
+        def hoVersion = project.ext.has('originalVersion')
+            ? project.ext.originalVersion
+            : project.version.toString()
+
+        copy {
+            from('src/main/resources/build-info.properties')
+            into(layout.buildDirectory.dir('generated/resources/build-info'))
+            expand(
+                version: hoVersion,
+                DEV_STAGE: project.ext.development_stage
+            )
+        }
+    }
+}
+
+sourceSets.main.resources.exclude('build-info.properties')
+
+tasks.named('processResources') {
+    from(tasks.named('generateBuildInfo'))
 }
 
 tasks.register("media", Install4jTask) {
