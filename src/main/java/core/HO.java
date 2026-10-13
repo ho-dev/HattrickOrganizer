@@ -14,60 +14,42 @@ import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.net.Connector;
 import core.training.TrainingManager;
-import core.util.ExceptionHandler;
-import core.util.HOEnvironmentVariable;
-import core.util.HOLogger;
-import core.util.OSUtils;
+import core.util.*;
+import lombok.Getter;
 
 import javax.imageio.ImageIO;
 import javax.management.*;
 import javax.swing.*;
 import java.io.File;
 import java.lang.management.ManagementFactory;
-import java.text.NumberFormat;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Locale;
+import java.util.Optional;
 
 import static java.awt.event.KeyEvent.VK_1;
 
 public class HO {
 
-    public static double VERSION;  // Version is set in build.gradle and exposed to HO via the manifest
-	public static int RevisionNumber;
-    private static String versionType;
+    private static final HOLogger log = HOLogger.instance();
+
+    @Getter
+    private static final HOBuild hoBuild = HOBuildLoader.getBuild();
 	private static OSUtils.OS platform;
 	private static boolean portable_version; // Used to determine the location of the DB
-	public static String getVersionType() {
-		return versionType;
-	}
-	public static int getRevisionNumber() {
-		return RevisionNumber;
-	}
 	public static OSUtils.OS getPlatform() {return platform; }
 	public static boolean isDevelopment() {
-		return "DEV".equalsIgnoreCase(versionType);
+        return Optional.ofNullable(hoBuild).map(HOBuild::isDevelopment).orElse(false);
 	}
 	public static boolean isBeta() {
-		return "BETA".equalsIgnoreCase(versionType);
+		return Optional.ofNullable(hoBuild).map(HOBuild::isBeta).orElse(false);
 	}
 	public static boolean isRelease() {
-		return "RELEASE".equalsIgnoreCase(versionType);
+        return Optional.ofNullable(hoBuild).map(HOBuild::isRelease).orElse(false);
 	}
 
 	public static String getVersionString() {
-		NumberFormat nf = NumberFormat.getInstance(Locale.US);
-		nf.setMinimumFractionDigits(1);
-		String txt = nf.format(VERSION);
-
-		if (isBeta()) {
-			txt += " BETA (r" + RevisionNumber + ")";
-		}
-		else if (isDevelopment()) {
-			txt += " DEV (r" + RevisionNumber + ")";
-		}
-
-		return txt;
+        return hoBuild.getVersionString();
 	}
 
 	public static boolean isPortableVersion() {
@@ -102,32 +84,18 @@ public class HO {
 			for (String _arg : args) {
 				arg = _arg.trim().toUpperCase();
 				switch (arg) {
-					case "INFO" -> HOLogger.instance().setLogLevel(HOLogger.INFORMATION);
-					case "DEBUG" -> HOLogger.instance().setLogLevel(HOLogger.DEBUG);
-					case "WARNING" -> HOLogger.instance().setLogLevel(HOLogger.WARNING);
-					case "ERROR" -> HOLogger.instance().setLogLevel(HOLogger.ERROR);
+                    case "INFO" -> log.setLogLevel(HOLogger.INFORMATION);
+                    case "DEBUG" -> log.setLogLevel(HOLogger.DEBUG);
+                    case "WARNING" -> log.setLogLevel(HOLogger.WARNING);
+                    case "ERROR" -> log.setLogLevel(HOLogger.ERROR);
 				}
 			}
 		}
 
-		// Get HO version from manifest
-		String sVERSION = HO.class.getPackage().getImplementationVersion();
-		if (sVERSION != null) {
-			String[] aVersion = sVERSION.split("\\.");
+        // Initialize file logging
+        log.initializeFileLogging(Paths.get(UserManager.instance().getDbParentFolder(), "logs"));
 
-			VERSION = Double.parseDouble(aVersion[0] + "." + aVersion[1]);
-			RevisionNumber = Integer.parseInt(aVersion[2]);
-			switch (aVersion[3]) {
-				case "0" -> versionType = "DEV";
-				case "1" -> versionType = "BETA";
-				default -> versionType = "RELEASE";
-			}
-			HOLogger.instance().info(HO.class, "VERSION: " + VERSION + "   versionType:  " + versionType + "   RevisionNumber: " + RevisionNumber );
-        } else {
-        	HOLogger.instance().error(HO.class, "Launched from IDE otherwise there is a bug !");
-        	VERSION = 0d;
-        	versionType = "DEV";
-        }
+        log.info(HO.class, "HO-Version: %s".formatted(hoBuild.getVersionString()));
 
         evaluateEnvironmentVariables();
 
@@ -153,7 +121,7 @@ public class HO {
 				}
 			}
 		} catch (Exception ex) {
-			HOLogger.instance().log(HO.class, ex);
+            log.log(HO.class, ex);
 		}
 
 		// start display splash image
@@ -172,7 +140,7 @@ public class HO {
 		try {
 			ThemeManager.instance().setCurrentTheme();
 		} catch (Exception e) {
-			HOLogger.instance().log(HO.class, "Can´t load Theme:" + UserParameter.instance().theme);
+            log.log(HO.class, "Can´t load Theme:" + UserParameter.instance().theme);
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Can´t load Theme: "
 					+ UserParameter.instance().theme, JOptionPane.WARNING_MESSAGE);
 		}
@@ -302,11 +270,11 @@ public class HO {
 	}
 
     private static void evaluateEnvironmentVariables() {
-        HOLogger.instance().info(HO.class, "Evaluating environment variables.");
+        log.info(HO.class, "Evaluating environment variables.");
 
         HOEnvironmentVariable.HO_SAVE_DOWNLOADED_XML.valueAsBoolean().ifPresent(saveDownloadedXml -> {
             Connector.setSaveDownloadedXml(saveDownloadedXml);
-            HOLogger.instance().info(HO.class, "Setting saving of downloaded XML files to '%s'".formatted(saveDownloadedXml));
+            log.info(HO.class, "Setting saving of downloaded XML files to '%s'".formatted(saveDownloadedXml));
         });
     }
 }

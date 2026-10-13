@@ -127,7 +127,7 @@ public class HRFStringBuilder {
     public void createBasics(Map<String, String> teamdetailsDataMap, Map<String, String> worldDataMap) {
         basicsStringBuilder = new StringBuilder("[basics]\n");
         appendKeyValue(basicsStringBuilder, "application", "HO");
-        appendKeyValue(basicsStringBuilder, "appversion", HO.VERSION);
+        appendKeyValue(basicsStringBuilder, "appversion", HO.getHoBuild().getVersionShort());
         appendKeyValue(basicsStringBuilder, "date", teamdetailsDataMap.get("FetchedDate"));
         appendKeyValue(basicsStringBuilder, "season", worldDataMap.get("Season"));
         appendKeyValue(basicsStringBuilder, "seasonOffset", worldDataMap.get("SeasonOffset"));
