@@ -68,6 +68,7 @@
 
 * Add experience skill to training tables (#2283)
 * Update training prediction table structure on first download after training date (#2467)
+* Fix exception in future training popup if no columns are selected (#2537)
 
 ### Statistics
 
@@ -116,21 +117,21 @@
 
 ## Translations
 
-Reports by Contributors - October 19, 2025 - October 09, 2026
+Reports by Contributors - October 19, 2025 - October 11, 2026
 
 * Jösgall 1005
 * Ioannidouefty 459
 * Lukasz 418
-* wsbrenk 176
+* wsbrenk 178
 * \_KOHb\_ 91
 * Frankieorabona 73
 * Lidegand 72
 * Baler0 47
-* Sebastian Reddig 36
+* Sebastian Reddig 39
 * Walter 28
 * Kristaps 11
 * Stefan Schenke 5
 * Mara 3
 * Joeri Roels 1
 
-Total 2425
+Total 2430
