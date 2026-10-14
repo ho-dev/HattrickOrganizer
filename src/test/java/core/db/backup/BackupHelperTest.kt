@@ -74,19 +74,27 @@ internal class BackupHelperTest {
         val dbDir = File(testResourcesDir, "db")
         var fileFromPreviousWeek = 0
         val currentDate = HODateTime.now()
-        var htWeek = currentDate.toHTWeek()
+        var htweekFile3 : HODateTime.HTWeek? = null
+
+        // Create backup files for the last 5 days
         (1..5).forEach { i ->
             val date = currentDate.minus(i, ChronoUnit.DAYS)
             val f = File(testResourcesDir, "db/db_user-${formatter.format(date.localDateTime)}.zip")
             Assertions.assertDoesNotThrow { f.createNewFile() }
             Files.setLastModifiedTime(f.toPath(), FileTime.from(date.instant))
-            if (i >= 4 && !date.toHTWeek().equals(htWeek)) {
-                fileFromPreviousWeek = 1
+            if (i==2) {
+                htweekFile3 = date.toHTWeek()
             } else {
-                htWeek = date.toHTWeek()
+                val htweek = date.toHTWeek()
+                if (i >= 3 && !htweek.equals(htweekFile3)) {
+                    fileFromPreviousWeek = 1
+
+                }
             }
         }
 
+        // Create backup file of the current day
+        // and remove obsolete backup files
         BackupHelper.backup(dbDir)
 
         val zips = listZipInDir(dbDir.absolutePath)
