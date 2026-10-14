@@ -1,13 +1,17 @@
 package core.util;
 
+import core.model.ResourceBundleFromMap;
 import core.model.TranslationFacility;
 import core.model.Translator;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
 import java.time.Instant;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import static org.apache.commons.lang3.StringUtils.EMPTY;
@@ -27,6 +31,36 @@ class HODurationTest {
     private static final long SECONDS_PER_DAY = HOURS_PER_DAY * SECONDS_PER_HOUR;
     private static final long SECONDS_PER_SEASON = DAYS_PER_SEASON * SECONDS_PER_DAY;
     private static final long SECONDS_PER_WEEK = DAYS_PER_WEEK * SECONDS_PER_DAY;
+
+    private static final Translator TRANSLATOR = ResourceBundleFromMap.createTranslator("Custom",
+        Map.ofEntries(
+            Map.entry("Duration.seasons.singular", "season"),
+            Map.entry("Duration.seasons.plural", "seasons"),
+            Map.entry("Duration.weeks.singular", "week"),
+            Map.entry("Duration.weeks.plural", "weeks"),
+            Map.entry("Duration.days.singular", "day"),
+            Map.entry("Duration.days.plural", "days"),
+            Map.entry("Duration.hours.singular", "hour"),
+            Map.entry("Duration.hours.plural", "hours"),
+            Map.entry("Duration.minutes.singular", "minute"),
+            Map.entry("Duration.minutes.plural", "minutes"),
+            Map.entry("Duration.seconds.singular", "second"),
+            Map.entry("Duration.seconds.plural", "seconds")
+        )
+    );
+
+    private static Translator originalTranslator;
+
+    @BeforeAll
+    static void replaceTranslator() {
+        originalTranslator = TranslationFacility.getTranslator();
+        TranslationFacility.setTranslator(TRANSLATOR);
+    }
+
+    @AfterAll
+    static void restoreTranslator() {
+        TranslationFacility.setTranslator(originalTranslator);
+    }
 
     private static Stream<Arguments> differentDurations() {
         return Stream.of(
@@ -429,24 +463,33 @@ class HODurationTest {
 
     private static Stream<Arguments> toHumanString() {
         return Stream.of(
-            of(HODuration.of(0, 0, 0, 2, 3, 4), "2 hours, 3 minutes, 4 seconds"),
-            of(HODuration.of(0, 0, 1, 0, 3, 4), "1 day, 3 minutes, 4 seconds"),
-            of(HODuration.of(0, 0, 1, 2, 0, 4), "1 day, 2 hours, 4 seconds"),
-            of(HODuration.of(0, 0, 1, 2, 3, 0), "1 day, 2 hours, 3 minutes"),
-            of(HODuration.of(0, 0, 1, 2, 3, 4), "1 day, 2 hours, 3 minutes, 4 seconds"),
-            of(HODuration.of(0, 1, 2, 3, 4, 5), "1 week, 2 days, 3 hours, 4 minutes, 5 seconds"),
-            of(HODuration.of(1, 2, 3, 4, 5, 6), "1 season, 2 weeks, 3 days, 4 hours, 5 minutes, 6 seconds"),
-            of(HODuration.fromSeconds(-1), "-1 season, 15 weeks, 6 days, 23 hours, 59 minutes, 59 seconds"),
-            of(new HODuration(), EMPTY)
+            of(HODuration.of(0, 0, 0, 2, 3, 4), "2 hours, 3 minutes, 4 seconds", "Hours, minutes and seconds"),
+            of(HODuration.of(0, 0, 1, 0, 3, 4), "1 day, 3 minutes, 4 seconds", "Day, minutes and seconds"),
+            of(HODuration.of(0, 0, 1, 2, 0, 4), "1 day, 2 hours, 4 seconds", "Day, hours and seconds"),
+            of(HODuration.of(0, 0, 1, 2, 3, 0), "1 day, 2 hours, 3 minutes", "Day, hours and minutes"),
+            of(HODuration.of(0, 0, 1, 2, 3, 4), "1 day, 2 hours, 3 minutes, 4 seconds", "Day, hours, minutes and seconds"),
+            of(HODuration.of(0, 1, 2, 3, 4, 5), "1 week, 2 days, 3 hours, 4 minutes, 5 seconds", "Week, days, hours, minutes and seconds"),
+            of(HODuration.of(1, 2, 3, 4, 5, 6), "1 season, 2 weeks, 3 days, 4 hours, 5 minutes, 6 seconds", "Season, weeks, days, hours, minutes and seconds"),
+            of(HODuration.fromSeconds(-1), "-1 season, 15 weeks, 6 days, 23 hours, 59 minutes, 59 seconds", "Negative season, weeks, days, hours, minutes and seconds"),
+            of(HODuration.of(1, 0, 0, 0, 0, 0), "1 season", "Singular for season"),
+            of(HODuration.of(2, 0, 0, 0, 0, 0), "2 seasons", "Plural for season"),
+            of(HODuration.of(0, 1, 0, 0, 0, 0), "1 week", "Singular for week"),
+            of(HODuration.of(0, 2, 0, 0, 0, 0), "2 weeks", "Plural for weeks"),
+            of(HODuration.of(0, 0, 1, 0, 0, 0), "1 day", "Singular for day"),
+            of(HODuration.of(0, 0, 2, 0, 0, 0), "2 days", "Plural for days"),
+            of(HODuration.of(0, 0, 0, 1, 0, 0), "1 hour", "Singular for hour"),
+            of(HODuration.of(0, 0, 0, 2, 0, 0), "2 hours", "Plural for hours"),
+            of(HODuration.of(0, 0, 0, 0, 1, 0), "1 minute", "Singular for minute"),
+            of(HODuration.of(0, 0, 0, 0, 2, 0), "2 minutes", "Plural for minutes"),
+            of(HODuration.of(0, 0, 0, 0, 0, 1), "1 second", "Singular for second"),
+            of(HODuration.of(0, 0, 0, 0, 0, 2), "2 seconds", "Plural for seconds"),
+            of(new HODuration(), EMPTY, "HO duration with zero seconds.")
         );
     }
 
-    @ParameterizedTest
+    @ParameterizedTest(name = "{2}: {0} -> {1}")
     @MethodSource
-    void toHumanString(HODuration hoDuration, String expected) {
-        // given
-        TranslationFacility.setTranslator(Translator.load(Translator.LANGUAGE_DEFAULT));
-
+    void toHumanString(HODuration hoDuration, String expected, String testName) {
         // when
         final var result = hoDuration.toHumanString();
 
