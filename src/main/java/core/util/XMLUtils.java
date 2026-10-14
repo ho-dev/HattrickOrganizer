@@ -171,15 +171,19 @@ public class XMLUtils {
 	public static String getStringValue(Element ancestor, String tagName) {
 		if (ancestor != null) {
 			NodeList nl = ancestor.getElementsByTagName(tagName);
-			if (!isEmpty(nl)) {
-				Element e = (Element) nl.item(0);
-				Node c = e.getFirstChild();
-				if (c != null) {
-					return c.getNodeValue();
-				}
-			}
+            switch (nl.getLength()) {
+                case 1:
+                    Element e = (Element) nl.item(0);
+                    Node c = e.getFirstChild();
+                    if (c != null) {
+                        return c.getNodeValue();
+                    }
+                    // pass through
+                case 0: throw new XMLParseException("No element with tag name '%s'.".formatted(tagName));
+                default: throw new XMLParseException("More than one element found with name '%s'.".formatted(tagName));
+            }
 		}
-		throw new XMLParseException("No element with tag name " + tagName);
+		throw new XMLParseException("No element with tag name '%s'.".formatted(tagName));
 	}
 
 	/**
