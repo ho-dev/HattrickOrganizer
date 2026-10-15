@@ -109,7 +109,7 @@ class XMLMatchdetailsParserTest {
         expectedMatchEvent0.setMatchEventIndex(1);
         expectedMatchEvent0.setM_eInjuryType(Matchdetails.eInjuryType.NA);
         expectedMatchEvent0.setTeamID(50000);
-        expectedMatchEvent0.setMatchEventID(MatchEvent.MatchEventID.SPECTATORS_OR_VENUE_CLOUDY.getValue());
+        expectedMatchEvent0.setMatchEventID(MatchEventID.SPECTATORS_OR_VENUE_CLOUDY.getValue());
         expectedMatchEvent0.setEventVariation(5);
         expectedMatchEvent0.setMatchPartId(MatchEvent.MatchPartId.BEFORE_THE_MATCH_STARTED);
         expectedMatchEvent0.setEventText("<a href=\"/Club/Stadium/?stadiumId=2154092\">Alte Rösterei</a> - 1648 ZuschauerInnen blickten angesichts der dunklen Wolken besorgt in den Himmel, aber der befürchtete Regen blieb aus. <a href=\"/Club/HallOfFame/Player.aspx?playerId=455444108\">Sultan Hafeeth Al-Buayqy</a> wurde als Schiedsrichter angesetzt, Unterstützung erhielt er von seinen Assistenten <a href=\"/Club/HallOfFame/Player.aspx?playerId=474275056\">Bill Matthews</a> und <a href=\"/Club/HallOfFame/Player.aspx?playerId=459237940\">Idar Åkesson</a>.");
