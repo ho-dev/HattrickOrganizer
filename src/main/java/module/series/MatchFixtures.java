@@ -7,7 +7,7 @@ import core.model.series.*;
 import core.net.OnlineWorker;
 import core.util.HODateTime;
 import core.util.HOLogger;
-import org.javatuples.Pair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -406,7 +406,7 @@ public class MatchFixtures extends AbstractTable.Storable {
     private static void removeIndexPair(List<Pair<Integer, Integer>> indexPairs, TeamSlot team0Slot, TeamSlot team1Slot) {
         Integer finalTeam0Slot = team0Slot.id;
         Integer finalTeam1Slot = team1Slot.id;
-        indexPairs.removeIf(p -> Objects.equals(p.getValue0(), finalTeam0Slot) && Objects.equals(p.getValue1(), finalTeam1Slot));
+        indexPairs.removeIf(p -> Objects.equals(p.getLeft(), finalTeam0Slot) && Objects.equals(p.getRight(), finalTeam1Slot));
     }
 
     /**
@@ -424,8 +424,8 @@ public class MatchFixtures extends AbstractTable.Storable {
         if (indexPairs.size() == 1) {
             for (var fixture : fixtures) {
                 if (unknownTeamSlots.contains(fixture.getHeimId()) || unknownTeamSlots.contains(fixture.getGastId())) {
-                    knownTeamSlots.addReplacedTeamSlot(indexPairs.get(0).getValue0(), fixture.getHeimId());
-                    knownTeamSlots.addReplacedTeamSlot(indexPairs.get(0).getValue1(), fixture.getGastId());
+                    knownTeamSlots.addReplacedTeamSlot(indexPairs.get(0).getLeft(), fixture.getHeimId());
+                    knownTeamSlots.addReplacedTeamSlot(indexPairs.get(0).getRight(), fixture.getGastId());
                     return;
                 }
             }
@@ -439,21 +439,21 @@ public class MatchFixtures extends AbstractTable.Storable {
                 var indexPair = indexPairs.get(matchIndex++);
                 var homeTeamSlot = knownTeamSlots.findTeamSlot(fixture.getHeimId());
                 if (homeTeamSlot.isPresent()) {
-                    if (homeTeamSlot.get().id != indexPair.getValue0()) {
+                    if (homeTeamSlot.get().id != indexPair.getLeft()) {
                         HOLogger.instance().warning(MatchFixtures.class, "Home team slot mismatch");
                         break;
                     }
                 } else {
-                    knownTeamSlots.addReplacedTeamSlot(indexPair.getValue0(), fixture.getHeimId());
+                    knownTeamSlots.addReplacedTeamSlot(indexPair.getLeft(), fixture.getHeimId());
                 }
                 var awayTeamSlot = knownTeamSlots.findTeamSlot(fixture.getGastId());
                 if (awayTeamSlot.isPresent()) {
-                    if (awayTeamSlot.get().id != indexPair.getValue1()) {
+                    if (awayTeamSlot.get().id != indexPair.getRight()) {
                         HOLogger.instance().warning(MatchFixtures.class, "Away team slot mismatch");
                         break;
                     }
                 } else {
-                    knownTeamSlots.addReplacedTeamSlot(indexPair.getValue1(), fixture.getGastId());
+                    knownTeamSlots.addReplacedTeamSlot(indexPair.getRight(), fixture.getGastId());
                 }
             }
         }
@@ -624,8 +624,8 @@ public class MatchFixtures extends AbstractTable.Storable {
             var awayTeamId = fixture.getGastId();
             var found = false;
             for (var matchDayIndexPair : matchDayIndexPairs) {
-                var awayTeamsInSecondLegMatch = teamSlots.getByTeamSlotId(matchDayIndexPair.getValue1());
-                var homeTeamsInSecondLegMatch = teamSlots.getByTeamSlotId(matchDayIndexPair.getValue0());
+                var awayTeamsInSecondLegMatch = teamSlots.getByTeamSlotId(matchDayIndexPair.getRight());
+                var homeTeamsInSecondLegMatch = teamSlots.getByTeamSlotId(matchDayIndexPair.getLeft());
                 if (awayTeamsInSecondLegMatch.contains(homeTeamId) && homeTeamsInSecondLegMatch.contains(awayTeamId)) {
                     found = true;
                     break;
@@ -653,11 +653,11 @@ public class MatchFixtures extends AbstractTable.Storable {
         for (int k = 0; k < fixturesOfLastMatchDay.size(); k++) {
             var pair = fixturesOfLastMatchDay.get(fixturePermutation[k]);
             var fixtureIndexPair = fixtureIndicesOfRound14.get(k);
-            var teamSlot = fixtureIndexPair.getValue0();
+            var teamSlot = fixtureIndexPair.getLeft();
             var awayTeamId = pair.getGastId();
 
             teamSlots.setCurrentTeamId(teamSlot, awayTeamId);
-            teamSlot = fixtureIndexPair.getValue1();
+            teamSlot = fixtureIndexPair.getRight();
             var homeTeamId = pair.getHeimId();
             teamSlots.setCurrentTeamId(teamSlot, homeTeamId);
         }
@@ -696,7 +696,7 @@ public class MatchFixtures extends AbstractTable.Storable {
         var i = LAST_MATCHDAY - matchDay;
         var pairs = fixtureEntryIndices.get(i);
         return pairs.stream()
-            .map(pair -> Pair.with(pair.getValue1(), pair.getValue0()))
+            .map(pair -> Pair.of(pair.getRight(), pair.getLeft()))
             .collect(Collectors.toCollection(ArrayList::new));
     }
 
@@ -928,13 +928,13 @@ public class MatchFixtures extends AbstractTable.Storable {
      * Map of indices used to generate series' fixtures
      */
     private static final List<List<Pair<Integer, Integer>>> fixtureEntryIndices = List.of(
-            List.of(new Pair<>(1,2), new Pair<>(3,4), new Pair<>(5,6), new Pair<>(7,8)),
-            List.of(new Pair<>(4,1), new Pair<>(2,7), new Pair<>(6,3), new Pair<>(8,5)),
-            List.of(new Pair<>(1,8), new Pair<>(3,5), new Pair<>(4,2), new Pair<>(7,6)),
-            List.of(new Pair<>(6,1), new Pair<>(2,3), new Pair<>(5,7), new Pair<>(8,4)),
-            List.of(new Pair<>(1,7), new Pair<>(4,5), new Pair<>(3,8), new Pair<>(2,6)),
-            List.of(new Pair<>(5,1), new Pair<>(7,3), new Pair<>(6,4), new Pair<>(8,2)),
-            List.of(new Pair<>(1,3), new Pair<>(2,5), new Pair<>(4,7), new Pair<>(6,8))
+            List.of(Pair.of(1,2), Pair.of(3,4), Pair.of(5,6), Pair.of(7,8)),
+            List.of(Pair.of(4,1), Pair.of(2,7), Pair.of(6,3), Pair.of(8,5)),
+            List.of(Pair.of(1,8), Pair.of(3,5), Pair.of(4,2), Pair.of(7,6)),
+            List.of(Pair.of(6,1), Pair.of(2,3), Pair.of(5,7), Pair.of(8,4)),
+            List.of(Pair.of(1,7), Pair.of(4,5), Pair.of(3,8), Pair.of(2,6)),
+            List.of(Pair.of(5,1), Pair.of(7,3), Pair.of(6,4), Pair.of(8,2)),
+            List.of(Pair.of(1,3), Pair.of(2,5), Pair.of(4,7), Pair.of(6,8))
     );
 
     /**
@@ -975,7 +975,7 @@ public class MatchFixtures extends AbstractTable.Storable {
         // First series half
         for (var round : fixtureEntryIndices){
             for ( var match  : round){
-                newFixtures.add(createFixture(matchId++, date, roundNumber, teams.get(match.getValue0()-1), teams.get(match.getValue1()-1)));
+                newFixtures.add(createFixture(matchId++, date, roundNumber, teams.get(match.getLeft()-1), teams.get(match.getRight()-1)));
             }
             roundNumber++;
             date = date.plusDaysAtSameLocalTime(7);
@@ -986,7 +986,7 @@ public class MatchFixtures extends AbstractTable.Storable {
         // Second series half
         for (var round : copy){
             for ( var match  : round){
-                newFixtures.add(createFixture(matchId++, date, roundNumber, teams.get(match.getValue1()-1), teams.get(match.getValue0()-1)));
+                newFixtures.add(createFixture(matchId++, date, roundNumber, teams.get(match.getRight()-1), teams.get(match.getLeft()-1)));
             }
             roundNumber++;
             date = date.plusDaysAtSameLocalTime(7);
