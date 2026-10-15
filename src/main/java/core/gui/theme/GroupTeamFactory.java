@@ -3,7 +3,7 @@ package core.gui.theme;
 import com.github.weisj.darklaf.properties.icons.IconLoader;
 import core.icon.OverlayIcon;
 import core.icon.TextIcon;
-import org.javatuples.Pair;
+import org.apache.commons.lang3.tuple.Pair;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,12 +31,12 @@ public class GroupTeamFactory {
 
     static {
         // Pair stores group icon properties, fill colour & stroke colour in that order.
-        groupIconProperties.put("A-Team", new Pair("#f65252", "#bd1b1b"));
-        groupIconProperties.put("B-Team", new Pair("#d382ff", "#8449a4"));
-        groupIconProperties.put("C-Team", new Pair("#38a0fe", "#1b5284"));
-        groupIconProperties.put("D-Team", new Pair("#f4ad2f", "#845c13"));
-        groupIconProperties.put("E-Team", new Pair("#45e6a4", "#2a9267"));
-        groupIconProperties.put("F-Team", new Pair("#f6ef6b", "#b7b241"));
+        groupIconProperties.put("A-Team", Pair.of("#f65252", "#bd1b1b"));
+        groupIconProperties.put("B-Team", Pair.of("#d382ff", "#8449a4"));
+        groupIconProperties.put("C-Team", Pair.of("#38a0fe", "#1b5284"));
+        groupIconProperties.put("D-Team", Pair.of("#f4ad2f", "#845c13"));
+        groupIconProperties.put("E-Team", Pair.of("#45e6a4", "#2a9267"));
+        groupIconProperties.put("F-Team", Pair.of("#f6ef6b", "#b7b241"));
     }
 
     private GroupTeamFactory() {}
@@ -82,8 +82,8 @@ public class GroupTeamFactory {
             }
 
             final OverlayIcon overlayIcon;
-            Pair<String, String> props = groupIconProperties.getOrDefault(groupName, new Pair("#FFFFFF", "#FFFFFF"));
-            double brightness = ImageUtilities.getBrightness(ImageUtilities.getColorFromHex(props.getValue0()));
+            Pair<String, String> props = groupIconProperties.getOrDefault(groupName, Pair.of("#FFFFFF", "#FFFFFF"));
+            double brightness = ImageUtilities.getBrightness(ImageUtilities.getColorFromHex(props.getLeft()));
             Color textColor = brightness < 130 ? Color.WHITE : Color.BLACK;
             if (active) {
                 overlayIcon = new OverlayIcon(GroupTeamFactory.getGroupIcon(groupName, size, size, "1.0"),
@@ -107,12 +107,12 @@ public class GroupTeamFactory {
 
         if (fullIcon == null) {
 
-            Pair<String, String> props = groupIconProperties.getOrDefault(key, new Pair("#FFFFFF", "#FFFFFF"));
+            Pair<String, String> props = groupIconProperties.getOrDefault(key, Pair.of("#FFFFFF", "#FFFFFF"));
             String imagePath = (String)ThemeManager.getIconPath(HOIconName.GROUP_TEAM);
 
             Map<Object, Object> colorMap = new HashMap<>();
-            colorMap.put("fillColor", ImageUtilities.getColorFromHex(props.getValue0()));
-            colorMap.put("strokeColor", ImageUtilities.getColorFromHex(props.getValue0()));
+            colorMap.put("fillColor", ImageUtilities.getColorFromHex(props.getLeft()));
+            colorMap.put("strokeColor", ImageUtilities.getColorFromHex(props.getLeft()));
             if (opacity != null) {
                 colorMap.put("opacityVal", (int)(Float.parseFloat(opacity)*100));
             } else {
