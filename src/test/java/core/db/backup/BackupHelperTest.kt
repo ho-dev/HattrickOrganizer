@@ -82,7 +82,7 @@ internal class BackupHelperTest {
             val f = File(testResourcesDir, "db/db_user-${formatter.format(date.localDateTime)}.zip")
             Assertions.assertDoesNotThrow { f.createNewFile() }
             Files.setLastModifiedTime(f.toPath(), FileTime.from(date.instant))
-            if (i==2) {
+            if (i == 2) {
                 htweekFile3 = date.toHTWeek()
             } else {
                 val htweek = date.toHTWeek()
