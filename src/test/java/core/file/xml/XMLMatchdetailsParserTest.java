@@ -86,7 +86,7 @@ class XMLMatchdetailsParserTest {
             assertThat(matchdetails.getHomeRatingIndirectSetPiecesDef()).isEqualTo(22);
             assertThat(matchdetails.getGuestRatingIndirectSetPiecesAtt()).isEqualTo(18);
             assertThat(matchdetails.getGuestRatingIndirectSetPiecesDef()).isEqualTo(15);
-            assertThat(matchdetails.getM_Injuries()).isEmpty();
+            assertThat(matchdetails.getInjuries()).isEmpty();
             // homeGoalsInParts in another test
             // guestGoalsInParts in another test
             assertThat(matchdetails.getFormation(true)).isEqualTo("4-4-2");
@@ -182,7 +182,7 @@ class XMLMatchdetailsParserTest {
             assertThat(matchdetails.getHomeRatingIndirectSetPiecesDef()).isEqualTo(22);
             assertThat(matchdetails.getGuestRatingIndirectSetPiecesAtt()).isEqualTo(18);
             assertThat(matchdetails.getGuestRatingIndirectSetPiecesDef()).isEqualTo(15);
-            assertThat(matchdetails.getM_Injuries()).isEmpty();
+            assertThat(matchdetails.getInjuries()).isEmpty();
             // homeGoalsInParts in another test
             // guestGoalsInParts in another test
             assertThat(matchdetails.getFormation(true)).isEqualTo("4-4-2");

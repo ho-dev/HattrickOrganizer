@@ -50,11 +50,11 @@ class TeamSummaryModelTest {
 
     private static HOModel createHOModel() {
         HOModel hoModel = new HOModel(HODateTime.now());
-        hoModel.setBasics(createBasis());
+        hoModel.setBasics(createBasics());
         return hoModel;
     }
 
-    private static Basics createBasis() {
+    private static Basics createBasics() {
         Basics basics = new Basics();
         basics.setDatum(HODateTime.now());
         return basics;

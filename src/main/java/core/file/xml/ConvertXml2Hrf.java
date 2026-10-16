@@ -195,7 +195,7 @@ public class ConvertXml2Hrf {
 		}
 		Arena arena = XMLArenaParser.parseArenaFromString(mc.downloadArena(arenaId)).getRight();
 
-		// MatchOrder
+		// Match order
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.match_orders"), progressIncrement);
 		List<MatchKurzInfo> matches = XMLMatchesParser
 				.parseMatchesFromString(mc.getMatches(Integer

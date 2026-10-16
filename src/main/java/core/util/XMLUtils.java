@@ -3,11 +3,16 @@ package core.util;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import core.file.xml.XMLParseException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -17,188 +22,202 @@ import org.xml.sax.SAXException;
 
 public class XMLUtils {
 
+    static class NoElementXMLParseException extends XMLParseException {
+        public NoElementXMLParseException(String tagName) {super("No element with tag name '%s'.".formatted(tagName));}
+    }
+
+    static class MoreThanOneElementXMLParseException extends XMLParseException {
+        public MoreThanOneElementXMLParseException(String tagName) {super("More than one element found with name '%s'.".formatted(tagName));}
+    }
+
 	private XMLUtils() {
 		throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
 	}
 
-	/**
-	 * Gets the date between an opening and closing xml tag. E.g. for
-	 * <tag>xyz</tag> the string xyz would be returned. If there are multiple
-	 * nodes with the specified tag name, the data of the first node found will
-	 * be returned.
-	 * 
-	 * @param doc
-	 *            a document.
-	 * @param tagname
-	 *            the name of the tag.
-	 * @return the data of the tag or <code>null</code> if no node with the
-	 *         specified tag name could be found.
-	 */
-	public static String getTagData(Document doc, String tagname) {
-		Node node = getNode(doc, tagname);
-		if (node != null) {
-			Node child = node.getFirstChild();
-			if (child != null) {
-				return child.getNodeValue();
-			}
-		}
-		return null;
-	}
+    /**
+     * Gets the date between an opening and closing xml tag. E.g. for
+     * <tag>xyz</tag> the string xyz would be returned. If there are multiple
+     * nodes with the specified tag name, the data of the first node found will
+     * be returned.
+     *
+     * @param doc     a document.
+     * @param tagName the name of the tag.
+     * @return the data of the tag or <code>null</code> if no node with the
+     * specified tag name could be found.
+     */
+    public static String getTagData(Document doc, String tagName) {
+        Node node = getNode(doc, tagName);
+        if (node != null) {
+            Node child = node.getFirstChild();
+            if (child != null) {
+                return child.getNodeValue();
+            }
+        }
+        return null;
+    }
 
-	/**
-	 * Creates a document from an XML string.
-	 * 
-	 * @param xmlSource
-	 *            the xml source as a string.
-	 * @return the document created from the given xml string.
-	 * @throws SAXException
-	 *             if an error occurs while parsing the xml.
-	 */
-	public static Document createDocument(String xmlSource) throws SAXException {
-		Reader xml = new StringReader(xmlSource);
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		Document doc;
-		try {
-			DocumentBuilder db = dbf.newDocumentBuilder();
-			return db.parse(new InputSource(xml));
-		} catch (ParserConfigurationException | IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
+    /**
+     * Creates a document from an XML string.
+     *
+     * @param xmlSource the xml source as a string.
+     * @return the document created from the given xml string.
+     * @throws SAXException if an error occurs while parsing the xml.
+     */
+    public static Document createDocument(String xmlSource) throws SAXException {
+        Reader xml = new StringReader(xmlSource);
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        try {
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            return db.parse(new InputSource(xml));
+        } catch (ParserConfigurationException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
-	/**
-	 * Finds a node in a document and returns the value from an attribute of
-	 * this node. If there are multiple nodes with the specified tag name, the
-	 * attribute value of the first node found will be returned.
-	 * 
-	 * @param document
-	 *            the document.
-	 * @param nodeName
-	 *            the name of the node .
-	 * @param attributeName
-	 *            the name of the node's attribute.
-	 * @return the value of the node's attribute or <code>null</code> if either
-	 *         no node with the specified tag name or no attribute with the
-	 *         specified attribute name could be found.
-	 */
-	public static String getAttributeValueFromNode(Document document,
-			String nodeName, String attributeName) {
-		Node node = getNode(document, nodeName);
-		if (node != null) {
-			Node attribute = getAttributeValue(node, attributeName);
-			if (attribute != null) {
-				return attribute.getNodeValue();
-			}
-		}
-		return null;
-	}
+    /**
+     * Finds a node in a document and returns the value from an attribute of
+     * this node. If there are multiple nodes with the specified tag name, the
+     * attribute value of the first node found will be returned.
+     *
+     * @param document      the document.
+     * @param nodeName      the name of the node .
+     * @param attributeName the name of the node's attribute.
+     * @return the value of the node's attribute or <code>null</code> if either
+     * no node with the specified tag name or no attribute with the
+     * specified attribute name could be found.
+     */
+    public static String getAttributeValueFromNode(Document document,
+                                                   String nodeName, String attributeName) {
+        Node node = getNode(document, nodeName);
+        if (node != null) {
+            Node attribute = getAttributeValue(node, attributeName);
+            if (attribute != null) {
+                return attribute.getNodeValue();
+            }
+        }
+        return null;
+    }
 
-	/**
-	 * Gets the value from a node's attribute.
-	 * 
-	 * @param node
-	 *            the node.
-	 * @param attributeName
-	 *            the name of the attribute.
-	 * @return the value of the attribute with the specified name or
-	 *         <code>null</code> if there is no attribute with that name.
-	 */
-	public static Node getAttributeValue(Node node, String attributeName) {
-		return (node.hasAttributes()) ? node.getAttributes().getNamedItem(
-				attributeName) : null;
+    /**
+     * Gets the value from a node's attribute.
+     *
+     * @param node          the node.
+     * @param attributeName the name of the attribute.
+     * @return the value of the attribute with the specified name or
+     * <code>null</code> if there is no attribute with that name.
+     */
+    public static Node getAttributeValue(Node node, String attributeName) {
+        return (node.hasAttributes()) ? node.getAttributes().getNamedItem(
+            attributeName) : null;
 
-	}
+    }
 
-	/**
-	 * Gets the first node with the specified tag name from the given document.
-	 * If there are multiple nodes with the specified tag name, the first node
-	 * found will be returned.
-	 * 
-	 * @param doc
-	 *            the document
-	 * @param tagname
-	 *            the tag name of the node to find.
-	 * @return the first node found with the specified tag name or
-	 *         <code>null</code> if no node with that name could be found.
-	 */
-	public static Node getNode(Document doc, String tagname) {
-		NodeList nl = doc.getElementsByTagName(tagname);
-		if (!isEmpty(nl)) {
-			return nl.item(0);
-		}
-		return null;
-	}
+    /**
+     * Gets the first node with the specified tag name from the given document.
+     * If there are multiple nodes with the specified tag name, the first node
+     * found will be returned.
+     *
+     * @param doc     the document
+     * @param tagname the tag name of the node to find.
+     * @return the first node found with the specified tag name or
+     * <code>null</code> if no node with that name could be found.
+     */
+    public static Node getNode(Document doc, String tagname) {
+        NodeList nl = doc.getElementsByTagName(tagname);
+        if (!isEmpty(nl)) {
+            return nl.item(0);
+        }
+        return null;
+    }
 
-	/**
-	 * Gets the first child element with the specified tag name from the given
-	 * parent element. If there are multiple elements with the specified tag
-	 * name, the first element found will be returned.
-	 * 
-	 * @param parent
-	 *            the parent element
-	 * @param tagname
-	 *            the tag name of the element to find.
-	 * @return the first element found with the specified tag name or
-	 *         <code>null</code> if no element with that name could be found.
-	 */
-	public static Element getElement(Element parent, String tagname) {
-		NodeList nl = parent.getElementsByTagName(tagname);
-		if (!isEmpty(nl)) {
-			return (Element) nl.item(0);
-		}
-		return null;
-	}
+    /**
+     * Gets the child element with the specified tag name from the given
+     * parent element.
+     *
+     * @param parent  the parent element
+     * @param tagName the tag name of the element to find.
+     * @return the first element found with the specified tag name
+     * @throws XMLParseException When the element is not found or more than one exists
+     * @throws NullPointerException When the parent element is null
+     */
+    public static Element getElement(Element parent, String tagName) {
+        Objects.requireNonNull(parent);
+        var nodes = getElements(parent.getChildNodes(), tagName);
+        return switch (nodes.size()) {
+            case 1 -> nodes.get(0);
+            case 0 -> throw new NoElementXMLParseException(tagName);
+            default -> throw new MoreThanOneElementXMLParseException(tagName);
+        };
+    }
+
+    private static List<Element> getElements(NodeList childNodes, String tagName) {
+        var elements = new ArrayList<Element>();
+        for (int i = 0; i < childNodes.getLength(); i++) {
+            var node = childNodes.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE && node.getNodeName().equals(tagName)) {
+                elements.add((Element) node);
+            }
+        }
+        return elements;
+    }
+
+
+    public static boolean hasElement(Element parent, String tagName) {
+        NodeList nl = parent.getElementsByTagName(tagName);
+        return !isEmpty(nl);
+    }
 
 	/**
 	 * Gets the value from the first descendant of a given ancestor, where the
 	 * descendant has the specified name.
-	 * 
+	 *
 	 * @param ancestor
 	 *            the ancestor element
-	 * @param tagname
+	 * @param tagName
 	 *            the tag name of the descendant to find.
-	 * @return the value of the descendant or <code>null</code> if no descendant
+	 * @return the value of the descendant
+     * @throws XMLParseException if no descendant
 	 *         with that name could be found or the descendant found has no
 	 *         value.
+     * @throws NullPointerException When the parent element is null
 	 */
-	public static String getValueFromDescendant(Element ancestor, String tagname) {
-		if (ancestor != null) {
-			NodeList nl = ancestor.getElementsByTagName(tagname);
-			if (!isEmpty(nl)) {
-				Element e = (Element) nl.item(0);
-				Node c = e.getFirstChild();
-				if (c != null) {
-					return c.getNodeValue();
-				}
-			}
-		}
-		return null;
-	}
+	public static String getStringValue(Element ancestor, String tagName) {
+        Element e = getElement(ancestor, tagName);
+        Node c = e.getFirstChild();
+        if (c != null) {
+            return c.getNodeValue();
+        }
+        throw new NoElementXMLParseException(tagName);
+    }
 
 	/**
 	 * Gets the value from the first descendant of a given ancestor, where the
 	 * descendant has the specified name.
-	 * 
+	 *
 	 * @param ancestor
 	 *            the ancestor element
-	 * @param tagname
+	 * @param tagName
 	 *            the tag name of the descendant to find.
 	 * @param defaultString
 	 *            a default string to return if the value found is
 	 *            <code>null</code>.
+     * @throws XMLParseException if more than one element with tag name are found
 	 * @return the value of the descendant or <code>null</code> if no descendant
 	 *         with that name could be found or the descendant found has no
 	 *         value.
 	 */
-	public static String getValueFromDescendant(Element ancestor,
-			String tagname, String defaultString) {
-		String val = getValueFromDescendant(ancestor, tagname);
-		return (val != null) ? val : defaultString;
-	}
+	public static String getStringValue(Element ancestor, String tagName, String defaultString) {
+        try {
+            return getStringValue(ancestor, tagName);
+        }
+        catch (NoElementXMLParseException e) {
+            return defaultString;
+        }
+    }
 
 	/**
 	 * Null-safe check if a nodelist is empty.
-	 * 
+	 *
 	 * @param nodeList
 	 *            the nodelist to check.
 	 * @return <code>true</code> if the given nodelist is <code>null</code> or
@@ -207,4 +226,39 @@ public class XMLUtils {
 	public static boolean isEmpty(NodeList nodeList) {
 		return nodeList == null || nodeList.getLength() == 0;
 	}
+
+    /**
+     * Gets an integer value from the first child element of a given parent element
+     * @param element Parent element
+     * @param tagName Child tag name
+     * @return int value
+     * @throws NumberFormatException Value is not a number
+     * @throws XMLParseException Child not found
+     */
+    public static int getIntValue(Element element, String tagName) {
+        var value = getStringValue(element, tagName);
+        return Integer.parseInt(value);
+    }
+
+    public static int getIntValue(Element element, String tagName, int defaultValue) {
+        try {
+            var value = getStringValue(element, tagName);
+            return Integer.parseInt(value);
+        } catch (NoElementXMLParseException e) {
+            return defaultValue;
+        }
+    }
+
+    public static Optional<Integer> findIntegerValue(Element element, String tagName) {
+        try {
+            var value = getStringValue(element, tagName);
+            return Optional.of(Integer.parseInt(value));
+        } catch (NoElementXMLParseException e) {
+            return Optional.empty();
+        }
+    }
+
+    public static boolean getBooleanValue(Element element, String tagName) {
+        return Boolean.parseBoolean(getStringValue(element, tagName));
+    }
 }
