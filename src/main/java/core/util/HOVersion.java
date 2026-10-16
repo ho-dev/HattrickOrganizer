@@ -56,11 +56,6 @@ public record HOVersion(
         return Double.parseDouble(getVersionShort());
     }
 
-    @Deprecated(since = "10.0")
-    public int getRevisionNumber() {
-        return buildNumber;
-    }
-
     public String getVersionString() {
         final String versionShort = getVersionShort();
         final String buildNumberStr = isLocalBuild() ? "(local build)" : "(build %d)".formatted(buildNumber);

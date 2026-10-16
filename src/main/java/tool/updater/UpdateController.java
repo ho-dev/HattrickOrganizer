@@ -116,7 +116,7 @@ public final class UpdateController {
     }
 
     private static void showNoUpdateAvailableDialog() {
-        final int currRev = HO.getHoVersion().getRevisionNumber();
+        final int currRev = HO.getHoVersion().buildNumber();
         JOptionPane.showMessageDialog(HOMainFrame.instance(),
                 TranslationFacility.tr("updatenotavailable")
                 + "\n\n"
@@ -184,7 +184,7 @@ public final class UpdateController {
     public static boolean compareToCurrentVersions(VersionInfo version) {
         if (version == null) return false; // NO version is NOT greater than current version
         return version.getVersion() > HO.getHoVersion().getVersionShortAsDouble() ||
-                ((version.getVersion() == HO.getHoVersion().getVersionShortAsDouble()) && (version.getBuild() > HO.getHoVersion().getRevisionNumber()));
+                ((version.getVersion() == HO.getHoVersion().getVersionShortAsDouble()) && (version.getBuild() > HO.getHoVersion().buildNumber()));
     }
 
 }
