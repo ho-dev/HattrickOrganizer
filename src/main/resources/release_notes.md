@@ -74,6 +74,11 @@
 
 * Fix background color of terraces income column (#2356)
 
+#### Arena
+
+* Fixed incorrect sorting in several columns, including seating capacities, match results, spectators, fans, and
+  placement. (#2551)
+
 ### Youth
 
 * Added support of all 13 **Player Categories** (#2418)

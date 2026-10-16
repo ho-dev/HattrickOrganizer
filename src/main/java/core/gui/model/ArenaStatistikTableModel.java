@@ -9,6 +9,7 @@ import core.model.TranslationFacility;
 import core.model.match.MatchKurzInfo;
 import core.model.match.MatchResultFormatter;
 import core.model.misc.Economy;
+import core.util.HODateTime;
 import core.util.HOLogger;
 import core.util.Helper;
 
@@ -18,6 +19,8 @@ import java.awt.*;
 import java.time.Duration;
 
 public class ArenaStatistikTableModel extends AbstractTableModel {
+
+    private static final HOLogger log = HOLogger.instance();
 
     public String[] m_sToolTipStrings = {
 			TranslationFacility.tr("Datum"),
@@ -247,7 +250,7 @@ public class ArenaStatistikTableModel extends AbstractTableModel {
 			    //Gast
 			    m_clData[i][colIndex++] = new ColorLabelEntry(match.getGastName(), ColorLabelEntry.FG_STANDARD,	background, SwingConstants.LEFT);
 			    //Ergebnis
-			    m_clData[i][colIndex] = new ColorLabelEntry(MatchResultFormatter.format(match.getHeimTore(), match.getGastTore(), ""), ColorLabelEntry.FG_STANDARD, background, SwingConstants.CENTER);
+                m_clData[i][colIndex] = new ColorLabelEntry(match.getHeimTore() * 100 + match.getGastTore(), MatchResultFormatter.format(match.getHeimTore(), match.getGastTore(), ""), ColorLabelEntry.FG_STANDARD, background, SwingConstants.CENTER);
 			    // Stars for the winner in the same column (do not increment the column index)
 			    if (match.getMatchStatus() != MatchKurzInfo.FINISHED) {
 			        ((ColorLabelEntry) m_clData[i][colIndex++]).setIcon(ImageUtilities.NOIMAGEICON);
@@ -271,22 +274,22 @@ public class ArenaStatistikTableModel extends AbstractTableModel {
 			    //Total Income
 				m_clData[i][colIndex++] = new ColorLabelEntry(match.getTotalIncome(),  background);
 			    //Terraces
-			    m_clData[i][colIndex++] = new ColorLabelEntry(match.getSoldTerraces() + " / " + match.getMaxTerraces(), ColorLabelEntry.FG_STANDARD, background, SwingConstants.CENTER);
+                m_clData[i][colIndex++] = new ColorLabelEntry(match.getSoldTerraces(), match.getSoldTerraces() + " / " + match.getMaxTerraces(), ColorLabelEntry.FG_STANDARD, background, SwingConstants.CENTER);
 			    m_clData[i][colIndex++] = new ProgressbarTableEntry((int) ((float) match.getSoldTerraces() / (float) match.getMaxTerraces() * 1000), 0, 1000, 1, 0.1, background, new Color(0, 120, 0), " %");
 				//Terrace Income
 				m_clData[i][colIndex++] = new ColorLabelEntry(match.getTerracesIncome(), background);
 			    //Basic seats
-			    m_clData[i][colIndex++] = new ColorLabelEntry(match.getSoldBasics() + " / " + match.getMaxBasic(), ColorLabelEntry.FG_STANDARD, background, SwingConstants.CENTER);
+                m_clData[i][colIndex++] = new ColorLabelEntry(match.getSoldBasics(), match.getSoldBasics() + " / " + match.getMaxBasic(), ColorLabelEntry.FG_STANDARD, background, SwingConstants.CENTER);
                 m_clData[i][colIndex++] = new ProgressbarTableEntry((int) ((float) match.getSoldBasics() / (float) match.getMaxBasic() * 1000), 0, 1000, 1, 0.1, background, new Color(0, 120, 0), " %");
 				//Basic Seat Income
 				m_clData[i][colIndex++] = new ColorLabelEntry(match.getBasicSeatIncome(), background);
 			    //Seats under the roof
-			    m_clData[i][colIndex++] = new ColorLabelEntry(match.getSoldRoof() + " / " + match.getMaxRoof(), ColorLabelEntry.FG_STANDARD, background, SwingConstants.CENTER);
+                m_clData[i][colIndex++] = new ColorLabelEntry(match.getSoldRoof(), match.getSoldRoof() + " / " + match.getMaxRoof(), ColorLabelEntry.FG_STANDARD, background, SwingConstants.CENTER);
                 m_clData[i][colIndex++] = new ProgressbarTableEntry((int) ((float) match.getSoldRoof() / (float) match.getMaxRoof() * 1000), 0, 1000, 1, 0.1, background, new Color(0, 120, 0), " %");
 				//Seats under the roof Income
 				m_clData[i][colIndex++] = new ColorLabelEntry(match.getSeatRoofIncome(), background);
 			    //VIP seats
-			    m_clData[i][colIndex++] = new ColorLabelEntry(match.getSoldVip() + " / " + match.getMaxVip(), ColorLabelEntry.FG_STANDARD, background, SwingConstants.CENTER);
+                m_clData[i][colIndex++] = new ColorLabelEntry(match.getSoldVip(), match.getSoldVip() + " / " + match.getMaxVip(), ColorLabelEntry.FG_STANDARD, background, SwingConstants.CENTER);
                 m_clData[i][colIndex++] = new ProgressbarTableEntry((int) ((float) match.getSoldVip() / (float) match.getMaxVip() * 1000), 0, 1000, 1, 0.1, background, new Color(0, 120, 0), " %");
 				//SVIP seats Income
 				m_clData[i][colIndex++] = new ColorLabelEntry(match.getVipIncome(), background);
@@ -299,12 +302,13 @@ public class ArenaStatistikTableModel extends AbstractTableModel {
 			        fanzuwachs = ((match.getFans() - m_clMatches[i + 1].getFans()) * 604800000f) / diff;
 			    }
 			    m_clData[i][colIndex++] = new ColorLabelEntry(fanzuwachs, background, false,0);
-			    //Quotione  Zuschauer/Fans
-			    m_clData[i][colIndex++] = new ColorLabelEntry(Helper.round((float) match.getSpectators() / (float) match.getFans(), 2) + "", ColorLabelEntry.FG_STANDARD, background, SwingConstants.RIGHT);
+			    // Spectators to Fans ratio
+                final var spectatorsFansRatio = Helper.round((float) match.getSpectators() / (float) match.getFans(), 2);
+			    m_clData[i][colIndex++] = new ColorLabelEntry(spectatorsFansRatio, spectatorsFansRatio + "", ColorLabelEntry.FG_STANDARD, background, SwingConstants.RIGHT);
 			    // Fanstimmung
-			    m_clData[i][colIndex++] = new ColorLabelEntry(Economy.getNameForLevelFans(match.getFanZufriedenheit(), match.getMatchDate()), ColorLabelEntry.FG_STANDARD, background, SwingConstants.LEFT);
+                m_clData[i][colIndex++] = new ColorLabelEntry(getSortValueForLevelFans(match.getFanZufriedenheit(), match.getMatchDate()), Economy.getNameForLevelFans(match.getFanZufriedenheit(), match.getMatchDate()), ColorLabelEntry.FG_STANDARD, background, SwingConstants.LEFT);
 			    //Ligaplatz
-			    m_clData[i][colIndex++] = new ColorLabelEntry(match.getLigaPlatz() + ".", ColorLabelEntry.FG_STANDARD, background, SwingConstants.CENTER);
+			    m_clData[i][colIndex++] = new ColorLabelEntry(match.getLigaPlatz(), match.getLigaPlatz() + ".", ColorLabelEntry.FG_STANDARD, background, SwingConstants.CENTER);
 			}
 		} catch (Exception e) {
 			HOLogger.instance().error(getClass(), e);
@@ -316,4 +320,12 @@ public class ArenaStatistikTableModel extends AbstractTableModel {
 		return m_clMatches;
 	}
 
+    private static int getSortValueForLevelFans(int historicalLevelFansOrLevelFans, HODateTime date) {
+        try {
+            return Economy.mapHistoricalLevelFansToLevelFans(historicalLevelFansOrLevelFans, date);
+        } catch (IllegalArgumentException e) {
+            log.warning(ArenaStatistikTableModel.class, "Mapping failed for level of fans %d: ".formatted(historicalLevelFansOrLevelFans) + e);
+            return historicalLevelFansOrLevelFans;
+        }
+    }
 }
