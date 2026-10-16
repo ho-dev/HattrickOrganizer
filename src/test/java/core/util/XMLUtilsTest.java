@@ -627,7 +627,6 @@ class XMLUtilsTest {
 
     private static Stream<Arguments> test_getStringValueDefault() {
         return Stream.of(
-            arguments(XMLUtils.getElement(matchElement, "Scorers"), "Goal", "default"),
             arguments(root, "FileName", "matchdetails.xml"),
             arguments(root, "Version", "3.0"),
             arguments(root, "_FileName", "default"),
@@ -643,7 +642,6 @@ class XMLUtilsTest {
 
     private static Stream<Arguments> test_getStringValue_throwsXMLParseException() {
         return Stream.of(
-            arguments(XMLUtils.getElement(matchElement, "Scorers"), "Goal", "More than one element found with name 'Goal'."),
             arguments(root, " FileName", "No element with tag name ' FileName'."),
             arguments(root, "version", "No element with tag name 'version'.")
         );
@@ -653,6 +651,19 @@ class XMLUtilsTest {
     @MethodSource
     void test_getStringValue_throwsXMLParseException(Element element, String tagName, String expected) {
         XMLParseException thrown = assertThrows(XMLParseException.class, () -> XMLUtils.getStringValue(element, tagName));
+        assertThat(thrown.getMessage()).isEqualTo(expected);
+    }
+
+    private static Stream<Arguments> test_getStringValueDefault_throwsXMLParseException() {
+        return Stream.of(
+            arguments(XMLUtils.getElement(matchElement, "Scorers"), "Goal", "More than one element found with name 'Goal'.")
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource
+    void test_getStringValueDefault_throwsXMLParseException(Element element, String tagName, String expected) {
+        XMLParseException thrown = assertThrows(XMLParseException.class, () -> XMLUtils.getStringValue(element, tagName, "default"));
         assertThat(thrown.getMessage()).isEqualTo(expected);
     }
 
@@ -670,10 +681,7 @@ class XMLUtilsTest {
 
     private static Stream<Arguments> test_getIntValueDefault() {
         return Stream.of(
-            arguments(XMLUtils.getElement(matchElement, "Scorers"), "Goal", -1),
             arguments(root, "UserID", 1757369),
-            arguments(root, "FileName", -1),
-            arguments(root, "Version", -1),
             arguments(root, "_FileName", -1),
             arguments(root, "_Version", -1)
         );
@@ -700,6 +708,19 @@ class XMLUtilsTest {
         assertThat(thrown.getMessage()).isEqualTo(expected);
     }
 
+    private static Stream<Arguments> test_getIntValueDefault_ThrowsXMLParseException() {
+        return Stream.of(
+            arguments(XMLUtils.getElement(matchElement, "Scorers"), "Goal", "More than one element found with name 'Goal'.")
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource
+    void test_getIntValueDefault_ThrowsXMLParseException(Element element, String tagName, String expected) {
+        XMLParseException thrown = assertThrows(XMLParseException.class, () -> XMLUtils.getIntValue(element, tagName, -1));
+        assertThat(thrown.getMessage()).isEqualTo(expected);
+    }
+
     private static Stream<Arguments> test_getIntValue_ThrowsNumberFormatException() {
         return Stream.of(
             arguments(root, "FileName", "For input string: \"matchdetails.xml\""),
@@ -716,10 +737,7 @@ class XMLUtilsTest {
 
     private static Stream<Arguments> test_findIntegerValue() {
         return Stream.of(
-            arguments(XMLUtils.getElement(matchElement, "Scorers"), "Goal", Optional.empty()),
             arguments(root, "UserID", Optional.of(1757369)),
-            arguments(root, "FileName", Optional.empty()),
-            arguments(root, "Version", Optional.empty()),
             arguments(root, "_FileName", Optional.empty()),
             arguments(root, "_Version", Optional.empty())
         );
@@ -729,6 +747,20 @@ class XMLUtilsTest {
     @MethodSource
     void test_findIntegerValue(Element element, String tagName, Optional<Integer> expected) {
         assertThat(XMLUtils.findIntegerValue(element, tagName)).isEqualTo(expected);
+    }
+
+    private static Stream<Arguments> test_findIntegerValue_ThrowsNumberFormatException() {
+        return Stream.of(
+            arguments(root, "FileName", "For input string: \"matchdetails.xml\""),
+            arguments(root, "Version", "For input string: \"3.0\"")
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource
+    void test_findIntegerValue_ThrowsNumberFormatException(Element element, String tagName, String expected) {
+        NumberFormatException thrown = assertThrows(NumberFormatException.class, () -> XMLUtils.findIntegerValue(element, tagName));
+        assertThat(thrown.getMessage()).isEqualTo(expected);
     }
 
     private static Stream<Arguments> test_getBooleanValue() {

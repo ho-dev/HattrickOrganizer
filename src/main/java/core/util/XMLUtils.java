@@ -3,6 +3,7 @@ package core.util;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.Objects;
 import java.util.Optional;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -19,136 +20,134 @@ import org.xml.sax.SAXException;
 
 public class XMLUtils {
 
+    static class NoElementXMLParseException extends XMLParseException {
+        public NoElementXMLParseException(String tagName) {super("No element with tag name '%s'.".formatted(tagName));}
+    }
+
+    static class MoreThanOneElementXMLParseException extends XMLParseException {
+        public MoreThanOneElementXMLParseException(String tagName) {super("More than one element found with name '%s'.".formatted(tagName));}
+    }
+
 	private XMLUtils() {
 		throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
 	}
 
-	/**
-	 * Gets the date between an opening and closing xml tag. E.g. for
-	 * <tag>xyz</tag> the string xyz would be returned. If there are multiple
-	 * nodes with the specified tag name, the data of the first node found will
-	 * be returned.
-	 *
-	 * @param doc
-	 *            a document.
-	 * @param tagName
-	 *            the name of the tag.
-	 * @return the data of the tag or <code>null</code> if no node with the
-	 *         specified tag name could be found.
-	 */
-	public static String getTagData(Document doc, String tagName) {
-		Node node = getNode(doc, tagName);
-		if (node != null) {
-			Node child = node.getFirstChild();
-			if (child != null) {
-				return child.getNodeValue();
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Creates a document from an XML string.
-	 *
-	 * @param xmlSource
-	 *            the xml source as a string.
-	 * @return the document created from the given xml string.
-	 * @throws SAXException
-	 *             if an error occurs while parsing the xml.
-	 */
-	public static Document createDocument(String xmlSource) throws SAXException {
-		Reader xml = new StringReader(xmlSource);
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		try {
-			DocumentBuilder db = dbf.newDocumentBuilder();
-			return db.parse(new InputSource(xml));
-		} catch (ParserConfigurationException | IOException e) {
-			throw new RuntimeException(e);
-		}
-	}
-
-	/**
-	 * Finds a node in a document and returns the value from an attribute of
-	 * this node. If there are multiple nodes with the specified tag name, the
-	 * attribute value of the first node found will be returned.
-	 *
-	 * @param document
-	 *            the document.
-	 * @param nodeName
-	 *            the name of the node .
-	 * @param attributeName
-	 *            the name of the node's attribute.
-	 * @return the value of the node's attribute or <code>null</code> if either
-	 *         no node with the specified tag name or no attribute with the
-	 *         specified attribute name could be found.
-	 */
-	public static String getAttributeValueFromNode(Document document,
-			String nodeName, String attributeName) {
-		Node node = getNode(document, nodeName);
-		if (node != null) {
-			Node attribute = getAttributeValue(node, attributeName);
-			if (attribute != null) {
-				return attribute.getNodeValue();
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Gets the value from a node's attribute.
-	 *
-	 * @param node
-	 *            the node.
-	 * @param attributeName
-	 *            the name of the attribute.
-	 * @return the value of the attribute with the specified name or
-	 *         <code>null</code> if there is no attribute with that name.
-	 */
-	public static Node getAttributeValue(Node node, String attributeName) {
-		return (node.hasAttributes()) ? node.getAttributes().getNamedItem(
-				attributeName) : null;
-
-	}
-
-	/**
-	 * Gets the first node with the specified tag name from the given document.
-	 * If there are multiple nodes with the specified tag name, the first node
-	 * found will be returned.
-	 *
-	 * @param doc
-	 *            the document
-	 * @param tagname
-	 *            the tag name of the node to find.
-	 * @return the first node found with the specified tag name or
-	 *         <code>null</code> if no node with that name could be found.
-	 */
-	public static Node getNode(Document doc, String tagname) {
-		NodeList nl = doc.getElementsByTagName(tagname);
-		if (!isEmpty(nl)) {
-			return nl.item(0);
-		}
-		return null;
-	}
-
-	/**
-	 * Gets the child element with the specified tag name from the given
-	 * parent element.
+    /**
+     * Gets the date between an opening and closing xml tag. E.g. for
+     * <tag>xyz</tag> the string xyz would be returned. If there are multiple
+     * nodes with the specified tag name, the data of the first node found will
+     * be returned.
      *
- 	 * @param parent
-	 *            the parent element
-	 * @param tagName
-	 *            the tag name of the element to find.
-	 * @return the first element found with the specified tag name
-     * @exception XMLParseException When the element is not found or more than one exists
-	 */
+     * @param doc     a document.
+     * @param tagName the name of the tag.
+     * @return the data of the tag or <code>null</code> if no node with the
+     * specified tag name could be found.
+     */
+    public static String getTagData(Document doc, String tagName) {
+        Node node = getNode(doc, tagName);
+        if (node != null) {
+            Node child = node.getFirstChild();
+            if (child != null) {
+                return child.getNodeValue();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Creates a document from an XML string.
+     *
+     * @param xmlSource the xml source as a string.
+     * @return the document created from the given xml string.
+     * @throws SAXException if an error occurs while parsing the xml.
+     */
+    public static Document createDocument(String xmlSource) throws SAXException {
+        Reader xml = new StringReader(xmlSource);
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        try {
+            DocumentBuilder db = dbf.newDocumentBuilder();
+            return db.parse(new InputSource(xml));
+        } catch (ParserConfigurationException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Finds a node in a document and returns the value from an attribute of
+     * this node. If there are multiple nodes with the specified tag name, the
+     * attribute value of the first node found will be returned.
+     *
+     * @param document      the document.
+     * @param nodeName      the name of the node .
+     * @param attributeName the name of the node's attribute.
+     * @return the value of the node's attribute or <code>null</code> if either
+     * no node with the specified tag name or no attribute with the
+     * specified attribute name could be found.
+     */
+    public static String getAttributeValueFromNode(Document document,
+                                                   String nodeName, String attributeName) {
+        Node node = getNode(document, nodeName);
+        if (node != null) {
+            Node attribute = getAttributeValue(node, attributeName);
+            if (attribute != null) {
+                return attribute.getNodeValue();
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Gets the value from a node's attribute.
+     *
+     * @param node          the node.
+     * @param attributeName the name of the attribute.
+     * @return the value of the attribute with the specified name or
+     * <code>null</code> if there is no attribute with that name.
+     */
+    public static Node getAttributeValue(Node node, String attributeName) {
+        return (node.hasAttributes()) ? node.getAttributes().getNamedItem(
+            attributeName) : null;
+
+    }
+
+    /**
+     * Gets the first node with the specified tag name from the given document.
+     * If there are multiple nodes with the specified tag name, the first node
+     * found will be returned.
+     *
+     * @param doc     the document
+     * @param tagname the tag name of the node to find.
+     * @return the first node found with the specified tag name or
+     * <code>null</code> if no node with that name could be found.
+     */
+    public static Node getNode(Document doc, String tagname) {
+        NodeList nl = doc.getElementsByTagName(tagname);
+        if (!isEmpty(nl)) {
+            return nl.item(0);
+        }
+        return null;
+    }
+
+    /**
+     * Gets the child element with the specified tag name from the given
+     * parent element.
+     *
+     * @param parent  the parent element
+     * @param tagName the tag name of the element to find.
+     * @return the first element found with the specified tag name
+     * @throws XMLParseException When the element is not found or more than one exists
+     * @throws NullPointerException When the parent element is null
+     */
     public static Element getElement(Element parent, String tagName) {
+        Objects.requireNonNull(parent);
         NodeList nl = parent.getElementsByTagName(tagName);
         return switch (nl.getLength()) {
             case 1 -> (Element) nl.item(0);
-            case 0 -> throw new XMLParseException("No element with tag name '%s'.".formatted(tagName));
-            default -> throw new XMLParseException("More than one element found with name '%s'.".formatted(tagName));
+            case 0 -> throw new NoElementXMLParseException(tagName);
+            default -> throw new MoreThanOneElementXMLParseException(tagName);
         };
     }
+
 
     public static boolean hasElement(Element parent, String tagName) {
         NodeList nl = parent.getElementsByTagName(tagName);
@@ -164,27 +163,19 @@ public class XMLUtils {
 	 * @param tagName
 	 *            the tag name of the descendant to find.
 	 * @return the value of the descendant
-     * @exception XMLParseException if no descendant
+     * @throws XMLParseException if no descendant
 	 *         with that name could be found or the descendant found has no
 	 *         value.
+     * @throws NullPointerException When the parent element is null
 	 */
 	public static String getStringValue(Element ancestor, String tagName) {
-		if (ancestor != null) {
-			NodeList nl = ancestor.getElementsByTagName(tagName);
-            switch (nl.getLength()) {
-                case 1:
-                    Element e = (Element) nl.item(0);
-                    Node c = e.getFirstChild();
-                    if (c != null) {
-                        return c.getNodeValue();
-                    }
-                    // pass through
-                case 0: throw new XMLParseException("No element with tag name '%s'.".formatted(tagName));
-                default: throw new XMLParseException("More than one element found with name '%s'.".formatted(tagName));
-            }
-		}
-		throw new XMLParseException("No element with tag name '%s'.".formatted(tagName));
-	}
+        Element e = getElement(ancestor, tagName);
+        Node c = e.getFirstChild();
+        if (c != null) {
+            return c.getNodeValue();
+        }
+        throw new NoElementXMLParseException(tagName);
+    }
 
 	/**
 	 * Gets the value from the first descendant of a given ancestor, where the
@@ -197,6 +188,7 @@ public class XMLUtils {
 	 * @param defaultString
 	 *            a default string to return if the value found is
 	 *            <code>null</code>.
+     * @throws XMLParseException if more than one element with tag name are found
 	 * @return the value of the descendant or <code>null</code> if no descendant
 	 *         with that name could be found or the descendant found has no
 	 *         value.
@@ -205,7 +197,7 @@ public class XMLUtils {
         try {
             return getStringValue(ancestor, tagName);
         }
-        catch (XMLParseException e) {
+        catch (NoElementXMLParseException e) {
             return defaultString;
         }
     }
@@ -227,8 +219,8 @@ public class XMLUtils {
      * @param element Parent element
      * @param tagName Child tag name
      * @return int value
-     * @exception NumberFormatException Value is not a number
-     * @exception XMLParseException Child not found
+     * @throws NumberFormatException Value is not a number
+     * @throws XMLParseException Child not found
      */
     public static int getIntValue(Element element, String tagName) {
         var value = getStringValue(element, tagName);
@@ -239,7 +231,7 @@ public class XMLUtils {
         try {
             var value = getStringValue(element, tagName);
             return Integer.parseInt(value);
-        } catch (Exception e) {
+        } catch (NoElementXMLParseException e) {
             return defaultValue;
         }
     }
@@ -248,7 +240,7 @@ public class XMLUtils {
         try {
             var value = getStringValue(element, tagName);
             return Optional.of(Integer.parseInt(value));
-        } catch (Exception e) {
+        } catch (NoElementXMLParseException e) {
             return Optional.empty();
         }
     }

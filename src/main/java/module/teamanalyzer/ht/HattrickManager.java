@@ -52,12 +52,14 @@ public class HattrickManager {
                 if (match.getMatchStatus() != MatchKurzInfo.FINISHED) {
                     continue;
                 }
+
                 boolean refresh = DBManager.instance().matchLineupIsNotStored(match.getMatchType(), match.getMatchID())
                     || !DBManager.instance().isMatchIFKRatingInDB(match.getMatchID());
                 var accepted = filter.isAcceptedMatch(new Match(match));
                 if (!filter.isAutomatic() || (accepted && refresh)) {
                     OnlineWorker.downloadMatchData(match, refresh);
                 }
+
                 if (accepted) limit--;
                 if (limit < 1) {
                     break;
