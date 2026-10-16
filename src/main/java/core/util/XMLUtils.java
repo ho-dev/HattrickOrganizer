@@ -3,6 +3,8 @@ package core.util;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -140,12 +142,23 @@ public class XMLUtils {
      */
     public static Element getElement(Element parent, String tagName) {
         Objects.requireNonNull(parent);
-        NodeList nl = parent.getElementsByTagName(tagName);
-        return switch (nl.getLength()) {
-            case 1 -> (Element) nl.item(0);
+        var nodes = getElements(parent.getChildNodes(), tagName);
+        return switch (nodes.size()) {
+            case 1 -> nodes.get(0);
             case 0 -> throw new NoElementXMLParseException(tagName);
             default -> throw new MoreThanOneElementXMLParseException(tagName);
         };
+    }
+
+    private static List<Element> getElements(NodeList childNodes, String tagName) {
+        var elements = new ArrayList<Element>();
+        for (int i = 0; i < childNodes.getLength(); i++) {
+            var node = childNodes.item(i);
+            if (node.getNodeType() == Node.ELEMENT_NODE && node.getNodeName().equals(tagName)) {
+                elements.add((Element) node);
+            }
+        }
+        return elements;
     }
 
 
