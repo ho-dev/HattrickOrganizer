@@ -71,16 +71,6 @@ public record HOVersion(
         };
     }
 
-    @Deprecated(since = "10.0")
-    public String getHistoricalVersionString() {
-        final String versionShort = getVersionShort();
-
-        return switch (stage) {
-            case DEV, BETA -> "%s %s (r%d)".formatted(versionShort, stage.getText(), buildNumber);
-            case STABLE -> versionShort;
-        };
-    }
-
     public String getImplementationVersionStr() {
         return "%d.%d.%d.%d".formatted(major, minor, buildNumber, stage.getId());
     }
