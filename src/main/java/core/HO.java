@@ -227,7 +227,8 @@ public class HO {
     }
 
     private static String createVersionStringForLocalBuild(String majorMinor) {
-        return "%s.-1.%s".formatted(majorMinor, BuildInfo.devStageStr());
+        var localBuildNumber = -1;
+        return "%s.%d.%s".formatted(majorMinor, localBuildNumber,  BuildInfo.devStageStr());
     }
 
     private static HOVersion createHoVersionFromBuildInfo() {
