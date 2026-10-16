@@ -562,7 +562,6 @@ class XMLUtilsTest {
     private static final Element root = doc.getDocumentElement();
     private static final Element matchElement = XMLUtils.getElement(root, "Match");
 
-
     private static Stream<Arguments> test_getElement() {
         return Stream.of(
             arguments(matchElement, "Scorers"),
@@ -593,7 +592,6 @@ class XMLUtilsTest {
         XMLParseException thrown = assertThrows(XMLParseException.class, () -> XMLUtils.getElement(element, tagName));
         assertThat(thrown.getMessage()).isEqualTo(expected);
     }
-
 
     private static Stream<Arguments> test_hasElement() {
         return Stream.of(

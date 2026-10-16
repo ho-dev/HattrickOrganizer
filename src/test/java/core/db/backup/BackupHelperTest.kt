@@ -88,7 +88,6 @@ internal class BackupHelperTest {
                 val htweek = date.toHTWeek()
                 if (i >= 3 && !htweek.equals(htweekFile3)) {
                     fileFromPreviousWeek = 1
-
                 }
             }
         }
