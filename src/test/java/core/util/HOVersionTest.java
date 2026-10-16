@@ -191,12 +191,4 @@ class HOVersionTest {
             .isInstanceOf(IllegalArgumentException.class)
             .hasMessage("%d is not a valid id for a Stage".formatted(id));
     }
-
-    @Test
-    @SuppressWarnings("deprecation")
-    void getRevisionNumber() {
-        final var version = new HOVersion(11, 0, 123, HOVersion.Stage.DEV);
-
-        assertThat(version.getRevisionNumber()).isEqualTo(123);
-    }
 }
