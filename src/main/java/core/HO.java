@@ -46,7 +46,6 @@ public class HO {
 	}
 
 	public static String getVersionString() {
-        // TODO: Revision or build number in the string?
         return hoVersion.getVersionString();
 	}
 

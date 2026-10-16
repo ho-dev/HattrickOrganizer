@@ -106,29 +106,22 @@ class HOVersionTest {
 
     private static Stream<Arguments> versionStrings() {
         return Stream.of(
-            Arguments.of(new HOVersion(11, 0, -1, HOVersion.Stage.DEV), "11.0 DEV (local build)", "11.0 DEV (r-1)"),
-            Arguments.of(new HOVersion(11, 0, -1, HOVersion.Stage.BETA), "11.0 BETA (local build)", "11.0 BETA (r-1)"),
-            Arguments.of(new HOVersion(11, 0, -1, HOVersion.Stage.STABLE), "11.0 (local build)", "11.0"),
-            Arguments.of(new HOVersion(11, 0, 0, HOVersion.Stage.DEV), "11.0 DEV (build 0)", "11.0 DEV (r0)"),
-            Arguments.of(new HOVersion(11, 0, 0, HOVersion.Stage.BETA), "11.0 BETA (build 0)", "11.0 BETA (r0)"),
-            Arguments.of(new HOVersion(11, 0, 0, HOVersion.Stage.STABLE), "11.0 (build 0)", "11.0"),
-            Arguments.of(new HOVersion(11, 0, 123, HOVersion.Stage.DEV), "11.0 DEV (build 123)", "11.0 DEV (r123)"),
-            Arguments.of(new HOVersion(11, 0, 123, HOVersion.Stage.BETA), "11.0 BETA (build 123)", "11.0 BETA (r123)"),
-            Arguments.of(new HOVersion(11, 0, 123, HOVersion.Stage.STABLE), "11.0 (build 123)", "11.0")
+            Arguments.of(new HOVersion(11, 0, -1, HOVersion.Stage.DEV), "11.0 DEV (local build)"),
+            Arguments.of(new HOVersion(11, 0, -1, HOVersion.Stage.BETA), "11.0 BETA (local build)"),
+            Arguments.of(new HOVersion(11, 0, -1, HOVersion.Stage.STABLE), "11.0 (local build)"),
+            Arguments.of(new HOVersion(11, 0, 0, HOVersion.Stage.DEV), "11.0 DEV (build 0)"),
+            Arguments.of(new HOVersion(11, 0, 0, HOVersion.Stage.BETA), "11.0 BETA (build 0)"),
+            Arguments.of(new HOVersion(11, 0, 0, HOVersion.Stage.STABLE), "11.0 (build 0)"),
+            Arguments.of(new HOVersion(11, 0, 123, HOVersion.Stage.DEV), "11.0 DEV (build 123)"),
+            Arguments.of(new HOVersion(11, 0, 123, HOVersion.Stage.BETA), "11.0 BETA (build 123)"),
+            Arguments.of(new HOVersion(11, 0, 123, HOVersion.Stage.STABLE), "11.0 (build 123)")
         );
     }
 
     @ParameterizedTest
     @MethodSource("versionStrings")
-    void getVersionString(HOVersion version, String expected, String ignored) {
+    void getVersionString(HOVersion version, String expected) {
         assertThat(version.getVersionString()).isEqualTo(expected);
-    }
-
-    @SuppressWarnings("deprecation")
-    @ParameterizedTest
-    @MethodSource("versionStrings")
-    void getHistoricalVersionString(HOVersion version, String ignored, String expected) {
-        assertThat(version.getHistoricalVersionString()).isEqualTo(expected);
     }
 
     private static Stream<Arguments> shortVersions() {
