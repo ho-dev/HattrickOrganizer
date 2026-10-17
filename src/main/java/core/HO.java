@@ -22,6 +22,7 @@ import javax.management.*;
 import javax.swing.*;
 import java.io.File;
 import java.lang.management.ManagementFactory;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Optional;
@@ -31,7 +32,7 @@ import static java.awt.event.KeyEvent.VK_1;
 public class HO {
 
     @Getter
-    private static HOVersion hoVersion = null;
+    private static final HOVersion hoVersion = HOVersionLoader.getVersion();
 	private static OSUtils.OS platform;
 	private static boolean portable_version; // Used to determine the location of the DB
 	public static OSUtils.OS getPlatform() {return platform; }
@@ -89,8 +90,9 @@ public class HO {
 			}
 		}
 
-		// Get HO version from manifest
-        hoVersion = createHoVersion();
+        // Initialize file logging
+        HOLogger.instance().initializeFileLogging(Paths.get(UserManager.instance().getDbParentFolder() , "logs"));
+
         HOLogger.instance().info(HO.class, "HO-Version: %s".formatted(hoVersion.getVersionString()));
 
         evaluateEnvironmentVariables();
@@ -203,39 +205,6 @@ public class HO {
 			interruptionWindow.dispose();
 		});
 	}
-
-    private static HOVersion createHoVersion() {
-        try {
-            return Optional.ofNullable(HO.class.getPackage().getImplementationVersion())
-                .map(HO::createHoVersionFromImplementationVersion)
-                .orElseGet(HO::createHoVersionFromBuildInfo);
-        } catch (RuntimeException e) {
-            HOLogger.instance().error(HO.class, "Cannot create HOVersion from implementation version and build info: " + e);
-            return new HOVersion(0, 0, 0, HOVersion.Stage.DEV);
-        }
-    }
-
-    private static HOVersion createHoVersionFromImplementationVersion(String implementationVersion) {
-        if (implementationVersion.matches("\\d+\\.\\d+") ) {
-            final var newImplementationVersion = createVersionStringForLocalBuild(implementationVersion);
-            HOLogger.instance().debug(HO.class, "Adjusted implementation version '%s' to '%s'."
-                .formatted(implementationVersion, newImplementationVersion));
-            return HOVersion.parseFromImplementationVersion(newImplementationVersion);
-        }
-        return HOVersion.parseFromImplementationVersion(implementationVersion);
-    }
-
-    private static String createVersionStringForLocalBuild(String majorMinor) {
-        var localBuildNumber = -1;
-        return "%s.%d.%s".formatted(majorMinor, localBuildNumber,  BuildInfo.devStageStr());
-    }
-
-    private static HOVersion createHoVersionFromBuildInfo() {
-        final String syntheticImplementationVersion = createVersionStringForLocalBuild(BuildInfo.versionStr());
-        HOLogger.instance().warning(HO.class,
-            "Implementation-Version not found in manifest. Expected when launched from an IDE; otherwise, check build configuration.");
-        return HOVersion.parseFromImplementationVersion(syntheticImplementationVersion);
-    }
 
 	private static void initJmxSupport() {
 		if (HO.isDevelopment()) {

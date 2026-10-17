@@ -1,16 +1,18 @@
 package core.util;
 
-import core.db.user.UserManager;
 import core.file.ExampleFileFilter;
+
 import java.io.File;
 import java.io.FileWriter;
-import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * This is the HO logger
- * 
+ *
  * @author Marco Senn
  */
 public class HOLogger {
@@ -25,41 +27,53 @@ public class HOLogger {
 	private FileWriter logWriter;
 	private int logLevel = INFORMATION;
 
+    private record LogEntry(int level, String message) {
+    }
+    private final List<LogEntry> bufferedLogs = new ArrayList<>();
+
 	/**
 	 * Creates a new instance of Logger
 	 */
 	private HOLogger() {
-		String errorMsg;
-		boolean logFolderExist = true;
-
-		logsFolderName = Paths.get(UserManager.instance().getDbParentFolder() , "logs").toString();
-		File logsFolder = new File(logsFolderName);
-		
-		if (!logsFolder.exists()) {
-			logFolderExist = logsFolder.mkdirs();
-			if (!logFolderExist) {
-				errorMsg = "Could not initialize the log folder: " + logsFolderName + "\n";
-				System.err.println(errorMsg);
-			}
-		}
-
-		if (logFolderExist) {
-			String fileName = "";
-			try {
-				deleteOldLogs(logsFolder);
-				File logFile;
-				do{
-					fileName = "HO-" + HODateTime.toEpochSecond(HODateTime.now()) + ".log";
-					logFile = new File(logsFolder, fileName);
-				} while (logFile.exists());
-				logWriter = new FileWriter(logFile);
-			} catch (Exception e) {
-				errorMsg = "Unable to create logfile: " + logsFolder + "/" + fileName;
-				System.err.println(errorMsg);
-				e.printStackTrace();
-			}
-		}
 	}
+
+    public synchronized void initializeFileLogging(Path logsPath) {
+        if (logWriter != null) {
+            throw new IllegalStateException("File logging is already initialized");
+        }
+
+        String errorMsg;
+        boolean logFolderExist = true;
+
+        logsFolderName = logsPath.toString();
+        File logsFolder = new File(logsFolderName);
+
+        if (!logsFolder.exists()) {
+            logFolderExist = logsFolder.mkdirs();
+            if (!logFolderExist) {
+                errorMsg = "Could not initialize the log folder: " + logsFolderName + "\n";
+                System.err.println(errorMsg);
+            }
+        }
+
+        if (logFolderExist) {
+            String fileName = "";
+            try {
+                deleteOldLogs(logsFolder);
+                File logFile;
+                do{
+                    fileName = "HO-" + HODateTime.toEpochSecond(HODateTime.now()) + ".log";
+                    logFile = new File(logsFolder, fileName);
+                } while (logFile.exists());
+                logWriter = new FileWriter(logFile);
+                flushBufferedLogs();
+            } catch (Exception e) {
+                errorMsg = "Unable to create logfile: " + logsFolder + "/" + fileName;
+                System.err.println(errorMsg);
+                e.printStackTrace();
+            }
+        }
+    }
 
 	private void deleteOldLogs(File dir) {
 		ExampleFileFilter filter = new ExampleFileFilter("log");
@@ -76,7 +90,7 @@ public class HOLogger {
 			}
 		}
 	}
-	
+
 	public static HOLogger instance() {
 		if (clLogger == null) {
 			clLogger = new HOLogger();
@@ -124,11 +138,10 @@ public class HOLogger {
 		}
 	}
 
-	private void logMessage(Class<?> caller, Object obj, int level) {
-
+	private synchronized void logMessage(Class<?> caller, Object obj, int level) {
 		String msg;
 		String text;
-		
+
 		if (obj instanceof Throwable t) {
 			text = t.getMessage() + "\n" + ExceptionUtils.getStackTrace(t);
 		} else {
@@ -144,19 +157,37 @@ public class HOLogger {
 
 		System.out.println(msg + ((caller != null) ? caller.getSimpleName() : "?") + ": " + text);
 
-		if (level < logLevel) {
-			return;
-		}
+        final Date d = new Date();
+        final String txt = (sdf.format(d) + msg + ((caller != null) ? caller.getName() : "?") + ": " + text + "\r\n");
 
-		if (logWriter != null) {
-			try {
-				Date d = new Date();
-				String txt = (sdf.format(d) + msg + ((caller != null) ? caller.getName() : "?") + ": " + text + "\r\n");
-				logWriter.write(txt);
-				logWriter.flush();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		}
+        final var logEntry = new LogEntry(level, txt);
+        if (logWriter == null) {
+            bufferedLogs.add(logEntry);
+            return;
+        }
+
+        writeToFile(logEntry);
 	}
+
+    private void writeToFile(LogEntry logEntry) {
+        if (logWriter == null) {
+            throw new IllegalStateException("logWriter should have been initialized");
+        }
+
+        if (logEntry.level() < logLevel) {
+            return;
+        }
+
+        try {
+            logWriter.write(logEntry.message());
+            logWriter.flush();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void flushBufferedLogs() {
+        bufferedLogs.forEach(this::writeToFile);
+        bufferedLogs.clear();
+    }
 }
