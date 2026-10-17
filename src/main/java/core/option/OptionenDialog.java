@@ -108,6 +108,10 @@ public class OptionenDialog extends JDialog {
         userColorsPanel = new UserColorsPanel();
         tabbedPane.addTab(TranslationFacility.tr("colors"), new JScrollPane(userColorsPanel));
 
+        // Colors
+        SmartPlayerNamesPanel smartPlayerNamesPanel = new SmartPlayerNamesPanel();
+        tabbedPane.addTab(TranslationFacility.tr("options.tabtitle.smart_player_names"), new JScrollPane(smartPlayerNamesPanel));
+
         // Tabs der plugins
         for (int i = 0; (i < HOMainFrame.instance().getOptionPanelNames().size())
             && (i < HOMainFrame.instance().getOptionPanels().size()); ++i) {
