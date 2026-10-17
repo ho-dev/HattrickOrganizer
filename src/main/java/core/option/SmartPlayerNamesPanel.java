@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Stream;
 
 /**
  * Preferences panel for the player name formats used throughout HO.
@@ -298,8 +299,15 @@ public final class SmartPlayerNamesPanel extends JPanel {
         box.setSelectedItem(Choice.USE_DEFAULT);
         box.setRenderer(new ChoiceRenderer());
         box.setPrototypeDisplayValue(Choice.FULL_FIRST_LAST);
-        int comboWidth = box.getFontMetrics(box.getFont()).stringWidth(
-            TranslationFacility.tr("SmartPlayerNamesPanel.Use_default", NameFormat.FULL_FIRST_LAST)) + 48;
+
+        final var fontMetrics = box.getFontMetrics(box.getFont());
+        final int maxNameFormatWidth =
+            Stream.of(NameFormat.values())
+                .map(nameFormat -> TranslationFacility.tr("SmartPlayerNamesPanel.Use_default", nameFormat))
+                .mapToInt(fontMetrics::stringWidth)
+                .max()
+                .orElseThrow();
+        final int comboWidth = maxNameFormatWidth + 48;
         box.setPreferredSize(new Dimension(comboWidth, box.getPreferredSize().height));
         locationBoxes.put(location, box);
 
