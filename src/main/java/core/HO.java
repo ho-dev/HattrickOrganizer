@@ -31,6 +31,8 @@ import static java.awt.event.KeyEvent.VK_1;
 
 public class HO {
 
+    private static final HOLogger log = HOLogger.instance();
+
     @Getter
     private static final HOVersion hoVersion = HOVersionLoader.getVersion();
 	private static OSUtils.OS platform;
@@ -82,18 +84,18 @@ public class HO {
 			for (String _arg : args) {
 				arg = _arg.trim().toUpperCase();
 				switch (arg) {
-					case "INFO" -> HOLogger.instance().setLogLevel(HOLogger.INFORMATION);
-					case "DEBUG" -> HOLogger.instance().setLogLevel(HOLogger.DEBUG);
-					case "WARNING" -> HOLogger.instance().setLogLevel(HOLogger.WARNING);
-					case "ERROR" -> HOLogger.instance().setLogLevel(HOLogger.ERROR);
+                    case "INFO" -> log.setLogLevel(HOLogger.INFORMATION);
+                    case "DEBUG" -> log.setLogLevel(HOLogger.DEBUG);
+                    case "WARNING" -> log.setLogLevel(HOLogger.WARNING);
+                    case "ERROR" -> log.setLogLevel(HOLogger.ERROR);
 				}
 			}
 		}
 
         // Initialize file logging
-        HOLogger.instance().initializeFileLogging(Paths.get(UserManager.instance().getDbParentFolder() , "logs"));
+        log.initializeFileLogging(Paths.get(UserManager.instance().getDbParentFolder(), "logs"));
 
-        HOLogger.instance().info(HO.class, "HO-Version: %s".formatted(hoVersion.getVersionString()));
+        log.info(HO.class, "HO-Version: %s".formatted(hoVersion.getVersionString()));
 
         evaluateEnvironmentVariables();
 
@@ -119,7 +121,7 @@ public class HO {
 				}
 			}
 		} catch (Exception ex) {
-			HOLogger.instance().log(HO.class, ex);
+            log.log(HO.class, ex);
 		}
 
 		// start display splash image
@@ -138,7 +140,7 @@ public class HO {
 		try {
 			ThemeManager.instance().setCurrentTheme();
 		} catch (Exception e) {
-			HOLogger.instance().log(HO.class, "Can´t load Theme:" + UserParameter.instance().theme);
+            log.log(HO.class, "Can´t load Theme:" + UserParameter.instance().theme);
 			JOptionPane.showMessageDialog(null, e.getMessage(), "Can´t load Theme: "
 					+ UserParameter.instance().theme, JOptionPane.WARNING_MESSAGE);
 		}
@@ -268,11 +270,11 @@ public class HO {
 	}
 
     private static void evaluateEnvironmentVariables() {
-        HOLogger.instance().info(HO.class, "Evaluating environment variables.");
+        log.info(HO.class, "Evaluating environment variables.");
 
         HOEnvironmentVariable.HO_SAVE_DOWNLOADED_XML.valueAsBoolean().ifPresent(saveDownloadedXml -> {
             Connector.setSaveDownloadedXml(saveDownloadedXml);
-            HOLogger.instance().info(HO.class, "Setting saving of downloaded XML files to '%s'".formatted(saveDownloadedXml));
+            log.info(HO.class, "Setting saving of downloaded XML files to '%s'".formatted(saveDownloadedXml));
         });
     }
 }
