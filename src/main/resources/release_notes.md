@@ -106,7 +106,7 @@
 
 ### Team Analyzer
 
-* Fix eception in ManMarkingOrderDisplay (#2555)
+* Fix exception in ManMarkingOrderDisplay (#2555)
 
 ### Misc
 
