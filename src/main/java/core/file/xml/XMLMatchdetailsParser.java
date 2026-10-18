@@ -78,11 +78,12 @@ public class XMLMatchdetailsParser {
         final ArrayList<Matchdetails.Injury> mdInjuries = new ArrayList<>();
         try {
             var root = doc.getDocumentElement();
-            if (XMLUtils.hasElement(root, "Injuries")) {
-                var injuriesElement = XMLUtils.getElement(root, "Injuries");
-                var injuryList = injuriesElement.getElementsByTagName("Injury");
-                for (int n = 0; n < injuryList.getLength(); n++) {
-                    var injuryELement = (Element) injuryList.item(n);
+            var matchElement = XMLUtils.getElement(root, "Match");
+            var injuries = XMLUtils.getElements(matchElement, "Injuries");
+            if (injuries.size() == 1) {
+                var injuriesElement = injuries.get(0);
+                var injuryList = XMLUtils.getElements(injuriesElement,"Injury");
+                for (var injuryELement : injuryList) {
                     var injuryPlayerID = XMLUtils.getIntValue(injuryELement, "InjuryPlayerID");
                     var injuryTeamID = XMLUtils.getIntValue(injuryELement, "InjuryTeamID");
                     var injuryType = XMLUtils.getIntValue(injuryELement, "InjuryType");

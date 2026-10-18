@@ -109,7 +109,6 @@ public class XMLUtils {
     public static Node getAttributeValue(Node node, String attributeName) {
         return (node.hasAttributes()) ? node.getAttributes().getNamedItem(
             attributeName) : null;
-
     }
 
     /**
@@ -150,6 +149,21 @@ public class XMLUtils {
         };
     }
 
+    /**
+     * Gets the child elements with the specified tag name from the given
+     * parent element.
+     *
+     * @param parent  the parent element
+     * @param tagName the tag name of the element to find.
+     * @return List of elements found with the specified tag name
+     * @throws XMLParseException When the element is not found or more than one exists
+     * @throws NullPointerException When the parent element is null
+     */
+    public static List<Element>  getElements(Element parent, String tagName) {
+        Objects.requireNonNull(parent);
+        return  getElements(parent.getChildNodes(), tagName);
+    }
+
     private static List<Element> getElements(NodeList childNodes, String tagName) {
         var elements = new ArrayList<Element>();
         for (int i = 0; i < childNodes.getLength(); i++) {
@@ -159,12 +173,6 @@ public class XMLUtils {
             }
         }
         return elements;
-    }
-
-
-    public static boolean hasElement(Element parent, String tagName) {
-        NodeList nl = parent.getElementsByTagName(tagName);
-        return !isEmpty(nl);
     }
 
 	/**
