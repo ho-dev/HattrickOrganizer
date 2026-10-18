@@ -83,7 +83,7 @@ public class XMLMatchesParser {
 						iCupLevelIndex = Integer.parseInt(tmp.getFirstChild().getNodeValue());
 						match.setCupLevelIndex(CupLevelIndex.fromInt(iCupLevelIndex));
 					}
-					else if (iMatchType == 50) {
+					else if (match.getMatchType().isTournament()) {
 						tmp = (Element) ele.getElementsByTagName("MatchContextId").item(0);
 						int tournamentId = Integer.parseInt(tmp.getFirstChild().getNodeValue());
 						match.setMatchContextId(tournamentId);
