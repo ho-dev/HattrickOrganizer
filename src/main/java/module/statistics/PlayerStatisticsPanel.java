@@ -15,6 +15,7 @@ import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.player.Player;
 import core.playername.PlayerNameFormatter;
+import core.playername.PlayerNameFormatterFactory;
 import core.playername.PlayerNameUtils;
 import core.util.HOLogger;
 import core.util.Helper;
@@ -440,7 +441,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		// former players
 		final List<Player> oldPlayers = HOVerwaltung.instance().getModel().getFormerPlayers().stream().filter(i->!i.getHrfDate().isBefore(fromDate)).toList();
 
-        final var playerNameFormatter = PlayerNameUtils.createPlayerNameFormatter(StreamUtils.concat(players.stream(), oldPlayers.stream()).toList());
+        final var playerNameFormatter = PlayerNameFormatterFactory.createFromPlayers(StreamUtils.concat(players.stream(), oldPlayers.stream()).toList());
 
 		final List<PlayerCBItem> playerCBItems = players.stream()
 				.map(player -> createPlayerCBItem(player, playerNameFormatter))

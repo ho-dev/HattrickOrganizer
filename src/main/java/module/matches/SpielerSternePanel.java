@@ -13,6 +13,8 @@ import core.model.match.MatchLineupPosition;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
+import core.playername.PlayerNameFormatter;
+import core.playername.PlayerNameUtils;
 import core.util.Helper;
 
 import javax.swing.*;
@@ -20,7 +22,6 @@ import javax.swing.border.BevelBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Set;
 
 /**
  * Zeigt den Player an der Position an und dessen Sterne
@@ -173,7 +174,7 @@ final class SpielerSternePanel extends ImagePanel implements ActionListener {
 		}
 	}
 
-	public void refresh(MatchLineup lineup, MatchLineupPosition matchLineupPosition, Set<String> duplicateLastNames) {
+	public void refresh(MatchLineup lineup, MatchLineupPosition matchLineupPosition, PlayerNameFormatter playerNameFormatter) {
 		m_clMatchLineup = lineup;
 		m_clMatchPlayer = matchLineupPosition;
 
@@ -183,11 +184,9 @@ final class SpielerSternePanel extends ImagePanel implements ActionListener {
 				addPanel();
 			}
 
-			final boolean unique = !duplicateLastNames.contains(matchLineupPosition.getLastName());
-            final String displayName = Player.getFullNameSmart(matchLineupPosition.getFirstName(),
-                matchLineupPosition.getLastName(),
-                matchLineupPosition.getNickName(),
-                unique);
+            final String displayName = matchLineupPosition.getPlayerId() != 0 ?
+                playerNameFormatter.format(PlayerNameUtils.createPlayerName(matchLineupPosition), PlayerNameFormatter.NameFormat.SMART_LAST_FIRST) :
+                null;
 			name.setText(displayName);
 
 			int trickotnummer = 0;

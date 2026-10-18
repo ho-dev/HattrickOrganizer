@@ -16,6 +16,7 @@ import core.model.match.MatchKurzInfo;
 import core.model.player.Player;
 import core.net.HattrickLink;
 import core.playername.PlayerNameFormatter;
+import core.playername.PlayerNameFormatterFactory;
 import core.playername.PlayerNameUtils;
 import core.util.Helper;
 import core.util.StreamUtils;
@@ -101,7 +102,7 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 
 		// Former Players
 		final List<Player> oldPlayers = HOVerwaltung.instance().getModel().getFormerPlayers();
-        final var playerNameFormatter = PlayerNameUtils.createPlayerNameFormatter(StreamUtils.concat(players.stream(), oldPlayers.stream()).toList());
+        final var playerNameFormatter = PlayerNameFormatterFactory.createFromPlayers(StreamUtils.concat(players.stream(), oldPlayers.stream()).toList());
 
 		final List<PlayerCBItem> playerCBItems = players.stream()
 				.map(player -> createPlayerCBItem(player, playerNameFormatter))
