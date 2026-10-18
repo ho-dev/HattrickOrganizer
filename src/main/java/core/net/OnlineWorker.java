@@ -163,7 +163,7 @@ public class OnlineWorker {
 				HOMainFrame.instance().setInformation(TranslationFacility.tr("ls.update_status.match_info"), 20);
 				List<MatchKurzInfo> matches = XMLMatchArchiveParser
 						.parseMatchesFromString(matchesString);
-                matches.stream().filter(i->i.getMatchType().isTournament()).forEach(OnlineWorker::downloadTournamentDetails);
+                matches.stream().filter(i->i.getMatchType().isTournament()).forEach(MatchKurzInfo::loadTournamentDetails);
 
 				// Add the new matches to the list of all matches
 				allMatches.addAll(matches);
@@ -494,7 +494,7 @@ public class OnlineWorker {
 	/**
 	 * Download information about a given tournament
 	 */
-	public static TournamentDetails getTournamentDetails(int tournamentId) {
+	public static TournamentDetails downloadTournamentDetails(int tournamentId) {
 		TournamentDetails oTournamentDetails = null;
 		String tournamentString = "";
 
@@ -564,7 +564,7 @@ public class OnlineWorker {
 				// Automatically download additional match infos (lineup + arena)
 				for (MatchKurzInfo match : matches) {
                     if (match.getMatchType().isTournament()) {
-                        OnlineWorker.downloadTournamentDetails(match);
+                        match.loadTournamentDetails();
                     }
                     int curMatchId = match.getMatchID();
 					boolean refresh = !DBManager.instance().isMatchInDB(curMatchId, match.getMatchType())
@@ -1328,15 +1328,5 @@ public class OnlineWorker {
     public static List<HallOfFamePlayer> downloadHallOfFame(int teamId) {
         String xmlString = Connector.instance().downloadHallOfFamePlayers(teamId);
         return XMLPlayersParser.parseHallOfFamesPlayersFromString(xmlString);
-    }
-
-    public static void downloadTournamentDetails(MatchKurzInfo matchKurzInfo) {
-        var tournamentId = matchKurzInfo.getMatchContextId();
-        TournamentDetails oTournamentDetails = DBManager.instance().getTournamentDetailsFromDB(tournamentId);
-        if (oTournamentDetails == null) {
-            oTournamentDetails = getTournamentDetails(tournamentId); // download info about tournament from HT
-            DBManager.instance().storeTournamentDetailsIntoDB(oTournamentDetails); // store tournament details into DB
-        }
-        matchKurzInfo.setTournamentTypeID(oTournamentDetails.getTournamentType());
     }
 }
