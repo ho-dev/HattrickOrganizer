@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 public class PlayerNameFormatter {
 
     private final List<PlayerNameWrapper> playerNameWrappers;
+    private final Set<Integer> knownPlayerIds;
     private final Set<String> duplicateNickNames;
     private final Map<String, List<PlayerNameWrapper>> mapLastNameToPlayerNameWrappers;
 
@@ -17,7 +18,7 @@ public class PlayerNameFormatter {
         FULL_FIRST_LAST,
         FULL_LAST_FIRST,
         SMART_FIRST_LAST,
-        SMART_LAST_FIRST;
+        SMART_LAST_FIRST
     }
 
     private record PlayerNameWrapper(PlayerName playerName) {
@@ -52,25 +53,44 @@ public class PlayerNameFormatter {
     }
 
     public PlayerNameFormatter(List<? extends PlayerName> playerNames) {
-        validateUniquePlayerIds(playerNames);
-        this.playerNameWrappers = playerNames.stream().map(PlayerNameWrapper::new).collect(Collectors.toList());
+        final var validatedPlayerNames = toValidatedUniquePlayerNames(playerNames);
+        this.knownPlayerIds = validatedPlayerNames.stream().map(PlayerName::getPlayerId).collect(Collectors.toSet());
+        this.playerNameWrappers = validatedPlayerNames.stream().map(PlayerNameWrapper::new).collect(Collectors.toList());
         this.duplicateNickNames = calcDuplicates(PlayerNameWrapper::findNickName);
         this.mapLastNameToPlayerNameWrappers = calcMapLastNameToPlayers();
     }
 
-    private static void validateUniquePlayerIds(List<? extends PlayerName> playerNames) {
-        final Set<Integer> playerIds = new HashSet<>();
-
-        for (PlayerName playerName : playerNames) {
-            final int playerId = playerName.getPlayerId();
-
-            if (!playerIds.add(playerId)) {
-                throw new IllegalArgumentException("Duplicate player ID: %d".formatted(playerId));
+    private static List<? extends PlayerName> toValidatedUniquePlayerNames(List<? extends PlayerName> originalPlayerNames) {
+        final var mapPlayerIdToPlayerNames = originalPlayerNames.stream().collect(Collectors.groupingBy(PlayerName::getPlayerId));
+        mapPlayerIdToPlayerNames.forEach((playerId, playerNames) -> {
+                if (playerNames.size() > 1) {
+                    final var firstPlayerName = playerNames.get(0);
+                    final boolean allEqual = playerNames.stream().skip(1)
+                        .allMatch(playerName -> allNamesEqual(firstPlayerName, playerName)
+                        );
+                    if (!allEqual) {
+                        throw new IllegalArgumentException(
+                            "Conflicting name data for player ID: %d".formatted(playerId)
+                        );
+                    }
+                }
             }
-        }
+        );
+
+        return mapPlayerIdToPlayerNames.values().stream().map(v -> v.get(0)).collect(Collectors.toList());
+    }
+
+    private static boolean allNamesEqual(PlayerName lhs, PlayerName rhs) {
+        return Objects.equals(lhs.getFirstName(), rhs.getFirstName()) &&
+            Objects.equals(lhs.getLastName(), rhs.getLastName()) &&
+            Objects.equals(lhs.getNickName(), rhs.getNickName());
     }
 
     public String format(PlayerName playerName, NameFormat nameFormat) {
+        if (!knownPlayerIds.contains(playerName.getPlayerId())) {
+            throw new IllegalStateException("Player id %d in unknown in formatter context".formatted(playerName.getPlayerId()));
+        }
+
         final var playerNameWrapper = new PlayerNameWrapper(playerName);
         return switch (nameFormat) {
             case HATTRICK -> formatHattrick(playerNameWrapper);
@@ -234,7 +254,7 @@ public class PlayerNameFormatter {
     }
 
     private boolean lastNameUnique(String lastName) {
-        if (StringUtils.isBlank(lastName) ) {
+        if (StringUtils.isBlank(lastName)) {
             return false;
         }
 

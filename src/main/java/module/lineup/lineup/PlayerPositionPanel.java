@@ -19,6 +19,7 @@ import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.playername.PlayerNameFormatter;
 import core.playername.PlayerNameFormatter.NameFormat;
+import core.playername.PlayerNameFormatterFactory;
 import core.playername.PlayerNameUtils;
 import core.training.TrainingPreviewPlayers;
 import core.util.Helper;
@@ -245,7 +246,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
      */
     public void refresh(List<Player> inCandidates, List<Player> plStartingLineup, List<Player> plSubstitutes, Weather weather, Boolean useWeatherImpact, int matchMinute) {
         var plCandidates = new ArrayList<>(inCandidates);
-        PlayerNameFormatter playerNameFormatter = PlayerNameUtils.createPlayerNameFormatter(inCandidates);
+        PlayerNameFormatter playerNameFormatter = PlayerNameFormatterFactory.createFromPlayers(inCandidates);
 
         Player selectedPlayer = null;
         HOModel model = HOVerwaltung.instance().getModel();
@@ -432,7 +433,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
     }
 
     protected void setPlayersList2(List<Player> allPlayers, @Nullable Player selectedPlayer, int playerIDcorrespondingSub) {
-        PlayerNameFormatter playerNameFormatter = PlayerNameUtils.createPlayerNameFormatter(allPlayers);
+        PlayerNameFormatter playerNameFormatter = PlayerNameFormatterFactory.createFromPlayers(allPlayers);
 
         m_jcbPlayer.removeItemListener(this);
 

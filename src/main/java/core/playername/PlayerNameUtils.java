@@ -1,17 +1,12 @@
 package core.playername;
 
+import core.model.match.MatchLineupPosition;
 import core.model.player.Player;
-
-import java.util.List;
 
 public final class PlayerNameUtils {
 
     private PlayerNameUtils() {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
-    }
-
-    public static PlayerNameFormatter createPlayerNameFormatter(List<Player> players) {
-        return new PlayerNameFormatter(players.stream().map(PlayerNameUtils::createPlayerName).toList());
     }
 
     public static PlayerName createPlayerName(Player player) {
@@ -34,6 +29,30 @@ public final class PlayerNameUtils {
             @Override
             public String getLastName() {
                 return player.getLastName();
+            }
+        };
+    }
+
+    public static PlayerName createPlayerName(MatchLineupPosition matchLineupPosition) {
+        return new PlayerName() {
+            @Override
+            public int getPlayerId() {
+                return matchLineupPosition.getPlayerId();
+            }
+
+            @Override
+            public String getFirstName() {
+                return matchLineupPosition.getFirstName();
+            }
+
+            @Override
+            public String getNickName() {
+                return matchLineupPosition.getNickName();
+            }
+
+            @Override
+            public String getLastName() {
+                return matchLineupPosition.getLastName();
             }
         };
     }

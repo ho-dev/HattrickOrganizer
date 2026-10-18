@@ -12,6 +12,7 @@ import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.model.util.PlayerNameFixupUtils;
+import core.playername.PlayerNameFormatterFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -107,6 +108,7 @@ public class AufstellungsSternePanel extends RasenPanel {
 			lineupteam = lineup.getGuestTeam();
 		}
 
+        // TODO
         if (lineupteam.getLineup().getAllPositions().stream().map(MatchLineupPosition::getFirstName).allMatch(String::isEmpty) ) {
             lineupteam.getLineup().getAllPositions()
                 .forEach(PlayerNameFixupUtils::fixup);
@@ -118,131 +120,128 @@ public class AufstellungsSternePanel extends RasenPanel {
 			m_jlTeamName.setText(lineupteam.getTeamName() + " (" + lineupteam.getTeamID() + ")");
 			var aufstellung = lineupteam.getLineup().getAllPositions();
 
-            final var duplicateLastNames = Player.getDuplicateNames(
-                lineupteam.getLineup().getAllPositions().stream()
-                    .collect(Collectors.toMap(MatchRoleID::getPlayerId, MatchLineupPosition::getLastName, (existing, replacement) -> existing))
-                    .values().stream().toList());
+            final var playerNameFormatter = PlayerNameFormatterFactory.createFromMatchLineupPositions(lineupteam.getLineup().getAllPositions());
 
 			for (var mlp : aufstellung) {
 				var player = mlp;
 				switch (player.getRoleId()) {
 				case IMatchRoleID.keeper: {
-					m_clKeeper.refresh(lineup, player, duplicateLastNames);
+					m_clKeeper.refresh(lineup, player, playerNameFormatter);
 					break;
 				}
 
 				case IMatchRoleID.rightBack: {
-					m_clRightBack.refresh(lineup, player, duplicateLastNames);
+					m_clRightBack.refresh(lineup, player, playerNameFormatter);
 					break;
 				}
 
 				case IMatchRoleID.leftBack: {
-					m_clLeftBack.refresh(lineup, player, duplicateLastNames);
+					m_clLeftBack.refresh(lineup, player, playerNameFormatter);
 					break;
 				}
 
 				case IMatchRoleID.rightCentralDefender: {
-					m_clRightCentralDefender.refresh(lineup, player, duplicateLastNames);
+					m_clRightCentralDefender.refresh(lineup, player, playerNameFormatter);
 					break;
 				}
 
 				case IMatchRoleID.middleCentralDefender: {
-					m_clMiddleCentralDefender.refresh(lineup, player, duplicateLastNames);
+					m_clMiddleCentralDefender.refresh(lineup, player, playerNameFormatter);
 					break;
 				}
 
 				case IMatchRoleID.leftCentralDefender: {
-					m_clLeftCentralDefender.refresh(lineup, player, duplicateLastNames);
+					m_clLeftCentralDefender.refresh(lineup, player, playerNameFormatter);
 					break;
 				}
 
 				case IMatchRoleID.rightInnerMidfield: {
-					m_clRightInnerMidfielder.refresh(lineup, player, duplicateLastNames);
+					m_clRightInnerMidfielder.refresh(lineup, player, playerNameFormatter);
 					break;
 				}
 
 				case IMatchRoleID.centralInnerMidfield: {
-					m_clCentralInnerMidfielder.refresh(lineup, player, duplicateLastNames);
+					m_clCentralInnerMidfielder.refresh(lineup, player, playerNameFormatter);
 					break;
 				}
 
 				case IMatchRoleID.leftInnerMidfield: {
-					m_clLeftInnerMidfielder.refresh(lineup, player, duplicateLastNames);
+					m_clLeftInnerMidfielder.refresh(lineup, player, playerNameFormatter);
 					break;
 				}
 
 				case IMatchRoleID.leftWinger: {
-					m_clLeftWinger.refresh(lineup, player, duplicateLastNames);
+					m_clLeftWinger.refresh(lineup, player, playerNameFormatter);
 					break;
 				}
 
 				case IMatchRoleID.rightWinger: {
-					m_clRightWinger.refresh(lineup, player, duplicateLastNames);
+					m_clRightWinger.refresh(lineup, player, playerNameFormatter);
 					break;
 				}
 
 				case IMatchRoleID.rightForward: {
-					m_clRightForward.refresh(lineup, player, duplicateLastNames);
+					m_clRightForward.refresh(lineup, player, playerNameFormatter);
 					break;
 				}
 
 				case IMatchRoleID.centralForward: {
-					m_clCentralForward.refresh(lineup, player, duplicateLastNames);
+					m_clCentralForward.refresh(lineup, player, playerNameFormatter);
 					break;
 				}
 
 				case IMatchRoleID.leftForward: {
-					m_clLeftForward.refresh(lineup, player, duplicateLastNames);
+					m_clLeftForward.refresh(lineup, player, playerNameFormatter);
 					break;
 				}
 
 				case IMatchRoleID.substCD1: {
-					m_clReserveDefender.refresh(lineup, player, duplicateLastNames);
+					m_clReserveDefender.refresh(lineup, player, playerNameFormatter);
 					break;
 				}
 
 				case IMatchRoleID.substFW1: {
-					m_clReserveForward.refresh(lineup, player, duplicateLastNames);
+					m_clReserveForward.refresh(lineup, player, playerNameFormatter);
 					break;
 				}
 
 				case IMatchRoleID.substIM1: {
-					m_clReserveMidfielder.refresh(lineup, player, duplicateLastNames);
+					m_clReserveMidfielder.refresh(lineup, player, playerNameFormatter);
 					break;
 				}
 
 				case IMatchRoleID.substGK1: {
-					m_clReserveKeeper.refresh(lineup, player, duplicateLastNames);
+					m_clReserveKeeper.refresh(lineup, player, playerNameFormatter);
 					break;
 				}
 
 				case IMatchRoleID.substWI1: {
-					m_clReserveWinger.refresh(lineup, player, duplicateLastNames);
+					m_clReserveWinger.refresh(lineup, player, playerNameFormatter);
 					break;
 				}
 
 				case IMatchRoleID.captain: {
-					m_clCaptain.refresh(lineup, player, duplicateLastNames);
+					m_clCaptain.refresh(lineup, player, playerNameFormatter);
 					break;
 				}
 
 				case IMatchRoleID.setPieces: {
-					m_clSetPieces.refresh(lineup, player, duplicateLastNames);
+					m_clSetPieces.refresh(lineup, player, playerNameFormatter);
 					break;
 				}
 
 				case IMatchRoleID.FirstPlayerReplaced: {
-					m_clAusgewechselt1.refresh(lineup, player, duplicateLastNames);
+					m_clAusgewechselt1.refresh(lineup, player, playerNameFormatter);
 					break;
 				}
 
 				case IMatchRoleID.SecondPlayerReplaced: {
-					m_clAusgewechselt2.refresh(lineup, player, duplicateLastNames);
+					m_clAusgewechselt2.refresh(lineup, player, playerNameFormatter);
 					break;
 				}
 
 				case IMatchRoleID.ThirdPlayerReplaced: {
-					m_clAusgewechselt3.refresh(lineup, player, duplicateLastNames);
+					m_clAusgewechselt3.refresh(lineup, player, playerNameFormatter);
 					break;
 				}
 
