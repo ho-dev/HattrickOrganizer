@@ -1381,14 +1381,6 @@ class XMLMatchdetailsParserTest {
 
     @Test
     void parseMatchdetailsFromString_withMatchLineupIsNull() {
-        // given
-
-//        final DBManager dbManager = mock(DBManager.class);
-//
-//        try (MockedStatic<DBManager> mockedDbManager = mockStatic(DBManager.class)) {
-//            mockedDbManager.when(DBManager::instance).thenReturn(dbManager);
-//
-//            when(dbManager.getMatchHighlights(anyInt(), anyInt())).thenReturn(List.of());
 
             // when
             final var matchdetails = XMLMatchdetailsParser.parseMatchdetailsFromString(xmlFileMatchDetails, null);
@@ -1512,14 +1504,6 @@ class XMLMatchdetailsParserTest {
         expectedMatchEvents.add(createExpectedMatchEvent(45, Matchdetails.eInjuryType.NA, 2157350, 41, 2, 2, 93,462788780, false, 0, true, "Der beste Spieler von <span class=\"hometeam\">KJH</span> war ohne jeden Zweifel <a href=\"/Club/Players/Player.aspx?playerId=462788780\" title=\"Daniel Stendel\" class=\"homeplayer\">Daniel Stendel</a>."));
         expectedMatchEvents.add(createExpectedMatchEvent(46, Matchdetails.eInjuryType.NA, 128206, 41, 3, 2, 93,483281921, false, 0, true, "Nach diesem Spiel forderten die Fans von <span class=\"awayteam\">Napoli-Köpenick</span> eine \"<a href=\"/Club/Players/Player.aspx?playerId=483281921\" title=\"Cesare Parmendola\" class=\"awayplayer\">Cesare Parmendola</a>-Straße\" - er hatte eine herausragende Leistung abgeliefert."));
 
-
-//        final DBManager dbManager = mock(DBManager.class);
-//
-//        try (MockedStatic<DBManager> mockedDbManager = mockStatic(DBManager.class)) {
-//            mockedDbManager.when(DBManager::instance).thenReturn(dbManager);
-//
-//            when(dbManager.getMatchHighlights(anyInt(), anyInt())).thenReturn(List.of());
-//
             // when
             final var matchdetails = XMLMatchdetailsParser.parseMatchdetailsFromString(xmlFileMatchDetails, matchLineup);
 
