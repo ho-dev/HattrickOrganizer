@@ -2631,10 +2631,10 @@ public class Player extends AbstractTable.Storable {
         return null;
     }
 
-    public static Set<String> getDuplicateLastNames(List<Player> players) {
-        final var playerNames = players.stream().map(Player::getLastName).toList();
-        return getDuplicateNames(playerNames);
-    }
+//    public static Set<String> getDuplicateLastNames(List<Player> players) {
+//        final var playerNames = players.stream().map(Player::getLastName).toList();
+//        return getDuplicateNames(playerNames);
+//    }
 
     public static Set<String> getDuplicateNames(List<String> playerNames) {
         return playerNames
