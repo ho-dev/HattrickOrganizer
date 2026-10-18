@@ -311,7 +311,9 @@ public class TeamPanel extends JPanel {
                 return 0;
             }
             var ret = component.getY();
-            if (component.getParent() != parent) ret += y(component.getParent());
+            if (component.getParent() != parent) {
+                ret += y(component.getParent());
+            }
             return ret;
         }
 
@@ -320,7 +322,9 @@ public class TeamPanel extends JPanel {
                 return 0;
             }
             var ret = component.getX();
-            if (component.getParent() != parent) ret += x(component.getParent());
+            if (component.getParent() != parent) {
+                ret += x(component.getParent());
+            }
             return ret;
         }
 
