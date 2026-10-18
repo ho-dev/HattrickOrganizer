@@ -1385,64 +1385,63 @@ class XMLMatchdetailsParserTest {
         // when
         final var matchdetails = XMLMatchdetailsParser.parseMatchdetailsFromString(xmlFileMatchDetails, null);
 
-            // then
-            assertThat(matchdetails.getArenaName()).isEqualTo("Alte Rösterei");
-            assertThat(matchdetails.getGuestTeamName()).isEqualTo("SSC Napoli-Köpenick");
-            assertThat(matchdetails.getHomeTeamName()).isEqualTo("Kaffee-Junkies Hannover");
-            assertThat(matchdetails.getMatchreport()).isEqualTo("");
-            assertThat(matchdetails.getFetchDatum()).isEqualTo(HODateTime.fromHT("2026-10-08 12:36:42"));
-            assertThat(matchdetails.getMatchDate()).isEqualTo(HODateTime.fromHT("2026-10-06 18:15:00"));
-            assertThat(matchdetails.getHighlights()).isEmpty();
-            assertThat(matchdetails.getArenaID()).isEqualTo(2154092);
-            assertThat(matchdetails.getGuestTeamId()).isEqualTo(128206);
-            assertThat(matchdetails.getGuestEinstellung()).isEqualTo(IMatchDetails.EINSTELLUNG_UNBEKANNT);
-            assertThat(matchdetails.getGuestGoals()).isEqualTo(0);
-            assertThat(matchdetails.getGuestLeftAtt()).isEqualTo(35);
-            assertThat(matchdetails.getGuestLeftDef()).isEqualTo(10);
-            assertThat(matchdetails.getGuestMidAtt()).isEqualTo(17);
-            assertThat(matchdetails.getGuestMidDef()).isEqualTo(16);
-            assertThat(matchdetails.getGuestMidfield()).isEqualTo(18);
-            assertThat(matchdetails.getGuestRightAtt()).isEqualTo(25);
-            assertThat(matchdetails.getGuestRightDef()).isEqualTo(15);
-            assertThat(matchdetails.getGuestHatStats()).isEqualTo(172);
-            assertThat(matchdetails.getGuestTacticSkill()).isEqualTo(0);
-            assertThat(matchdetails.getGuestTacticType()).isEqualTo(IMatchDetails.TAKTIK_NORMAL);
-            assertThat(matchdetails.getHomeTeamId()).isEqualTo(2157350);
-            assertThat(matchdetails.getMatchType()).isEqualTo(MatchType.FRIENDLYNORMAL);
-            assertThat(matchdetails.getHomeEinstellung()).isEqualTo(IMatchDetails.EINSTELLUNG_NORMAL);
-            assertThat(matchdetails.getHomeGoals()).isEqualTo(7);
-            assertThat(matchdetails.getHomeLeftAtt()).isEqualTo(21);
-            assertThat(matchdetails.getHomeLeftDef()).isEqualTo(28);
-            assertThat(matchdetails.getHomeMidAtt()).isEqualTo(18);
-            assertThat(matchdetails.getHomeMidDef()).isEqualTo(31);
-            assertThat(matchdetails.getHomeMidfield()).isEqualTo(22);
-            assertThat(matchdetails.getHomeRightAtt()).isEqualTo(16);
-            assertThat(matchdetails.getHomeRightDef()).isEqualTo(29);
-            assertThat(matchdetails.getHomeHatStats()).isEqualTo(209);
-            assertThat(matchdetails.getHomeTacticSkill()).isEqualTo(11);
-            assertThat(matchdetails.getHomeTacticType()).isEqualTo(IMatchDetails.TAKTIK_CREATIVE);
-            assertThat(matchdetails.getMatchID()).isEqualTo(771794947);
-            assertThat(matchdetails.getWetterId()).isEqualTo(Weather.OVERCAST.getId());
-            assertThat(matchdetails.getZuschauer()).isEqualTo(1648);
-            assertThat(matchdetails.getCupLevel()).isEqualTo(CupLevel.NONE);
-            assertThat(matchdetails.getCupLevelIndex()).isEqualTo(CupLevelIndex.NONE);
-            assertThat(matchdetails.getMatchContextId()).isEqualTo(0);
-            assertThat(matchdetails.getSoldTerraces()).isEqualTo(938);
-            assertThat(matchdetails.getSoldBasic()).isEqualTo(390);
-            assertThat(matchdetails.getSoldRoof()).isEqualTo(280);
-            assertThat(matchdetails.getSoldVIP()).isEqualTo(40);
-            assertThat(matchdetails.getRegionId()).isNull();
-            assertThat(matchdetails.getHomeRatingIndirectSetPiecesAtt()).isEqualTo(18);
-            assertThat(matchdetails.getHomeRatingIndirectSetPiecesDef()).isEqualTo(22);
-            assertThat(matchdetails.getGuestRatingIndirectSetPiecesAtt()).isEqualTo(18);
-            assertThat(matchdetails.getGuestRatingIndirectSetPiecesDef()).isEqualTo(15);
-            assertThat(matchdetails.getInjuries()).isEmpty();
-            // homeGoalsInParts in another test
-            // guestGoalsInParts in another test
-            assertThat(matchdetails.getFormation(true)).isEqualTo("4-4-2");
-            assertThat(matchdetails.getFormation(false)).isEqualTo("4-5-1");
-            assertThat(matchdetails.getResult()).isEqualTo(" 7 !ls.match.result.separation! 0");
-        }
+        // then
+        assertThat(matchdetails.getArenaName()).isEqualTo("Alte Rösterei");
+        assertThat(matchdetails.getGuestTeamName()).isEqualTo("SSC Napoli-Köpenick");
+        assertThat(matchdetails.getHomeTeamName()).isEqualTo("Kaffee-Junkies Hannover");
+        assertThat(matchdetails.getMatchreport()).isEqualTo("");
+        assertThat(matchdetails.getFetchDatum()).isEqualTo(HODateTime.fromHT("2026-10-08 12:36:42"));
+        assertThat(matchdetails.getMatchDate()).isEqualTo(HODateTime.fromHT("2026-10-06 18:15:00"));
+        assertThat(matchdetails.getHighlights()).isEmpty();
+        assertThat(matchdetails.getArenaID()).isEqualTo(2154092);
+        assertThat(matchdetails.getGuestTeamId()).isEqualTo(128206);
+        assertThat(matchdetails.getGuestEinstellung()).isEqualTo(IMatchDetails.EINSTELLUNG_UNBEKANNT);
+        assertThat(matchdetails.getGuestGoals()).isEqualTo(0);
+        assertThat(matchdetails.getGuestLeftAtt()).isEqualTo(35);
+        assertThat(matchdetails.getGuestLeftDef()).isEqualTo(10);
+        assertThat(matchdetails.getGuestMidAtt()).isEqualTo(17);
+        assertThat(matchdetails.getGuestMidDef()).isEqualTo(16);
+        assertThat(matchdetails.getGuestMidfield()).isEqualTo(18);
+        assertThat(matchdetails.getGuestRightAtt()).isEqualTo(25);
+        assertThat(matchdetails.getGuestRightDef()).isEqualTo(15);
+        assertThat(matchdetails.getGuestHatStats()).isEqualTo(172);
+        assertThat(matchdetails.getGuestTacticSkill()).isEqualTo(0);
+        assertThat(matchdetails.getGuestTacticType()).isEqualTo(IMatchDetails.TAKTIK_NORMAL);
+        assertThat(matchdetails.getHomeTeamId()).isEqualTo(2157350);
+        assertThat(matchdetails.getMatchType()).isEqualTo(MatchType.FRIENDLYNORMAL);
+        assertThat(matchdetails.getHomeEinstellung()).isEqualTo(IMatchDetails.EINSTELLUNG_NORMAL);
+        assertThat(matchdetails.getHomeGoals()).isEqualTo(7);
+        assertThat(matchdetails.getHomeLeftAtt()).isEqualTo(21);
+        assertThat(matchdetails.getHomeLeftDef()).isEqualTo(28);
+        assertThat(matchdetails.getHomeMidAtt()).isEqualTo(18);
+        assertThat(matchdetails.getHomeMidDef()).isEqualTo(31);
+        assertThat(matchdetails.getHomeMidfield()).isEqualTo(22);
+        assertThat(matchdetails.getHomeRightAtt()).isEqualTo(16);
+        assertThat(matchdetails.getHomeRightDef()).isEqualTo(29);
+        assertThat(matchdetails.getHomeHatStats()).isEqualTo(209);
+        assertThat(matchdetails.getHomeTacticSkill()).isEqualTo(11);
+        assertThat(matchdetails.getHomeTacticType()).isEqualTo(IMatchDetails.TAKTIK_CREATIVE);
+        assertThat(matchdetails.getMatchID()).isEqualTo(771794947);
+        assertThat(matchdetails.getWetterId()).isEqualTo(Weather.OVERCAST.getId());
+        assertThat(matchdetails.getZuschauer()).isEqualTo(1648);
+        assertThat(matchdetails.getCupLevel()).isEqualTo(CupLevel.NONE);
+        assertThat(matchdetails.getCupLevelIndex()).isEqualTo(CupLevelIndex.NONE);
+        assertThat(matchdetails.getMatchContextId()).isEqualTo(0);
+        assertThat(matchdetails.getSoldTerraces()).isEqualTo(938);
+        assertThat(matchdetails.getSoldBasic()).isEqualTo(390);
+        assertThat(matchdetails.getSoldRoof()).isEqualTo(280);
+        assertThat(matchdetails.getSoldVIP()).isEqualTo(40);
+        assertThat(matchdetails.getRegionId()).isNull();
+        assertThat(matchdetails.getHomeRatingIndirectSetPiecesAtt()).isEqualTo(18);
+        assertThat(matchdetails.getHomeRatingIndirectSetPiecesDef()).isEqualTo(22);
+        assertThat(matchdetails.getGuestRatingIndirectSetPiecesAtt()).isEqualTo(18);
+        assertThat(matchdetails.getGuestRatingIndirectSetPiecesDef()).isEqualTo(15);
+        assertThat(matchdetails.getInjuries()).isEmpty();
+        // homeGoalsInParts in another test
+        // guestGoalsInParts in another test
+        assertThat(matchdetails.getFormation(true)).isEqualTo("4-4-2");
+        assertThat(matchdetails.getFormation(false)).isEqualTo("4-5-1");
+        assertThat(matchdetails.getResult()).isEqualTo(" 7 !ls.match.result.separation! 0");
     }
 
     @Test
@@ -1582,7 +1581,7 @@ class XMLMatchdetailsParserTest {
         assertThat(matchdetails.getHomeRatingIndirectSetPiecesDef()).isEqualTo(22);
         assertThat(matchdetails.getGuestRatingIndirectSetPiecesAtt()).isEqualTo(18);
         assertThat(matchdetails.getGuestRatingIndirectSetPiecesDef()).isEqualTo(15);
-        assertThat(matchdetails.getM_Injuries()).isEmpty();
+        assertThat(matchdetails.getInjuries()).isEmpty();
         // homeGoalsInParts in another test
         // guestGoalsInParts in another test
         assertThat(matchdetails.getFormation(true)).isEqualTo("4-4-2");

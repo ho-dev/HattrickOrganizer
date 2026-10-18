@@ -62,7 +62,7 @@ public class XMLMatchesParser {
 
                     var homeTeamElement = XMLUtils.getElement(matchElement, "HomeTeam");
                     match.setHomeTeamID(XMLUtils.getIntValue(homeTeamElement, "HomeTeamID"));
-                    match.setHomeTeamName(XMLUtils.getStringValue(matchElement, "HomeTeamName"));
+                    match.setHomeTeamName(XMLUtils.getStringValue(homeTeamElement, "HomeTeamName"));
 
                     var awayTeamElement = XMLUtils.getElement(matchElement, "AwayTeam");
                     match.setGuestTeamID(XMLUtils.getIntValue(awayTeamElement, "AwayTeamID"));
