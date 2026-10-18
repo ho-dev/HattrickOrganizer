@@ -104,6 +104,10 @@
 * Added a local cache with TTL for stadium images and manual reload by clicking on the image. (#2440)
 * Tab 'Arena': Display for all values now with the thousands separator.
 
+### Team Analyzer
+
+* Fix exception in ManMarkingOrderDisplay (#2555)
+
 ### Misc
 
 * Fix CVEs with HO dependencies
