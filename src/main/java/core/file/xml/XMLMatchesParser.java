@@ -62,7 +62,7 @@ public class XMLMatchesParser {
 
 				Element ele;
 				Element tmp;
-				for (int i = 0; (list != null) && (i < list.getLength()); i++) {
+				for (int i = 0; i < list.getLength(); i++) {
 					match = new MatchKurzInfo();
 					ele = (Element) list.item(i);
 
