@@ -77,12 +77,7 @@ public class TeamPanel extends JPanel {
         fillPanel(lineupPanel.getOpponentTeam().getCentralForwardPanel(), centralAttacker);
         fillPanel(lineupPanel.getOpponentTeam().getCentralMidfieldPanel(), centralMidfielder);
         fillPanel(lineupPanel.getOpponentTeam().getMiddleCentralDefenderPanel(), middleCentral);
-        
-
         JScrollPane scrollPane = new JScrollPane(grassPanel);
-
-//        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-//        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_ALWAYS);
         add(scrollPane, BorderLayout.CENTER);
     }
 
@@ -104,7 +99,7 @@ public class TeamPanel extends JPanel {
             centralAttacker.reload(teamLineup.getSpotLineup(IMatchRoleID.centralForward), week, season);
             centralMidfielder.reload(teamLineup.getSpotLineup(IMatchRoleID.centralInnerMidfield), week, season);
             middleCentral.reload(teamLineup.getSpotLineup(IMatchRoleID.middleCentralDefender), week, season);
-            
+
             lineupPanel.getOpponentTeam().setLeftAttack(teamLineup.getRating().getLeftAttack());
             lineupPanel.getOpponentTeam().setLeftDefence(teamLineup.getRating().getLeftDefense());
             lineupPanel.getOpponentTeam().setRightAttack(teamLineup.getRating().getRightAttack());
@@ -159,8 +154,8 @@ public class TeamPanel extends JPanel {
             centralAttacker.reload(null, 0, 0);
             centralMidfielder.reload(null, 0, 0);
             middleCentral.reload(null, 0, 0);
-            
-            
+
+
             lineupPanel.getOpponentTeam().setLeftAttack(0);
             lineupPanel.getOpponentTeam().setLeftDefence(0);
             lineupPanel.getOpponentTeam().setRightAttack(0);
@@ -180,7 +175,7 @@ public class TeamPanel extends JPanel {
         fillPanel(lineupPanel.getOpponentTeam().getRightWingPanel(), rightWinger);
         fillPanel(lineupPanel.getOpponentTeam().getLeftForwardPanel(), leftAttacker);
         fillPanel(lineupPanel.getOpponentTeam().getRightForwardPanel(), rightAttacker);
-        fillPanel(lineupPanel.getOpponentTeam().getCentralForwardPanel(), centralAttacker);            
+        fillPanel(lineupPanel.getOpponentTeam().getCentralForwardPanel(), centralAttacker);
         fillPanel(lineupPanel.getOpponentTeam().getMiddleCentralDefenderPanel(), middleCentral);
         fillPanel(lineupPanel.getOpponentTeam().getCentralMidfieldPanel(), centralMidfielder);
 
@@ -214,7 +209,7 @@ public class TeamPanel extends JPanel {
                 spotLineup.setSpot(spot);
                 spotLineup.setTactics(new ArrayList<>());
                 pp.reload(spotLineup);
-                
+
             } else {
                 pp.reload(null);
             }
@@ -277,7 +272,7 @@ public class TeamPanel extends JPanel {
 
     private void fillPanel(JPanel panel, PlayerPanel playerPanel) {
         panel.removeAll();
-        
+
         // Don't add the panel of an empty position.
         if (playerPanel.getContainsPlayer()) {
             panel.setLayout(new GridBagLayout());
@@ -312,20 +307,25 @@ public class TeamPanel extends JPanel {
         }
 
         private int y(Container component) {
+            if (component == null) {
+                return 0;
+            }
             var ret = component.getY();
-            if ( component.getParent() != parent) ret += y(component.getParent());
+            if (component.getParent() != parent) ret += y(component.getParent());
             return ret;
         }
 
         private int x(Container component) {
+            if (component == null) {
+                return 0;
+            }
             var ret = component.getX();
-            if ( component.getParent() != parent) ret += x(component.getParent());
+            if (component.getParent() != parent) ret += x(component.getParent());
             return ret;
         }
 
         @Override
         protected void paintComponent(Graphics gIn) {
-            //super.paintComponent(gIn);
             // adapted from aioobe, https://stackoverflow.com/questions/4112701/drawing-a-line-with-arrow-in-java
             double dx = xto - xfrom, dy = yto - yfrom;
             double angle = Math.atan2(dy, dx);
