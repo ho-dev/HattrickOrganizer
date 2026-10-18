@@ -1,7 +1,5 @@
 package core.model.player;
 
-import lombok.Getter;
-import org.apache.commons.lang3.StringUtils;
 import core.constants.TrainingType;
 import core.constants.player.PlayerSkill;
 import core.constants.player.Specialty;
@@ -19,12 +17,11 @@ import core.training.*;
 import core.util.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 import static core.constants.player.PlayerSkill.*;
 import static core.model.player.IMatchRoleID.aPositionBehaviours;
@@ -2629,21 +2626,5 @@ public class Player extends AbstractTable.Storable {
             }
         }
         return null;
-    }
-
-//    public static Set<String> getDuplicateLastNames(List<Player> players) {
-//        final var playerNames = players.stream().map(Player::getLastName).toList();
-//        return getDuplicateNames(playerNames);
-//    }
-
-    public static Set<String> getDuplicateNames(List<String> playerNames) {
-        return playerNames
-            .stream()
-            .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
-            .entrySet()
-            .stream()
-            .filter(entry -> entry.getValue() > 1L)
-            .map(Map.Entry::getKey)
-            .collect(Collectors.toSet());
     }
 }
