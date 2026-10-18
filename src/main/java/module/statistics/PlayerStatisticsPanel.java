@@ -14,8 +14,11 @@ import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.player.Player;
+import core.playername.PlayerNameFormatter;
+import core.playername.PlayerNameUtils;
 import core.util.HOLogger;
 import core.util.Helper;
+import core.util.StreamUtils;
 import core.util.chart.HOLinesChart;
 import core.util.chart.LinesChartDataModel;
 import org.knowm.xchart.style.lines.SeriesLines;
@@ -29,10 +32,8 @@ import java.awt.event.FocusEvent;
 import java.awt.event.ItemEvent;
 import java.text.NumberFormat;
 import java.time.temporal.ChronoUnit;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Panel Player in Module Statistics
@@ -439,14 +440,14 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		// former players
 		final List<Player> oldPlayers = HOVerwaltung.instance().getModel().getFormerPlayers().stream().filter(i->!i.getHrfDate().isBefore(fromDate)).toList();
 
-		final var duplicateLastNames = Player.getDuplicateLastNames(Stream.concat(players.stream(), oldPlayers.stream()).toList());
+        final var playerNameFormatter = PlayerNameUtils.createPlayerNameFormatter(StreamUtils.concat(players.stream(), oldPlayers.stream()).toList());
 
 		final List<PlayerCBItem> playerCBItems = players.stream()
-				.map(player -> createPlayerCBItem(player, duplicateLastNames))
+				.map(player -> createPlayerCBItem(player, playerNameFormatter))
 				.sorted()
 				.toList();
 		final List<PlayerCBItem> spielerOldCBItems = oldPlayers.stream()
-				.map(player -> createPlayerCBItem(player, duplicateLastNames))
+				.map(player -> createPlayerCBItem(player, playerNameFormatter))
 				.sorted()
 				.toList();
 
@@ -461,9 +462,9 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		jcbPlayer.setSelectedItem(null);
 	}
 
-	private static PlayerCBItem createPlayerCBItem(Player player, Set<String> duplicateLastNames) {
-		final boolean lastNameUnique = !duplicateLastNames.contains(player.getLastName());
-		return new PlayerCBItem(player.getFullNameSmart(lastNameUnique), 0f, player);
+	private static PlayerCBItem createPlayerCBItem(Player player, PlayerNameFormatter playerNameFormatter) {
+        final var playerName = playerNameFormatter.format(PlayerNameUtils.createPlayerName(player), PlayerNameFormatter.NameFormat.SMART_LAST_FIRST);
+		return new PlayerCBItem(playerName, 0f, player);
 	}
 
 	private void initStatistic() {
@@ -515,5 +516,5 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		return TranslationFacility.tr(key);
 	}
 
-	
+
 }
