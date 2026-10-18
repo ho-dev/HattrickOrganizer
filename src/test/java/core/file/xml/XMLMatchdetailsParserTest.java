@@ -1522,7 +1522,7 @@ class XMLMatchdetailsParserTest {
             var expectedEvent = expectedMatchEvents.get(i);
 
             assertThat(event.getMatchEventIndex()).isEqualTo(expectedEvent.getMatchEventIndex());
-            assertThat(event.getM_eInjuryType()).isEqualTo(expectedEvent.getM_eInjuryType());
+            assertThat(event.getInjuryType()).isEqualTo(expectedEvent.getInjuryType());
             assertThat(event.getTeamID()).isEqualTo(expectedEvent.getTeamID());
             assertThat(event.getMatchEventID()).isEqualTo(expectedEvent.getMatchEventID());
             assertThat(event.getEventVariation()).isEqualTo(expectedEvent.getEventVariation());
@@ -1596,7 +1596,7 @@ class XMLMatchdetailsParserTest {
     private MatchEvent createExpectedMatchEvent(int eventIndex, Matchdetails.eInjuryType injuryType, int teamID, int matchEventID, int eventVariation, int matchPartId, int minute, int playerID, boolean playerIsFromHomeTeam, int assistingPlayerID, boolean assistingPlayerIsFromHomeTeam, String eventText) {
         var matchEvent = new  MatchEvent();
         matchEvent.setMatchEventIndex(eventIndex);
-        matchEvent.setM_eInjuryType(injuryType);
+        matchEvent.setInjuryType(injuryType);
         matchEvent.setTeamID(teamID);
         matchEvent.setMatchEventID(matchEventID);
         matchEvent.setEventVariation(eventVariation);
@@ -1627,6 +1627,6 @@ class XMLMatchdetailsParserTest {
         assertThat(matchEvent.getGehilfeHeim()).isEqualTo(other.getGehilfeHeim());
         assertThat(matchEvent.getEventVariation()).isEqualTo(other.getEventVariation());
         assertThat(matchEvent.getMinute()).isEqualTo(other.getMinute());
-        assertThat(matchEvent.getM_eInjuryType()).isEqualTo(other.getM_eInjuryType());
+        assertThat(matchEvent.getInjuryType()).isEqualTo(other.getInjuryType());
     }
 }
