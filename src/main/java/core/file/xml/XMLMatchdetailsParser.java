@@ -56,7 +56,7 @@ public class XMLMatchdetailsParser {
 					home.setMatchTacticType(MatchTacticType.fromInt(md.getHomeTacticType()));
 				}
 
-                md.setStatisics();
+                md.setHatStats();
 
 			} catch (Exception e) {
 	            HOLogger.instance().log(XMLMatchdetailsParser.class, e);
@@ -196,6 +196,7 @@ public class XMLMatchdetailsParser {
 
                 //generate MatchEvent and add to list
                 final MatchEvent myHighlight = new MatchEvent();
+                // TODO: Read index from xml file
                 myHighlight.setMatchEventIndex(n + 1);
                 myHighlight.setMatchEventID(iMatchEventID);
                 myHighlight.setMinute(iMinute);
