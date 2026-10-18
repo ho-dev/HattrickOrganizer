@@ -15,7 +15,11 @@ import core.model.UserParameter;
 import core.model.match.MatchKurzInfo;
 import core.model.player.Player;
 import core.net.HattrickLink;
+import core.playername.PlayerNameFormatter;
+import core.playername.PlayerNameUtils;
 import core.util.Helper;
+import core.util.StreamUtils;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
@@ -23,8 +27,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Stream;
 
 /**
  * Bietet Übersicht über alle Player
@@ -99,15 +101,15 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 
 		// Former Players
 		final List<Player> oldPlayers = HOVerwaltung.instance().getModel().getFormerPlayers();
-		final var duplicateLastNames = Player.getDuplicateLastNames(Stream.concat(players.stream(), oldPlayers.stream()).toList());
+        final var playerNameFormatter = PlayerNameUtils.createPlayerNameFormatter(StreamUtils.concat(players.stream(), oldPlayers.stream()).toList());
 
 		final List<PlayerCBItem> playerCBItems = players.stream()
-				.map(player -> createPlayerCBItem(player, duplicateLastNames))
+				.map(player -> createPlayerCBItem(player, playerNameFormatter))
 				.sorted()
 				.toList();
 
 		final List<PlayerCBItem> spielerOldCBItems = oldPlayers.stream()
-				.map(player -> createPlayerCBItem(player, duplicateLastNames))
+				.map(player -> createPlayerCBItem(player, playerNameFormatter))
 				.sorted()
 				.toList();
 
@@ -124,9 +126,9 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 		playerComboBox.setSelectedItem(null);
 	}
 
-	private static PlayerCBItem createPlayerCBItem(Player player, Set<String> duplicateLastNames) {
-		final boolean lastNameUnique = !duplicateLastNames.contains(player.getLastName());
-		return new PlayerCBItem(player.getFullNameSmart(lastNameUnique), 0f, player);
+	private static PlayerCBItem createPlayerCBItem(Player player, PlayerNameFormatter playerNameFormatter) {
+        final var playerName = playerNameFormatter.format(PlayerNameUtils.createPlayerName(player), PlayerNameFormatter.NameFormat.SMART_LAST_FIRST);
+		return new PlayerCBItem(playerName, 0f, player);
 	}
 
 	private void initComponents() {
