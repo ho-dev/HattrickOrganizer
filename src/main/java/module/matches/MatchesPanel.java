@@ -13,13 +13,11 @@ import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
-import core.model.match.IMatchDetails;
-import core.model.match.MatchKurzInfo;
-import core.model.match.MatchLineupPosition;
-import core.model.match.Matchdetails;
+import core.model.match.*;
 import core.model.player.IMatchRoleID;
 import core.module.IModule;
 import core.net.OnlineWorker;
+import core.playername.PlayerNameFormatterFactory;
 import core.prediction.MatchEnginePanel;
 import core.prediction.MatchPredictionDialog;
 import core.prediction.engine.MatchPredictionManager;
@@ -537,8 +535,10 @@ public final class MatchesPanel extends LazyImagePanel {
 				aufstellungHeimPanel.clearAll();
 				aufstellungGastPanel.clearAll();
 			} else {
-				aufstellungHeimPanel.refresh(info, info.getHomeTeamID());
-				aufstellungGastPanel.refresh(info, info.getGuestTeamID());
+                final var matchLineup = loadMatchLineup(info);
+                final var playerNameFormatter = PlayerNameFormatterFactory.createFrom(matchLineup);
+				aufstellungHeimPanel.refresh(matchLineup, info.getHomeTeamID(), playerNameFormatter);
+				aufstellungGastPanel.refresh(matchLineup, info.getGuestTeamID(), playerNameFormatter);
 			}
 		} else {
 			this.matchesModel.setMatch(null);
@@ -552,6 +552,10 @@ public final class MatchesPanel extends LazyImagePanel {
 			aufstellungGastPanel.clearAll();
 		}
 	}
+
+    private MatchLineup loadMatchLineup(MatchKurzInfo match) {
+        return DBManager.instance().loadMatchLineup(match.getMatchType().getId(), match.getMatchID());
+    }
 
 	/**
 	 * Refresh button states.
