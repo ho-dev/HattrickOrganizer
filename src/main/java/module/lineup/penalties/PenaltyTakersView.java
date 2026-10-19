@@ -8,6 +8,9 @@ import core.model.TranslationFacility;
 import core.model.match.MatchLineupPosition;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
+import core.playername.PlayerNameFormatter;
+import core.playername.PlayerNameFormatterFactory;
+import core.playername.PlayerNameUtils;
 import core.util.GUIUtils;
 import module.lineup.Lineup;
 
@@ -19,8 +22,8 @@ import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.ItemListener;
 import java.text.NumberFormat;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 
 public class PenaltyTakersView extends JPanel {
 
@@ -38,6 +41,8 @@ public class PenaltyTakersView extends JPanel {
 	private JCheckBox showOthersCheckBox;
 	private List<PenaltyTaker> players;
 
+    private PlayerNameFormatter playerNameFormatter;
+
 	public PenaltyTakersView() {
 		initComponents();
 		addListeners();
@@ -53,6 +58,7 @@ public class PenaltyTakersView extends JPanel {
 	}
 
 	public void setPlayers(List<Player> players) {
+        playerNameFormatter = PlayerNameFormatterFactory.createFromPlayers(players);
 		this.players = new ArrayList<>();
 		for (Player player : players) {
 			if (!player.isExternallyRecruitedCoach()) {
@@ -569,7 +575,7 @@ public class PenaltyTakersView extends JPanel {
 			PenaltyTaker taker = this.data.get(rowIndex);
 			return switch (columnIndex) {
 				case 0 -> getInLineupVal(taker.getPlayer());
-				case 1 -> taker.getPlayer().getFullName();
+                case 1 -> playerNameFormatter.format(PlayerNameUtils.createPlayerName(taker.getPlayer()), PlayerNameFormatter.NameFormat.SMART_LAST_FIRST);
 				case 2 -> taker.getExperience();
 				case 3 -> taker.getSetPieces();
 				case 4 -> taker.getScoring();
