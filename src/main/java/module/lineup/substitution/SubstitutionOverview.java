@@ -5,6 +5,9 @@ import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
+import core.model.player.Player;
+import core.playername.PlayerNameFormatter;
+import core.playername.PlayerNameUtils;
 import core.util.GUIUtils;
 import module.lineup.Lineup;
 import module.lineup.substitution.model.MatchOrderType;
@@ -13,6 +16,7 @@ import module.lineup.substitution.plausibility.Error;
 import module.lineup.substitution.plausibility.PlausibilityCheck;
 import module.lineup.substitution.plausibility.Problem;
 import module.lineup.substitution.plausibility.Uncertainty;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import javax.swing.table.AbstractTableModel;
@@ -23,9 +27,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.*;
 import java.util.List;
 
 /**
@@ -47,9 +49,11 @@ public class SubstitutionOverview extends JPanel {
 	private ManMarkingAction manMarkingAction;
 	private Lineup lineup;
 	private List<Substitution> substitutionBackup;
+    private final PlayerNameFormatter playerNameFormatter;
 
-	public SubstitutionOverview(Lineup lineup) {
+	public SubstitutionOverview(Lineup lineup, PlayerNameFormatter playerNameFormatter) {
 		this.lineup = lineup;
+        this.playerNameFormatter = playerNameFormatter;
 		createActions();
 		initComponents();
 		addListeners();
@@ -194,7 +198,7 @@ public class SubstitutionOverview extends JPanel {
 		orderTypeIconCol.setMaxWidth(25);
 
 		JPanel lowerPanel = new JPanel(new GridBagLayout());
-		this.detailsView = new DetailsView();
+		this.detailsView = new DetailsView(playerNameFormatter);
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 		gbc.weighty = 1.0;
@@ -311,9 +315,9 @@ public class SubstitutionOverview extends JPanel {
 		SubstitutionEditDialog dlg;
 		Window windowAncestor = SwingUtilities.getWindowAncestor(SubstitutionOverview.this);
 		if (windowAncestor instanceof Frame) {
-			dlg = new SubstitutionEditDialog((Frame) windowAncestor, orderType);
+			dlg = new SubstitutionEditDialog((Frame) windowAncestor, orderType, playerNameFormatter);
 		} else {
-			dlg = new SubstitutionEditDialog((Dialog) windowAncestor, orderType);
+			dlg = new SubstitutionEditDialog((Dialog) windowAncestor, orderType, playerNameFormatter);
 		}
 		return dlg;
 	}
@@ -396,7 +400,7 @@ public class SubstitutionOverview extends JPanel {
 	 * listed.
 	 *
 	 */
-	private static class SubstitutionsTableModel extends AbstractTableModel {
+	private class SubstitutionsTableModel extends AbstractTableModel {
 
         public static final int WARNING_COL_IDX = 0;
         public static final int ORDERTYPE_COL_IDX = 1;
@@ -474,9 +478,9 @@ public class SubstitutionOverview extends JPanel {
 
             return switch (columnIndex) {
                 case ORDERTYPE_COL_IDX -> LanguageStringLookup.getOrderType(sub.getOrderType());
-                case SUBJECTPLAYER_COL_IDX -> sub.getSubjectPlayerName();
+                case SUBJECTPLAYER_COL_IDX -> findPlayerById(sub.getSubjectPlayerID()).map(this::getName).orElse(StringUtils.EMPTY);
                 case ORDERTYPE_ICON_COL_IDX -> sub.getBehaviour();
-                case OBJECTPLAYER_COL_IDX -> sub.getObjectPlayerName();
+                case OBJECTPLAYER_COL_IDX -> findPlayerById(sub.getObjectPlayerID()).map(this::getName).orElse(StringUtils.EMPTY);
                 case WHEN_COL_IDX -> {
                     if (sub.getMatchMinuteCriteria() > 0) {
                         yield TranslationFacility.tr("subs.MinuteAfterX", sub.getMatchMinuteCriteria());
@@ -487,7 +491,6 @@ public class SubstitutionOverview extends JPanel {
                 case CARDS_COL_IDX -> LanguageStringLookup.getRedCard(sub.getRedCardCriteria());
                 default -> "";
             };
-
         }
 
         @Override
@@ -497,6 +500,15 @@ public class SubstitutionOverview extends JPanel {
 
         public TableRow getRow(int rowIndex) {
             return this.rows.get(rowIndex);
+        }
+
+        private String getName(Player player) {
+            final var playerName = PlayerNameUtils.createPlayerName(player);
+            return playerNameFormatter.format(playerName, PlayerNameFormatter.NameFormat.SMART_LAST_FIRST);
+        }
+
+        private static Optional<Player> findPlayerById(int playerId) {
+            return Optional.ofNullable(HOVerwaltung.instance().getModel().getCurrentPlayer(playerId));
         }
     }
 
