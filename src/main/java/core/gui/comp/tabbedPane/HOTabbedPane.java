@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
 
-public final class HOTabbedPane extends JTabbedPane {
+public final class HOTabbedPane extends DraggableTabbedPane {
 
 	public HOTabbedPane() {
 		super();
