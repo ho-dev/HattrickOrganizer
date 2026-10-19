@@ -9,9 +9,9 @@ import core.model.match.MatchLineupPosition;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.playername.PlayerNameFormatter;
-import core.playername.PlayerNameFormatterFactory;
 import core.playername.PlayerNameUtils;
 import core.util.GUIUtils;
+import lombok.Setter;
 import module.lineup.Lineup;
 
 import javax.swing.*;
@@ -41,6 +41,7 @@ public class PenaltyTakersView extends JPanel {
 	private JCheckBox showOthersCheckBox;
 	private List<PenaltyTaker> players;
 
+    @Setter
     private PlayerNameFormatter playerNameFormatter;
 
 	public PenaltyTakersView() {
@@ -58,7 +59,6 @@ public class PenaltyTakersView extends JPanel {
 	}
 
 	public void setPlayers(List<Player> players) {
-        playerNameFormatter = PlayerNameFormatterFactory.createFromPlayers(players);
 		this.players = new ArrayList<>();
 		for (Player player : players) {
 			if (!player.isExternallyRecruitedCoach()) {

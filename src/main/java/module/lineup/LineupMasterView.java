@@ -6,6 +6,8 @@ import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
 import core.model.match.MatchLineupPosition;
 import core.model.player.IMatchRoleID;
+import core.playername.PlayerNameFormatter;
+import core.playername.PlayerNameFormatterFactory;
 import module.lineup.penalties.PenaltyTaker;
 import module.lineup.penalties.PenaltyTakersView;
 import module.lineup.substitution.SubstitutionOverview;
@@ -29,6 +31,7 @@ public class LineupMasterView extends JPanel {
 	private SubstitutionOverview substitutionOverview;
 	private PenaltyTakersView penaltyTakersView;
 	private int oldTabIndex = -1;
+    private PlayerNameFormatter playerNameFormatter;
 
 	public LineupMasterView() {
 		initComponents();
@@ -42,15 +45,18 @@ public class LineupMasterView extends JPanel {
 	private void initComponents() {
 		this.tabbedPane = new JTabbedPane();
 		HOVerwaltung hov = HOVerwaltung.instance();
+        final var currentPlayers = hov.getModel().getCurrentPlayers();
+        playerNameFormatter = PlayerNameFormatterFactory.createFromPlayers(currentPlayers);
 
 		this.lineupPanel = new LineupPanel();
 		this.tabbedPane.addTab(TranslationFacility.tr("Aufstellung"), this.lineupPanel);
 
-		this.substitutionOverview = new SubstitutionOverview(hov.getModel().getCurrentLineup());
+		this.substitutionOverview = new SubstitutionOverview(hov.getModel().getCurrentLineup(), playerNameFormatter);
 		this.tabbedPane.addTab(TranslationFacility.tr("subs.Title"), this.substitutionOverview);
 
 		this.penaltyTakersView = new PenaltyTakersView();
-		this.penaltyTakersView.setPlayers(hov.getModel().getCurrentPlayers());
+        this.penaltyTakersView.setPlayerNameFormatter(playerNameFormatter);
+		this.penaltyTakersView.setPlayers(currentPlayers);
 		this.penaltyTakersView.setLineup(hov.getModel().getCurrentLineup());
 		this.tabbedPane.addTab(TranslationFacility.tr("lineup.penaltytakers.tab.title"), this.penaltyTakersView);
 
@@ -96,7 +102,9 @@ public class LineupMasterView extends JPanel {
 
 	private void refreshView() {
 		this.substitutionOverview.setLineup(HOVerwaltung.instance().getModel().getCurrentLineup());
-		this.penaltyTakersView.setPlayers(HOVerwaltung.instance().getModel().getCurrentPlayers());
+        final var currentPlayers = HOVerwaltung.instance().getModel().getCurrentPlayers();
+        playerNameFormatter = PlayerNameFormatterFactory.createFromPlayers(currentPlayers);
+		this.penaltyTakersView.setPlayers(currentPlayers);
 		this.penaltyTakersView.setLineup(HOVerwaltung.instance().getModel().getCurrentLineup());
 	}
 
