@@ -5,6 +5,8 @@ import core.constants.player.PlayerSkill;
 import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
+import core.playername.PlayerNameFormatter;
+import core.playername.PlayerNameUtils;
 import core.util.AmountOfMoney;
 import module.transfer.PlayerTransfer;
 import module.transfer.TransferType;
@@ -40,13 +42,13 @@ class TransferredPlayer {
      *
      * @param player PlayerId of the Transferred Player
      */
-    TransferredPlayer(int transferId, Player player) {
+    TransferredPlayer(int transferId, Player player, PlayerNameFormatter playerNameFormatter) {
         this.transferId = transferId;
         age = player.getAge();
         playerId = player.getPlayerId();
         experience = player.getExperience();
         leadership = player.getLeadership();
-        playerName = player.getFullNameWithLastNameFirst();
+        playerName = playerNameFormatter.format(PlayerNameUtils.createPlayerName(player), PlayerNameFormatter.NameFormat.SMART_LAST_FIRST);
         skillups += player.getAllLevelUp(PlayerSkill.KEEPER).size();
         skillups += player.getAllLevelUp(PlayerSkill.PLAYMAKING).size();
         skillups += player.getAllLevelUp(PlayerSkill.PASSING).size();
