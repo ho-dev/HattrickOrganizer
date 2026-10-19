@@ -601,7 +601,7 @@ class XMLMatchArchiveParserTest {
     void parseMatchesFromString() {
 
         // when
-        final var matches = XMLMatchArchivParser.parseMatchesFromString(xmlFileMatchArchive);
+        final var matches = XMLMatchArchiveParser.parseMatchesFromString(xmlFileMatchArchive);
 
         assertThat(matches).isNotNull();
 
