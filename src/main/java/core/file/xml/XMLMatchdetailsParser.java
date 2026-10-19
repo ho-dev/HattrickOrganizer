@@ -19,9 +19,9 @@ import org.w3c.dom.Element;
  * @author thomas.werth
  */
 public class XMLMatchdetailsParser {
-	/**
-	 * Utility class - private constructor enforces noninstantiability.
-	 */
+    /**
+     * Utility class - private constructor enforces noninstantiability.
+     */
     private XMLMatchdetailsParser() {
     }
 
@@ -33,68 +33,69 @@ public class XMLMatchdetailsParser {
         Matchdetails md = null;
 
         if (doc != null) {
-        	try {
+            try {
                 md = new Matchdetails();
 
                 readGeneral(doc, md);
                 readArena(doc, md);
                 readGuestTeam(doc, md);
                 readHomeTeam(doc, md);
-				readInjuries(doc, md);
+                readInjuries(doc, md);
 
-				if (matchLineup != null) {
-					// Match lineup needs to be available, if not -> ignore match highlights/report
-					readHighlights(doc, md, matchLineup);
-					parseMatchReport(md);
+                if (matchLineup != null) {
+                    // Match lineup needs to be available, if not -> ignore match highlights/report
+                    readHighlights(doc, md, matchLineup);
+                    parseMatchReport(md);
 
-					var guest = matchLineup.getGuestTeam();
-					guest.setMatchTeamAttitude(MatchTeamAttitude.fromInt(md.getGuestEinstellung()));
-					guest.setMatchTacticType(MatchTacticType.fromInt(md.getGuestTacticType()));
+                    var guest = matchLineup.getGuestTeam();
+                    guest.setMatchTeamAttitude(MatchTeamAttitude.fromInt(md.getGuestEinstellung()));
+                    guest.setMatchTacticType(MatchTacticType.fromInt(md.getGuestTacticType()));
 
-					var home = matchLineup.getHomeTeam();
-					home.setMatchTeamAttitude(MatchTeamAttitude.fromInt(md.getHomeEinstellung()));
-					home.setMatchTacticType(MatchTacticType.fromInt(md.getHomeTacticType()));
-				}
+                    var home = matchLineup.getHomeTeam();
+                    home.setMatchTeamAttitude(MatchTeamAttitude.fromInt(md.getHomeEinstellung()));
+                    home.setMatchTacticType(MatchTacticType.fromInt(md.getHomeTacticType()));
+                }
 
-                md.setHatStats();
+                md.calculateHatStats();
 
-			} catch (Exception e) {
-	            HOLogger.instance().log(XMLMatchdetailsParser.class, e);
-	            return null;
-			}
+            } catch (Exception e) {
+                HOLogger.instance().log(XMLMatchdetailsParser.class, e);
+                return null;
+            }
         }
 
         return md;
     }
 
-	/**
-	 * read the match injuries from XML
-	 *
-	 * @param doc 	XML document
-	 * @param md	match details
-	 *
-	 */
-	private static void readInjuries(Document doc, Matchdetails md) {
+    /**
+     * read the match injuries from XML
+     *
+     * @param doc XML document
+     * @param md  match details
+     *
+     */
+    private static void readInjuries(Document doc, Matchdetails md) {
         final ArrayList<Matchdetails.Injury> mdInjuries = new ArrayList<>();
         try {
             var root = doc.getDocumentElement();
             var matchElement = XMLUtils.getElement(root, "Match");
-            var injuries = XMLUtils.getElements(matchElement, "Injuries");
-            if (injuries.size() == 1) {
-                var injuriesElement = injuries.get(0);
-                var injuryList = XMLUtils.getElements(injuriesElement,"Injury");
-                for (var injuryELement : injuryList) {
-                    var injuryPlayerID = XMLUtils.getIntValue(injuryELement, "InjuryPlayerID");
-                    var injuryTeamID = XMLUtils.getIntValue(injuryELement, "InjuryTeamID");
-                    var injuryType = XMLUtils.getIntValue(injuryELement, "InjuryType");
-                    var injuryMinute = XMLUtils.getIntValue(injuryELement, "InjuryMinute");
-                    var matchPart = XMLUtils.getIntValue(injuryELement, "MatchPart");
-                    var injury = new Matchdetails.Injury(injuryPlayerID, injuryTeamID, injuryType, injuryMinute, matchPart);
-                    mdInjuries.add(injury);
-                }
-                md.setInjuries(mdInjuries);
+            var injuriesElement = XMLUtils.getOptionalElement(matchElement, "Injuries");
+            if (injuriesElement.isEmpty()) {
+                return;
             }
-        } catch (Exception e) {
+            var injuryList = XMLUtils.getElements(injuriesElement.get(), "Injury");
+            for (var injuryELement : injuryList) {
+                var injuryPlayerID = XMLUtils.getIntValue(injuryELement, "InjuryPlayerID");
+                var injuryTeamID = XMLUtils.getIntValue(injuryELement, "InjuryTeamID");
+                var injuryType = XMLUtils.getIntValue(injuryELement, "InjuryType");
+                var injuryMinute = XMLUtils.getIntValue(injuryELement, "InjuryMinute");
+                var matchPart = XMLUtils.getIntValue(injuryELement, "MatchPart");
+                var injury = new Matchdetails.Injury(injuryPlayerID, injuryTeamID, injuryType, injuryMinute, matchPart);
+                mdInjuries.add(injury);
+            }
+            md.setInjuries(mdInjuries);
+        } catch (
+            Exception e) {
             HOLogger.instance().log(XMLMatchdetailsParser.class, e);
         }
     }
@@ -112,13 +113,10 @@ public class XMLMatchdetailsParser {
             //get Root element
             var root = doc.getDocumentElement();
             var matchElement = XMLUtils.getElement(root, "Match");
-            var eventListElement = XMLUtils.getElement(matchElement, "EventList");
-            var eventNodeList = eventListElement.getElementsByTagName("Event");
-
-            //now go through the match events
-            for (int n = 0; n < eventNodeList.getLength(); n++) {
-                var eventNode = (Element) eventNodeList.item(n);
-
+            var eventListElement = XMLUtils.getOptionalElement(matchElement, "EventList");
+            if (eventListElement.isEmpty()) { return; }
+            var eventNodeList = XMLUtils.getElements(eventListElement.get(), "Event");
+            for (var eventNode : eventNodeList) {
                 //get values from xml
                 var eventIndex = XMLUtils.getAttributeIntValue(eventNode, "Index");
                 int iMinute = XMLUtils.getIntValue(eventNode, "Minute");

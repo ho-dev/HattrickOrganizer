@@ -22,7 +22,7 @@ import org.xml.sax.SAXException;
 
 public class XMLUtils {
 
-    static class NoElementXMLParseException extends XMLParseException {
+    public static class NoElementXMLParseException extends XMLParseException {
         public NoElementXMLParseException(String tagName) {super("No element with tag name '%s'.".formatted(tagName));}
     }
 
@@ -86,7 +86,7 @@ public class XMLUtils {
      */
     public static Node getNode(Document doc, String tagName) {
         NodeList nl = doc.getElementsByTagName(tagName);
-        if (!isEmpty(nl)) {
+        if (nl.getLength() > 0) {
             return nl.item(0);
         }
         return null;
@@ -98,7 +98,7 @@ public class XMLUtils {
      *
      * @param parent  the parent element
      * @param tagName the tag name of the element to find.
-     * @return the first element found with the specified tag name
+     * @return the element found with the specified tag name
      * @throws XMLParseException When the element is not found or more than one exists
      * @throws NullPointerException When the parent element is null
      */
@@ -108,6 +108,26 @@ public class XMLUtils {
         return switch (nodes.size()) {
             case 1 -> nodes.get(0);
             case 0 -> throw new NoElementXMLParseException(tagName);
+            default -> throw new MoreThanOneElementXMLParseException(tagName);
+        };
+    }
+
+    /**
+     * Gets the optional child element with the specified tag name from the given
+     * parent element.
+     *
+     * @param parent  the parent element
+     * @param tagName the tag name of the element to find.
+     * @return Optional<Element> the element found with the specified tag name of empty
+     * @throws XMLParseException If more than one element exists
+     * @throws NullPointerException If the parent element is null
+     */
+    public static Optional<Element> getOptionalElement(Element parent, String tagName) {
+        Objects.requireNonNull(parent);
+        var nodes = getElements(parent.getChildNodes(), tagName);
+        return switch (nodes.size()) {
+            case 1 -> Optional.of(nodes.get(0));
+            case 0 -> Optional.empty();
             default -> throw new MoreThanOneElementXMLParseException(tagName);
         };
     }
@@ -198,18 +218,6 @@ public class XMLUtils {
         if (attribute != null) { return attribute.getNodeValue(); }
         throw new NoElementXMLParseException(tagName);
     }
-
-	/**
-	 * Null-safe check if a nodelist is empty.
-	 *
-	 * @param nodeList
-	 *            the nodelist to check.
-	 * @return <code>true</code> if the given nodelist is <code>null</code> or
-	 *         empty.
-	 */
-	public static boolean isEmpty(NodeList nodeList) {
-		return nodeList == null || nodeList.getLength() == 0;
-	}
 
     /**
      * Gets an integer value from the child element of a given parent element
