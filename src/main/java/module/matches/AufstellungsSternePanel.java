@@ -1,22 +1,17 @@
 // %2675300316:de.hattrickorganizer.gui.matches%
 package module.matches;
 
-import core.db.DBManager;
 import core.gui.comp.panel.RasenPanel;
 import core.model.UserParameter;
-import core.model.match.MatchKurzInfo;
 import core.model.match.MatchLineup;
 import core.model.match.MatchLineupPosition;
 import core.model.match.MatchLineupTeam;
 import core.model.player.IMatchRoleID;
-import core.model.player.MatchRoleID;
-import core.model.player.Player;
 import core.model.util.PlayerNameFixupUtils;
-import core.playername.PlayerNameFormatterFactory;
+import core.playername.PlayerNameFormatter;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.stream.Collectors;
 
 /**
  * Zeigt die Stärken und Aufstellung einer Mannschaft an
@@ -97,9 +92,7 @@ public class AufstellungsSternePanel extends RasenPanel {
 	/**
 	 * Get match lineup and refresh this SpielerSternePanels.
 	 */
-	public final void refresh(MatchKurzInfo match, int teamid) {
-		final MatchLineup lineup = DBManager.instance().loadMatchLineup(match.getMatchType().getId(), match.getMatchID());
-
+	public final void refresh(MatchLineup lineup, int teamid, PlayerNameFormatter playerNameFormatter) {
 		MatchLineupTeam lineupteam;
 
 		if (lineup.getHomeTeamId() == teamid) {
@@ -108,7 +101,7 @@ public class AufstellungsSternePanel extends RasenPanel {
 			lineupteam = lineup.getGuestTeam();
 		}
 
-        // TODO
+        // TODO: remove this fixup here
         if (lineupteam.getLineup().getAllPositions().stream().map(MatchLineupPosition::getFirstName).allMatch(String::isEmpty) ) {
             lineupteam.getLineup().getAllPositions()
                 .forEach(PlayerNameFixupUtils::fixup);
@@ -119,8 +112,6 @@ public class AufstellungsSternePanel extends RasenPanel {
 		if (lineupteam != null) {
 			m_jlTeamName.setText(lineupteam.getTeamName() + " (" + lineupteam.getTeamID() + ")");
 			var aufstellung = lineupteam.getLineup().getAllPositions();
-
-            final var playerNameFormatter = PlayerNameFormatterFactory.createFromMatchLineupPositions(lineupteam.getLineup().getAllPositions());
 
 			for (var mlp : aufstellung) {
 				var player = mlp;
