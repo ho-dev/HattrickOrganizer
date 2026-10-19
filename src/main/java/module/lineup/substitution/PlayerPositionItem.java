@@ -1,14 +1,18 @@
 package module.lineup.substitution;
 
 import core.model.player.Player;
+import core.playername.PlayerNameFormatter;
+import core.playername.PlayerNameUtils;
 
 public class PlayerPositionItem {
 	private Integer position;
 	private Player player;
+    private final PlayerNameFormatter playerNameFormatter;
 
-	PlayerPositionItem(Integer pos, Player player) {
+	PlayerPositionItem(Integer pos, Player player, PlayerNameFormatter playerNameFormatter) {
 		this.player = player;
 		this.position = pos;
+        this.playerNameFormatter = playerNameFormatter;
 	}
 
 	public Integer getPosition() {
@@ -28,7 +32,8 @@ public class PlayerPositionItem {
 			builder.append(" ) ");
 		}
 		if (this.player != null) {
-			builder.append(this.player.getFullName());
+            final var playerName = playerNameFormatter.format(PlayerNameUtils.createPlayerName(this.player), PlayerNameFormatter.NameFormat.SMART_LAST_FIRST);
+			builder.append(playerName);
 		}
 
 		return builder.toString();
