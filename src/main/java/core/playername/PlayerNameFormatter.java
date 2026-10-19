@@ -88,7 +88,7 @@ public class PlayerNameFormatter {
 
     public String format(PlayerName playerName, NameFormat nameFormat) {
         if (!knownPlayerIds.contains(playerName.getPlayerId())) {
-            throw new IllegalStateException("Player id %d in unknown in formatter context".formatted(playerName.getPlayerId()));
+            throw new IllegalStateException("Player id %d is unknown in formatter context.".formatted(playerName.getPlayerId()));
         }
 
         final var playerNameWrapper = new PlayerNameWrapper(playerName);

@@ -21,7 +21,7 @@ public interface MatchHighlight {
     boolean isPenaltyContestGoalEvent();
     boolean isPenaltyContestNoGoalEvent();
     List<Icon> getIcons();
-    String getPlayerName();
-    String getAssistingPlayerName();
+    int getPlayerId();
+    int getAssistingPlayerId();
     int getMinute();
 }
