@@ -15,7 +15,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class XMLMatchesParserTest {
 
-    final String xmlFileMatchArchive = """
+    final String xmlFileMatches = """
 <?xml version="1.0" encoding="utf-8"?>
 <HattrickData>
   <FileName>matches.xml</FileName>
@@ -262,10 +262,8 @@ class XMLMatchesParserTest {
 
     @Test
     void parseMatchesFromString() {
-
         // when
-        final var matches = XMLMatchesParser.parseMatchesFromString(xmlFileMatchArchive);
-
+        final var matches = XMLMatchesParser.parseMatchesFromString(xmlFileMatches);
         assertThat(matches).isNotNull();
 
         var expectedMatches = new ArrayList<MatchKurzInfo>();
@@ -301,7 +299,7 @@ class XMLMatchesParserTest {
         }
     }
 
-    private MatchKurzInfo createMatch(int matchID, int homeTeamID, String homeTeam, int awayTeamID, String awayTeam, String matchDate, int matchType, int matchContextID, int cupLevel, int cupLevelIndex, int homeGoals, int awayGoals, int status, boolean isMatchOrderSet) {
+    private static MatchKurzInfo createMatch(int matchID, int homeTeamID, String homeTeam, int awayTeamID, String awayTeam, String matchDate, int matchType, int matchContextID, int cupLevel, int cupLevelIndex, int homeGoals, int awayGoals, int status, boolean isMatchOrderSet) {
         var m = new MatchKurzInfo();
         m.setMatchID(matchID);
         m.setHomeTeamID(homeTeamID);
@@ -319,5 +317,4 @@ class XMLMatchesParserTest {
         m.setOrdersGiven(isMatchOrderSet);
         return m;
     }
-
 }

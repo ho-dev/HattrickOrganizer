@@ -653,7 +653,7 @@ class XMLMatchArchiveParserTest {
         }
     }
 
-    private MatchKurzInfo createMatch(int matchID, int homeTeamID, String homeTeam, int awayTeamID, String awayTeam, String matchDate, int matchType, int matchContextID, int cupLevel, int cupLevelIndex, int homeGoals, int awayGoals) {
+    private static MatchKurzInfo createMatch(int matchID, int homeTeamID, String homeTeam, int awayTeamID, String awayTeam, String matchDate, int matchType, int matchContextID, int cupLevel, int cupLevelIndex, int homeGoals, int awayGoals) {
         var m = new MatchKurzInfo();
         m.setMatchID(matchID);
         m.setHomeTeamID(homeTeamID);
@@ -669,5 +669,4 @@ class XMLMatchArchiveParserTest {
         m.setGuestTeamGoals(awayGoals);
         return m;
     }
-
 }
