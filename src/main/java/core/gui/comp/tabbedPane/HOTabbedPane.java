@@ -2,11 +2,8 @@ package core.gui.comp.tabbedPane;
 
 import core.module.IModule;
 import core.module.ModuleManager;
-
 import java.awt.Component;
-
 import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
 import javax.swing.UIManager;
 
 public final class HOTabbedPane extends DraggableTabbedPane {
