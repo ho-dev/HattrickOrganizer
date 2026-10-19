@@ -18,6 +18,8 @@ import core.model.match.MatchLineupPosition;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
+import core.playername.PlayerNameFormatter;
+import core.playername.PlayerNameUtils;
 import core.util.HOLogger;
 import core.util.Helper;
 import module.playeroverview.PlayerStatusLabelEntry;
@@ -26,6 +28,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.List;
 
 /**
  * Zeigt Details zu einem Player zu einer Zeit an
@@ -183,8 +186,11 @@ final class SpielerDetailDialog extends JDialog {
 
 	};
 
+    private final PlayerNameFormatter playerNameFormatter;
+
 	public SpielerDetailDialog(JFrame owner, MatchLineupPosition matchplayer, MatchLineup matchlineup) {
 		super(owner);
+        this.playerNameFormatter = new PlayerNameFormatter(List.of(PlayerNameUtils.createPlayerName(matchplayer)));
 		HOLogger.instance().log(getClass(), "SpielerDetailDialog");
 		Player player = DBManager.instance().getSpielerAtDate(matchplayer.getPlayerId(),
 				matchlineup.getMatchDate().toDbTimestamp());
@@ -200,7 +206,8 @@ final class SpielerDetailDialog extends JDialog {
 
 		HOLogger.instance().log(getClass(), "Show Player: " + player.getFullName());
 
-		setTitle(player.getFullName() + " (" + player.getPlayerId() + ")");
+        final var playerName = playerNameFormatter.format(PlayerNameUtils.createPlayerName(matchplayer), PlayerNameFormatter.NameFormat.FULL_LAST_FIRST);
+		setTitle(playerName + " (" + player.getPlayerId() + ")");
 		addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -227,7 +234,8 @@ final class SpielerDetailDialog extends JDialog {
 		Player m_clVergleichsPlayer = HOVerwaltung.instance().getModel()
 				.getCurrentPlayer(m_clPlayer.getPlayerId());
 
-		m_jpName.setText(m_clPlayer.getFullName());
+        final var playerName = playerNameFormatter.format(PlayerNameUtils.createPlayerName(m_clPlayer), PlayerNameFormatter.NameFormat.FULL_LAST_FIRST);
+		m_jpName.setText(playerName);
 		m_jpAlter.setText(m_clPlayer.getAgeWithDaysAsString(m_clPlayer.getHrfDate()));
 		m_jpNationalitaet.setIcon(ImageUtilities.getCountryFlagIcon(m_clPlayer.getCountryId()));
 
