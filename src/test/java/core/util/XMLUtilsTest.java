@@ -593,23 +593,6 @@ class XMLUtilsTest {
         assertThat(thrown.getMessage()).isEqualTo(expected);
     }
 
-    private static Stream<Arguments> test_hasElement() {
-        return Stream.of(
-            arguments(matchElement, "Scorers", true),
-            arguments(XMLUtils.getElement(matchElement, "Scorers"), "Goal", true),
-            arguments(root, " FileName", false),
-            arguments(root, "version", false),
-            arguments(root, "FileName", true),
-            arguments(root, "Version", true)
-        );
-    }
-
-    @ParameterizedTest
-    @MethodSource
-    void test_hasElement(Element element, String tagName, boolean expected) {
-        assertThat(XMLUtils.hasElement(element, tagName)).isEqualTo(expected);
-    }
-
     private static Stream<Arguments> test_getStringValue() {
         return Stream.of(
             arguments(root, "FileName", "matchdetails.xml"),
@@ -788,5 +771,33 @@ class XMLUtilsTest {
     void test_getBooleanValue_ThrowsXMLParseException(Element element, String tagName, String expected) {
         XMLParseException thrown = assertThrows(XMLParseException.class, () -> XMLUtils.getBooleanValue(element, tagName));
         assertThat(thrown.getMessage()).isEqualTo(expected);
+    }
+
+    private static Stream<Arguments> test_getAttributeStringValue() {
+        return Stream.of(
+            arguments(XMLUtils.getElement(matchElement, "EventList"), "Event", 0, "Index", "0"),
+            arguments(XMLUtils.getElement(matchElement, "EventList"), "Event", 1, "Index", "1")
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource
+    void test_getAttributeStringValue(Element element, String nodeTagName, int nodeIndex, String attributeTagName, String expected) {
+        var eventNode = XMLUtils.getElements(element, nodeTagName).get(nodeIndex);
+        assertThat(XMLUtils.getAttributeStringValue(eventNode, attributeTagName)).isEqualTo(expected);
+    }
+
+    private static Stream<Arguments> test_getAttributeIntValue() {
+        return Stream.of(
+            arguments(XMLUtils.getElement(matchElement, "EventList"), "Event", 0, "Index", 0),
+            arguments(XMLUtils.getElement(matchElement, "EventList"), "Event", 1, "Index", 1)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource
+    void test_getAttributeIntValue(Element element, String nodeTagName, int nodeIndex, String attributeTagName, int expected) {
+        var eventNode = XMLUtils.getElements(element, nodeTagName).get(nodeIndex);
+        assertThat(XMLUtils.getAttributeIntValue(eventNode, attributeTagName)).isEqualTo(expected);
     }
 }

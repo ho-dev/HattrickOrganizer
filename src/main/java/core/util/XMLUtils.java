@@ -75,43 +75,6 @@ public class XMLUtils {
     }
 
     /**
-     * Finds a node in a document and returns the value from an attribute of
-     * this node. If there are multiple nodes with the specified tag name, the
-     * attribute value of the first node found will be returned.
-     *
-     * @param document      the document.
-     * @param nodeName      the name of the node .
-     * @param attributeName the name of the node's attribute.
-     * @return the value of the node's attribute or <code>null</code> if either
-     * no node with the specified tag name or no attribute with the
-     * specified attribute name could be found.
-     */
-    public static String getAttributeValueFromNode(Document document,
-                                                   String nodeName, String attributeName) {
-        Node node = getNode(document, nodeName);
-        if (node != null) {
-            Node attribute = getAttributeValue(node, attributeName);
-            if (attribute != null) {
-                return attribute.getNodeValue();
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Gets the value from a node's attribute.
-     *
-     * @param node          the node.
-     * @param attributeName the name of the attribute.
-     * @return the value of the attribute with the specified name or
-     * <code>null</code> if there is no attribute with that name.
-     */
-    public static Node getAttributeValue(Node node, String attributeName) {
-        return (node.hasAttributes()) ? node.getAttributes().getNamedItem(
-            attributeName) : null;
-    }
-
-    /**
      * Gets the first node with the specified tag name from the given document.
      * If there are multiple nodes with the specified tag name, the first node
      * found will be returned.
@@ -223,6 +186,19 @@ public class XMLUtils {
         }
     }
 
+    /**
+     * Gets an string value from an attribute of a given element
+     * @param node Element
+     * @param tagName Attribute tag name
+     * @return String
+     * @throws XMLParseException Attribute not found
+     */
+    public static String getAttributeStringValue(Element node, String tagName) {
+        var attribute = node.getAttributes().getNamedItem(tagName);
+        if (attribute != null) { return attribute.getNodeValue(); }
+        throw new NoElementXMLParseException(tagName);
+    }
+
 	/**
 	 * Null-safe check if a nodelist is empty.
 	 *
@@ -236,7 +212,7 @@ public class XMLUtils {
 	}
 
     /**
-     * Gets an integer value from the first child element of a given parent element
+     * Gets an integer value from the child element of a given parent element
      * @param element Parent element
      * @param tagName Child tag name
      * @return int value
@@ -246,6 +222,20 @@ public class XMLUtils {
     public static int getIntValue(Element element, String tagName) {
         var value = getStringValue(element, tagName);
         return Integer.parseInt(value);
+    }
+
+    /**
+     * Gets an integer from an attribute of a given element
+     * @param node Element
+     * @param tagName Attribute tag name
+     * @return int
+     * @throws NumberFormatException Value is not a number
+     * @throws XMLParseException Attribute not found
+     */
+    public static int getAttributeIntValue(Element node, String tagName) {
+        var attribute = node.getAttributes().getNamedItem(tagName);
+        if (attribute != null) { return Integer.parseInt(attribute.getNodeValue()); }
+        throw new NoElementXMLParseException(tagName);
     }
 
     public static int getIntValue(Element element, String tagName, int defaultValue) {

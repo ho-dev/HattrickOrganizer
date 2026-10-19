@@ -120,6 +120,7 @@ public class XMLMatchdetailsParser {
                 var eventNode = (Element) eventNodeList.item(n);
 
                 //get values from xml
+                var eventIndex = XMLUtils.getAttributeIntValue(eventNode, "Index");
                 int iMinute = XMLUtils.getIntValue(eventNode, "Minute");
                 var iSubjectPlayerID = XMLUtils.getIntValue(eventNode, "SubjectPlayerID");
                 var iSubjectTeamID = XMLUtils.getIntValue(eventNode, "SubjectTeamID");
@@ -197,8 +198,7 @@ public class XMLMatchdetailsParser {
 
                 //generate MatchEvent and add to list
                 final MatchEvent myHighlight = new MatchEvent();
-                // TODO: Read index from xml file
-                myHighlight.setMatchEventIndex(n + 1);
+                myHighlight.setMatchEventIndex(eventIndex);
                 myHighlight.setMatchEventID(iMatchEventID);
                 myHighlight.setMinute(iMinute);
                 myHighlight.setPlayerId(iSubjectPlayerID);
