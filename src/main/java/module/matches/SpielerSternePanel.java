@@ -14,6 +14,7 @@ import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.playername.PlayerNameFormatter;
+import core.playername.PlayerNameFormatterFactory;
 import core.playername.PlayerNameUtils;
 import core.util.Helper;
 
@@ -47,7 +48,7 @@ final class SpielerSternePanel extends ImagePanel implements ActionListener {
 	private boolean m_bOnScreen = false;
 	private final GridBagConstraints m_gbcConstraints = new GridBagConstraints();
 
-	SpielerSternePanel(int positionsID, boolean print, JPanel parent, int x, int y) {
+    SpielerSternePanel(int positionsID, boolean print, JPanel parent, int x, int y) {
 		super(print);
 
 		m_iPositionsID = positionsID;
