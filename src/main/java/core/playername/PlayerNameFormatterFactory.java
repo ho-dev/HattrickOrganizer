@@ -4,6 +4,7 @@ import core.model.match.MatchLineup;
 import core.model.match.MatchLineupPosition;
 import core.model.player.Player;
 import core.util.StreamUtils;
+import module.matches.MatchesModel;
 
 import java.util.List;
 
@@ -21,14 +22,25 @@ public final class PlayerNameFormatterFactory {
         return createFromMatchLineupPositions(getAllMatchLineupPositions(matchLineup));
     }
 
-    public static PlayerNameFormatter createFromMatchLineupPositions(List<MatchLineupPosition> matchLineupPositions) {
-        return new PlayerNameFormatter(matchLineupPositions.stream().map(PlayerNameUtils::createPlayerName).toList());
-    }
-
     private static List<MatchLineupPosition> getAllMatchLineupPositions(MatchLineup matchLineup) {
         return StreamUtils.concat(
                 matchLineup.getHomeTeam().getLineup().getAllPositions().stream(),
                 matchLineup.getGuestTeam().getLineup().getAllPositions().stream())
             .toList();
+    }
+
+    public static PlayerNameFormatter createFrom(MatchesModel matchesModel) {
+        return createFromMatchLineupPositions(getAllMatchLineupPositions(matchesModel));
+    }
+
+    private static List<MatchLineupPosition> getAllMatchLineupPositions(MatchesModel matchesModel) {
+        return StreamUtils.concat(
+                matchesModel.getHomeTeamInfo().getLineup().getAllPositions().stream(),
+                matchesModel.getAwayTeamInfo().getLineup().getAllPositions().stream())
+            .toList();
+    }
+
+    public static PlayerNameFormatter createFromMatchLineupPositions(List<MatchLineupPosition> matchLineupPositions) {
+        return new PlayerNameFormatter(matchLineupPositions.stream().map(PlayerNameUtils::createPlayerName).toList());
     }
 }
