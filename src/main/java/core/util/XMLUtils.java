@@ -35,7 +35,7 @@ public class XMLUtils {
 	}
 
     /**
-     * Gets the date between an opening and closing xml tag. E.g. for
+     * Gets the date between an opening and closing Xml tag. E.g. for
      * <tag>xyz</tag> the string xyz would be returned. If there are multiple
      * nodes with the specified tag name, the data of the first node found will
      * be returned.
@@ -59,9 +59,9 @@ public class XMLUtils {
     /**
      * Creates a document from an XML string.
      *
-     * @param xmlSource the xml source as a string.
-     * @return the document created from the given xml string.
-     * @throws SAXException if an error occurs while parsing the xml.
+     * @param xmlSource the Xml source as a string.
+     * @return the document created from the given Xml string.
+     * @throws SAXException if an error occurs while parsing the Xml.
      */
     public static Document createDocument(String xmlSource) throws SAXException {
         Reader xml = new StringReader(xmlSource);
@@ -80,12 +80,12 @@ public class XMLUtils {
      * found will be returned.
      *
      * @param doc     the document
-     * @param tagname the tag name of the node to find.
+     * @param tagName the tag name of the node to find.
      * @return the first node found with the specified tag name or
      * <code>null</code> if no node with that name could be found.
      */
-    public static Node getNode(Document doc, String tagname) {
-        NodeList nl = doc.getElementsByTagName(tagname);
+    public static Node getNode(Document doc, String tagName) {
+        NodeList nl = doc.getElementsByTagName(tagName);
         if (!isEmpty(nl)) {
             return nl.item(0);
         }
@@ -187,7 +187,7 @@ public class XMLUtils {
     }
 
     /**
-     * Gets an string value from an attribute of a given element
+     * Gets a string value from an attribute of a given element
      * @param node Element
      * @param tagName Attribute tag name
      * @return String
