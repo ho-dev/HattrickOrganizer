@@ -13,9 +13,7 @@ import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.series.Paarung;
 import core.model.util.PlayerNameFixupUtils;
-import core.playername.PlayerName;
-import core.playername.PlayerNameFormatter;
-import core.playername.PlayerNameUtils;
+import core.playername.*;
 import core.util.StreamUtils;
 import module.series.MatchFixtures;
 import org.apache.commons.lang3.StringUtils;
@@ -131,7 +129,8 @@ public class TeamOfTheWeekPanel extends LazyPanel implements ChangeListener, Act
 
 		panel.removeAll();
 
-        final var playerName = playerNameFormatter.format(mlp.getPlayerId(), PlayerNameFormatter.NameFormat.SMART_LAST_FIRST);
+        final var format = PlayerNameSettingsManager.instance().getFormat(Location.BEST_WORST_TEAM);
+        final var playerName = playerNameFormatter.format(mlp.getPlayerId(), format);
 		JLabel spielername = createLabel(playerName, Color.black, 1);
 		JLabel teamname = createLabel(getTeamName(mlp.getTeamId()), Color.black, 1);
 		JLabel position = createLabel(posi, Color.black, 0);

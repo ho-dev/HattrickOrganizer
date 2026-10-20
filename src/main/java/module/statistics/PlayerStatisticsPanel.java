@@ -14,6 +14,7 @@ import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.player.Player;
+import core.playername.NameFormat;
 import core.playername.PlayerNameFormatter;
 import core.playername.PlayerNameFormatterFactory;
 import core.playername.PlayerNameUtils;
@@ -464,7 +465,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 	}
 
 	private static PlayerCBItem createPlayerCBItem(Player player, PlayerNameFormatter playerNameFormatter) {
-        final var playerName = playerNameFormatter.format(PlayerNameUtils.createPlayerName(player), PlayerNameFormatter.NameFormat.SMART_LAST_FIRST);
+        final var playerName = playerNameFormatter.format(PlayerNameUtils.createPlayerName(player), NameFormat.SMART_LAST_FIRST);
 		return new PlayerCBItem(playerName, 0f, player);
 	}
 

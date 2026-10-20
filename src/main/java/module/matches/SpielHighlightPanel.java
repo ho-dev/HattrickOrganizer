@@ -5,10 +5,7 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.TranslationFacility;
 import core.model.match.*;
-import core.playername.PlayerName;
-import core.playername.PlayerNameFormatter;
-import core.playername.PlayerNameFormatterFactory;
-import core.playername.PlayerNameUtils;
+import core.playername.*;
 import core.util.HtmlUtils;
 
 import javax.swing.*;
@@ -244,7 +241,7 @@ public class SpielHighlightPanel extends LazyImagePanel {
     }
 
     private static String toPlayerNameShortened(PlayerName playerName, PlayerNameFormatter playerNameFormatter) {
-        return playerNameFormatter.format(playerName, PlayerNameFormatter.NameFormat.SMART_LAST_FIRST);
+        return playerNameFormatter.format(playerName, NameFormat.SMART_LAST_FIRST);
     }
 
 	private void addListeners() {this.matchesModel.addMatchModelChangeListener(() -> setNeedsRefresh(true));}

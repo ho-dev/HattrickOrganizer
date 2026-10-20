@@ -13,6 +13,7 @@ import core.model.match.MatchLineupPosition;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
+import core.playername.NameFormat;
 import core.playername.PlayerNameFormatter;
 import core.playername.PlayerNameFormatterFactory;
 import core.playername.PlayerNameUtils;
@@ -186,7 +187,7 @@ final class SpielerSternePanel extends ImagePanel implements ActionListener {
 			}
 
             final String displayName = matchLineupPosition.getPlayerId() != 0 ?
-                playerNameFormatter.format(PlayerNameUtils.createPlayerName(matchLineupPosition), PlayerNameFormatter.NameFormat.SMART_LAST_FIRST) :
+                playerNameFormatter.format(PlayerNameUtils.createPlayerName(matchLineupPosition), NameFormat.SMART_LAST_FIRST) :
                 null;
 			name.setText(displayName);
 

@@ -46,7 +46,7 @@ class PlayerNameFormatterTest {
 
     @ParameterizedTest(name = "{0} -> {1}")
     @MethodSource("standardFormats")
-    void formatsCompleteName(PlayerNameFormatter.NameFormat format, String expected) {
+    void formatsCompleteName(NameFormat format, String expected) {
         var player = player(1, "Cristiano", "CR7", "Ronaldo");
         var formatter = new PlayerNameFormatter(List.of(player));
 
@@ -56,7 +56,7 @@ class PlayerNameFormatterTest {
 
     private static Stream<Arguments> standardFormats() {
         return Stream.of(
-            arguments(HATTRICK, "Cristiano 'CR7' Ronaldo"),
+            arguments(NameFormat.HATTRICK, "Cristiano 'CR7' Ronaldo"),
             arguments(FULL_FIRST_LAST, "Cristiano 'CR7' Ronaldo"),
             arguments(FULL_LAST_FIRST, "Ronaldo, Cristiano 'CR7'"),
             arguments(SMART_FIRST_LAST, "'CR7'"),

@@ -3,13 +3,12 @@ package core.option;
 import core.model.TranslationFacility;
 import core.playername.Location;
 import core.playername.NameFormat;
+import core.playername.PlayerNameSettings;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.util.Collections;
 import java.util.EnumMap;
-import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
 
@@ -17,7 +16,7 @@ import java.util.stream.Stream;
  * Preferences panel for the player name formats used throughout HO.
  *
  * <p>This class deliberately does not persist settings. The surrounding
- * options dialog can call {@link #load(Settings)} when opening and
+ * options dialog can call {@link #load(PlayerNameSettings)} when opening and
  * {@link #snapshot()} only when the user confirms the dialog. As with all
  * Swing components, call its public methods on the Event Dispatch Thread.</p>
  */
@@ -134,25 +133,6 @@ public final class SmartPlayerNamesPanel extends JPanel {
             case YOUTH_PLAYER -> "SmartPlayerNamesPanel.Location.YOUTH_PLAYER";
             case HALL_OF_FAME_PLAYER_LIST -> "SmartPlayerNamesPanel.Location.HALL_OF_FAME_PLAYER_LIST";
         };
-    }
-
-    /**
-     * Immutable snapshot. An absent entry in {@code overrides} means the
-     * location follows {@code defaultFormat}.
-     */
-    public record Settings(NameFormat defaultFormat, Map<Location, NameFormat> overrides) {
-        public Settings {
-            Objects.requireNonNull(defaultFormat, "defaultFormat");
-            Objects.requireNonNull(overrides, "overrides");
-            EnumMap<Location, NameFormat> copy = new EnumMap<>(Location.class);
-            overrides.forEach((location, format) ->
-                copy.put(Objects.requireNonNull(location), Objects.requireNonNull(format)));
-            overrides = Collections.unmodifiableMap(copy);
-        }
-
-        public NameFormat effectiveFormat(Location location) {
-            return overrides.getOrDefault(Objects.requireNonNull(location), defaultFormat);
-        }
     }
 
     /** The extra choice is available only for an individual location. */
@@ -395,18 +375,13 @@ public final class SmartPlayerNamesPanel extends JPanel {
             Choice.fromFormat(format));
     }
 
-    public NameFormat getEffectiveFormat(Location location) {
-        NameFormat override = getOverride(location);
-        return override != null ? override : getDefaultFormat();
-    }
-
     /** Clears individual overrides without changing the global default. */
     public void clearOverrides() {
         locationBoxes.values().forEach(box -> box.setSelectedItem(Choice.USE_DEFAULT));
     }
 
     /** Loads settings for editing; nothing is persisted until the caller saves. */
-    public void load(Settings settings) {
+    public void load(PlayerNameSettings settings) {
         Objects.requireNonNull(settings, "settings");
         setDefaultFormat(settings.defaultFormat());
         for (Location location : Location.values()) {
@@ -415,7 +390,7 @@ public final class SmartPlayerNamesPanel extends JPanel {
     }
 
     /** Gets a detached snapshot suitable for persistence by the options dialog. */
-    public Settings snapshot() {
+    public PlayerNameSettings snapshot() {
         EnumMap<Location, NameFormat> overrides = new EnumMap<>(Location.class);
         for (Location location : Location.values()) {
             NameFormat format = getOverride(location);
@@ -423,6 +398,6 @@ public final class SmartPlayerNamesPanel extends JPanel {
                 overrides.put(location, format);
             }
         }
-        return new Settings(getDefaultFormat(), overrides);
+        return new PlayerNameSettings(getDefaultFormat(), overrides);
     }
 }

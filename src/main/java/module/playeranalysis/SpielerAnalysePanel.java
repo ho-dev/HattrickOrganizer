@@ -15,6 +15,7 @@ import core.model.UserParameter;
 import core.model.match.MatchKurzInfo;
 import core.model.player.Player;
 import core.net.HattrickLink;
+import core.playername.NameFormat;
 import core.playername.PlayerNameFormatter;
 import core.playername.PlayerNameFormatterFactory;
 import core.playername.PlayerNameUtils;
@@ -128,7 +129,7 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 	}
 
 	private static PlayerCBItem createPlayerCBItem(Player player, PlayerNameFormatter playerNameFormatter) {
-        final var playerName = playerNameFormatter.format(PlayerNameUtils.createPlayerName(player), PlayerNameFormatter.NameFormat.SMART_LAST_FIRST);
+        final var playerName = playerNameFormatter.format(PlayerNameUtils.createPlayerName(player), NameFormat.SMART_LAST_FIRST);
 		return new PlayerCBItem(playerName, 0f, player);
 	}
 
