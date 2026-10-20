@@ -9,7 +9,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static core.playername.PlayerNameFormatter.NameFormat.*;
+import static core.playername.NameFormat.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
@@ -56,7 +56,7 @@ class PlayerNameFormatterTest {
 
     private static Stream<Arguments> standardFormats() {
         return Stream.of(
-            arguments(NameFormat.HATTRICK, "Cristiano 'CR7' Ronaldo"),
+            arguments(HATTRICK, "Cristiano 'CR7' Ronaldo"),
             arguments(FULL_FIRST_LAST, "Cristiano 'CR7' Ronaldo"),
             arguments(FULL_LAST_FIRST, "Ronaldo, Cristiano 'CR7'"),
             arguments(SMART_FIRST_LAST, "'CR7'"),
