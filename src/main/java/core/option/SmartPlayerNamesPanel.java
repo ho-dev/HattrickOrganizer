@@ -1,28 +1,10 @@
 package core.option;
 
 import core.model.TranslationFacility;
-import lombok.RequiredArgsConstructor;
 
-import javax.swing.BorderFactory;
-import javax.swing.DefaultListCellRenderer;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JComponent;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
+import java.awt.*;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.Map;
@@ -39,84 +21,149 @@ import java.util.stream.Stream;
  */
 public final class SmartPlayerNamesPanel extends JPanel {
 
-    @RequiredArgsConstructor
     public enum NameFormat {
-        HATTRICK("SmartPlayerNamesPanel.NameFormat.HATTRICK"),
-        FULL_FIRST_LAST("SmartPlayerNamesPanel.NameFormat.FULL_FIRST_LAST"),
-        FULL_LAST_FIRST("SmartPlayerNamesPanel.NameFormat.FULL_LAST_FIRST"),
-        SMART_FIRST_LAST("SmartPlayerNamesPanel.NameFormat.SMART_FIRST_LAST"),
-        SMART_LAST_FIRST("SmartPlayerNamesPanel.NameFormat.SMART_LAST_FIRST");
+        HATTRICK,
+        FULL_FIRST_LAST,
+        FULL_LAST_FIRST,
+        SMART_FIRST_LAST,
+        SMART_LAST_FIRST
+    }
 
-        private final String translationKey;
-
+    private static class NameFormatRenderer extends DefaultListCellRenderer {
         @Override
-        public String toString() {
-            return TranslationFacility.tr(translationKey);
+        public Component getListCellRendererComponent(
+            JList<?> list, Object value, int index,
+            boolean isSelected, boolean cellHasFocus) {
+
+            JLabel label = (JLabel) super.getListCellRendererComponent(
+                list, value, index, isSelected, cellHasFocus);
+
+            if (value instanceof NameFormat format) {
+                label.setText(getNameFormatLabel(format));
+            }
+
+            return label;
         }
     }
 
-    @RequiredArgsConstructor
+    private static String getNameFormatLabel(NameFormat nameFormat) {
+        return TranslationFacility.tr(getTranslationKey(nameFormat));
+    }
+
+    static String getTranslationKey(NameFormat nameFormat) {
+        return switch (nameFormat) {
+            case HATTRICK -> "SmartPlayerNamesPanel.NameFormat.HATTRICK";
+            case FULL_FIRST_LAST -> "SmartPlayerNamesPanel.NameFormat.FULL_FIRST_LAST";
+            case FULL_LAST_FIRST -> "SmartPlayerNamesPanel.NameFormat.FULL_LAST_FIRST";
+            case SMART_FIRST_LAST -> "SmartPlayerNamesPanel.NameFormat.SMART_FIRST_LAST";
+            case SMART_LAST_FIRST -> "SmartPlayerNamesPanel.NameFormat.SMART_LAST_FIRST";
+        };
+    }
+
     public enum Group {
-        SQUAD("SmartPlayerNamesPanel.Group.Squad"),
-        LINEUP("SmartPlayerNamesPanel.Group.Lineup"),
-        MATCHES("SmartPlayerNamesPanel.Group.Matches"),
-        TRAINING("SmartPlayerNamesPanel.Group.Training"),
-        TRANSFERS("SmartPlayerNamesPanel.Group.Transfers"),
-        YOUTH("SmartPlayerNamesPanel.Group.Youth"),
-        BEST_WORST_TEAM("SmartPlayerNamesPanel.Group.BestWorstTeam"),
-        SPECIAL_EVENTS("SmartPlayerNamesPanel.Group.SpecialEvents"),
-        TEAM_ANALYZER("SmartPlayerNamesPanel.Group.TeamAnalyzer"),
-        STATISTICS_PLAYER("SmartPlayerNamesPanel.Group.Statistics_Player"),
-        PLAYER_ANALYSIS("SmartPlayerNamesPanel.Group.Player_Analysis"),
-        HALL_OF_FAME("SmartPlayerNamesPanel.Group.HallOfFame"),
-        ;
+        SQUAD,
+        LINEUP,
+        MATCHES,
+        TRAINING,
+        TRANSFERS,
+        YOUTH,
+        BEST_WORST_TEAM,
+        SPECIAL_EVENTS,
+        TEAM_ANALYZER,
+        STATISTICS_PLAYER,
+        PLAYER_ANALYSIS,
+        HALL_OF_FAME
+    }
 
-        private final String translationKey;
+    private static String getGroupLabel(Group group) {
+        return TranslationFacility.tr(getTranslationKey(group));
+    }
 
-        @Override
-        public String toString() {
-            return TranslationFacility.tr(translationKey);
-        }
+    static String getTranslationKey(Group group) {
+        return switch (group) {
+            case SQUAD -> "SmartPlayerNamesPanel.Group.Squad";
+            case LINEUP -> "SmartPlayerNamesPanel.Group.Lineup";
+            case MATCHES -> "SmartPlayerNamesPanel.Group.Matches";
+            case TRAINING -> "SmartPlayerNamesPanel.Group.Training";
+            case TRANSFERS -> "SmartPlayerNamesPanel.Group.Transfers";
+            case YOUTH -> "SmartPlayerNamesPanel.Group.Youth";
+            case BEST_WORST_TEAM -> "SmartPlayerNamesPanel.Group.BestWorstTeam";
+            case SPECIAL_EVENTS -> "SmartPlayerNamesPanel.Group.SpecialEvents";
+            case TEAM_ANALYZER -> "SmartPlayerNamesPanel.Group.TeamAnalyzer";
+            case STATISTICS_PLAYER -> "SmartPlayerNamesPanel.Group.Statistics_Player";
+            case PLAYER_ANALYSIS -> "SmartPlayerNamesPanel.Group.Player_Analysis";
+            case HALL_OF_FAME -> "SmartPlayerNamesPanel.Group.HallOfFame";
+        };
     }
 
     /** Every configurable use of a player name, grouped by application area. */
     public enum Location {
-        SQUAD_NAME_COLUMN(Group.SQUAD, "SmartPlayerNamesPanel.Location.SQUAD_NAME_COLUMN"),
-        SQUAD_PLAYER_DETAILS(Group.SQUAD, "SmartPlayerNamesPanel.Location.SQUAD_PLAYER_DETAILS"),
-        LINEUP_POSITIONS(Group.LINEUP, "SmartPlayerNamesPanel.Location.LINEUP_POSITIONS"),
-        LINEUP_SUBSTITUTES(Group.LINEUP, "SmartPlayerNamesPanel.Location.LINEUP_SUBSTITUTES"),
-        LINEUP_PLAYER_LIST(Group.LINEUP, "SmartPlayerNamesPanel.Location.LINEUP_PLAYER_LIST"),
-        MATCHES_FORMATION(Group.MATCHES, "SmartPlayerNamesPanel.Location.MATCHES_FORMATION"),
-        PLAYER_ANALYSIS_MATCHES(Group.PLAYER_ANALYSIS, "SmartPlayerNamesPanel.Location.PLAYER_ANALYSIS_MATCHES"),
-        PLAYER_ANALYSIS_PLAYER_COMPARE(Group.PLAYER_ANALYSIS, "SmartPlayerNamesPanel.Location.PLAYER_ANALYSIS_PLAYER_COMPARE"),
-        STATISTICS_PLAYER_PLAYER_SELECTION(Group.STATISTICS_PLAYER, "SmartPlayerNamesPanel.Location.STATISTICS_PLAYER_PLAYER_SELECTION"),
-        TRANSFERS_TRANSFER_LIST(Group.TRANSFERS, "SmartPlayerNamesPanel.Location.TRANSFERS_TRANSFER_LIST"),
-        TRAINING_TRAINING(Group.TRAINING, "SmartPlayerNamesPanel.Location.TRAINING_TRAINING"),
-        TRAINING_PREDICTION(Group.TRAINING, "SmartPlayerNamesPanel.Location.TRAINING_PREDICTION"),
-        TRAINING_ANALYZER(Group.TRAINING, "SmartPlayerNamesPanel.Location.TRAINING_ANALYZER"),
-        TEAM_ANALYSER_SPECIAL_EVENTS(Group.TEAM_ANALYZER, "SmartPlayerNamesPanel.Location.TEAM_ANALYSER_SPECIAL_EVENTS"),
-        TEAM_ANALYSER_FIELD(Group.TEAM_ANALYZER, "SmartPlayerNamesPanel.Location.TEAM_ANALYSER_FIELD"),
-        SPECIAL_EVENTS_SELECTION(Group.SPECIAL_EVENTS, "SmartPlayerNamesPanel.Location.SPECIAL_EVENTS_SELECTION"),
-        SPECIAL_EVENTS_PLAYER_COLUMN(Group.SPECIAL_EVENTS, "SmartPlayerNamesPanel.Location.SPECIAL_EVENTS_PLAYER_COLUMN"),
-        BEST_WORST_TEAM(Group.BEST_WORST_TEAM, "SmartPlayerNamesPanel.Location.BEST_WORST_TEAM"),
-        YOUTH_PLAYER(Group.YOUTH, "SmartPlayerNamesPanel.Location.YOUTH_PLAYER"),
-        HALL_OF_FAME_PLAYER_LIST(Group.HALL_OF_FAME, "SmartPlayerNamesPanel.Location.HALL_OF_FAME_PLAYER_LIST");
+        SQUAD_NAME_COLUMN,
+        SQUAD_PLAYER_DETAILS,
+        LINEUP_POSITIONS,
+        LINEUP_SUBSTITUTES,
+        LINEUP_PLAYER_LIST,
+        MATCHES_FORMATION,
+        PLAYER_ANALYSIS_MATCHES,
+        PLAYER_ANALYSIS_PLAYER_COMPARE,
+        STATISTICS_PLAYER_PLAYER_SELECTION,
+        TRANSFERS_TRANSFER_LIST,
+        TRAINING_TRAINING,
+        TRAINING_PREDICTION,
+        TRAINING_ANALYZER,
+        TEAM_ANALYSER_SPECIAL_EVENTS,
+        TEAM_ANALYSER_FIELD,
+        SPECIAL_EVENTS_SELECTION,
+        SPECIAL_EVENTS_PLAYER_COLUMN,
+        BEST_WORST_TEAM,
+        YOUTH_PLAYER,
+        HALL_OF_FAME_PLAYER_LIST;
+    }
 
-        private final Group group;
-        private final String translationKey;
+    private static Group getGroup(Location location) {
+        return switch (location) {
+            case SQUAD_NAME_COLUMN, SQUAD_PLAYER_DETAILS -> Group.SQUAD;
+            case LINEUP_POSITIONS, LINEUP_SUBSTITUTES, LINEUP_PLAYER_LIST -> Group.LINEUP;
+            case MATCHES_FORMATION -> Group.MATCHES;
+            case PLAYER_ANALYSIS_MATCHES, PLAYER_ANALYSIS_PLAYER_COMPARE -> Group.PLAYER_ANALYSIS;
+            case STATISTICS_PLAYER_PLAYER_SELECTION -> Group.STATISTICS_PLAYER;
+            case TRANSFERS_TRANSFER_LIST -> Group.TRANSFERS;
+            case TRAINING_TRAINING, TRAINING_PREDICTION, TRAINING_ANALYZER -> Group.TRAINING;
+            case TEAM_ANALYSER_SPECIAL_EVENTS, TEAM_ANALYSER_FIELD -> Group.TEAM_ANALYZER;
+            case SPECIAL_EVENTS_SELECTION, SPECIAL_EVENTS_PLAYER_COLUMN -> Group.SPECIAL_EVENTS;
+            case BEST_WORST_TEAM -> Group.BEST_WORST_TEAM;
+            case YOUTH_PLAYER -> Group.YOUTH;
+            case HALL_OF_FAME_PLAYER_LIST -> Group.HALL_OF_FAME;
+        };
+    }
 
-        Location(Group group, String translationKey) {
-            this.group = group;
-            this.translationKey = translationKey;
-        }
+    private static String getLocationLabel(Location location) {
+        return TranslationFacility.tr(getTranslationKey(location));
+    }
 
-        public Group group() {
-            return group;
-        }
-
-        public String label() {
-            return TranslationFacility.tr(translationKey);
-        }
+    static String getTranslationKey(Location location) {
+        return switch (location) {
+            case SQUAD_NAME_COLUMN -> "SmartPlayerNamesPanel.Location.SQUAD_NAME_COLUMN";
+            case SQUAD_PLAYER_DETAILS -> "SmartPlayerNamesPanel.Location.SQUAD_PLAYER_DETAILS";
+            case LINEUP_POSITIONS -> "SmartPlayerNamesPanel.Location.LINEUP_POSITIONS";
+            case LINEUP_SUBSTITUTES -> "SmartPlayerNamesPanel.Location.LINEUP_SUBSTITUTES";
+            case LINEUP_PLAYER_LIST -> "SmartPlayerNamesPanel.Location.LINEUP_PLAYER_LIST";
+            case MATCHES_FORMATION -> "SmartPlayerNamesPanel.Location.MATCHES_FORMATION";
+            case PLAYER_ANALYSIS_MATCHES -> "SmartPlayerNamesPanel.Location.PLAYER_ANALYSIS_MATCHES";
+            case PLAYER_ANALYSIS_PLAYER_COMPARE -> "SmartPlayerNamesPanel.Location.PLAYER_ANALYSIS_PLAYER_COMPARE";
+            case STATISTICS_PLAYER_PLAYER_SELECTION -> "SmartPlayerNamesPanel.Location.STATISTICS_PLAYER_PLAYER_SELECTION";
+            case TRANSFERS_TRANSFER_LIST -> "SmartPlayerNamesPanel.Location.TRANSFERS_TRANSFER_LIST";
+            case TRAINING_TRAINING -> "SmartPlayerNamesPanel.Location.TRAINING_TRAINING";
+            case TRAINING_PREDICTION -> "SmartPlayerNamesPanel.Location.TRAINING_PREDICTION";
+            case TRAINING_ANALYZER -> "SmartPlayerNamesPanel.Location.TRAINING_ANALYZER";
+            case TEAM_ANALYSER_SPECIAL_EVENTS -> "SmartPlayerNamesPanel.Location.TEAM_ANALYSER_SPECIAL_EVENTS";
+            case TEAM_ANALYSER_FIELD -> "SmartPlayerNamesPanel.Location.TEAM_ANALYSER_FIELD";
+            case SPECIAL_EVENTS_SELECTION -> "SmartPlayerNamesPanel.Location.SPECIAL_EVENTS_SELECTION";
+            case SPECIAL_EVENTS_PLAYER_COLUMN -> "SmartPlayerNamesPanel.Location.SPECIAL_EVENTS_PLAYER_COLUMN";
+            case BEST_WORST_TEAM -> "SmartPlayerNamesPanel.Location.BEST_WORST_TEAM";
+            case YOUTH_PLAYER -> "SmartPlayerNamesPanel.Location.YOUTH_PLAYER";
+            case HALL_OF_FAME_PLAYER_LIST -> "SmartPlayerNamesPanel.Location.HALL_OF_FAME_PLAYER_LIST";
+        };
     }
 
     /**
@@ -178,6 +225,7 @@ public final class SmartPlayerNamesPanel extends JPanel {
         add(createDefaultSettingsPanel(), BorderLayout.NORTH);
         add(createLocationsPanel(), BorderLayout.CENTER);
 
+        defaultFormatBox.setRenderer(new NameFormatRenderer());
         defaultFormatBox.setSelectedItem(NameFormat.HATTRICK);
         defaultFormatBox.addActionListener(event -> {
             updatePreview();
@@ -254,9 +302,10 @@ public final class SmartPlayerNamesPanel extends JPanel {
 
         Group previousGroup = null;
         for (Location location : Location.values()) {
-            if (!location.group().equals(previousGroup)) {
-                addGroupHeader(rows, c, location.group());
-                previousGroup = location.group();
+            final var group = getGroup(location);
+            if (group != previousGroup) {
+                addGroupHeader(rows, c, group);
+                previousGroup = group;
             }
             addLocationRow(rows, c, location);
         }
@@ -285,7 +334,7 @@ public final class SmartPlayerNamesPanel extends JPanel {
         c.insets = new Insets(c.gridy == 0 ? 4 : 14, 0, 4, 0);
 
         JPanel header = new JPanel(new BorderLayout(10, 0));
-        JLabel label = new JLabel(group.toString());
+        JLabel label = new JLabel(getGroupLabel(group));
         label.setFont(label.getFont().deriveFont(Font.BOLD));
         header.add(label, BorderLayout.WEST);
         JSeparator separator = new JSeparator(SwingConstants.HORIZONTAL);
@@ -303,7 +352,7 @@ public final class SmartPlayerNamesPanel extends JPanel {
         final var fontMetrics = box.getFontMetrics(box.getFont());
         final int maxNameFormatWidth =
             Stream.of(NameFormat.values())
-                .map(nameFormat -> TranslationFacility.tr("SmartPlayerNamesPanel.Use_default", nameFormat))
+                .map(nameFormat -> TranslationFacility.tr("SmartPlayerNamesPanel.Use_default", getNameFormatLabel(nameFormat)))
                 .mapToInt(fontMetrics::stringWidth)
                 .max()
                 .orElseThrow();
@@ -315,7 +364,7 @@ public final class SmartPlayerNamesPanel extends JPanel {
         c.gridwidth = 1;
         c.weightx = 1;
         c.insets = new Insets(3, 12, 3, 16);
-        JLabel label = new JLabel(location.label());
+        JLabel label = new JLabel(getLocationLabel(location));
         label.setLabelFor(box);
         rows.add(label, c);
 
@@ -334,8 +383,8 @@ public final class SmartPlayerNamesPanel extends JPanel {
                 list, value, index, selected, hasFocus);
             if (value instanceof Choice choice) {
                 result.setText(choice == Choice.USE_DEFAULT
-                    ? TranslationFacility.tr("SmartPlayerNamesPanel.Use_default", getDefaultFormat())
-                    : choice.format.toString());
+                    ? TranslationFacility.tr("SmartPlayerNamesPanel.Use_default", getNameFormatLabel(getDefaultFormat()))
+                    : getNameFormatLabel(choice.format));
             }
             return result;
         }
