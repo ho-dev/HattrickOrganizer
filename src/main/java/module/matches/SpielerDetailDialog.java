@@ -18,6 +18,7 @@ import core.model.match.MatchLineupPosition;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
+import core.playername.NameFormat;
 import core.playername.PlayerNameFormatter;
 import core.playername.PlayerNameUtils;
 import core.util.HOLogger;
@@ -206,7 +207,7 @@ final class SpielerDetailDialog extends JDialog {
 
 		HOLogger.instance().log(getClass(), "Show Player: " + player.getFullName());
 
-        final var playerName = playerNameFormatter.format(PlayerNameUtils.createPlayerName(matchplayer), PlayerNameFormatter.NameFormat.FULL_LAST_FIRST);
+        final var playerName = playerNameFormatter.format(PlayerNameUtils.createPlayerName(matchplayer), NameFormat.FULL_LAST_FIRST);
 		setTitle(playerName + " (" + player.getPlayerId() + ")");
 		addWindowListener(new WindowAdapter() {
 			@Override
@@ -234,7 +235,7 @@ final class SpielerDetailDialog extends JDialog {
 		Player m_clVergleichsPlayer = HOVerwaltung.instance().getModel()
 				.getCurrentPlayer(m_clPlayer.getPlayerId());
 
-        final var playerName = playerNameFormatter.format(PlayerNameUtils.createPlayerName(m_clPlayer), PlayerNameFormatter.NameFormat.FULL_LAST_FIRST);
+        final var playerName = playerNameFormatter.format(PlayerNameUtils.createPlayerName(m_clPlayer), NameFormat.FULL_LAST_FIRST);
 		m_jpName.setText(playerName);
 		m_jpAlter.setText(m_clPlayer.getAgeWithDaysAsString(m_clPlayer.getHrfDate()));
 		m_jpNationalitaet.setIcon(ImageUtilities.getCountryFlagIcon(m_clPlayer.getCountryId()));

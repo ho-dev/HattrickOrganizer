@@ -1,6 +1,7 @@
 package module.lineup.substitution;
 
 import core.model.player.Player;
+import core.playername.NameFormat;
 import core.playername.PlayerNameFormatter;
 import core.playername.PlayerNameUtils;
 
@@ -32,7 +33,7 @@ public class PlayerPositionItem {
 			builder.append(" ) ");
 		}
 		if (this.player != null) {
-            final var playerName = playerNameFormatter.format(PlayerNameUtils.createPlayerName(this.player), PlayerNameFormatter.NameFormat.SMART_LAST_FIRST);
+            final var playerName = playerNameFormatter.format(PlayerNameUtils.createPlayerName(this.player), NameFormat.SMART_LAST_FIRST);
 			builder.append(playerName);
 		}
 

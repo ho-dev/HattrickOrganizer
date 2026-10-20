@@ -13,6 +13,7 @@ import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.net.Connector;
+import core.playername.PlayerNameSettingsManager;
 import core.training.TrainingManager;
 import core.util.ExceptionHandler;
 import core.util.HOEnvironmentVariable;
@@ -167,6 +168,8 @@ public class HO {
 		// Load user parameters from the DB
 		interruptionWindow.setInfoText(2, "Initialize Database");
 		DBManager.instance().loadUserParameter();
+        // Initialize player name settings
+        PlayerNameSettingsManager.initialize();
 
 		// init Theme
 		try {
