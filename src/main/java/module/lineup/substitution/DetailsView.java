@@ -4,6 +4,7 @@ import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.TranslationFacility;
+import core.playername.NameFormat;
 import core.playername.PlayerNameFormatter;
 import core.playername.PlayerNameUtils;
 import core.util.Helper;
@@ -127,11 +128,11 @@ public class DetailsView extends JPanel {
 
 			playerOut = substitution.findSubjectPlayer()
                 .map(PlayerNameUtils::createPlayerName)
-                .map(playerName -> playerNameFormatter.format(playerName, PlayerNameFormatter.NameFormat.SMART_LAST_FIRST))
+                .map(playerName -> playerNameFormatter.format(playerName, NameFormat.SMART_LAST_FIRST))
                 .orElse("");
 			playerIn = substitution.findObjectPlayer()
                 .map(PlayerNameUtils::createPlayerName)
-                .map(playerName -> playerNameFormatter.format(playerName, PlayerNameFormatter.NameFormat.SMART_LAST_FIRST))
+                .map(playerName -> playerNameFormatter.format(playerName, NameFormat.SMART_LAST_FIRST))
                 .orElse("");
 
 			if (this.substitution.getMatchMinuteCriteria() > 0) {

@@ -6,6 +6,7 @@ import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
 import core.model.player.Player;
+import core.playername.NameFormat;
 import core.playername.PlayerNameFormatter;
 import core.playername.PlayerNameUtils;
 import core.util.GUIUtils;
@@ -504,7 +505,7 @@ public class SubstitutionOverview extends JPanel {
 
         private String getName(Player player) {
             final var playerName = PlayerNameUtils.createPlayerName(player);
-            return playerNameFormatter.format(playerName, PlayerNameFormatter.NameFormat.SMART_LAST_FIRST);
+            return playerNameFormatter.format(playerName, NameFormat.SMART_LAST_FIRST);
         }
 
         private static Optional<Player> findPlayerById(int playerId) {

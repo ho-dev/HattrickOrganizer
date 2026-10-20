@@ -8,6 +8,7 @@ import core.model.UserParameter;
 import core.module.ModuleConfigPanel;
 import core.module.ModuleManager;
 import core.module.config.ModuleConfig;
+import core.playername.PlayerNameSettingsManager;
 import core.util.AmountOfMoney;
 import core.util.Helper;
 import core.util.Updater;
@@ -26,6 +27,7 @@ public class OptionenDialog extends JDialog {
     private JButton saveButton;
     private JButton cancelButton;
     private UserColorsPanel userColorsPanel;
+    private SmartPlayerNamesPanel smartPlayerNamesPanel;
 
     public OptionenDialog(JFrame owner) {
         super(owner, TranslationFacility.tr("ls.menu.file.preferences"), true);
@@ -108,8 +110,9 @@ public class OptionenDialog extends JDialog {
         userColorsPanel = new UserColorsPanel();
         tabbedPane.addTab(TranslationFacility.tr("colors"), new JScrollPane(userColorsPanel));
 
-        // Colors
-        SmartPlayerNamesPanel smartPlayerNamesPanel = new SmartPlayerNamesPanel();
+        // Smart Player Names
+        smartPlayerNamesPanel = new SmartPlayerNamesPanel();
+        smartPlayerNamesPanel.load(PlayerNameSettingsManager.instance().getSettings());
         tabbedPane.addTab(TranslationFacility.tr("options.tabtitle.smart_player_names"), new JScrollPane(smartPlayerNamesPanel));
 
         // Tabs der plugins
@@ -172,5 +175,9 @@ public class OptionenDialog extends JDialog {
             RefreshManager.instance().doReInit();
             HOMainFrame.instance().setInformationCompleted();
         }
+
+        PlayerNameSettingsManager.instance().apply(
+            smartPlayerNamesPanel.snapshot()
+        );
     }
 }
