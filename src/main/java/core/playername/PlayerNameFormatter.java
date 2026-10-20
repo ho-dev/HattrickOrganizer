@@ -22,7 +22,6 @@ public class PlayerNameFormatter {
     }
 
     private record PlayerNameWrapper(PlayerName playerName) {
-
         public int getPlayerId() {
             return playerName.getPlayerId();
         }
@@ -65,12 +64,17 @@ public class PlayerNameFormatter {
         mapPlayerIdToPlayerNames.forEach((playerId, playerNames) -> {
                 if (playerNames.size() > 1) {
                     final var firstPlayerName = playerNames.get(0);
-                    final boolean allEqual = playerNames.stream().skip(1)
-                        .allMatch(playerName -> allNamesEqual(firstPlayerName, playerName)
-                        );
-                    if (!allEqual) {
+                    final var firstUnequal = playerNames.stream()
+                        .skip(1)
+                        .filter(playerName -> !allNamesEqual(firstPlayerName, playerName))
+                        .findFirst();
+                    if (firstUnequal.isPresent()) {
+
                         throw new IllegalArgumentException(
-                            "Conflicting name data for player ID: %d".formatted(playerId)
+                            "Conflicting name data for player ID %d: %s vs %s".formatted(playerId,
+                                playerNameToString(firstPlayerName),
+                                playerNameToString(firstUnequal.orElseThrow())
+                            )
                         );
                     }
                 }
@@ -78,6 +82,15 @@ public class PlayerNameFormatter {
         );
 
         return mapPlayerIdToPlayerNames.values().stream().map(v -> v.get(0)).collect(Collectors.toList());
+    }
+
+    private static String playerNameToString(PlayerName playerName) {
+        return "ID %d as [%s], [%s] with Nickname [%s]".formatted(
+            playerName.getPlayerId(),
+            playerName.getLastName(),
+            playerName.getFirstName(),
+            playerName.getNickName()
+        );
     }
 
     private static boolean allNamesEqual(PlayerName lhs, PlayerName rhs) {
