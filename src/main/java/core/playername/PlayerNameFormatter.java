@@ -12,14 +12,6 @@ public class PlayerNameFormatter {
     private final Set<String> duplicateNickNames;
     private final Map<String, List<PlayerNameWrapper>> mapLastNameToPlayerNameWrappers;
 
-    public enum NameFormat {
-        HATTRICK,
-        FULL_FIRST_LAST,
-        FULL_LAST_FIRST,
-        SMART_FIRST_LAST,
-        SMART_LAST_FIRST
-    }
-
     private record PlayerNameWrapper(PlayerName playerName) {
         public int getPlayerId() {
             return playerName.getPlayerId();
@@ -68,7 +60,6 @@ public class PlayerNameFormatter {
                         .filter(playerName -> !allNamesEqual(firstPlayerName, playerName))
                         .findFirst();
                     if (firstUnequal.isPresent()) {
-
                         throw new IllegalArgumentException(
                             "Conflicting name data for player ID %d: %s vs %s".formatted(playerId,
                                 playerNameToString(firstPlayerName),
