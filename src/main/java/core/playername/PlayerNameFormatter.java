@@ -8,8 +8,7 @@ import java.util.stream.Collectors;
 
 public class PlayerNameFormatter {
 
-    private final List<PlayerNameWrapper> playerNameWrappers;
-    private final Set<Integer> knownPlayerIds;
+    private final Map<Integer, PlayerNameWrapper> mapIdToWrapper;
     private final Set<String> duplicateNickNames;
     private final Map<String, List<PlayerNameWrapper>> mapLastNameToPlayerNameWrappers;
 
@@ -53,10 +52,10 @@ public class PlayerNameFormatter {
 
     public PlayerNameFormatter(List<? extends PlayerName> playerNames) {
         final var validatedPlayerNames = toValidatedUniquePlayerNames(playerNames);
-        this.knownPlayerIds = validatedPlayerNames.stream().map(PlayerName::getPlayerId).collect(Collectors.toSet());
-        this.playerNameWrappers = validatedPlayerNames.stream().map(PlayerNameWrapper::new).collect(Collectors.toList());
-        this.duplicateNickNames = calcDuplicates(PlayerNameWrapper::findNickName);
-        this.mapLastNameToPlayerNameWrappers = calcMapLastNameToPlayers();
+        this.mapIdToWrapper = validatedPlayerNames.stream().map(PlayerNameWrapper::new)
+            .collect(Collectors.toMap(PlayerNameWrapper::getPlayerId, Function.identity()));
+        this.duplicateNickNames = calcDuplicates(mapIdToWrapper.values(), PlayerNameWrapper::findNickName);
+        this.mapLastNameToPlayerNameWrappers = calcMapLastNameToPlayers(mapIdToWrapper.values());
     }
 
     private static List<? extends PlayerName> toValidatedUniquePlayerNames(List<? extends PlayerName> originalPlayerNames) {
@@ -99,12 +98,22 @@ public class PlayerNameFormatter {
             Objects.equals(lhs.getNickName(), rhs.getNickName());
     }
 
+    public String format(int playerId, NameFormat nameFormat) {
+        final var playerNameWrapper = getPlayerNameWrapper(playerId);
+        return formatPlayerNameWrapper(playerNameWrapper, nameFormat);
+    }
+
     public String format(PlayerName playerName, NameFormat nameFormat) {
-        if (!knownPlayerIds.contains(playerName.getPlayerId())) {
-            throw new IllegalStateException("Player id %d is unknown in formatter context.".formatted(playerName.getPlayerId()));
+        final var playerNameWrapper = getPlayerNameWrapper(playerName.getPlayerId());
+        if (!allNamesEqual(playerName, playerNameWrapper.playerName())) {
+            throw new IllegalArgumentException("Give PlayerName %s is not equal to known one %s."
+                .formatted(playerNameToString(playerName), playerNameToString(playerNameWrapper.playerName())));
         }
 
-        final var playerNameWrapper = new PlayerNameWrapper(playerName);
+        return formatPlayerNameWrapper(playerNameWrapper, nameFormat);
+    }
+
+    private String formatPlayerNameWrapper(PlayerNameWrapper playerNameWrapper, NameFormat nameFormat) {
         return switch (nameFormat) {
             case HATTRICK -> formatHattrick(playerNameWrapper);
             case FULL_FIRST_LAST -> formatFullFirstLast(playerNameWrapper);
@@ -112,6 +121,15 @@ public class PlayerNameFormatter {
             case SMART_FIRST_LAST -> formatSmartFirstLast(playerNameWrapper);
             case SMART_LAST_FIRST -> formatSmartLastFirst(playerNameWrapper);
         };
+    }
+
+    private PlayerNameWrapper getPlayerNameWrapper(int playerId) {
+        return findPlayerNameWrapper(playerId)
+            .orElseThrow(() -> new IllegalStateException("Player id %d is unknown in formatter context.".formatted(playerId)));
+    }
+
+    private Optional<PlayerNameWrapper> findPlayerNameWrapper(int playerId) {
+        return Optional.ofNullable(mapIdToWrapper.get(playerId));
     }
 
     private String formatHattrick(PlayerNameWrapper playerNameWrapper) {
@@ -275,14 +293,13 @@ public class PlayerNameFormatter {
         return withSameLastName.size() == 1;
     }
 
-    private Set<String> calcDuplicates(Function<PlayerNameWrapper, Optional<String>> nameExtractor) {
+    private static Set<String> calcDuplicates(Collection<PlayerNameWrapper> playerNameWrappers,
+                                              Function<PlayerNameWrapper, Optional<String>> nameExtractor) {
         return playerNameWrappers.stream()
             .map(nameExtractor)
             .filter(Optional::isPresent)
             .map(Optional::orElseThrow)
-            .collect(Collectors.groupingBy(
-                Function.identity(),
-                Collectors.counting()))
+            .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
             .entrySet()
             .stream()
             .filter(entry -> entry.getValue() > 1)
@@ -290,7 +307,7 @@ public class PlayerNameFormatter {
             .collect(Collectors.toSet());
     }
 
-    private Map<String, List<PlayerNameWrapper>> calcMapLastNameToPlayers() {
+    private static Map<String, List<PlayerNameWrapper>> calcMapLastNameToPlayers(Collection<PlayerNameWrapper> playerNameWrappers) {
         return playerNameWrappers.stream()
             .filter(playerNameWrapper -> playerNameWrapper.findLastName().isPresent())
             .collect(Collectors.groupingBy(PlayerNameWrapper::getLastName));
