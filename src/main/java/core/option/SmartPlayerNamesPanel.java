@@ -1,6 +1,8 @@
 package core.option;
 
 import core.model.TranslationFacility;
+import core.playername.Location;
+import core.playername.NameFormat;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -20,14 +22,6 @@ import java.util.stream.Stream;
  * Swing components, call its public methods on the Event Dispatch Thread.</p>
  */
 public final class SmartPlayerNamesPanel extends JPanel {
-
-    public enum NameFormat {
-        HATTRICK,
-        FULL_FIRST_LAST,
-        FULL_LAST_FIRST,
-        SMART_FIRST_LAST,
-        SMART_LAST_FIRST
-    }
 
     private static class NameFormatRenderer extends DefaultListCellRenderer {
         @Override
@@ -94,30 +88,6 @@ public final class SmartPlayerNamesPanel extends JPanel {
             case PLAYER_ANALYSIS -> "SmartPlayerNamesPanel.Group.Player_Analysis";
             case HALL_OF_FAME -> "SmartPlayerNamesPanel.Group.HallOfFame";
         };
-    }
-
-    /** Every configurable use of a player name, grouped by application area. */
-    public enum Location {
-        SQUAD_NAME_COLUMN,
-        SQUAD_PLAYER_DETAILS,
-        LINEUP_POSITIONS,
-        LINEUP_SUBSTITUTES,
-        LINEUP_PLAYER_LIST,
-        MATCHES_FORMATION,
-        PLAYER_ANALYSIS_MATCHES,
-        PLAYER_ANALYSIS_PLAYER_COMPARE,
-        STATISTICS_PLAYER_PLAYER_SELECTION,
-        TRANSFERS_TRANSFER_LIST,
-        TRAINING_TRAINING,
-        TRAINING_PREDICTION,
-        TRAINING_ANALYZER,
-        TEAM_ANALYSER_SPECIAL_EVENTS,
-        TEAM_ANALYSER_FIELD,
-        SPECIAL_EVENTS_SELECTION,
-        SPECIAL_EVENTS_PLAYER_COLUMN,
-        BEST_WORST_TEAM,
-        YOUTH_PLAYER,
-        HALL_OF_FAME_PLAYER_LIST;
     }
 
     private static Group getGroup(Location location) {
