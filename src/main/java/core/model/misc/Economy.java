@@ -23,7 +23,7 @@ public class Economy extends AbstractTable.Storable {
     public static final int LV_FANS_ANGRY = 2;
     public static final int LV_FANS_FURIOUS = 1;
     public static final int LV_FANS_MURDEROUS = 0;
-    
+
     private static final HODateTime DATE_NEW_FANLEVELS = HODateTime.fromHT("2008-02-25 00:00:00"); // 25.02.2008
 
     // level constants for the sponsor mood
@@ -181,7 +181,7 @@ public class Economy extends AbstractTable.Storable {
 
     ////////////////////////////////////////////////////////////////////////////////
     //Static
-    ////////////////////////////////////////////////////////////////////////////////    
+    ////////////////////////////////////////////////////////////////////////////////
 
     /**
      * Get the name string for a numerical level.
@@ -192,7 +192,7 @@ public class Economy extends AbstractTable.Storable {
     public static String getNameForLevelFans(int level) {
     	return getNameForLevelFans(level, null);
     }
-    
+
     /**
      * Get the name string for a numerical level.
      *
@@ -201,7 +201,7 @@ public class Economy extends AbstractTable.Storable {
      * @return the i18n'ed name for the level
      */
     public static String getNameForLevelFans(int level, HODateTime date) {
-    	// previously, fan and sponsor levels where identical, 
+    	// previously, fan and sponsor levels where identical,
     	//   thats why we can simply use sponsor values
     	if (date != null && date.isBefore(DATE_NEW_FANLEVELS)) {
     		return getNameForLevelSponsors(level);
@@ -227,6 +227,37 @@ public class Economy extends AbstractTable.Storable {
 
                 yield TranslationFacility.tr("Unbestimmt");
             }
+        };
+    }
+
+    /**
+     * Maps a historical or current fan level to the current fan level scale.
+     *
+     * @param historicalLevelFansOrLevelFans fan level in the historical or current scale
+     * @param date                           date used to determine the applicable scale; {@code null} assumes the current scale
+     * @return the corresponding level in the current fan level scale
+     * @throws IllegalArgumentException if a historical level cannot be mapped
+     */
+    public static int mapHistoricalLevelFansToLevelFans(int historicalLevelFansOrLevelFans, HODateTime date) {
+        if (date != null && date.isBefore(Economy.DATE_NEW_FANLEVELS)) {
+            return mapHistoricalLevelFansToLevelFans(historicalLevelFansOrLevelFans);
+        }
+        return historicalLevelFansOrLevelFans;
+    }
+
+    private static int mapHistoricalLevelFansToLevelFans(int historicalLevelFans) {
+        return switch (historicalLevelFans) {
+            case Economy.LV_SPONSORS_SENDING_LOVE_POEMS_TO_YOU -> Economy.LV_FANS_SENDING_LOVE_POEMS_TO_YOU;
+            case Economy.LV_SPONSORS_DANCING_IN_THE_STREETS -> Economy.LV_FANS_DANCING_IN_THE_STREETS;
+            case Economy.LV_SPONSORS_HIGH_ON_LIFE -> Economy.LV_FANS_HIGH_ON_LIFE;
+            case Economy.LV_SPONSORS_DELIRIOUS -> Economy.LV_FANS_DELIRIOUS;
+            case Economy.LV_SPONSORS_SATISFIED -> Economy.LV_FANS_SATISFIED;
+            case Economy.LV_SPONSORS_CONTENT -> Economy.LV_FANS_CONTENT;
+            case Economy.LV_SPONSORS_CALM -> Economy.LV_FANS_CALM;
+            case Economy.LV_SPONSORS_IRRITATED -> Economy.LV_FANS_IRRITATED;
+            case Economy.LV_SPONSORS_FURIOUS -> Economy.LV_FANS_FURIOUS;
+            case Economy.LV_SPONSORS_MURDEROUS -> Economy.LV_FANS_MURDEROUS;
+            default -> throw new IllegalArgumentException("No mapping for historical level of fans %d to level of fans.".formatted(historicalLevelFans));
         };
     }
 
