@@ -146,12 +146,12 @@ public final class UserColumnController {
         dbManager.loadHOColumModel(getTrainingSettingsFutureTableModel());
         dbManager.loadHOColumModel(getTrainingSettingsPastTableModel());
         dbManager.loadHOColumModel(getTrainingEffectTableModel());
-        dbManager.loadHOColumModel(getHallOfFameTableModel());
+        dbManager.loadHOColumModel(getHallOfFameTableModel(PlayerNameSettingsManager.instance().getFormat(Location.HALL_OF_FAME_PLAYER_LIST)));
 	}
 
-    public HallOfFameTableModel getHallOfFameTableModel() {
+    public HallOfFameTableModel getHallOfFameTableModel(NameFormat nameFormat) {
         if (this.hallOfFameTableModel == null){
-            this.hallOfFameTableModel = new HallOfFameTableModel(ColumnModelId.HALL_OF_FAME);
+            this.hallOfFameTableModel = new HallOfFameTableModel(ColumnModelId.HALL_OF_FAME, nameFormat);
         }
         return this.hallOfFameTableModel;
     }
@@ -282,7 +282,7 @@ public final class UserColumnController {
         v.add(getTrainingSettingsPastTableModel());
         v.add(getTrainingSettingsFutureTableModel());
         v.add(getTrainingEffectTableModel());
-        v.add(getHallOfFameTableModel());
+        v.add(getHallOfFameTableModel(PlayerNameSettingsManager.instance().getFormat(Location.HALL_OF_FAME_PLAYER_LIST)));
 		// MatchesOverView1Model should not add in this vector, because columns should not be edited
 		return v;
 	}

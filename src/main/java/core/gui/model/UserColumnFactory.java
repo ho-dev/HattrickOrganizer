@@ -21,6 +21,7 @@ import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.model.player.PlayerCategory;
+import core.playername.ConfiguredPlayerNameFormatter;
 import core.playername.NameFormat;
 import core.util.HODateTime;
 import core.util.Helper;
@@ -269,7 +270,8 @@ public final class UserColumnFactory {
                 var team = HOVerwaltung.instance().getModel().getCurrentLineup();
                 var pos = team.getPositionById(player.getPlayerId());
                 var formatter = HOVerwaltung.instance().getModel().getPlayerNameFormatterCurrentPlayers();
-                return new PlayerLabelEntry(player, pos, 0f, false, false, formatter, nameFormat);
+                var configuredPlayerNameFormatter = new ConfiguredPlayerNameFormatter(formatter, nameFormat);
+                return new PlayerLabelEntry(player, pos, 0f, false, false, configuredPlayerNameFormatter);
             }
 
             @Override

@@ -31,6 +31,7 @@ public class SpielHighlightPanel extends LazyImagePanel {
 	private JPanel panel;
 	private List<Component> highlightLabels;
 	private final MatchesModel matchesModel;
+    private final NameFormat nameFormat = PlayerNameSettingsManager.instance().getFormat(Location.MATCHES_HIGHLIGHTS);
 
 	/**
 	 * Creates a new SpielHighlightPanel object.
@@ -63,7 +64,7 @@ public class SpielHighlightPanel extends LazyImagePanel {
 			List<MatchEvent> matchEvents = details.downloadHighlightsIfMissing();
 
             final var highlights = MatchEventsAnalyser.analyse(info.getHomeTeamID(), matchEvents);
-            final var playerNameFormatter = PlayerNameFormatterFactory.createFrom(this.matchesModel);
+            final var configuredPlayerNameFormatter = new ConfiguredPlayerNameFormatter(PlayerNameFormatterFactory.createFrom(this.matchesModel), nameFormat);
 
             AtomicInteger index = new AtomicInteger();
 
@@ -72,11 +73,11 @@ public class SpielHighlightPanel extends LazyImagePanel {
                 final var playerName = PlayerNameUtils.createPlayerName(getMatchLineupPosition(highlight.getPlayerId(), matchesModel));
                 if (highlight.isSubstitution()) {
                     final var assistingPlayerName = PlayerNameUtils.createPlayerName(getMatchLineupPosition(highlight.getAssistingPlayerId(), matchesModel));
-                    spielername = toPlayerNameShortened(playerName, playerNameFormatter);
-                    final String playerEntering = toPlayerNameShortened(assistingPlayerName, playerNameFormatter);
+                    spielername = toPlayerNameShortened(playerName, configuredPlayerNameFormatter);
+                    final String playerEntering = toPlayerNameShortened(assistingPlayerName, configuredPlayerNameFormatter);
                     spielername = "<html>" + spielername + "<br>" + playerEntering + " " + createMinuteText(highlight) + "</html>";
                 } else {
-                    spielername = toPlayerNameShortened(playerName, playerNameFormatter);
+                    spielername = toPlayerNameShortened(playerName, configuredPlayerNameFormatter);
                     spielername += " " + createMinuteText(highlight);
                 }
 
@@ -95,7 +96,7 @@ public class SpielHighlightPanel extends LazyImagePanel {
                         addPenaltyContestTossingCoinToList(index.get(), info, highlight);
                     } else {
                         final var playerName = PlayerNameUtils.createPlayerName(getMatchLineupPosition(highlight.getPlayerId(), matchesModel));
-                        final String spielername = toPlayerNameShortened(playerName, playerNameFormatter) + " " + createMinuteText(highlight);
+                        final String spielername = toPlayerNameShortened(playerName, configuredPlayerNameFormatter) + " " + createMinuteText(highlight);
                         final String scoreText = highlight.isPenaltyContestEvent() ? createScoreText(highlight) : "";
 
                         addToList(index.get(), highlight, spielername, scoreText);
@@ -240,8 +241,8 @@ public class SpielHighlightPanel extends LazyImagePanel {
         return "%s %s %s".formatted(homeScore, TranslationFacility.tr(MatchResultFormatter.TRANSLATION_KEY_SEPARATOR), guestScore);
     }
 
-    private static String toPlayerNameShortened(PlayerName playerName, PlayerNameFormatter playerNameFormatter) {
-        return playerNameFormatter.format(playerName, NameFormat.SMART_LAST_FIRST);
+    private static String toPlayerNameShortened(PlayerName playerName, ConfiguredPlayerNameFormatter configuredPlayerNameFormatter) {
+        return configuredPlayerNameFormatter.format(playerName);
     }
 
 	private void addListeners() {this.matchesModel.addMatchModelChangeListener(() -> setNeedsRefresh(true));}
