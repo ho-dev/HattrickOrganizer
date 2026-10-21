@@ -4,12 +4,16 @@ import core.gui.model.BaseTableModel;
 import core.model.TranslationFacility;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
-import core.playername.*;
+import core.playername.NameFormat;
+import core.playername.PlayerNameFormatter;
+import core.playername.PlayerNameFormatterFactory;
+import core.playername.PlayerNameUtils;
 import core.specialevents.SpecialEventsPrediction;
 import core.specialevents.SpecialEventsPredictionManager;
 import core.util.HOLogger;
 import core.util.StreamUtils;
 import module.teamanalyzer.vo.TeamLineup;
+
 import javax.swing.*;
 import java.awt.*;
 import java.text.DecimalFormat;
@@ -23,7 +27,7 @@ public class SpecialEventsPanel extends JPanel {
     private final JTable table;
     private BaseTableModel tableModel;
     private final JLabel resultLabel;
-    private final NameFormat nameFormat = PlayerNameSettingsManager.instance().getFormat(Location.TEAM_ANALYSER_SPECIAL_EVENTS);
+    private final NameFormat nameFormat;
 
     private final String[] columns = {
             TranslationFacility.tr("Event"),
@@ -35,7 +39,8 @@ public class SpecialEventsPanel extends JPanel {
             TranslationFacility.tr("ls.teamanalyzer.opponent_scores")
     };
 
-    public SpecialEventsPanel(){
+    public SpecialEventsPanel(NameFormat nameFormat) {
+        this.nameFormat = nameFormat;
         Vector<Vector<Object>> data = new Vector<>();
 
         tableModel = new BaseTableModel(data, new Vector<>(Arrays.asList(columns)));

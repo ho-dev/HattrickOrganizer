@@ -17,7 +17,10 @@ import core.model.match.*;
 import core.model.player.IMatchRoleID;
 import core.module.IModule;
 import core.net.OnlineWorker;
+import core.playername.Location;
+import core.playername.NameFormat;
 import core.playername.PlayerNameFormatterFactory;
+import core.playername.PlayerNameSettingsManager;
 import core.prediction.MatchEnginePanel;
 import core.prediction.MatchPredictionDialog;
 import core.prediction.engine.MatchPredictionManager;
@@ -84,7 +87,7 @@ public final class MatchesPanel extends LazyImagePanel {
 	private MatchesOverviewTable matchesOverviewTable;
 	private MatchesHighlightsTable matchesHighlightsTable;
 	private MatchesModel matchesModel;
-
+    private final NameFormat nameFormat = PlayerNameSettingsManager.instance().getFormat(Location.MATCHES_FORMATION);
 
 	@Override
 	protected void initialize() {
@@ -253,7 +256,7 @@ public final class MatchesPanel extends LazyImagePanel {
 			}
 
 			String matchName = matchesModel.getMatch().getHomeTeamName() + " – " + matchesModel.getMatch().getGuestTeamName();
-			MatchEnginePanel matchPredictionPanel = new MatchEnginePanel(homeTeamValues, awayTeamValues);
+			MatchEnginePanel matchPredictionPanel = new MatchEnginePanel(homeTeamValues, awayTeamValues, nameFormat);
 
 			MatchPredictionDialog d = new MatchPredictionDialog(matchPredictionPanel, matchName);
 		}

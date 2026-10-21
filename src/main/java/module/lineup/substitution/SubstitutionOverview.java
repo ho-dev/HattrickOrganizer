@@ -6,9 +6,7 @@ import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
 import core.model.player.Player;
-import core.playername.NameFormat;
-import core.playername.PlayerNameFormatter;
-import core.playername.PlayerNameUtils;
+import core.playername.*;
 import core.util.GUIUtils;
 import module.lineup.Lineup;
 import module.lineup.substitution.model.MatchOrderType;
@@ -51,6 +49,7 @@ public class SubstitutionOverview extends JPanel {
 	private Lineup lineup;
 	private List<Substitution> substitutionBackup;
     private final PlayerNameFormatter playerNameFormatter;
+    private final NameFormat nameFormat = PlayerNameSettingsManager.instance().getFormat(Location.LINEUP_SUBSTITUTES);
 
 	public SubstitutionOverview(Lineup lineup, PlayerNameFormatter playerNameFormatter) {
 		this.lineup = lineup;
@@ -199,7 +198,7 @@ public class SubstitutionOverview extends JPanel {
 		orderTypeIconCol.setMaxWidth(25);
 
 		JPanel lowerPanel = new JPanel(new GridBagLayout());
-		this.detailsView = new DetailsView(playerNameFormatter);
+		this.detailsView = new DetailsView(playerNameFormatter, nameFormat);
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 		gbc.weighty = 1.0;
@@ -316,9 +315,9 @@ public class SubstitutionOverview extends JPanel {
 		SubstitutionEditDialog dlg;
 		Window windowAncestor = SwingUtilities.getWindowAncestor(SubstitutionOverview.this);
 		if (windowAncestor instanceof Frame) {
-			dlg = new SubstitutionEditDialog((Frame) windowAncestor, orderType, playerNameFormatter);
+			dlg = new SubstitutionEditDialog((Frame) windowAncestor, orderType, playerNameFormatter, nameFormat);
 		} else {
-			dlg = new SubstitutionEditDialog((Dialog) windowAncestor, orderType, playerNameFormatter);
+			dlg = new SubstitutionEditDialog((Dialog) windowAncestor, orderType, playerNameFormatter, nameFormat);
 		}
 		return dlg;
 	}
@@ -505,7 +504,7 @@ public class SubstitutionOverview extends JPanel {
 
         private String getName(Player player) {
             final var playerName = PlayerNameUtils.createPlayerName(player);
-            return playerNameFormatter.format(playerName, NameFormat.SMART_LAST_FIRST);
+            return playerNameFormatter.format(playerName, nameFormat);
         }
 
         private static Optional<Player> findPlayerById(int playerId) {

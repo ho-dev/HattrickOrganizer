@@ -6,6 +6,7 @@ import core.gui.comp.panel.ImagePanel;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.player.Player;
+import core.playername.NameFormat;
 import core.playername.PlayerNameFormatterFactory;
 import core.util.AmountOfMoney;
 import core.util.CurrencyUtils;
@@ -50,15 +51,16 @@ public class TransferTypePane extends JSplitPane implements ListSelectionListene
     private final TransfersPanel transfersPanel;
     private List<TransferredPlayer> transferred = new ArrayList<>();
     private final PlayerDetailPanel playerDetailPanel = new PlayerDetailPanel();
-
+    private final NameFormat nameFormat;
 
     /**
      * Creates a TransferTypePane.
      */
-    public TransferTypePane(TransfersPanel transfersPanel) {
+    public TransferTypePane(TransfersPanel transfersPanel, NameFormat nameFormat) {
         super(JSplitPane.VERTICAL_SPLIT);
 
         this.transfersPanel = transfersPanel;
+        this.nameFormat = nameFormat;
 
         FORMAT.setGroupingUsed(true);
         FORMAT.setMaximumFractionDigits(0);
@@ -135,7 +137,7 @@ public class TransferTypePane extends JSplitPane implements ListSelectionListene
                     Player player = mapPlayerIdToPlayer.get(playerTransfer.getPlayerId());
 
                     if (player != null) {
-                        transferredPlayer = new TransferredPlayer(playerTransfer.getTransferId(), player, playerNameFormatter);
+                        transferredPlayer = new TransferredPlayer(playerTransfer.getTransferId(), player, playerNameFormatter, nameFormat);
                     } else {
                         transferredPlayer = new TransferredPlayer(playerTransfer);
                     }

@@ -5,6 +5,7 @@ import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
 import core.model.match.IMatchDetails;
 import core.model.match.Matchdetails;
+import core.playername.NameFormat;
 import core.prediction.MatchEnginePanel;
 import core.prediction.MatchPredictionDialog;
 import core.prediction.engine.MatchPredictionManager;
@@ -37,6 +38,7 @@ public class SimButtonListener implements ActionListener {
     /** The opponent team */
     TeamLineupData opponentTeam;
     private final RecapPanel recapPanel;
+    private final NameFormat nameFormat;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -44,10 +46,11 @@ public class SimButtonListener implements ActionListener {
      * Creates a new SimButtonListener object.
      *
      */
-    public SimButtonListener(TeamLineupData myTeam, TeamLineupData opponentTeam, RecapPanel recapPanel) {
+    public SimButtonListener(TeamLineupData myTeam, TeamLineupData opponentTeam, RecapPanel recapPanel, NameFormat nameFormat) {
         this.myTeam = myTeam;
         this.opponentTeam = opponentTeam;
         this.recapPanel = recapPanel;
+        this.nameFormat = nameFormat;
     }
 
     //~ Methods ------------------------------------------------------------------------------------
@@ -97,10 +100,10 @@ public class SimButtonListener implements ActionListener {
         String match;
 
         if (SystemManager.getSelectedTeamLocation() == IMatchDetails.LOCATION_HOME) {
-            matchPredictionPanel = new MatchEnginePanel(myTeamValues, opponentTeamValues);
+            matchPredictionPanel = new MatchEnginePanel(myTeamValues, opponentTeamValues, nameFormat);
             match = myTeamValues.getTeamName() + " – " + opponentTeamValues.getTeamName();
         } else {
-            matchPredictionPanel = 	new MatchEnginePanel(opponentTeamValues, myTeamValues);
+            matchPredictionPanel = 	new MatchEnginePanel(opponentTeamValues, myTeamValues, nameFormat);
             match = opponentTeamValues.getTeamName() + " – " + myTeamValues.getTeamName();
         }
 

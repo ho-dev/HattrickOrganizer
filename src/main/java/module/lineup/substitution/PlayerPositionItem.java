@@ -9,11 +9,13 @@ public class PlayerPositionItem {
 	private Integer position;
 	private Player player;
     private final PlayerNameFormatter playerNameFormatter;
+    private final NameFormat nameFormat;
 
-	PlayerPositionItem(Integer pos, Player player, PlayerNameFormatter playerNameFormatter) {
+	PlayerPositionItem(Integer pos, Player player, PlayerNameFormatter playerNameFormatter, NameFormat nameFormat) {
 		this.player = player;
 		this.position = pos;
         this.playerNameFormatter = playerNameFormatter;
+        this.nameFormat = nameFormat;
 	}
 
 	public Integer getPosition() {
@@ -33,7 +35,7 @@ public class PlayerPositionItem {
 			builder.append(" ) ");
 		}
 		if (this.player != null) {
-            final var playerName = playerNameFormatter.format(PlayerNameUtils.createPlayerName(this.player), NameFormat.SMART_LAST_FIRST);
+            final var playerName = playerNameFormatter.format(PlayerNameUtils.createPlayerName(this.player), nameFormat);
 			builder.append(playerName);
 		}
 
