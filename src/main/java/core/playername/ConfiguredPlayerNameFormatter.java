@@ -2,12 +2,12 @@ package core.playername;
 
 import java.util.Objects;
 
-public final class PlayerNameFormatterProxy {
+public final class ConfiguredPlayerNameFormatter {
 
     private final PlayerNameFormatter formatter;
     private final NameFormat format;
 
-    public PlayerNameFormatterProxy(PlayerNameFormatter formatter, NameFormat format) {
+    public ConfiguredPlayerNameFormatter(PlayerNameFormatter formatter, NameFormat format) {
         this.formatter = Objects.requireNonNull(formatter);
         this.format = Objects.requireNonNull(format);
     }
