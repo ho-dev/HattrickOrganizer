@@ -462,7 +462,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 	}
 
 	private static PlayerCBItem createPlayerCBItem(Player player, PlayerNameFormatter playerNameFormatter, NameFormat nameFormat) {
-        final var playerName = playerNameFormatter.format(PlayerNameUtils.createPlayerName(player), NameFormat.SMART_LAST_FIRST);
+        final var playerName = playerNameFormatter.format(PlayerNameUtils.createPlayerName(player), nameFormat);
 		return new PlayerCBItem(playerName, 0f, player, playerNameFormatter, nameFormat);
 	}
 
