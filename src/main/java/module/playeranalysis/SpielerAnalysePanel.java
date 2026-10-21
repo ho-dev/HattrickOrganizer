@@ -15,10 +15,7 @@ import core.model.UserParameter;
 import core.model.match.MatchKurzInfo;
 import core.model.player.Player;
 import core.net.HattrickLink;
-import core.playername.NameFormat;
-import core.playername.PlayerNameFormatter;
-import core.playername.PlayerNameFormatterFactory;
-import core.playername.PlayerNameUtils;
+import core.playername.*;
 import core.util.Helper;
 import core.util.StreamUtils;
 
@@ -38,6 +35,7 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 	private SpielerMatchesTable m_jtSpielerMatchesTable;
 	private SpielerPositionTable m_jtSpielerPositionTable;
 	private final int columnModelInstance;
+    private final NameFormat nameFormat = PlayerNameSettingsManager.instance().getFormat(Location.PLAYER_ANALYSIS_MATCHES);
 
 	/**
 	 * Creates a new SpielerAnalysePanel object.
@@ -106,12 +104,12 @@ public class SpielerAnalysePanel extends LazyImagePanel {
         final var playerNameFormatter = PlayerNameFormatterFactory.createFromPlayers(StreamUtils.concat(players.stream(), oldPlayers.stream()).toList());
 
 		final List<PlayerCBItem> playerCBItems = players.stream()
-				.map(player -> createPlayerCBItem(player, playerNameFormatter))
+				.map(player -> createPlayerCBItem(player, playerNameFormatter, nameFormat))
 				.sorted()
 				.toList();
 
 		final List<PlayerCBItem> spielerOldCBItems = oldPlayers.stream()
-				.map(player -> createPlayerCBItem(player, playerNameFormatter))
+				.map(player -> createPlayerCBItem(player, playerNameFormatter, nameFormat))
 				.sorted()
 				.toList();
 
@@ -128,9 +126,9 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 		playerComboBox.setSelectedItem(null);
 	}
 
-	private static PlayerCBItem createPlayerCBItem(Player player, PlayerNameFormatter playerNameFormatter) {
+	private static PlayerCBItem createPlayerCBItem(Player player, PlayerNameFormatter playerNameFormatter, NameFormat nameFormat) {
         final var playerName = playerNameFormatter.format(PlayerNameUtils.createPlayerName(player), NameFormat.SMART_LAST_FIRST);
-		return new PlayerCBItem(playerName, 0f, player);
+		return new PlayerCBItem(playerName, 0f, player, playerNameFormatter, nameFormat);
 	}
 
 	private void initComponents() {

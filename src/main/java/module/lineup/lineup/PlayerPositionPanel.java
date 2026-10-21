@@ -45,14 +45,14 @@ import static core.model.player.IMatchRoleID.*;
 
 public class PlayerPositionPanel extends ImagePanel implements ItemListener, FocusListener {
 
-    private static final PlayerCBItem oNullPlayer = new PlayerCBItem("", 0f, null, false, true);
+    private static final PlayerCBItem oNullPlayer = new PlayerCBItem("", 0f, null, false, true, null, null);
     private static final Color defaultBorderColor = ThemeManager.getColor(HOColorName.PLAYER_POSITION_PANEL_BORDER);
 
     //~ Instance fields ----------------------------------------------------------------------------
     private final JComboBox<PlayerCBItem> m_jcbPlayer = new JComboBox<>();
     private final JComboBox<CBItem> m_jcbTactic = new JComboBox<>();
     private final JLabel m_jlPosition = new JLabel();
-    private final PlayerCBItem m_clSelectedPlayer = new PlayerCBItem("", 0f, null, false, true);
+    private final PlayerCBItem m_clSelectedPlayer = new PlayerCBItem("", 0f, null, false, true, null, null);
     private final Updatable m_clUpdater;
     private PlayerCBItem @Nullable [] m_clCBItems = new PlayerCBItem[0];
     private final int m_iPositionID;
@@ -244,7 +244,8 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
      * @param plSubstitutes    the substitute players (not the backup)
      * @param matchMinute      minute used for rating calculation
      */
-    public void refresh(List<Player> inCandidates, List<Player> plStartingLineup, List<Player> plSubstitutes, Weather weather, Boolean useWeatherImpact, int matchMinute) {
+    public void refresh(List<Player> inCandidates, List<Player> plStartingLineup, List<Player> plSubstitutes, Weather weather, Boolean useWeatherImpact, int matchMinute,
+                        NameFormat nameFormat) {
         var plCandidates = new ArrayList<>(inCandidates);
         PlayerNameFormatter playerNameFormatter = PlayerNameFormatterFactory.createFromPlayers(inCandidates);
 
@@ -293,7 +294,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
             }
         }
 
-        setPlayersList(plCandidates, selectedPlayer, playerNameFormatter);
+        setPlayersList(plCandidates, selectedPlayer, playerNameFormatter, nameFormat);
 
         // for all players in the combobox set correct values for isSelect (starting 11) and isAssis (it is a subsitute)
         for (int i = 0; i < m_jcbPlayer.getModel().getSize(); i++) {
@@ -336,7 +337,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
     }
 
 
-    public void refresh2(List<Player> lPlayers, int playerIDcorrespondingSub, Weather weather, Boolean useWeatherImpact) {
+    public void refresh2(List<Player> lPlayers, int playerIDcorrespondingSub, Weather weather, Boolean useWeatherImpact, NameFormat nameFormat) {
         Player selectedPlayer = null;
         iSelectedPlayerId = -1;
         m_weather = weather;
@@ -349,12 +350,12 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
             selectedPlayer = HOVerwaltung.instance().getModel().getCurrentPlayer(position.getPlayerId());
             setTactic(position.getTactic(), selectedPlayer);
         }
-        setPlayersList2(lPlayers, selectedPlayer, playerIDcorrespondingSub);
+        setPlayersList2(lPlayers, selectedPlayer, playerIDcorrespondingSub, nameFormat);
         initLabel();
         repaint();
     }
 
-    protected void setPlayersList(List<Player> oCandidates, @Nullable Player oSelectedPlayer, PlayerNameFormatter playerNameFormatter) {
+    protected void setPlayersList(List<Player> oCandidates, @Nullable Player oSelectedPlayer, PlayerNameFormatter playerNameFormatter, NameFormat nameFormat) {
 
         m_jcbPlayer.removeItemListener(this);
 
@@ -378,7 +379,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
                 }
                 //Create new
                 else {
-                    tempCB[i] = new PlayerCBItem("", 0f, null, true, true);//HOLogger.instance().log(getClass(), "Create new SpielerCBItem " + this.m_iPositionsID );
+                    tempCB[i] = new PlayerCBItem("", 0f, null, true, true, playerNameFormatter, nameFormat);//HOLogger.instance().log(getClass(), "Create new SpielerCBItem " + this.m_iPositionsID );
                 }
             }
 
@@ -432,7 +433,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         setPlayerTooltip(m_clSelectedPlayer.getPlayer());
     }
 
-    protected void setPlayersList2(List<Player> allPlayers, @Nullable Player selectedPlayer, int playerIDcorrespondingSub) {
+    protected void setPlayersList2(List<Player> allPlayers, @Nullable Player selectedPlayer, int playerIDcorrespondingSub, NameFormat nameFormat) {
         PlayerNameFormatter playerNameFormatter = PlayerNameFormatterFactory.createFromPlayers(allPlayers);
 
         m_jcbPlayer.removeItemListener(this);
@@ -464,7 +465,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
                 }
                 //Create new
                 else {
-                    tempCB[i] = new PlayerCBItem("", 0f, null, true, true);
+                    tempCB[i] = new PlayerCBItem("", 0f, null, true, true, playerNameFormatter, nameFormat);
                 }
             }
 

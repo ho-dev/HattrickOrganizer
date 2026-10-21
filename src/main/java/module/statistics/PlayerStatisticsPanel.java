@@ -14,10 +14,7 @@ import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.player.Player;
-import core.playername.NameFormat;
-import core.playername.PlayerNameFormatter;
-import core.playername.PlayerNameFormatterFactory;
-import core.playername.PlayerNameUtils;
+import core.playername.*;
 import core.util.HOLogger;
 import core.util.Helper;
 import core.util.StreamUtils;
@@ -64,7 +61,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 	private JComboBox<PlayerCBItem> jcbPlayer;
 	private JTextField jtfNbWeeks;
 	private HOLinesChart oChartPanel;
-
+    private final NameFormat nameFormat = PlayerNameSettingsManager.instance().getFormat(Location.STATISTICS_PLAYER_PLAYER_SELECTION);
 
 	public final void setPlayer(int playerID) {
 		Helper.setComboBoxFromID(jcbPlayer, playerID);
@@ -445,11 +442,11 @@ class PlayerStatisticsPanel extends LazyImagePanel {
         final var playerNameFormatter = PlayerNameFormatterFactory.createFromPlayers(StreamUtils.concat(players.stream(), oldPlayers.stream()).toList());
 
 		final List<PlayerCBItem> playerCBItems = players.stream()
-				.map(player -> createPlayerCBItem(player, playerNameFormatter))
+				.map(player -> createPlayerCBItem(player, playerNameFormatter, nameFormat))
 				.sorted()
 				.toList();
 		final List<PlayerCBItem> spielerOldCBItems = oldPlayers.stream()
-				.map(player -> createPlayerCBItem(player, playerNameFormatter))
+				.map(player -> createPlayerCBItem(player, playerNameFormatter, nameFormat))
 				.sorted()
 				.toList();
 
@@ -464,9 +461,9 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		jcbPlayer.setSelectedItem(null);
 	}
 
-	private static PlayerCBItem createPlayerCBItem(Player player, PlayerNameFormatter playerNameFormatter) {
+	private static PlayerCBItem createPlayerCBItem(Player player, PlayerNameFormatter playerNameFormatter, NameFormat nameFormat) {
         final var playerName = playerNameFormatter.format(PlayerNameUtils.createPlayerName(player), NameFormat.SMART_LAST_FIRST);
-		return new PlayerCBItem(playerName, 0f, player);
+		return new PlayerCBItem(playerName, 0f, player, playerNameFormatter, nameFormat);
 	}
 
 	private void initStatistic() {

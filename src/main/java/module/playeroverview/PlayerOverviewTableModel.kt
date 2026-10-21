@@ -6,6 +6,7 @@ import core.gui.comp.table.PlayerCheckBoxColumn
 import core.gui.comp.table.UserColumn
 import core.gui.model.*
 import core.model.player.Player
+import core.playername.NameFormat
 import core.util.HODateTime
 
 /**
@@ -14,16 +15,16 @@ import core.util.HODateTime
  * @author Thorsten Dietz
  * @since 1.36
  */
-class PlayerOverviewTableModel(id: UserColumnController.ColumnModelId, name: String) : HOPlayersTableModel(id, name) {
+class PlayerOverviewTableModel(id: UserColumnController.ColumnModelId, name: String, nameFormat: NameFormat) : HOPlayersTableModel(id, name) {
 
     /**
      * constructor
      *
      */
-    internal constructor(id: UserColumnController.ColumnModelId) : this(id, "Spieleruebersicht")
+    internal constructor(id: UserColumnController.ColumnModelId, nameFormat: NameFormat) : this(id, "Spieleruebersicht", nameFormat)
 
     init {
-        val basic: Array<out PlayerColumn>? = UserColumnFactory.createPlayerBasicArray() // 2
+        val basic: Array<out PlayerColumn>? = UserColumnFactory.createPlayerBasicArray(nameFormat) // 2
         val skills: Array<out PlayerSkillColumn>? = UserColumnFactory.createPlayerSkillArray() // 12
         val positions: Array<out PlayerPositionColumn>? = UserColumnFactory.createPlayerPositionArray() // 19
         val goals: Array<out PlayerColumn>? = UserColumnFactory.createGoalsColumnsArray() // 7
