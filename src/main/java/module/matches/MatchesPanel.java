@@ -353,9 +353,9 @@ public final class MatchesPanel extends LazyImagePanel {
 				initMatchesTable(), initSpieldetails());
 
 		JPanel linupPanel = new JPanel(new GridLayout(2, 1));
-		aufstellungHeimPanel = new AufstellungsSternePanel(true);
+		aufstellungHeimPanel = new AufstellungsSternePanel(true, nameFormat);
 		linupPanel.add(aufstellungHeimPanel);
-		aufstellungGastPanel = new AufstellungsSternePanel(false);
+		aufstellungGastPanel = new AufstellungsSternePanel(false, nameFormat);
 		linupPanel.add(aufstellungGastPanel);
 		verticalSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, false,
 				horizontalLeftSplitPane, new JScrollPane(linupPanel));

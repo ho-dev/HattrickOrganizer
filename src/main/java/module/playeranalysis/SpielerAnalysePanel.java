@@ -102,14 +102,15 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 		// Former Players
 		final List<Player> oldPlayers = HOVerwaltung.instance().getModel().getFormerPlayers();
         final var playerNameFormatter = PlayerNameFormatterFactory.createFromPlayers(StreamUtils.concat(players.stream(), oldPlayers.stream()).toList());
+        final var configuredPlayerNameFormatter = new ConfiguredPlayerNameFormatter(playerNameFormatter, nameFormat);
 
 		final List<PlayerCBItem> playerCBItems = players.stream()
-				.map(player -> createPlayerCBItem(player, playerNameFormatter, nameFormat))
+				.map(player -> createPlayerCBItem(player, configuredPlayerNameFormatter))
 				.sorted()
 				.toList();
 
 		final List<PlayerCBItem> spielerOldCBItems = oldPlayers.stream()
-				.map(player -> createPlayerCBItem(player, playerNameFormatter, nameFormat))
+				.map(player -> createPlayerCBItem(player, configuredPlayerNameFormatter))
 				.sorted()
 				.toList();
 
@@ -126,9 +127,9 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 		playerComboBox.setSelectedItem(null);
 	}
 
-	private static PlayerCBItem createPlayerCBItem(Player player, PlayerNameFormatter playerNameFormatter, NameFormat nameFormat) {
-        final var playerName = playerNameFormatter.format(PlayerNameUtils.createPlayerName(player), NameFormat.SMART_LAST_FIRST);
-		return new PlayerCBItem(playerName, 0f, player, playerNameFormatter, nameFormat);
+	private static PlayerCBItem createPlayerCBItem(Player player, ConfiguredPlayerNameFormatter configuredPlayerNameFormatter) {
+        final var playerName = configuredPlayerNameFormatter.format(PlayerNameUtils.createPlayerName(player));
+		return new PlayerCBItem(playerName, 0f, player, configuredPlayerNameFormatter);
 	}
 
 	private void initComponents() {

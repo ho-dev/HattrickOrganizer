@@ -15,7 +15,7 @@ public final class PlayerNameFormatterFactory {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
     }
 
-    public static PlayerNameFormatter createFromPlayers(List<Player> players) {
+    public static PlayerNameFormatter createFromPlayers(List<? extends Player> players) {
         return new PlayerNameFormatter(players.stream().map(PlayerNameUtils::createPlayerName).toList());
     }
 

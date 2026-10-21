@@ -13,9 +13,8 @@ import core.model.match.MatchLineupPosition;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
+import core.playername.ConfiguredPlayerNameFormatter;
 import core.playername.NameFormat;
-import core.playername.PlayerNameFormatter;
-import core.playername.PlayerNameFormatterFactory;
 import core.playername.PlayerNameUtils;
 import core.util.Helper;
 
@@ -176,7 +175,7 @@ final class SpielerSternePanel extends ImagePanel implements ActionListener {
 		}
 	}
 
-	public void refresh(MatchLineup lineup, MatchLineupPosition matchLineupPosition, PlayerNameFormatter playerNameFormatter) {
+	public void refresh(MatchLineup lineup, MatchLineupPosition matchLineupPosition, ConfiguredPlayerNameFormatter configuredPlayerNameFormatter) {
 		m_clMatchLineup = lineup;
 		m_clMatchPlayer = matchLineupPosition;
 
@@ -187,7 +186,7 @@ final class SpielerSternePanel extends ImagePanel implements ActionListener {
 			}
 
             final String displayName = matchLineupPosition.getPlayerId() != 0 ?
-                playerNameFormatter.format(PlayerNameUtils.createPlayerName(matchLineupPosition), NameFormat.SMART_LAST_FIRST) :
+                configuredPlayerNameFormatter.format(PlayerNameUtils.createPlayerName(matchLineupPosition)) :
                 null;
 			name.setText(displayName);
 
