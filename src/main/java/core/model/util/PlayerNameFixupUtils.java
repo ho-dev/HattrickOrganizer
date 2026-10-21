@@ -2,15 +2,22 @@ package core.model.util;
 
 import core.model.match.MatchLineupPosition;
 import core.util.HOLogger;
-import module.teamanalyzer.vo.MatchDetail;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.Arrays;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+import static org.apache.commons.lang3.StringUtils.*;
 
 public final class PlayerNameFixupUtils {
+
+    private static final Pattern NICKNAME_PATTERN = Pattern.compile("^(.+?)\\s+'([^']+)'\\s+(.+)$");
+    private static final int INDEX_FIRST_NAME = 1;
+    private static final int INDEX_NICK_NAME = 2;
+    private static final int INDEX_LAST_NAME = 3;
+
+    public record PlayerName(String firstName, String nickName, String lastName) {
+    }
 
     private PlayerNameFixupUtils() {
         throw new UnsupportedOperationException("This is a utility class and cannot be instantiated");
@@ -20,18 +27,39 @@ public final class PlayerNameFixupUtils {
         if (isEmpty(matchLineupPosition.getFirstName()) &&
             isEmpty(matchLineupPosition.getNickName()) &&
             isNotEmpty(matchLineupPosition.getLastName())) {
-            HOLogger.instance().debug(MatchDetail.class, "Candidate to fix is: FirstName='%s', Nick='%s', LastName='%s'"
+            HOLogger.instance().debug(PlayerNameFixupUtils.class, "Candidate to fix is: FirstName='%s', Nick='%s', LastName='%s'"
                 .formatted(matchLineupPosition.getFirstName(), matchLineupPosition.getNickName(), matchLineupPosition.getLastName()));
-            final var parts = matchLineupPosition.getLastName().split("\\s");
-            if (parts.length >= 2) {
-                final var newFirstName = String.join(StringUtils.SPACE, Arrays.asList(parts).subList(0, (parts.length - 1)));
-                matchLineupPosition.setFirstName(newFirstName);
-                matchLineupPosition.setLastName(parts[parts.length - 1]);
-                HOLogger.instance().debug(MatchDetail.class, "Fixed to: FirstName='%s', Nick='%s', LastName='%s'"
-                    .formatted(matchLineupPosition.getFirstName(), matchLineupPosition.getNickName(), matchLineupPosition.getLastName()));
-            } else {
-                HOLogger.instance().debug(MatchDetail.class, "Not fixed because last name must be split in 2 or more parts: current number %d".formatted(parts.length));
+
+            final var playerName = splitName(matchLineupPosition.getLastName());
+            if (isNotBlank(playerName.firstName())) {
+                HOLogger.instance().debug(PlayerNameFixupUtils.class, "Fixing player name '%s' to %s".formatted(matchLineupPosition.getLastName(), playerName));
+
+                matchLineupPosition.setFirstName(playerName.firstName());
+                matchLineupPosition.setNickName(playerName.nickName());
+                matchLineupPosition.setLastName(playerName.lastName());
+                return;
             }
+
+            HOLogger.instance().debug(PlayerNameFixupUtils.class, "Could not reliably split player name: '%s'".formatted(matchLineupPosition.getLastName()));
         }
+    }
+
+    public static PlayerName splitName(String fullName) {
+        final String name = StringUtils.trimToEmpty(fullName);
+
+        final Matcher matcher = NICKNAME_PATTERN.matcher(name);
+        if (matcher.matches()) {
+            final var firstName = StringUtils.trim(matcher.group(INDEX_FIRST_NAME));
+            final var nickName = StringUtils.trim(matcher.group(INDEX_NICK_NAME));
+            final var lastName = StringUtils.trim(matcher.group(INDEX_LAST_NAME));
+            return new PlayerName(firstName, nickName, lastName);
+        }
+
+        final String[] parts = StringUtils.split(name);
+        if (parts != null && parts.length == 2) {
+            return new PlayerName(parts[0], EMPTY, parts[1]);
+        }
+
+        return new PlayerName(EMPTY, EMPTY, name);
     }
 }
