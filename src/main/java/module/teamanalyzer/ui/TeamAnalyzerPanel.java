@@ -3,6 +3,9 @@ package module.teamanalyzer.ui;
 import core.gui.comp.panel.LazyPanel;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
+import core.playername.Location;
+import core.playername.NameFormat;
+import core.playername.PlayerNameSettingsManager;
 import module.teamanalyzer.SystemManager;
 import module.teamanalyzer.report.TeamReport;
 import module.teamanalyzer.ui.controller.SimButtonListener;
@@ -32,6 +35,7 @@ public class TeamAnalyzerPanel extends LazyPanel {
 	private FilterPanel filterPanel;
 	private RatingPanel ratingPanel;
 	private SpecialEventsPanel specialEventsPanel;
+    private final NameFormat nameFormat = PlayerNameSettingsManager.instance().getFormat(Location.TEAM_ANALYSER_SPECIAL_EVENTS);
 
 	@Override
 	protected void initialize() {
@@ -53,7 +57,8 @@ public class TeamAnalyzerPanel extends LazyPanel {
 				new SimButtonListener(
 						mainPanel.getMyTeamLineupPanel(),
 						mainPanel.getOpponentTeamLineupPanel(),
-						recapPanel));
+						recapPanel,
+                    nameFormat));
 	}
 
 	private void initComponents() {
@@ -61,7 +66,7 @@ public class TeamAnalyzerPanel extends LazyPanel {
 		recapPanel = new RecapPanel();
 		mainPanel = new MainPanel();
 		ratingPanel = new RatingPanel();
-		specialEventsPanel = new SpecialEventsPanel();
+		specialEventsPanel = new SpecialEventsPanel(nameFormat);
 
 		setLayout(new BorderLayout());
 
@@ -134,7 +139,7 @@ public class TeamAnalyzerPanel extends LazyPanel {
 
 	public void reload() {
 		getFilterPanel().reload();
-		TeamReport teamReport = SystemManager.getTeamReport();
+		TeamReport teamReport = SystemManager.getTeamReport(nameFormat);
 
 		getMainPanel().reload(teamReport.getSelectedLineup(), 0, 0);
 		getRecapPanel().reload(teamReport);

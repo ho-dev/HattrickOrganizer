@@ -5,6 +5,7 @@ import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
+import core.playername.*;
 import core.rating.RatingPredictionModel;
 import module.lineup.Lineup;
 import module.teamanalyzer.SystemManager;
@@ -18,6 +19,7 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 public class TeamPanel extends JPanel {
     //~ Instance fields ----------------------------------------------------------------------------
@@ -36,6 +38,8 @@ public class TeamPanel extends JPanel {
     private final PlayerPanel middleCentral = new PlayerPanel();
     private final PlayerPanel centralMidfielder = new PlayerPanel();
     private final PlayerPanel centralAttacker = new PlayerPanel ();
+    private final NameFormat nameFormat = PlayerNameSettingsManager.instance().getFormat(Location.TEAM_ANALYSER_FIELD);
+
     JPanel grassPanel = new RasenPanel();
 
     ManMarkingOrderDisplay manMarkingOrderDisplay;
@@ -186,9 +190,17 @@ public class TeamPanel extends JPanel {
     private void setMyTeam() {
     	HashMap<Integer, UserTeamPlayerPanel> list = new HashMap<>();
         Lineup lineup = getOwnLineup();
-        if ( lineup == null ) return;
+        if (lineup == null) {
+            return;
+        }
 
         var ratingPredictionModel = HOVerwaltung.instance().getModel().getRatingPredictionModel();
+
+        final var playerNameFormatter = PlayerNameFormatterFactory.createFromPlayers(
+            IMatchRoleID.aFieldMatchRoleID.stream()
+                .map(lineup::getPlayerByPositionID)
+                .filter(Objects::nonNull).toList()
+        );
 
         for (int spot : IMatchRoleID.aFieldMatchRoleID) {
             Player player = lineup.getPlayerByPositionID(spot);
@@ -197,7 +209,7 @@ public class TeamPanel extends JPanel {
             if (player != null) {
                 UserTeamSpotLineup spotLineup = new UserTeamSpotLineup();
                 spotLineup.setAppearance(0);
-                spotLineup.setName(" " + player.getShortName());
+                spotLineup.setName(playerNameFormatter.format(PlayerNameUtils.createPlayerName(player), nameFormat));
                 spotLineup.setPlayerId(player.getPlayerId());
                 spotLineup.setSpecialEvent(player.getSpecialty());
                 spotLineup.setTacticCode(lineup.getTactic4PositionID(spot));

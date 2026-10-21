@@ -33,9 +33,11 @@ public class DetailsView extends JPanel {
 	private JLabel playerLabel;
 	private JLabel playerInLabel;
     private final PlayerNameFormatter playerNameFormatter;
+    private final NameFormat nameFormat;
 
-	public DetailsView(PlayerNameFormatter playerNameFormatter) {
+	public DetailsView(PlayerNameFormatter playerNameFormatter, NameFormat nameFormat) {
         this.playerNameFormatter = playerNameFormatter;
+        this.nameFormat = nameFormat;
 		initComponents();
 	}
 
@@ -128,11 +130,11 @@ public class DetailsView extends JPanel {
 
 			playerOut = substitution.findSubjectPlayer()
                 .map(PlayerNameUtils::createPlayerName)
-                .map(playerName -> playerNameFormatter.format(playerName, NameFormat.SMART_LAST_FIRST))
+                .map(playerName -> playerNameFormatter.format(playerName, nameFormat))
                 .orElse("");
 			playerIn = substitution.findObjectPlayer()
                 .map(PlayerNameUtils::createPlayerName)
-                .map(playerName -> playerNameFormatter.format(playerName, NameFormat.SMART_LAST_FIRST))
+                .map(playerName -> playerNameFormatter.format(playerName, nameFormat))
                 .orElse("");
 
 			if (this.substitution.getMatchMinuteCriteria() > 0) {

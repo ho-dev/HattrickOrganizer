@@ -1,6 +1,8 @@
 // %2614020934:hoplugins.teamAnalyzer.report%
 package module.teamanalyzer.report;
 
+import core.playername.NameFormat;
+import core.playername.PlayerNameFormatter;
 import module.teamanalyzer.vo.PlayerAppearance;
 import module.teamanalyzer.vo.PlayerPerformance;
 
@@ -18,10 +20,13 @@ public class SpotReport extends Report {
     //~ Instance fields ----------------------------------------------------------------------------
 
     /** Map of players that played in this spot */
-    private Map<String,PlayerAppearance> players = new HashMap<>();
+    private final Map<Integer, PlayerAppearance> players = new HashMap<>();
 
     /** Map of PositionReport based on the effective position on the field */
     private Map<String,PositionReport> positionReports = new HashMap<>();
+
+    private final PlayerNameFormatter playerNameFormatter;
+    private final NameFormat nameFormat;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -30,8 +35,10 @@ public class SpotReport extends Report {
      *
      * @param pp PlayerPerformance
      */
-    public SpotReport(PlayerPerformance pp) {
+    public SpotReport(PlayerPerformance pp, PlayerNameFormatter playerNameFormatter, NameFormat nameFormat) {
         super(pp);
+        this.playerNameFormatter = playerNameFormatter;
+        this.nameFormat = nameFormat;
     }
 
     //~ Methods ------------------------------------------------------------------------------------
@@ -61,19 +68,15 @@ public class SpotReport extends Report {
      * @param pp
      */
     private void updatePlayerAppearance(PlayerPerformance pp) {
-        String name = "" + pp.getPlayerName();
-
-        name = name.replaceAll(" ", "");
-
-        PlayerAppearance playerApperance = players.get(name);
+        PlayerAppearance playerApperance = players.get(pp.getPlayerId());
 
         if (playerApperance == null) {
             playerApperance = new PlayerAppearance();
             playerApperance.setPlayerId(pp.getPlayerId());
-            playerApperance.setName(pp.getPlayerName());
+            playerApperance.setName(playerNameFormatter.format(pp.getPlayerId(), nameFormat));
 
             playerApperance.setStatus(pp.getStatus());
-            players.put(name, playerApperance);
+            players.put(pp.getPlayerId(), playerApperance);
         }
 
         playerApperance.addApperarence();

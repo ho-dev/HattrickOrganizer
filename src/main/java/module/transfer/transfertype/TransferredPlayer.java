@@ -43,13 +43,13 @@ class TransferredPlayer {
      *
      * @param player PlayerId of the Transferred Player
      */
-    TransferredPlayer(int transferId, Player player, PlayerNameFormatter playerNameFormatter) {
+    TransferredPlayer(int transferId, Player player, PlayerNameFormatter playerNameFormatter, NameFormat nameFormat) {
         this.transferId = transferId;
         age = player.getAge();
         playerId = player.getPlayerId();
         experience = player.getExperience();
         leadership = player.getLeadership();
-        playerName = playerNameFormatter.format(PlayerNameUtils.createPlayerName(player), NameFormat.SMART_LAST_FIRST);
+        playerName = playerNameFormatter.format(PlayerNameUtils.createPlayerName(player), nameFormat);
         skillups += player.getAllLevelUp(PlayerSkill.KEEPER).size();
         skillups += player.getAllLevelUp(PlayerSkill.PLAYMAKING).size();
         skillups += player.getAllLevelUp(PlayerSkill.PASSING).size();

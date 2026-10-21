@@ -6,6 +6,9 @@ import core.gui.RefreshManager;
 import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
 import core.model.player.Player;
+import core.playername.Location;
+import core.playername.NameFormat;
+import core.playername.PlayerNameSettingsManager;
 import module.transfer.history.HistoryPane;
 import module.transfer.scout.TransferScoutPanel;
 import module.transfer.transfertype.TransferTypePane;
@@ -22,6 +25,7 @@ public class TransfersPanel extends JPanel implements IRefreshable {
 	private List<Player> players;
 	private final TransferTypePane transferTypePane;
 	private final TransferScoutPanel scoutPanel;
+    final NameFormat nameFormat = PlayerNameSettingsManager.instance().getFormat(Location.TRANSFERS_TRANSFER_LIST);
 
 	public TransfersPanel() {
 
@@ -34,7 +38,7 @@ public class TransfersPanel extends JPanel implements IRefreshable {
 		historyPane = new HistoryPane(this);
 		tabPane.add(TranslationFacility.tr("History"), historyPane); //$NON-NLS-1$
 
-		transferTypePane = new TransferTypePane(this);
+		transferTypePane = new TransferTypePane(this, nameFormat);
 		tabPane.add(TranslationFacility.tr("TransferTypes"), transferTypePane);
 
 		scoutPanel = new TransferScoutPanel();
@@ -64,10 +68,10 @@ public class TransfersPanel extends JPanel implements IRefreshable {
 		if ((!allOutdated.isEmpty()) && !HOVerwaltung.instance().getModel().getBasics().isNationalTeam() &&  (DBManager.instance().getTransfers(0, true, true).isEmpty())) {
 			success = XMLParser.updateTeamTransfers(HOVerwaltung.instance().getModel().getBasics().getTeamId());
 		}
-		
+
 		// If download is cancelled, the below will give authorization requests for each player.
 		// Don't do this if first download access was cancelled. This is relevant on hrf import to empty db.
-		// Also, Db is called to do downloads? Truly messed up. 
+		// Also, Db is called to do downloads? Truly messed up.
 		if (success) {
 			for (final Player player : allOutdated) {
 				XMLParser.updatePlayerTransfers(player.getPlayerId());
