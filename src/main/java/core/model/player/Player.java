@@ -1124,10 +1124,6 @@ public class Player extends AbstractTable.Storable {
         };
     }
 
-    public String getFullNameWithLastNameFirst() {
-        return getFullNameWithLastNameFirst(getFirstName(), getLastName(), getNickName());
-    }
-
     enum FullNameDisplayType {
         FULL_NAME_NORMAL,
         FULL_NAME_WITH_LAST_NAME_FIRST
