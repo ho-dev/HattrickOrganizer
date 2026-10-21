@@ -5,6 +5,7 @@ import core.model.match.MatchLineupPosition;
 import core.model.player.Player;
 import core.util.StreamUtils;
 import module.matches.MatchesModel;
+import module.youth.YouthPlayer;
 
 import java.util.List;
 
@@ -15,6 +16,10 @@ public final class PlayerNameFormatterFactory {
     }
 
     public static PlayerNameFormatter createFromPlayers(List<Player> players) {
+        return new PlayerNameFormatter(players.stream().map(PlayerNameUtils::createPlayerName).toList());
+    }
+
+    public static PlayerNameFormatter createFromYouthPlayers(List<YouthPlayer> players) {
         return new PlayerNameFormatter(players.stream().map(PlayerNameUtils::createPlayerName).toList());
     }
 

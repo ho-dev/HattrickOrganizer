@@ -2,9 +2,7 @@ package core.playername;
 
 import core.model.match.MatchLineupPosition;
 import core.model.player.Player;
-import module.matches.MatchesModel;
-
-import java.util.Optional;
+import module.youth.YouthPlayer;
 
 public final class PlayerNameUtils {
 
@@ -17,6 +15,30 @@ public final class PlayerNameUtils {
             @Override
             public int getPlayerId() {
                 return player.getPlayerId();
+            }
+
+            @Override
+            public String getFirstName() {
+                return player.getFirstName();
+            }
+
+            @Override
+            public String getNickName() {
+                return player.getNickName();
+            }
+
+            @Override
+            public String getLastName() {
+                return player.getLastName();
+            }
+        };
+    }
+
+    public static PlayerName createPlayerName(YouthPlayer player) {
+        return new PlayerName() {
+            @Override
+            public int getPlayerId() {
+                return player.getId();
             }
 
             @Override

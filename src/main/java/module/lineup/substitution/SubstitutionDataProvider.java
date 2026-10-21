@@ -3,6 +3,7 @@ package module.lineup.substitution;
 import core.datatype.CBItem;
 import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
+import core.playername.NameFormat;
 import core.playername.PlayerNameFormatter;
 import module.lineup.Lineup;
 import module.lineup.substitution.model.GoalDiffCriteria;
@@ -19,41 +20,41 @@ import static core.model.player.IMatchRoleID.aFieldAndSubsMatchRoleID;
 
 public class SubstitutionDataProvider {
 
-	public static Map<Integer, PlayerPositionItem> getFieldAndSubPlayerPosition(PlayerNameFormatter playerNameFormatter) {
+	public static Map<Integer, PlayerPositionItem> getFieldAndSubPlayerPosition(PlayerNameFormatter playerNameFormatter, NameFormat nameFormat) {
 		LinkedHashMap<Integer, PlayerPositionItem> positionMap = new LinkedHashMap<>();
 		Lineup lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
 
 		for (Integer i : aFieldAndSubsMatchRoleID) {
 			var player = lineup.getPlayerByPositionID(i);
 			if (player != null) {
-				positionMap.put(i,	new PlayerPositionItem(i, lineup.getPlayerByPositionID(i), playerNameFormatter));
+				positionMap.put(i,	new PlayerPositionItem(i, lineup.getPlayerByPositionID(i), playerNameFormatter, nameFormat));
 			}
 		}
 		return positionMap;
 	}
 
 
-	public static List<PlayerPositionItem> getFieldPositions(List<Integer> aMatchRoleID , boolean includeEmptyPositions, PlayerNameFormatter playerNameFormatter) {
+	public static List<PlayerPositionItem> getFieldPositions(List<Integer> aMatchRoleID , boolean includeEmptyPositions, PlayerNameFormatter playerNameFormatter, NameFormat nameFormat) {
 		List<PlayerPositionItem> playerItems = new ArrayList<>();
 
 		Lineup lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
 		for (Integer i : aMatchRoleID) {
 			var player = lineup.getPlayerByPositionID(i);
 			if (player != null || includeEmptyPositions) {
-				playerItems.add(new PlayerPositionItem(i, player, playerNameFormatter));
+				playerItems.add(new PlayerPositionItem(i, player, playerNameFormatter, nameFormat));
 			}
 		}
 		return playerItems;
 	}
 
-	public static List<PlayerPositionItem> getFieldPositions(int start, int end, boolean includeEmptyPositions, PlayerNameFormatter playerNameFormatter) {
+	public static List<PlayerPositionItem> getFieldPositions(int start, int end, boolean includeEmptyPositions, PlayerNameFormatter playerNameFormatter, NameFormat nameFormat) {
 		List<PlayerPositionItem> playerItems = new ArrayList<>();
 
 		Lineup lineup = HOVerwaltung.instance().getModel().getCurrentLineup();
 		for (int i = start; i <= end; i++) {
 			var player = lineup.getPlayerByPositionID(i);
 			if (player != null || includeEmptyPositions) {
-				playerItems.add(new PlayerPositionItem(i, player, playerNameFormatter));
+				playerItems.add(new PlayerPositionItem(i, player, playerNameFormatter, nameFormat));
 			}
 		}
 		return playerItems;

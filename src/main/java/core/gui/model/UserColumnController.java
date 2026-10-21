@@ -10,11 +10,11 @@ import module.matches.statistics.MatchesOverviewColumnModel;
 import module.playeroverview.PlayerOverviewTableModel;
 import module.specialevents.SpecialEventsTableModel;
 import module.teamanalyzer.ui.RecapPanelTableModel;
+import module.training.ui.EffectTableModel;
+import module.training.ui.TrainingPredictionTableModel;
 import module.training.ui.TrainingProgressTableModel;
 import module.training.ui.model.ChangesTableModel;
-import module.training.ui.EffectTableModel;
 import module.training.ui.model.SkillupTableModel;
-import module.training.ui.TrainingPredictionTableModel;
 import module.training.ui.model.TrainingSettingsTableModel;
 import module.transfer.history.PlayerTransferTableModel;
 import module.transfer.history.TransferTableModel;
@@ -132,7 +132,7 @@ public final class UserColumnController {
 		dbManager.loadHOColumModel(getMatchesOverview1ColumnModel());
 
 		dbManager.loadHOColumModel(getYouthTrainingViewColumnModel());
-		dbManager.loadHOColumModel(getYouthPlayerOverviewColumnModel());
+		dbManager.loadHOColumModel(getYouthPlayerOverviewColumnModel(PlayerNameSettingsManager.instance().getFormat(Location.YOUTH_PLAYER)));
 		dbManager.loadHOColumModel(getYouthPlayerDetailsColumnModel());
 		dbManager.loadHOColumModel(getTeamAnalyzerRecapModel());
 		dbManager.loadHOColumModel(getTransferTableModel());
@@ -246,7 +246,7 @@ public final class UserColumnController {
 	 */
 	public PlayerOverviewTableModel getPlayerOverviewModel(){
 		if(playerOverviewColumnModel == null){
-            final NameFormat nameFormat = PlayerNameSettingsManager.instance().getFormat(Location.SQUAD_PLAYER_DETAILS);
+            final NameFormat nameFormat = PlayerNameSettingsManager.instance().getFormat(Location.SQUAD_NAME_COLUMN);
 			playerOverviewColumnModel = new PlayerOverviewTableModel(ColumnModelId.PLAYEROVERVIEW, nameFormat);
 		}
 		return playerOverviewColumnModel;
@@ -275,7 +275,7 @@ public final class UserColumnController {
 		v.add(getAnalysisModel(1));
 		v.add(getAnalysisModel(2));
 		v.add(getTeamAnalyzerRecapModel());
-		v.add(getYouthPlayerOverviewColumnModel());
+		v.add(getYouthPlayerOverviewColumnModel(PlayerNameSettingsManager.instance().getFormat(Location.YOUTH_PLAYER)));
 		v.add(getYouthPlayerDetailsColumnModel());
 		v.add(getTrainingProgressTableModel());
 		v.add(getTrainingPlayerSkillChangesTableModel());
@@ -287,9 +287,9 @@ public final class UserColumnController {
 		return v;
 	}
 
-	public YouthPlayerOverviewTableModel getYouthPlayerOverviewColumnModel() {
+	public YouthPlayerOverviewTableModel getYouthPlayerOverviewColumnModel(NameFormat nameFormat) {
 		if(youthPlayerOverviewColumnModel == null){
-			youthPlayerOverviewColumnModel = new YouthPlayerOverviewTableModel(ColumnModelId.YOUTHPLAYEROVERVIEW);
+			youthPlayerOverviewColumnModel = new YouthPlayerOverviewTableModel(ColumnModelId.YOUTHPLAYEROVERVIEW, nameFormat);
 		}
 		return youthPlayerOverviewColumnModel;
 	}

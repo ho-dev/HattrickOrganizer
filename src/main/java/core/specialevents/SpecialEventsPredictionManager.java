@@ -6,6 +6,7 @@ import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.model.util.PlayerNameFixupUtils;
+import core.util.HOLogger;
 import module.lineup.Lineup;
 import module.opponentspy.OppPlayerSkillEstimator;
 import module.opponentspy.OpponentPlayer;
@@ -291,7 +292,11 @@ public class SpecialEventsPredictionManager {
 
     public Player getPlayer(IMatchRoleID id) {
         MatchRoleID mid = (MatchRoleID) id;
-        return getPlayer(mid.getPlayerId());
+        var p = getPlayer(mid.getPlayerId());
+        if (p == null) {
+            HOLogger.instance().debug(SpecialEventsPredictionManager.class, "mid.getPlayerId() %d not found".formatted(mid.getPlayerId()));
+        }
+        return p;
     }
 
     public Player getPlayer(int id) {
@@ -300,7 +305,11 @@ public class SpecialEventsPredictionManager {
 
     public Player getOpponentPlayer(IMatchRoleID id) {
         MatchRoleID mid = (MatchRoleID) id;
-        return getOpponentPlayer(mid.getPlayerId());
+        var p = getOpponentPlayer(mid.getPlayerId());;
+        if (p == null) {
+            HOLogger.instance().debug(SpecialEventsPredictionManager.class, "mid.getOpponentPlayer() %d not found".formatted(mid.getPlayerId()));
+        }
+        return p;
     }
 
     public Player getOpponentPlayer(int id) {
