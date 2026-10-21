@@ -13,13 +13,11 @@ import module.lineup.substitution.model.MatchOrderType;
 import module.lineup.substitution.model.RedCardCriteria;
 import module.lineup.substitution.model.Substitution;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.tuple.Pair;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 
@@ -85,9 +83,9 @@ public class XMLMatchLineupParser {
 		int behavior = 0;
 		double rating = -1.0d;
 		double ratingStarsEndOfMatch = -1.0d;
-        String firstName = "";
-		String lastName = "";
-        String nickName = "";
+        String firstName = StringUtils.EMPTY;
+		String lastName = StringUtils.EMPTY;
+        String nickName = StringUtils.EMPTY;
 
 		Element tmp = (Element) ele.getElementsByTagName("PlayerID").item(0);
 		int spielerID = Integer.parseInt(tmp.getFirstChild().getNodeValue());
@@ -113,25 +111,9 @@ public class XMLMatchLineupParser {
 		// nur wenn Player existiert
 		if (spielerID > 0) {
 			// First- and LastName can be empty
-            final var parsedFirstName = getStringValue((Element)ele.getElementsByTagName("FirstName").item(0));
-            final var parsedLastName = getStringValue((Element)ele.getElementsByTagName("LastName").item(0));
+            firstName = getStringValue((Element)ele.getElementsByTagName("FirstName").item(0));
+            lastName = getStringValue((Element)ele.getElementsByTagName("LastName").item(0));
             nickName = getStringValue((Element)ele.getElementsByTagName("NickName").item(0));
-
-            if (StringUtils.isNotEmpty(parsedFirstName) && StringUtils.isNotEmpty(parsedLastName)) {
-                firstName = parsedFirstName;
-                lastName = parsedLastName;
-            } else if (StringUtils.isNotEmpty(parsedFirstName) && StringUtils.isEmpty(parsedLastName)) {
-                final var firstAndLastName = splitName(parsedFirstName);
-                firstName = firstAndLastName.getLeft();
-                lastName = firstAndLastName.getRight();
-            } else if (StringUtils.isNotEmpty(parsedLastName) && StringUtils.isEmpty(parsedFirstName)) {
-                final var firstAndLastName = splitName(parsedLastName);
-                firstName = firstAndLastName.getLeft();
-                lastName = firstAndLastName.getRight();
-            } else {
-                firstName = StringUtils.EMPTY;
-                lastName = StringUtils.EMPTY;
-            }
 
 			// shift lineup ids to match order ids
 			if ( roleID >= IMatchRoleID.startReserves && roleID < IMatchRoleID.substGK1) {
@@ -200,23 +182,6 @@ public class XMLMatchLineupParser {
 		player.setRatingStarsEndOfMatch(ratingStarsEndOfMatch);
 		return player;
 	}
-
-    private static Pair<String, String> splitName(String name) {
-        String firstName;
-        String lastName;
-        final String[] parts = name.split("\\s");
-        if (parts.length == 2) {
-            firstName = parts[0];
-            lastName = parts[1];
-        } else if (parts.length < 2) {
-            firstName = StringUtils.EMPTY;
-            lastName = parts[0];
-        } else {
-            firstName = String.join(StringUtils.SPACE, Arrays.asList(parts).subList(0, (parts.length - 1)));
-            lastName = parts[parts.length - 1];
-        }
-        return Pair.of(firstName, lastName);
-    }
 
 	/**
 	 * Get string content of ELement. If content is empty an empty string is returned.
