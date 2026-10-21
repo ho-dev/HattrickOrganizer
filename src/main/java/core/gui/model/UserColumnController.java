@@ -2,6 +2,9 @@ package core.gui.model;
 
 import core.db.DBManager;
 import core.gui.comp.table.HOTableModel;
+import core.playername.Location;
+import core.playername.NameFormat;
+import core.playername.PlayerNameSettingsManager;
 import module.halloffame.HallOfFameTableModel;
 import module.matches.statistics.MatchesOverviewColumnModel;
 import module.playeroverview.PlayerOverviewTableModel;
@@ -243,7 +246,8 @@ public final class UserColumnController {
 	 */
 	public PlayerOverviewTableModel getPlayerOverviewModel(){
 		if(playerOverviewColumnModel == null){
-			playerOverviewColumnModel = new PlayerOverviewTableModel(ColumnModelId.PLAYEROVERVIEW);
+            final NameFormat nameFormat = PlayerNameSettingsManager.instance().getFormat(Location.SQUAD_PLAYER_DETAILS);
+			playerOverviewColumnModel = new PlayerOverviewTableModel(ColumnModelId.PLAYEROVERVIEW, nameFormat);
 		}
 		return playerOverviewColumnModel;
 	}
@@ -254,7 +258,8 @@ public final class UserColumnController {
 	 */
 	public PlayerOverviewTableModel getLineupModel(){
 		if(lineupColumnModel == null){
-			lineupColumnModel = new PlayerOverviewTableModel(ColumnModelId.LINEUP, "Aufstellung");
+            final NameFormat nameFormat = PlayerNameSettingsManager.instance().getFormat(Location.LINEUP_PLAYER_LIST);
+			lineupColumnModel = new PlayerOverviewTableModel(ColumnModelId.LINEUP, "Aufstellung", nameFormat);
 		}
 		return lineupColumnModel;
 	}

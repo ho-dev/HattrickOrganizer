@@ -9,6 +9,8 @@ import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.match.MatchLineupPosition;
 import core.model.player.Player;
+import core.playername.NameFormat;
+import core.playername.PlayerNameFormatter;
 import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
@@ -28,24 +30,24 @@ public class PlayerCBItem implements Comparable<PlayerCBItem>, ComboItem {
         return m_bSetInBestPosition;
     }
 
-    public PlayerCBItem(String text, float positionRating, @Nullable Player player) {
+    public PlayerCBItem(String text, float positionRating, @Nullable Player player, PlayerNameFormatter playerNameFormatter, NameFormat nameFormat) {
         m_sText = text;
         m_clPlayer = player;
         m_fPositionsBewertung = positionRating;
         m_bSetInBestPosition = false;
-        m_clEntry = new PlayerLabelEntry(null, null, 0f, false, true);
+        m_clEntry = new PlayerLabelEntry(null, null, 0f, false, true, playerNameFormatter, nameFormat);
     }
 
-    public PlayerCBItem(String text, float positionRating, @Nullable Player player, boolean useCustomText, boolean multiLine) {
+    public PlayerCBItem(String text, float positionRating, @Nullable Player player, boolean useCustomText, boolean multiLine, PlayerNameFormatter playerNameFormatter, NameFormat nameFormat) {
         m_sText = text;
         m_clPlayer = player;
         m_fPositionsBewertung = positionRating;
         m_bSetInBestPosition = false;
         m_bMultiLine = multiLine;
         if (useCustomText) {
-            m_clEntry = new PlayerLabelEntry(null, null, 0f, true, true, true, text, m_bMultiLine);
+            m_clEntry = new PlayerLabelEntry(null, null, 0f, true, true, true, text, m_bMultiLine, playerNameFormatter, nameFormat);
         } else {
-            m_clEntry = new PlayerLabelEntry(null, null, 0f, true, true, false, "", m_bMultiLine);
+            m_clEntry = new PlayerLabelEntry(null, null, 0f, true, true, false, "", m_bMultiLine, playerNameFormatter, nameFormat);
         }
     }
 
