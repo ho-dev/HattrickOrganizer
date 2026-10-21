@@ -2,14 +2,11 @@ package core.playername;
 
 import java.util.Objects;
 
-public final class ConfiguredPlayerNameFormatter {
+public record ConfiguredPlayerNameFormatter(PlayerNameFormatter formatter, NameFormat format) {
 
-    private final PlayerNameFormatter formatter;
-    private final NameFormat format;
-
-    public ConfiguredPlayerNameFormatter(PlayerNameFormatter formatter, NameFormat format) {
-        this.formatter = Objects.requireNonNull(formatter);
-        this.format = Objects.requireNonNull(format);
+    public ConfiguredPlayerNameFormatter {
+        Objects.requireNonNull(formatter);
+        Objects.requireNonNull(format);
     }
 
     public String format(int playerId) {

@@ -827,7 +827,6 @@ public class Lineup{
 		if (penaltyTakers != null) ret.addAll(penaltyTakers);
 		if (captain != null) ret.add(captain);
 		if (setPiecesTaker != null) ret.add(setPiecesTaker);
-        if (setPiecesTaker != null) ret.add(setPiecesTaker);
         ret.addAll(otherPositions);
 		return ret;
 	}

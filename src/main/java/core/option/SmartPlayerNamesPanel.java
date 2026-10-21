@@ -92,8 +92,8 @@ public final class SmartPlayerNamesPanel extends JPanel {
     private static Group getGroup(Location location) {
         return switch (location) {
             case SQUAD_NAME_COLUMN, SQUAD_PLAYER_DETAILS -> Group.SQUAD;
-            case LINEUP_POSITIONS, LINEUP_SUBSTITUTES, LINEUP_PLAYER_LIST -> Group.LINEUP;
-            case MATCHES_FORMATION -> Group.MATCHES;
+            case LINEUP_POSITIONS, LINEUP_SUBSTITUTES, LINEUP_PLAYER_LIST, LINEUP_PENALTY_TAKERS -> Group.LINEUP;
+            case MATCHES_HIGHLIGHTS, MATCHES_FORMATION -> Group.MATCHES;
             case PLAYER_ANALYSIS_MATCHES, PLAYER_ANALYSIS_PLAYER_COMPARE -> Group.PLAYER_ANALYSIS;
             case STATISTICS_PLAYER_PLAYER_SELECTION -> Group.STATISTICS_PLAYER;
             case TRANSFERS_TRANSFER_LIST -> Group.TRANSFERS;
@@ -117,6 +117,8 @@ public final class SmartPlayerNamesPanel extends JPanel {
             case LINEUP_POSITIONS -> "SmartPlayerNamesPanel.Location.LINEUP_POSITIONS";
             case LINEUP_SUBSTITUTES -> "SmartPlayerNamesPanel.Location.LINEUP_SUBSTITUTES";
             case LINEUP_PLAYER_LIST -> "SmartPlayerNamesPanel.Location.LINEUP_PLAYER_LIST";
+            case LINEUP_PENALTY_TAKERS -> "SmartPlayerNamesPanel.Location.LINEUP_PENALTY_TAKERS";
+            case MATCHES_HIGHLIGHTS -> "SmartPlayerNamesPanel.Location.MATCHES_HIGHLIGHTS";
             case MATCHES_FORMATION -> "SmartPlayerNamesPanel.Location.MATCHES_FORMATION";
             case PLAYER_ANALYSIS_MATCHES -> "SmartPlayerNamesPanel.Location.PLAYER_ANALYSIS_MATCHES";
             case PLAYER_ANALYSIS_PLAYER_COMPARE -> "SmartPlayerNamesPanel.Location.PLAYER_ANALYSIS_PLAYER_COMPARE";

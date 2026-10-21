@@ -6,13 +6,17 @@ import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.theme.*;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
-import core.playername.*;
+import core.playername.ConfiguredPlayerNameFormatter;
+import core.playername.NameFormat;
+import core.playername.PlayerNameFormatter;
+import core.playername.PlayerNameUtils;
 import core.training.TrainingPreviewPlayers;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import java.awt.*;
+
 import javax.swing.*;
+import java.awt.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -49,30 +53,26 @@ public final class PlayerLabelEntry implements IHOTableCellEntry {
     private JLabel suspendedLabel;
     private JLabel twoYellowCardsLabel;
     private JLabel oneYellowCardLabel;
-    private final PlayerNameFormatter playerNameFormatter;
-    private final NameFormat nameFormat;
+    private final ConfiguredPlayerNameFormatter configuredPlayerNameFormatter;
 
     // Label for the player name (depending on status)
     public PlayerLabelEntry(@Nullable Player player, @Nullable MatchRoleID playerMatchRoleID,
                             float rating, boolean showJersey, boolean showWeatherEffect,
-                            PlayerNameFormatter playerNameFormatter,
-                            NameFormat nameFormat) {
+                            ConfiguredPlayerNameFormatter configuredPlayerNameFormatter) {
         m_clPlayer = player;
         m_clPlayerMatchRoleID = playerMatchRoleID;
         m_rating = rating;
         m_IsOneOfBestPositions = false;
         m_bshowJersey = showJersey;
         m_bShowWeatherEffect = showWeatherEffect;
-        this.playerNameFormatter = playerNameFormatter;
-        this.nameFormat = nameFormat;
+        this.configuredPlayerNameFormatter = configuredPlayerNameFormatter;
         createComponent();
     }
 
     // Label for the player name (depending on status)
     public PlayerLabelEntry(@Nullable Player player, @Nullable MatchRoleID playerMatchRoleID,
                             float rating, boolean showJersey, boolean showWeatherEffect, boolean customName, String customNameText, boolean multiLine,
-                            PlayerNameFormatter playerNameFormatter,
-                            NameFormat nameFormat) {
+                            ConfiguredPlayerNameFormatter configuredPlayerNameFormatter) {
         m_clPlayer = player;
         m_clPlayerMatchRoleID = playerMatchRoleID;
         m_rating = rating;
@@ -82,8 +82,7 @@ public final class PlayerLabelEntry implements IHOTableCellEntry {
         m_bCustomName = customName;
         m_sCustomNameString = customNameText;
         m_bMultiLine = multiLine;
-        this.playerNameFormatter = playerNameFormatter;
-        this.nameFormat = nameFormat;
+        this.configuredPlayerNameFormatter = configuredPlayerNameFormatter;
         createComponent();
     }
 
@@ -289,8 +288,8 @@ public final class PlayerLabelEntry implements IHOTableCellEntry {
     }
 
     private String getFormattedPlayerName(Player player) {
-        return Optional.ofNullable(playerNameFormatter)
-            .map(pnf -> pnf.format(PlayerNameUtils.createPlayerName(player), nameFormat))
+        return Optional.ofNullable(configuredPlayerNameFormatter)
+            .map(pnf -> pnf.format(PlayerNameUtils.createPlayerName(player)))
             .orElseGet(() -> "PlayerId(%s)".formatted(player));
     }
 

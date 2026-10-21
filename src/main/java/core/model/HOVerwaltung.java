@@ -5,6 +5,8 @@ import core.db.PersistenceManager;
 import core.file.hrf.HRF;
 import core.gui.HOMainFrame;
 import core.gui.RefreshManager;
+import core.playername.PlayerName;
+import core.playername.PlayerNameUtils;
 import core.util.HODateTime;
 import core.util.HOLogger;
 
@@ -13,6 +15,7 @@ import java.beans.PropertyChangeSupport;
 import java.sql.Timestamp;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
 
@@ -59,10 +62,12 @@ public class HOVerwaltung {
 		HOModel oldModel = m_clHoModel;
 		if ( oldModel != null && model != null) {
 			for (var player : model.getCurrentPlayers()) {
+                final var playerName = PlayerNameUtils.createPlayerName(player);
 				if (oldModel.getCurrentPlayers().stream().noneMatch(i -> i.getPlayerId() == player.getPlayerId())) {
 					// Check if new player was youth player in old model
 					// Todo: Check if player id can be used instead of name filtering
-					var youthPlayer = oldModel.getCurrentYouthPlayers().stream().filter(i -> i.getFullName().equals(player.getFullName())).findFirst();
+					var youthPlayer = oldModel.getCurrentYouthPlayers().stream()
+                        .filter(yp -> allNamesEqual(PlayerNameUtils.createPlayerName(yp), playerName)).findFirst();
 					if (youthPlayer.isPresent()) {
 						for (var skill : youthPlayer.get().getCurrentSkills().values()) {
 							var currentLevel = player.getValue4Skill(skill.getSkillID());
@@ -78,6 +83,12 @@ public class HOVerwaltung {
 		m_clHoModel = model;
 		support.firePropertyChange("m_clHoModel", oldModel, m_clHoModel);
 	}
+
+    private static boolean allNamesEqual(PlayerName first, PlayerName second) {
+        return Objects.equals(first.getLastName(), second.getLastName()) &&
+            Objects.equals(first.getFirstName(), second.getFirstName()) &&
+            Objects.equals(first.getNickName(), second.getNickName());
+    }
 
 	public HOModel getModel() {
 		return m_clHoModel;

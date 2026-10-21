@@ -10,6 +10,9 @@ import core.model.HOConfigurationBooleanParameter;
 import core.model.TranslationFacility;
 import core.model.player.Player;
 import core.module.config.ModuleConfig;
+import core.playername.Location;
+import core.playername.NameFormat;
+import core.playername.PlayerNameSettingsManager;
 import core.util.Helper;
 import core.util.chart.HOLinesChart;
 import core.util.chart.LinesChartDataModel;
@@ -22,6 +25,7 @@ import java.util.*;
 public class HallOfFamePanel extends JPanel {
     private final JPanel historyPanel = new JPanel(new BorderLayout());
     private final PlayersTable hallOfFameTable;
+    private final NameFormat nameFormat = PlayerNameSettingsManager.instance().getFormat(Location.HALL_OF_FAME_PLAYER_LIST);
 
     private final HOConfigurationBooleanParameter chartDisplayForm = new HOConfigurationBooleanParameter("hof.chart.display.form", true);
     private final HOConfigurationBooleanParameter  chartDisplayLeadership= new HOConfigurationBooleanParameter("hof.chart.display.leadership", true);
@@ -41,7 +45,7 @@ public class HallOfFamePanel extends JPanel {
      */
     public HallOfFamePanel(){
         setLayout(new BorderLayout());
-        var tableModel = UserColumnController.instance().getHallOfFameTableModel();
+        var tableModel = UserColumnController.instance().getHallOfFameTableModel(nameFormat);
         this.hallOfFameTable = new PlayersTable(tableModel);
         this.hallOfFameTable.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
         this.hallOfFameTable.addListSelectionListener(e -> refreshHistory());
@@ -248,7 +252,7 @@ public class HallOfFamePanel extends JPanel {
      * of table model and ui positions
      */
     public void storeUserSettings() {
-        var tableModel = UserColumnController.instance().getHallOfFameTableModel();
+        var tableModel = UserColumnController.instance().getHallOfFameTableModel(nameFormat);
         tableModel.storeUserSettings();
 
         var splitPane = (JSplitPane)this.getComponent(0);

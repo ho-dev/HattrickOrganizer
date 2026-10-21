@@ -6,6 +6,10 @@ import core.gui.comp.table.HOPlayersTableModel;
 import core.gui.model.UserColumnController;
 import core.gui.theme.ImageUtilities;
 import core.model.HOVerwaltung;
+import core.playername.NameFormat;
+import core.playername.PlayerNameFormatter;
+import core.playername.PlayerNameFormatterFactory;
+import core.playername.PlayerNameUtils;
 import core.util.HODateTime;
 import org.apache.commons.lang3.StringUtils;
 
@@ -15,14 +19,18 @@ import java.util.List;
 import java.util.Optional;
 
 public class HallOfFameTableModel extends HOPlayersTableModel {
-    public HallOfFameTableModel(UserColumnController.ColumnModelId columnModelId) {
+
+    private PlayerNameFormatter playerNameFormatter;
+
+    public HallOfFameTableModel(UserColumnController.ColumnModelId columnModelId, NameFormat nameFormat) {
         super(columnModelId, "ls.hof");
 
         var newColumns = new ArrayList<>(List.of(
             new HallOfFameColumn("ls.player.name") {
                 @Override
                 public IHOTableCellEntry getTableEntry(HallOfFamePlayer player) {
-                    return new ColorLabelEntry(player.getFullName(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                    final var playerName = playerNameFormatter.format(PlayerNameUtils.createPlayerName(player), nameFormat);
+                    return new ColorLabelEntry(playerName, ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                 }
 
                 @Override
@@ -126,6 +134,8 @@ public class HallOfFameTableModel extends HOPlayersTableModel {
     protected void initData() {
         var players = HOVerwaltung.instance().getModel().getHallOfFamePlayers();
         this.setPlayers(players);
+        this.playerNameFormatter = PlayerNameFormatterFactory.createFromPlayers(players);
+
         m_clData = new Object[players.size()][getDisplayedColumns().length];
         int rownum = 0;
         for (var player : players) {
