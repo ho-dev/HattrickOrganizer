@@ -58,34 +58,6 @@ public class MatchLineupPosition  extends MatchRoleID {
         m_iStatus = status;
     }
 
-//    /**
-//     * Creates a new instance of MatchLineupPosition
-//     */
-//    public MatchLineupPosition(int roleID,
-//                               int spielerID,
-//                               int behavior,
-//                               double rating,
-//                               String firstName,
-//                               String nickName,
-//                               String lastName,
-//                               int status,
-//                               double ratingStarsEndOfMatch,
-//                               int startPos,
-//                               int startBeh,
-//                               boolean startSetPieces) {
-//        super(roleID, spielerID, (byte) behavior);
-//
-//        m_sSpielerName = lastName;
-//        m_sNickName = nickName;
-//        m_sSpielerVName = firstName;
-//        m_dRating = rating;
-//        m_iStatus = status;
-//        m_dRatingStarsEndOfMatch = ratingStarsEndOfMatch;
-//        m_iStartBehavior = startBeh;
-//        m_iStartPosition = startPos;
-//        setStartSetPiecesTaker(startSetPieces);
-//    }
-
     public final int getRoleId() {
         return this.getId();
     }
