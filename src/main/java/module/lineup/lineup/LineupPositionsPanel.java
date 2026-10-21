@@ -12,6 +12,9 @@ import core.model.UserParameter;
 import core.model.match.Weather;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
+import core.playername.Location;
+import core.playername.NameFormat;
+import core.playername.PlayerNameSettingsManager;
 import core.util.HOLogger;
 import module.lineup.AllTeamsPanel;
 import module.lineup.Lineup;
@@ -67,6 +70,7 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 	private PlayerPositionPanel m_clSetPieceTaker;
 	private javax.swing.JLayeredPane centerPanel;
 	private final SwapPositionsManager swapPositionsManager = new SwapPositionsManager(this);
+    private final NameFormat nameFormat = PlayerNameSettingsManager.instance().getFormat(Location.LINEUP_POSITIONS);
 
 	private Weather m_weather;
 	private final boolean m_useWeatherImpact;
@@ -157,36 +161,36 @@ public class LineupPositionsPanel extends core.gui.comp.panel.RasenPanel impleme
 			}
 		}
 
-		m_clKeeper.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact, matchMinute);
-		m_clLeftBack.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact, matchMinute);
-		m_clLeftCentralDefender.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact, matchMinute);
-		m_clMiddleCentralDefender.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact, matchMinute);
-		m_clRightCentralDefender.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact, matchMinute);
-		m_clRightBack.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact, matchMinute);
-		m_clLeftWinger.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact, matchMinute);
-		m_clLeftInnerMidfielder.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact, matchMinute);
-		m_clCentralInnerMidfielder.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact, matchMinute);
-		m_clRightInnerMidfielder.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact, matchMinute);
-		m_clRightWinger.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact, matchMinute);
-		m_clLeftForward.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact, matchMinute);
-		m_clCentralForward.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact, matchMinute);
-		m_clRightForward.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact, matchMinute);
-		m_clSubstKeeper1.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact, matchMinute);
-		m_clSubstKeeper2.refresh2(filteredPlayers, m_clSubstKeeper1.getiSelectedPlayerId(), m_weather, m_useWeatherImpact);
-		m_clSubstCD1.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact, matchMinute);
-		m_clSubstCD2.refresh2(filteredPlayers, m_clSubstCD1.getiSelectedPlayerId(), m_weather, m_useWeatherImpact);
-		m_clSubstWB1.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact, matchMinute);
-		m_clSubstWB2.refresh2(filteredPlayers, m_clSubstWB1.getiSelectedPlayerId(), m_weather, m_useWeatherImpact);
-		m_clSubstIM1.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact, matchMinute);
-		m_clSubstIM2.refresh2(filteredPlayers, m_clSubstIM1.getiSelectedPlayerId(), m_weather, m_useWeatherImpact);
-		m_clSubstFwd1.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact, matchMinute);
-		m_clSubstFwd2.refresh2(filteredPlayers, m_clSubstFwd1.getiSelectedPlayerId(), m_weather, m_useWeatherImpact);
-		m_clSubstWI1.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact, matchMinute);
-		m_clSubstWI2.refresh2(filteredPlayers, m_clSubstWI1.getiSelectedPlayerId(), m_weather, m_useWeatherImpact);
-		m_clSubstXtr1.refresh(filteredPlayers, selectedPlayers, substitutes, null, false, matchMinute);
-		m_clSubstXtr2.refresh2(filteredPlayers, m_clSubstXtr1.getiSelectedPlayerId(), null, false);
-		m_clSetPieceTaker.refresh(selectedPlayers, null, null, m_weather, m_useWeatherImpact, matchMinute);
-		m_clCaptain.refresh(selectedPlayers, null, null, null, false, matchMinute);
+		m_clKeeper.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact, matchMinute, nameFormat);
+		m_clLeftBack.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact, matchMinute, nameFormat);
+		m_clLeftCentralDefender.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact, matchMinute, nameFormat);
+		m_clMiddleCentralDefender.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact, matchMinute, nameFormat);
+		m_clRightCentralDefender.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact, matchMinute, nameFormat);
+		m_clRightBack.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact, matchMinute, nameFormat);
+		m_clLeftWinger.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact, matchMinute, nameFormat);
+		m_clLeftInnerMidfielder.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact, matchMinute, nameFormat);
+		m_clCentralInnerMidfielder.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact, matchMinute, nameFormat);
+		m_clRightInnerMidfielder.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact, matchMinute, nameFormat);
+		m_clRightWinger.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact, matchMinute, nameFormat);
+		m_clLeftForward.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact, matchMinute, nameFormat);
+		m_clCentralForward.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact, matchMinute, nameFormat);
+		m_clRightForward.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact, matchMinute, nameFormat);
+		m_clSubstKeeper1.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact, matchMinute, nameFormat);
+		m_clSubstKeeper2.refresh2(filteredPlayers, m_clSubstKeeper1.getiSelectedPlayerId(), m_weather, m_useWeatherImpact, nameFormat);
+		m_clSubstCD1.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact, matchMinute, nameFormat);
+		m_clSubstCD2.refresh2(filteredPlayers, m_clSubstCD1.getiSelectedPlayerId(), m_weather, m_useWeatherImpact, nameFormat);
+		m_clSubstWB1.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact, matchMinute, nameFormat);
+		m_clSubstWB2.refresh2(filteredPlayers, m_clSubstWB1.getiSelectedPlayerId(), m_weather, m_useWeatherImpact, nameFormat);
+		m_clSubstIM1.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact, matchMinute, nameFormat);
+		m_clSubstIM2.refresh2(filteredPlayers, m_clSubstIM1.getiSelectedPlayerId(), m_weather, m_useWeatherImpact, nameFormat);
+		m_clSubstFwd1.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact, matchMinute, nameFormat);
+		m_clSubstFwd2.refresh2(filteredPlayers, m_clSubstFwd1.getiSelectedPlayerId(), m_weather, m_useWeatherImpact, nameFormat);
+		m_clSubstWI1.refresh(filteredPlayers, selectedPlayers, substitutes, m_weather, m_useWeatherImpact, matchMinute, nameFormat);
+		m_clSubstWI2.refresh2(filteredPlayers, m_clSubstWI1.getiSelectedPlayerId(), m_weather, m_useWeatherImpact, nameFormat);
+		m_clSubstXtr1.refresh(filteredPlayers, selectedPlayers, substitutes, null, false, matchMinute, nameFormat);
+		m_clSubstXtr2.refresh2(filteredPlayers, m_clSubstXtr1.getiSelectedPlayerId(), null, false, nameFormat);
+		m_clSetPieceTaker.refresh(selectedPlayers, null, null, m_weather, m_useWeatherImpact, matchMinute, nameFormat);
+		m_clCaptain.refresh(selectedPlayers, null, null, null, false, matchMinute, nameFormat);
 
 		// Check
 		lineup.checkAufgestellteSpieler();
