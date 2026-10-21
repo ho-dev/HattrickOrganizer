@@ -1095,13 +1095,6 @@ public class Player extends AbstractTable.Storable {
 
     }
 
-    public String getShortNameWithLastNameFirst() {
-        if (getFirstName().isEmpty()) {
-            return getLastName();
-        }
-        return String.format("%s, %s.", getLastName(), getFirstName().charAt(0));
-    }
-
     public static String getFullName(String firstName, String lastName, String nickName) {
         if (StringUtils.isEmpty(nickName)) {
             if (StringUtils.isNotEmpty(firstName)) {
@@ -1124,18 +1117,6 @@ public class Player extends AbstractTable.Storable {
         return "%s, %s '%s'".formatted(lastName, firstName, nickName);
     }
 
-    public static String getFullNameSmart(String firstName, String lastName, String nickName, boolean lastNameUnique) {
-        if (StringUtils.isEmpty(nickName)) {
-            if (StringUtils.isEmpty(firstName) || lastNameUnique) {
-                return lastName;
-            } else {
-                return "%s, %s.".formatted(lastName, firstName.charAt(0));
-            }
-        } else {
-            return "'%s'".formatted(nickName);
-        }
-    }
-
     public String getFullName() {
         return switch (fullNameDisplayType) {
             case FULL_NAME_NORMAL -> getFullName(getFirstName(), getLastName(), getNickName());
@@ -1145,10 +1126,6 @@ public class Player extends AbstractTable.Storable {
 
     public String getFullNameWithLastNameFirst() {
         return getFullNameWithLastNameFirst(getFirstName(), getLastName(), getNickName());
-    }
-
-    public String getFullNameSmart(boolean lastNameUnique) {
-        return getFullNameSmart(getFirstName(), getLastName(), getNickName(), lastNameUnique);
     }
 
     enum FullNameDisplayType {
