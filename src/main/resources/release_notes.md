@@ -127,7 +127,7 @@
 
 ## Translations
 
-Reports by Contributors - October 19, 2025 - October 11, 2026
+Reports by Contributors - October 19, 2025 - October 22, 2026
 
 * Jösgall 1005
 * Ioannidouefty 459
@@ -139,9 +139,9 @@ Reports by Contributors - October 19, 2025 - October 11, 2026
 * Baler0 47
 * Sebastian Reddig 39
 * Walter 28
-* Kristaps 11
+* Kristaps 12
 * Stefan Schenke 5
 * Mara 3
 * Joeri Roels 1
 
-Total 2430
+Total 2431
