@@ -8,7 +8,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.stream.Stream;
 
 import static core.model.util.PlayerNameFixupUtils.splitName;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 class PlayerNameFixupUtilsTest {
@@ -55,6 +55,6 @@ class PlayerNameFixupUtilsTest {
     @ParameterizedTest(name = "[{index}] splitName(\"{0}\")")
     @MethodSource("playerNames")
     void testSplitName(String fullName, PlayerName expected) {
-        assertEquals(expected, splitName(fullName));
+        assertThat(splitName(fullName)).isEqualTo(expected);
     }
 }
