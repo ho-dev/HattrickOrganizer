@@ -56,7 +56,7 @@ public class FutureTrainingPrioPopup  extends JPopupMenu implements ActionListen
             return;
         }
 
-        if (cols == null) {
+        if (cols == null || cols.length == 0) {
             from = futureTrainings.get(0).getTrainingDate();
         }
         else {
