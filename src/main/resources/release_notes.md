@@ -69,6 +69,7 @@
 * Add experience skill to training tables (#2283)
 * Update training prediction table structure on first download after training date (#2467)
 * Fix exception in future training popup if no columns are selected (#2537)
+* Fix exception in training prediction table before first data are downloaded (#2563)
 
 ### Statistics
 

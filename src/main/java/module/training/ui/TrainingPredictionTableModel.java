@@ -68,7 +68,7 @@ public class TrainingPredictionTableModel  extends HOPlayersTableModel {
                 }
         ));
 
-        nextTrainingDate = getDownloadedNextTrainingDate().orElse(HODateTime.now());
+        nextTrainingDate = findDownloadedNextTrainingDate().orElse(HODateTime.now());
         var nextWeek = nextTrainingDate;
         for (int weekIndex = 0; weekIndex < UserParameter.instance().futureWeeks; weekIndex++) {
             var htWeek = nextWeek.toLocaleHTWeek();
@@ -79,7 +79,7 @@ public class TrainingPredictionTableModel  extends HOPlayersTableModel {
         setColumns(newColumns.toArray(new UserColumn[0]));
     }
 
-    private Optional<HODateTime> getDownloadedNextTrainingDate() {
+    private Optional<HODateTime> findDownloadedNextTrainingDate() {
         var xtraData = HOVerwaltung.instance().getModel().getXtraDaten();
         if (xtraData != null) {
             return Optional.ofNullable(xtraData.getNextTrainingDate());
@@ -136,6 +136,6 @@ public class TrainingPredictionTableModel  extends HOPlayersTableModel {
     }
 
     public boolean isHeaderChanged() {
-        return getDownloadedNextTrainingDate().equals(Optional.of(nextTrainingDate));
+        return !findDownloadedNextTrainingDate().equals(Optional.of(nextTrainingDate));
     }
 }
