@@ -599,7 +599,6 @@ class XMLMatchArchiveParserTest {
 
     @Test
     void parseMatchesFromString() {
-
         // when
         final var matches = XMLMatchArchiveParser.parseMatchesFromString(xmlFileMatchArchive);
 

@@ -1,52 +1,59 @@
 package module.youth
 
 import core.constants.player.PlayerSkill
+import core.model.HOVerwaltung
 import core.model.player.Specialty
-import org.junit.jupiter.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.mockStatic
 import java.util.*
 
 class YouthPlayerTests {
     @Test
-    fun test() {
-        // Prepare model
-        val properties = Properties()
-        properties.setProperty("age", "16")
-        properties.setProperty("agedays", "84")
-        properties.setProperty("canbepromotedin", "96")
-        properties.setProperty("defenderskill", "4")
-        properties.setProperty("defenderskillmax", "8")
-        properties.setProperty("passingskillmax", "4")
-        properties.setProperty("scorerskillmax", "5")
-        var youthPlayer = YouthPlayer(properties)
-        Assertions.assertEquals(2158, youthPlayer.calculateRateMyAcademyScore())
+    fun calculateRateMyAcademyScore() {
+        val hoVerwaltung = mock(HOVerwaltung::class.java)
+        mockStatic(HOVerwaltung::class.java).use { mockedStatic ->
+            mockedStatic.`when`<HOVerwaltung> {
+                HOVerwaltung.instance()
+            }.thenReturn(hoVerwaltung)
 
-        youthPlayer.ageDays += 1;
-        Assertions.assertEquals(2148, youthPlayer.calculateRateMyAcademyScore())
+            val properties = Properties()
+            properties.setProperty("age", "16")
+            properties.setProperty("agedays", "84")
+            properties.setProperty("canbepromotedin", "96")
+            properties.setProperty("defenderskill", "4")
+            properties.setProperty("defenderskillmax", "8")
+            properties.setProperty("passingskillmax", "4")
+            properties.setProperty("scorerskillmax", "5")
+            var youthPlayer = YouthPlayer(properties)
+            assertThat(youthPlayer.calculateRateMyAcademyScore()).isEqualTo(2158)
 
-        youthPlayer.canBePromotedIn += 1
-        Assertions.assertEquals(2138, youthPlayer.calculateRateMyAcademyScore())
+            youthPlayer.ageDays += 1
+            assertThat(youthPlayer.calculateRateMyAcademyScore()).isEqualTo(2148)
 
-        youthPlayer.specialty = Specialty.Head
-        Assertions.assertEquals(2238, youthPlayer.calculateRateMyAcademyScore())
+            youthPlayer.canBePromotedIn += 1
+            assertThat(youthPlayer.calculateRateMyAcademyScore()).isEqualTo(2138)
 
-        youthPlayer.setMax(PlayerSkill.PLAYMAKING, 8)
-        Assertions.assertEquals(2830, youthPlayer.calculateRateMyAcademyScore())
+            youthPlayer.specialty = Specialty.Head
+            assertThat(youthPlayer.calculateRateMyAcademyScore()).isEqualTo(2238)
 
-        youthPlayer.specialty = Specialty.Regainer
-        Assertions.assertEquals(2730, youthPlayer.calculateRateMyAcademyScore())
+            youthPlayer.setMax(PlayerSkill.PLAYMAKING, 8)
+            assertThat(youthPlayer.calculateRateMyAcademyScore()).isEqualTo(2830)
 
-        youthPlayer.specialty = Specialty.NoSpecialty
-        Assertions.assertEquals(2630, youthPlayer.calculateRateMyAcademyScore())
+            youthPlayer.specialty = Specialty.Regainer
+            assertThat(youthPlayer.calculateRateMyAcademyScore()).isEqualTo(2730)
 
-        properties.setProperty("scoutcomment0text", "")
-        properties.setProperty("scoutcomment0type", "6")        // overallskill type
-        properties.setProperty("scoutcomment0skilltype", "7")   // solid value (never seen that in real hattrick;-)
-        properties.setProperty("playmakerskillmax", "8")
+            youthPlayer.specialty = Specialty.NoSpecialty
+            assertThat(youthPlayer.calculateRateMyAcademyScore()).isEqualTo(2630)
 
-        youthPlayer = YouthPlayer(properties)
-        Assertions.assertEquals(2928, youthPlayer.calculateRateMyAcademyScore())
+            properties.setProperty("scoutcomment0text", "")
+            properties.setProperty("scoutcomment0type", "6")        // overallskill type
+            properties.setProperty("scoutcomment0skilltype", "7")   // solid value (never seen that in real hattrick;-)
+            properties.setProperty("playmakerskillmax", "8")
 
-
+            youthPlayer = YouthPlayer(properties)
+            assertThat(youthPlayer.calculateRateMyAcademyScore()).isEqualTo(2928)
+        }
     }
 }

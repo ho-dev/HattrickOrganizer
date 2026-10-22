@@ -60,6 +60,9 @@
 
 ### Developer Tools
 
+* Save downloaded CHPP responses as valid XML files instead of text files, making them directly usable for debugging and
+  automated parser tests. (#2521)
+
 ## Translations
 
 Reports by Contributors - October 09, 2026 - October 09, 2026
