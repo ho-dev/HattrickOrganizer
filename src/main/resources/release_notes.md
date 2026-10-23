@@ -119,6 +119,8 @@
 
 * Fix CVEs with HO dependencies
 * Update darklaf to most recent version.
+* Fixed Windows portable ZIP archives not being extractable with Windows Explorer. The archives now contain an `HO`
+  subdirectory. (#1642)
 
 ### Developer Tools
 
