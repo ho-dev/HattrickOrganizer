@@ -60,6 +60,8 @@ public class XMLMatchesParser {
                         match.setCupLevelIndex(CupLevelIndex.fromInt(XMLUtils.getIntValue(matchElement, "CupLevelIndex")));
                     }
 
+                    match.setMatchContextId(XMLUtils.getIntValue(matchElement, "MatchContextId"));
+
                     var homeTeamElement = XMLUtils.getElement(matchElement, "HomeTeam");
                     match.setHomeTeamID(XMLUtils.getIntValue(homeTeamElement, "HomeTeamID"));
                     match.setHomeTeamName(XMLUtils.getStringValue(homeTeamElement, "HomeTeamName"));
