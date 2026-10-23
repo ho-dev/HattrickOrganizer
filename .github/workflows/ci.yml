@@ -75,7 +75,7 @@ jobs:
           sed -n '1,30p' zip-entries.txt
 
           echo "Problematic entries:"
-          grep -nE '^(\./|/)' zip-entries.txt || true
+          grep -nE '^\./.+' zip-entries.txt || true
 
       - name: Upload ZIP
         uses: actions/upload-artifact@v6
