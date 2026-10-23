@@ -23,6 +23,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 public class TrainingPredictionTableModel  extends HOPlayersTableModel {
 
@@ -67,7 +68,7 @@ public class TrainingPredictionTableModel  extends HOPlayersTableModel {
                 }
         ));
 
-        nextTrainingDate = getDownloadedNextTrainingDate();
+        nextTrainingDate = findDownloadedNextTrainingDate().orElse(HODateTime.now());
         var nextWeek = nextTrainingDate;
         for (int weekIndex = 0; weekIndex < UserParameter.instance().futureWeeks; weekIndex++) {
             var htWeek = nextWeek.toLocaleHTWeek();
@@ -78,8 +79,12 @@ public class TrainingPredictionTableModel  extends HOPlayersTableModel {
         setColumns(newColumns.toArray(new UserColumn[0]));
     }
 
-    private HODateTime getDownloadedNextTrainingDate() {
-        return HOVerwaltung.instance().getModel().getXtraDaten().getNextTrainingDate();
+    private Optional<HODateTime> findDownloadedNextTrainingDate() {
+        var xtraData = HOVerwaltung.instance().getModel().getXtraDaten();
+        if (xtraData != null) {
+            return Optional.ofNullable(xtraData.getNextTrainingDate());
+        }
+        return Optional.empty();
     }
 
     private Color getBackgroundColor(FutureTrainingEntry entry) {
@@ -131,6 +136,6 @@ public class TrainingPredictionTableModel  extends HOPlayersTableModel {
     }
 
     public boolean isHeaderChanged() {
-        return !Objects.equals(getDownloadedNextTrainingDate(), nextTrainingDate);
+        return !findDownloadedNextTrainingDate().equals(Optional.of(nextTrainingDate));
     }
 }

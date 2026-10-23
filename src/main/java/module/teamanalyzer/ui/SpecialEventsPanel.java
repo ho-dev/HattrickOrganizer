@@ -4,20 +4,30 @@ import core.gui.model.BaseTableModel;
 import core.model.TranslationFacility;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
+import core.playername.NameFormat;
+import core.playername.PlayerNameFormatter;
+import core.playername.PlayerNameFormatterFactory;
+import core.playername.PlayerNameUtils;
 import core.specialevents.SpecialEventsPrediction;
 import core.specialevents.SpecialEventsPredictionManager;
+import core.util.HOLogger;
+import core.util.StreamUtils;
 import module.teamanalyzer.vo.TeamLineup;
+
 import javax.swing.*;
 import java.awt.*;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 public class SpecialEventsPanel extends JPanel {
     private final JTable table;
     private BaseTableModel tableModel;
     private final JLabel resultLabel;
+    private final NameFormat nameFormat;
 
     private final String[] columns = {
             TranslationFacility.tr("Event"),
@@ -29,7 +39,8 @@ public class SpecialEventsPanel extends JPanel {
             TranslationFacility.tr("ls.teamanalyzer.opponent_scores")
     };
 
-    public SpecialEventsPanel(){
+    public SpecialEventsPanel(NameFormat nameFormat) {
+        this.nameFormat = nameFormat;
         Vector<Vector<Object>> data = new Vector<>();
 
         tableModel = new BaseTableModel(data, new Vector<>(Arrays.asList(columns)));
@@ -55,68 +66,58 @@ public class SpecialEventsPanel extends JPanel {
         tableModel = new BaseTableModel(new Vector<>(), new Vector<>(Arrays.asList(columns)));
         table.setModel(tableModel);
 
-        ArrayList<IMatchRoleID> involvedPositions;
-
         List<SpecialEventsPrediction> teamEvents = specialEventsPredictionManager.getTeamEvents();
-        if ( teamEvents != null) {
+        List<SpecialEventsPrediction> opponentEvents = specialEventsPredictionManager.getOpponentEvents();
+
+        // TODO: Context is all positions not only involved team/opponent players
+        final var allPlayers = StreamUtils.concat(
+                Optional.ofNullable(teamEvents).stream().flatMap(events -> events.stream()
+                    .flatMap(sep ->
+                        StreamUtils.concat(
+                            Stream.of(sep.getResponsiblePosition()).map(specialEventsPredictionManager::getPlayer),
+                            getAllInvolvedPlayersOfTeamEvents(sep, specialEventsPredictionManager).stream())
+                    )),
+                Optional.ofNullable(opponentEvents).stream().flatMap(events -> events.stream()
+                    .flatMap(sep ->
+                        StreamUtils.concat(
+                            Stream.of(sep.getResponsiblePosition()).map(specialEventsPredictionManager::getOpponentPlayer),
+                            getAllInvolvedPlayersOfOpponentEvents(sep, specialEventsPredictionManager).stream())
+                    )))
+            .toList();
+        final var playerNameFormatter = PlayerNameFormatterFactory.createFromPlayers(allPlayers);
+
+        if (teamEvents != null) {
             for (SpecialEventsPrediction se : teamEvents) {
-                ArrayList<Player> involved = new ArrayList<>();
-                involvedPositions = se.getInvolvedPositions();
-                if (involvedPositions != null) {
-                    for (IMatchRoleID id : involvedPositions) {
-                        involved.add(specialEventsPredictionManager.getPlayer(id));
-                    }
-                }
-                involvedPositions = se.getInvolvedOpponentPositions();
-                if (involvedPositions != null) {
-                    for (IMatchRoleID id : involvedPositions) {
-                        involved.add(specialEventsPredictionManager.getOpponentPlayer(id));
-                    }
-                }
+                final var involved = getAllInvolvedPlayersOfTeamEvents(se, specialEventsPredictionManager);
 
                 tableModel.addRow(
-                        getRow(
-                                se.getEventTypeAsString(),
-                                specialEventsPredictionManager.getPlayer(se.getResponsiblePosition()),
-                                null,
-                                involved,
-                                se.getChanceCreationProbability(),
-                                se.getChanceCreationProbability() > 0 ? se.getGoalProbability() : null,
-                                se.getChanceCreationProbability() > 0 ? null : -se.getGoalProbability()
-                        )
+                    createRowData(
+                        se.getEventTypeAsString(),
+                        specialEventsPredictionManager.getPlayer(se.getResponsiblePosition()),
+                        null,
+                        involved,
+                        se.getChanceCreationProbability(),
+                        se.getChanceCreationProbability() > 0 ? se.getGoalProbability() : null,
+                        se.getChanceCreationProbability() > 0 ? null : -se.getGoalProbability(),
+                        playerNameFormatter, nameFormat)
                 );
             }
         }
 
-        List<SpecialEventsPrediction> opponentEvents = specialEventsPredictionManager.getOpponentEvents();
         if (opponentEvents != null) {
-
             for (SpecialEventsPrediction se : opponentEvents) {
-                ArrayList<Player> involved = new ArrayList<>();
-
-                involvedPositions = se.getInvolvedPositions();
-                if (involvedPositions != null) {
-                    for (IMatchRoleID id : involvedPositions) {
-                        involved.add(specialEventsPredictionManager.getOpponentPlayer(id));     // SE from opponent perspective
-                    }
-                }
-                involvedPositions = se.getInvolvedOpponentPositions();
-                if (involvedPositions != null) {
-                    for (IMatchRoleID id : involvedPositions) {
-                        involved.add(specialEventsPredictionManager.getPlayer(id));     // SE from opponent perspective
-                    }
-                }
+                final var involved = getAllInvolvedPlayersOfOpponentEvents(se, specialEventsPredictionManager);
 
                 tableModel.addRow(
-                        getRow(
-                                se.getEventTypeAsString(),
-                                null,
-                                specialEventsPredictionManager.getOpponentPlayer(se.getResponsiblePosition()),
-                                involved,
-                                se.getChanceCreationProbability(),
-                                se.getChanceCreationProbability() > 0 ? null : -se.getGoalProbability(),
-                                se.getChanceCreationProbability() > 0 ? se.getGoalProbability() : null
-                        )
+                    createRowData(
+                        se.getEventTypeAsString(),
+                        null,
+                        specialEventsPredictionManager.getOpponentPlayer(se.getResponsiblePosition()),
+                        involved,
+                        se.getChanceCreationProbability(),
+                        se.getChanceCreationProbability() > 0 ? null : -se.getGoalProbability(),
+                        se.getChanceCreationProbability() > 0 ? se.getGoalProbability() : null,
+                        playerNameFormatter, nameFormat)
                 );
             }
         }
@@ -126,22 +127,47 @@ public class SpecialEventsPanel extends JPanel {
         this.resultLabel.setText(String.format(TranslationFacility.tr("ls.teamanalyzer.result") + ": %.2f : %.2f", scores, opponentScores));
     }
 
-    private Vector<Object> getRow(String kind, Player player, Player opponentPlayer, ArrayList<Player> involved,
-                                  double probability, Double scores, Double scoresOpponent) {
+    private static List<Player> getAllInvolvedPlayersOfTeamEvents(SpecialEventsPrediction se, SpecialEventsPredictionManager specialEventsPredictionManager) {
+        return StreamUtils.concat(
+                mapToPlayers(se.getInvolvedPositions(), specialEventsPredictionManager).stream(),
+                mapToOpponentPlayers(se.getInvolvedOpponentPositions(), specialEventsPredictionManager).stream())
+            .toList();
+    }
 
-        ArrayList<String> involvedPlayerNames = new ArrayList<>();
-        for (Player p : involved) {
-            if (p == null) {
-                continue;
-            }
-            involvedPlayerNames.add(p.getFullName());
+    private static List<Player> getAllInvolvedPlayersOfOpponentEvents(SpecialEventsPrediction se, SpecialEventsPredictionManager specialEventsPredictionManager) {
+        return StreamUtils.concat(
+                mapToOpponentPlayers(se.getInvolvedPositions(), specialEventsPredictionManager).stream(),
+                mapToPlayers(se.getInvolvedOpponentPositions(), specialEventsPredictionManager).stream())
+            .toList();
+    }
+
+    private static List<Player> mapToPlayers(List<IMatchRoleID> iMatchRoleIDs, SpecialEventsPredictionManager specialEventsPredictionManager) {
+        if (iMatchRoleIDs == null) {
+            return new ArrayList<>();
         }
-        Vector<Object> rowData = new Vector<>();
+        return iMatchRoleIDs.stream().map(specialEventsPredictionManager::getPlayer).toList();
+    }
 
+    private static List<Player> mapToOpponentPlayers(List<IMatchRoleID> iMatchRoleIDs, SpecialEventsPredictionManager specialEventsPredictionManager) {
+        if (iMatchRoleIDs == null) {
+            return new ArrayList<>();
+        }
+        return iMatchRoleIDs.stream().map(specialEventsPredictionManager::getOpponentPlayer).toList();
+    }
+
+    private static Vector<Object> createRowData(String kind, Player player, Player opponentPlayer, List<Player> involved,
+                                                double probability, Double scores, Double scoresOpponent,
+                                                PlayerNameFormatter playerNameFormatter, NameFormat nameFormat) {
+        final String playerName = getOptionalFormattedPlayerName(player, playerNameFormatter, nameFormat);
+        final String opponentPlayerName = getOptionalFormattedPlayerName(opponentPlayer, playerNameFormatter, nameFormat);
+        final String involvedPlayerNamesStr = createFormattedPlayerNamesListString(involved, playerNameFormatter, nameFormat);
+
+        Vector<Object> rowData = new Vector<>();
         rowData.add(kind);
-        rowData.add(player!=null?player.getFullName():"");
-        rowData.add(opponentPlayer!=null?opponentPlayer.getFullName():"");
-        rowData.add(involvedPlayerNames);
+        rowData.add(playerName);
+        rowData.add(opponentPlayerName);
+        HOLogger.instance().info(SpecialEventsPanel.class, "opponentPlayer: %s".formatted(Optional.ofNullable(opponentPlayer).map(Player::getFullName).orElse("")));
+        rowData.add(involvedPlayerNamesStr);
 
         DecimalFormat df = new DecimalFormat("#.00");
         rowData.add(df.format(probability));
@@ -151,4 +177,18 @@ public class SpecialEventsPanel extends JPanel {
         return rowData;
     }
 
+    private static String createFormattedPlayerNamesListString(List<Player> players, PlayerNameFormatter playerNameFormatter, NameFormat nameFormat) {
+        return players.stream()
+            .filter(Objects::nonNull)
+            .map(player -> getFormattedPlayerName(player, playerNameFormatter, nameFormat))
+            .collect(Collectors.joining("; "));
+    }
+
+    private static String getOptionalFormattedPlayerName(Player player, PlayerNameFormatter playerNameFormatter, NameFormat nameFormat) {
+        return Optional.ofNullable(player).map(p -> getFormattedPlayerName(p, playerNameFormatter, nameFormat)).orElse(null);
+    }
+
+    private static String getFormattedPlayerName(Player player, PlayerNameFormatter playerNameFormatter, NameFormat nameFormat) {
+        return playerNameFormatter.format(PlayerNameUtils.createPlayerName(player), nameFormat);
+    }
 }

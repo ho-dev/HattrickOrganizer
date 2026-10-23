@@ -13,8 +13,10 @@ import core.model.match.MatchLineupPosition;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
+import core.playername.ConfiguredPlayerNameFormatter;
+import core.playername.NameFormat;
+import core.playername.PlayerNameUtils;
 import core.util.Helper;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
@@ -46,7 +48,7 @@ final class SpielerSternePanel extends ImagePanel implements ActionListener {
 	private boolean m_bOnScreen = false;
 	private final GridBagConstraints m_gbcConstraints = new GridBagConstraints();
 
-	SpielerSternePanel(int positionsID, boolean print, JPanel parent, int x, int y) {
+    SpielerSternePanel(int positionsID, boolean print, JPanel parent, int x, int y) {
 		super(print);
 
 		m_iPositionsID = positionsID;
@@ -173,7 +175,7 @@ final class SpielerSternePanel extends ImagePanel implements ActionListener {
 		}
 	}
 
-	public void refresh(MatchLineup lineup, MatchLineupPosition matchLineupPosition) {
+	public void refresh(MatchLineup lineup, MatchLineupPosition matchLineupPosition, ConfiguredPlayerNameFormatter configuredPlayerNameFormatter) {
 		m_clMatchLineup = lineup;
 		m_clMatchPlayer = matchLineupPosition;
 
@@ -183,12 +185,9 @@ final class SpielerSternePanel extends ImagePanel implements ActionListener {
 				addPanel();
 			}
 
-			String displayName = "";
-			if (!StringUtils.isEmpty(matchLineupPosition.getSpielerName())) {
-				displayName = matchLineupPosition.getSpielerName().charAt(0)
-						+ "."
-						+ matchLineupPosition.getSpielerName().substring(matchLineupPosition.getSpielerName().indexOf(" ") + 1);
-			}
+            final String displayName = matchLineupPosition.getPlayerId() != 0 ?
+                configuredPlayerNameFormatter.format(PlayerNameUtils.createPlayerName(matchLineupPosition)) :
+                null;
 			name.setText(displayName);
 
 			int trickotnummer = 0;

@@ -5,6 +5,8 @@ import core.model.HOVerwaltung;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
+import core.model.util.PlayerNameFixupUtils;
+import core.util.HOLogger;
 import module.lineup.Lineup;
 import module.opponentspy.OppPlayerSkillEstimator;
 import module.opponentspy.OpponentPlayer;
@@ -13,11 +15,16 @@ import module.teamanalyzer.manager.PlayerDataManager;
 import module.teamanalyzer.vo.MatchDetail;
 import module.teamanalyzer.vo.PlayerInfo;
 import module.teamanalyzer.vo.PlayerPerformance;
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
 
 public class SpecialEventsPredictionManager {
 
-    private static final OppPlayerSkillEstimator oppPlayerSkillEstimator = new OppPlayerSkillEstimator();
+    private static final OppPlayerSkillEstimator OPP_PLAYER_SKILL_ESTIMATOR = new OppPlayerSkillEstimator();
+
     static ArrayList<ISpecialEventPredictionAnalyzer> analyzers;
     private Lineup lineup = null;
     private Lineup opponentLineup = null;
@@ -226,49 +233,11 @@ public class SpecialEventsPredictionManager {
             if (playerPerformance.getStatus() <= PlayerDataManager.AVAILABLE) {     // if status is UNKNOWN user has to download players info
                 this.opponentLineup.setPosition(playerPerformance.getMatchLineupPosition());
                 // playerPerformance -> Player
-                OpponentPlayer player = (OpponentPlayer) this.opponentPlayerInLineup.get(playerPerformance.getPlayerId());
-                if (player == null) {
+                OpponentPlayer opponentPlayer = (OpponentPlayer) this.opponentPlayerInLineup.get(playerPerformance.getPlayerId());
+                if (opponentPlayer == null) {
                     PlayerInfo latestPlayerInfo = PlayerDataManager.getLatestPlayerInfo(playerPerformance.getPlayerId());
-                    int age = latestPlayerInfo.getAge();
-                    var wage = latestPlayerInfo.getSalary();
-                    int tsi = latestPlayerInfo.getTsi();
-                    double form = latestPlayerInfo.getForm();
-                    double stamina = latestPlayerInfo.getStamina();
-                    int spec = latestPlayerInfo.getSpecialEvent();
-                    int role = playerPerformance.getMatchLineupPosition().getPosition();
-                    player = oppPlayerSkillEstimator.calcPlayer(age, wage, tsi, form, stamina, spec, role, -1);
-                    player.setPlayerId(playerPerformance.getPlayerId());
-                    player.setLastName(playerPerformance.getPlayerName());
-                    player.setHomeGrown(latestPlayerInfo.isMotherClubBonus());
-                    player.setLoyalty(latestPlayerInfo.getLoyalty());
-                    player.setExperience(latestPlayerInfo.getExperience());
-                    player.setAge(age);
-                    player.setWage(wage);
-                    player.setTsi(tsi);
-                    player.setForm((int) form);
-                    player.setSpecialty(spec);
-
-//                    String pInfo = String.format(
-//                            "Name=%s, Age=%d, TSI=%d, Wage=%s, Form=%d, Stamina=%d, Experience=%d, GK=%d, DEF=%d, WI=%d, PM=%d , PS=%d, SC=%d, SP=%d, Status=%s",
-//                            player.getFullName(),
-//                            player.getAge(),
-//                            player.getTsi(),
-//                            player.getWage().toLocaleString(),
-//                            player.getForm(),
-//                            player.getStamina(),
-//                            player.getExperience(),
-//                            player.getGoalkeeperSkill(),
-//                            player.getDefendingSkill(),
-//                            player.getWingerSkill(),
-//                            player.getPlaymakingSkill(),
-//                            player.getPassingSkill(),
-//                            player.getScoringSkill(),
-//                            player.getSetPiecesSkill(),
-//                            playerPerformance.getStatusAsText()
-//                    );
-//                    HOLogger.instance().debug(getClass(), pInfo);
-
-                    this.opponentPlayerInLineup.put(playerPerformance.getPlayerId(), player);
+                    opponentPlayer = createOpponentPlayer(playerPerformance, latestPlayerInfo);
+                    this.opponentPlayerInLineup.put(playerPerformance.getPlayerId(), opponentPlayer);
                 }
 
                 int positionId = playerPerformance.getPosition();
@@ -277,8 +246,7 @@ public class SpecialEventsPredictionManager {
                 double ratingStart = playerPerformance.getRating();
                 double ratingEnd = playerPerformance.getRatingEnd();
                 PlayedPosition pos = new PlayedPosition(positionId, tacticId, matchtype, ratingStart, ratingEnd);
-                player.addPlayedPosition(pos);
-                //m_cOppPlayerSkillEstimator.CalculateSkillsForPlayer(player);
+                opponentPlayer.addPlayedPosition(pos);
             } else {
                 // PLayer SOLD, SUSPENDED or INJURED
                 OpponentPlayer player = (OpponentPlayer) opponentPlayerInLineup.get(playerPerformance.getPlayerId());
@@ -289,9 +257,46 @@ public class SpecialEventsPredictionManager {
         }
     }
 
+    private static OpponentPlayer createOpponentPlayer(PlayerPerformance playerPerformance, PlayerInfo playerInfo) {
+        final int age = playerInfo.getAge();
+        final var wage = playerInfo.getSalary();
+        final int tsi = playerInfo.getTsi();
+        final double form = playerInfo.getForm();
+        final double stamina = playerInfo.getStamina();
+        final int spec = playerInfo.getSpecialEvent();
+        final int role = playerPerformance.getMatchLineupPosition().getPosition();
+        OpponentPlayer opponentPlayer = OPP_PLAYER_SKILL_ESTIMATOR.calcPlayer(age, wage, tsi, form, stamina, spec, role, -1);
+        opponentPlayer.setPlayerId(playerPerformance.getPlayerId());
+        Optional.ofNullable(playerPerformance.getPlayer()).ifPresentOrElse(player -> {
+                opponentPlayer.setFirstName(player.getFirstName());
+                opponentPlayer.setLastName(player.getLastName());
+                opponentPlayer.setNickName(player.getNickName());
+            },
+            () -> {
+                final var playerName = PlayerNameFixupUtils.splitName(playerPerformance.getPlayerName());
+                opponentPlayer.setFirstName(playerName.firstName());
+                opponentPlayer.setLastName(playerName.lastName());
+                opponentPlayer.setNickName(playerName.nickName());
+            }
+        );
+        opponentPlayer.setHomeGrown(playerInfo.isMotherClubBonus());
+        opponentPlayer.setLoyalty(playerInfo.getLoyalty());
+        opponentPlayer.setExperience(playerInfo.getExperience());
+        opponentPlayer.setAge(age);
+        opponentPlayer.setWage(wage);
+        opponentPlayer.setTsi(tsi);
+        opponentPlayer.setForm((int) form);
+        opponentPlayer.setSpecialty(spec);
+        return opponentPlayer;
+    }
+
     public Player getPlayer(IMatchRoleID id) {
         MatchRoleID mid = (MatchRoleID) id;
-        return getPlayer(mid.getPlayerId());
+        var p = getPlayer(mid.getPlayerId());
+        if (p == null) {
+            HOLogger.instance().debug(SpecialEventsPredictionManager.class, "mid.getPlayerId() %d not found".formatted(mid.getPlayerId()));
+        }
+        return p;
     }
 
     public Player getPlayer(int id) {
@@ -300,7 +305,11 @@ public class SpecialEventsPredictionManager {
 
     public Player getOpponentPlayer(IMatchRoleID id) {
         MatchRoleID mid = (MatchRoleID) id;
-        return getOpponentPlayer(mid.getPlayerId());
+        var p = getOpponentPlayer(mid.getPlayerId());;
+        if (p == null) {
+            HOLogger.instance().debug(SpecialEventsPredictionManager.class, "mid.getOpponentPlayer() %d not found".formatted(mid.getPlayerId()));
+        }
+        return p;
     }
 
     public Player getOpponentPlayer(int id) {

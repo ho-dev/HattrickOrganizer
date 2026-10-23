@@ -187,13 +187,13 @@ class MatchHighlightFromEventTest {
     }
 
     @Test
-    void test_getPlayerName() {
-        assertThat(MATCH_HIGHLIGHT.getPlayerName()).isEqualTo("PlayerName");
+    void test_getPlayerId() {
+        assertThat(MATCH_HIGHLIGHT.getPlayerId()).isEqualTo(5);
     }
 
     @Test
-    void test_getAssistingPlayerName() {
-        assertThat(MATCH_HIGHLIGHT.getAssistingPlayerName()).isEqualTo("AssistingPlayerName");
+    void test_getAssistingPlayerId() {
+        assertThat(MATCH_HIGHLIGHT.getAssistingPlayerId()).isEqualTo(6);
     }
 
     @Test

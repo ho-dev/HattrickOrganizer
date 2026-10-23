@@ -6,14 +6,21 @@ import core.gui.comp.renderer.HODefaultTableCellRenderer;
 import core.gui.theme.*;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
+import core.playername.ConfiguredPlayerNameFormatter;
+import core.playername.NameFormat;
+import core.playername.PlayerNameFormatter;
+import core.playername.PlayerNameUtils;
 import core.training.TrainingPreviewPlayers;
+import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import java.awt.*;
+
 import javax.swing.*;
+import java.awt.*;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 
 import static core.gui.theme.HOIconName.*;
 
@@ -46,22 +53,26 @@ public final class PlayerLabelEntry implements IHOTableCellEntry {
     private JLabel suspendedLabel;
     private JLabel twoYellowCardsLabel;
     private JLabel oneYellowCardLabel;
+    private final ConfiguredPlayerNameFormatter configuredPlayerNameFormatter;
 
     // Label for the player name (depending on status)
     public PlayerLabelEntry(@Nullable Player player, @Nullable MatchRoleID playerMatchRoleID,
-                            float rating, boolean showJersey, boolean showWeatherEffect) {
+                            float rating, boolean showJersey, boolean showWeatherEffect,
+                            ConfiguredPlayerNameFormatter configuredPlayerNameFormatter) {
         m_clPlayer = player;
         m_clPlayerMatchRoleID = playerMatchRoleID;
         m_rating = rating;
         m_IsOneOfBestPositions = false;
         m_bshowJersey = showJersey;
         m_bShowWeatherEffect = showWeatherEffect;
+        this.configuredPlayerNameFormatter = configuredPlayerNameFormatter;
         createComponent();
     }
 
     // Label for the player name (depending on status)
     public PlayerLabelEntry(@Nullable Player player, @Nullable MatchRoleID playerMatchRoleID,
-                            float rating, boolean showJersey, boolean showWeatherEffect, boolean customName, String customNameText, boolean multiLine) {
+                            float rating, boolean showJersey, boolean showWeatherEffect, boolean customName, String customNameText, boolean multiLine,
+                            ConfiguredPlayerNameFormatter configuredPlayerNameFormatter) {
         m_clPlayer = player;
         m_clPlayerMatchRoleID = playerMatchRoleID;
         m_rating = rating;
@@ -71,6 +82,7 @@ public final class PlayerLabelEntry implements IHOTableCellEntry {
         m_bCustomName = customName;
         m_sCustomNameString = customNameText;
         m_bMultiLine = multiLine;
+        this.configuredPlayerNameFormatter = configuredPlayerNameFormatter;
         createComponent();
     }
 
@@ -127,7 +139,7 @@ public final class PlayerLabelEntry implements IHOTableCellEntry {
 
     public int compareTo(@NotNull IHOTableCellEntry obj) {
         if (obj instanceof PlayerLabelEntry entry) {
-            return Objects.requireNonNull(m_clPlayer).getFullName().compareTo(Objects.requireNonNull(entry.getSpieler()).getFullName());
+            return compareByPlayerName(m_clPlayer, entry.getSpieler());
         }
 
         return 0;
@@ -143,10 +155,16 @@ public final class PlayerLabelEntry implements IHOTableCellEntry {
             } else if (num1 > num2) {
                 return 1;
             } else {
-                return Objects.requireNonNull(entry.getSpieler()).getLastName().compareTo(Objects.requireNonNull(m_clPlayer).getLastName());
+                return compareByPlayerName(entry.getSpieler(), m_clPlayer);
             }
         }
         return 0;
+    }
+
+    private int compareByPlayerName(Player player1, Player player2) {
+        final var playerName1 = getFormattedPlayerName(Objects.requireNonNull(player1));
+        final var playerName2 = getFormattedPlayerName(Objects.requireNonNull(player2));
+        return playerName1.compareTo(playerName2);
     }
 
     public void createComponent() {
@@ -262,11 +280,17 @@ public final class PlayerLabelEntry implements IHOTableCellEntry {
 
         if (m_clPlayer != null) {
             //Name
-            m_jlName.setText(m_clPlayer.getFullName());
+            m_jlName.setText(getFormattedPlayerName(m_clPlayer));
             m_jlName.setOpaque(false);
             showJersey();
             updateDisplay(m_clPlayer);
         }
+    }
+
+    private String getFormattedPlayerName(Player player) {
+        return Optional.ofNullable(configuredPlayerNameFormatter)
+            .map(pnf -> pnf.format(PlayerNameUtils.createPlayerName(player)))
+            .orElseGet(() -> "PlayerId(%s)".formatted(player));
     }
 
     private void addPlayerStatusIcons(JPanel infoPanel) {
@@ -316,13 +340,14 @@ public final class PlayerLabelEntry implements IHOTableCellEntry {
         m_clPlayerMatchRoleID = positionAktuell;
         m_rating = rating;
         m_IsOneOfBestPositions = alternativePosition;
+        m_bCustomName = StringUtils.isNotBlank(nameText);
         m_sCustomNameString = nameText;
 
         if (m_clPlayer != null) {
             if (m_bCustomName) {
                 m_jlName.setText(m_sCustomNameString);
             } else {
-                m_jlName.setText(m_clPlayer.getLastName());
+                m_jlName.setText(getFormattedPlayerName(m_clPlayer));
             }
 
             showJersey();

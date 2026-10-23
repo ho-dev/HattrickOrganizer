@@ -13,13 +13,14 @@ import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
-import core.model.match.IMatchDetails;
-import core.model.match.MatchKurzInfo;
-import core.model.match.MatchLineupPosition;
-import core.model.match.Matchdetails;
+import core.model.match.*;
 import core.model.player.IMatchRoleID;
 import core.module.IModule;
 import core.net.OnlineWorker;
+import core.playername.Location;
+import core.playername.NameFormat;
+import core.playername.PlayerNameFormatterFactory;
+import core.playername.PlayerNameSettingsManager;
 import core.prediction.MatchEnginePanel;
 import core.prediction.MatchPredictionDialog;
 import core.prediction.engine.MatchPredictionManager;
@@ -86,7 +87,7 @@ public final class MatchesPanel extends LazyImagePanel {
 	private MatchesOverviewTable matchesOverviewTable;
 	private MatchesHighlightsTable matchesHighlightsTable;
 	private MatchesModel matchesModel;
-
+    private final NameFormat nameFormat = PlayerNameSettingsManager.instance().getFormat(Location.MATCHES_FORMATION);
 
 	@Override
 	protected void initialize() {
@@ -255,7 +256,7 @@ public final class MatchesPanel extends LazyImagePanel {
 			}
 
 			String matchName = matchesModel.getMatch().getHomeTeamName() + " – " + matchesModel.getMatch().getGuestTeamName();
-			MatchEnginePanel matchPredictionPanel = new MatchEnginePanel(homeTeamValues, awayTeamValues);
+			MatchEnginePanel matchPredictionPanel = new MatchEnginePanel(homeTeamValues, awayTeamValues, nameFormat);
 
 			MatchPredictionDialog d = new MatchPredictionDialog(matchPredictionPanel, matchName);
 		}
@@ -352,9 +353,9 @@ public final class MatchesPanel extends LazyImagePanel {
 				initMatchesTable(), initSpieldetails());
 
 		JPanel linupPanel = new JPanel(new GridLayout(2, 1));
-		aufstellungHeimPanel = new AufstellungsSternePanel(true);
+		aufstellungHeimPanel = new AufstellungsSternePanel(true, nameFormat);
 		linupPanel.add(aufstellungHeimPanel);
-		aufstellungGastPanel = new AufstellungsSternePanel(false);
+		aufstellungGastPanel = new AufstellungsSternePanel(false, nameFormat);
 		linupPanel.add(aufstellungGastPanel);
 		verticalSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, false,
 				horizontalLeftSplitPane, new JScrollPane(linupPanel));
@@ -537,8 +538,10 @@ public final class MatchesPanel extends LazyImagePanel {
 				aufstellungHeimPanel.clearAll();
 				aufstellungGastPanel.clearAll();
 			} else {
-				aufstellungHeimPanel.refresh(info, info.getHomeTeamID());
-				aufstellungGastPanel.refresh(info, info.getGuestTeamID());
+                final var matchLineup = loadMatchLineup(info);
+                final var playerNameFormatter = PlayerNameFormatterFactory.createFrom(matchLineup);
+				aufstellungHeimPanel.refresh(matchLineup, info.getHomeTeamID(), playerNameFormatter);
+				aufstellungGastPanel.refresh(matchLineup, info.getGuestTeamID(), playerNameFormatter);
 			}
 		} else {
 			this.matchesModel.setMatch(null);
@@ -552,6 +555,10 @@ public final class MatchesPanel extends LazyImagePanel {
 			aufstellungGastPanel.clearAll();
 		}
 	}
+
+    private MatchLineup loadMatchLineup(MatchKurzInfo match) {
+        return DBManager.instance().loadMatchLineup(match.getMatchType().getId(), match.getMatchID());
+    }
 
 	/**
 	 * Refresh button states.

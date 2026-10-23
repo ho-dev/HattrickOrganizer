@@ -6,6 +6,8 @@ import core.gui.comp.panel.ImagePanel;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.player.Player;
+import core.playername.NameFormat;
+import core.playername.PlayerNameFormatterFactory;
 import core.util.AmountOfMoney;
 import core.util.CurrencyUtils;
 import module.training.ui.comp.DividerListener;
@@ -18,26 +20,20 @@ import module.transfer.ui.layout.TableLayout;
 import module.transfer.ui.layout.TableLayoutConstants;
 import module.transfer.ui.layout.TableLayoutConstraints;
 import module.transfer.ui.sorter.DefaultTableSorter;
-import java.awt.BorderLayout;
-import java.awt.Font;
-import java.text.NumberFormat;
-import java.util.*;
-import javax.swing.BorderFactory;
-import javax.swing.DefaultCellEditor;
-import javax.swing.JComboBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
-import javax.swing.ScrollPaneConstants;
+
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableModel;
+import java.awt.*;
+import java.text.NumberFormat;
+import java.util.*;
+import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 
 /**
@@ -55,15 +51,16 @@ public class TransferTypePane extends JSplitPane implements ListSelectionListene
     private final TransfersPanel transfersPanel;
     private List<TransferredPlayer> transferred = new ArrayList<>();
     private final PlayerDetailPanel playerDetailPanel = new PlayerDetailPanel();
-
+    private final NameFormat nameFormat;
 
     /**
      * Creates a TransferTypePane.
      */
-    public TransferTypePane(TransfersPanel transfersPanel) {
+    public TransferTypePane(TransfersPanel transfersPanel, NameFormat nameFormat) {
         super(JSplitPane.VERTICAL_SPLIT);
 
         this.transfersPanel = transfersPanel;
+        this.nameFormat = nameFormat;
 
         FORMAT.setGroupingUsed(true);
         FORMAT.setMaximumFractionDigits(0);
@@ -110,37 +107,49 @@ public class TransferTypePane extends JSplitPane implements ListSelectionListene
     /**
      * Refreshes the information on the panel.
      *
-     * @param transfers List of transfers to show.
+     * @param playerTransfers List of transfers to show.
      */
-    public final void refresh(List<PlayerTransfer> transfers) {
-        final Map<String, TransferredPlayer> players = new LinkedHashMap<>();
+    public final void refresh(List<PlayerTransfer> playerTransfers) {
+        final var playerIds = playerTransfers.stream()
+            .map(PlayerTransfer::getPlayerId)
+            .collect(Collectors.toSet());
+
+        final var mapPlayerIdToPlayer = playerIds.stream()
+            .map(PlayerRetriever::getPlayer)
+            .filter(Objects::nonNull)
+            .collect(Collectors.toMap(Player::getPlayerId, Function.identity()));
+
+        final var playerNameFormatter = PlayerNameFormatterFactory.createFromPlayers(mapPlayerIdToPlayer.values().stream().toList());
+
+        final Map<Integer, TransferredPlayer> mapPlayerIdToTransferredPlayer = new HashMap<>();
+
         final List<PlayerTransfer> wasted = new ArrayList<>();
 
-        for (final PlayerTransfer pt : transfers) {
-            final int id = pt.getPlayerId();
+        for (final PlayerTransfer playerTransfer : playerTransfers) {
+            final int id = playerTransfer.getPlayerId();
 
             if (id == 0) {
-                wasted.add(pt);
+                wasted.add(playerTransfer);
             } else {
-                TransferredPlayer tt = players.get(pt.getPlayerId() + "");
+                TransferredPlayer transferredPlayer = mapPlayerIdToTransferredPlayer.get(playerTransfer.getPlayerId());
 
-                if (tt == null) {
-                    Player player = PlayerRetriever.getPlayer(pt.getPlayerId());
+                if (transferredPlayer == null) {
+                    Player player = mapPlayerIdToPlayer.get(playerTransfer.getPlayerId());
 
                     if (player != null) {
-                        tt = new TransferredPlayer(pt.getTransferId(), player);
+                        transferredPlayer = new TransferredPlayer(playerTransfer.getTransferId(), player, playerNameFormatter, nameFormat);
                     } else {
-                        tt = new TransferredPlayer(pt);
+                        transferredPlayer = new TransferredPlayer(playerTransfer);
                     }
 
-                    players.put("" + tt.getPlayerId(), tt);
+                    mapPlayerIdToTransferredPlayer.put(transferredPlayer.getPlayerId(), transferredPlayer);
                 }
 
-                tt.addTransfer(pt);
+                transferredPlayer.addTransfer(playerTransfer);
             }
         }
 
-        transferred = new ArrayList<>(players.values());
+        transferred = new ArrayList<>(mapPlayerIdToTransferredPlayer.values());
 
         final TransferRecap recap = new TransferRecap();
 

@@ -7,6 +7,8 @@ import core.model.HOVerwaltung;
 import core.model.enums.MatchType;
 import core.model.player.Player;
 
+import java.util.Optional;
+
 
 /**
  * A class holding information about match orders
@@ -14,9 +16,9 @@ import core.model.player.Player;
  *  - position swap
  *  - behaviour change
  *  - man marking
- * 
+ *
  * @author blaghaid
- * 
+ *
  */
 public class Substitution extends AbstractTable.Storable {
 	private int playerOrderID = -1;
@@ -108,7 +110,7 @@ public class Substitution extends AbstractTable.Storable {
 	/**
 	 * Gets the ID of the the player entering, or if position swap, the player
 	 * to swap with.
-	 * 
+	 *
 	 * @return the id of the player entering
 	 */
 	public int getObjectPlayerID() {
@@ -125,7 +127,7 @@ public class Substitution extends AbstractTable.Storable {
 	 * Gets the ID of the affected player. If substitution: the player leaving.
 	 * If behaviour change: the player changing his behaviour. If position swap:
 	 * the first player that will change his position.
-	 * 
+	 *
 	 * @return the id of the affected player.
 	 */
 	public int getSubjectPlayerID() {
@@ -134,7 +136,7 @@ public class Substitution extends AbstractTable.Storable {
 
 	public void setSubjectPlayerID(int subjectPlayerID) {
 		this.subjectPlayerID = subjectPlayerID;
-		// to get conform with CHPP API (playerout==playerin if its a 
+		// to get conform with CHPP API (playerout==playerin if its a
 		// behaviour change)
 		if (this.orderType == MatchOrderType.NEW_BEHAVIOUR) {
 			setObjectPlayerID(subjectPlayerID);
@@ -200,23 +202,33 @@ public class Substitution extends AbstractTable.Storable {
 	String subjectPlayerName;
 	public String getSubjectPlayerName(){
 		if ( subjectPlayerName == null){
-			subjectPlayerName = getCurrentPlayerName(this.getSubjectPlayerID());
+			subjectPlayerName = getPlayerName(this.getSubjectPlayerID());
 		}
 		return subjectPlayerName;
 	}
 
-	private String getCurrentPlayerName(int id) {
-		Player p = HOVerwaltung.instance().getModel().getCurrentPlayer(id);
-		if (p != null) return p.getFullName();
-		return "";
+	private String getPlayerName(int id) {
+		return findPlayer(id).map(Player::getFullName).orElse("");
 	}
+
+    public Optional<Player> findObjectPlayer() {
+        return findPlayer(getObjectPlayerID());
+    }
+
+    public Optional<Player> findSubjectPlayer() {
+        return findPlayer(getSubjectPlayerID());
+    }
+
+    private Optional<Player> findPlayer(int playerId) {
+        return Optional.ofNullable(HOVerwaltung.instance().getModel().getCurrentPlayer(playerId));
+    }
 
 	String objectPlayerName;
 	public String getObjectPlayerName() {
 		if ( getObjectPlayerID() == getSubjectPlayerID()) return getSubjectPlayerName();
 		if ( objectPlayerName == null){
 			if ( getOrderType() != MatchOrderType.MAN_MARKING) {
-				objectPlayerName = getCurrentPlayerName(this.getObjectPlayerID());
+				objectPlayerName = getPlayerName(this.getObjectPlayerID());
 			}
 			else {
 				objectPlayerName = HOVerwaltung.instance().getModel().getOpponentPlayerName(this.getObjectPlayerID());

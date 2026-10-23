@@ -4,6 +4,8 @@ package module.teamanalyzer.report;
 import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
+import core.model.util.PlayerNameFixupUtils;
+import core.playername.*;
 import core.prediction.engine.TeamData;
 import core.specialevents.SpecialEventsPredictionManager;
 import module.lineup.Lineup;
@@ -11,6 +13,7 @@ import module.teamanalyzer.SystemManager;
 import module.teamanalyzer.manager.PlayerDataManager;
 import module.teamanalyzer.manager.TeamLineupBuilder;
 import module.teamanalyzer.vo.*;
+import org.apache.commons.lang3.tuple.Pair;
 
 import java.util.*;
 
@@ -49,6 +52,8 @@ public class TeamReport {
     /** Number of matches considered */
     private int matchNumber = 0;
 
+    private final NameFormat nameFormat;
+    private final PlayerNameFormatter playerNameFormatter;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -57,8 +62,37 @@ public class TeamReport {
      *
      * @param matchDetails list of matches of the team report
      */
-    public TeamReport(int teamId, List<MatchDetail> matchDetails) {
-        this.teamId=teamId;
+    public TeamReport(int teamId, List<MatchDetail> matchDetails, NameFormat nameFormat) {
+        this.teamId = teamId;
+        this.nameFormat = nameFormat;
+
+        // TODO: that is not correct here
+        final var players = matchDetails.stream()
+            .flatMap( md -> md.getPerformances().stream())
+            .map(pp -> Pair.of(pp.getPlayerId(), PlayerNameFixupUtils.splitName(pp.getPlayerName())))
+            .map(p -> new PlayerName() {
+                @Override
+                public int getPlayerId() {
+                    return p.getKey();
+                }
+
+                @Override
+                public String getFirstName() {
+                    return p.getValue().firstName();
+                }
+
+                @Override
+                public String getNickName() {
+                    return p.getValue().nickName();
+                }
+
+                @Override
+                public String getLastName() {
+                    return p.getValue().lastName();
+                }
+            }).toList();
+        playerNameFormatter = new PlayerNameFormatter(players);
+
         var squadInfos = loadSquadInfo(teamId);
         for (MatchDetail m:matchDetails ) {
             // find latest squad info in training week after match
@@ -66,7 +100,7 @@ public class TeamReport {
                     i.getFetchDate().isBefore(m.getMatch().getMatchDate().plusDaysAtSameLocalTime(7))).min(Comparator.comparing(SquadInfo::getFetchDate)).orElse(null);
             // don't use info in other matches
             if ( squadInfo != null ) squadInfos.remove(squadInfo);
-            addMatch(m, squadInfo,  SystemManager.isShowUnavailable.isSet());
+            addMatch(m, squadInfo,  SystemManager.isShowUnavailable.isSet(), playerNameFormatter, nameFormat);
         }
         this.averageRatingslineup = new TeamLineupBuilder(this)
                 .setName(TranslationFacility.tr("Durchschnitt")).build();
@@ -85,9 +119,37 @@ public class TeamReport {
      *
      * @param matchDetail The match of the report is stored in averageRatingslineup
      */
-    private TeamReport(int teamId, MatchDetail matchDetail, SquadInfo squadInfo) {
+    private TeamReport(int teamId, MatchDetail matchDetail, SquadInfo squadInfo, NameFormat nameFormat) {
         this.teamId = teamId;
-        addMatch(matchDetail, squadInfo , SystemManager.isShowUnavailable.isSet());
+        this.nameFormat = nameFormat;
+
+        // TODO: that is not correct here
+        final var players = matchDetail.getPerformances().stream()
+            .map(pp -> Pair.of(pp.getPlayerId(), PlayerNameFixupUtils.splitName(pp.getPlayerName())))
+            .map(p -> new PlayerName() {
+                @Override
+                public int getPlayerId() {
+                    return p.getKey();
+                }
+
+                @Override
+                public String getFirstName() {
+                    return p.getValue().firstName();
+                }
+
+                @Override
+                public String getNickName() {
+                    return p.getValue().nickName();
+                }
+
+                @Override
+                public String getLastName() {
+                    return p.getValue().lastName();
+                }
+            }).toList();
+        playerNameFormatter = new PlayerNameFormatter(players);
+
+        addMatch(matchDetail, squadInfo , SystemManager.isShowUnavailable.isSet(), playerNameFormatter, nameFormat);
         this.averageRatingslineup = new TeamLineupBuilder(this).setMatchDetail(matchDetail).setSquadInfo(squadInfo).build();
         if (HOVerwaltung.instance().getModel().getBasics().isNationalTeam()) {
             this.averageRatingslineup.setNtTeamDetails(DBManager.instance().loadNtTeamDetails(this.teamId, matchDetail.getMatch().getMatchDate().toDbTimestamp()));
@@ -127,7 +189,7 @@ public class TeamReport {
             }
             int matchNumber = selection - offset;
             // create a team report of one single match
-            TeamReport selectedMatchReport = new TeamReport(this.teamId, matchDetails.get(matchNumber), squadInfo.get(matchNumber));
+            TeamReport selectedMatchReport = new TeamReport(this.teamId, matchDetails.get(matchNumber), squadInfo.get(matchNumber), nameFormat);
             return selectedMatchReport.getTeamMatchReport(0);
         }
     }
@@ -146,7 +208,7 @@ public class TeamReport {
                     .build();
         } else {
             MatchDetail matchDetail = getTeamMatchReport(selection).getMatchDetail();
-            adjustedRatingsLineup = new TeamLineupBuilder(new TeamReport(this.teamId, matchDetail, null))
+            adjustedRatingsLineup = new TeamLineupBuilder(new TeamReport(this.teamId, matchDetail, null, nameFormat))
                     .setTeamData(newRatings)
                     .setMatchType(matchDetail.getMatch().getMatchType())
                     .setName(TranslationFacility.tr("ls.teamanalyzer.Adjusted"))
@@ -185,12 +247,12 @@ public class TeamReport {
      * @param matchDetail Match to be analyzed
      * @param showUnavailable consider also unavailable or not
      */
-    public void addMatch(MatchDetail matchDetail, SquadInfo squad, boolean showUnavailable) {
+    public void addMatch(MatchDetail matchDetail, SquadInfo squad, boolean showUnavailable, PlayerNameFormatter playerNameFormatter, NameFormat nameFormat) {
         this.matchDetails.add(matchDetail);
         this.squadInfo.add(squad);
 
         for (PlayerPerformance playerPerformance : matchDetail.getPerformances()) {
-            addPerformance(playerPerformance, showUnavailable);
+            addPerformance(playerPerformance, showUnavailable, playerNameFormatter, nameFormat);
         }
 
         addRating(matchDetail.getRating());
@@ -212,7 +274,7 @@ public class TeamReport {
     /**
      * Add a performance to the correct SpotReport
      */
-    private void addPerformance(PlayerPerformance pp, boolean showUnavailable) {
+    private void addPerformance(PlayerPerformance pp, boolean showUnavailable, PlayerNameFormatter playerNameFormatter, NameFormat nameFormat) {
         if ((!showUnavailable) && (pp.getStatus() != PlayerDataManager.AVAILABLE)) {
             return;
         }
@@ -220,7 +282,7 @@ public class TeamReport {
         SpotReport spotReport = getSpotReport(pp.getRoleId());
 
         if (spotReport == null) {
-            spotReport = new SpotReport(pp);
+            spotReport = new SpotReport(pp, playerNameFormatter, nameFormat);
             spotReports.put(pp.getRoleId(), spotReport);
         }
 

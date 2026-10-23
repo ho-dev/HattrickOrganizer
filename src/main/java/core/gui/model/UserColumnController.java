@@ -2,16 +2,19 @@ package core.gui.model;
 
 import core.db.DBManager;
 import core.gui.comp.table.HOTableModel;
+import core.playername.Location;
+import core.playername.NameFormat;
+import core.playername.PlayerNameSettingsManager;
 import module.halloffame.HallOfFameTableModel;
 import module.matches.statistics.MatchesOverviewColumnModel;
 import module.playeroverview.PlayerOverviewTableModel;
 import module.specialevents.SpecialEventsTableModel;
 import module.teamanalyzer.ui.RecapPanelTableModel;
+import module.training.ui.EffectTableModel;
+import module.training.ui.TrainingPredictionTableModel;
 import module.training.ui.TrainingProgressTableModel;
 import module.training.ui.model.ChangesTableModel;
-import module.training.ui.EffectTableModel;
 import module.training.ui.model.SkillupTableModel;
-import module.training.ui.TrainingPredictionTableModel;
 import module.training.ui.model.TrainingSettingsTableModel;
 import module.transfer.history.PlayerTransferTableModel;
 import module.transfer.history.TransferTableModel;
@@ -129,7 +132,7 @@ public final class UserColumnController {
 		dbManager.loadHOColumModel(getMatchesOverview1ColumnModel());
 
 		dbManager.loadHOColumModel(getYouthTrainingViewColumnModel());
-		dbManager.loadHOColumModel(getYouthPlayerOverviewColumnModel());
+		dbManager.loadHOColumModel(getYouthPlayerOverviewColumnModel(PlayerNameSettingsManager.instance().getFormat(Location.YOUTH_PLAYER)));
 		dbManager.loadHOColumModel(getYouthPlayerDetailsColumnModel());
 		dbManager.loadHOColumModel(getTeamAnalyzerRecapModel());
 		dbManager.loadHOColumModel(getTransferTableModel());
@@ -143,12 +146,12 @@ public final class UserColumnController {
         dbManager.loadHOColumModel(getTrainingSettingsFutureTableModel());
         dbManager.loadHOColumModel(getTrainingSettingsPastTableModel());
         dbManager.loadHOColumModel(getTrainingEffectTableModel());
-        dbManager.loadHOColumModel(getHallOfFameTableModel());
+        dbManager.loadHOColumModel(getHallOfFameTableModel(PlayerNameSettingsManager.instance().getFormat(Location.HALL_OF_FAME_PLAYER_LIST)));
 	}
 
-    public HallOfFameTableModel getHallOfFameTableModel() {
+    public HallOfFameTableModel getHallOfFameTableModel(NameFormat nameFormat) {
         if (this.hallOfFameTableModel == null){
-            this.hallOfFameTableModel = new HallOfFameTableModel(ColumnModelId.HALL_OF_FAME);
+            this.hallOfFameTableModel = new HallOfFameTableModel(ColumnModelId.HALL_OF_FAME, nameFormat);
         }
         return this.hallOfFameTableModel;
     }
@@ -243,7 +246,8 @@ public final class UserColumnController {
 	 */
 	public PlayerOverviewTableModel getPlayerOverviewModel(){
 		if(playerOverviewColumnModel == null){
-			playerOverviewColumnModel = new PlayerOverviewTableModel(ColumnModelId.PLAYEROVERVIEW);
+            final NameFormat nameFormat = PlayerNameSettingsManager.instance().getFormat(Location.SQUAD_NAME_COLUMN);
+			playerOverviewColumnModel = new PlayerOverviewTableModel(ColumnModelId.PLAYEROVERVIEW, nameFormat);
 		}
 		return playerOverviewColumnModel;
 	}
@@ -254,7 +258,8 @@ public final class UserColumnController {
 	 */
 	public PlayerOverviewTableModel getLineupModel(){
 		if(lineupColumnModel == null){
-			lineupColumnModel = new PlayerOverviewTableModel(ColumnModelId.LINEUP, "Aufstellung");
+            final NameFormat nameFormat = PlayerNameSettingsManager.instance().getFormat(Location.LINEUP_PLAYER_LIST);
+			lineupColumnModel = new PlayerOverviewTableModel(ColumnModelId.LINEUP, "Aufstellung", nameFormat);
 		}
 		return lineupColumnModel;
 	}
@@ -270,21 +275,21 @@ public final class UserColumnController {
 		v.add(getAnalysisModel(1));
 		v.add(getAnalysisModel(2));
 		v.add(getTeamAnalyzerRecapModel());
-		v.add(getYouthPlayerOverviewColumnModel());
+		v.add(getYouthPlayerOverviewColumnModel(PlayerNameSettingsManager.instance().getFormat(Location.YOUTH_PLAYER)));
 		v.add(getYouthPlayerDetailsColumnModel());
 		v.add(getTrainingProgressTableModel());
 		v.add(getTrainingPlayerSkillChangesTableModel());
         v.add(getTrainingSettingsPastTableModel());
         v.add(getTrainingSettingsFutureTableModel());
         v.add(getTrainingEffectTableModel());
-        v.add(getHallOfFameTableModel());
+        v.add(getHallOfFameTableModel(PlayerNameSettingsManager.instance().getFormat(Location.HALL_OF_FAME_PLAYER_LIST)));
 		// MatchesOverView1Model should not add in this vector, because columns should not be edited
 		return v;
 	}
 
-	public YouthPlayerOverviewTableModel getYouthPlayerOverviewColumnModel() {
+	public YouthPlayerOverviewTableModel getYouthPlayerOverviewColumnModel(NameFormat nameFormat) {
 		if(youthPlayerOverviewColumnModel == null){
-			youthPlayerOverviewColumnModel = new YouthPlayerOverviewTableModel(ColumnModelId.YOUTHPLAYEROVERVIEW);
+			youthPlayerOverviewColumnModel = new YouthPlayerOverviewTableModel(ColumnModelId.YOUTHPLAYEROVERVIEW, nameFormat);
 		}
 		return youthPlayerOverviewColumnModel;
 	}

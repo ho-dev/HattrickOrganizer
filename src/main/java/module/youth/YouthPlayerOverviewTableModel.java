@@ -11,6 +11,10 @@ import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
 import core.model.player.Player;
+import core.playername.NameFormat;
+import core.playername.PlayerNameFormatter;
+import core.playername.PlayerNameFormatterFactory;
+import core.playername.PlayerNameUtils;
 import core.util.HODateTime;
 import org.apache.commons.lang3.StringUtils;
 
@@ -25,9 +29,12 @@ import static module.youth.YouthSkillInfo.getSkillName;
 
 public class YouthPlayerOverviewTableModel extends HOTableModel {
 
+    private final NameFormat nameFormat;
+    private PlayerNameFormatter playerNameFormatter;
 
-    public YouthPlayerOverviewTableModel(UserColumnController.ColumnModelId id) {
+    public YouthPlayerOverviewTableModel(UserColumnController.ColumnModelId id, NameFormat nameFormat) {
         super(id, "YouthPlayerOverview");
+        this.nameFormat = nameFormat;
         setColumns(initColumns());
     }
 
@@ -41,7 +48,8 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
                 new YouthPlayerColumn("ls.player.name") {
                     @Override
                     public IHOTableCellEntry getTableEntry(YouthPlayer player) {
-                        return new ColorLabelEntry(player.getFullName(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        final var playerName = playerNameFormatter.format(PlayerNameUtils.createPlayerName(player), nameFormat);
+                        return new ColorLabelEntry(playerName, ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
 
                     @Override
@@ -242,6 +250,7 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
     protected void initData() {
         UserColumn[] displayedColumns = getDisplayedColumns();
         var youthplayers = HOVerwaltung.instance().getModel().getCurrentYouthPlayers();
+        playerNameFormatter = PlayerNameFormatterFactory.createFromYouthPlayers(youthplayers);
         m_clData = new Object[youthplayers.size()][getColumns().length];
         int playernum = 0;
         for (var player : youthplayers) {
