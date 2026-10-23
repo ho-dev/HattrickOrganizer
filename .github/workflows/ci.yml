@@ -34,3 +34,52 @@ jobs:
 
       - name: Run unit tests
         run: ./gradlew test
+  package-test:
+    name: Test Windows ZIP packaging
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Install install4j
+        run: |
+          wget https://download.ej-technologies.com/install4j/install4j_linux-x64_12_0_2.deb
+          sudo dpkg -i install4j_linux-x64_12_0_2.deb
+
+      - name: Build packages
+        run: ./gradlew release
+        env:
+          INSTALL4J_HOME: /opt/install4j12
+          INSTALL4J_LICENSE: ${{ secrets.INSTALL4J_LICENSE }}
+          POEDITOR_APIKEY: ${{ secrets.POEDITOR_APIKEY }}
+          RUN_NUMBER: ${{ github.run_number }}
+
+      - name: Inspect Windows ZIP
+        run: |
+          ZIP=$(find build/artefacts -name '*portable-win-DEV-JRE.zip' -print -quit)
+          test -n "$ZIP"
+
+          echo "Inspecting $ZIP"
+
+          unzip -Z -1 "$ZIP" > zip-entries.txt
+
+          echo "First 30 entries:"
+          sed -n '1,30p' zip-entries.txt
+
+          echo "Problematic entries:"
+          grep -nE '^\./.+' zip-entries.txt || true
+
+      - name: Upload ZIP
+        uses: actions/upload-artifact@v6
+        with:
+          name: windows-zip-test
+          path: build/artefacts/*portable-win-DEV-JRE.zip
+          if-no-files-found: error
