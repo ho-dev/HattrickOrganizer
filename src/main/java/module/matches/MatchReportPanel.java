@@ -5,6 +5,7 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.TranslationFacility;
 import core.model.match.MatchEvent;
+import core.model.match.MatchEventID;
 import core.model.match.MatchKurzInfo;
 import core.model.match.Matchdetails;
 
@@ -90,7 +91,7 @@ public class MatchReportPanel extends LazyImagePanel {
 				MatchEvent highlight = matchHighlights.get(i);
 				bEventHighlighted = true;
 
-				if (highlight.getiMatchEventID() == MatchEvent.MatchEventID.MATCH_FINISHED.getValue())
+				if (highlight.getiMatchEventID() == MatchEventID.MATCH_FINISHED.getValue())
 				{
 					bMatchFinished = true;
 				}
@@ -157,7 +158,7 @@ public class MatchReportPanel extends LazyImagePanel {
 						timeLabel.setBackground(ThemeManager.getColor(NEUTRAL_ACTION));
 					}
 
-					if (bMatchFinished && (highlight.getiMatchEventID() != MatchEvent.MatchEventID.MATCH_FINISHED.getValue())){timeLabel.setText("i");}
+					if (bMatchFinished && (highlight.getiMatchEventID() != MatchEventID.MATCH_FINISHED.getValue())){timeLabel.setText("i");}
 					else{timeLabel.setText(highlight.getMinute()+"'");}
 					timeLabel.setOpaque(true);
 					f = timeLabel.getFont();
@@ -202,7 +203,7 @@ public class MatchReportPanel extends LazyImagePanel {
 
 				}
 
-				else if (highlight.getMatchEventID() == MatchEvent.MatchEventID.PENALTY_CONTEST_AFTER_EXTENSION)
+				else if (highlight.getMatchEventID() == MatchEventID.PENALTY_CONTEST_AFTER_EXTENSION)
 				{
 					constraints.anchor = GridBagConstraints.CENTER;
 					constraints.fill = GridBagConstraints.HORIZONTAL;

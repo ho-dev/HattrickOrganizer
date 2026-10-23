@@ -340,10 +340,10 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
                     guestGoalsInParts[part]++;
                     totalGuest++;
                 }
-            } else if (eventId == MatchEvent.MatchEventID.HOME_TEAM_WALKOVER.getValue()) {
+            } else if (eventId == MatchEventID.HOME_TEAM_WALKOVER.getValue()) {
                 guestGoalsInParts[0] = 5;
                 totalGuest = 5;
-            } else if (eventId == MatchEvent.MatchEventID.AWAY_TEAM_WALKOVER.getValue()) {
+            } else if (eventId == MatchEventID.AWAY_TEAM_WALKOVER.getValue()) {
                 homeGoalsInParts[0] = 5;
                 totalHome = 5;
             }
@@ -1557,12 +1557,12 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
             if (getLastMinute() == 0) {
                 // Duration of walk over matches is 0 minutes
                 for (var e : downloadHighlightsIfMissing()) {
-                    if (e.getMatchEventID() == MatchEvent.MatchEventID.AWAY_TEAM_WALKOVER) {
+                    if (e.getMatchEventID() == MatchEventID.AWAY_TEAM_WALKOVER) {
                         if (this.m_iHeimId == teamId) {
                             isWalkoverMatchWin = true;
                         }
                         break;
-                    } else if (e.getMatchEventID() == MatchEvent.MatchEventID.HOME_TEAM_WALKOVER) {
+                    } else if (e.getMatchEventID() == MatchEventID.HOME_TEAM_WALKOVER) {
                         if (this.m_iGastId == teamId) {
                             isWalkoverMatchWin = true;
                         }
