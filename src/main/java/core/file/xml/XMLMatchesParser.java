@@ -88,13 +88,14 @@ public class XMLMatchesParser {
 						int tournamentId = Integer.parseInt(tmp.getFirstChild().getNodeValue());
 						match.setMatchContextId(tournamentId);
 
-						TournamentDetails oTournamentDetails = DBManager.instance().getTournamentDetailsFromDB(tournamentId);
-						if (oTournamentDetails == null)
-						{
-							oTournamentDetails = getTournamentDetails(tournamentId); // download info about tournament from HT
-							DBManager.instance().storeTournamentDetailsIntoDB(oTournamentDetails); // store tournament details into DB
-						}
-						match.setTournamentTypeID(oTournamentDetails.getTournamentType());
+                        // TODO this part should no longer be part of the xml parsing
+//						TournamentDetails oTournamentDetails = DBManager.instance().getTournamentDetailsFromDB(tournamentId);
+//						if (oTournamentDetails == null)
+//						{
+//							oTournamentDetails = getTournamentDetails(tournamentId); // download info about tournament from HT
+//							DBManager.instance().storeTournamentDetailsIntoDB(oTournamentDetails); // store tournament details into DB
+//						}
+//						match.setTournamentTypeID(oTournamentDetails.getTournamentType());
 					}
 
 
