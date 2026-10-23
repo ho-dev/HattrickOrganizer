@@ -84,7 +84,7 @@ public class Updater {
     public void saveReleaseChannelPreference(ReleaseChannel rc) {
         try {
             // we are testing from the IDE and media is not set by install4j
-            if (HO.getRevisionNumber() == 0) {
+            if (HO.getHoVersion().isLocalBuild()) {
                 mediaID = "HO_IDE_MEDIA_ID";
             }
             if (mediaID != null) {
