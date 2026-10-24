@@ -112,12 +112,12 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
     private int guestRatingIndirectSetPiecesAtt = -1;
     private int guestRatingIndirectSetPiecesDef = -1;
 
-    public ArrayList<Injury> getM_Injuries() {
+    public ArrayList<Injury> getInjuries() {
         return m_Injuries;
     }
 
-    public void setM_Injuries(ArrayList<Injury> m_Injuries) {
-        this.m_Injuries = m_Injuries;
+    public void setInjuries(ArrayList<Injury> injuries) {
+        this.m_Injuries = injuries;
     }
 
     public ArrayList<Injury> m_Injuries = new ArrayList<>();
@@ -850,14 +850,14 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
     /**
      * Setter for property m_iGuestHatStats
      */
-    public void setGuestHatStats() {
+    public void calculateGuestHatStats() {
         int m_iGuestHatStats = this.m_iGuestLeftDef + this.m_iGuestMidDef + this.m_iGuestRightDef;
         m_iGuestHatStats += this.m_iGuestMidfield * 3;
         m_iGuestHatStats += this.m_iGuestLeftAtt + this.m_iGuestMidAtt + this.m_iGuestRightAtt;
         this.m_iGuestHatStats = m_iGuestHatStats;
     }
 
-    public void setGuestHatStats(int v){
+    public void calculateGuestHatStats(int v){
         this.m_iGuestHatStats = v;
     }
 
@@ -1164,14 +1164,14 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
     /**
      * Setter for property m_iHomeHatStats
      */
-    public void setHomeHatStats() {
+    public void calculateHomeHatStats() {
         int m_iHomeHatStats = this.m_iHomeLeftDef + this.m_iHomeMidDef + this.m_iHomeRightDef;
         m_iHomeHatStats += this.m_iHomeMidfield * 3;
         m_iHomeHatStats += this.m_iHomeLeftAtt + this.m_iHomeMidAtt + this.m_iHomeRightAtt;
         this.m_iHomeHatStats = m_iHomeHatStats;
     }
 
-    public void setHomeHatStats(int v){
+    public void calculateHomeHatStats(int v){
         this.m_iHomeHatStats = v;
     }
 
@@ -1451,9 +1451,9 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
     }
 
 
-    public void setStatisics() {
-        this.setHomeHatStats();
-        this.setGuestHatStats();
+    public void calculateHatStats() {
+        this.calculateHomeHatStats();
+        this.calculateGuestHatStats();
     }
 
     public final int getHomeHatStats() {

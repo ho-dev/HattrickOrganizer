@@ -7,6 +7,7 @@ import core.model.cup.CupLevel;
 import core.model.cup.CupLevelIndex;
 import core.model.enums.MatchType;
 import core.model.enums.MatchTypeExtended;
+import core.model.tournament.TournamentDetails;
 import core.net.OnlineWorker;
 import core.util.HODateTime;
 import core.util.HOLogger;
@@ -583,4 +584,14 @@ public class MatchKurzInfo extends AbstractTable.Storable implements Comparable<
 		ret.add(this.getGuestTeamID());
 		return ret;
 	}
+
+    public void loadTournamentDetails() {
+        var tournamentId = getMatchContextId();
+        TournamentDetails oTournamentDetails = DBManager.instance().getTournamentDetailsFromDB(tournamentId);
+        if (oTournamentDetails == null) {
+            oTournamentDetails = OnlineWorker.downloadTournamentDetails(tournamentId); // download info about tournament from HT
+            DBManager.instance().storeTournamentDetailsIntoDB(oTournamentDetails); // store tournament details into DB
+        }
+        setTournamentTypeID(oTournamentDetails.getTournamentType());
+    }
 }
