@@ -121,7 +121,7 @@ class XMLMatchesParserTest {
         expectedMatches.add(createMatch(42268560, 932038, "Byrde Boldklub", 669787, "FC Ruja", "2026-10-09 16:07:00", 62, 3140761, 0, 0, 3, 5, FINISHED, true));
         expectedMatches.add(createMatch(42272804, 669787, "FC Ruja", 107690, "FC Pine Box", "2026-10-10 10:30:00", 62, 3140692, 0, 0, 3, 1, FINISHED, true));
         expectedMatches.add(createMatch(42272886, 669787, "FC Ruja", 1901514, "Chelsea Addict", "2026-10-10 10:35:00", 62, 1258033, 0, 0, 1, 3, FINISHED, true));
-        expectedMatches.add(createMatch(768137622, 669787, "FC Ruja", 675264, "Timeteams", "2026-10-10 15:20:00",1, 29752, 0, 0, 4, 1, FINISHED, true));
+        expectedMatches.add(createMatch(768137622, 669787, "FC Ruja", 675264, "Timeteams", "2026-10-10 15:20:00", 1, 29752, 0, 0, 4, 1, FINISHED, true));
         expectedMatches.add(createMatch(42294534, 669787, "FC Ruja", 1961030, "The owls are not what they seem", "2026-10-12 14:44:00", 62, 3140692, 0, 0, 3, 1, FINISHED, true));
         expectedMatches.add(createMatch(42294559, 669787, "FC Ruja", 581729, "Józsi csapata", "2026-10-12 14:49:00", 62, 1255256, 0, 0, 1, 0, FINISHED, true));
         expectedMatches.add(createMatch(42294562, 669787, "FC Ruja", 1901514, "Chelsea Addict", "2026-10-12 14:50:00", 62, 1258033, 0, 0, 0, 3, FINISHED, true));
@@ -161,7 +161,7 @@ class XMLMatchesParserTest {
         expectedMatches.add(createMatch(42301799, 2268079, "FC ShaChri", 669787, "FC Ruja", "2026-10-17 08:32:00", 50, 7146394, 0, 0, 0, 8, FINISHED, true));
         expectedMatches.add(createMatch(42319532, 601338, "Gusy's Champions", 669787, "FC Ruja", "2026-10-17 13:37:00", 50, 7172108, 0, 0, 2, 0, FINISHED, true));
         expectedMatches.add(createMatch(42319565, 484321, "Cabo Verde", 669787, "FC Ruja", "2026-10-17 13:49:00", 50, 7175115, 0, 0, 0, 4, FINISHED, true));
-        expectedMatches.add(createMatch(768137626, 674699, "Moons", 669787, "FC Ruja", "2026-10-17 15:20:00",1, 29752, 0, 0, 0, 3, FINISHED, true));
+        expectedMatches.add(createMatch(768137626, 674699, "Moons", 669787, "FC Ruja", "2026-10-17 15:20:00", 1, 29752, 0, 0, 0, 3, FINISHED, true));
         expectedMatches.add(createMatch(42319852, 484322, "Norge", 669787, "FC Ruja", "2026-10-17 16:03:00", 50, 7175115, 0, 0, 1, 5, FINISHED, true));
         expectedMatches.add(createMatch(42319857, 601338, "Gusy's Champions", 669787, "FC Ruja", "2026-10-17 16:07:00", 50, 7172108, 0, 0, 4, 1, FINISHED, true));
         expectedMatches.add(createMatch(42320286, 484323, "England", 669787, "FC Ruja", "2026-10-17 19:22:00", 50, 7175115, 0, 0, 2, 0, FINISHED, true));
@@ -185,7 +185,7 @@ class XMLMatchesParserTest {
         expectedMatches.add(createMatch(42301822, 669787, "FC Ruja", 2351824, "Real Sociedad de San Cristóbal", "2026-10-23 08:32:00", 50, 7146394, 0, 0, 2, 0, FINISHED, true));
         expectedMatches.add(createMatch(42301917, 3234951, "the roiters", 669787, "FC Ruja", "2026-10-24 08:32:00", 50, 7146394, 0, 0, -1, -1, UPCOMING, false));
         expectedMatches.add(createMatch(42342803, 669787, "FC Ruja", 1602482, "Erbil Sport Club", "2026-10-24 10:13:00", 62, 1258033, 0, 0, -1, -1, UPCOMING, false));
-        expectedMatches.add(createMatch(768137632, 669787, "FC Ruja", 482976, "-=TXT=-", "2026-10-24 15:20:00",1, 29752, 0, 0, -1, -1, UPCOMING, false));
+        expectedMatches.add(createMatch(768137632, 669787, "FC Ruja", 482976, "-=TXT=-", "2026-10-24 15:20:00", 1, 29752, 0, 0, -1, -1, UPCOMING, false));
         expectedMatches.add(createMatch(42301835, 669787, "FC Ruja", 3225770, "los tronchamuros", "2026-10-25 08:32:00", 50, 7146394, 0, 0, -1, -1, UPCOMING, false));
         expectedMatches.add(createMatch(42301838, 52030, "Berliner Elbkicker", 669787, "FC Ruja", "2026-10-28 08:32:00", 50, 7146394, 0, 0, -1, -1, UPCOMING, false));
         expectedMatches.add(createMatch(771989634, 669787, "FC Ruja", 2622805, "FCPakistan", "2026-10-28 19:20:00", 9, 0, 0, 0, -1, -1, UPCOMING, false));
