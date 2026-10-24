@@ -15,19 +15,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class XMLMatchArchiveParserTest {
 
-    final static String xmlFileMatchArchive;
-
-    static {
-        try {
-            xmlFileMatchArchive = ResourceUtils.getResourceFileAsString("chpp/matchesArchive/matchesArchive.xml");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-
     @Test
-    void parseMatchesFromString() {
+    void parseMatchesFromString() throws IOException {
+
+        var xmlFileMatchArchive = ResourceUtils.getResourceFileAsString("chpp/matchesArchive/matchesArchive.xml");
+
         // when
         final var matches = XMLMatchArchivParser.parseMatchesFromString(xmlFileMatchArchive);
         assertThat(matches).isNotNull();
