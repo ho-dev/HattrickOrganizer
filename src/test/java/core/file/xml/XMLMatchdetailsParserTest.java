@@ -15,22 +15,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class XMLMatchdetailsParserTest {
 
-    final static String xmlFileMatchDetails;
-    final static String xmlFileMatchLineupTeam1;
-    final static String xmlFileMatchLineupTeam2;
-
-    static {
-        try {
-            xmlFileMatchDetails = ResourceUtils.getResourceFileAsString("chpp/matchdetails/matchdetails.xml");
-            xmlFileMatchLineupTeam1 = ResourceUtils.getResourceFileAsString("chpp/matchlineup/team2189893.xml");
-            xmlFileMatchLineupTeam2 = ResourceUtils.getResourceFileAsString("chpp/matchlineup/team520472.xml");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
     @Test
-    void parseMatchdetailsFromString_withMatchLineupIsNull() {
+    void parseMatchdetailsFromString_withMatchLineupIsNull() throws IOException {
+
+        var xmlFileMatchDetails = ResourceUtils.getResourceFileAsString("chpp/matchdetails/matchdetails.xml");
 
         // when
         final var matchdetails = XMLMatchdetailsParser.parseMatchdetailsFromString(xmlFileMatchDetails, null);
@@ -95,8 +83,11 @@ class XMLMatchdetailsParserTest {
     }
 
     @Test
-    void parseMatchdetailsFromString_withMatchLineup() {
+    void parseMatchdetailsFromString_withMatchLineup() throws IOException {
         // given
+        var xmlFileMatchDetails = ResourceUtils.getResourceFileAsString("chpp/matchdetails/matchdetails.xml");
+        var xmlFileMatchLineupTeam1 = ResourceUtils.getResourceFileAsString("chpp/matchlineup/team2189893.xml");
+        var xmlFileMatchLineupTeam2 = ResourceUtils.getResourceFileAsString("chpp/matchlineup/team520472.xml");
 
         var matchLineup = XMLMatchLineupParser.parseMatchLineupFromString(xmlFileMatchLineupTeam1);
         matchLineup.setGuestTeam(XMLMatchLineupParser.parseMatchLineupFromString(xmlFileMatchLineupTeam2).getGuestTeam());
