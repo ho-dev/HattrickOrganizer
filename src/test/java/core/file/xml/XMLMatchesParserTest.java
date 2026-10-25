@@ -41,16 +41,16 @@ class XMLMatchesParserTest {
     private static ArrayList<MatchKurzInfo> createExpectedMatchesWithCup() {
         var expectedMatches = new ArrayList<MatchKurzInfo>();
         expectedMatches.add(createMatch(42217559, 601338, "Gusy's Champions", 333027, "Fortuna Fippes Freiburg", "2026-09-29 13:42:00", 50, 7139879, 0, 0, 3, 0, FINISHED, true));
-        expectedMatches.add(createMatch(771641277, 333586, "Offenbach am Main Kickers", 333027, "Fortuna Fippes Freiburg", "2026-09-29 18:00:00", 3, 4, 1, 1, 0, 1, FINISHED, true));
-        expectedMatches.add(createMatch(768429927, 333027, "Fortuna Fippes Freiburg", 128858, "FC Renaissance Ried", "2026-10-03 18:00:00", 1, 427, 0, 0, 1, 0, FINISHED, true));
-        expectedMatches.add(createMatch(771726780, 6903, "TSV Sace", 333027, "Fortuna Fippes Freiburg", "2026-10-06 18:00:00", 3, 4, 1, 1, 2, 3, FINISHED, true));
-        expectedMatches.add(createMatch(768429931, 1286887, "Hertha SCB", 333027, "Fortuna Fippes Freiburg", "2026-10-10 18:00:00", 1, 427, 0, 0, 1, 3, FINISHED, true));
+        expectedMatches.add(createMatch(771641277, 333586, "Offenbach am Main Kickers", 333027, "Fortuna Fippes Freiburg", "2026-09-29 18:00:00", 3, 0, 1, 1, 0, 1, FINISHED, true));
+        expectedMatches.add(createMatch(768429927, 333027, "Fortuna Fippes Freiburg", 128858, "FC Renaissance Ried", "2026-10-03 18:00:00", 1, 0, 0, 0, 1, 0, FINISHED, true));
+        expectedMatches.add(createMatch(771726780, 6903, "TSV Sace", 333027, "Fortuna Fippes Freiburg", "2026-10-06 18:00:00", 3, 0, 1, 1, 2, 3, FINISHED, true));
+        expectedMatches.add(createMatch(768429931, 1286887, "Hertha SCB", 333027, "Fortuna Fippes Freiburg", "2026-10-10 18:00:00", 1, 0, 0, 0, 1, 3, FINISHED, true));
         expectedMatches.add(createMatch(42298460, 601338, "Gusy's Champions", 333027, "Fortuna Fippes Freiburg", "2026-10-12 11:13:00", 50, 7139879, 0, 0, 4, 1, FINISHED, true));
         expectedMatches.add(createMatch(42301387, 601338, "Gusy's Champions", 333027, "Fortuna Fippes Freiburg", "2026-10-12 22:29:00", 50, 7139879, 0, 0, 3, 5, FINISHED, true));
-        expectedMatches.add(createMatch(771811846, 644914, "Eintracht Leipzig 05", 333027, "Fortuna Fippes Freiburg", "2026-10-13 18:00:00", 3, 4, 1, 1, 3, 4, FINISHED, true));
-        expectedMatches.add(createMatch(768429935, 333027, "Fortuna Fippes Freiburg", 1002098, "FC Superwixens", "2026-10-17 18:00:00", 1, 427, 0, 0, 1, 0, FINISHED, true));
-        expectedMatches.add(createMatch(771896643, 334857, "Lila-Weiß Wolkenkuckucksheim", 333027, "Fortuna Fippes Freiburg", "2026-10-20 18:00:00", 3, 4, 1, 1, 2, 3, FINISHED, true));
-        expectedMatches.add(createMatch(768429939, 820764, "FC Wieselhausen", 333027, "Fortuna Fippes Freiburg", "2026-10-24 18:00:00", 1, 427, 0, 0, 1, 3, FINISHED, true));
+        expectedMatches.add(createMatch(771811846, 644914, "Eintracht Leipzig 05", 333027, "Fortuna Fippes Freiburg", "2026-10-13 18:00:00", 3, 0, 1, 1, 3, 4, FINISHED, true));
+        expectedMatches.add(createMatch(768429935, 333027, "Fortuna Fippes Freiburg", 1002098, "FC Superwixens", "2026-10-17 18:00:00", 1, 0, 0, 0, 1, 0, FINISHED, true));
+        expectedMatches.add(createMatch(771896643, 334857, "Lila-Weiß Wolkenkuckucksheim", 333027, "Fortuna Fippes Freiburg", "2026-10-20 18:00:00", 3, 0, 1, 1, 2, 3, FINISHED, true));
+        expectedMatches.add(createMatch(768429939, 820764, "FC Wieselhausen", 333027, "Fortuna Fippes Freiburg", "2026-10-24 18:00:00", 1, 0, 0, 0, 1, 3, FINISHED, true));
         expectedMatches.add(createMatch(42360679, 333027, "Fortuna Fippes Freiburg", 367379, "DenkesFC", "2026-10-26 07:05:00", 50, 3116071, 0, 0, -1, -1, UPCOMING, false));
         expectedMatches.add(createMatch(772006738, 333027, "Fortuna Fippes Freiburg", 820764, "FC Wieselhausen", "2026-10-27 18:20:00", 5, 0, 0, 0, -1, -1, UPCOMING, false));
         return expectedMatches;
@@ -58,15 +58,15 @@ class XMLMatchesParserTest {
 
     private static ArrayList<MatchKurzInfo> createExpectedMatchesWithRubinCup() {
         var expectedMatches = new ArrayList<MatchKurzInfo>();
-        expectedMatches.add(createMatch(771641196, 824579, "Barmbeggers", 520805, "Hansa Wittstock", "2026-09-29 18:30:00", 3, 643, 2, 2, 1, 3, FINISHED, true));
-        expectedMatches.add(createMatch(768430542, 1136812, "Viktoria Appenweier", 520805, "Hansa Wittstock", "2026-10-03 18:00:00", 1, 438, 0, 0, 3, 1, FINISHED, true));
-        expectedMatches.add(createMatch(771726750, 979564, "FC Sensederbfuss", 520805, "Hansa Wittstock", "2026-10-06 18:30:00", 3, 643, 2, 2, 2, 5, FINISHED, true));
-        expectedMatches.add(createMatch(768430545, 520805, "Hansa Wittstock", 523612, "Latin Vikings", "2026-10-10 18:00:00", 1, 438, 0, 0, 2, 2, FINISHED, true));
-        expectedMatches.add(createMatch(771811831, 1196135, "Fanfaria Scofield FC.", 520805, "Hansa Wittstock", "2026-10-13 18:30:00", 3, 643, 2, 2, 4, 5, FINISHED, true));
-        expectedMatches.add(createMatch(768430552, 1137230, "FC Hajde Hamburg", 520805, "Hansa Wittstock", "2026-10-17 18:00:00", 1, 438, 0, 0, 0, 4, FINISHED, true));
-        expectedMatches.add(createMatch(771896635, 520805, "Hansa Wittstock", 130343, "Tantris Shanghai", "2026-10-20 18:30:00", 3, 643, 2, 2, 4, 1, FINISHED, true));
-        expectedMatches.add(createMatch(768430555, 520805, "Hansa Wittstock", 129528, "Gladiators Cologne FC 03", "2026-10-24 18:00:00", 1, 438, 0, 0, 6, 2, FINISHED, true));
-        expectedMatches.add(createMatch(771981300, 1196481, "Village Bombers United", 520805, "Hansa Wittstock", "2026-10-27 18:30:00", 3, 643, 2, 2, -1, -1, UPCOMING, false));
+        expectedMatches.add(createMatch(771641196, 824579, "Barmbeggers", 520805, "Hansa Wittstock", "2026-09-29 18:30:00", 3, 0, 2, 2, 1, 3, FINISHED, true));
+        expectedMatches.add(createMatch(768430542, 1136812, "Viktoria Appenweier", 520805, "Hansa Wittstock", "2026-10-03 18:00:00", 1, 0, 0, 0, 3, 1, FINISHED, true));
+        expectedMatches.add(createMatch(771726750, 979564, "FC Sensederbfuss", 520805, "Hansa Wittstock", "2026-10-06 18:30:00", 3, 0, 2, 2, 2, 5, FINISHED, true));
+        expectedMatches.add(createMatch(768430545, 520805, "Hansa Wittstock", 523612, "Latin Vikings", "2026-10-10 18:00:00", 1, 0, 0, 0, 2, 2, FINISHED, true));
+        expectedMatches.add(createMatch(771811831, 1196135, "Fanfaria Scofield FC.", 520805, "Hansa Wittstock", "2026-10-13 18:30:00", 3, 0, 2, 2, 4, 5, FINISHED, true));
+        expectedMatches.add(createMatch(768430552, 1137230, "FC Hajde Hamburg", 520805, "Hansa Wittstock", "2026-10-17 18:00:00", 1, 0, 0, 0, 0, 4, FINISHED, true));
+        expectedMatches.add(createMatch(771896635, 520805, "Hansa Wittstock", 130343, "Tantris Shanghai", "2026-10-20 18:30:00", 3, 0, 2, 2, 4, 1, FINISHED, true));
+        expectedMatches.add(createMatch(768430555, 520805, "Hansa Wittstock", 129528, "Gladiators Cologne FC 03", "2026-10-24 18:00:00", 1, 0, 0, 0, 6, 2, FINISHED, true));
+        expectedMatches.add(createMatch(771981300, 1196481, "Village Bombers United", 520805, "Hansa Wittstock", "2026-10-27 18:30:00", 3, 0, 2, 2, -1, -1, UPCOMING, false));
         return expectedMatches;
     }
 
