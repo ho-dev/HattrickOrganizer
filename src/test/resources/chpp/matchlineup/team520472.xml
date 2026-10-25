@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <HattrickData>
     <FileName>matchlineup.xml</FileName>
-    <Version>2.1</Version>
+    <Version>2.0</Version>
     <UserID>1757369</UserID>
-    <FetchedDate>2026-10-16 17:31:24</FetchedDate>
+    <FetchedDate>2026-10-25 22:53:31</FetchedDate>
     <MatchID>771832586</MatchID>
-    <SourceSystem>Hattrick</SourceSystem>
+    <IsYouth>False</IsYouth>
     <MatchType>9</MatchType>
     <MatchContextId>0</MatchContextId>
     <MatchDate>2026-10-14 12:25:00</MatchDate>
