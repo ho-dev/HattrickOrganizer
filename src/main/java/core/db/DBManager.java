@@ -7,6 +7,7 @@ import core.db.backup.BackupDialog;
 import core.db.user.User;
 import core.db.user.UserManager;
 import core.file.hrf.HRF;
+import core.gui.comp.tabbedPane.HOTabInfo;
 import core.gui.comp.table.HOTableModel;
 import core.gui.model.ArenaStatistikTableModel;
 import core.gui.model.PlayerMatchCBItem;
@@ -2498,5 +2499,10 @@ public class DBManager implements PersistenceManager {
             throw new RuntimeException(e);
         }
         return ret;
+    }
+
+    public List<HOTabInfo> loadHOTabInfo(String tabbedPaneID) {
+        var hallOfFamePlayersTable = ((HOTabInfoTable) getTable(HallOfFamePlayersTable.TABLENAME));
+        return hallOfFamePlayersTable.loadHOTabInfo(tabbedPaneID);
     }
 }

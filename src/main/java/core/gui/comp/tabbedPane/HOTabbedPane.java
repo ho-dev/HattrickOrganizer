@@ -1,59 +1,29 @@
 package core.gui.comp.tabbedPane;
 
-import core.module.IModule;
-import core.module.ModuleManager;
-import java.awt.Component;
-import javax.swing.JPanel;
-import javax.swing.UIManager;
+import core.db.DBManager;
+import core.db.HOTabInfoTable;
 
-public final class HOTabbedPane extends DraggableTabbedPane {
+import java.awt.*;
+import java.util.List;
 
-	public HOTabbedPane() {
-		super();
-	}
+public abstract class HOTabbedPane extends DraggableTabbedPane {
 
-	public void addTab(String title, Component component, boolean closeIcon) {
-		int xOffset = 0;
-		super.addTab(title, component);
-		if (closeIcon) {
-			// Nimbus skin is the only one to put the icon on the right, which
-			// we need to move away from title text
-			if (UIManager.getLookAndFeel().getName().equalsIgnoreCase("Nimbus")) {
-				xOffset = 6;
-			}
-			setIconAt(getComponentCount() - 1, new TabCloseIcon(this, xOffset));
-		}
-	}
+    private List<HOTabInfo> tabs;
 
-	public void showTab(int moduleId) {
-		IModule module = ModuleManager.instance().getModule(moduleId);
-		if (module.hasMainTab()) {
-			int index = indexOfTab(module.getDescription());
-			if (index == -1) {
-				addTab(module.getDescription(), module.createTabPanel(), true);
-				setSelectedIndex(getTabCount() - 1);
-			} else {
-				setSelectedIndex(index);
-			}
-		}
-	}
+    public HOTabbedPane(String tabbedPaneID) {
+        tabs = DBManager.instance().loadHOTabInfo(tabbedPaneID);
+        for ( var tab : tabs ) {
+            this.add(getTabComponent(tab.getTabID()));
+        }
+    }
 
-	public JPanel getModulePanel(int moduleId) {
-		IModule module = ModuleManager.instance().getModule(moduleId);
-		if (module.hasMainTab()) {
-			int index = indexOfTab(module.getDescription());
-			if (index == -1) {
-				addTab(module.getDescription(), module.createTabPanel(), true);
-				setSelectedIndex(getTabCount() - 1);
-				index = getTabCount() - 1;
-			}
-			return (JPanel) getComponent(index);
-		}
-		return null;
-	}
+    public void storeHOTabInfo(){
+        var tabs = getTabs()
+    }
 
-	public boolean isModuleTabVisible(int moduleId) {
-		IModule module = ModuleManager.instance().getModule(moduleId);
-		return indexOfTab(module.getDescription()) != -1;
-	}
+    protected abstract Component getTabComponent(String tabID);
+
+    private List<HOTabInfo> getTabs(){ return tabs;}
+
+
 }
