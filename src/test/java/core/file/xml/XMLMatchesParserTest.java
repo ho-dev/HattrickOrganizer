@@ -22,7 +22,7 @@ import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 class XMLMatchesParserTest {
 
-    static ArrayList<MatchKurzInfo> createExpectedMatches() {
+    private static ArrayList<MatchKurzInfo> createExpectedMatches() {
         var expectedMatches = new ArrayList<MatchKurzInfo>();
         expectedMatches.add(createMatch(768443696, 977497, "Hotzenwälder SC", 520472, "Juventus Brenk", "2026-09-26 18:00:00", 1, 6253, 0, 0, 1, 6, FINISHED, true));
         expectedMatches.add(createMatch(771662522, 520472, "Juventus Brenk", 2318194, "Ruti88", "2026-09-29 18:25:00", 9, 0, 0, 0, 3, 0, FINISHED, true));
@@ -214,7 +214,6 @@ class XMLMatchesParserTest {
     @ParameterizedTest
     @MethodSource
     void test_parseMatchesFromString(String xmlFilePath, ArrayList<MatchKurzInfo> expectedMatches) throws IOException {
-
         var xmlFileMatches = ResourceUtils.getResourceFileAsString(xmlFilePath);
 
         // when
