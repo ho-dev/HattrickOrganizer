@@ -48,7 +48,7 @@ public final class XMLMatchArchiveParser {
             for (int i = 0; i < nodeList.getLength(); i++) {
                 var match = new MatchKurzInfo();
                 var matchElement = (Element) nodeList.item(i);
-                match.setMatchSchedule(HODateTime.fromHT(XMLUtils.getStringValue(matchElement, "MatchDate")));
+                match.setMatchSchedule(XMLUtils.getHODateTimeValue(matchElement, "MatchDate"));
                 match.setMatchID(XMLUtils.getIntValue(matchElement, "MatchID"));
                 var matchType = XMLUtils.getIntValue(matchElement, "MatchType", MatchType.YOUTHLEAGUE.getId());
                 if (matchType == MatchType.YOUTHLEAGUE.getId() && !isYouth) {

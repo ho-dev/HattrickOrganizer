@@ -220,6 +220,24 @@ public class XMLUtils {
     }
 
     /**
+     * Gets a HODateTime value from the given ancestor, where the
+     * descendant has the specified name.
+     *
+     * @param ancestor
+     *            the ancestor element
+     * @param tagName
+     *            the tag name of the descendant to find.
+     * @return the value of the descendant. Null if this xml value cannot be converted to HODateTime
+     * @throws XMLParseException if no descendant
+     *         with that name could be found or the descendant found has no
+     *         value.
+     * @throws NullPointerException When the parent element is null
+     */
+    public static HODateTime getHODateTimeValue(Element ancestor, String tagName){
+        return HODateTime.fromHT(getStringValue(ancestor, tagName));
+    }
+
+    /**
      * Gets an integer value from the child element of a given parent element
      * @param element Parent element
      * @param tagName Child tag name

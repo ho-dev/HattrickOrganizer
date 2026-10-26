@@ -857,7 +857,7 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
         this.m_iGuestHatStats = m_iGuestHatStats;
     }
 
-    public void calculateGuestHatStats(int v){
+    public void setGuestHatStats(int v){
         this.m_iGuestHatStats = v;
     }
 
@@ -1171,7 +1171,7 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
         this.m_iHomeHatStats = m_iHomeHatStats;
     }
 
-    public void calculateHomeHatStats(int v){
+    public void setHomeHatStats(int v){
         this.m_iHomeHatStats = v;
     }
 

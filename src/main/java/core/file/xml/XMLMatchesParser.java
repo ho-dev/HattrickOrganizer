@@ -51,7 +51,7 @@ public class XMLMatchesParser {
                 for (int i = 0; i < list.getLength(); i++) {
                     var match = new MatchKurzInfo();
                     var matchElement = (Element) list.item(i);
-                    match.setMatchSchedule(HODateTime.fromHT(XMLUtils.getStringValue(matchElement, "MatchDate")));
+                    match.setMatchSchedule(XMLUtils.getHODateTimeValue(matchElement, "MatchDate"));
                     match.setMatchID(XMLUtils.getIntValue(matchElement, "MatchID"));
                     match.setMatchType(MatchType.getById(XMLUtils.getIntValue(matchElement, "MatchType")));
 
