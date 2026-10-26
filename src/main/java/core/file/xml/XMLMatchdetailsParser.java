@@ -298,6 +298,7 @@ public class XMLMatchdetailsParser {
             }
             md.setMatchID(XMLUtils.getIntValue(matchElement, "MatchID"));
             md.setSpielDatumFromString(XMLUtils.getStringValue(matchElement, "MatchDate"));
+            md.setMatchContextId(XMLUtils.getIntValue(matchElement, "MatchContextID"));
         } catch (Exception e) {
             HOLogger.instance().log(XMLMatchdetailsParser.class, e);
         }

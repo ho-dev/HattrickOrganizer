@@ -9,7 +9,6 @@ import core.model.cup.CupLevel;
 import core.model.cup.CupLevelIndex;
 import core.model.match.MatchKurzInfo;
 import core.model.enums.MatchType;
-import core.util.HODateTime;
 import core.util.HOLogger;
 
 import java.util.ArrayList;
