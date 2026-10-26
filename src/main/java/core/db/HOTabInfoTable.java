@@ -26,4 +26,16 @@ public class HOTabInfoTable extends AbstractTable {
         var rs = connectionManager.executePreparedQuery(createSelectStatement("WHERE tabbedPaneID=? ORDER BY tabIndex ASC"), tabbedPaneID);
         return load(HOTabInfo.class, rs);
     }
+
+    public void storeHOTabInfo(List<HOTabInfo> tabs) {
+        for (var tab : tabs) {
+            store(tab);
+        }
+    }
+
+    public void deleteHOTabInfo(List<HOTabInfo> tabs) {
+        for (var tab : tabs) {
+            delete(tab);
+        }
+    }
 }

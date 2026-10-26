@@ -2505,4 +2505,14 @@ public class DBManager implements PersistenceManager {
         var hallOfFamePlayersTable = ((HOTabInfoTable) getTable(HallOfFamePlayersTable.TABLENAME));
         return hallOfFamePlayersTable.loadHOTabInfo(tabbedPaneID);
     }
+
+    public void storeHOTabInfo(List<HOTabInfo> tabs) {
+        var hallOfFamePlayersTable = ((HOTabInfoTable) getTable(HallOfFamePlayersTable.TABLENAME));
+        hallOfFamePlayersTable.storeHOTabInfo(tabs);
+    }
+
+    public void deleteHOTabInfo(List<HOTabInfo> tabs) {
+        var hallOfFamePlayersTable = ((HOTabInfoTable) getTable(HallOfFamePlayersTable.TABLENAME));
+        hallOfFamePlayersTable.deleteHOTabInfo(tabs);
+    }
 }

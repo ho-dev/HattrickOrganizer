@@ -6,10 +6,10 @@ import java.awt.Component;
 import javax.swing.JPanel;
 import javax.swing.UIManager;
 
-public final class HOModuleTabbedPane extends DraggableTabbedPane {
+public final class HOModuleTabbedPane extends HOTabbedPane {
 
 	public HOModuleTabbedPane() {
-		super();
+		super("Modules");
 	}
 
 	public void addTab(String title, Component component, boolean closeIcon) {
@@ -56,4 +56,9 @@ public final class HOModuleTabbedPane extends DraggableTabbedPane {
 		IModule module = ModuleManager.instance().getModule(moduleId);
 		return indexOfTab(module.getDescription()) != -1;
 	}
+
+    @Override
+    protected Component getTabComponent(String tabID) {
+        return null;
+    }
 }
