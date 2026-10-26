@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="utf-8"?>
+<HattrickData>
+    <FileName>matches.xml</FileName>
+    <Version>2.8</Version>
+    <UserID>1757369</UserID>
+    <FetchedDate>2026-10-25 22:07:29</FetchedDate>
+    <IsYouth>False</IsYouth>
+    <Team>
+        <TeamID>333027</TeamID>
+        <TeamName>Fortuna Fippes Freiburg</TeamName>
+        <ShortTeamName>FFF</ShortTeamName>
+        <League>
+            <LeagueID>3</LeagueID>
+            <LeagueName>Deutschland</LeagueName>
+        </League>
+        <LeagueLevelUnit>
+            <LeagueLevelUnitID>427</LeagueLevelUnitID>
+            <LeagueLevelUnitName>Bundesliga</LeagueLevelUnitName>
+            <LeagueLevel>1</LeagueLevel>
+        </LeagueLevelUnit>
+        <MatchList>
+            <Match>
+                <MatchID>42217559</MatchID>
+                <HomeTeam>
+                    <HomeTeamID>601338</HomeTeamID>
+                    <HomeTeamName>Gusy's Champions</HomeTeamName>
+                    <HomeTeamNameShortName></HomeTeamNameShortName>
+                </HomeTeam>
+                <AwayTeam>
+                    <AwayTeamID>333027</AwayTeamID>
+                    <AwayTeamName>Fortuna Fippes Freiburg</AwayTeamName>
+                    <AwayTeamNameShortName></AwayTeamNameShortName>
+                </AwayTeam>
+                <MatchDate>2026-09-29 13:42:00</MatchDate>
+                <SourceSystem>HTOIntegrated</SourceSystem>
+                <MatchType>50</MatchType>
+                <MatchContextId>7139879</MatchContextId>
+                <CupLevel>0</CupLevel>
+                <CupLevelIndex>0</CupLevelIndex>
+                <HomeGoals>3</HomeGoals>
+                <AwayGoals>0</AwayGoals>
+                <Status>FINISHED</Status>
+            </Match>
+            <Match>
+                <MatchID>771641277</MatchID>
+                <HomeTeam>
+                    <HomeTeamID>333586</HomeTeamID>
+                    <HomeTeamName>Offenbach am Main Kickers</HomeTeamName>
+                    <HomeTeamNameShortName>Kickers</HomeTeamNameShortName>
+                </HomeTeam>
+                <AwayTeam>
+                    <AwayTeamID>333027</AwayTeamID>
+                    <AwayTeamName>Fortuna Fippes Freiburg</AwayTeamName>
+                    <AwayTeamNameShortName>FFF</AwayTeamNameShortName>
+                </AwayTeam>
+                <MatchDate>2026-09-29 18:00:00</MatchDate>
+                <SourceSystem>Hattrick</SourceSystem>
+                <MatchType>3</MatchType>
+                <MatchContextId>4</MatchContextId>
+                <CupLevel>1</CupLevel>
+                <CupLevelIndex>1</CupLevelIndex>
+                <HomeGoals>0</HomeGoals>
+                <AwayGoals>1</AwayGoals>
+                <Status>FINISHED</Status>
+            </Match>
+            <Match>
+                <MatchID>768429927</MatchID>
+                <HomeTeam>
+                    <HomeTeamID>333027</HomeTeamID>
+                    <HomeTeamName>Fortuna Fippes Freiburg</HomeTeamName>
+                    <HomeTeamNameShortName>FFF</HomeTeamNameShortName>
+                </HomeTeam>
+                <AwayTeam>
+                    <AwayTeamID>128858</AwayTeamID>
+                    <AwayTeamName>FC Renaissance Ried</AwayTeamName>
+                    <AwayTeamNameShortName>Renaissance</AwayTeamNameShortName>
+                </AwayTeam>
+                <MatchDate>2026-10-03 18:00:00</MatchDate>
+                <SourceSystem>Hattrick</SourceSystem>
+                <MatchType>1</MatchType>
+                <MatchContextId>427</MatchContextId>
+                <CupLevel>0</CupLevel>
+                <CupLevelIndex>0</CupLevelIndex>
+                <HomeGoals>1</HomeGoals>
+                <AwayGoals>0</AwayGoals>
+                <Status>FINISHED</Status>
+            </Match>
+            <Match>
+                <MatchID>771726780</MatchID>
+                <HomeTeam>
+                    <HomeTeamID>6903</HomeTeamID>
+                    <HomeTeamName>TSV Sace</HomeTeamName>
+                    <HomeTeamNameShortName>Sace</HomeTeamNameShortName>
+                </HomeTeam>
+                <AwayTeam>
+                    <AwayTeamID>333027</AwayTeamID>
+                    <AwayTeamName>Fortuna Fippes Freiburg</AwayTeamName>
+                    <AwayTeamNameShortName>FFF</AwayTeamNameShortName>
+                </AwayTeam>
+                <MatchDate>2026-10-06 18:00:00</MatchDate>
+                <SourceSystem>Hattrick</SourceSystem>
+                <MatchType>3</MatchType>
+                <MatchContextId>4</MatchContextId>
+                <CupLevel>1</CupLevel>
+                <CupLevelIndex>1</CupLevelIndex>
+                <HomeGoals>2</HomeGoals>
+                <AwayGoals>3</AwayGoals>
+                <Status>FINISHED</Status>
+            </Match>
+            <Match>
+                <MatchID>768429931</MatchID>
+                <HomeTeam>
+                    <HomeTeamID>1286887</HomeTeamID>
+                    <HomeTeamName>Hertha SCB</HomeTeamName>
+                    <HomeTeamNameShortName>Hertha</HomeTeamNameShortName>
+                </HomeTeam>
+                <AwayTeam>
+                    <AwayTeamID>333027</AwayTeamID>
+                    <AwayTeamName>Fortuna Fippes Freiburg</AwayTeamName>
+                    <AwayTeamNameShortName>FFF</AwayTeamNameShortName>
+                </AwayTeam>
+                <MatchDate>2026-10-10 18:00:00</MatchDate>
+                <SourceSystem>Hattrick</SourceSystem>
+                <MatchType>1</MatchType>
+                <MatchContextId>427</MatchContextId>
+                <CupLevel>0</CupLevel>
+                <CupLevelIndex>0</CupLevelIndex>
+                <HomeGoals>1</HomeGoals>
+                <AwayGoals>3</AwayGoals>
+                <Status>FINISHED</Status>
+            </Match>
+            <Match>
+                <MatchID>42298460</MatchID>
+                <HomeTeam>
+                    <HomeTeamID>601338</HomeTeamID>
+                    <HomeTeamName>Gusy's Champions</HomeTeamName>
+                    <HomeTeamNameShortName></HomeTeamNameShortName>
+                </HomeTeam>
+                <AwayTeam>
+                    <AwayTeamID>333027</AwayTeamID>
+                    <AwayTeamName>Fortuna Fippes Freiburg</AwayTeamName>
+                    <AwayTeamNameShortName></AwayTeamNameShortName>
+                </AwayTeam>
+                <MatchDate>2026-10-12 11:13:00</MatchDate>
+                <SourceSystem>HTOIntegrated</SourceSystem>
+                <MatchType>50</MatchType>
+                <MatchContextId>7139879</MatchContextId>
+                <CupLevel>0</CupLevel>
+                <CupLevelIndex>0</CupLevelIndex>
+                <HomeGoals>4</HomeGoals>
+                <AwayGoals>1</AwayGoals>
+                <Status>FINISHED</Status>
+            </Match>
+            <Match>
+                <MatchID>42301387</MatchID>
+                <HomeTeam>
+                    <HomeTeamID>601338</HomeTeamID>
+                    <HomeTeamName>Gusy's Champions</HomeTeamName>
+                    <HomeTeamNameShortName></HomeTeamNameShortName>
+                </HomeTeam>
+                <AwayTeam>
+                    <AwayTeamID>333027</AwayTeamID>
+                    <AwayTeamName>Fortuna Fippes Freiburg</AwayTeamName>
+                    <AwayTeamNameShortName></AwayTeamNameShortName>
+                </AwayTeam>
+                <MatchDate>2026-10-12 22:29:00</MatchDate>
+                <SourceSystem>HTOIntegrated</SourceSystem>
+                <MatchType>50</MatchType>
+                <MatchContextId>7139879</MatchContextId>
+                <CupLevel>0</CupLevel>
+                <CupLevelIndex>0</CupLevelIndex>
+                <HomeGoals>3</HomeGoals>
+                <AwayGoals>5</AwayGoals>
+                <Status>FINISHED</Status>
+            </Match>
+            <Match>
+                <MatchID>771811846</MatchID>
+                <HomeTeam>
+                    <HomeTeamID>644914</HomeTeamID>
+                    <HomeTeamName>Eintracht Leipzig 05</HomeTeamName>
+                    <HomeTeamNameShortName>Eintracht</HomeTeamNameShortName>
+                </HomeTeam>
+                <AwayTeam>
+                    <AwayTeamID>333027</AwayTeamID>
+                    <AwayTeamName>Fortuna Fippes Freiburg</AwayTeamName>
+                    <AwayTeamNameShortName>FFF</AwayTeamNameShortName>
+                </AwayTeam>
+                <MatchDate>2026-10-13 18:00:00</MatchDate>
+                <SourceSystem>Hattrick</SourceSystem>
+                <MatchType>3</MatchType>
+                <MatchContextId>4</MatchContextId>
+                <CupLevel>1</CupLevel>
+                <CupLevelIndex>1</CupLevelIndex>
+                <HomeGoals>3</HomeGoals>
+                <AwayGoals>4</AwayGoals>
+                <Status>FINISHED</Status>
+            </Match>
+            <Match>
+                <MatchID>768429935</MatchID>
+                <HomeTeam>
+                    <HomeTeamID>333027</HomeTeamID>
+                    <HomeTeamName>Fortuna Fippes Freiburg</HomeTeamName>
+                    <HomeTeamNameShortName>FFF</HomeTeamNameShortName>
+                </HomeTeam>
+                <AwayTeam>
+                    <AwayTeamID>1002098</AwayTeamID>
+                    <AwayTeamName>FC Superwixens</AwayTeamName>
+                    <AwayTeamNameShortName>Superwixens</AwayTeamNameShortName>
+                </AwayTeam>
+                <MatchDate>2026-10-17 18:00:00</MatchDate>
+                <SourceSystem>Hattrick</SourceSystem>
+                <MatchType>1</MatchType>
+                <MatchContextId>427</MatchContextId>
+                <CupLevel>0</CupLevel>
+                <CupLevelIndex>0</CupLevelIndex>
+                <HomeGoals>1</HomeGoals>
+                <AwayGoals>0</AwayGoals>
+                <Status>FINISHED</Status>
+            </Match>
+            <Match>
+                <MatchID>771896643</MatchID>
+                <HomeTeam>
+                    <HomeTeamID>334857</HomeTeamID>
+                    <HomeTeamName>Lila-Weiß Wolkenkuckucksheim</HomeTeamName>
+                    <HomeTeamNameShortName>L-W Wolken</HomeTeamNameShortName>
+                </HomeTeam>
+                <AwayTeam>
+                    <AwayTeamID>333027</AwayTeamID>
+                    <AwayTeamName>Fortuna Fippes Freiburg</AwayTeamName>
+                    <AwayTeamNameShortName>FFF</AwayTeamNameShortName>
+                </AwayTeam>
+                <MatchDate>2026-10-20 18:00:00</MatchDate>
+                <SourceSystem>Hattrick</SourceSystem>
+                <MatchType>3</MatchType>
+                <MatchContextId>4</MatchContextId>
+                <CupLevel>1</CupLevel>
+                <CupLevelIndex>1</CupLevelIndex>
+                <HomeGoals>2</HomeGoals>
+                <AwayGoals>3</AwayGoals>
+                <Status>FINISHED</Status>
+            </Match>
+            <Match>
+                <MatchID>768429939</MatchID>
+                <HomeTeam>
+                    <HomeTeamID>820764</HomeTeamID>
+                    <HomeTeamName>FC Wieselhausen</HomeTeamName>
+                    <HomeTeamNameShortName>Wieselhausen</HomeTeamNameShortName>
+                </HomeTeam>
+                <AwayTeam>
+                    <AwayTeamID>333027</AwayTeamID>
+                    <AwayTeamName>Fortuna Fippes Freiburg</AwayTeamName>
+                    <AwayTeamNameShortName>FFF</AwayTeamNameShortName>
+                </AwayTeam>
+                <MatchDate>2026-10-24 18:00:00</MatchDate>
+                <SourceSystem>Hattrick</SourceSystem>
+                <MatchType>1</MatchType>
+                <MatchContextId>427</MatchContextId>
+                <CupLevel>0</CupLevel>
+                <CupLevelIndex>0</CupLevelIndex>
+                <HomeGoals>1</HomeGoals>
+                <AwayGoals>3</AwayGoals>
+                <Status>FINISHED</Status>
+            </Match>
+            <Match>
+                <MatchID>42360679</MatchID>
+                <HomeTeam>
+                    <HomeTeamID>333027</HomeTeamID>
+                    <HomeTeamName>Fortuna Fippes Freiburg</HomeTeamName>
+                    <HomeTeamNameShortName></HomeTeamNameShortName>
+                </HomeTeam>
+                <AwayTeam>
+                    <AwayTeamID>367379</AwayTeamID>
+                    <AwayTeamName>DenkesFC</AwayTeamName>
+                    <AwayTeamNameShortName></AwayTeamNameShortName>
+                </AwayTeam>
+                <MatchDate>2026-10-26 07:05:00</MatchDate>
+                <SourceSystem>HTOIntegrated</SourceSystem>
+                <MatchType>50</MatchType>
+                <MatchContextId>3116071</MatchContextId>
+                <CupLevel>0</CupLevel>
+                <CupLevelIndex>0</CupLevelIndex>
+                <Status>UPCOMING</Status>
+            </Match>
+            <Match>
+                <MatchID>772006738</MatchID>
+                <HomeTeam>
+                    <HomeTeamID>333027</HomeTeamID>
+                    <HomeTeamName>Fortuna Fippes Freiburg</HomeTeamName>
+                    <HomeTeamNameShortName>FFF</HomeTeamNameShortName>
+                </HomeTeam>
+                <AwayTeam>
+                    <AwayTeamID>820764</AwayTeamID>
+                    <AwayTeamName>FC Wieselhausen</AwayTeamName>
+                    <AwayTeamNameShortName>Wieselhausen</AwayTeamNameShortName>
+                </AwayTeam>
+                <MatchDate>2026-10-27 18:20:00</MatchDate>
+                <SourceSystem>Hattrick</SourceSystem>
+                <MatchType>5</MatchType>
+                <MatchContextId>0</MatchContextId>
+                <CupLevel>0</CupLevel>
+                <CupLevelIndex>0</CupLevelIndex>
+                <Status>UPCOMING</Status>
+            </Match>
+        </MatchList>
+    </Team>
+</HattrickData>
