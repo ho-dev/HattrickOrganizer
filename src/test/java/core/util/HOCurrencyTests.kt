@@ -1,47 +1,53 @@
 package core.util
 
-import core.model.HOModel
+import core.db.PersistenceManager
 import core.model.HOVerwaltung
-import core.model.UserParameter
-import core.model.XtraData
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.AfterEach
-import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.mockito.Mockito.*
 import java.math.BigDecimal
-import java.util.Locale
+import java.util.*
 
 class HOCurrencyTests {
-    var currentLocale: Locale = Locale.getDefault()
+    private lateinit var originalLocale: Locale
 
     @BeforeEach
-    fun setup() {
+    fun setGermanLocale() {
+        originalLocale = Locale.getDefault()
         Locale.setDefault(Locale.GERMANY)
+    }
+
+    @AfterEach
+    fun restoreLocale() {
+        Locale.setDefault(originalLocale)
     }
 
     @Test
     fun test() {
-        // Prepare model
-        val hov = HOVerwaltung.instance()
-        hov.model = HOModel(1)
-        hov.model.xtraDaten = XtraData()
-        hov.model.xtraDaten.countryId = 3
-        UserParameter.instance().currencyRate = 10f
+        // given
+        val persistenceManager = mock(PersistenceManager::class.java)
 
-        val amountOfMoney = AmountOfMoney(10)
-        AmountOfMoney.setExchangeRate(BigDecimal.valueOf(10))
-        Assertions.assertEquals(BigDecimal.valueOf(1), amountOfMoney.toLocale())
+        val hoVerwaltung = mock(HOVerwaltung::class.java)
+        `when`(hoVerwaltung.persistenceManager).thenReturn(persistenceManager)
 
-        val e = AmountOfMoney(50)
-        Assertions.assertEquals(BigDecimal.valueOf(5), e.toLocale())
+        mockStatic(HOVerwaltung::class.java).use { mockedStatic ->
+            mockedStatic.`when`<HOVerwaltung> {
+                HOVerwaltung.instance()
+            }.thenReturn(hoVerwaltung)
 
-        val d = AmountOfMoney(amountOfMoney.swedishKrona + BigDecimal.valueOf(90))
-        val nbsp = "\u00A0"
-        Assertions.assertEquals("10" + nbsp + "€", d.toLocaleString())
-    }
+            AmountOfMoney.setExchangeRate(BigDecimal.TEN)
 
-    @AfterEach
-    fun tearDown() {
-        Locale.setDefault(currentLocale)
+            val amountOfMoney = AmountOfMoney(10)
+            assertThat(amountOfMoney.toLocale()).isEqualTo(BigDecimal.ONE)
+
+            val money = AmountOfMoney(50)
+            assertThat(money.toLocale()).isEqualTo(BigDecimal.valueOf(5))
+
+            val d = AmountOfMoney(amountOfMoney.swedishKrona + BigDecimal.valueOf(90))
+            val nbsp = "\u00A0"
+            assertThat(d.toLocaleString()).isEqualTo("10" + nbsp + "€")
+        }
     }
 }

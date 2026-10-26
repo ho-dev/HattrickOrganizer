@@ -313,7 +313,7 @@ class MatchEventsAnalyserTest {
     }
 
     private static Optional<MatchHighlight> findOneMatchHighlight(MatchHighlights matchHighlights) {
-        return StreamUtils.findOne(extractHighlightedEvents(matchHighlights).stream());
+        return StreamUtils.findOne(extractHighlightedEvents(matchHighlights));
     }
 
     private static List<MatchHighlight> extractHighlightedEvents(MatchHighlights matchHighlights) {

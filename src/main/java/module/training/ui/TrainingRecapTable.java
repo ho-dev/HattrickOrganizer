@@ -5,6 +5,7 @@ import core.gui.comp.table.PlayersTable;
 import core.gui.model.UserColumnController;
 import module.training.ui.model.TrainingModel;
 import javax.swing.*;
+import javax.swing.table.TableColumnModel;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -37,6 +38,14 @@ public class TrainingRecapTable extends JScrollPane {
         this.setViewportView(this.trainingPredictionTable.getContainerComponent());
         this.trainingPredictionTable.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
         this.trainingPredictionTable.getTableHeader().setReorderingAllowed(false);
+
+        TableColumnModel columnModel = trainingPredictionTable.getColumnModel();
+        columnModel.setColumnSelectionAllowed(true);
+        ListSelectionModel columnSelectionModel = columnModel.getSelectionModel();
+        columnSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_INTERVAL_SELECTION);
+        ListSelectionModel rowSelectionModel = trainingPredictionTable.getSelectionModel();
+        rowSelectionModel.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
         trainingPrioPopUp = new FutureTrainingPrioPopup(panel, model);
         this.trainingPredictionTable.addMouseListener(new MouseAdapter() {
             @Override

@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="utf-8"?>
+<HattrickData>
+    <FileName>matches.xml</FileName>
+    <Version>2.8</Version>
+    <UserID>1757369</UserID>
+    <FetchedDate>2026-10-23 10:07:43</FetchedDate>
+    <IsYouth>False</IsYouth>
+    <Team>
+        <TeamID>520472</TeamID>
+        <TeamName>Juventus Brenk</TeamName>
+        <ShortTeamName>Juventus</ShortTeamName>
+        <League>
+            <LeagueID>3</LeagueID>
+            <LeagueName>Deutschland</LeagueName>
+        </League>
+        <LeagueLevelUnit>
+            <LeagueLevelUnitID>6253</LeagueLevelUnitID>
+            <LeagueLevelUnitName>V.162</LeagueLevelUnitName>
+            <LeagueLevel>5</LeagueLevel>
+        </LeagueLevelUnit>
+        <MatchList>
+            <Match>
+                <MatchID>768443696</MatchID>
+                <HomeTeam>
+                    <HomeTeamID>977497</HomeTeamID>
+                    <HomeTeamName>Hotzenwälder SC</HomeTeamName>
+                    <HomeTeamNameShortName>Hotzenwälder</HomeTeamNameShortName>
+                </HomeTeam>
+                <AwayTeam>
+                    <AwayTeamID>520472</AwayTeamID>
+                    <AwayTeamName>Juventus Brenk</AwayTeamName>
+                    <AwayTeamNameShortName>Juventus</AwayTeamNameShortName>
+                </AwayTeam>
+                <MatchDate>2026-09-26 18:00:00</MatchDate>
+                <SourceSystem>Hattrick</SourceSystem>
+                <MatchType>1</MatchType>
+                <MatchContextId>6253</MatchContextId>
+                <CupLevel>0</CupLevel>
+                <CupLevelIndex>0</CupLevelIndex>
+                <HomeGoals>1</HomeGoals>
+                <AwayGoals>6</AwayGoals>
+                <Status>FINISHED</Status>
+            </Match>
+            <Match>
+                <MatchID>771662522</MatchID>
+                <HomeTeam>
+                    <HomeTeamID>520472</HomeTeamID>
+                    <HomeTeamName>Juventus Brenk</HomeTeamName>
+                    <HomeTeamNameShortName>Juventus</HomeTeamNameShortName>
+                </HomeTeam>
+                <AwayTeam>
+                    <AwayTeamID>2318194</AwayTeamID>
+                    <AwayTeamName>Ruti88</AwayTeamName>
+                    <AwayTeamNameShortName>Ruti88</AwayTeamNameShortName>
+                </AwayTeam>
+                <MatchDate>2026-09-29 18:25:00</MatchDate>
+                <SourceSystem>Hattrick</SourceSystem>
+                <MatchType>9</MatchType>
+                <MatchContextId>0</MatchContextId>
+                <CupLevel>0</CupLevel>
+                <CupLevelIndex>0</CupLevelIndex>
+                <HomeGoals>3</HomeGoals>
+                <AwayGoals>0</AwayGoals>
+                <Status>FINISHED</Status>
+            </Match>
+            <Match>
+                <MatchID>768443702</MatchID>
+                <HomeTeam>
+                    <HomeTeamID>1247727</HomeTeamID>
+                    <HomeTeamName>FC Zwietracht Cuxhaven</HomeTeamName>
+                    <HomeTeamNameShortName>CUX</HomeTeamNameShortName>
+                </HomeTeam>
+                <AwayTeam>
+                    <AwayTeamID>520472</AwayTeamID>
+                    <AwayTeamName>Juventus Brenk</AwayTeamName>
+                    <AwayTeamNameShortName>Juventus</AwayTeamNameShortName>
+                </AwayTeam>
+                <MatchDate>2026-10-03 18:00:00</MatchDate>
+                <SourceSystem>Hattrick</SourceSystem>
+                <MatchType>1</MatchType>
+                <MatchContextId>6253</MatchContextId>
+                <CupLevel>0</CupLevel>
+                <CupLevelIndex>0</CupLevelIndex>
+                <HomeGoals>1</HomeGoals>
+                <AwayGoals>5</AwayGoals>
+                <Status>FINISHED</Status>
+            </Match>
+            <Match>
+                <MatchID>771747669</MatchID>
+                <HomeTeam>
+                    <HomeTeamID>2825742</HomeTeamID>
+                    <HomeTeamName>Macarrisme Català</HomeTeamName>
+                    <HomeTeamNameShortName>Macarrisme</HomeTeamNameShortName>
+                </HomeTeam>
+                <AwayTeam>
+                    <AwayTeamID>520472</AwayTeamID>
+                    <AwayTeamName>Juventus Brenk</AwayTeamName>
+                    <AwayTeamNameShortName>Juventus</AwayTeamNameShortName>
+                </AwayTeam>
+                <MatchDate>2026-10-07 15:15:00</MatchDate>
+                <SourceSystem>Hattrick</SourceSystem>
+                <MatchType>9</MatchType>
+                <MatchContextId>0</MatchContextId>
+                <CupLevel>0</CupLevel>
+                <CupLevelIndex>0</CupLevelIndex>
+                <HomeGoals>1</HomeGoals>
+                <AwayGoals>0</AwayGoals>
+                <Status>FINISHED</Status>
+            </Match>
+            <Match>
+                <MatchID>768443705</MatchID>
+                <HomeTeam>
+                    <HomeTeamID>520472</HomeTeamID>
+                    <HomeTeamName>Juventus Brenk</HomeTeamName>
+                    <HomeTeamNameShortName>Juventus</HomeTeamNameShortName>
+                </HomeTeam>
+                <AwayTeam>
+                    <AwayTeamID>130796</AwayTeamID>
+                    <AwayTeamName>Galatasaray-SC</AwayTeamName>
+                    <AwayTeamNameShortName>GS</AwayTeamNameShortName>
+                </AwayTeam>
+                <MatchDate>2026-10-10 18:00:00</MatchDate>
+                <SourceSystem>Hattrick</SourceSystem>
+                <MatchType>1</MatchType>
+                <MatchContextId>6253</MatchContextId>
+                <CupLevel>0</CupLevel>
+                <CupLevelIndex>0</CupLevelIndex>
+                <HomeGoals>3</HomeGoals>
+                <AwayGoals>0</AwayGoals>
+                <Status>FINISHED</Status>
+            </Match>
+            <Match>
+                <MatchID>771832586</MatchID>
+                <HomeTeam>
+                    <HomeTeamID>2189893</HomeTeamID>
+                    <HomeTeamName>Balón a Tierra</HomeTeamName>
+                    <HomeTeamNameShortName>BaT</HomeTeamNameShortName>
+                </HomeTeam>
+                <AwayTeam>
+                    <AwayTeamID>520472</AwayTeamID>
+                    <AwayTeamName>Juventus Brenk</AwayTeamName>
+                    <AwayTeamNameShortName>Juventus</AwayTeamNameShortName>
+                </AwayTeam>
+                <MatchDate>2026-10-14 12:25:00</MatchDate>
+                <SourceSystem>Hattrick</SourceSystem>
+                <MatchType>9</MatchType>
+                <MatchContextId>0</MatchContextId>
+                <CupLevel>0</CupLevel>
+                <CupLevelIndex>0</CupLevelIndex>
+                <HomeGoals>0</HomeGoals>
+                <AwayGoals>2</AwayGoals>
+                <Status>FINISHED</Status>
+            </Match>
+            <Match>
+                <MatchID>768443710</MatchID>
+                <HomeTeam>
+                    <HomeTeamID>824658</HomeTeamID>
+                    <HomeTeamName>SK Lation 16</HomeTeamName>
+                    <HomeTeamNameShortName>SKL</HomeTeamNameShortName>
+                </HomeTeam>
+                <AwayTeam>
+                    <AwayTeamID>520472</AwayTeamID>
+                    <AwayTeamName>Juventus Brenk</AwayTeamName>
+                    <AwayTeamNameShortName>Juventus</AwayTeamNameShortName>
+                </AwayTeam>
+                <MatchDate>2026-10-17 18:00:00</MatchDate>
+                <SourceSystem>Hattrick</SourceSystem>
+                <MatchType>1</MatchType>
+                <MatchContextId>6253</MatchContextId>
+                <CupLevel>0</CupLevel>
+                <CupLevelIndex>0</CupLevelIndex>
+                <HomeGoals>1</HomeGoals>
+                <AwayGoals>1</AwayGoals>
+                <Status>FINISHED</Status>
+            </Match>
+            <Match>
+                <MatchID>771917205</MatchID>
+                <HomeTeam>
+                    <HomeTeamID>2832566</HomeTeamID>
+                    <HomeTeamName>De Soepsterren</HomeTeamName>
+                    <HomeTeamNameShortName>Soepsterren</HomeTeamNameShortName>
+                </HomeTeam>
+                <AwayTeam>
+                    <AwayTeamID>520472</AwayTeamID>
+                    <AwayTeamName>Juventus Brenk</AwayTeamName>
+                    <AwayTeamNameShortName>Juventus</AwayTeamNameShortName>
+                </AwayTeam>
+                <MatchDate>2026-10-21 11:15:00</MatchDate>
+                <SourceSystem>Hattrick</SourceSystem>
+                <MatchType>9</MatchType>
+                <MatchContextId>0</MatchContextId>
+                <CupLevel>0</CupLevel>
+                <CupLevelIndex>0</CupLevelIndex>
+                <HomeGoals>0</HomeGoals>
+                <AwayGoals>5</AwayGoals>
+                <Status>FINISHED</Status>
+            </Match>
+            <Match>
+                <MatchID>768443715</MatchID>
+                <HomeTeam>
+                    <HomeTeamID>520472</HomeTeamID>
+                    <HomeTeamName>Juventus Brenk</HomeTeamName>
+                    <HomeTeamNameShortName>Juventus</HomeTeamNameShortName>
+                </HomeTeam>
+                <AwayTeam>
+                    <AwayTeamID>339078</AwayTeamID>
+                    <AwayTeamName>Haake-Becker Jungs</AwayTeamName>
+                    <AwayTeamNameShortName>Haake-Becker</AwayTeamNameShortName>
+                </AwayTeam>
+                <MatchDate>2026-10-24 18:00:00</MatchDate>
+                <SourceSystem>Hattrick</SourceSystem>
+                <MatchType>1</MatchType>
+                <MatchContextId>6253</MatchContextId>
+                <CupLevel>0</CupLevel>
+                <CupLevelIndex>0</CupLevelIndex>
+                <OrdersGiven>True</OrdersGiven>
+                <Status>UPCOMING</Status>
+            </Match>
+            <Match>
+                <MatchID>772000965</MatchID>
+                <HomeTeam>
+                    <HomeTeamID>520472</HomeTeamID>
+                    <HomeTeamName>Juventus Brenk</HomeTeamName>
+                    <HomeTeamNameShortName>Juventus</HomeTeamNameShortName>
+                </HomeTeam>
+                <AwayTeam>
+                    <AwayTeamID>3445201</AwayTeamID>
+                    <AwayTeamName>Grebenčeva team</AwayTeamName>
+                    <AwayTeamNameShortName>Grebenčeva</AwayTeamNameShortName>
+                </AwayTeam>
+                <MatchDate>2026-10-27 18:25:00</MatchDate>
+                <SourceSystem>Hattrick</SourceSystem>
+                <MatchType>9</MatchType>
+                <MatchContextId>0</MatchContextId>
+                <CupLevel>0</CupLevel>
+                <CupLevelIndex>0</CupLevelIndex>
+                <OrdersGiven>False</OrdersGiven>
+                <Status>UPCOMING</Status>
+            </Match>
+        </MatchList>
+    </Team>
+</HattrickData>

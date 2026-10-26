@@ -1451,7 +1451,7 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
     }
 
 
-    public void setStatisics() {
+    public void setHatStats() {
         this.setHomeHatStats();
         this.setGuestHatStats();
     }

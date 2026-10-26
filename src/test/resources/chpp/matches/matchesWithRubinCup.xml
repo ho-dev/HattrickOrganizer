@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="utf-8"?>
+<HattrickData>
+    <FileName>matches.xml</FileName>
+    <Version>2.8</Version>
+    <UserID>1757369</UserID>
+    <FetchedDate>2026-10-25 22:04:58</FetchedDate>
+    <IsYouth>False</IsYouth>
+    <Team>
+        <TeamID>520805</TeamID>
+        <TeamName>Hansa Wittstock</TeamName>
+        <ShortTeamName>Wittstock</ShortTeamName>
+        <League>
+            <LeagueID>3</LeagueID>
+            <LeagueName>Deutschland</LeagueName>
+        </League>
+        <LeagueLevelUnit>
+            <LeagueLevelUnitID>438</LeagueLevelUnitID>
+            <LeagueLevelUnitName>III.7</LeagueLevelUnitName>
+            <LeagueLevel>3</LeagueLevel>
+        </LeagueLevelUnit>
+        <MatchList>
+            <Match>
+                <MatchID>771641196</MatchID>
+                <HomeTeam>
+                    <HomeTeamID>824579</HomeTeamID>
+                    <HomeTeamName>Barmbeggers</HomeTeamName>
+                    <HomeTeamNameShortName>Barmbeggers</HomeTeamNameShortName>
+                </HomeTeam>
+                <AwayTeam>
+                    <AwayTeamID>520805</AwayTeamID>
+                    <AwayTeamName>Hansa Wittstock</AwayTeamName>
+                    <AwayTeamNameShortName>Wittstock</AwayTeamNameShortName>
+                </AwayTeam>
+                <MatchDate>2026-09-29 18:30:00</MatchDate>
+                <SourceSystem>Hattrick</SourceSystem>
+                <MatchType>3</MatchType>
+                <MatchContextId>643</MatchContextId>
+                <CupLevel>2</CupLevel>
+                <CupLevelIndex>2</CupLevelIndex>
+                <HomeGoals>1</HomeGoals>
+                <AwayGoals>3</AwayGoals>
+                <Status>FINISHED</Status>
+            </Match>
+            <Match>
+                <MatchID>768430542</MatchID>
+                <HomeTeam>
+                    <HomeTeamID>1136812</HomeTeamID>
+                    <HomeTeamName>Viktoria Appenweier</HomeTeamName>
+                    <HomeTeamNameShortName>Appenweier</HomeTeamNameShortName>
+                </HomeTeam>
+                <AwayTeam>
+                    <AwayTeamID>520805</AwayTeamID>
+                    <AwayTeamName>Hansa Wittstock</AwayTeamName>
+                    <AwayTeamNameShortName>Wittstock</AwayTeamNameShortName>
+                </AwayTeam>
+                <MatchDate>2026-10-03 18:00:00</MatchDate>
+                <SourceSystem>Hattrick</SourceSystem>
+                <MatchType>1</MatchType>
+                <MatchContextId>438</MatchContextId>
+                <CupLevel>0</CupLevel>
+                <CupLevelIndex>0</CupLevelIndex>
+                <HomeGoals>3</HomeGoals>
+                <AwayGoals>1</AwayGoals>
+                <Status>FINISHED</Status>
+            </Match>
+            <Match>
+                <MatchID>771726750</MatchID>
+                <HomeTeam>
+                    <HomeTeamID>979564</HomeTeamID>
+                    <HomeTeamName>FC Sensederbfuss</HomeTeamName>
+                    <HomeTeamNameShortName>Sensederbfuss</HomeTeamNameShortName>
+                </HomeTeam>
+                <AwayTeam>
+                    <AwayTeamID>520805</AwayTeamID>
+                    <AwayTeamName>Hansa Wittstock</AwayTeamName>
+                    <AwayTeamNameShortName>Wittstock</AwayTeamNameShortName>
+                </AwayTeam>
+                <MatchDate>2026-10-06 18:30:00</MatchDate>
+                <SourceSystem>Hattrick</SourceSystem>
+                <MatchType>3</MatchType>
+                <MatchContextId>643</MatchContextId>
+                <CupLevel>2</CupLevel>
+                <CupLevelIndex>2</CupLevelIndex>
+                <HomeGoals>2</HomeGoals>
+                <AwayGoals>5</AwayGoals>
+                <Status>FINISHED</Status>
+            </Match>
+            <Match>
+                <MatchID>768430545</MatchID>
+                <HomeTeam>
+                    <HomeTeamID>520805</HomeTeamID>
+                    <HomeTeamName>Hansa Wittstock</HomeTeamName>
+                    <HomeTeamNameShortName>Wittstock</HomeTeamNameShortName>
+                </HomeTeam>
+                <AwayTeam>
+                    <AwayTeamID>523612</AwayTeamID>
+                    <AwayTeamName>Latin Vikings</AwayTeamName>
+                    <AwayTeamNameShortName>Vikings</AwayTeamNameShortName>
+                </AwayTeam>
+                <MatchDate>2026-10-10 18:00:00</MatchDate>
+                <SourceSystem>Hattrick</SourceSystem>
+                <MatchType>1</MatchType>
+                <MatchContextId>438</MatchContextId>
+                <CupLevel>0</CupLevel>
+                <CupLevelIndex>0</CupLevelIndex>
+                <HomeGoals>2</HomeGoals>
+                <AwayGoals>2</AwayGoals>
+                <Status>FINISHED</Status>
+            </Match>
+            <Match>
+                <MatchID>771811831</MatchID>
+                <HomeTeam>
+                    <HomeTeamID>1196135</HomeTeamID>
+                    <HomeTeamName>Fanfaria Scofield FC.</HomeTeamName>
+                    <HomeTeamNameShortName>Fanfaria</HomeTeamNameShortName>
+                </HomeTeam>
+                <AwayTeam>
+                    <AwayTeamID>520805</AwayTeamID>
+                    <AwayTeamName>Hansa Wittstock</AwayTeamName>
+                    <AwayTeamNameShortName>Wittstock</AwayTeamNameShortName>
+                </AwayTeam>
+                <MatchDate>2026-10-13 18:30:00</MatchDate>
+                <SourceSystem>Hattrick</SourceSystem>
+                <MatchType>3</MatchType>
+                <MatchContextId>643</MatchContextId>
+                <CupLevel>2</CupLevel>
+                <CupLevelIndex>2</CupLevelIndex>
+                <HomeGoals>4</HomeGoals>
+                <AwayGoals>5</AwayGoals>
+                <Status>FINISHED</Status>
+            </Match>
+            <Match>
+                <MatchID>768430552</MatchID>
+                <HomeTeam>
+                    <HomeTeamID>1137230</HomeTeamID>
+                    <HomeTeamName>FC Hajde Hamburg</HomeTeamName>
+                    <HomeTeamNameShortName>Hajde</HomeTeamNameShortName>
+                </HomeTeam>
+                <AwayTeam>
+                    <AwayTeamID>520805</AwayTeamID>
+                    <AwayTeamName>Hansa Wittstock</AwayTeamName>
+                    <AwayTeamNameShortName>Wittstock</AwayTeamNameShortName>
+                </AwayTeam>
+                <MatchDate>2026-10-17 18:00:00</MatchDate>
+                <SourceSystem>Hattrick</SourceSystem>
+                <MatchType>1</MatchType>
+                <MatchContextId>438</MatchContextId>
+                <CupLevel>0</CupLevel>
+                <CupLevelIndex>0</CupLevelIndex>
+                <HomeGoals>0</HomeGoals>
+                <AwayGoals>4</AwayGoals>
+                <Status>FINISHED</Status>
+            </Match>
+            <Match>
+                <MatchID>771896635</MatchID>
+                <HomeTeam>
+                    <HomeTeamID>520805</HomeTeamID>
+                    <HomeTeamName>Hansa Wittstock</HomeTeamName>
+                    <HomeTeamNameShortName>Wittstock</HomeTeamNameShortName>
+                </HomeTeam>
+                <AwayTeam>
+                    <AwayTeamID>130343</AwayTeamID>
+                    <AwayTeamName>Tantris Shanghai</AwayTeamName>
+                    <AwayTeamNameShortName>Shanghai</AwayTeamNameShortName>
+                </AwayTeam>
+                <MatchDate>2026-10-20 18:30:00</MatchDate>
+                <SourceSystem>Hattrick</SourceSystem>
+                <MatchType>3</MatchType>
+                <MatchContextId>643</MatchContextId>
+                <CupLevel>2</CupLevel>
+                <CupLevelIndex>2</CupLevelIndex>
+                <HomeGoals>4</HomeGoals>
+                <AwayGoals>1</AwayGoals>
+                <Status>FINISHED</Status>
+            </Match>
+            <Match>
+                <MatchID>768430555</MatchID>
+                <HomeTeam>
+                    <HomeTeamID>520805</HomeTeamID>
+                    <HomeTeamName>Hansa Wittstock</HomeTeamName>
+                    <HomeTeamNameShortName>Wittstock</HomeTeamNameShortName>
+                </HomeTeam>
+                <AwayTeam>
+                    <AwayTeamID>129528</AwayTeamID>
+                    <AwayTeamName>Gladiators Cologne FC 03</AwayTeamName>
+                    <AwayTeamNameShortName>Gladiators</AwayTeamNameShortName>
+                </AwayTeam>
+                <MatchDate>2026-10-24 18:00:00</MatchDate>
+                <SourceSystem>Hattrick</SourceSystem>
+                <MatchType>1</MatchType>
+                <MatchContextId>438</MatchContextId>
+                <CupLevel>0</CupLevel>
+                <CupLevelIndex>0</CupLevelIndex>
+                <HomeGoals>6</HomeGoals>
+                <AwayGoals>2</AwayGoals>
+                <Status>FINISHED</Status>
+            </Match>
+            <Match>
+                <MatchID>771981300</MatchID>
+                <HomeTeam>
+                    <HomeTeamID>1196481</HomeTeamID>
+                    <HomeTeamName>Village Bombers United</HomeTeamName>
+                    <HomeTeamNameShortName>Village</HomeTeamNameShortName>
+                </HomeTeam>
+                <AwayTeam>
+                    <AwayTeamID>520805</AwayTeamID>
+                    <AwayTeamName>Hansa Wittstock</AwayTeamName>
+                    <AwayTeamNameShortName>Wittstock</AwayTeamNameShortName>
+                </AwayTeam>
+                <MatchDate>2026-10-27 18:30:00</MatchDate>
+                <SourceSystem>Hattrick</SourceSystem>
+                <MatchType>3</MatchType>
+                <MatchContextId>643</MatchContextId>
+                <CupLevel>2</CupLevel>
+                <CupLevelIndex>2</CupLevelIndex>
+                <Status>UPCOMING</Status>
+            </Match>
+        </MatchList>
+    </Team>
+</HattrickData>

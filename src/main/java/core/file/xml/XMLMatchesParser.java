@@ -62,7 +62,7 @@ public class XMLMatchesParser {
 
 				Element ele;
 				Element tmp;
-				for (int i = 0; (list != null) && (i < list.getLength()); i++) {
+				for (int i = 0; i < list.getLength(); i++) {
 					match = new MatchKurzInfo();
 					ele = (Element) list.item(i);
 
@@ -83,18 +83,19 @@ public class XMLMatchesParser {
 						iCupLevelIndex = Integer.parseInt(tmp.getFirstChild().getNodeValue());
 						match.setCupLevelIndex(CupLevelIndex.fromInt(iCupLevelIndex));
 					}
-					else if (iMatchType == 50) {
+					else if (match.getMatchType().isTournament()) {
 						tmp = (Element) ele.getElementsByTagName("MatchContextId").item(0);
 						int tournamentId = Integer.parseInt(tmp.getFirstChild().getNodeValue());
 						match.setMatchContextId(tournamentId);
 
-						TournamentDetails oTournamentDetails = DBManager.instance().getTournamentDetailsFromDB(tournamentId);
-						if (oTournamentDetails == null)
-						{
-							oTournamentDetails = getTournamentDetails(tournamentId); // download info about tournament from HT
-							DBManager.instance().storeTournamentDetailsIntoDB(oTournamentDetails); // store tournament details into DB
-						}
-						match.setTournamentTypeID(oTournamentDetails.getTournamentType());
+                        // TODO this part should no longer be part of the xml parsing
+//						TournamentDetails oTournamentDetails = DBManager.instance().getTournamentDetailsFromDB(tournamentId);
+//						if (oTournamentDetails == null)
+//						{
+//							oTournamentDetails = getTournamentDetails(tournamentId); // download info about tournament from HT
+//							DBManager.instance().storeTournamentDetailsIntoDB(oTournamentDetails); // store tournament details into DB
+//						}
+//						match.setTournamentTypeID(oTournamentDetails.getTournamentType());
 					}
 
 

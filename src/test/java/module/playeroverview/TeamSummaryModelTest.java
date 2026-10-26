@@ -13,28 +13,41 @@ import java.math.RoundingMode;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
 class TeamSummaryModelTest {
+
+    private static final HODateTime NOW = HODateTime.now();
 
     @Test
     void computeTeamStatistics() {
         // given
-        HOVerwaltung.instance().setModel(createHOModel());
-        final var players = List.of(createPlayer(1), createPlayer(2));
-        final var expectedTeamStatistics = new TeamSummaryModel.TeamStatistics();
-        expectedTeamStatistics.numPlayers = 2;
-        expectedTeamStatistics.averageAge = 19.63392857142857;
-        expectedTeamStatistics.averageSalary = new AmountOfMoney(BigDecimal.valueOf(150000).setScale(2, RoundingMode.HALF_UP));
-        expectedTeamStatistics.totalTsi = 3000;
-        expectedTeamStatistics.averageTsi = 1500;
-        expectedTeamStatistics.averageStamina = 1.5;
-        expectedTeamStatistics.averageForm = 1.5;
+        final var basics = createBasics();
+        final var hoModel = mock(HOModel.class);
+        when(hoModel.getBasics()).thenReturn(basics);
 
-        // when
-        final var teamStatistics = TeamSummaryModel.computeTeamStatistics(players);
+        final var hoVerwaltung = mock(HOVerwaltung.class);
+        when(hoVerwaltung.getModel()).thenReturn(hoModel);
 
-        // then
-        assertThat(teamStatistics).isEqualTo(expectedTeamStatistics);
+        try (var mockedStatic = mockStatic(HOVerwaltung.class)) {
+            mockedStatic.when(HOVerwaltung::instance).thenReturn(hoVerwaltung);
+
+            final var players = List.of(createPlayer(1), createPlayer(2));
+            final var expectedTeamStatistics = new TeamSummaryModel.TeamStatistics();
+            expectedTeamStatistics.numPlayers = 2;
+            expectedTeamStatistics.averageAge = 19.63392857142857;
+            expectedTeamStatistics.averageSalary = new AmountOfMoney(BigDecimal.valueOf(150000).setScale(2, RoundingMode.HALF_UP));
+            expectedTeamStatistics.totalTsi = 3000;
+            expectedTeamStatistics.averageTsi = 1500;
+            expectedTeamStatistics.averageStamina = 1.5;
+            expectedTeamStatistics.averageForm = 1.5;
+
+            // when
+            final var teamStatistics = TeamSummaryModel.computeTeamStatistics(players);
+
+            // then
+            assertThat(teamStatistics).isEqualTo(expectedTeamStatistics);
+        }
     }
 
     private static Player createPlayer(int n) {
@@ -48,15 +61,9 @@ class TeamSummaryModelTest {
         return player;
     }
 
-    private static HOModel createHOModel() {
-        HOModel hoModel = new HOModel(HODateTime.now());
-        hoModel.setBasics(createBasis());
-        return hoModel;
-    }
-
-    private static Basics createBasis() {
+    private static Basics createBasics() {
         Basics basics = new Basics();
-        basics.setDatum(HODateTime.now());
+        basics.setDatum(NOW);
         return basics;
     }
 }
