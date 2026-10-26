@@ -1,6 +1,8 @@
 package module.lineup.substitution;
 
 import core.model.TranslationFacility;
+import core.playername.NameFormat;
+import core.playername.PlayerNameFormatter;
 import core.util.GUIUtils;
 import module.lineup.Lineup;
 import module.lineup.substitution.model.MatchOrderType;
@@ -18,16 +20,22 @@ public class SubstitutionEditDialog extends JDialog {
 	private MatchOrderType orderType;
 	private SubstitutionEditView behaviourView;
 	private boolean canceled = true;
+    private final PlayerNameFormatter playerNameFormatter;
+    private final NameFormat nameFormat;
 
-	public SubstitutionEditDialog(Dialog parent, MatchOrderType orderType) {
+	public SubstitutionEditDialog(Dialog parent, MatchOrderType orderType, PlayerNameFormatter playerNameFormatter, NameFormat nameFormat) {
 		super(parent, true);
 		this.orderType = orderType;
+        this.playerNameFormatter = playerNameFormatter;
+        this.nameFormat = nameFormat;
 		initDialog();
 	}
 
-	public SubstitutionEditDialog(Frame parent, MatchOrderType orderType) {
+	public SubstitutionEditDialog(Frame parent, MatchOrderType orderType, PlayerNameFormatter playerNameFormatter, NameFormat nameFormat) {
 		super(parent, true);
 		this.orderType = orderType;
+        this.playerNameFormatter = playerNameFormatter;
+        this.nameFormat = nameFormat;
 		initDialog();
 	}
 
@@ -77,7 +85,7 @@ public class SubstitutionEditDialog extends JDialog {
 		gbc.insets = new Insets(12, 2, 8, 8);
 		buttonPanel.add(cancelButton, gbc);
 
-		this.behaviourView = new SubstitutionEditView(this.orderType);
+		this.behaviourView = new SubstitutionEditView(this.orderType, playerNameFormatter, nameFormat);
 		getContentPane().add(this.behaviourView, BorderLayout.CENTER);
 		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 

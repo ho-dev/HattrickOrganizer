@@ -76,6 +76,7 @@ public class Lineup{
 
 	private Vector<MatchLineupPosition> replacedPositions = new Vector<>();
 	private Vector<MatchLineupPosition> redCardedPositions = new Vector<>();
+    private final List<MatchLineupPosition> otherPositions = new ArrayList<>();
 	MatchLineupPosition captain;
 	MatchLineupPosition setPiecesTaker;
 	private Player.ManMarkingPosition manMarkingPosition;
@@ -749,6 +750,11 @@ public class Lineup{
 			if ( ret == null ) {
 				ret = getPositionByPlayerId(playerid, redCardedPositions);
 			}
+            if (ret == null) {
+                ret = otherPositions.stream()
+                    .filter(matchLineupPosition -> matchLineupPosition.getPlayerId() == playerid).findFirst()
+                    .orElse(null);
+            }
 		}
 		return ret;
 	}
@@ -785,7 +791,9 @@ public class Lineup{
 		}
 		else if ( position.isRedCardedMatchRoleId()){
 			setPosition(this.redCardedPositions, position);
-		}
+		} else {
+            otherPositions.add(position);
+        }
 	}
 
 	private void setPosition(Vector<MatchLineupPosition> m_vPositionen, MatchLineupPosition spos) {
@@ -819,6 +827,7 @@ public class Lineup{
 		if (penaltyTakers != null) ret.addAll(penaltyTakers);
 		if (captain != null) ret.add(captain);
 		if (setPiecesTaker != null) ret.add(setPiecesTaker);
+        ret.addAll(otherPositions);
 		return ret;
 	}
 

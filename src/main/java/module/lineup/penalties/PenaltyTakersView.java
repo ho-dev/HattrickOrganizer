@@ -8,7 +8,9 @@ import core.model.TranslationFacility;
 import core.model.match.MatchLineupPosition;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
+import core.playername.*;
 import core.util.GUIUtils;
+import lombok.Setter;
 import module.lineup.Lineup;
 
 import javax.swing.*;
@@ -19,8 +21,8 @@ import javax.swing.table.TableRowSorter;
 import java.awt.*;
 import java.awt.event.ItemListener;
 import java.text.NumberFormat;
-import java.util.List;
 import java.util.*;
+import java.util.List;
 
 public class PenaltyTakersView extends JPanel {
 
@@ -37,6 +39,10 @@ public class PenaltyTakersView extends JPanel {
 	private JCheckBox showReserveCheckBox;
 	private JCheckBox showOthersCheckBox;
 	private List<PenaltyTaker> players;
+    private final NameFormat nameFormat = PlayerNameSettingsManager.instance().getFormat(Location.LINEUP_PENALTY_TAKERS);
+
+    @Setter
+    private PlayerNameFormatter playerNameFormatter;
 
 	public PenaltyTakersView() {
 		initComponents();
@@ -569,7 +575,7 @@ public class PenaltyTakersView extends JPanel {
 			PenaltyTaker taker = this.data.get(rowIndex);
 			return switch (columnIndex) {
 				case 0 -> getInLineupVal(taker.getPlayer());
-				case 1 -> taker.getPlayer().getFullName();
+                case 1 -> playerNameFormatter.format(PlayerNameUtils.createPlayerName(taker.getPlayer()), nameFormat);
 				case 2 -> taker.getExperience();
 				case 3 -> taker.getSetPieces();
 				case 4 -> taker.getScoring();

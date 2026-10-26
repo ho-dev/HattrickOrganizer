@@ -55,12 +55,12 @@ record MatchHighlightFromEvent(int homeTeamId,
         return matchEvent.getIcons();
     }
 
-    public String getPlayerName() {
-        return matchEvent.getPlayerName();
+    public int getPlayerId() {
+        return matchEvent.getPlayerId();
     }
 
-    public String getAssistingPlayerName() {
-        return matchEvent.getAssistingPlayerName();
+    public int getAssistingPlayerId() {
+        return matchEvent.getAssistingPlayerId();
     }
 
     public int getMinute() {

@@ -1,25 +1,19 @@
 // %2675300316:de.hattrickorganizer.gui.matches%
 package module.matches;
 
-import core.db.DBManager;
 import core.gui.comp.panel.RasenPanel;
 import core.model.UserParameter;
-import core.model.match.*;
+import core.model.match.MatchLineup;
+import core.model.match.MatchLineupPosition;
+import core.model.match.MatchLineupTeam;
 import core.model.player.IMatchRoleID;
+import core.model.util.PlayerNameFixupUtils;
+import core.playername.ConfiguredPlayerNameFormatter;
+import core.playername.NameFormat;
+import core.playername.PlayerNameFormatter;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
-import java.awt.Insets;
-import java.util.List;
-
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
+import java.awt.*;
 
 /**
  * Zeigt die Stärken und Aufstellung einer Mannschaft an
@@ -53,16 +47,18 @@ public class AufstellungsSternePanel extends RasenPanel {
 	private SpielerSternePanel m_clKeeper;
 	private boolean m_bHeim;
 	private boolean m_bPrint;
+    private final NameFormat nameFormat;
 
-	public AufstellungsSternePanel(boolean heim) {
-		this(heim, false);
+	public AufstellungsSternePanel(boolean heim, NameFormat nameFormat) {
+		this(heim, nameFormat, false);
 	}
 
-	public AufstellungsSternePanel(boolean heim, boolean print) {
+	private AufstellungsSternePanel(boolean heim, NameFormat nameFormat, boolean print) {
 		super(print);
 
 		m_bPrint = print;
 		m_bHeim = heim;
+        this.nameFormat = nameFormat;
 		initComponentes();
 	}
 
@@ -100,8 +96,8 @@ public class AufstellungsSternePanel extends RasenPanel {
 	/**
 	 * Get match lineup and refresh this SpielerSternePanels.
 	 */
-	public final void refresh(MatchKurzInfo match, int teamid) {
-		final MatchLineup lineup = DBManager.instance().loadMatchLineup(match.getMatchType().getId(), match.getMatchID());
+	public final void refresh(MatchLineup lineup, int teamid, PlayerNameFormatter playerNameFormatter) {
+        final var configuredPlayerNameFormatter = new ConfiguredPlayerNameFormatter(playerNameFormatter, nameFormat);
 		MatchLineupTeam lineupteam;
 
 		if (lineup.getHomeTeamId() == teamid) {
@@ -110,6 +106,12 @@ public class AufstellungsSternePanel extends RasenPanel {
 			lineupteam = lineup.getGuestTeam();
 		}
 
+        // TODO: remove this fixup here
+        if (lineupteam.getLineup().getAllPositions().stream().map(MatchLineupPosition::getFirstName).allMatch(String::isEmpty) ) {
+            lineupteam.getLineup().getAllPositions()
+                .forEach(PlayerNameFixupUtils::fixup);
+        }
+
 		clearAll();
 
 		if (lineupteam != null) {
@@ -117,125 +119,125 @@ public class AufstellungsSternePanel extends RasenPanel {
 			var aufstellung = lineupteam.getLineup().getAllPositions();
 
 			for (var mlp : aufstellung) {
-				var player = (MatchLineupPosition)mlp;
+				var player = mlp;
 				switch (player.getRoleId()) {
 				case IMatchRoleID.keeper: {
-					m_clKeeper.refresh(lineup, player);
+					m_clKeeper.refresh(lineup, player, configuredPlayerNameFormatter);
 					break;
 				}
 
 				case IMatchRoleID.rightBack: {
-					m_clRightBack.refresh(lineup, player);
+					m_clRightBack.refresh(lineup, player, configuredPlayerNameFormatter);
 					break;
 				}
 
 				case IMatchRoleID.leftBack: {
-					m_clLeftBack.refresh(lineup, player);
+					m_clLeftBack.refresh(lineup, player, configuredPlayerNameFormatter);
 					break;
 				}
 
 				case IMatchRoleID.rightCentralDefender: {
-					m_clRightCentralDefender.refresh(lineup, player);
+					m_clRightCentralDefender.refresh(lineup, player, configuredPlayerNameFormatter);
 					break;
 				}
 
 				case IMatchRoleID.middleCentralDefender: {
-					m_clMiddleCentralDefender.refresh(lineup, player);
+					m_clMiddleCentralDefender.refresh(lineup, player, configuredPlayerNameFormatter);
 					break;
 				}
 
 				case IMatchRoleID.leftCentralDefender: {
-					m_clLeftCentralDefender.refresh(lineup, player);
+					m_clLeftCentralDefender.refresh(lineup, player, configuredPlayerNameFormatter);
 					break;
 				}
 
 				case IMatchRoleID.rightInnerMidfield: {
-					m_clRightInnerMidfielder.refresh(lineup, player);
+					m_clRightInnerMidfielder.refresh(lineup, player, configuredPlayerNameFormatter);
 					break;
 				}
 
 				case IMatchRoleID.centralInnerMidfield: {
-					m_clCentralInnerMidfielder.refresh(lineup, player);
+					m_clCentralInnerMidfielder.refresh(lineup, player, configuredPlayerNameFormatter);
 					break;
 				}
 
 				case IMatchRoleID.leftInnerMidfield: {
-					m_clLeftInnerMidfielder.refresh(lineup, player);
+					m_clLeftInnerMidfielder.refresh(lineup, player, configuredPlayerNameFormatter);
 					break;
 				}
 
 				case IMatchRoleID.leftWinger: {
-					m_clLeftWinger.refresh(lineup, player);
+					m_clLeftWinger.refresh(lineup, player, configuredPlayerNameFormatter);
 					break;
 				}
 
 				case IMatchRoleID.rightWinger: {
-					m_clRightWinger.refresh(lineup, player);
+					m_clRightWinger.refresh(lineup, player, configuredPlayerNameFormatter);
 					break;
 				}
 
 				case IMatchRoleID.rightForward: {
-					m_clRightForward.refresh(lineup, player);
+					m_clRightForward.refresh(lineup, player, configuredPlayerNameFormatter);
 					break;
 				}
 
 				case IMatchRoleID.centralForward: {
-					m_clCentralForward.refresh(lineup, player);
+					m_clCentralForward.refresh(lineup, player, configuredPlayerNameFormatter);
 					break;
 				}
 
 				case IMatchRoleID.leftForward: {
-					m_clLeftForward.refresh(lineup, player);
+					m_clLeftForward.refresh(lineup, player, configuredPlayerNameFormatter);
 					break;
 				}
 
 				case IMatchRoleID.substCD1: {
-					m_clReserveDefender.refresh(lineup, player);
+					m_clReserveDefender.refresh(lineup, player, configuredPlayerNameFormatter);
 					break;
 				}
 
 				case IMatchRoleID.substFW1: {
-					m_clReserveForward.refresh(lineup, player);
+					m_clReserveForward.refresh(lineup, player, configuredPlayerNameFormatter);
 					break;
 				}
 
 				case IMatchRoleID.substIM1: {
-					m_clReserveMidfielder.refresh(lineup, player);
+					m_clReserveMidfielder.refresh(lineup, player, configuredPlayerNameFormatter);
 					break;
 				}
 
 				case IMatchRoleID.substGK1: {
-					m_clReserveKeeper.refresh(lineup, player);
+					m_clReserveKeeper.refresh(lineup, player, configuredPlayerNameFormatter);
 					break;
 				}
 
 				case IMatchRoleID.substWI1: {
-					m_clReserveWinger.refresh(lineup, player);
+					m_clReserveWinger.refresh(lineup, player, configuredPlayerNameFormatter);
 					break;
 				}
 
 				case IMatchRoleID.captain: {
-					m_clCaptain.refresh(lineup, player);
+					m_clCaptain.refresh(lineup, player, configuredPlayerNameFormatter);
 					break;
 				}
 
 				case IMatchRoleID.setPieces: {
-					m_clSetPieces.refresh(lineup, player);
+					m_clSetPieces.refresh(lineup, player, configuredPlayerNameFormatter);
 					break;
 				}
 
 				case IMatchRoleID.FirstPlayerReplaced: {
-					m_clAusgewechselt1.refresh(lineup, player);
+					m_clAusgewechselt1.refresh(lineup, player, configuredPlayerNameFormatter);
 					break;
 				}
 
 				case IMatchRoleID.SecondPlayerReplaced: {
-					m_clAusgewechselt2.refresh(lineup, player);
+					m_clAusgewechselt2.refresh(lineup, player, configuredPlayerNameFormatter);
 					break;
 				}
 
 				case IMatchRoleID.ThirdPlayerReplaced: {
-					m_clAusgewechselt3.refresh(lineup, player);
+					m_clAusgewechselt3.refresh(lineup, player, configuredPlayerNameFormatter);
 					break;
 				}
 
