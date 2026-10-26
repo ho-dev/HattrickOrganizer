@@ -18,7 +18,7 @@ class XMLMatchArchiveParserTest {
     @Test
     void parseMatchesFromString() throws IOException {
 
-        var xmlFileMatchArchive = ResourceUtils.getResourceFileAsString("chpp/matchesArchive/matchesArchive.xml");
+        var xmlFileMatchArchive = ResourceUtils.getResourceFileAsString("chpp/matchesarchive/matchesArchive.xml");
 
         // when
         final var matches = XMLMatchArchiveParser.parseMatchesFromString(xmlFileMatchArchive);
