@@ -63,6 +63,7 @@
 * Added support of all 13 **Player Categories** (#2418)
 * Fix scroll behavior of lineup rating panel (#2365)
 * Fix refresh of player table after download (#2515)
+* Fix exception in lineup download of upcoming matches (2574)
 
 ### Training
 
