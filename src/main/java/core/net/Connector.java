@@ -883,7 +883,7 @@ public class Connector {
 	}
 
     private static String getIdentifier() {
-        return "HO! Hattrick Organizer V" + HO.getHoVersion().getVersionShort();
+        return "HO! Hattrick Organizer V" + HO.getHoBuild().getVersionShort();
     }
 
     /**

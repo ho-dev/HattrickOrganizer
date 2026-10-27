@@ -129,7 +129,7 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 	private void setFrameIconImage() {
 		String iconName = HOIconName.LOGO16_STABLE;
 		if (!HO.isRelease()) {
-			iconName = HOIconName.LOGO16 + "_" + HO.getHoVersion().stage().name().toLowerCase();
+			iconName = HOIconName.LOGO16 + "_" + HO.getHoBuild().stage().name().toLowerCase();
 		}
 
 		final Image iconImage = ImageUtilities.iconToImage(ThemeManager.getIcon(iconName));

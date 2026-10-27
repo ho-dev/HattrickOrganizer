@@ -34,22 +34,22 @@ public class HO {
     private static final HOLogger log = HOLogger.instance();
 
     @Getter
-    private static final HOVersion hoVersion = HOVersionLoader.getVersion();
+    private static final HOBuild hoBuild = HOBuildLoader.getBuild();
 	private static OSUtils.OS platform;
 	private static boolean portable_version; // Used to determine the location of the DB
 	public static OSUtils.OS getPlatform() {return platform; }
 	public static boolean isDevelopment() {
-        return Optional.ofNullable(hoVersion).map(HOVersion::isDevelopment).orElse(false);
+        return Optional.ofNullable(hoBuild).map(HOBuild::isDevelopment).orElse(false);
 	}
 	public static boolean isBeta() {
-		return Optional.ofNullable(hoVersion).map(HOVersion::isBeta).orElse(false);
+		return Optional.ofNullable(hoBuild).map(HOBuild::isBeta).orElse(false);
 	}
 	public static boolean isRelease() {
-        return Optional.ofNullable(hoVersion).map(HOVersion::isRelease).orElse(false);
+        return Optional.ofNullable(hoBuild).map(HOBuild::isRelease).orElse(false);
 	}
 
 	public static String getVersionString() {
-        return hoVersion.getVersionString();
+        return hoBuild.getVersionString();
 	}
 
 	public static boolean isPortableVersion() {
@@ -95,7 +95,7 @@ public class HO {
         // Initialize file logging
         log.initializeFileLogging(Paths.get(UserManager.instance().getDbParentFolder(), "logs"));
 
-        log.info(HO.class, "HO-Version: %s".formatted(hoVersion.getVersionString()));
+        log.info(HO.class, "HO-Version: %s".formatted(hoBuild.getVersionString()));
 
         evaluateEnvironmentVariables();
 
