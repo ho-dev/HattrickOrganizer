@@ -12,6 +12,19 @@ import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toMap;
 
+/**
+ * Represents a specific build of Hattrick Organizer.
+ * <p>
+ * A build consists of an {@link HOVersion}, a build number, and a development stage. The build number {@code -1}
+ * identifies a local build.
+ * <p>
+ * Unlike {@link HOVersion}, a build does not define a natural ordering. Comparisons involving build numbers and
+ * development stages depend on the respective use case.
+ *
+ * @param hoVersion   the major and minor version associated with this build
+ * @param buildNumber the build number, or {@code -1} for a local build
+ * @param stage       the development stage of the build
+ */
 public record HOBuild(
     HOVersion hoVersion,
     int buildNumber,

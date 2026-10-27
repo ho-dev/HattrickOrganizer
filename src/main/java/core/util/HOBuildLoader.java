@@ -6,6 +6,18 @@ import lombok.Getter;
 
 import java.util.Optional;
 
+/**
+ * Loads the current {@link HOBuild} of Hattrick Organizer.
+ * <p>
+ * Build information is determined from the JAR manifest's {@code Implementation-Version} attribute when available.
+ * If the attribute contains only major and minor version numbers, the build is treated as a local build with build
+ * number {@code -1}, using the development stage from {@link BuildInfo}.
+ * <p>
+ * When the manifest attribute is unavailable (e.g. when launched from an IDE), version and stage information are
+ * obtained from {@link BuildInfo}.
+ * <p>
+ * The build information is initialized once and is available independently of {@code HO.main()}.
+ */
 public final class HOBuildLoader {
 
     private static final HOLogger log = HOLogger.instance();
