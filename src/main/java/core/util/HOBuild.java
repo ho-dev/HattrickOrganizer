@@ -1,0 +1,124 @@
+package core.util;
+
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Stream;
+
+import static java.util.stream.Collectors.toMap;
+
+/**
+ * Represents a specific build of Hattrick Organizer.
+ * <p>
+ * A build consists of an {@link HOVersion}, a build number, and a development stage. The build number {@code -1}
+ * identifies a local build.
+ * <p>
+ * Unlike {@link HOVersion}, a build does not define a natural ordering. Comparisons involving build numbers and
+ * development stages depend on the respective use case.
+ *
+ * @param hoVersion   the major and minor version associated with this build
+ * @param buildNumber the build number, or {@code -1} for a local build
+ * @param stage       the development stage of the build
+ */
+public record HOBuild(
+    HOVersion hoVersion,
+    int buildNumber,
+    Stage stage
+) {
+    public HOBuild(int major, int minor, int buildNumber, Stage stage) {
+        this(new HOVersion(major, minor), buildNumber, stage);
+    }
+
+    public HOBuild {
+        Objects.requireNonNull(hoVersion, "hoVersion must not be null");
+        Objects.requireNonNull(stage, "stage must not be null");
+
+        if (buildNumber < -1) {
+            throw new IllegalArgumentException("buildNumber must be -1 (local build) or non-negative");
+        }
+    }
+
+    public boolean isDevelopment() {
+        return stage == Stage.DEV;
+    }
+
+    public boolean isBeta() {
+        return stage == Stage.BETA;
+    }
+
+    public boolean isRelease() {
+        return stage == Stage.STABLE;
+    }
+
+    public boolean isLocalBuild() {
+        return buildNumber == -1;
+    }
+
+    public String getVersionShort() {
+        return hoVersion.getVersionStr();
+    }
+
+    public String getVersionString() {
+        final String versionShort = getVersionShort();
+        final String buildNumberStr = isLocalBuild() ? "(local build)" : "(build %d)".formatted(buildNumber);
+
+        return switch (stage) {
+            case DEV, BETA -> "%s %s %s".formatted(versionShort, stage.getText(), buildNumberStr);
+            case STABLE -> "%s %s".formatted(versionShort, buildNumberStr);
+        };
+    }
+
+    public String getImplementationVersionStr() {
+        return "%s.%d.%d".formatted(hoVersion().getVersionStr(), buildNumber, stage.getId());
+    }
+
+    public static HOBuild parseFromImplementationVersion(String implementationVersion) {
+        if (implementationVersion == null) {
+            throw new IllegalArgumentException("null is not allowed for implementationVersion");
+        }
+
+        final var parts = StringUtils.splitPreserveAllTokens(implementationVersion, ".");
+        if (parts.length != 4) {
+            throw new IllegalArgumentException("4 parts expected but got %d from '%s'".formatted(parts.length, implementationVersion));
+        }
+
+        final int major = parseInt(parts[0]);
+        final int minor = parseInt(parts[1]);
+        final int buildNumber = parseInt(parts[2]);
+        final int stageId = parseInt(parts[3]);
+        final var stage = Stage.fromId(stageId);
+        return new HOBuild(new HOVersion(major, minor), buildNumber, stage);
+    }
+
+    private static int parseInt(String str) {
+        try {
+            return Integer.parseInt(str);
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Cannot parse integer from '%s'".formatted(str));
+        }
+    }
+
+    @RequiredArgsConstructor
+    @Getter
+    public enum Stage {
+        DEV(0, "DEV"),
+        BETA(1, "BETA"),
+        STABLE(2, "");
+
+        private final int id;
+        private final String text;
+
+        private static final Map<Integer, Stage> MAP_ID_TO_STAGE =
+            Stream.of(values()).collect(toMap(Stage::getId, Function.identity()));
+
+        public static Stage fromId(int id) {
+            return Optional.ofNullable(MAP_ID_TO_STAGE.get(id))
+                .orElseThrow(() -> new IllegalArgumentException("%d is not a valid id for a Stage".formatted(id)));
+        }
+    }
+}

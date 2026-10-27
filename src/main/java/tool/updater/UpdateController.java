@@ -6,9 +6,7 @@ import core.gui.HOMainFrame;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.net.Connector;
-import core.util.BrowserLauncher;
-import core.util.HOLogger;
-import core.util.Updater;
+import core.util.*;
 import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
@@ -116,13 +114,13 @@ public final class UpdateController {
     }
 
     private static void showNoUpdateAvailableDialog() {
-        final int currRev = HO.getRevisionNumber();
+        final int currRev = HO.getHoBuild().buildNumber();
         JOptionPane.showMessageDialog(HOMainFrame.instance(),
                 TranslationFacility.tr("updatenotavailable")
                 + "\n\n"
                 + TranslationFacility.tr("ls.version")
                 + ": "
-                + HO.VERSION
+                + HO.getHoBuild().getVersionShort()
                 + (currRev > 1 ? " (Build " + currRev + ")" : ""),
                 TranslationFacility.tr("ls.menu.file.update") + " - "+
                         TranslationFacility.tr("ls.menu.file.update.ho"), JOptionPane.INFORMATION_MESSAGE);
@@ -180,11 +178,19 @@ public final class UpdateController {
                 (a.getVersion() == b.getVersion() && a.getBuild() > b.getBuild());
     }
 
-    // returns true if version is more recent than current version
-    public static boolean compareToCurrentVersions(VersionInfo version) {
-        if (version == null) return false; // NO version is NOT greater than current version
-        return version.getVersion() > HO.VERSION ||
-                ((version.getVersion() == HO.VERSION) && (version.getBuild() > HO.getRevisionNumber()));
-    }
+    /**
+     * Returns true if {@code versionInfo} represents a newer version or build than the current HO build.
+     * The development stage is not considered.
+     */
+    public static boolean compareToCurrentVersions(VersionInfo versionInfo) {
+        if (versionInfo == null) {
+            return false; // NO version is NOT greater than current version
+        }
 
+        final HOBuild availableBuild = HOBuild.parseFromImplementationVersion(versionInfo.getFullVersion());
+        final HOBuild currentBuild = HO.getHoBuild();
+
+        final int versionComparison = availableBuild.hoVersion().compareTo(currentBuild.hoVersion());
+        return versionComparison > 0 || (versionComparison == 0 && availableBuild.buildNumber() > currentBuild.buildNumber());
+    }
 }
