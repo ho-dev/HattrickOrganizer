@@ -33,45 +33,47 @@ public class XMLMatchLineupParser {
 	}
 
 	private static MatchLineup createLineup(Document doc) {
-		MatchLineup ml = new MatchLineup();
-		if (doc == null) {
-			return ml;
-		}
+        if (doc == null) {
+            return null;
+        }
+        MatchLineup ml = new MatchLineup();
+        try {
+            Element root = doc.getDocumentElement();
 
-		try {
-			Element root = doc.getDocumentElement();
+            Element ele = (Element) root.getElementsByTagName("MatchID").item(0);
+            ml.setMatchID(Integer.parseInt(ele.getFirstChild().getNodeValue()));
 
-			Element ele = (Element) root.getElementsByTagName("MatchID").item(0);
-			ml.setMatchID(Integer.parseInt(ele.getFirstChild().getNodeValue()));
+            ele = (Element) root.getElementsByTagName("MatchType").item(0);
+            ml.setMatchTyp(MatchType.getById(Integer.parseInt(ele.getFirstChild().getNodeValue())));
 
-			ele = (Element) root.getElementsByTagName("MatchType").item(0);
-			ml.setMatchTyp(MatchType.getById(Integer.parseInt(ele.getFirstChild().getNodeValue())));
+            ele = (Element) root.getElementsByTagName("HomeTeam").item(0);
+            ml.setHomeTeamId(Integer.parseInt(ele.getElementsByTagName("HomeTeamID").item(0)
+                .getFirstChild().getNodeValue()));
+            ml.setHomeTeamName(ele.getElementsByTagName("HomeTeamName").item(0).getFirstChild()
+                .getNodeValue());
+            ele = (Element) root.getElementsByTagName("AwayTeam").item(0);
+            ml.setGuestTeamId(Integer.parseInt(ele.getElementsByTagName("AwayTeamID").item(0)
+                .getFirstChild().getNodeValue()));
+            ml.setGuestTeamName(ele.getElementsByTagName("AwayTeamName").item(0).getFirstChild()
+                .getNodeValue());
 
-			ele = (Element) root.getElementsByTagName("HomeTeam").item(0);
-			ml.setHomeTeamId(Integer.parseInt(ele.getElementsByTagName("HomeTeamID").item(0)
-					.getFirstChild().getNodeValue()));
-			ml.setHomeTeamName(ele.getElementsByTagName("HomeTeamName").item(0).getFirstChild()
-					.getNodeValue());
-			ele = (Element) root.getElementsByTagName("AwayTeam").item(0);
-			ml.setGuestTeamId(Integer.parseInt(ele.getElementsByTagName("AwayTeamID").item(0)
-					.getFirstChild().getNodeValue()));
-			ml.setGuestTeamName(ele.getElementsByTagName("AwayTeamName").item(0).getFirstChild()
-					.getNodeValue());
+            // Team element is only available in finished matches
+            var teamElement = (Element) root.getElementsByTagName("Team").item(0);
+            if (teamElement != null) {
+                MatchLineupTeam team = createTeam(ml.getMatchType(), ml.getMatchID(), teamElement);
+                if (team.getTeamID() == ml.getHomeTeamId()) {
+                    ml.setHomeTeam(team);
+                } else {
+                    ml.setGuestTeam(team);
+                }
+            }
+        } catch (Exception e) {
+            HOLogger.instance().log(XMLMatchLineupParser.class, e);
+            ml = null;
+        }
 
-			MatchLineupTeam team = createTeam(ml.getMatchType(), ml.getMatchID(), (Element) root.getElementsByTagName("Team").item(0));
-
-			if (team.getTeamID() == ml.getHomeTeamId()) {
-				ml.setHomeTeam(team);
-			} else {
-				ml.setGuestTeam(team);
-			}
-		} catch (Exception e) {
-			HOLogger.instance().log(XMLMatchLineupParser.class, e);
-			ml = null;
-		}
-
-		return ml;
-	}
+        return ml;
+    }
 
 	private static MatchLineupPosition createPlayer(Element ele) {
 		int roleID = -1;

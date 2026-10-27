@@ -297,11 +297,10 @@ public class OnlineWorker {
 						info.setMatchSchedule(details.getMatchDate());
 						info.setMatchType(details.getMatchType());
 						int wetterId = details.getWetterId();
-						if (wetterId != -1) {
-							info.setMatchStatus(MatchKurzInfo.FINISHED);
+						if (wetterId != -1 && info.getMatchStatus() == MatchKurzInfo.FINISHED) {
 							info.setWeather(Weather.getById(details.getWetterId()));
 							info.setWeatherForecast(Weather.Forecast.HAPPENED);
-						} else if (info.getArenaId() > 0) {
+						} else if (info.getArenaId() > 0 && info.getMatchStatus() == MatchKurzInfo.UPCOMING) {
 							info.setRegionId(details.getRegionId());
 
 							if (!info.getWeatherForecast().isSure()) {
@@ -651,16 +650,18 @@ public class OnlineWorker {
 		var lineUp1 = downloadMatchLineup(matchId, teamId1, matchType);
 		if (lineUp1 != null) {
 			HOMainFrame.instance().setWaitInformation();
-			if (teamId2 > 0)
-				lineUp2 = downloadMatchLineup(matchId, teamId2, matchType);
-
+			if (teamId2 > 0) {
+                lineUp2 = downloadMatchLineup(matchId, teamId2, matchType);
+            }
 			// Merge the two
-			if ((lineUp2 != null)) {
-				if (lineUp1.isHomeTeamNotLoaded())
-					lineUp1.setHomeTeam(lineUp2.getHomeTeam());
-				else if (!lineUp1.isGuestTeamLoaded())
-					lineUp1.setGuestTeam(lineUp2.getGuestTeam());
-			} else {
+			if ((lineUp2 != null && lineUp2.isTeamLoaded(teamId2))) {
+				if (lineUp1.isHomeTeamNotLoaded() && lineUp1.getHomeTeamId() == teamId2) {
+                    lineUp1.setHomeTeam(lineUp2.getHomeTeam());
+                }
+				else if (!lineUp1.isGuestTeamLoaded() && lineUp1.getGuestTeamId() == teamId2) {
+                    lineUp1.setGuestTeam(lineUp2.getGuestTeam());
+                }
+			} else if (teamId2 > 0) {
 				// Get the 2nd lineup
 				if (lineUp1.isHomeTeamNotLoaded()) {
 					lineUp2 = downloadMatchLineup(matchId, lineUp1.getHomeTeamId(), matchType);
