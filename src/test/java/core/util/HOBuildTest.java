@@ -148,12 +148,6 @@ class HOBuildTest {
     }
 
     @ParameterizedTest
-    @MethodSource("shortVersions")
-    void getVersionShortAsDouble(HOBuild version, String ignored, double expected) {
-        assertThat(version.getVersionShortAsDouble()).isEqualTo(expected);
-    }
-
-    @ParameterizedTest
     @EnumSource(HOBuild.Stage.class)
     void stagePredicates(HOBuild.Stage stage) {
         final var version = new HOBuild(11, 0, 123, stage);

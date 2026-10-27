@@ -50,10 +50,6 @@ public record HOBuild(
         return hoVersion.getVersionStr();
     }
 
-    public double getVersionShortAsDouble() {
-        return Double.parseDouble(getVersionShort());
-    }
-
     public String getVersionString() {
         final String versionShort = getVersionShort();
         final String buildNumberStr = isLocalBuild() ? "(local build)" : "(build %d)".formatted(buildNumber);
