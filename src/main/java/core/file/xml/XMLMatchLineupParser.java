@@ -58,8 +58,9 @@ public class XMLMatchLineupParser {
                 .getNodeValue());
 
             // Team element is only available in finished matches
-            var teamElement = (Element) root.getElementsByTagName("Team").item(0);
-            if (teamElement != null) {
+            var teamElements = root.getElementsByTagName("Team");
+            if (teamElements.getLength() > 0) {
+                var teamElement = (Element) teamElements.item(0);
                 MatchLineupTeam team = createTeam(ml.getMatchType(), ml.getMatchID(), teamElement);
                 if (team.getTeamID() == ml.getHomeTeamId()) {
                     ml.setHomeTeam(team);
