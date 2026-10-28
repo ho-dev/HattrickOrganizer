@@ -240,4 +240,9 @@ public class MatchLineup extends AbstractTable.Storable {
     public boolean isGuestTeamLoaded() {
         return this.guestTeam != null;
     }
+
+    public boolean isTeamLoaded(int teamId) {
+        return teamId == this.getHomeTeamId() && this.homeTeam != null ||
+            teamId == this.getGuestTeamId() && this.guestTeam != null;
+    }
 }
