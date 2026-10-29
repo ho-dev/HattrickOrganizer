@@ -78,12 +78,12 @@ public class XMLMatchdetailsParser {
         final ArrayList<Matchdetails.Injury> mdInjuries = new ArrayList<>();
         try {
             var root = doc.getDocumentElement();
-            var matchElement = XMLUtils.getElement(root, "Match");
-            var injuriesElement = XMLUtils.getOptionalElement(matchElement, "Injuries");
+            var matchElement = XMLUtils.getChildElement(root, "Match");
+            var injuriesElement = XMLUtils.findChildElement(matchElement, "Injuries");
             if (injuriesElement.isEmpty()) {
                 return;
             }
-            var injuryList = XMLUtils.getElements(injuriesElement.get(), "Injury");
+            var injuryList = XMLUtils.getChildElements(injuriesElement.get(), "Injury");
             for (var injuryELement : injuryList) {
                 var injuryPlayerID = XMLUtils.getIntValue(injuryELement, "InjuryPlayerID");
                 var injuryTeamID = XMLUtils.getIntValue(injuryELement, "InjuryTeamID");
@@ -112,10 +112,10 @@ public class XMLMatchdetailsParser {
         try {
             //get Root element
             var root = doc.getDocumentElement();
-            var matchElement = XMLUtils.getElement(root, "Match");
-            var eventListElement = XMLUtils.getOptionalElement(matchElement, "EventList");
+            var matchElement = XMLUtils.getChildElement(root, "Match");
+            var eventListElement = XMLUtils.findChildElement(matchElement, "EventList");
             if (eventListElement.isEmpty()) { return; }
-            var eventNodeList = XMLUtils.getElements(eventListElement.get(), "Event");
+            var eventNodeList = XMLUtils.getChildElements(eventListElement.get(), "Event");
             for (var eventNode : eventNodeList) {
                 //get values from xml
                 var eventIndex = XMLUtils.getAttributeIntValue(eventNode, "Index");
@@ -254,8 +254,8 @@ public class XMLMatchdetailsParser {
         var root = doc.getDocumentElement();
         try {
             //Match data
-            var matchElement = XMLUtils.getElement(root, "Match");
-            var arenaElement = XMLUtils.getElement(matchElement, "Arena");
+            var matchElement = XMLUtils.getChildElement(root, "Match");
+            var arenaElement = XMLUtils.getChildElement(matchElement, "Arena");
 
             try {
                 md.setArenaID(XMLUtils.getIntValue(arenaElement, "ArenaID"));
@@ -287,7 +287,7 @@ public class XMLMatchdetailsParser {
         try {
             md.setFetchDatumFromString(XMLUtils.getStringValue(root, "FetchedDate"));
 
-            var matchElement = XMLUtils.getElement(root, "Match");
+            var matchElement = XMLUtils.getChildElement(root, "Match");
             var iMatchType = XMLUtils.getIntValue(matchElement, "MatchType");
             var matchType = Objects.requireNonNull(MatchType.getById(iMatchType));
             md.setMatchType(matchType);
@@ -307,8 +307,8 @@ public class XMLMatchdetailsParser {
     private static void readGuestTeam(Document doc, Matchdetails md) {
         try {
             var root = doc.getDocumentElement();
-            var matchElement = core.util.XMLUtils.getElement(root, "Match");
-            var awayTeamElement = XMLUtils.getElement(matchElement, "AwayTeam");
+            var matchElement = core.util.XMLUtils.getChildElement(root, "Match");
+            var awayTeamElement = XMLUtils.getChildElement(matchElement, "AwayTeam");
             md.setAwayFormation(XMLUtils.getStringValue(awayTeamElement, "Formation", ""));
             md.setGastId(XMLUtils.getIntValue(awayTeamElement, "AwayTeamID"));
             md.setGastName(XMLUtils.getStringValue(awayTeamElement, "AwayTeamName"));
@@ -333,8 +333,8 @@ public class XMLMatchdetailsParser {
     private static void readHomeTeam(Document doc, Matchdetails md) {
         try {
             var root = doc.getDocumentElement();
-            var matchElement = core.util.XMLUtils.getElement(root, "Match");
-            var homeTeamElement = XMLUtils.getElement(matchElement, "HomeTeam");
+            var matchElement = core.util.XMLUtils.getChildElement(root, "Match");
+            var homeTeamElement = XMLUtils.getChildElement(matchElement, "HomeTeam");
             md.setHomeFormation(XMLUtils.getStringValue(homeTeamElement, "Formation", ""));
             md.setHeimId(XMLUtils.getIntValue(homeTeamElement, "HomeTeamID"));
             md.setHeimName(XMLUtils.getStringValue(homeTeamElement, "HomeTeamName"));

@@ -560,7 +560,7 @@ class XMLUtilsTest {
 
     private static final Document doc = XMLManager.parseString(xmlText);
     private static final Element root = doc.getDocumentElement();
-    private static final Element matchElement = XMLUtils.getElement(root, "Match");
+    private static final Element matchElement = XMLUtils.getChildElement(root, "Match");
 
     private static Stream<Arguments> test_getElement() {
         return Stream.of(
@@ -573,14 +573,14 @@ class XMLUtilsTest {
     @ParameterizedTest
     @MethodSource
     void test_getElement(Element element, String tagName) {
-        var child = XMLUtils.getElement(element, tagName);
+        var child = XMLUtils.getChildElement(element, tagName);
         assertThat(child).isNotNull();
         assertThat(child.getTagName()).isEqualTo(tagName);
     }
 
     private static Stream<Arguments> test_getElement_throwsXMLParseException() {
         return Stream.of(
-            arguments(XMLUtils.getElement(matchElement, "Scorers"), "Goal", "More than one element found with name 'Goal'."),
+            arguments(XMLUtils.getChildElement(matchElement, "Scorers"), "Goal", "More than one element found with name 'Goal'."),
             arguments(root, " FileName", "No element with tag name ' FileName'."),
             arguments(root, "version", "No element with tag name 'version'.")
         );
@@ -589,12 +589,14 @@ class XMLUtilsTest {
     @ParameterizedTest
     @MethodSource
     void test_getElement_throwsXMLParseException(Element element, String tagName, String expected) {
-        XMLParseException thrown = assertThrows(XMLParseException.class, () -> XMLUtils.getElement(element, tagName));
+        XMLParseException thrown = assertThrows(XMLParseException.class, () -> XMLUtils.getChildElement(element, tagName));
         assertThat(thrown.getMessage()).isEqualTo(expected);
     }
 
     private static Stream<Arguments> test_getStringValue() {
         return Stream.of(
+            arguments(matchElement, "Bookings", ""),
+            arguments(matchElement, "Injuries", ""),
             arguments(root, "FileName", "matchdetails.xml"),
             arguments(root, "Version", "3.0")
         );
@@ -611,6 +613,8 @@ class XMLUtilsTest {
             arguments(root, "FileName", "matchdetails.xml"),
             arguments(root, "Version", "3.0"),
             arguments(root, "_FileName", "default"),
+            arguments(matchElement, "Bookings", ""),
+            arguments(matchElement, "Injuries", ""),
             arguments(root, "_Version", "default")
         );
     }
@@ -637,7 +641,7 @@ class XMLUtilsTest {
 
     private static Stream<Arguments> test_getStringValueDefault_throwsXMLParseException() {
         return Stream.of(
-            arguments(XMLUtils.getElement(matchElement, "Scorers"), "Goal", "More than one element found with name 'Goal'.")
+            arguments(XMLUtils.getChildElement(matchElement, "Scorers"), "Goal", "More than one element found with name 'Goal'.")
         );
     }
 
@@ -676,7 +680,7 @@ class XMLUtilsTest {
 
     private static Stream<Arguments> test_getIntValue_ThrowsXMLParseException() {
         return Stream.of(
-            arguments(XMLUtils.getElement(matchElement, "Scorers"), "Goal", "More than one element found with name 'Goal'."),
+            arguments(XMLUtils.getChildElement(matchElement, "Scorers"), "Goal", "More than one element found with name 'Goal'."),
             arguments(root, "_FileName", "No element with tag name '_FileName'."),
             arguments(root, "_Version", "No element with tag name '_Version'.")
         );
@@ -691,7 +695,7 @@ class XMLUtilsTest {
 
     private static Stream<Arguments> test_getIntValueDefault_ThrowsXMLParseException() {
         return Stream.of(
-            arguments(XMLUtils.getElement(matchElement, "Scorers"), "Goal", "More than one element found with name 'Goal'.")
+            arguments(XMLUtils.getChildElement(matchElement, "Scorers"), "Goal", "More than one element found with name 'Goal'.")
         );
     }
 
@@ -760,7 +764,7 @@ class XMLUtilsTest {
 
     private static Stream<Arguments> test_getBooleanValue_ThrowsXMLParseException() {
         return Stream.of(
-            arguments(XMLUtils.getElement(matchElement, "Scorers"), "Goal", "More than one element found with name 'Goal'."),
+            arguments(XMLUtils.getChildElement(matchElement, "Scorers"), "Goal", "More than one element found with name 'Goal'."),
             arguments(root, "_FileName", "No element with tag name '_FileName'."),
             arguments(root, "_Version", "No element with tag name '_Version'.")
         );
@@ -775,29 +779,29 @@ class XMLUtilsTest {
 
     private static Stream<Arguments> test_getAttributeStringValue() {
         return Stream.of(
-            arguments(XMLUtils.getElement(matchElement, "EventList"), "Event", 0, "Index", "0"),
-            arguments(XMLUtils.getElement(matchElement, "EventList"), "Event", 1, "Index", "1")
+            arguments(XMLUtils.getChildElement(matchElement, "EventList"), "Event", 0, "Index", "0"),
+            arguments(XMLUtils.getChildElement(matchElement, "EventList"), "Event", 1, "Index", "1")
         );
     }
 
     @ParameterizedTest
     @MethodSource
     void test_getAttributeStringValue(Element element, String nodeTagName, int nodeIndex, String attributeTagName, String expected) {
-        var eventNode = XMLUtils.getElements(element, nodeTagName).get(nodeIndex);
+        var eventNode = XMLUtils.getChildElements(element, nodeTagName).get(nodeIndex);
         assertThat(XMLUtils.getAttributeStringValue(eventNode, attributeTagName)).isEqualTo(expected);
     }
 
     private static Stream<Arguments> test_getAttributeIntValue() {
         return Stream.of(
-            arguments(XMLUtils.getElement(matchElement, "EventList"), "Event", 0, "Index", 0),
-            arguments(XMLUtils.getElement(matchElement, "EventList"), "Event", 1, "Index", 1)
+            arguments(XMLUtils.getChildElement(matchElement, "EventList"), "Event", 0, "Index", 0),
+            arguments(XMLUtils.getChildElement(matchElement, "EventList"), "Event", 1, "Index", 1)
         );
     }
 
     @ParameterizedTest
     @MethodSource
     void test_getAttributeIntValue(Element element, String nodeTagName, int nodeIndex, String attributeTagName, int expected) {
-        var eventNode = XMLUtils.getElements(element, nodeTagName).get(nodeIndex);
+        var eventNode = XMLUtils.getChildElements(element, nodeTagName).get(nodeIndex);
         assertThat(XMLUtils.getAttributeIntValue(eventNode, attributeTagName)).isEqualTo(expected);
     }
 }

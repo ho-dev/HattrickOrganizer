@@ -23,11 +23,15 @@ import org.xml.sax.SAXException;
 public class XMLUtils {
 
     public static class NoElementXMLParseException extends XMLParseException {
-        public NoElementXMLParseException(String tagName) {super("No element with tag name '%s'.".formatted(tagName));}
+        public NoElementXMLParseException(String tagName) {
+            super("No element with tag name '%s'.".formatted(tagName));
+        }
     }
 
     static class MoreThanOneElementXMLParseException extends XMLParseException {
-        public MoreThanOneElementXMLParseException(String tagName) {super("More than one element found with name '%s'.".formatted(tagName));}
+        public MoreThanOneElementXMLParseException(String tagName) {
+            super("More than one element found with name '%s'.".formatted(tagName));
+        }
     }
 
 	private XMLUtils() {
@@ -35,7 +39,7 @@ public class XMLUtils {
 	}
 
     /**
-     * Gets the date between an opening and closing Xml tag. E.g. for
+     * Gets the date between an opening and closing XML tag. E.g. for
      * <tag>xyz</tag> the string xyz would be returned. If there are multiple
      * nodes with the specified tag name, the data of the first node found will
      * be returned.
@@ -45,6 +49,7 @@ public class XMLUtils {
      * @return the data of the tag or <code>null</code> if no node with the
      * specified tag name could be found.
      */
+    @Deprecated(since = "11.0")
     public static String getTagData(Document doc, String tagName) {
         Node node = getNode(doc, tagName);
         if (node != null) {
@@ -59,9 +64,9 @@ public class XMLUtils {
     /**
      * Creates a document from an XML string.
      *
-     * @param xmlSource the Xml source as a string.
-     * @return the document created from the given Xml string.
-     * @throws SAXException if an error occurs while parsing the Xml.
+     * @param xmlSource the XML source as a string.
+     * @return the document created from the given XML string.
+     * @throws SAXException if an error occurs while parsing the XML.
      */
     public static Document createDocument(String xmlSource) throws SAXException {
         Reader xml = new StringReader(xmlSource);
@@ -84,7 +89,8 @@ public class XMLUtils {
      * @return the first node found with the specified tag name or
      * <code>null</code> if no node with that name could be found.
      */
-    public static Node getNode(Document doc, String tagName) {
+    @Deprecated(since = "11.0")
+    private static Node getNode(Document doc, String tagName) {
         NodeList nl = doc.getElementsByTagName(tagName);
         if (nl.getLength() > 0) {
             return nl.item(0);
@@ -102,14 +108,9 @@ public class XMLUtils {
      * @throws XMLParseException When the element is not found or more than one exists
      * @throws NullPointerException When the parent element is null
      */
-    public static Element getElement(Element parent, String tagName) {
-        Objects.requireNonNull(parent);
-        var nodes = getElements(parent.getChildNodes(), tagName);
-        return switch (nodes.size()) {
-            case 1 -> nodes.get(0);
-            case 0 -> throw new NoElementXMLParseException(tagName);
-            default -> throw new MoreThanOneElementXMLParseException(tagName);
-        };
+    public static Element getChildElement(Element parent, String tagName) {
+        return findChildElement(parent, tagName)
+            .orElseThrow(() -> new NoElementXMLParseException(tagName));
     }
 
     /**
@@ -122,9 +123,9 @@ public class XMLUtils {
      * @throws XMLParseException If more than one element exists
      * @throws NullPointerException If the parent element is null
      */
-    public static Optional<Element> getOptionalElement(Element parent, String tagName) {
+    public static Optional<Element> findChildElement(Element parent, String tagName) {
         Objects.requireNonNull(parent);
-        var nodes = getElements(parent.getChildNodes(), tagName);
+        var nodes = getChildElements(parent.getChildNodes(), tagName);
         return switch (nodes.size()) {
             case 1 -> Optional.of(nodes.get(0));
             case 0 -> Optional.empty();
@@ -142,12 +143,12 @@ public class XMLUtils {
      * @throws XMLParseException When the element is not found or more than one exists
      * @throws NullPointerException When the parent element is null
      */
-    public static List<Element>  getElements(Element parent, String tagName) {
+    public static List<Element> getChildElements(Element parent, String tagName) {
         Objects.requireNonNull(parent);
-        return  getElements(parent.getChildNodes(), tagName);
+        return getChildElements(parent.getChildNodes(), tagName);
     }
 
-    private static List<Element> getElements(NodeList childNodes, String tagName) {
+    private static List<Element> getChildElements(NodeList childNodes, String tagName) {
         var elements = new ArrayList<Element>();
         for (int i = 0; i < childNodes.getLength(); i++) {
             var node = childNodes.item(i);
@@ -159,11 +160,11 @@ public class XMLUtils {
     }
 
 	/**
-	 * Gets the value from the first descendant of a given ancestor, where the
+	 * Gets the value from the first descendant of a given parent, where the
 	 * descendant has the specified name.
 	 *
-	 * @param ancestor
-	 *            the ancestor element
+	 * @param parent
+	 *            the parent element
 	 * @param tagName
 	 *            the tag name of the descendant to find.
 	 * @return the value of the descendant
@@ -172,21 +173,16 @@ public class XMLUtils {
 	 *         value.
      * @throws NullPointerException When the parent element is null
 	 */
-	public static String getStringValue(Element ancestor, String tagName) {
-        Element e = getElement(ancestor, tagName);
-        Node c = e.getFirstChild();
-        if (c != null) {
-            return c.getNodeValue();
-        }
-        throw new NoElementXMLParseException(tagName);
+	public static String getStringValue(Element parent, String tagName) {
+        return  getChildElement(parent, tagName).getTextContent();
     }
 
 	/**
-	 * Gets the value from the first descendant of a given ancestor, where the
+	 * Gets the value from the first descendant of a given parent, where the
 	 * descendant has the specified name.
 	 *
-	 * @param ancestor
-	 *            the ancestor element
+	 * @param parent
+	 *            the parent element
 	 * @param tagName
 	 *            the tag name of the descendant to find.
 	 * @param defaultString
@@ -197,13 +193,8 @@ public class XMLUtils {
 	 *         with that name could be found or the descendant found has no
 	 *         value.
 	 */
-	public static String getStringValue(Element ancestor, String tagName, String defaultString) {
-        try {
-            return getStringValue(ancestor, tagName);
-        }
-        catch (NoElementXMLParseException e) {
-            return defaultString;
-        }
+	public static String getStringValue(Element parent, String tagName, String defaultString) {
+        return findChildElement(parent, tagName).map(Element::getTextContent).orElse(defaultString);
     }
 
     /**

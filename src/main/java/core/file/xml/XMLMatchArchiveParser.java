@@ -61,11 +61,11 @@ public final class XMLMatchArchiveParser {
                     match.setCupLevelIndex(CupLevelIndex.fromInt(XMLUtils.getIntValue(matchElement, "CupLevelIndex")));
                 }
 
-                var homeTeamElement = XMLUtils.getElement(matchElement, "HomeTeam");
+                var homeTeamElement = XMLUtils.getChildElement(matchElement, "HomeTeam");
                 match.setHomeTeamID(XMLUtils.getIntValue(homeTeamElement, "HomeTeamID"));
                 match.setHomeTeamName(XMLUtils.getStringValue(homeTeamElement, "HomeTeamName"));
 
-                var awayTeamElement = XMLUtils.getElement(matchElement, "AwayTeam");
+                var awayTeamElement = XMLUtils.getChildElement(matchElement, "AwayTeam");
                 match.setGuestTeamID(XMLUtils.getIntValue(awayTeamElement, "AwayTeamID"));
                 match.setGuestTeamName(XMLUtils.getStringValue(awayTeamElement, "AwayTeamName"));
                 match.setHomeTeamGoals(XMLUtils.getIntValue(matchElement, "HomeGoals"));
