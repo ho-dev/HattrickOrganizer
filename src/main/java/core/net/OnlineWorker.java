@@ -161,8 +161,9 @@ public class OnlineWorker {
 				}
 
 				HOMainFrame.instance().setInformation(TranslationFacility.tr("ls.update_status.match_info"), 20);
-				List<MatchKurzInfo> matches = XMLMatchArchivParser
+				List<MatchKurzInfo> matches = XMLMatchArchiveParser
 						.parseMatchesFromString(matchesString);
+                matches.stream().filter(i->i.getMatchType().isTournament()).forEach(MatchKurzInfo::loadTournamentDetails);
 
 				// Add the new matches to the list of all matches
 				allMatches.addAll(matches);
@@ -456,7 +457,6 @@ public class OnlineWorker {
 		List<MatchKurzInfo> matches = getMatches(teamId, matchDate.plus(1, ChronoUnit.MINUTES));
 		for (MatchKurzInfo m : matches) {
 			if (m.getMatchID() == match.getMatchID()) {
-				//DBManager.instance().updateMatchKurzInfo(m);
 				return m;
 			}
 		}
@@ -494,7 +494,7 @@ public class OnlineWorker {
 	/**
 	 * Download information about a given tournament
 	 */
-	public static TournamentDetails getTournamentDetails(int tournamentId) {
+	public static TournamentDetails downloadTournamentDetails(int tournamentId) {
 		TournamentDetails oTournamentDetails = null;
 		String tournamentString = "";
 
@@ -508,7 +508,7 @@ public class OnlineWorker {
 		}
 
 		if (!StringUtils.isEmpty(tournamentString)) {
-			oTournamentDetails = XMLTournamentDetailsParser.parseTournamentDetailsFromString(tournamentString);  // TODO: create function parseTournamentDetailsFromString
+			oTournamentDetails = XMLTournamentDetailsParser.parseTournamentDetailsFromString(tournamentString);
 		}
 
 		return oTournamentDetails;
@@ -563,7 +563,10 @@ public class OnlineWorker {
 
 				// Automatically download additional match infos (lineup + arena)
 				for (MatchKurzInfo match : matches) {
-					int curMatchId = match.getMatchID();
+                    if (match.getMatchType().isTournament()) {
+                        match.loadTournamentDetails();
+                    }
+                    int curMatchId = match.getMatchID();
 					boolean refresh = !DBManager.instance().isMatchInDB(curMatchId, match.getMatchType())
 							|| (match.getMatchStatus() != MatchKurzInfo.FINISHED && DBManager.instance().hasUnsureWeatherForecast(curMatchId))
 							|| DBManager.instance().matchLineupIsNotStored(match.getMatchType(), curMatchId);
@@ -1149,7 +1152,7 @@ public class OnlineWorker {
 	public static List<MatchKurzInfo> downloadMatchesOfSeason(int teamId, int season){
 		try{
 			var xml = Connector.instance().getMatchesOfSeason(teamId, season);
-			return XMLMatchArchivParser.parseMatchesFromString(xml);
+			return XMLMatchArchiveParser.parseMatchesFromString(xml);
 		}
 		catch (Exception exception) {
 			HOLogger.instance().error(OnlineWorker.class,"downloadMatchData:  Error in downloading matches of season: " + exception);
@@ -1176,7 +1179,7 @@ public class OnlineWorker {
 			var mc = Connector.instance();
 			try {
 				var xml = mc.getMatchesArchive(SourceSystem.YOUTH, youthteamid, dateSince, dateUntil);
-				var youthMatches = XMLMatchArchivParser.parseMatchesFromString(xml);
+				var youthMatches = XMLMatchArchiveParser.parseMatchesFromString(xml);
 				for ( var match: youthMatches){
 					MatchLineup lineup = downloadMatchlineup(match.getMatchID(), match.getMatchType(), match.getHomeTeamID(), match.getGuestTeamID());
 					if (lineup != null) {

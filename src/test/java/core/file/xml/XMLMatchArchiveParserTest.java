@@ -21,7 +21,8 @@ class XMLMatchArchiveParserTest {
         var xmlFileMatchArchive = ResourceUtils.getResourceFileAsString("chpp/matchesarchive/matchesArchive.xml");
 
         // when
-        final var matches = XMLMatchArchivParser.parseMatchesFromString(xmlFileMatchArchive);
+        final var matches = XMLMatchArchiveParser.parseMatchesFromString(xmlFileMatchArchive);
+
         assertThat(matches).isNotNull();
 
         var expectedMatches = new ArrayList<MatchKurzInfo>();
