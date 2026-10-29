@@ -136,7 +136,7 @@ class XMLUtilsTest {
                   </Goal>
                 </Scorers>
                 <Bookings />
-                <Injuries />
+                <Injuries></Injuries>
                 <PossessionFirstHalfHome>53</PossessionFirstHalfHome>
                 <PossessionFirstHalfAway>47</PossessionFirstHalfAway>
                 <PossessionSecondHalfHome>54</PossessionSecondHalfHome>
