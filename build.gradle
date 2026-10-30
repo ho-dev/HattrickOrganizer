@@ -298,7 +298,7 @@ tasks.register("media", Install4jTask) {
     // 464  -> Linux rpm JRE
     // 471 -> Linux deb JRE
 
-    buildIds = ["60", "485", "64", "481", "1225", "1224", "173", "477", "1062", "1064", "1203", "1206", "1208", "1211"]
+    buildIds = ["60", "485", "64", "481", "1225", "1224", "1400", "1401", "173", "477", "1062", "1064", "1203", "1206", "1208", "1211"]
 
     variables = [HO_version: "$project.version.$buildNumber.$developmentStage", projectDir: projectDir, versionType: project.ext.version_type]
 }

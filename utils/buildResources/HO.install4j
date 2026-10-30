@@ -1315,6 +1315,31 @@ return true;</property>
       </excludedBeans>
       <jreBundle jreBundleSource="none" />
     </macosFolder>
+    <macosFolder name="macOS Intel - JRE" id="1400" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}${compiler:versionType}-macOS-Intel-JRE" architecture="amd64">
+      <excludedLaunchers>
+        <launcher id="59" />
+        <launcher id="274" />
+        <launcher id="497" />
+      </excludedLaunchers>
+      <excludedBeans>
+        <bean refId="1220" />
+        <bean refId="1221" />
+        <bean refId="1222" />
+      </excludedBeans>
+    </macosFolder>
+    <macosFolder name="macOS Intel" id="1401" mediaFileName="${compiler:sys.shortName}-${compiler:sys.version}${compiler:versionType}-macOS-Intel" architecture="amd64">
+      <excludedLaunchers>
+        <launcher id="59" />
+        <launcher id="274" />
+        <launcher id="497" />
+      </excludedLaunchers>
+      <excludedBeans>
+        <bean refId="1220" />
+        <bean refId="1221" />
+        <bean refId="1222" />
+      </excludedBeans>
+      <jreBundle jreBundleSource="none" />
+    </macosFolder>
   </mediaSets>
   <buildIds buildAll="false">
     <mediaSet refId="64" />
