@@ -7,6 +7,11 @@ public class HOTabInfo extends AbstractTable.Storable {
     private String tabID;
     private int tabIndex;
 
+    public HOTabInfo(String paneID, String tabID, int index){
+        this.tabbedPaneID = paneID;
+        this.tabID = tabID;
+        this.tabIndex = index;
+    }
     public String getTabbedPaneID() {
         return tabbedPaneID;
     }

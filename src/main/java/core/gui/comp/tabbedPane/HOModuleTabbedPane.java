@@ -27,6 +27,7 @@ public final class HOModuleTabbedPane extends HOTabbedPane {
 
 	public void showTab(int moduleId) {
 		IModule module = ModuleManager.instance().getModule(moduleId);
+        String moduleID = getModuleID(module);
 		if (module.hasMainTab()) {
 			int index = indexOfTab(module.getDescription());
 			if (index == -1) {
@@ -38,7 +39,11 @@ public final class HOModuleTabbedPane extends HOTabbedPane {
 		}
 	}
 
-	public JPanel getModulePanel(int moduleId) {
+    private String getModuleID(IModule module) {
+        return "Module_" + module.getModuleId();
+    }
+
+    public JPanel getModulePanel(int moduleId) {
 		IModule module = ModuleManager.instance().getModule(moduleId);
 		if (module.hasMainTab()) {
 			int index = indexOfTab(module.getDescription());

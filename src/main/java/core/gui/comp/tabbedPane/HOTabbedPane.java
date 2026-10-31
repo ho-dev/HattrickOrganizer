@@ -1,6 +1,7 @@
 package core.gui.comp.tabbedPane;
 
 import core.db.DBManager;
+import core.model.TranslationFacility;
 import core.util.HOLogger;
 
 import java.awt.*;
@@ -8,13 +9,20 @@ import java.util.List;
 
 public abstract class HOTabbedPane extends DraggableTabbedPane {
 
+    private String tabbedPaneID;
     private List<HOTabInfo> tabs;
 
     public HOTabbedPane(String tabbedPaneID) {
+        this.tabbedPaneID = tabbedPaneID;
         tabs = DBManager.instance().loadHOTabInfo(tabbedPaneID);
-        for ( var tab : tabs ) {
-            this.add(getTabComponent(tab.getTabID()));
+        for (var tab : tabs) {
+            super.add(getTabComponent(tab.getTabID()));
         }
+    }
+
+    public void addTab(String tabID, Component tabComponent){
+        tabs.add(new HOTabInfo(tabbedPaneID, tabID, super.getTabCount()));
+        super.addTab(TranslationFacility.tr(tabID), tabComponent);
     }
 
     public void storeHOTabInfo() {
