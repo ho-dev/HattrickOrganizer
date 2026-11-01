@@ -21,8 +21,7 @@ import java.util.List;
 public class SkillupTableModel extends HOTableModel {
 
     private static int nextId=0;
-	private ArrayList<PlayerSkillChange> skillChanges;
-	private TrainingModel trainingModel;
+    private TrainingModel trainingModel;
 
 	public SkillupTableModel(UserColumnController.@NotNull ColumnModelId id) {
 		super(id, "ls.module.training.skillUps");
@@ -88,28 +87,28 @@ public class SkillupTableModel extends HOTableModel {
 
 	@Override
 	protected void initData() {
-		this.skillChanges = new ArrayList<>();
+        ArrayList<PlayerSkillChange> skillChanges = new ArrayList<>();
         var selectedPlayer = PlayersTable.Companion.getSelectedPlayer();
-		if (selectedPlayer != null) {
-			for ( var skillUp : this.trainingModel.getSkillupManager().getTrainedSkillChanges()){
-				skillChanges.add(new PlayerSkillChange(selectedPlayer, skillUp));
-			}
-			for ( var skillUp : this.trainingModel.getFutureTrainingManager().getFutureSkillChanges()){
-				skillChanges.add(new PlayerSkillChange(selectedPlayer, skillUp));
-			}
-			Collections.reverse(skillChanges);
-		}
+        if (selectedPlayer != null) {
+            for (var skillUp : this.trainingModel.getSkillupManager().getTrainedSkillChanges()) {
+                skillChanges.add(new PlayerSkillChange(selectedPlayer, skillUp));
+            }
+            for (var skillUp : this.trainingModel.getFutureTrainingManager().getFutureSkillChanges()) {
+                skillChanges.add(new PlayerSkillChange(selectedPlayer, skillUp));
+            }
+            Collections.reverse(skillChanges);
+        }
 
-		m_clData = new Object[skillChanges.size()][getDisplayedColumns().length];
-		int rownum = 0;
-		for (var skillChange : skillChanges) {
-			int colnum = 0;
-			for ( var col : getDisplayedColumns()){
-				m_clData[rownum][colnum] = ((TrainingColumn)col).getTableEntry(skillChange);
-				colnum++;
-			}
-			rownum++;
-		}
-		fireTableDataChanged();
-	}
+        m_clData = new Object[skillChanges.size()][getDisplayedColumns().length];
+        int rownum = 0;
+        for (var skillChange : skillChanges) {
+            int colnum = 0;
+            for (var col : getDisplayedColumns()) {
+                m_clData[rownum][colnum] = ((TrainingColumn) col).getTableEntry(skillChange);
+                colnum++;
+            }
+            rownum++;
+        }
+        fireTableDataChanged();
+    }
 }
