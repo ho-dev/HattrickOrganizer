@@ -83,6 +83,73 @@ class XMLMatchdetailsParserTest {
     }
 
     @Test
+    void parseMatchdetailsFromString_UpcomingWithWeather() throws IOException {
+
+        var xmlFileMatchDetails = ResourceUtils.getResourceFileAsString("chpp/matchdetails/matchdefailsUpcomingWithWeather.xml");
+
+        // when
+        final var matchdetails = XMLMatchdetailsParser.parseMatchdetailsFromString(xmlFileMatchDetails, null);
+
+        // then
+        assertThat(matchdetails.getArenaName()).isEqualTo("High Road");
+        assertThat(matchdetails.getGuestTeamName()).isEqualTo("Juventus Brenk 2");
+        assertThat(matchdetails.getHomeTeamName()).isEqualTo("Nazka United");
+        assertThat(matchdetails.getMatchreport()).isEqualTo("");
+        assertThat(matchdetails.getFetchDatum()).isEqualTo(HODateTime.fromHT("2026-11-01 15:45:00"));
+        assertThat(matchdetails.getMatchDate()).isEqualTo(HODateTime.fromHT("2026-11-01 16:00:00"));
+        assertThat(matchdetails.getHighlights()).isEmpty();
+        assertThat(matchdetails.getArenaID()).isEqualTo(574260);
+        assertThat(matchdetails.getGuestTeamId()).isEqualTo(1242154);
+        assertThat(matchdetails.getGuestEinstellung()).isEqualTo(IMatchDetails.EINSTELLUNG_UNBEKANNT);
+        assertThat(matchdetails.getGuestGoals()).isEqualTo(-1);
+        assertThat(matchdetails.getGuestLeftAtt()).isEqualTo(-1);
+        assertThat(matchdetails.getGuestLeftDef()).isEqualTo(-1);
+        assertThat(matchdetails.getGuestMidAtt()).isEqualTo(-1);
+        assertThat(matchdetails.getGuestMidDef()).isEqualTo(-1);
+        assertThat(matchdetails.getGuestMidfield()).isEqualTo(-1);
+        assertThat(matchdetails.getGuestRightAtt()).isEqualTo(-1);
+        assertThat(matchdetails.getGuestRightDef()).isEqualTo(-1);
+        assertThat(matchdetails.getGuestHatStats()).isEqualTo(-9);
+        assertThat(matchdetails.getGuestTacticSkill()).isEqualTo(-1);
+        assertThat(matchdetails.getGuestTacticType()).isEqualTo(-1);
+        assertThat(matchdetails.getHomeTeamId()).isEqualTo(574260);
+        assertThat(matchdetails.getMatchType()).isEqualTo(MatchType.INTFRIENDLYCUPRULES);
+        assertThat(matchdetails.getHomeEinstellung()).isEqualTo(IMatchDetails.EINSTELLUNG_UNBEKANNT);
+        assertThat(matchdetails.getHomeGoals()).isEqualTo(-1);
+        assertThat(matchdetails.getHomeLeftAtt()).isEqualTo(-1);
+        assertThat(matchdetails.getHomeLeftDef()).isEqualTo(-1);
+        assertThat(matchdetails.getHomeMidAtt()).isEqualTo(-1);
+        assertThat(matchdetails.getHomeMidDef()).isEqualTo(-1);
+        assertThat(matchdetails.getHomeMidfield()).isEqualTo(-1);
+        assertThat(matchdetails.getHomeRightAtt()).isEqualTo(-1);
+        assertThat(matchdetails.getHomeRightDef()).isEqualTo(-1);
+        assertThat(matchdetails.getHomeHatStats()).isEqualTo(-9);
+        assertThat(matchdetails.getHomeTacticSkill()).isEqualTo(-1);
+        assertThat(matchdetails.getHomeTacticType()).isEqualTo(-1);
+        assertThat(matchdetails.getMatchID()).isEqualTo(772121209);
+        assertThat(matchdetails.getWetterId()).isEqualTo(Weather.PARTIALLY_CLOUDY.getId());
+        assertThat(matchdetails.getZuschauer()).isEqualTo(0);
+        assertThat(matchdetails.getCupLevel()).isEqualTo(CupLevel.NONE);
+        assertThat(matchdetails.getCupLevelIndex()).isEqualTo(CupLevelIndex.NONE);
+        assertThat(matchdetails.getMatchContextId()).isEqualTo(0);
+        assertThat(matchdetails.getSoldTerraces()).isEqualTo(-1);
+        assertThat(matchdetails.getSoldBasic()).isEqualTo(-1);
+        assertThat(matchdetails.getSoldRoof()).isEqualTo(-1);
+        assertThat(matchdetails.getSoldVIP()).isEqualTo(-1);
+        assertThat(matchdetails.getRegionId()).isNull();
+        assertThat(matchdetails.getHomeRatingIndirectSetPiecesAtt()).isEqualTo(-1);
+        assertThat(matchdetails.getHomeRatingIndirectSetPiecesDef()).isEqualTo(-1);
+        assertThat(matchdetails.getGuestRatingIndirectSetPiecesAtt()).isEqualTo(-1);
+        assertThat(matchdetails.getGuestRatingIndirectSetPiecesDef()).isEqualTo(-1);
+        assertThat(matchdetails.getInjuries()).isEmpty();
+        // homeGoalsInParts in another test
+        // guestGoalsInParts in another test
+        assertThat(matchdetails.getFormation(true)).isEqualTo("");
+        assertThat(matchdetails.getFormation(false)).isEqualTo("");
+        assertThat(matchdetails.getResult()).isEqualTo("   !ls.match.result.separation! ");
+    }
+
+    @Test
     void parseMatchdetailsFromString_withMatchLineup() throws IOException {
         // given
         var xmlFileMatchDetails = ResourceUtils.getResourceFileAsString("chpp/matchdetails/matchdetails.xml");
