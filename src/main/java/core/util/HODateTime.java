@@ -120,6 +120,10 @@ public class HODateTime implements Comparable<HODateTime> {
         return new HODateTime(HT_START.instant.plus(Duration.ofDays(((week.season - 1) * 16L + week.week - 1) * 7)));
     }
 
+    public static HODateTime fromLocaleHTWeek(LocaleHTWeek localeHtWeek) {
+        return fromHTWeek(HTWeek.fromLocaleHTWeek(localeHtWeek));
+    }
+
     /**
      * Convert to seconds since epoch (1-1-1070)
      * @param ts HODateTime
@@ -311,19 +315,7 @@ public class HODateTime implements Comparable<HODateTime> {
             this.week = week;
         }
 
-        public static HTWeek fromString(String s) {
-            var nr = s.split(" ");
-            if (nr.length == 2) {
-                return new HTWeek(
-                        Integer.parseInt(nr[0]),
-                        Integer.parseInt(nr[1])
-                );
-            } else {
-                return new HTWeek(0, 0);
-            }
-        }
-
-        public long sinceOrigin() {
+        public long weeksSinceLeagueStart() {
             return (season-1) * 16L + week -1L;
         }
 
@@ -333,7 +325,42 @@ public class HODateTime implements Comparable<HODateTime> {
         }
 
         public boolean equals(HTWeek other) { return this.week == other.week && this.season == other.season;}
+
+        public static HTWeek fromLocaleHTWeek(LocaleHTWeek localeHtWeek) {
+            return new HTWeek(localeHtWeek.season - HOVerwaltung.instance().getModel().getBasics().getSeasonOffset(), localeHtWeek.week);
+        }
     }
+
+    /**
+     * Internal class representing HT's locale season and week
+     */
+    public static class LocaleHTWeek {
+        /**
+         * season number [1..]
+         */
+        public int season;
+        /**
+         * week number [1..16]
+         */
+        public int week;
+
+        public LocaleHTWeek(int season, int week) {
+            this.season = season;
+            this.week = week;
+        }
+
+        public long weeksSinceLeagueStart() {
+            return (season-1) * 16L + week -1L;
+        }
+
+        @Override
+        public String toString(){
+            return season + " (" + week + ")";
+        }
+
+        public boolean equals(LocaleHTWeek other) { return this.week == other.week && this.season == other.season;}
+    }
+
 
     /**
      * Convert to absolut HT's season and week (same as swedish's league season)
@@ -359,7 +386,7 @@ public class HODateTime implements Comparable<HODateTime> {
      * training date differs from start of weeks
      * @return local training season/week
      */
-    public HTWeek toTrainingWeek() {
+    public LocaleHTWeek toTrainingWeek() {
         if (durationBetweenWeekStartAndTrainingDate == null) {
             var xtra = HOVerwaltung.instance().getModel().getXtraDaten();
             if (xtra != null) {
@@ -395,10 +422,9 @@ public class HODateTime implements Comparable<HODateTime> {
      *
      * @return HTWeek
      */
-    public HTWeek toLocaleHTWeek() {
-        var ret = toHTWeek();
-        ret.season += HOVerwaltung.instance().getModel().getBasics().getSeasonOffset();
-        return ret;
+    public LocaleHTWeek toLocaleHTWeek() {
+        var htWeek = toHTWeek();
+        return new LocaleHTWeek(htWeek.season + HOVerwaltung.instance().getModel().getBasics().getSeasonOffset(), htWeek.week);
     }
 
     public static BigDecimal daysFromNow(HODateTime to, int scale) {

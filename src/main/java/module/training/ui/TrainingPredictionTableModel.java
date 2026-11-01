@@ -71,8 +71,8 @@ public class TrainingPredictionTableModel  extends HOPlayersTableModel {
         nextTrainingDate = findDownloadedNextTrainingDate().orElse(HODateTime.now());
         var nextWeek = nextTrainingDate;
         for (int weekIndex = 0; weekIndex < UserParameter.instance().futureWeeks; weekIndex++) {
-            var htWeek = nextWeek.toLocaleHTWeek();
-            var column = new TrainingProgressColumn(nextColumnId++, htWeek, weekIndex, 60);
+            var localeHTWeek = nextWeek.toLocaleHTWeek();
+            var column = new TrainingProgressColumn(nextColumnId++, localeHTWeek, weekIndex, 60);
             newColumns.add(column);
             nextWeek = nextWeek.plusDaysAtSameLocalTime(7);
         }

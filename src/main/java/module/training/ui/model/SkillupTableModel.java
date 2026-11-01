@@ -7,7 +7,6 @@ import core.gui.comp.table.HOTableModel;
 import core.gui.comp.table.PlayersTable;
 import core.gui.model.UserColumnController;
 import core.model.HOVerwaltung;
-import core.model.player.SkillChange;
 import module.training.PlayerSkillChange;
 import module.training.Skills;
 import module.training.ui.TrainingLegendPanel;
@@ -44,7 +43,7 @@ public class SkillupTableModel extends HOTableModel {
 					public IHOTableCellEntry getTableEntry(PlayerSkillChange entry) {
 						var date = entry.getSkillChange().getDate();
 						var htWeek = date.toHTWeek();
-                        var ret = new ColorLabelEntry(htWeek.sinceOrigin(), String.valueOf(htWeek.week), getForegroundColor(entry), ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
+                        var ret = new ColorLabelEntry(htWeek.weeksSinceLeagueStart(), String.valueOf(htWeek.week), getForegroundColor(entry), ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
 						ret.setToolTipText(entry.getSkillChange().getDate().toLocaleDateTime());
 						return ret;
 					}
@@ -54,7 +53,7 @@ public class SkillupTableModel extends HOTableModel {
 					public IHOTableCellEntry getTableEntry(PlayerSkillChange entry) {
 						var date = entry.getSkillChange().getDate();
 						var htWeek = date.toHTWeek();
-						var ret = new ColorLabelEntry(htWeek.sinceOrigin(), String.valueOf(htWeek.season), getForegroundColor(entry), ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
+						var ret = new ColorLabelEntry(htWeek.weeksSinceLeagueStart(), String.valueOf(htWeek.season), getForegroundColor(entry), ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
 						ret.setToolTipText(entry.getSkillChange().getDate().toLocaleDateTime());
 						return ret;
 
@@ -65,7 +64,7 @@ public class SkillupTableModel extends HOTableModel {
 					public IHOTableCellEntry getTableEntry(PlayerSkillChange entry) {
 						var date = entry.getSkillChange().getDate();
 						var htWeek = date.toHTWeek();
-						var ret = new ColorLabelEntry(htWeek.sinceOrigin(), entry.getPlayer().getAgeWithDaysAsString(date), getForegroundColor(entry), ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+						var ret = new ColorLabelEntry(htWeek.weeksSinceLeagueStart(), entry.getPlayer().getAgeWithDaysAsString(date), getForegroundColor(entry), ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
 						ret.setToolTipText(entry.getSkillChange().getDate().toLocaleDateTime());
 						return ret;
 
