@@ -70,6 +70,7 @@
 * Update training prediction table structure on first download after training date (#2467)
 * Fix exception in future training popup if no columns are selected (#2537)
 * Fix exception in training prediction table before first data are downloaded (#2563)
+* Fix error in training prediction that doesn't show any information for leagues with offsets other than the Swedish league. (#2573)
 
 ### Statistics
 
