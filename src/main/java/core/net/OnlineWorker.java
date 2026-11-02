@@ -640,26 +640,26 @@ public class OnlineWorker {
 	 * @return
 	 * 			MatchLineup containing specified teams
 	 */
-	private static MatchLineup downloadMatchlineup(int matchId, MatchType matchType, int teamId1, int teamId2) {
+    private static MatchLineup downloadMatchlineup(int matchId, MatchType matchType, int teamId1, int teamId2) {
         HOMainFrame.instance().setWaitInformation();
-        var lineUp1 = downloadMatchLineup(matchId, teamId1, matchType);
-        if (lineUp1 != null && teamId2 > 0) {
-            if (teamId2 == lineUp1.getGuestTeamId()) {
+        var matchLineup = downloadMatchLineup(matchId, teamId1, matchType);
+        if (matchLineup != null && teamId2 > 0) {
+            final boolean otherTeamIdIsGuest = teamId2 == matchLineup.getGuestTeamId();
+            final boolean otherTeamIdIsHomeTeam = teamId2 == matchLineup.getHomeTeamId();
+            if (otherTeamIdIsGuest || otherTeamIdIsHomeTeam) {
                 HOMainFrame.instance().setWaitInformation();
-                var lineUp2 = downloadMatchLineup(matchId, teamId2, matchType);
-                if (lineUp2 != null) {
-                    lineUp1.setGuestTeam(lineUp2.getGuestTeam());
-                }
-            } else if (teamId2 == lineUp1.getHomeTeamId()) {
-                HOMainFrame.instance().setWaitInformation();
-                var lineUp2 = downloadMatchLineup(matchId, teamId2, matchType);
-                if (lineUp2 != null) {
-                    lineUp1.setHomeTeam(lineUp2.getHomeTeam());
+                final var otherMatchLineup = downloadMatchLineup(matchId, teamId2, matchType);
+                if (otherMatchLineup != null) {
+                    if (otherTeamIdIsGuest) {
+                        matchLineup.setGuestTeam(otherMatchLineup.getGuestTeam());
+                    } else {
+                        matchLineup.setHomeTeam(otherMatchLineup.getHomeTeam());
+                    }
                 }
             }
         }
         HOMainFrame.instance().setWaitInformation();
-        return lineUp1;
+        return matchLineup;
     }
 
 	/**
