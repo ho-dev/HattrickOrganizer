@@ -40,38 +40,37 @@ class HODateTimeTest {
         final var ts = fetchedDate.toDbTimestamp();
         assertThat(HODateTime.fromDbTimestamp(ts).toHT()).isEqualTo("2022-01-08 14:33:58");
 
-
         var dti = HODateTime.fromHT("2022-02-19 23:11:00");
-        assertThat(dti.toHTWeek().season).isEqualTo(80);
-        assertThat(dti.toHTWeek().week).isEqualTo(10);
+        assertThat(dti.toHTWeek().season()).isEqualTo(80);
+        assertThat(dti.toHTWeek().week()).isEqualTo(10);
 
         dti = HODateTime.fromHT("2021-02-14 23:11:00");
-        assertThat(dti.toHTWeek().season).isEqualTo(77);
-        assertThat(dti.toHTWeek().week).isEqualTo(6);
+        assertThat(dti.toHTWeek().season()).isEqualTo(77);
+        assertThat(dti.toHTWeek().week()).isEqualTo(6);
 
         dti = HODateTime.fromHT("2020-06-27 00:00:00");
-        assertThat(dti.toHTWeek().season).isEqualTo(75);
-        assertThat(dti.toHTWeek().week).isEqualTo(4);
+        assertThat(dti.toHTWeek().season()).isEqualTo(75);
+        assertThat(dti.toHTWeek().week()).isEqualTo(4);
 
         dti = HODateTime.fromHT("2018-05-10 00:00:00");
-        assertThat(dti.toHTWeek().season).isEqualTo(68);
-        assertThat(dti.toHTWeek().week).isEqualTo(5);
+        assertThat(dti.toHTWeek().season()).isEqualTo(68);
+        assertThat(dti.toHTWeek().week()).isEqualTo(5);
 
         dti = HODateTime.fromHT("2009-05-28 00:00:00");
-        assertThat(dti.toHTWeek().season).isEqualTo(39);
-        assertThat(dti.toHTWeek().week).isEqualTo(2);
+        assertThat(dti.toHTWeek().season()).isEqualTo(39);
+        assertThat(dti.toHTWeek().week()).isEqualTo(2);
 
         dti = HODateTime.fromHT("2020-09-07 00:00:00");
-        assertThat(dti.toHTWeek().season).isEqualTo(75);
-        assertThat(dti.toHTWeek().week).isEqualTo(15);
+        assertThat(dti.toHTWeek().season()).isEqualTo(75);
+        assertThat(dti.toHTWeek().week()).isEqualTo(15);
 
         dti = HODateTime.fromHT("2020-09-14 00:00:00");
-        assertThat(dti.toHTWeek().season).isEqualTo(75);
-        assertThat(dti.toHTWeek().week).isEqualTo(16);
+        assertThat(dti.toHTWeek().season()).isEqualTo(75);
+        assertThat(dti.toHTWeek().week()).isEqualTo(16);
 
         dti = HODateTime.fromHT("2020-09-21 01:30:00");
-        assertThat(dti.toHTWeek().season).isEqualTo(76);
-        assertThat(dti.toHTWeek().week).isEqualTo(1);
+        assertThat(dti.toHTWeek().season()).isEqualTo(76);
+        assertThat(dti.toHTWeek().week()).isEqualTo(1);
     }
 
     private static Stream<Arguments> testToEpochSecond() {
