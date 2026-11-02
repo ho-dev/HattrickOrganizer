@@ -117,7 +117,7 @@ public class HODateTime implements Comparable<HODateTime> {
      * @return date time of the start of hattrick week
      */
     public static HODateTime fromHTWeek(HTWeek week) {
-        return new HODateTime(HT_START.instant.plus(Duration.ofDays(((week.season - 1) * 16L + week.week - 1) * 7)));
+        return new HODateTime(HT_START.instant.plus(Duration.ofDays(((week.season() - 1) * 16L + week.week() - 1) * 7)));
     }
 
     public static HODateTime fromLocaleHTWeek(LocaleHTWeek localeHtWeek) {
@@ -359,7 +359,7 @@ public class HODateTime implements Comparable<HODateTime> {
      */
     public LocaleHTWeek toLocaleHTWeek() {
         var htWeek = toHTWeek();
-        return new LocaleHTWeek(htWeek.season + HOVerwaltung.instance().getModel().getBasics().getSeasonOffset(), htWeek.week);
+        return new LocaleHTWeek(htWeek.season() + HOVerwaltung.instance().getModel().getBasics().getSeasonOffset(), htWeek.week());
     }
 
     public static BigDecimal daysFromNow(HODateTime to, int scale) {

@@ -159,8 +159,8 @@ public class FuturePlayerTraining extends AbstractTable.Storable {
     public void setFrom(HODateTime from) {
         this._from = from;
         var htWeek = from.toHTWeek();
-        this.fromSeason = htWeek.season;
-        this.fromWeek = htWeek.week;
+        this.fromSeason = htWeek.season();
+        this.fromWeek = htWeek.week();
     }
 
     boolean toInitDone = false;
@@ -179,8 +179,8 @@ public class FuturePlayerTraining extends AbstractTable.Storable {
         this._to = to;
         if (to != null){
             var htWeek = to.toHTWeek();
-            this.toSeason = htWeek.season;
-            this.toWeek = htWeek.week;
+            this.toSeason = htWeek.season();
+            this.toWeek = htWeek.week();
         }
         else {
             this.toSeason = null;

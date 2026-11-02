@@ -254,12 +254,12 @@ abstract class ForecastCurve extends Curve {
 			var htweek = matchDate.toHTWeek();
 			Curve.Point point;
 			if (match.getMatchType() == MatchType.LEAGUE) {
-				switch (htweek.week) {
+				switch (htweek.week()) {
 					case 16 -> point = new Point(matchDate, getTargetSpirit(), RESET_PT);
 					case 15 -> {
 						point = new Point(matchDate,
 								IMatchDetails.EINSTELLUNG_NORMAL,
-								htweek.week,
+								htweek.week(),
 								MatchType.QUALIFICATION,
 								intensity);
 						point.m_strTooltip = TranslationFacility.tr("ls.match.matchtype.qualification");
@@ -267,8 +267,8 @@ abstract class ForecastCurve extends Curve {
 					default -> {
 						point = new Point(matchDate,
 								IMatchDetails.EINSTELLUNG_NORMAL,
-								htweek.week, MatchType.LEAGUE, intensity);
-						point.m_strTooltip = (htweek.week)
+								htweek.week(), MatchType.LEAGUE, intensity);
+						point.m_strTooltip = (htweek.week())
 								+ ". "
 								+ TranslationFacility.tr("ls.match.matchtype.league");
 					}
@@ -280,8 +280,8 @@ abstract class ForecastCurve extends Curve {
 				// add Cup Match
 				point = new Curve.Point(matchDate,
 						IMatchDetails.EINSTELLUNG_NORMAL,
-						htweek.week, MatchType.CUP, intensity);
-				point.m_strTooltip = htweek.week
+						htweek.week(), MatchType.CUP, intensity);
+				point.m_strTooltip = htweek.week()
 						+ ". "
 						+ TranslationFacility.tr(matchTypTooltip.toString());
 				m_clPoints.add(point);

@@ -41,7 +41,7 @@ public class SkillChange {
     }
 
     public int getHtWeek() {
-        return date.toHTWeek().week;
+        return date.toHTWeek().week();
     }
 
     /**
