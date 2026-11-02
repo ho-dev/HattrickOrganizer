@@ -8,6 +8,7 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.TranslationFacility;
 import core.util.HODateTime;
+import core.util.LocaleHTWeek;
 import module.training.ui.TrainingLegendPanel;
 
 import javax.swing.*;
@@ -20,10 +21,10 @@ public class TrainingProgressColumn extends UserColumn {
     private static final Color FULL_TRAINING_BG = ThemeManager.getColor(HOColorName.TRAINING_FULL_BG);
     private static final Color PARTIAL_TRAINING_BG = ThemeManager.getColor(HOColorName.TRAINING_PARTIAL_BG);
     private static final Color OSMOSIS_TRAINING_BG = ThemeManager.getColor(HOColorName.TRAINING_OSMOSIS_BG);
-    private final HODateTime.LocaleHTWeek localeHtWeek;
+    private final LocaleHTWeek localeHtWeek;
     private final int trainingWeekIndex;
 
-    public TrainingProgressColumn(int id, HODateTime.LocaleHTWeek localeHtweek, int trainingWeekIndex, int minWidth) {
+    public TrainingProgressColumn(int id, LocaleHTWeek localeHtweek, int trainingWeekIndex, int minWidth) {
         super(id, localeHtweek.season + " " + localeHtweek.week);
         this.trainingWeekIndex = trainingWeekIndex;
         this.translateColumnName = false;

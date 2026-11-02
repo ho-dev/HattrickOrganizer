@@ -41,7 +41,7 @@ public class SkillupTableModel extends HOTableModel {
 					@Override
 					public IHOTableCellEntry getTableEntry(PlayerSkillChange entry) {
 						var date = entry.getSkillChange().getDate();
-						var htWeek = date.toHTWeek();
+						var htWeek = date.toLocaleHTWeek();
                         var ret = new ColorLabelEntry(htWeek.weeksSinceLeagueStart(), String.valueOf(htWeek.week), getForegroundColor(entry), ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
 						ret.setToolTipText(entry.getSkillChange().getDate().toLocaleDateTime());
 						return ret;
@@ -51,7 +51,7 @@ public class SkillupTableModel extends HOTableModel {
 					@Override
 					public IHOTableCellEntry getTableEntry(PlayerSkillChange entry) {
 						var date = entry.getSkillChange().getDate();
-						var htWeek = date.toHTWeek();
+						var htWeek = date.toLocaleHTWeek();
 						var ret = new ColorLabelEntry(htWeek.weeksSinceLeagueStart(), String.valueOf(htWeek.season), getForegroundColor(entry), ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
 						ret.setToolTipText(entry.getSkillChange().getDate().toLocaleDateTime());
 						return ret;
@@ -62,7 +62,7 @@ public class SkillupTableModel extends HOTableModel {
 					@Override
 					public IHOTableCellEntry getTableEntry(PlayerSkillChange entry) {
 						var date = entry.getSkillChange().getDate();
-						var htWeek = date.toHTWeek();
+						var htWeek = date.toLocaleHTWeek();
 						var ret = new ColorLabelEntry(htWeek.weeksSinceLeagueStart(), entry.getPlayer().getAgeWithDaysAsString(date), getForegroundColor(entry), ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
 						ret.setToolTipText(entry.getSkillChange().getDate().toLocaleDateTime());
 						return ret;

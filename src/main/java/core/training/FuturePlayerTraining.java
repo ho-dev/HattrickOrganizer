@@ -3,6 +3,7 @@ package core.training;
 import core.db.AbstractTable;
 import core.model.TranslationFacility;
 import core.util.HODateTime;
+import core.util.HTWeek;
 
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -150,7 +151,7 @@ public class FuturePlayerTraining extends AbstractTable.Storable {
 
     public HODateTime getFrom() {
         if ( this._from == null){
-            this._from = HODateTime.fromHTWeek(new HODateTime.HTWeek(fromSeason, fromWeek));
+            this._from = HODateTime.fromHTWeek(new HTWeek(fromSeason, fromWeek));
         }
         return _from;
     }
@@ -166,7 +167,7 @@ public class FuturePlayerTraining extends AbstractTable.Storable {
     public HODateTime getTo() {
         if ( !toInitDone) {
             if (toSeason != null && toWeek != null) {
-                _to = HODateTime.fromHTWeek(new HODateTime.HTWeek(toSeason, toWeek));
+                _to = HODateTime.fromHTWeek(new HTWeek(toSeason, toWeek));
             } else {
                 _to = null;
             }
