@@ -30,7 +30,6 @@ class XMLMatchdetailsParserTest {
         assertThat(matchdetails.getMatchreport()).isEqualTo("");
         assertThat(matchdetails.getFetchDatum()).isEqualTo(HODateTime.fromHT("2026-10-08 12:36:42"));
         assertThat(matchdetails.getMatchDate()).isEqualTo(HODateTime.fromHT("2026-10-06 18:15:00"));
-//        assertThat(matchdetails.getHighlights()).isEmpty();
         assertThat(matchdetails.getArenaID()).isEqualTo(2154092);
         assertThat(matchdetails.getGuestTeamId()).isEqualTo(128206);
         assertThat(matchdetails.getGuestEinstellung()).isEqualTo(IMatchDetails.EINSTELLUNG_UNBEKANNT);
@@ -83,6 +82,79 @@ class XMLMatchdetailsParserTest {
     }
 
     @Test
+    void parseMatchdetailsFromString_CupWithInjuries() throws IOException {
+        var xmlFileMatchDetails = ResourceUtils.getResourceFileAsString("chpp/matchdetails/matchdetailsCupWithInjuries.xml");
+        final var matchdetails = XMLMatchdetailsParser.parseMatchdetailsFromString(xmlFileMatchDetails, null);
+        assertThat(matchdetails.getArenaName()).isEqualTo("Thüringer Waldstadion");
+        assertThat(matchdetails.getGuestTeamName()).isEqualTo("Lila-Weiß Wolkenkuckucksheim");
+        assertThat(matchdetails.getHomeTeamName()).isEqualTo("Jenaer Phalanx");
+        assertThat(matchdetails.getMatchreport()).isEqualTo("");
+        assertThat(matchdetails.getFetchDatum()).isEqualTo(HODateTime.fromHT("2026-11-02 23:56:03"));
+        assertThat(matchdetails.getMatchDate()).isEqualTo(HODateTime.fromHT("2026-09-08 18:00:00"));
+        assertThat(matchdetails.getArenaID()).isEqualTo(1242154);
+        assertThat(matchdetails.getGuestTeamId()).isEqualTo(334857);
+        assertThat(matchdetails.getGuestEinstellung()).isEqualTo(IMatchDetails.EINSTELLUNG_UNBEKANNT);
+        assertThat(matchdetails.getGuestGoals()).isEqualTo(7);
+        assertThat(matchdetails.getGuestLeftAtt()).isEqualTo(49);
+        assertThat(matchdetails.getGuestLeftDef()).isEqualTo(50);
+        assertThat(matchdetails.getGuestMidAtt()).isEqualTo(69);
+        assertThat(matchdetails.getGuestMidDef()).isEqualTo(53);
+        assertThat(matchdetails.getGuestMidfield()).isEqualTo(41);
+        assertThat(matchdetails.getGuestRightAtt()).isEqualTo(41);
+        assertThat(matchdetails.getGuestRightDef()).isEqualTo(46);
+        assertThat(matchdetails.getGuestHatStats()).isEqualTo(431);
+        assertThat(matchdetails.getGuestTacticSkill()).isEqualTo(0);
+        assertThat(matchdetails.getGuestTacticType()).isEqualTo(IMatchDetails.TAKTIK_NORMAL);
+        assertThat(matchdetails.getHomeTeamId()).isEqualTo(1245592);
+        assertThat(matchdetails.getMatchType()).isEqualTo(MatchType.CUP);
+        assertThat(matchdetails.getHomeEinstellung()).isEqualTo(IMatchDetails.EINSTELLUNG_UNBEKANNT);
+        assertThat(matchdetails.getHomeGoals()).isEqualTo(6);
+        assertThat(matchdetails.getHomeLeftAtt()).isEqualTo(41);
+        assertThat(matchdetails.getHomeLeftDef()).isEqualTo(52);
+        assertThat(matchdetails.getHomeMidAtt()).isEqualTo(50);
+        assertThat(matchdetails.getHomeMidDef()).isEqualTo(57);
+        assertThat(matchdetails.getHomeMidfield()).isEqualTo(53);
+        assertThat(matchdetails.getHomeRightAtt()).isEqualTo(40);
+        assertThat(matchdetails.getHomeRightDef()).isEqualTo(51);
+        assertThat(matchdetails.getHomeHatStats()).isEqualTo(450);
+        assertThat(matchdetails.getHomeTacticSkill()).isEqualTo(0);
+        assertThat(matchdetails.getHomeTacticType()).isEqualTo(IMatchDetails.TAKTIK_NORMAL);
+        assertThat(matchdetails.getMatchID()).isEqualTo(771381952);
+        assertThat(matchdetails.getWetterId()).isEqualTo(Weather.PARTIALLY_CLOUDY.getId());
+        assertThat(matchdetails.getZuschauer()).isEqualTo(59964);
+        assertThat(matchdetails.getCupLevel()).isEqualTo(CupLevel.NATIONALorDIVISIONAL);
+        assertThat(matchdetails.getCupLevelIndex()).isEqualTo(CupLevelIndex.EMERALD);
+        assertThat(matchdetails.getMatchContextId()).isEqualTo(4);
+        assertThat(matchdetails.getSoldTerraces()).isEqualTo(-1);
+        assertThat(matchdetails.getSoldBasic()).isEqualTo(-1);
+        assertThat(matchdetails.getSoldRoof()).isEqualTo(-1);
+        assertThat(matchdetails.getSoldVIP()).isEqualTo(-1);
+        assertThat(matchdetails.getRegionId()).isNull();
+        assertThat(matchdetails.getHomeRatingIndirectSetPiecesAtt()).isEqualTo(34);
+        assertThat(matchdetails.getHomeRatingIndirectSetPiecesDef()).isEqualTo(44);
+        assertThat(matchdetails.getGuestRatingIndirectSetPiecesAtt()).isEqualTo(39);
+        assertThat(matchdetails.getGuestRatingIndirectSetPiecesDef()).isEqualTo(43);
+
+        var injuries = matchdetails.getInjuries();
+        var injury = injuries.get(0);
+        assertThat(injury.getInjuryPlayerID()).isEqualTo(457059990);
+        assertThat(injury.getInjuryType()).isEqualTo(Matchdetails.eInjuryType.BRUISE);
+        assertThat(injury.getInjuryMinute()).isEqualTo(32);
+        assertThat(injury.getInjuryTeamID()).isEqualTo(1245592);
+        assertThat(injury.getMatchPart()).isEqualTo(1);
+        injury = injuries.get(1);
+        assertThat(injury.getInjuryPlayerID()).isEqualTo(474716667);
+        assertThat(injury.getInjuryType()).isEqualTo(Matchdetails.eInjuryType.INJURY);
+        assertThat(injury.getInjuryMinute()).isEqualTo(57);
+        assertThat(injury.getInjuryTeamID()).isEqualTo(1245592);
+        assertThat(injury.getMatchPart()).isEqualTo(2);
+
+        assertThat(matchdetails.getFormation(true)).isEqualTo("3-5-2");
+        assertThat(matchdetails.getFormation(false)).isEqualTo("2-5-3");
+        assertThat(matchdetails.getResult()).isEqualTo(" 6 !ls.match.result.separation! 7");
+    }
+
+    @Test
     void parseMatchdetailsFromString_UpcomingWithWeather() throws IOException {
 
         var xmlFileMatchDetails = ResourceUtils.getResourceFileAsString("chpp/matchdetails/matchdefailsUpcomingWithWeather.xml");
@@ -97,7 +169,6 @@ class XMLMatchdetailsParserTest {
         assertThat(matchdetails.getMatchreport()).isEqualTo("");
         assertThat(matchdetails.getFetchDatum()).isEqualTo(HODateTime.fromHT("2026-11-01 15:45:00"));
         assertThat(matchdetails.getMatchDate()).isEqualTo(HODateTime.fromHT("2026-11-01 16:00:00"));
-        assertThat(matchdetails.getHighlights()).isEmpty();
         assertThat(matchdetails.getArenaID()).isEqualTo(574260);
         assertThat(matchdetails.getGuestTeamId()).isEqualTo(1242154);
         assertThat(matchdetails.getGuestEinstellung()).isEqualTo(IMatchDetails.EINSTELLUNG_UNBEKANNT);

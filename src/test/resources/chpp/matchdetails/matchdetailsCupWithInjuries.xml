@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<HattrickData>
+    <FileName>matchdetails.xml</FileName>
+    <Version>3.0</Version>
+    <UserID>1757369</UserID>
+    <FetchedDate>2026-11-02 23:56:03</FetchedDate>
+    <UserSupporterTier>diamond</UserSupporterTier>
+    <SourceSystem>Hattrick</SourceSystem>
+    <Match>
+        <MatchID>771381952</MatchID>
+        <MatchType>3</MatchType>
+        <MatchContextId>4</MatchContextId>
+        <MatchRuleId>0</MatchRuleId>
+        <CupLevel>1</CupLevel>
+        <CupLevelIndex>1</CupLevelIndex>
+        <MatchDate>2026-09-08 18:00:00</MatchDate>
+        <FinishedDate>2026-09-08 20:32:00</FinishedDate>
+        <AddedMinutes>2</AddedMinutes>
+        <HomeTeam>
+            <HomeTeamID>1245592</HomeTeamID>
+            <HomeTeamName>Jenaer Phalanx</HomeTeamName>
+            <DressURI>//res.hattrick.org/kits/23/222/2215/2214035/matchKitSmall.png</DressURI>
+            <Formation>3-5-2</Formation>
+            <HomeGoals>6</HomeGoals>
+            <TacticType>0</TacticType>
+            <TacticSkill>0</TacticSkill>
+            <RatingMidfield>53</RatingMidfield>
+            <RatingRightDef>51</RatingRightDef>
+            <RatingMidDef>57</RatingMidDef>
+            <RatingLeftDef>52</RatingLeftDef>
+            <RatingRightAtt>40</RatingRightAtt>
+            <RatingMidAtt>50</RatingMidAtt>
+            <RatingLeftAtt>41</RatingLeftAtt>
+            <RatingIndirectSetPiecesDef>44</RatingIndirectSetPiecesDef>
+            <RatingIndirectSetPiecesAtt>34</RatingIndirectSetPiecesAtt>
+        </HomeTeam>
+        <AwayTeam>
+            <AwayTeamID>334857</AwayTeamID>
+            <AwayTeamName>Lila-Weiß Wolkenkuckucksheim</AwayTeamName>
+            <DressURI>//res.hattrick.org/kits/1/1/1/2/matchKitSmall.png</DressURI>
+            <Formation>2-5-3</Formation>
+            <AwayGoals>7</AwayGoals>
+            <TacticType>0</TacticType>
+            <TacticSkill>0</TacticSkill>
+            <RatingMidfield>41</RatingMidfield>
+            <RatingRightDef>46</RatingRightDef>
+            <RatingMidDef>53</RatingMidDef>
+            <RatingLeftDef>50</RatingLeftDef>
+            <RatingRightAtt>41</RatingRightAtt>
+            <RatingMidAtt>69</RatingMidAtt>
+            <RatingLeftAtt>49</RatingLeftAtt>
+            <RatingIndirectSetPiecesDef>43</RatingIndirectSetPiecesDef>
+            <RatingIndirectSetPiecesAtt>39</RatingIndirectSetPiecesAtt>
+        </AwayTeam>
+        <Arena>
+            <ArenaID>1242154</ArenaID>
+            <ArenaName>Thüringer Waldstadion</ArenaName>
+            <WeatherID>2</WeatherID>
+            <SoldTotal>59964</SoldTotal>
+        </Arena>
+        <MatchOfficials>
+            <Referee>
+                <RefereeId>465987995</RefereeId>
+                <RefereeName>Salvador Vivero</RefereeName>
+                <RefereeCountryId>18</RefereeCountryId>
+                <RefereeCountryName>Chile</RefereeCountryName>
+                <RefereeTeamId>287511</RefereeTeamId>
+                <RefereeTeamname>C.S.D. Rackville</RefereeTeamname>
+            </Referee>
+            <RefereeAssistant1>
+                <RefereeId>420507710</RefereeId>
+                <RefereeName>Hubert Huemer</RefereeName>
+                <RefereeCountryId>39</RefereeCountryId>
+                <RefereeCountryName>Österreich</RefereeCountryName>
+                <RefereeTeamId>141693</RefereeTeamId>
+                <RefereeTeamname>Eintracht Neuwindorf</RefereeTeamname>
+            </RefereeAssistant1>
+            <RefereeAssistant2>
+                <RefereeId>450788229</RefereeId>
+                <RefereeName>Tibor Szemancsik</RefereeName>
+                <RefereeCountryId>51</RefereeCountryId>
+                <RefereeCountryName>Magyarország</RefereeCountryName>
+                <RefereeTeamId>686914</RefereeTeamId>
+                <RefereeTeamname>AC Milan 1899 FV</RefereeTeamname>
+            </RefereeAssistant2>
+        </MatchOfficials>
+        <Scorers>
+            <Goal Index="0">
+                <ScorerPlayerID>490955685</ScorerPlayerID>
+                <ScorerPlayerName>Harald Georg Martin-Egermann</ScorerPlayerName>
+                <ScorerTeamID>1245592</ScorerTeamID>
+                <ScorerHomeGoals>1</ScorerHomeGoals>
+                <ScorerAwayGoals>0</ScorerAwayGoals>
+                <ScorerMinute>13</ScorerMinute>
+                <MatchPart>1</MatchPart>
+            </Goal>
+            <Goal Index="1">
+                <ScorerPlayerID>485328832</ScorerPlayerID>
+                <ScorerPlayerName>Sebastian Harwanegg</ScorerPlayerName>
+                <ScorerTeamID>1245592</ScorerTeamID>
+                <ScorerHomeGoals>2</ScorerHomeGoals>
+                <ScorerAwayGoals>0</ScorerAwayGoals>
+                <ScorerMinute>43</ScorerMinute>
+                <MatchPart>1</MatchPart>
+            </Goal>
+            <Goal Index="2">
+                <ScorerPlayerID>459675597</ScorerPlayerID>
+                <ScorerPlayerName>Helge Hähner</ScorerPlayerName>
+                <ScorerTeamID>334857</ScorerTeamID>
+                <ScorerHomeGoals>2</ScorerHomeGoals>
+                <ScorerAwayGoals>1</ScorerAwayGoals>
+                <ScorerMinute>51</ScorerMinute>
+                <MatchPart>2</MatchPart>
+            </Goal>
+            <Goal Index="3">
+                <ScorerPlayerID>459675597</ScorerPlayerID>
+                <ScorerPlayerName>Helge Hähner</ScorerPlayerName>
+                <ScorerTeamID>334857</ScorerTeamID>
+                <ScorerHomeGoals>2</ScorerHomeGoals>
+                <ScorerAwayGoals>2</ScorerAwayGoals>
+                <ScorerMinute>64</ScorerMinute>
+                <MatchPart>2</MatchPart>
+            </Goal>
+        </Scorers>
+        <Bookings>
+            <Booking Index="0">
+                <BookingPlayerID>461537617</BookingPlayerID>
+                <BookingPlayerName>Hans Frauendienst</BookingPlayerName>
+                <BookingTeamID>334857</BookingTeamID>
+                <BookingType>1</BookingType>
+                <BookingMinute>32</BookingMinute>
+                <MatchPart>1</MatchPart>
+            </Booking>
+        </Bookings>
+        <Injuries>
+            <Injury Index="0">
+                <InjuryPlayerID>457059990</InjuryPlayerID>
+                <InjuryPlayerName>Klaudio Pernjek</InjuryPlayerName>
+                <InjuryTeamID>1245592</InjuryTeamID>
+                <InjuryType>1</InjuryType>
+                <InjuryMinute>32</InjuryMinute>
+                <MatchPart>1</MatchPart>
+            </Injury>
+            <Injury Index="1">
+                <InjuryPlayerID>474716667</InjuryPlayerID>
+                <InjuryPlayerName>Matej Urbanič</InjuryPlayerName>
+                <InjuryTeamID>1245592</InjuryTeamID>
+                <InjuryType>2</InjuryType>
+                <InjuryMinute>57</InjuryMinute>
+                <MatchPart>2</MatchPart>
+            </Injury>
+        </Injuries>
+        <PossessionFirstHalfHome>55</PossessionFirstHalfHome>
+        <PossessionFirstHalfAway>45</PossessionFirstHalfAway>
+        <PossessionSecondHalfHome>56</PossessionSecondHalfHome>
+        <PossessionSecondHalfAway>44</PossessionSecondHalfAway>
+    </Match>
+</HattrickData>

@@ -125,9 +125,9 @@ public class XMLUtils {
      */
     public static Optional<Element> findChildElement(Element parent, String tagName) {
         Objects.requireNonNull(parent);
-        var nodes = getChildElements(parent.getChildNodes(), tagName);
-        return switch (nodes.size()) {
-            case 1 -> Optional.of(nodes.get(0));
+        var elements = getChildElements(parent.getChildNodes(), tagName);
+        return switch (elements.size()) {
+            case 1 -> Optional.of(elements.get(0));
             case 0 -> Optional.empty();
             default -> throw new MoreThanOneElementXMLParseException(tagName);
         };

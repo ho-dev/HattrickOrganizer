@@ -141,36 +141,36 @@ public class OnlineWorker {
 			String matchesString;
 
 			while (firstDate.isBefore(endDate)) {
-				var lastDate=firstDate.plus(90, ChronoUnit.DAYS);
-				if (!lastDate.isBefore(endDate)) {
-					lastDate = endDate;
-				}
+                var lastDate = firstDate.plus(90, ChronoUnit.DAYS);
+                if (!lastDate.isBefore(endDate)) {
+                    lastDate = endDate;
+                }
 
-				try {
-					HOMainFrame.instance().setInformation(TranslationFacility.tr("ls.update_status.match_info"), 20);
-					matchesString = Connector.instance().getMatchesArchive(teamId, firstDate,	lastDate);
-					HOMainFrame.instance().setInformation(TranslationFacility.tr("ls.update_status.match_info"), 20);
-				} catch (Exception e) {
-					// Info
-					String msg = getLangString("Downloadfehler")
-							+ " : Error fetching MatchArchiv : ";
-					setInfoMsg(msg, InfoPanel.FEHLERFARBE);
-					Helper.showMessage(HOMainFrame.instance(), msg, getLangString("Fehler"),
-							JOptionPane.ERROR_MESSAGE);
-					return null;
-				}
+                try {
+                    HOMainFrame.instance().setInformation(TranslationFacility.tr("ls.update_status.match_info"), 20);
+                    matchesString = Connector.instance().getMatchesArchive(teamId, firstDate, lastDate);
+                    HOMainFrame.instance().setInformation(TranslationFacility.tr("ls.update_status.match_info"), 20);
+                } catch (Exception e) {
+                    // Info
+                    String msg = getLangString("Downloadfehler")
+                        + " : Error fetching MatchArchiv : ";
+                    setInfoMsg(msg, InfoPanel.FEHLERFARBE);
+                    Helper.showMessage(HOMainFrame.instance(), msg, getLangString("Fehler"),
+                        JOptionPane.ERROR_MESSAGE);
+                    return null;
+                }
 
-				HOMainFrame.instance().setInformation(TranslationFacility.tr("ls.update_status.match_info"), 20);
-				List<MatchKurzInfo> matches = XMLMatchArchiveParser
-						.parseMatchesFromString(matchesString);
-                matches.stream().filter(i->i.getMatchType().isTournament()).forEach(MatchKurzInfo::loadTournamentDetails);
+                HOMainFrame.instance().setInformation(TranslationFacility.tr("ls.update_status.match_info"), 20);
+                List<MatchKurzInfo> matches = XMLMatchArchiveParser
+                    .parseMatchesFromString(matchesString);
+                matches.stream().filter(i -> i.getMatchType().isTournament()).forEach(MatchKurzInfo::loadTournamentDetails);
 
-				// Add the new matches to the list of all matches
-				allMatches.addAll(matches);
+                // Add the new matches to the list of all matches
+                allMatches.addAll(matches);
 
-				// Zeitfenster neu setzen
-				firstDate = firstDate.plus(90, ChronoUnit.DAYS);
-			}
+                // Zeitfenster neu setzen
+                firstDate = firstDate.plus(90, ChronoUnit.DAYS);
+            }
 
 			// Store in the db if store is true
 			if (store && (!allMatches.isEmpty())) {

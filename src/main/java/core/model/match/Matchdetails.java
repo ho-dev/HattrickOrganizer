@@ -451,8 +451,22 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
         }
 
         int InjuryPlayerID;
+
+        public int getInjuryTeamID() {
+            return InjuryTeamID;
+        }
+
         int InjuryTeamID;
         eInjuryType InjuryType;
+
+        public int getInjuryMinute() {
+            return InjuryMinute;
+        }
+
+        public int getMatchPart() {
+            return MatchPart;
+        }
+
         int InjuryMinute;
         int MatchPart;
 
