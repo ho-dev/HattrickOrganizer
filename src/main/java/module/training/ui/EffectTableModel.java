@@ -33,14 +33,14 @@ public class EffectTableModel extends HOTableModel {
                     @Override
                     public IHOTableCellEntry getTableEntry(TrainWeekEffect entry) {
                         var localeHTWeek = entry.getHattrickWeek();
-                        return new ColorLabelEntry(localeHTWeek.weeksSinceLeagueStart(), String.valueOf(localeHTWeek.season), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        return new ColorLabelEntry(localeHTWeek.weeksSinceLeagueStart(), String.valueOf(localeHTWeek.season()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
                 new TrainingColumn(nextId++, "Week", 60) {
                     @Override
                     public IHOTableCellEntry getTableEntry(TrainWeekEffect entry) {
                         var localeHTWeek = entry.getHattrickWeek();
-                        return new ColorLabelEntry(localeHTWeek.weeksSinceLeagueStart(), String.valueOf(localeHTWeek.week), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        return new ColorLabelEntry(localeHTWeek.weeksSinceLeagueStart(), String.valueOf(localeHTWeek.week()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
                 new TrainingColumn(nextId++, "TotalTSI", 60) {

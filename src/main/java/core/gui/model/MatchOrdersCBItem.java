@@ -50,7 +50,7 @@ public class MatchOrdersCBItem extends MatchKurzInfo implements ComboItem {
 
         var sDate = getMatchSchedule().toLocaleDateTime();
         var htWeek  = getMatchSchedule().toLocaleHTWeek();
-        sDate += "(" + htWeek.week + "/" + htWeek.season + ")";
+        sDate += "(" + htWeek.week() + "/" + htWeek.season() + ")";
         JLabel jlNextGame = new JLabel(this.getOpponentTeamName() + "  " + sDate);
         jlNextGame.setIcon(ThemeManager.getIcon(HOIconName.MATCHICONS[this.getMatchTypeExtended().getIconArrayIndex()]));
         layout.setConstraints(jlNextGame, constraints);

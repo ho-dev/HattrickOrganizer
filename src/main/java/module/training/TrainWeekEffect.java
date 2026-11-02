@@ -236,8 +236,8 @@ public class TrainWeekEffect {
     @Override
 	public String toString() {
         return "TrainWeekEffect[" +
-                " HT season = " + trainweek.season +
-                ", HT week = " + trainweek.week +
+                " HT season = " + trainweek.season() +
+                ", HT week = " + trainweek.week() +
                 ", hrf before = " + hrfIdBefore +
                 ", hrf after = " + hrfIdAfter +
                 "]";

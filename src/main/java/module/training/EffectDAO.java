@@ -150,7 +150,7 @@ public class EffectDAO {
                 }
 
                 // Set amount of skillups for this training week
-                String key = week.getHattrickWeek().season + "-" + week.getHattrickWeek().week; //$NON-NLS-1$
+                String key = week.getHattrickWeek().season() + "-" + week.getHattrickWeek().week(); //$NON-NLS-1$
 
                 if (weeklySkillups.containsKey(key)) {
 

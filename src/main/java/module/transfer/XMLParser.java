@@ -86,8 +86,8 @@ public final class XMLParser {
                         playerTransfer.setDate(transferDate);
 
                         var htweek = transferDate.toLocaleHTWeek();
-                        playerTransfer.setSeason(htweek.season);
-                        playerTransfer.setWeek(htweek.week);
+                        playerTransfer.setSeason(htweek.season());
+                        playerTransfer.setWeek(htweek.week());
 
                         final Element buyer = (Element) transfer.getElementsByTagName("Buyer").item(0); //$NON-NLS-1$
                         final Element seller = (Element) transfer.getElementsByTagName("Seller").item(0); //$NON-NLS-1$
@@ -207,8 +207,8 @@ public final class XMLParser {
                         HODateTime transferDate = HODateTime.fromHT(deadline);
                         playerTranfer.setDate(transferDate);
                         var htweek = transferDate.toLocaleHTWeek();
-                        playerTranfer.setSeason(htweek.season);
-                        playerTranfer.setWeek(htweek.week);
+                        playerTranfer.setSeason(htweek.season());
+                        playerTranfer.setWeek(htweek.week());
 
                         final Element buyer = (Element) transfer.getElementsByTagName("Buyer").item(0); //$NON-NLS-1$
                         final Element seller = (Element) transfer.getElementsByTagName("Seller").item(0); //$NON-NLS-1$

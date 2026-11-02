@@ -30,6 +30,6 @@ public class HTWeek {
     }
 
     public static HTWeek fromLocaleHTWeek(LocaleHTWeek localeHtWeek) {
-        return new HTWeek(localeHtWeek.season - HOVerwaltung.instance().getModel().getBasics().getSeasonOffset(), localeHtWeek.week);
+        return new HTWeek(localeHtWeek.season() - HOVerwaltung.instance().getModel().getBasics().getSeasonOffset(), localeHtWeek.week());
     }
 }

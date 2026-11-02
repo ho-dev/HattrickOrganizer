@@ -184,9 +184,9 @@ public class SpielerTrainingsVergleichsPanel extends ImagePanel
         var trainingWeek = date.toTrainingWeek();
         var string = date.toLocaleDateTime()
             + " ( " + TranslationFacility.tr("Season")
-            + " " + trainingWeek.season
+            + " " + trainingWeek.season()
             + " " + TranslationFacility.tr("ls.training.week")
-            + " " + trainingWeek.week;
+            + " " + trainingWeek.week();
         if (update != null) {
             string += "; " + TranslationFacility.tr("ls.next.daily.update")
                 + ": " + update.toLocaleDateTime();

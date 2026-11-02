@@ -25,7 +25,7 @@ public class TrainingProgressColumn extends UserColumn {
     private final int trainingWeekIndex;
 
     public TrainingProgressColumn(int id, LocaleHTWeek localeHtweek, int trainingWeekIndex, int minWidth) {
-        super(id, localeHtweek.season + " " + localeHtweek.week);
+        super(id, localeHtweek.season() + " " + localeHtweek.week());
         this.trainingWeekIndex = trainingWeekIndex;
         this.translateColumnName = false;
         this.translateColumnTooltip = false;

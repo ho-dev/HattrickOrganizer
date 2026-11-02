@@ -48,7 +48,7 @@ public class TrainingSettingsTableModel extends HOTableModel {
                     @Override
                     public IHOTableCellEntry getTableEntry(TrainingPerWeek entry) {
                         var trainingDate = entry.getTrainingDate();
-                        return new ColorLabelEntry(HODateTime.toEpochSecond(trainingDate), String.valueOf(trainingDate.toLocaleHTWeek().season), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        return new ColorLabelEntry(HODateTime.toEpochSecond(trainingDate), String.valueOf(trainingDate.toLocaleHTWeek().season()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
                 // 2
@@ -56,7 +56,7 @@ public class TrainingSettingsTableModel extends HOTableModel {
                     @Override
                     public IHOTableCellEntry getTableEntry(TrainingPerWeek entry) {
                         var trainingDate = entry.getTrainingDate();
-                        return new ColorLabelEntry(HODateTime.toEpochSecond(trainingDate), String.valueOf(trainingDate.toLocaleHTWeek().week), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        return new ColorLabelEntry(HODateTime.toEpochSecond(trainingDate), String.valueOf(trainingDate.toLocaleHTWeek().week()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
                 // 3

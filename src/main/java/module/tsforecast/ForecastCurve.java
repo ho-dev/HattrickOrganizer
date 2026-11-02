@@ -328,7 +328,7 @@ abstract class ForecastCurve extends Curve {
 				var details = match.getMatchdetails();
 				if ( details != null){
 					var sortDate = details.getMatchDate();
-					iMatchDay = sortDate.toLocaleHTWeek().week;
+					iMatchDay = sortDate.toLocaleHTWeek().week();
 					var attitude = ibasics.getTeamId()==details.getHomeTeamId()?details.getHomeEinstellung():details.getGuestEinstellung();
 					point = new Point(sortDate, attitude, iMatchDay, details.getMatchType(), -1);
 

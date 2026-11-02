@@ -74,8 +74,8 @@ public class MatchComboBoxRenderer extends JLabel implements ListCellRenderer<Te
                 if (matchSchedule.isAfter(HODateTime.HT_START)) {
                     sDate = matchSchedule.toLocaleDateTime();
                     var htWeek = matchSchedule.toLocaleHTWeek();
-                    int iHTSeason = htWeek.season;
-                    int iHTWeek = htWeek.week;
+                    int iHTSeason = htWeek.season();
+                    int iHTWeek = htWeek.week();
                     sDate += " (" + iHTWeek + "/" + iHTSeason + ")";
                 }
             }
