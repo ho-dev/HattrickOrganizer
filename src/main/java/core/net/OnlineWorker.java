@@ -640,43 +640,27 @@ public class OnlineWorker {
 	 * @return
 	 * 			MatchLineup containing specified teams
 	 */
-	private static MatchLineup downloadMatchlineup(int matchId, MatchType matchType, int teamId1,
-												   int teamId2) {
-		MatchLineup lineUp2 = null;
-
-		HOMainFrame.instance().setWaitInformation();
-
-		// Lineups holen
-		var lineUp1 = downloadMatchLineup(matchId, teamId1, matchType);
-		if (lineUp1 != null) {
-			HOMainFrame.instance().setWaitInformation();
-			if (teamId2 > 0) {
-                lineUp2 = downloadMatchLineup(matchId, teamId2, matchType);
-            }
-			// Merge the two
-			if ((lineUp2 != null && lineUp2.isTeamLoaded(teamId2))) {
-				if (lineUp1.isHomeTeamNotLoaded() && lineUp1.getHomeTeamId() == teamId2) {
-                    lineUp1.setHomeTeam(lineUp2.getHomeTeam());
-                }
-				else if (!lineUp1.isGuestTeamLoaded() && lineUp1.getGuestTeamId() == teamId2) {
+	private static MatchLineup downloadMatchlineup(int matchId, MatchType matchType, int teamId1, int teamId2) {
+        HOMainFrame.instance().setWaitInformation();
+        var lineUp1 = downloadMatchLineup(matchId, teamId1, matchType);
+        if (lineUp1 != null && teamId2 > 0) {
+            if (teamId2 == lineUp1.getGuestTeamId()) {
+                HOMainFrame.instance().setWaitInformation();
+                var lineUp2 = downloadMatchLineup(matchId, teamId2, matchType);
+                if (lineUp2 != null) {
                     lineUp1.setGuestTeam(lineUp2.getGuestTeam());
                 }
-			} else if (teamId2 > 0) {
-				// Get the 2nd lineup
-				if (lineUp1.isHomeTeamNotLoaded()) {
-					lineUp2 = downloadMatchLineup(matchId, lineUp1.getHomeTeamId(), matchType);
-					if (lineUp2 != null)
-						lineUp1.setHomeTeam(lineUp2.getHomeTeam());
-				} else {
-					lineUp2 = downloadMatchLineup(matchId, lineUp1.getGuestTeamId(), matchType);
-					if (lineUp2 != null)
-						lineUp1.setGuestTeam(lineUp2.getGuestTeam());
-				}
-			}
-		}
-		HOMainFrame.instance().setWaitInformation();
-		return lineUp1;
-	}
+            } else if (teamId2 == lineUp1.getHomeTeamId()) {
+                HOMainFrame.instance().setWaitInformation();
+                var lineUp2 = downloadMatchLineup(matchId, teamId2, matchType);
+                if (lineUp2 != null) {
+                    lineUp1.setHomeTeam(lineUp2.getHomeTeam());
+                }
+            }
+        }
+        HOMainFrame.instance().setWaitInformation();
+        return lineUp1;
+    }
 
 	/**
 	 * Get the Fixtures list
