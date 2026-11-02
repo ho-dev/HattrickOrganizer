@@ -20,10 +20,6 @@ public class HTWeek {
         this.week = week;
     }
 
-    public long weeksSinceLeagueStart() {
-        return (season - 1) * 16L + week - 1L;
-    }
-
     @Override
     public String toString() {
         return season + " (" + week + ")";
