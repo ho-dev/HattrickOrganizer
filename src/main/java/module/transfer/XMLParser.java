@@ -249,14 +249,11 @@ public final class XMLParser {
 
     public static boolean updateTeamTransfers(int teamId) {
         var transfers = getAllTeamTransfers(teamId, HODateTime.now().plus(1, ChronoUnit.DAYS));
-        var players =  updateTeamTransfers(transfers);
-        if ( players != null) {
-            for (var player : players) {
-                updatePlayerTransfers(player.getPlayerId());
-            }
-            return true;
+        var players = updateTeamTransfers(transfers);
+        for (var player : players) {
+            updatePlayerTransfers(player.getPlayerId());
         }
-        return false;
+        return true;
     }
 
     /**

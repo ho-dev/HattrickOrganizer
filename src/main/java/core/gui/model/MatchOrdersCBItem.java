@@ -10,7 +10,6 @@ import core.model.match.MatchKurzInfo;
 
 import javax.swing.*;
 import java.awt.*;
-import java.text.SimpleDateFormat;
 import java.util.Map;
 
 public class MatchOrdersCBItem extends MatchKurzInfo implements ComboItem {
