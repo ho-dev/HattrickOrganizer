@@ -34,17 +34,15 @@ public class EffectTableModel extends HOTableModel {
                 new TrainingColumn(nextId++, "Season", 60) {
                     @Override
                     public IHOTableCellEntry getTableEntry(TrainWeekEffect entry) {
-                        var htWeek = new HTWeek(entry.getHattrickSeason(), entry.getHattrickWeek());
-                        var trainingDate = HODateTime.fromHTWeek(htWeek);
-                        return new ColorLabelEntry(HODateTime.toEpochSecond(trainingDate), String.valueOf(trainingDate.toLocaleHTWeek().season), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        var localeHTWeek = entry.getHattrickWeek();
+                        return new ColorLabelEntry(localeHTWeek.weeksSinceLeagueStart(), String.valueOf(localeHTWeek.season), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
                 new TrainingColumn(nextId++, "Week", 60) {
                     @Override
                     public IHOTableCellEntry getTableEntry(TrainWeekEffect entry) {
-                        var htWeek = new HTWeek(entry.getHattrickSeason(), entry.getHattrickWeek());
-                        var trainingDate = HODateTime.fromHTWeek(htWeek);
-                        return new ColorLabelEntry(HODateTime.toEpochSecond(trainingDate), String.valueOf(trainingDate.toLocaleHTWeek().week), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        var localeHTWeek = entry.getHattrickWeek();
+                        return new ColorLabelEntry(localeHTWeek.weeksSinceLeagueStart(), String.valueOf(localeHTWeek.week), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
                 new TrainingColumn(nextId++, "TotalTSI", 60) {

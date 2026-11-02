@@ -1,6 +1,7 @@
 package module.training;
 
 import core.constants.player.PlayerSkill;
+import core.util.LocaleHTWeek;
 
 /**
  * This value object represents a week of training. It contains the last hrf id before a training
@@ -37,11 +38,8 @@ public class TrainWeekEffect {
     private int totalTSI;
     private PlayerSkill trainingType;
 
-    /** Training season */
-    private final int trainseason;
-
     /** Training week */
-    private final int trainweek;
+    private final LocaleHTWeek trainweek;
 
     /** Value for total decrease in TSI */
     private int tsiDecrease;
@@ -55,15 +53,13 @@ public class TrainWeekEffect {
      * Creates a new TrainWeek object.
      *
      * @param week Training week
-     * @param season training season
      * @param beforeHRF HRF id before training update
      * @param afterHRF HRF id after training update
      */
-    public TrainWeekEffect(int week, int season, int beforeHRF, int afterHRF) {
+    public TrainWeekEffect(LocaleHTWeek week, int beforeHRF, int afterHRF) {
         this.hrfIdBefore = beforeHRF;
         this.hrfIdAfter = afterHRF;
         this.trainweek = week;
-        this.trainseason = season;
     }
 
     //~ Methods ------------------------------------------------------------------------------------
@@ -159,20 +155,11 @@ public class TrainWeekEffect {
     }
 
     /**
-     * Get the training HT season
-     *
-     * @return Training HT season
-     */
-    public int getHattrickSeason() {
-        return trainseason;
-    }
-
-    /**
      * Get the training HT week
      *
      * @return Training HT week
      */
-    public int getHattrickWeek() {
+    public LocaleHTWeek getHattrickWeek() {
         return trainweek;
     }
 
@@ -249,8 +236,8 @@ public class TrainWeekEffect {
     @Override
 	public String toString() {
         return "TrainWeekEffect[" +
-                " HT season = " + trainseason +
-                ", HT week = " + trainweek +
+                " HT season = " + trainweek.season +
+                ", HT week = " + trainweek.week +
                 ", hrf before = " + hrfIdBefore +
                 ", hrf after = " + hrfIdAfter +
                 "]";
