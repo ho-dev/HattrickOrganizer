@@ -297,11 +297,10 @@ public class OnlineWorker {
 						info.setMatchSchedule(details.getMatchDate());
 						info.setMatchType(details.getMatchType());
 						int wetterId = details.getWetterId();
-						if (wetterId != -1) {
-							info.setMatchStatus(MatchKurzInfo.FINISHED);
+						if (wetterId != -1 && info.getMatchStatus() == MatchKurzInfo.FINISHED) {
 							info.setWeather(Weather.getById(details.getWetterId()));
 							info.setWeatherForecast(Weather.Forecast.HAPPENED);
-						} else if (info.getArenaId() > 0) {
+						} else if (info.getArenaId() > 0 && info.getMatchStatus() == MatchKurzInfo.UPCOMING) {
 							info.setRegionId(details.getRegionId());
 
 							if (!info.getWeatherForecast().isSure()) {
@@ -641,41 +640,27 @@ public class OnlineWorker {
 	 * @return
 	 * 			MatchLineup containing specified teams
 	 */
-	private static MatchLineup downloadMatchlineup(int matchId, MatchType matchType, int teamId1,
-												   int teamId2) {
-		MatchLineup lineUp2 = null;
-
-		HOMainFrame.instance().setWaitInformation();
-
-		// Lineups holen
-		var lineUp1 = downloadMatchLineup(matchId, teamId1, matchType);
-		if (lineUp1 != null) {
-			HOMainFrame.instance().setWaitInformation();
-			if (teamId2 > 0)
-				lineUp2 = downloadMatchLineup(matchId, teamId2, matchType);
-
-			// Merge the two
-			if ((lineUp2 != null)) {
-				if (lineUp1.isHomeTeamNotLoaded())
-					lineUp1.setHomeTeam(lineUp2.getHomeTeam());
-				else if (!lineUp1.isGuestTeamLoaded())
-					lineUp1.setGuestTeam(lineUp2.getGuestTeam());
-			} else {
-				// Get the 2nd lineup
-				if (lineUp1.isHomeTeamNotLoaded()) {
-					lineUp2 = downloadMatchLineup(matchId, lineUp1.getHomeTeamId(), matchType);
-					if (lineUp2 != null)
-						lineUp1.setHomeTeam(lineUp2.getHomeTeam());
-				} else {
-					lineUp2 = downloadMatchLineup(matchId, lineUp1.getGuestTeamId(), matchType);
-					if (lineUp2 != null)
-						lineUp1.setGuestTeam(lineUp2.getGuestTeam());
-				}
-			}
-		}
-		HOMainFrame.instance().setWaitInformation();
-		return lineUp1;
-	}
+    private static MatchLineup downloadMatchlineup(int matchId, MatchType matchType, int teamId1, int teamId2) {
+        HOMainFrame.instance().setWaitInformation();
+        var matchLineup = downloadMatchLineup(matchId, teamId1, matchType);
+        if (matchLineup != null && teamId2 > 0) {
+            final boolean otherTeamIdIsGuest = teamId2 == matchLineup.getGuestTeamId();
+            final boolean otherTeamIdIsHomeTeam = teamId2 == matchLineup.getHomeTeamId();
+            if (otherTeamIdIsGuest || otherTeamIdIsHomeTeam) {
+                HOMainFrame.instance().setWaitInformation();
+                final var otherMatchLineup = downloadMatchLineup(matchId, teamId2, matchType);
+                if (otherMatchLineup != null) {
+                    if (otherTeamIdIsGuest) {
+                        matchLineup.setGuestTeam(otherMatchLineup.getGuestTeam());
+                    } else {
+                        matchLineup.setHomeTeam(otherMatchLineup.getHomeTeam());
+                    }
+                }
+            }
+        }
+        HOMainFrame.instance().setWaitInformation();
+        return matchLineup;
+    }
 
 	/**
 	 * Get the Fixtures list
