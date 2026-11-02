@@ -4,8 +4,6 @@ import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.IHOTableCellEntry;
 import core.gui.comp.table.HOTableModel;
 import core.gui.model.UserColumnController;
-import core.util.HODateTime;
-import core.util.HTWeek;
 import module.training.EffectDAO;
 import module.training.TrainWeekEffect;
 import module.training.ui.model.TrainingColumn;
