@@ -22,7 +22,7 @@ import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.model.player.PlayerCategory;
 import core.playername.ConfiguredPlayerNameFormatter;
-import core.playername.NameFormat;
+import core.playername.PlayerNameFormat;
 import core.util.HODateTime;
 import core.util.Helper;
 import module.playeroverview.PlayerStatusLabelEntry;
@@ -262,7 +262,7 @@ public final class UserColumnFactory {
     /**
      * @return PlayerColumn []
      */
-    public static PlayerColumn[] createPlayerBasicArray(NameFormat nameFormat) {
+    public static PlayerColumn[] createPlayerBasicArray(PlayerNameFormat playerNameFormat) {
         final PlayerColumn[] playerBasicArray = new PlayerColumn[2];
         playerBasicArray[0] = new PlayerColumn(NAME, "ls.player.name", 160) {
             @Override
@@ -270,7 +270,7 @@ public final class UserColumnFactory {
                 var team = HOVerwaltung.instance().getModel().getCurrentLineup();
                 var pos = team.getPositionById(player.getPlayerId());
                 var formatter = HOVerwaltung.instance().getModel().getPlayerNameFormatterCurrentPlayers();
-                var configuredPlayerNameFormatter = new ConfiguredPlayerNameFormatter(formatter, nameFormat);
+                var configuredPlayerNameFormatter = new ConfiguredPlayerNameFormatter(formatter, playerNameFormat);
                 return new PlayerLabelEntry(player, pos, 0f, false, false, configuredPlayerNameFormatter);
             }
 

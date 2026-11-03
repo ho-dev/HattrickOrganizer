@@ -18,7 +18,7 @@ import core.model.player.IMatchRoleID;
 import core.module.IModule;
 import core.net.OnlineWorker;
 import core.playername.Location;
-import core.playername.NameFormat;
+import core.playername.PlayerNameFormat;
 import core.playername.PlayerNameFormatterFactory;
 import core.playername.PlayerNameSettingsManager;
 import core.prediction.MatchEnginePanel;
@@ -87,7 +87,7 @@ public final class MatchesPanel extends LazyImagePanel {
 	private MatchesOverviewTable matchesOverviewTable;
 	private MatchesHighlightsTable matchesHighlightsTable;
 	private MatchesModel matchesModel;
-    private final NameFormat nameFormat = PlayerNameSettingsManager.instance().getFormat(Location.MATCHES_FORMATION);
+    private final PlayerNameFormat playerNameFormat = PlayerNameSettingsManager.instance().getFormat(Location.MATCHES_FORMATION);
 
 	@Override
 	protected void initialize() {
@@ -256,7 +256,7 @@ public final class MatchesPanel extends LazyImagePanel {
 			}
 
 			String matchName = matchesModel.getMatch().getHomeTeamName() + " – " + matchesModel.getMatch().getGuestTeamName();
-			MatchEnginePanel matchPredictionPanel = new MatchEnginePanel(homeTeamValues, awayTeamValues, nameFormat);
+			MatchEnginePanel matchPredictionPanel = new MatchEnginePanel(homeTeamValues, awayTeamValues, playerNameFormat);
 
 			MatchPredictionDialog d = new MatchPredictionDialog(matchPredictionPanel, matchName);
 		}
@@ -353,9 +353,9 @@ public final class MatchesPanel extends LazyImagePanel {
 				initMatchesTable(), initSpieldetails());
 
 		JPanel linupPanel = new JPanel(new GridLayout(2, 1));
-		aufstellungHeimPanel = new AufstellungsSternePanel(true, nameFormat);
+		aufstellungHeimPanel = new AufstellungsSternePanel(true, playerNameFormat);
 		linupPanel.add(aufstellungHeimPanel);
-		aufstellungGastPanel = new AufstellungsSternePanel(false, nameFormat);
+		aufstellungGastPanel = new AufstellungsSternePanel(false, playerNameFormat);
 		linupPanel.add(aufstellungGastPanel);
 		verticalSplitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, false,
 				horizontalLeftSplitPane, new JScrollPane(linupPanel));

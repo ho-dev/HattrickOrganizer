@@ -16,7 +16,7 @@ public final class PlayerNameSettingsStore {
     private final EnumMap<Location, HOConfigurationStringParameter> overrideParameters = new EnumMap<>(Location.class);
 
     public PlayerNameSettingsStore() {
-        defaultFormatParameter = new HOConfigurationStringParameter(PREFIX + "defaultFormat", NameFormat.HATTRICK.name());
+        defaultFormatParameter = new HOConfigurationStringParameter(PREFIX + "defaultFormat", PlayerNameFormat.HATTRICK.name());
 
         Stream.of(Location.values()).forEach(location ->
             overrideParameters.put(location, new HOConfigurationStringParameter(PREFIX + location.name(), INHERIT))
@@ -24,9 +24,9 @@ public final class PlayerNameSettingsStore {
     }
 
     public PlayerNameSettings load() {
-        NameFormat defaultFormat = parseFormat(defaultFormatParameter.getValue()).orElse(NameFormat.HATTRICK);
+        PlayerNameFormat defaultFormat = parseFormat(defaultFormatParameter.getValue()).orElse(PlayerNameFormat.HATTRICK);
 
-        EnumMap<Location, NameFormat> overrides = new EnumMap<>(Location.class);
+        EnumMap<Location, PlayerNameFormat> overrides = new EnumMap<>(Location.class);
 
         overrideParameters.forEach((location, parameter) -> {
             String value = parameter.getValue();
@@ -43,7 +43,7 @@ public final class PlayerNameSettingsStore {
         defaultFormatParameter.setValue(settings.defaultFormat().name());
 
         overrideParameters.forEach((location, parameter) -> {
-            NameFormat format = settings.getOverride(location);
+            PlayerNameFormat format = settings.getOverride(location);
 
             parameter.setValue(
                 format != null ? format.name() : INHERIT
@@ -51,13 +51,13 @@ public final class PlayerNameSettingsStore {
         });
     }
 
-    private static Optional<NameFormat> parseFormat(String value) {
+    private static Optional<PlayerNameFormat> parseFormat(String value) {
         if (value == null) {
             return Optional.empty();
         }
 
         try {
-            return Optional.of(NameFormat.valueOf(value));
+            return Optional.of(PlayerNameFormat.valueOf(value));
         } catch (IllegalArgumentException e) {
             return Optional.empty();
         }

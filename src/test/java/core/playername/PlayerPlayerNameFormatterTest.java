@@ -9,12 +9,12 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static core.playername.NameFormat.*;
+import static core.playername.PlayerNameFormat.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.junit.jupiter.params.provider.Arguments.arguments;
 
-class PlayerNameFormatterTest {
+class PlayerPlayerNameFormatterTest {
 
     private record TestPlayerName(int playerId, String firstName, String nickName, String lastName)
         implements PlayerName {
@@ -46,7 +46,7 @@ class PlayerNameFormatterTest {
 
     @ParameterizedTest(name = "{0} -> {1}")
     @MethodSource("standardFormats")
-    void formatsCompleteName(NameFormat format, String expected) {
+    void formatsCompleteName(PlayerNameFormat format, String expected) {
         var player = player(1, "Cristiano", "CR7", "Ronaldo");
         var formatter = new PlayerNameFormatter(List.of(player));
 

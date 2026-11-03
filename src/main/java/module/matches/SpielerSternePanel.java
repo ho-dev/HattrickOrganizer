@@ -14,7 +14,6 @@ import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.playername.ConfiguredPlayerNameFormatter;
-import core.playername.NameFormat;
 import core.playername.PlayerNameUtils;
 import core.util.Helper;
 

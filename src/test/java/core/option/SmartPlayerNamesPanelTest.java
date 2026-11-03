@@ -4,7 +4,7 @@ import core.model.TranslationFacility;
 import core.model.Translator;
 import core.option.SmartPlayerNamesPanel.Group;
 import core.playername.Location;
-import core.playername.NameFormat;
+import core.playername.PlayerNameFormat;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -28,12 +28,12 @@ class SmartPlayerNamesPanelTest {
     }
 
     @ParameterizedTest
-    @EnumSource(NameFormat.class)
-    void getTranslationKey_NameFormat_translationKeyExistsInDefaultLanguage(NameFormat nameFormat) {
-        final String key = SmartPlayerNamesPanel.getTranslationKey(nameFormat);
+    @EnumSource(PlayerNameFormat.class)
+    void getTranslationKey_NameFormat_translationKeyExistsInDefaultLanguage(PlayerNameFormat playerNameFormat) {
+        final String key = SmartPlayerNamesPanel.getTranslationKey(playerNameFormat);
         final String translation = TranslationFacility.tr(key);
         assertThat(translation)
-            .as("Missing translation for %s with key '%s'", nameFormat, key)
+            .as("Missing translation for %s with key '%s'", playerNameFormat, key)
             .isNotBlank()
             .isNotEqualTo(createTranslationForNotFound(key));
     }

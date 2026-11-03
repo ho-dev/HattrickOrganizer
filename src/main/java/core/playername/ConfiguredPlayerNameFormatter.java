@@ -2,7 +2,7 @@ package core.playername;
 
 import java.util.Objects;
 
-public record ConfiguredPlayerNameFormatter(PlayerNameFormatter formatter, NameFormat format) {
+public record ConfiguredPlayerNameFormatter(PlayerNameFormatter formatter, PlayerNameFormat format) {
 
     public ConfiguredPlayerNameFormatter {
         Objects.requireNonNull(formatter);

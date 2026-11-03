@@ -4,7 +4,7 @@ import core.datatype.CBItem;
 import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
 import core.model.player.IMatchRoleID;
-import core.playername.NameFormat;
+import core.playername.PlayerNameFormat;
 import core.playername.PlayerNameFormatter;
 import core.util.Helper;
 import module.lineup.Lineup;
@@ -90,13 +90,13 @@ public class SubstitutionEditView extends JPanel {
 
 	private boolean initDone=false;
 
-	public SubstitutionEditView(MatchOrderType orderType, PlayerNameFormatter playerNameFormatter, NameFormat nameFormat) {
+	public SubstitutionEditView(MatchOrderType orderType, PlayerNameFormatter playerNameFormatter, PlayerNameFormat playerNameFormat) {
 		this.orderType = orderType;
 		initComponents();
 		addListeners();
 
 		Map<Integer, PlayerPositionItem> lineupPositions = SubstitutionDataProvider
-				.getFieldAndSubPlayerPosition(playerNameFormatter, nameFormat);
+				.getFieldAndSubPlayerPosition(playerNameFormatter, playerNameFormat);
 
 		this.playerComboBox.setModel(new DefaultComboBoxModel(lineupPositions
 				.values().toArray()));
@@ -105,7 +105,7 @@ public class SubstitutionEditView extends JPanel {
 		switch (this.orderType){
 			case SUBSTITUTION:
 				List<PlayerPositionItem> substitutionPlayers = SubstitutionDataProvider
-						.getFieldPositions(aSubstitutesMatchRoleID, false, playerNameFormatter, nameFormat);
+						.getFieldPositions(aSubstitutesMatchRoleID, false, playerNameFormatter, playerNameFormat);
 				this.playerInComboBox.setModel(new DefaultComboBoxModel(
 						substitutionPlayers.toArray()));
 				this.playerInComboBox.setSelectedItem(null);
@@ -113,7 +113,7 @@ public class SubstitutionEditView extends JPanel {
 			case NEW_BEHAVIOUR:
 				List<PlayerPositionItem> positions = SubstitutionDataProvider
 						.getFieldPositions(IMatchRoleID.keeper,
-								IMatchRoleID.leftForward, true, playerNameFormatter, nameFormat);
+								IMatchRoleID.leftForward, true, playerNameFormatter, playerNameFormat);
 				this.positionComboBox.setModel(new DefaultComboBoxModel(positions
 						.toArray()));
 				this.positionComboBox.setSelectedItem(null);

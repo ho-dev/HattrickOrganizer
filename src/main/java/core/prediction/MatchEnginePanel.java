@@ -6,7 +6,7 @@ import core.gui.comp.panel.ImagePanel;
 import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
-import core.playername.NameFormat;
+import core.playername.PlayerNameFormat;
 import core.prediction.engine.MatchPredictionManager;
 import core.prediction.engine.MatchResult;
 import core.prediction.engine.TeamData;
@@ -29,11 +29,11 @@ public class MatchEnginePanel extends ImagePanel implements	 ActionListener {
 	private TeamRatingPanel homeTeamPanel;
 	private TeamRatingPanel guestTeamPanel;
 	private boolean isHomeMatch = true;
-    private final NameFormat nameFormat;
+    private final PlayerNameFormat playerNameFormat;
 
 	public MatchEnginePanel(TeamData homeTeamValues,
-			TeamData guestTeamValues, NameFormat nameFormat) {
-        this.nameFormat = nameFormat;
+			TeamData guestTeamValues, PlayerNameFormat playerNameFormat) {
+        this.playerNameFormat = playerNameFormat;
 		if (guestTeamValues.getTeamName().startsWith(
 				HOVerwaltung.instance().getModel().getBasics().getTeamName())) {
 			isHomeMatch = false;
@@ -69,7 +69,7 @@ public class MatchEnginePanel extends ImagePanel implements	 ActionListener {
 		TeamRatingPanel opponentPanel = getOpponentPanel();
 		if ( opponentPanel.isRatingsChanged()){
 			// user has changed the match ratings
-			SystemManager.adjustRatingsLineup(opponentPanel.getTeamData(), nameFormat);
+			SystemManager.adjustRatingsLineup(opponentPanel.getTeamData(), playerNameFormat);
 		}
 	}
 

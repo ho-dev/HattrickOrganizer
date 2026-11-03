@@ -4,7 +4,7 @@ import core.gui.model.BaseTableModel;
 import core.model.TranslationFacility;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
-import core.playername.NameFormat;
+import core.playername.PlayerNameFormat;
 import core.playername.PlayerNameFormatter;
 import core.playername.PlayerNameFormatterFactory;
 import core.playername.PlayerNameUtils;
@@ -27,7 +27,7 @@ public class SpecialEventsPanel extends JPanel {
     private final JTable table;
     private BaseTableModel tableModel;
     private final JLabel resultLabel;
-    private final NameFormat nameFormat;
+    private final PlayerNameFormat playerNameFormat;
 
     private final String[] columns = {
             TranslationFacility.tr("Event"),
@@ -39,8 +39,8 @@ public class SpecialEventsPanel extends JPanel {
             TranslationFacility.tr("ls.teamanalyzer.opponent_scores")
     };
 
-    public SpecialEventsPanel(NameFormat nameFormat) {
-        this.nameFormat = nameFormat;
+    public SpecialEventsPanel(PlayerNameFormat playerNameFormat) {
+        this.playerNameFormat = playerNameFormat;
         Vector<Vector<Object>> data = new Vector<>();
 
         tableModel = new BaseTableModel(data, new Vector<>(Arrays.asList(columns)));
@@ -99,7 +99,7 @@ public class SpecialEventsPanel extends JPanel {
                         se.getChanceCreationProbability(),
                         se.getChanceCreationProbability() > 0 ? se.getGoalProbability() : null,
                         se.getChanceCreationProbability() > 0 ? null : -se.getGoalProbability(),
-                        playerNameFormatter, nameFormat)
+                        playerNameFormatter, playerNameFormat)
                 );
             }
         }
@@ -117,7 +117,7 @@ public class SpecialEventsPanel extends JPanel {
                         se.getChanceCreationProbability(),
                         se.getChanceCreationProbability() > 0 ? null : -se.getGoalProbability(),
                         se.getChanceCreationProbability() > 0 ? se.getGoalProbability() : null,
-                        playerNameFormatter, nameFormat)
+                        playerNameFormatter, playerNameFormat)
                 );
             }
         }
@@ -157,10 +157,10 @@ public class SpecialEventsPanel extends JPanel {
 
     private static Vector<Object> createRowData(String kind, Player player, Player opponentPlayer, List<Player> involved,
                                                 double probability, Double scores, Double scoresOpponent,
-                                                PlayerNameFormatter playerNameFormatter, NameFormat nameFormat) {
-        final String playerName = getOptionalFormattedPlayerName(player, playerNameFormatter, nameFormat);
-        final String opponentPlayerName = getOptionalFormattedPlayerName(opponentPlayer, playerNameFormatter, nameFormat);
-        final String involvedPlayerNamesStr = createFormattedPlayerNamesListString(involved, playerNameFormatter, nameFormat);
+                                                PlayerNameFormatter playerNameFormatter, PlayerNameFormat playerNameFormat) {
+        final String playerName = getOptionalFormattedPlayerName(player, playerNameFormatter, playerNameFormat);
+        final String opponentPlayerName = getOptionalFormattedPlayerName(opponentPlayer, playerNameFormatter, playerNameFormat);
+        final String involvedPlayerNamesStr = createFormattedPlayerNamesListString(involved, playerNameFormatter, playerNameFormat);
 
         Vector<Object> rowData = new Vector<>();
         rowData.add(kind);
@@ -177,18 +177,18 @@ public class SpecialEventsPanel extends JPanel {
         return rowData;
     }
 
-    private static String createFormattedPlayerNamesListString(List<Player> players, PlayerNameFormatter playerNameFormatter, NameFormat nameFormat) {
+    private static String createFormattedPlayerNamesListString(List<Player> players, PlayerNameFormatter playerNameFormatter, PlayerNameFormat playerNameFormat) {
         return players.stream()
             .filter(Objects::nonNull)
-            .map(player -> getFormattedPlayerName(player, playerNameFormatter, nameFormat))
+            .map(player -> getFormattedPlayerName(player, playerNameFormatter, playerNameFormat))
             .collect(Collectors.joining("; "));
     }
 
-    private static String getOptionalFormattedPlayerName(Player player, PlayerNameFormatter playerNameFormatter, NameFormat nameFormat) {
-        return Optional.ofNullable(player).map(p -> getFormattedPlayerName(p, playerNameFormatter, nameFormat)).orElse(null);
+    private static String getOptionalFormattedPlayerName(Player player, PlayerNameFormatter playerNameFormatter, PlayerNameFormat playerNameFormat) {
+        return Optional.ofNullable(player).map(p -> getFormattedPlayerName(p, playerNameFormatter, playerNameFormat)).orElse(null);
     }
 
-    private static String getFormattedPlayerName(Player player, PlayerNameFormatter playerNameFormatter, NameFormat nameFormat) {
-        return playerNameFormatter.format(PlayerNameUtils.createPlayerName(player), nameFormat);
+    private static String getFormattedPlayerName(Player player, PlayerNameFormatter playerNameFormatter, PlayerNameFormat playerNameFormat) {
+        return playerNameFormatter.format(PlayerNameUtils.createPlayerName(player), playerNameFormat);
     }
 }

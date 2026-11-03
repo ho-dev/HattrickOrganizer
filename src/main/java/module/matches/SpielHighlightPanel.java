@@ -31,7 +31,7 @@ public class SpielHighlightPanel extends LazyImagePanel {
 	private JPanel panel;
 	private List<Component> highlightLabels;
 	private final MatchesModel matchesModel;
-    private final NameFormat nameFormat = PlayerNameSettingsManager.instance().getFormat(Location.MATCHES_HIGHLIGHTS);
+    private final PlayerNameFormat playerNameFormat = PlayerNameSettingsManager.instance().getFormat(Location.MATCHES_HIGHLIGHTS);
 
 	/**
 	 * Creates a new SpielHighlightPanel object.
@@ -64,7 +64,7 @@ public class SpielHighlightPanel extends LazyImagePanel {
 			List<MatchEvent> matchEvents = details.downloadHighlightsIfMissing();
 
             final var highlights = MatchEventsAnalyser.analyse(info.getHomeTeamID(), matchEvents);
-            final var configuredPlayerNameFormatter = new ConfiguredPlayerNameFormatter(PlayerNameFormatterFactory.createFrom(this.matchesModel), nameFormat);
+            final var configuredPlayerNameFormatter = new ConfiguredPlayerNameFormatter(PlayerNameFormatterFactory.createFrom(this.matchesModel), playerNameFormat);
 
             AtomicInteger index = new AtomicInteger();
 

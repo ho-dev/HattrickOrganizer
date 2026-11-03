@@ -38,7 +38,7 @@ public class TeamPanel extends JPanel {
     private final PlayerPanel middleCentral = new PlayerPanel();
     private final PlayerPanel centralMidfielder = new PlayerPanel();
     private final PlayerPanel centralAttacker = new PlayerPanel ();
-    private final NameFormat nameFormat = PlayerNameSettingsManager.instance().getFormat(Location.TEAM_ANALYSER_FIELD);
+    private final PlayerNameFormat playerNameFormat = PlayerNameSettingsManager.instance().getFormat(Location.TEAM_ANALYSER_FIELD);
 
     JPanel grassPanel = new RasenPanel();
 
@@ -209,7 +209,7 @@ public class TeamPanel extends JPanel {
             if (player != null) {
                 UserTeamSpotLineup spotLineup = new UserTeamSpotLineup();
                 spotLineup.setAppearance(0);
-                spotLineup.setName(playerNameFormatter.format(PlayerNameUtils.createPlayerName(player), nameFormat));
+                spotLineup.setName(playerNameFormatter.format(PlayerNameUtils.createPlayerName(player), playerNameFormat));
                 spotLineup.setPlayerId(player.getPlayerId());
                 spotLineup.setSpecialEvent(player.getSpecialty());
                 spotLineup.setTacticCode(lineup.getTactic4PositionID(spot));

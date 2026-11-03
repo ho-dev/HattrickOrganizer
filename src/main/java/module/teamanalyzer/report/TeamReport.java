@@ -52,7 +52,7 @@ public class TeamReport {
     /** Number of matches considered */
     private int matchNumber = 0;
 
-    private final NameFormat nameFormat;
+    private final PlayerNameFormat playerNameFormat;
     private final PlayerNameFormatter playerNameFormatter;
 
     //~ Constructors -------------------------------------------------------------------------------
@@ -62,9 +62,9 @@ public class TeamReport {
      *
      * @param matchDetails list of matches of the team report
      */
-    public TeamReport(int teamId, List<MatchDetail> matchDetails, NameFormat nameFormat) {
+    public TeamReport(int teamId, List<MatchDetail> matchDetails, PlayerNameFormat playerNameFormat) {
         this.teamId = teamId;
-        this.nameFormat = nameFormat;
+        this.playerNameFormat = playerNameFormat;
 
         // TODO: that is not correct here
         final var players = matchDetails.stream()
@@ -100,7 +100,7 @@ public class TeamReport {
                     i.getFetchDate().isBefore(m.getMatch().getMatchDate().plusDaysAtSameLocalTime(7))).min(Comparator.comparing(SquadInfo::getFetchDate)).orElse(null);
             // don't use info in other matches
             if ( squadInfo != null ) squadInfos.remove(squadInfo);
-            addMatch(m, squadInfo,  SystemManager.isShowUnavailable.isSet(), playerNameFormatter, nameFormat);
+            addMatch(m, squadInfo,  SystemManager.isShowUnavailable.isSet(), playerNameFormatter, playerNameFormat);
         }
         this.averageRatingslineup = new TeamLineupBuilder(this)
                 .setName(TranslationFacility.tr("Durchschnitt")).build();
@@ -119,9 +119,9 @@ public class TeamReport {
      *
      * @param matchDetail The match of the report is stored in averageRatingslineup
      */
-    private TeamReport(int teamId, MatchDetail matchDetail, SquadInfo squadInfo, NameFormat nameFormat) {
+    private TeamReport(int teamId, MatchDetail matchDetail, SquadInfo squadInfo, PlayerNameFormat playerNameFormat) {
         this.teamId = teamId;
-        this.nameFormat = nameFormat;
+        this.playerNameFormat = playerNameFormat;
 
         // TODO: that is not correct here
         final var players = matchDetail.getPerformances().stream()
@@ -149,7 +149,7 @@ public class TeamReport {
             }).toList();
         playerNameFormatter = new PlayerNameFormatter(players);
 
-        addMatch(matchDetail, squadInfo , SystemManager.isShowUnavailable.isSet(), playerNameFormatter, nameFormat);
+        addMatch(matchDetail, squadInfo , SystemManager.isShowUnavailable.isSet(), playerNameFormatter, playerNameFormat);
         this.averageRatingslineup = new TeamLineupBuilder(this).setMatchDetail(matchDetail).setSquadInfo(squadInfo).build();
         if (HOVerwaltung.instance().getModel().getBasics().isNationalTeam()) {
             this.averageRatingslineup.setNtTeamDetails(DBManager.instance().loadNtTeamDetails(this.teamId, matchDetail.getMatch().getMatchDate().toDbTimestamp()));
@@ -189,7 +189,7 @@ public class TeamReport {
             }
             int matchNumber = selection - offset;
             // create a team report of one single match
-            TeamReport selectedMatchReport = new TeamReport(this.teamId, matchDetails.get(matchNumber), squadInfo.get(matchNumber), nameFormat);
+            TeamReport selectedMatchReport = new TeamReport(this.teamId, matchDetails.get(matchNumber), squadInfo.get(matchNumber), playerNameFormat);
             return selectedMatchReport.getTeamMatchReport(0);
         }
     }
@@ -208,7 +208,7 @@ public class TeamReport {
                     .build();
         } else {
             MatchDetail matchDetail = getTeamMatchReport(selection).getMatchDetail();
-            adjustedRatingsLineup = new TeamLineupBuilder(new TeamReport(this.teamId, matchDetail, null, nameFormat))
+            adjustedRatingsLineup = new TeamLineupBuilder(new TeamReport(this.teamId, matchDetail, null, playerNameFormat))
                     .setTeamData(newRatings)
                     .setMatchType(matchDetail.getMatch().getMatchType())
                     .setName(TranslationFacility.tr("ls.teamanalyzer.Adjusted"))
@@ -247,12 +247,12 @@ public class TeamReport {
      * @param matchDetail Match to be analyzed
      * @param showUnavailable consider also unavailable or not
      */
-    public void addMatch(MatchDetail matchDetail, SquadInfo squad, boolean showUnavailable, PlayerNameFormatter playerNameFormatter, NameFormat nameFormat) {
+    public void addMatch(MatchDetail matchDetail, SquadInfo squad, boolean showUnavailable, PlayerNameFormatter playerNameFormatter, PlayerNameFormat playerNameFormat) {
         this.matchDetails.add(matchDetail);
         this.squadInfo.add(squad);
 
         for (PlayerPerformance playerPerformance : matchDetail.getPerformances()) {
-            addPerformance(playerPerformance, showUnavailable, playerNameFormatter, nameFormat);
+            addPerformance(playerPerformance, showUnavailable, playerNameFormatter, playerNameFormat);
         }
 
         addRating(matchDetail.getRating());
@@ -274,7 +274,7 @@ public class TeamReport {
     /**
      * Add a performance to the correct SpotReport
      */
-    private void addPerformance(PlayerPerformance pp, boolean showUnavailable, PlayerNameFormatter playerNameFormatter, NameFormat nameFormat) {
+    private void addPerformance(PlayerPerformance pp, boolean showUnavailable, PlayerNameFormatter playerNameFormatter, PlayerNameFormat playerNameFormat) {
         if ((!showUnavailable) && (pp.getStatus() != PlayerDataManager.AVAILABLE)) {
             return;
         }
@@ -282,7 +282,7 @@ public class TeamReport {
         SpotReport spotReport = getSpotReport(pp.getRoleId());
 
         if (spotReport == null) {
-            spotReport = new SpotReport(pp, playerNameFormatter, nameFormat);
+            spotReport = new SpotReport(pp, playerNameFormatter, playerNameFormat);
             spotReports.put(pp.getRoleId(), spotReport);
         }
 

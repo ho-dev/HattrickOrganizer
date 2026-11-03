@@ -1,7 +1,7 @@
 package module.lineup.substitution;
 
 import core.model.TranslationFacility;
-import core.playername.NameFormat;
+import core.playername.PlayerNameFormat;
 import core.playername.PlayerNameFormatter;
 import core.util.GUIUtils;
 import module.lineup.Lineup;
@@ -21,21 +21,21 @@ public class SubstitutionEditDialog extends JDialog {
 	private SubstitutionEditView behaviourView;
 	private boolean canceled = true;
     private final PlayerNameFormatter playerNameFormatter;
-    private final NameFormat nameFormat;
+    private final PlayerNameFormat playerNameFormat;
 
-	public SubstitutionEditDialog(Dialog parent, MatchOrderType orderType, PlayerNameFormatter playerNameFormatter, NameFormat nameFormat) {
+	public SubstitutionEditDialog(Dialog parent, MatchOrderType orderType, PlayerNameFormatter playerNameFormatter, PlayerNameFormat playerNameFormat) {
 		super(parent, true);
 		this.orderType = orderType;
         this.playerNameFormatter = playerNameFormatter;
-        this.nameFormat = nameFormat;
+        this.playerNameFormat = playerNameFormat;
 		initDialog();
 	}
 
-	public SubstitutionEditDialog(Frame parent, MatchOrderType orderType, PlayerNameFormatter playerNameFormatter, NameFormat nameFormat) {
+	public SubstitutionEditDialog(Frame parent, MatchOrderType orderType, PlayerNameFormatter playerNameFormatter, PlayerNameFormat playerNameFormat) {
 		super(parent, true);
 		this.orderType = orderType;
         this.playerNameFormatter = playerNameFormatter;
-        this.nameFormat = nameFormat;
+        this.playerNameFormat = playerNameFormat;
 		initDialog();
 	}
 
@@ -85,7 +85,7 @@ public class SubstitutionEditDialog extends JDialog {
 		gbc.insets = new Insets(12, 2, 8, 8);
 		buttonPanel.add(cancelButton, gbc);
 
-		this.behaviourView = new SubstitutionEditView(this.orderType, playerNameFormatter, nameFormat);
+		this.behaviourView = new SubstitutionEditView(this.orderType, playerNameFormatter, playerNameFormat);
 		getContentPane().add(this.behaviourView, BorderLayout.CENTER);
 		getContentPane().add(buttonPanel, BorderLayout.SOUTH);
 

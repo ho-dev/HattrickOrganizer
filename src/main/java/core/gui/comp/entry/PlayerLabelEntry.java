@@ -7,8 +7,6 @@ import core.gui.theme.*;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.playername.ConfiguredPlayerNameFormatter;
-import core.playername.NameFormat;
-import core.playername.PlayerNameFormatter;
 import core.playername.PlayerNameUtils;
 import core.training.TrainingPreviewPlayers;
 import org.apache.commons.lang3.StringUtils;

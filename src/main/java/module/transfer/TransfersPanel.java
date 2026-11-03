@@ -7,7 +7,7 @@ import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
 import core.model.player.Player;
 import core.playername.Location;
-import core.playername.NameFormat;
+import core.playername.PlayerNameFormat;
 import core.playername.PlayerNameSettingsManager;
 import module.transfer.history.HistoryPane;
 import module.transfer.scout.TransferScoutPanel;
@@ -25,7 +25,7 @@ public class TransfersPanel extends JPanel implements IRefreshable {
 	private List<Player> players;
 	private final TransferTypePane transferTypePane;
 	private final TransferScoutPanel scoutPanel;
-    final NameFormat nameFormat = PlayerNameSettingsManager.instance().getFormat(Location.TRANSFERS_TRANSFER_LIST);
+    final PlayerNameFormat playerNameFormat = PlayerNameSettingsManager.instance().getFormat(Location.TRANSFERS_TRANSFER_LIST);
 
 	public TransfersPanel() {
 
@@ -38,7 +38,7 @@ public class TransfersPanel extends JPanel implements IRefreshable {
 		historyPane = new HistoryPane(this);
 		tabPane.add(TranslationFacility.tr("History"), historyPane); //$NON-NLS-1$
 
-		transferTypePane = new TransferTypePane(this, nameFormat);
+		transferTypePane = new TransferTypePane(this, playerNameFormat);
 		tabPane.add(TranslationFacility.tr("TransferTypes"), transferTypePane);
 
 		scoutPanel = new TransferScoutPanel();

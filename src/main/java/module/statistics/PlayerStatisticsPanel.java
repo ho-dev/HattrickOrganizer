@@ -61,7 +61,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 	private JComboBox<PlayerCBItem> jcbPlayer;
 	private JTextField jtfNbWeeks;
 	private HOLinesChart oChartPanel;
-    private final NameFormat nameFormat = PlayerNameSettingsManager.instance().getFormat(Location.STATISTICS_PLAYER_PLAYER_SELECTION);
+    private final PlayerNameFormat playerNameFormat = PlayerNameSettingsManager.instance().getFormat(Location.STATISTICS_PLAYER_PLAYER_SELECTION);
 
 	public final void setPlayer(int playerID) {
 		Helper.setComboBoxFromID(jcbPlayer, playerID);
@@ -440,7 +440,7 @@ class PlayerStatisticsPanel extends LazyImagePanel {
 		final List<Player> oldPlayers = HOVerwaltung.instance().getModel().getFormerPlayers().stream().filter(i->!i.getHrfDate().isBefore(fromDate)).toList();
 
         final var playerNameFormatter = PlayerNameFormatterFactory.createFromPlayers(StreamUtils.concat(players.stream(), oldPlayers.stream()).toList());
-        final var configuredPlayerNameFormatter = new ConfiguredPlayerNameFormatter(playerNameFormatter, nameFormat);
+        final var configuredPlayerNameFormatter = new ConfiguredPlayerNameFormatter(playerNameFormatter, playerNameFormat);
 
 		final List<PlayerCBItem> playerCBItems = players.stream()
 				.map(player -> createPlayerCBItem(player, configuredPlayerNameFormatter))

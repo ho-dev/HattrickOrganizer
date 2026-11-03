@@ -49,7 +49,7 @@ public class SubstitutionOverview extends JPanel {
 	private Lineup lineup;
 	private List<Substitution> substitutionBackup;
     private final PlayerNameFormatter playerNameFormatter;
-    private final NameFormat nameFormat = PlayerNameSettingsManager.instance().getFormat(Location.LINEUP_SUBSTITUTES);
+    private final PlayerNameFormat playerNameFormat = PlayerNameSettingsManager.instance().getFormat(Location.LINEUP_SUBSTITUTES);
 
 	public SubstitutionOverview(Lineup lineup, PlayerNameFormatter playerNameFormatter) {
 		this.lineup = lineup;
@@ -198,7 +198,7 @@ public class SubstitutionOverview extends JPanel {
 		orderTypeIconCol.setMaxWidth(25);
 
 		JPanel lowerPanel = new JPanel(new GridBagLayout());
-		this.detailsView = new DetailsView(playerNameFormatter, nameFormat);
+		this.detailsView = new DetailsView(playerNameFormatter, playerNameFormat);
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.anchor = GridBagConstraints.NORTHWEST;
 		gbc.weighty = 1.0;
@@ -315,9 +315,9 @@ public class SubstitutionOverview extends JPanel {
 		SubstitutionEditDialog dlg;
 		Window windowAncestor = SwingUtilities.getWindowAncestor(SubstitutionOverview.this);
 		if (windowAncestor instanceof Frame) {
-			dlg = new SubstitutionEditDialog((Frame) windowAncestor, orderType, playerNameFormatter, nameFormat);
+			dlg = new SubstitutionEditDialog((Frame) windowAncestor, orderType, playerNameFormatter, playerNameFormat);
 		} else {
-			dlg = new SubstitutionEditDialog((Dialog) windowAncestor, orderType, playerNameFormatter, nameFormat);
+			dlg = new SubstitutionEditDialog((Dialog) windowAncestor, orderType, playerNameFormatter, playerNameFormat);
 		}
 		return dlg;
 	}
@@ -504,7 +504,7 @@ public class SubstitutionOverview extends JPanel {
 
         private String getName(Player player) {
             final var playerName = PlayerNameUtils.createPlayerName(player);
-            return playerNameFormatter.format(playerName, nameFormat);
+            return playerNameFormatter.format(playerName, playerNameFormat);
         }
 
         private static Optional<Player> findPlayerById(int playerId) {

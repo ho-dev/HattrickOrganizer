@@ -35,7 +35,7 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 	private SpielerMatchesTable m_jtSpielerMatchesTable;
 	private SpielerPositionTable m_jtSpielerPositionTable;
 	private final int columnModelInstance;
-    private final NameFormat nameFormat = PlayerNameSettingsManager.instance().getFormat(Location.PLAYER_ANALYSIS_MATCHES);
+    private final PlayerNameFormat playerNameFormat = PlayerNameSettingsManager.instance().getFormat(Location.PLAYER_ANALYSIS_MATCHES);
 
 	/**
 	 * Creates a new SpielerAnalysePanel object.
@@ -102,7 +102,7 @@ public class SpielerAnalysePanel extends LazyImagePanel {
 		// Former Players
 		final List<Player> oldPlayers = HOVerwaltung.instance().getModel().getFormerPlayers();
         final var playerNameFormatter = PlayerNameFormatterFactory.createFromPlayers(StreamUtils.concat(players.stream(), oldPlayers.stream()).toList());
-        final var configuredPlayerNameFormatter = new ConfiguredPlayerNameFormatter(playerNameFormatter, nameFormat);
+        final var configuredPlayerNameFormatter = new ConfiguredPlayerNameFormatter(playerNameFormatter, playerNameFormat);
 
 		final List<PlayerCBItem> playerCBItems = players.stream()
 				.map(player -> createPlayerCBItem(player, configuredPlayerNameFormatter))

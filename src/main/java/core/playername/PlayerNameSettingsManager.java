@@ -33,7 +33,7 @@ public final class PlayerNameSettingsManager {
         return instance;
     }
 
-    public NameFormat getFormat(Location location) {
+    public PlayerNameFormat getFormat(Location location) {
         return settings.effectiveFormat(location);
     }
 

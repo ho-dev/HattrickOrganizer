@@ -89,23 +89,23 @@ public class PlayerNameFormatter {
             Objects.equals(lhs.getNickName(), rhs.getNickName());
     }
 
-    public String format(int playerId, NameFormat nameFormat) {
+    public String format(int playerId, PlayerNameFormat playerNameFormat) {
         final var playerNameWrapper = getPlayerNameWrapper(playerId);
-        return formatPlayerNameWrapper(playerNameWrapper, nameFormat);
+        return formatPlayerNameWrapper(playerNameWrapper, playerNameFormat);
     }
 
-    public String format(PlayerName playerName, NameFormat nameFormat) {
+    public String format(PlayerName playerName, PlayerNameFormat playerNameFormat) {
         final var playerNameWrapper = getPlayerNameWrapper(playerName.getPlayerId());
         if (!allNamesEqual(playerName, playerNameWrapper.playerName())) {
             throw new IllegalArgumentException("Give PlayerName %s is not equal to known one %s."
                 .formatted(playerNameToString(playerName), playerNameToString(playerNameWrapper.playerName())));
         }
 
-        return formatPlayerNameWrapper(playerNameWrapper, nameFormat);
+        return formatPlayerNameWrapper(playerNameWrapper, playerNameFormat);
     }
 
-    private String formatPlayerNameWrapper(PlayerNameWrapper playerNameWrapper, NameFormat nameFormat) {
-        return switch (nameFormat) {
+    private String formatPlayerNameWrapper(PlayerNameWrapper playerNameWrapper, PlayerNameFormat playerNameFormat) {
+        return switch (playerNameFormat) {
             case HATTRICK -> formatHattrick(playerNameWrapper);
             case FULL_FIRST_LAST -> formatFullFirstLast(playerNameWrapper);
             case FULL_LAST_FIRST -> formatFullLastFirst(playerNameWrapper);

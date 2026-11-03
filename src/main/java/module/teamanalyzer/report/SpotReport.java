@@ -1,7 +1,7 @@
 // %2614020934:hoplugins.teamAnalyzer.report%
 package module.teamanalyzer.report;
 
-import core.playername.NameFormat;
+import core.playername.PlayerNameFormat;
 import core.playername.PlayerNameFormatter;
 import module.teamanalyzer.vo.PlayerAppearance;
 import module.teamanalyzer.vo.PlayerPerformance;
@@ -26,7 +26,7 @@ public class SpotReport extends Report {
     private Map<String,PositionReport> positionReports = new HashMap<>();
 
     private final PlayerNameFormatter playerNameFormatter;
-    private final NameFormat nameFormat;
+    private final PlayerNameFormat playerNameFormat;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -35,10 +35,10 @@ public class SpotReport extends Report {
      *
      * @param pp PlayerPerformance
      */
-    public SpotReport(PlayerPerformance pp, PlayerNameFormatter playerNameFormatter, NameFormat nameFormat) {
+    public SpotReport(PlayerPerformance pp, PlayerNameFormatter playerNameFormatter, PlayerNameFormat playerNameFormat) {
         super(pp);
         this.playerNameFormatter = playerNameFormatter;
-        this.nameFormat = nameFormat;
+        this.playerNameFormat = playerNameFormat;
     }
 
     //~ Methods ------------------------------------------------------------------------------------
@@ -73,7 +73,7 @@ public class SpotReport extends Report {
         if (playerApperance == null) {
             playerApperance = new PlayerAppearance();
             playerApperance.setPlayerId(pp.getPlayerId());
-            playerApperance.setName(playerNameFormatter.format(pp.getPlayerId(), nameFormat));
+            playerApperance.setName(playerNameFormatter.format(pp.getPlayerId(), playerNameFormat));
 
             playerApperance.setStatus(pp.getStatus());
             players.put(pp.getPlayerId(), playerApperance);

@@ -39,7 +39,7 @@ public class PenaltyTakersView extends JPanel {
 	private JCheckBox showReserveCheckBox;
 	private JCheckBox showOthersCheckBox;
 	private List<PenaltyTaker> players;
-    private final NameFormat nameFormat = PlayerNameSettingsManager.instance().getFormat(Location.LINEUP_PENALTY_TAKERS);
+    private final PlayerNameFormat playerNameFormat = PlayerNameSettingsManager.instance().getFormat(Location.LINEUP_PENALTY_TAKERS);
 
     @Setter
     private PlayerNameFormatter playerNameFormatter;
@@ -575,7 +575,7 @@ public class PenaltyTakersView extends JPanel {
 			PenaltyTaker taker = this.data.get(rowIndex);
 			return switch (columnIndex) {
 				case 0 -> getInLineupVal(taker.getPlayer());
-                case 1 -> playerNameFormatter.format(PlayerNameUtils.createPlayerName(taker.getPlayer()), nameFormat);
+                case 1 -> playerNameFormatter.format(PlayerNameUtils.createPlayerName(taker.getPlayer()), playerNameFormat);
 				case 2 -> taker.getExperience();
 				case 3 -> taker.getSetPieces();
 				case 4 -> taker.getScoring();

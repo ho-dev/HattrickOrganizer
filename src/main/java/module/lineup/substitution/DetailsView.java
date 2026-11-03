@@ -4,7 +4,7 @@ import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.TranslationFacility;
-import core.playername.NameFormat;
+import core.playername.PlayerNameFormat;
 import core.playername.PlayerNameFormatter;
 import core.playername.PlayerNameUtils;
 import core.util.Helper;
@@ -33,11 +33,11 @@ public class DetailsView extends JPanel {
 	private JLabel playerLabel;
 	private JLabel playerInLabel;
     private final PlayerNameFormatter playerNameFormatter;
-    private final NameFormat nameFormat;
+    private final PlayerNameFormat playerNameFormat;
 
-	public DetailsView(PlayerNameFormatter playerNameFormatter, NameFormat nameFormat) {
+	public DetailsView(PlayerNameFormatter playerNameFormatter, PlayerNameFormat playerNameFormat) {
         this.playerNameFormatter = playerNameFormatter;
-        this.nameFormat = nameFormat;
+        this.playerNameFormat = playerNameFormat;
 		initComponents();
 	}
 
@@ -130,11 +130,11 @@ public class DetailsView extends JPanel {
 
 			playerOut = substitution.findSubjectPlayer()
                 .map(PlayerNameUtils::createPlayerName)
-                .map(playerName -> playerNameFormatter.format(playerName, nameFormat))
+                .map(playerName -> playerNameFormatter.format(playerName, playerNameFormat))
                 .orElse("");
 			playerIn = substitution.findObjectPlayer()
                 .map(PlayerNameUtils::createPlayerName)
-                .map(playerName -> playerNameFormatter.format(playerName, nameFormat))
+                .map(playerName -> playerNameFormatter.format(playerName, playerNameFormat))
                 .orElse("");
 
 			if (this.substitution.getMatchMinuteCriteria() > 0) {

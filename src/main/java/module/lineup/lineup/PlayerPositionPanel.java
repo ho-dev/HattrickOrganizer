@@ -18,7 +18,7 @@ import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.Player;
 import core.playername.ConfiguredPlayerNameFormatter;
-import core.playername.NameFormat;
+import core.playername.PlayerNameFormat;
 import core.playername.PlayerNameFormatterFactory;
 import core.playername.PlayerNameUtils;
 import core.training.TrainingPreviewPlayers;
@@ -245,9 +245,9 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
      * @param matchMinute      minute used for rating calculation
      */
     public void refresh(List<Player> inCandidates, List<Player> plStartingLineup, List<Player> plSubstitutes, Weather weather, Boolean useWeatherImpact, int matchMinute,
-                        NameFormat nameFormat) {
+                        PlayerNameFormat playerNameFormat) {
         var plCandidates = new ArrayList<>(inCandidates);
-        final var configuredPlayerNameFormatter = new ConfiguredPlayerNameFormatter(PlayerNameFormatterFactory.createFromPlayers(inCandidates), nameFormat);
+        final var configuredPlayerNameFormatter = new ConfiguredPlayerNameFormatter(PlayerNameFormatterFactory.createFromPlayers(inCandidates), playerNameFormat);
 
         Player selectedPlayer = null;
         HOModel model = HOVerwaltung.instance().getModel();
@@ -337,7 +337,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
     }
 
 
-    public void refresh2(List<Player> lPlayers, int playerIDcorrespondingSub, Weather weather, Boolean useWeatherImpact, NameFormat nameFormat) {
+    public void refresh2(List<Player> lPlayers, int playerIDcorrespondingSub, Weather weather, Boolean useWeatherImpact, PlayerNameFormat playerNameFormat) {
         Player selectedPlayer = null;
         iSelectedPlayerId = -1;
         m_weather = weather;
@@ -350,7 +350,7 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
             selectedPlayer = HOVerwaltung.instance().getModel().getCurrentPlayer(position.getPlayerId());
             setTactic(position.getTactic(), selectedPlayer);
         }
-        setPlayersList2(lPlayers, selectedPlayer, playerIDcorrespondingSub, nameFormat);
+        setPlayersList2(lPlayers, selectedPlayer, playerIDcorrespondingSub, playerNameFormat);
         initLabel();
         repaint();
     }
@@ -433,8 +433,8 @@ public class PlayerPositionPanel extends ImagePanel implements ItemListener, Foc
         setPlayerTooltip(m_clSelectedPlayer.getPlayer());
     }
 
-    protected void setPlayersList2(List<Player> allPlayers, @Nullable Player selectedPlayer, int playerIDcorrespondingSub, NameFormat nameFormat) {
-        final var configuredPlayerNameFormatter = new ConfiguredPlayerNameFormatter(PlayerNameFormatterFactory.createFromPlayers(allPlayers), nameFormat);
+    protected void setPlayersList2(List<Player> allPlayers, @Nullable Player selectedPlayer, int playerIDcorrespondingSub, PlayerNameFormat playerNameFormat) {
+        final var configuredPlayerNameFormatter = new ConfiguredPlayerNameFormatter(PlayerNameFormatterFactory.createFromPlayers(allPlayers), playerNameFormat);
 
         m_jcbPlayer.removeItemListener(this);
 

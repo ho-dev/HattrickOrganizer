@@ -2,7 +2,7 @@ package core.option;
 
 import core.model.TranslationFacility;
 import core.playername.Location;
-import core.playername.NameFormat;
+import core.playername.PlayerNameFormat;
 import core.playername.PlayerNameSettings;
 
 import javax.swing.*;
@@ -31,7 +31,7 @@ public final class SmartPlayerNamesPanel extends JPanel {
             JLabel label = (JLabel) super.getListCellRendererComponent(
                 list, value, index, isSelected, cellHasFocus);
 
-            if (value instanceof NameFormat format) {
+            if (value instanceof PlayerNameFormat format) {
                 label.setText(getNameFormatLabel(format));
             }
 
@@ -39,12 +39,12 @@ public final class SmartPlayerNamesPanel extends JPanel {
         }
     }
 
-    private static String getNameFormatLabel(NameFormat nameFormat) {
-        return TranslationFacility.tr(getTranslationKey(nameFormat));
+    private static String getNameFormatLabel(PlayerNameFormat playerNameFormat) {
+        return TranslationFacility.tr(getTranslationKey(playerNameFormat));
     }
 
-    static String getTranslationKey(NameFormat nameFormat) {
-        return switch (nameFormat) {
+    static String getTranslationKey(PlayerNameFormat playerNameFormat) {
+        return switch (playerNameFormat) {
             case HATTRICK -> "SmartPlayerNamesPanel.NameFormat.HATTRICK";
             case FULL_FIRST_LAST -> "SmartPlayerNamesPanel.NameFormat.FULL_FIRST_LAST";
             case FULL_LAST_FIRST -> "SmartPlayerNamesPanel.NameFormat.FULL_LAST_FIRST";
@@ -140,19 +140,19 @@ public final class SmartPlayerNamesPanel extends JPanel {
     /** The extra choice is available only for an individual location. */
     private enum Choice {
         USE_DEFAULT(null),
-        HATTRICK(NameFormat.HATTRICK),
-        FULL_FIRST_LAST(NameFormat.FULL_FIRST_LAST),
-        FULL_LAST_FIRST(NameFormat.FULL_LAST_FIRST),
-        SMART_FIRST_LAST(NameFormat.SMART_FIRST_LAST),
-        SMART_LAST_FIRST(NameFormat.SMART_LAST_FIRST);
+        HATTRICK(PlayerNameFormat.HATTRICK),
+        FULL_FIRST_LAST(PlayerNameFormat.FULL_FIRST_LAST),
+        FULL_LAST_FIRST(PlayerNameFormat.FULL_LAST_FIRST),
+        SMART_FIRST_LAST(PlayerNameFormat.SMART_FIRST_LAST),
+        SMART_LAST_FIRST(PlayerNameFormat.SMART_LAST_FIRST);
 
-        private final NameFormat format;
+        private final PlayerNameFormat format;
 
-        Choice(NameFormat format) {
+        Choice(PlayerNameFormat format) {
             this.format = format;
         }
 
-        static Choice fromFormat(NameFormat format) {
+        static Choice fromFormat(PlayerNameFormat format) {
             if (format == null) {
                 return USE_DEFAULT;
             }
@@ -165,7 +165,7 @@ public final class SmartPlayerNamesPanel extends JPanel {
         }
     }
 
-    private final JComboBox<NameFormat> defaultFormatBox = new JComboBox<>(NameFormat.values());
+    private final JComboBox<PlayerNameFormat> defaultFormatBox = new JComboBox<>(PlayerNameFormat.values());
     private final EnumMap<Location, JComboBox<Choice>> locationBoxes =
         new EnumMap<>(Location.class);
     private final JLabel previewLabel = new JLabel();
@@ -178,7 +178,7 @@ public final class SmartPlayerNamesPanel extends JPanel {
         add(createLocationsPanel(), BorderLayout.CENTER);
 
         defaultFormatBox.setRenderer(new NameFormatRenderer());
-        defaultFormatBox.setSelectedItem(NameFormat.HATTRICK);
+        defaultFormatBox.setSelectedItem(PlayerNameFormat.HATTRICK);
         defaultFormatBox.addActionListener(event -> {
             updatePreview();
             locationBoxes.values().forEach(JComponent::repaint);
@@ -216,7 +216,7 @@ public final class SmartPlayerNamesPanel extends JPanel {
         c.gridx = 1;
         c.weightx = 1;
         c.insets = new Insets(0, 0, 0, 0);
-        defaultFormatBox.setPrototypeDisplayValue(NameFormat.FULL_FIRST_LAST);
+        defaultFormatBox.setPrototypeDisplayValue(PlayerNameFormat.FULL_FIRST_LAST);
         panel.add(defaultFormatBox, c);
 
         c.gridx = 0;
@@ -303,7 +303,7 @@ public final class SmartPlayerNamesPanel extends JPanel {
 
         final var fontMetrics = box.getFontMetrics(box.getFont());
         final int maxNameFormatWidth =
-            Stream.of(NameFormat.values())
+            Stream.of(PlayerNameFormat.values())
                 .map(nameFormat -> TranslationFacility.tr("SmartPlayerNamesPanel.Use_default", getNameFormatLabel(nameFormat)))
                 .mapToInt(fontMetrics::stringWidth)
                 .max()
@@ -355,24 +355,24 @@ public final class SmartPlayerNamesPanel extends JPanel {
             TranslationFacility.tr("SmartPlayerNamesPanel.Smart_names_are_determined_using_the_other_players_in_the_relevant_group"));
     }
 
-    public NameFormat getDefaultFormat() {
-        return (NameFormat) defaultFormatBox.getSelectedItem();
+    public PlayerNameFormat getDefaultFormat() {
+        return (PlayerNameFormat) defaultFormatBox.getSelectedItem();
     }
 
-    public void setDefaultFormat(NameFormat format) {
+    public void setDefaultFormat(PlayerNameFormat format) {
         defaultFormatBox.setSelectedItem(Objects.requireNonNull(format, "format"));
         updatePreview();
         locationBoxes.values().forEach(JComponent::repaint);
     }
 
     /** Returns the explicit override, or null if the location uses the default. */
-    public NameFormat getOverride(Location location) {
+    public PlayerNameFormat getOverride(Location location) {
         JComboBox<Choice> box = locationBoxes.get(Objects.requireNonNull(location));
         return ((Choice) Objects.requireNonNull(box.getSelectedItem())).format;
     }
 
     /** Pass null to make this location use the default format. */
-    public void setOverride(Location location, NameFormat format) {
+    public void setOverride(Location location, PlayerNameFormat format) {
         locationBoxes.get(Objects.requireNonNull(location)).setSelectedItem(
             Choice.fromFormat(format));
     }
@@ -393,9 +393,9 @@ public final class SmartPlayerNamesPanel extends JPanel {
 
     /** Gets a detached snapshot suitable for persistence by the options dialog. */
     public PlayerNameSettings snapshot() {
-        EnumMap<Location, NameFormat> overrides = new EnumMap<>(Location.class);
+        EnumMap<Location, PlayerNameFormat> overrides = new EnumMap<>(Location.class);
         for (Location location : Location.values()) {
-            NameFormat format = getOverride(location);
+            PlayerNameFormat format = getOverride(location);
             if (format != null) {
                 overrides.put(location, format);
             }

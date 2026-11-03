@@ -9,7 +9,7 @@ import core.model.match.MatchLineupTeam;
 import core.model.player.IMatchRoleID;
 import core.model.util.PlayerNameFixupUtils;
 import core.playername.ConfiguredPlayerNameFormatter;
-import core.playername.NameFormat;
+import core.playername.PlayerNameFormat;
 import core.playername.PlayerNameFormatter;
 
 import javax.swing.*;
@@ -47,18 +47,18 @@ public class AufstellungsSternePanel extends RasenPanel {
 	private SpielerSternePanel m_clKeeper;
 	private boolean m_bHeim;
 	private boolean m_bPrint;
-    private final NameFormat nameFormat;
+    private final PlayerNameFormat playerNameFormat;
 
-	public AufstellungsSternePanel(boolean heim, NameFormat nameFormat) {
-		this(heim, nameFormat, false);
+	public AufstellungsSternePanel(boolean heim, PlayerNameFormat playerNameFormat) {
+		this(heim, playerNameFormat, false);
 	}
 
-	private AufstellungsSternePanel(boolean heim, NameFormat nameFormat, boolean print) {
+	private AufstellungsSternePanel(boolean heim, PlayerNameFormat playerNameFormat, boolean print) {
 		super(print);
 
 		m_bPrint = print;
 		m_bHeim = heim;
-        this.nameFormat = nameFormat;
+        this.playerNameFormat = playerNameFormat;
 		initComponentes();
 	}
 
@@ -97,7 +97,7 @@ public class AufstellungsSternePanel extends RasenPanel {
 	 * Get match lineup and refresh this SpielerSternePanels.
 	 */
 	public final void refresh(MatchLineup lineup, int teamid, PlayerNameFormatter playerNameFormatter) {
-        final var configuredPlayerNameFormatter = new ConfiguredPlayerNameFormatter(playerNameFormatter, nameFormat);
+        final var configuredPlayerNameFormatter = new ConfiguredPlayerNameFormatter(playerNameFormatter, playerNameFormat);
 		MatchLineupTeam lineupteam;
 
 		if (lineup.getHomeTeamId() == teamid) {

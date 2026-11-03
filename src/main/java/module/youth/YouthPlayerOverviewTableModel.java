@@ -11,7 +11,7 @@ import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
 import core.model.player.Player;
-import core.playername.NameFormat;
+import core.playername.PlayerNameFormat;
 import core.playername.PlayerNameFormatter;
 import core.playername.PlayerNameFormatterFactory;
 import core.playername.PlayerNameUtils;
@@ -29,12 +29,12 @@ import static module.youth.YouthSkillInfo.getSkillName;
 
 public class YouthPlayerOverviewTableModel extends HOTableModel {
 
-    private final NameFormat nameFormat;
+    private final PlayerNameFormat playerNameFormat;
     private PlayerNameFormatter playerNameFormatter;
 
-    public YouthPlayerOverviewTableModel(UserColumnController.ColumnModelId id, NameFormat nameFormat) {
+    public YouthPlayerOverviewTableModel(UserColumnController.ColumnModelId id, PlayerNameFormat playerNameFormat) {
         super(id, "YouthPlayerOverview");
-        this.nameFormat = nameFormat;
+        this.playerNameFormat = playerNameFormat;
         setColumns(initColumns());
     }
 
@@ -48,7 +48,7 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
                 new YouthPlayerColumn("ls.player.name") {
                     @Override
                     public IHOTableCellEntry getTableEntry(YouthPlayer player) {
-                        final var playerName = playerNameFormatter.format(PlayerNameUtils.createPlayerName(player), nameFormat);
+                        final var playerName = playerNameFormatter.format(PlayerNameUtils.createPlayerName(player), playerNameFormat);
                         return new ColorLabelEntry(playerName, ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
 

@@ -6,7 +6,7 @@ import core.gui.comp.table.HOPlayersTableModel;
 import core.gui.model.UserColumnController;
 import core.gui.theme.ImageUtilities;
 import core.model.HOVerwaltung;
-import core.playername.NameFormat;
+import core.playername.PlayerNameFormat;
 import core.playername.PlayerNameFormatter;
 import core.playername.PlayerNameFormatterFactory;
 import core.playername.PlayerNameUtils;
@@ -22,14 +22,14 @@ public class HallOfFameTableModel extends HOPlayersTableModel {
 
     private PlayerNameFormatter playerNameFormatter;
 
-    public HallOfFameTableModel(UserColumnController.ColumnModelId columnModelId, NameFormat nameFormat) {
+    public HallOfFameTableModel(UserColumnController.ColumnModelId columnModelId, PlayerNameFormat playerNameFormat) {
         super(columnModelId, "ls.hof");
 
         var newColumns = new ArrayList<>(List.of(
             new HallOfFameColumn("ls.player.name") {
                 @Override
                 public IHOTableCellEntry getTableEntry(HallOfFamePlayer player) {
-                    final var playerName = playerNameFormatter.format(PlayerNameUtils.createPlayerName(player), nameFormat);
+                    final var playerName = playerNameFormatter.format(PlayerNameUtils.createPlayerName(player), playerNameFormat);
                     return new ColorLabelEntry(playerName, ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                 }
 

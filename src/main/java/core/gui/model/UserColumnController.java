@@ -3,7 +3,7 @@ package core.gui.model;
 import core.db.DBManager;
 import core.gui.comp.table.HOTableModel;
 import core.playername.Location;
-import core.playername.NameFormat;
+import core.playername.PlayerNameFormat;
 import core.playername.PlayerNameSettingsManager;
 import module.halloffame.HallOfFameTableModel;
 import module.matches.statistics.MatchesOverviewColumnModel;
@@ -149,9 +149,9 @@ public final class UserColumnController {
         dbManager.loadHOColumModel(getHallOfFameTableModel(PlayerNameSettingsManager.instance().getFormat(Location.HALL_OF_FAME_PLAYER_LIST)));
 	}
 
-    public HallOfFameTableModel getHallOfFameTableModel(NameFormat nameFormat) {
+    public HallOfFameTableModel getHallOfFameTableModel(PlayerNameFormat playerNameFormat) {
         if (this.hallOfFameTableModel == null){
-            this.hallOfFameTableModel = new HallOfFameTableModel(ColumnModelId.HALL_OF_FAME, nameFormat);
+            this.hallOfFameTableModel = new HallOfFameTableModel(ColumnModelId.HALL_OF_FAME, playerNameFormat);
         }
         return this.hallOfFameTableModel;
     }
@@ -246,8 +246,8 @@ public final class UserColumnController {
 	 */
 	public PlayerOverviewTableModel getPlayerOverviewModel(){
 		if(playerOverviewColumnModel == null){
-            final NameFormat nameFormat = PlayerNameSettingsManager.instance().getFormat(Location.SQUAD_NAME_COLUMN);
-			playerOverviewColumnModel = new PlayerOverviewTableModel(ColumnModelId.PLAYEROVERVIEW, nameFormat);
+            final PlayerNameFormat playerNameFormat = PlayerNameSettingsManager.instance().getFormat(Location.SQUAD_NAME_COLUMN);
+			playerOverviewColumnModel = new PlayerOverviewTableModel(ColumnModelId.PLAYEROVERVIEW, playerNameFormat);
 		}
 		return playerOverviewColumnModel;
 	}
@@ -258,8 +258,8 @@ public final class UserColumnController {
 	 */
 	public PlayerOverviewTableModel getLineupModel(){
 		if(lineupColumnModel == null){
-            final NameFormat nameFormat = PlayerNameSettingsManager.instance().getFormat(Location.LINEUP_PLAYER_LIST);
-			lineupColumnModel = new PlayerOverviewTableModel(ColumnModelId.LINEUP, "Aufstellung", nameFormat);
+            final PlayerNameFormat playerNameFormat = PlayerNameSettingsManager.instance().getFormat(Location.LINEUP_PLAYER_LIST);
+			lineupColumnModel = new PlayerOverviewTableModel(ColumnModelId.LINEUP, "Aufstellung", playerNameFormat);
 		}
 		return lineupColumnModel;
 	}
@@ -287,9 +287,9 @@ public final class UserColumnController {
 		return v;
 	}
 
-	public YouthPlayerOverviewTableModel getYouthPlayerOverviewColumnModel(NameFormat nameFormat) {
+	public YouthPlayerOverviewTableModel getYouthPlayerOverviewColumnModel(PlayerNameFormat playerNameFormat) {
 		if(youthPlayerOverviewColumnModel == null){
-			youthPlayerOverviewColumnModel = new YouthPlayerOverviewTableModel(ColumnModelId.YOUTHPLAYEROVERVIEW, nameFormat);
+			youthPlayerOverviewColumnModel = new YouthPlayerOverviewTableModel(ColumnModelId.YOUTHPLAYEROVERVIEW, playerNameFormat);
 		}
 		return youthPlayerOverviewColumnModel;
 	}

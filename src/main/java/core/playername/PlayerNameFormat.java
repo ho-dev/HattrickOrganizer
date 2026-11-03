@@ -1,6 +1,6 @@
 package core.playername;
 
-public enum NameFormat {
+public enum PlayerNameFormat {
     HATTRICK,
     FULL_FIRST_LAST,
     FULL_LAST_FIRST,

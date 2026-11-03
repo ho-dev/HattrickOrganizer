@@ -2,7 +2,7 @@ package module.youth;
 
 import core.model.TranslationFacility;
 import core.playername.Location;
-import core.playername.NameFormat;
+import core.playername.PlayerNameFormat;
 import core.playername.PlayerNameSettingsManager;
 
 import javax.swing.*;
@@ -12,11 +12,11 @@ public class YouthPanel extends JPanel {
 
     private final YouthPlayerView youthPlayerView;
     private final YouthTrainingView youthTrainingView;
-    private final NameFormat nameFormat = PlayerNameSettingsManager.instance().getFormat(Location.YOUTH_PLAYER);
+    private final PlayerNameFormat playerNameFormat = PlayerNameSettingsManager.instance().getFormat(Location.YOUTH_PLAYER);
 
     public YouthPanel() {
         setLayout(new BorderLayout());
-        youthPlayerView = new YouthPlayerView(nameFormat);
+        youthPlayerView = new YouthPlayerView(playerNameFormat);
         var tabbedPane = new JTabbedPane();
         tabbedPane.addTab(TranslationFacility.tr("ls.youth.player"), this.youthPlayerView);
         youthTrainingView = new YouthTrainingView();

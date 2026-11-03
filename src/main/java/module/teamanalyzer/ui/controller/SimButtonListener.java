@@ -5,7 +5,7 @@ import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
 import core.model.match.IMatchDetails;
 import core.model.match.Matchdetails;
-import core.playername.NameFormat;
+import core.playername.PlayerNameFormat;
 import core.prediction.MatchEnginePanel;
 import core.prediction.MatchPredictionDialog;
 import core.prediction.engine.MatchPredictionManager;
@@ -38,7 +38,7 @@ public class SimButtonListener implements ActionListener {
     /** The opponent team */
     TeamLineupData opponentTeam;
     private final RecapPanel recapPanel;
-    private final NameFormat nameFormat;
+    private final PlayerNameFormat playerNameFormat;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -46,11 +46,11 @@ public class SimButtonListener implements ActionListener {
      * Creates a new SimButtonListener object.
      *
      */
-    public SimButtonListener(TeamLineupData myTeam, TeamLineupData opponentTeam, RecapPanel recapPanel, NameFormat nameFormat) {
+    public SimButtonListener(TeamLineupData myTeam, TeamLineupData opponentTeam, RecapPanel recapPanel, PlayerNameFormat playerNameFormat) {
         this.myTeam = myTeam;
         this.opponentTeam = opponentTeam;
         this.recapPanel = recapPanel;
-        this.nameFormat = nameFormat;
+        this.playerNameFormat = playerNameFormat;
     }
 
     //~ Methods ------------------------------------------------------------------------------------
@@ -100,10 +100,10 @@ public class SimButtonListener implements ActionListener {
         String match;
 
         if (SystemManager.getSelectedTeamLocation() == IMatchDetails.LOCATION_HOME) {
-            matchPredictionPanel = new MatchEnginePanel(myTeamValues, opponentTeamValues, nameFormat);
+            matchPredictionPanel = new MatchEnginePanel(myTeamValues, opponentTeamValues, playerNameFormat);
             match = myTeamValues.getTeamName() + " – " + opponentTeamValues.getTeamName();
         } else {
-            matchPredictionPanel = 	new MatchEnginePanel(opponentTeamValues, myTeamValues, nameFormat);
+            matchPredictionPanel = 	new MatchEnginePanel(opponentTeamValues, myTeamValues, playerNameFormat);
             match = opponentTeamValues.getTeamName() + " – " + myTeamValues.getTeamName();
         }
 

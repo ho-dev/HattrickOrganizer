@@ -3,7 +3,7 @@ package module.teamanalyzer;
 import core.model.match.IMatchDetails;
 import core.module.config.ModuleConfig;
 import core.playername.Location;
-import core.playername.NameFormat;
+import core.playername.PlayerNameFormat;
 import core.playername.PlayerNameSettingsManager;
 import core.prediction.engine.TeamData;
 import module.teamanalyzer.manager.MatchManager;
@@ -205,15 +205,15 @@ public class SystemManager {
 		}
 	}
 
-	public static TeamReport getTeamReport(NameFormat nameFormat) {
+	public static TeamReport getTeamReport(PlayerNameFormat playerNameFormat) {
 		if (teamReport == null) {
-			teamReport = new TeamReport(getActiveTeamId(), new ArrayList<>(), nameFormat); // create an empty team report
+			teamReport = new TeamReport(getActiveTeamId(), new ArrayList<>(), playerNameFormat); // create an empty team report
 		}
 		return teamReport;
 	}
 
-	public static void adjustRatingsLineup(TeamData newRatings, NameFormat nameFormat) {
-		getTeamReport(nameFormat).adjustRatingsLineup(newRatings);
+	public static void adjustRatingsLineup(TeamData newRatings, PlayerNameFormat playerNameFormat) {
+		getTeamReport(playerNameFormat).adjustRatingsLineup(newRatings);
 		updateUI();
 	}
 }
