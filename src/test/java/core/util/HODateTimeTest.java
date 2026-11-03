@@ -1,5 +1,7 @@
 package core.util;
 
+import core.HOModelBuilder;
+import core.model.HOVerwaltung;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -31,6 +33,7 @@ class HODateTimeTest {
     private static final LocalDateTime NEXT_LOCAL_DAY_1 = LocalDate.of(2024, 8, 30).atStartOfDay();
     private static final LocalDateTime NEXT_LOCAL_DAY_2 = LocalDate.of(2024, 8, 31).atStartOfDay();
     private static final LocalDateTime NEXT_LOCAL_DAY_3 = LocalDate.of(2024, 9, 1).atStartOfDay();
+    private static final int HRF_MOCK_ID = 43;
 
     @Test
     void test() {
@@ -388,4 +391,23 @@ class HODateTimeTest {
         final var zonedDateTime = ZonedDateTime.of(localDateTime, ZoneId.systemDefault());
         return new HODateTime(zonedDateTime.toInstant());
     }
+
+    private static Stream<Arguments> test_toLocalHtWeek() {
+        return Stream.of(
+            Arguments.of(HODateTime.fromHT("2026-11-03 00:00:00"), 0, new LocalHTWeek(95,16)),
+            Arguments.of(HODateTime.fromHT("2026-11-03 01:00:00"), -10, new LocalHTWeek(85,16))
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource
+    void test_toLocalHtWeek(HODateTime date, int seasonOffset, LocalHTWeek expected) {
+
+        var model = new HOModelBuilder().hrfId(HRF_MOCK_ID).build();
+        HOVerwaltung.instance().setModel(model);
+        var basics =  model.getBasics();
+        basics.setSeasonOffset(seasonOffset);
+        assertThat(date.toLocaleHTWeek()).isEqualTo(expected);
+    }
+
 }
