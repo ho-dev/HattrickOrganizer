@@ -17,6 +17,7 @@ import core.training.*;
 import core.util.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
@@ -1094,16 +1095,42 @@ public class Player extends AbstractTable.Storable {
 
     }
 
-    public String getFullName() {
-        if (getNickName().isEmpty()) {
-            if (!getFirstName().isEmpty()) {
-                return getFirstName() + " " + getLastName();
+    public static String getFullName(String firstName, String lastName, String nickName) {
+        if (StringUtils.isEmpty(nickName)) {
+            if (StringUtils.isNotEmpty(firstName)) {
+                return "%s %s".formatted(firstName, lastName);
             }
-            return getLastName();
+            return lastName;
         }
 
-        return getFirstName() + " '" + getNickName() + "' " + getLastName();
+        return "%s '%s' %s".formatted(firstName, nickName, lastName);
     }
+
+    public static String getFullNameWithLastNameFirst(String firstName, String lastName, String nickName) {
+        if (StringUtils.isEmpty(nickName)) {
+            if (StringUtils.isNotEmpty(firstName)) {
+                return "%s, %s".formatted(lastName, firstName);
+            }
+            return lastName;
+        }
+
+        return "%s, %s '%s'".formatted(lastName, firstName, nickName);
+    }
+
+    public String getFullName() {
+        return switch (fullNameDisplayType) {
+            case FULL_NAME_NORMAL -> getFullName(getFirstName(), getLastName(), getNickName());
+            case FULL_NAME_WITH_LAST_NAME_FIRST -> getFullNameWithLastNameFirst(getFirstName(), getLastName(), getNickName());
+        };
+    }
+
+    enum FullNameDisplayType {
+        FULL_NAME_NORMAL,
+        FULL_NAME_WITH_LAST_NAME_FIRST
+    }
+
+    @Getter
+    private static final FullNameDisplayType fullNameDisplayType = FullNameDisplayType.FULL_NAME_WITH_LAST_NAME_FIRST;
 
     public void setCountryId(int m_iNationalitaet) {
         this.countryId = m_iNationalitaet;
@@ -2573,5 +2600,4 @@ public class Player extends AbstractTable.Storable {
         }
         return null;
     }
-
 }

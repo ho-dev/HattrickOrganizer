@@ -7,11 +7,16 @@ import core.gui.comp.panel.LazyPanel;
 import core.gui.comp.panel.RasenPanel;
 import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
+import core.model.enums.MatchType;
 import core.model.match.MatchLineupPosition;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.series.Paarung;
+import core.model.util.PlayerNameFixupUtils;
+import core.playername.*;
+import core.util.StreamUtils;
 import module.series.MatchFixtures;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.swing.*;
 import javax.swing.event.ChangeEvent;
@@ -19,7 +24,10 @@ import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Comparator;
 import java.util.List;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 public class TeamOfTheWeekPanel extends LazyPanel implements ChangeListener, ActionListener {
 
@@ -31,6 +39,7 @@ public class TeamOfTheWeekPanel extends LazyPanel implements ChangeListener, Act
 	private JSpinner weekSpinner;
 
 	private List<Paarung> matches;
+    private PlayerNameFormatter playerNameFormatter;
 
 	@Override
 	protected void initialize() {
@@ -120,7 +129,9 @@ public class TeamOfTheWeekPanel extends LazyPanel implements ChangeListener, Act
 
 		panel.removeAll();
 
-		JLabel spielername = createLabel(mlp.getSpielerName(), Color.black, 1);
+        final var format = PlayerNameSettingsManager.instance().getFormat(Location.BEST_WORST_TEAM);
+        final var playerName = playerNameFormatter.format(mlp.getPlayerId(), format);
+		JLabel spielername = createLabel(playerName, Color.black, 1);
 		JLabel teamname = createLabel(getTeamName(mlp.getTeamId()), Color.black, 1);
 		JLabel position = createLabel(posi, Color.black, 0);
 		position.setOpaque(false);
@@ -268,6 +279,24 @@ public class TeamOfTheWeekPanel extends LazyPanel implements ChangeListener, Act
 		}
 		// TODO For match of year attention of doubles
 		var ret = new MatchLineupPosition[11];
+
+        final var allMatchLineupPostions =
+            matches.stream().sorted(Comparator.comparing(Paarung::getDatum).reversed())
+                .flatMap(paarung -> {
+                    List<MatchLineupPosition> homeTeamPositions =
+                        DBManager.instance().getMatchLineupPlayers(paarung.getMatchId(), MatchType.LEAGUE, paarung.getHeimId());
+                    homeTeamPositions.forEach(PlayerNameFixupUtils::fixup);
+                    List<MatchLineupPosition> guestTeamPositions =
+                        DBManager.instance().getMatchLineupPlayers(paarung.getMatchId(), MatchType.LEAGUE, paarung.getGastId());
+                    homeTeamPositions.forEach(PlayerNameFixupUtils::fixup); // TODO
+                    guestTeamPositions.forEach(PlayerNameFixupUtils::fixup); // TODO
+                    return StreamUtils.concat(homeTeamPositions.stream(), guestTeamPositions.stream());
+                })
+                .map(PlayerNameUtils::createPlayerName)
+                .collect(Collectors.toMap(PlayerName::getPlayerId, Function.identity(), TeamOfTheWeekPanel::preferWithLastName))
+                .values().stream().toList();
+        playerNameFormatter = new PlayerNameFormatter(allMatchLineupPostions);
+
 		var players = DBManager.instance().loadTopFlopRatings(matches, IMatchRoleID.KEEPER, 1, isBest);
 		ret[0] = getPlayer(players,0);
 		players = DBManager.instance().loadTopFlopRatings(matches, IMatchRoleID.BACK, 2, isBest);
@@ -287,6 +316,13 @@ public class TeamOfTheWeekPanel extends LazyPanel implements ChangeListener, Act
 		ret[10] = getPlayer(players,1);
 		return ret;
 	}
+
+    private static PlayerName preferWithLastName(PlayerName first, PlayerName second) {
+        if (StringUtils.isBlank(first.getLastName()) && StringUtils.isNotBlank(second.getLastName())) {
+            return second;
+        }
+        return first;
+    }
 
 	private MatchLineupPosition getPlayer(List<MatchLineupPosition> players, int index){
 		if ( index < players.size()){

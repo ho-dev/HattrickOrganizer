@@ -4,6 +4,9 @@ import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.TranslationFacility;
+import core.playername.PlayerNameFormat;
+import core.playername.PlayerNameFormatter;
+import core.playername.PlayerNameUtils;
 import core.util.Helper;
 import module.lineup.substitution.model.GoalDiffCriteria;
 import module.lineup.substitution.model.MatchOrderType;
@@ -29,8 +32,12 @@ public class DetailsView extends JPanel {
 	private JLabel redCardsEntry;
 	private JLabel playerLabel;
 	private JLabel playerInLabel;
+    private final PlayerNameFormatter playerNameFormatter;
+    private final PlayerNameFormat playerNameFormat;
 
-	public DetailsView() {
+	public DetailsView(PlayerNameFormatter playerNameFormatter, PlayerNameFormat playerNameFormat) {
+        this.playerNameFormatter = playerNameFormatter;
+        this.playerNameFormat = playerNameFormat;
 		initComponents();
 	}
 
@@ -121,8 +128,14 @@ public class DetailsView extends JPanel {
 		if (this.substitution != null) {
 			orderType = LanguageStringLookup.getOrderType(this.substitution.getOrderType());
 
-			playerOut = this.substitution.getSubjectPlayerName();
-			playerIn = this.substitution.getObjectPlayerName();
+			playerOut = substitution.findSubjectPlayer()
+                .map(PlayerNameUtils::createPlayerName)
+                .map(playerName -> playerNameFormatter.format(playerName, playerNameFormat))
+                .orElse("");
+			playerIn = substitution.findObjectPlayer()
+                .map(PlayerNameUtils::createPlayerName)
+                .map(playerName -> playerNameFormatter.format(playerName, playerNameFormat))
+                .orElse("");
 
 			if (this.substitution.getMatchMinuteCriteria() > 0) {
 				when = MessageFormat.format(

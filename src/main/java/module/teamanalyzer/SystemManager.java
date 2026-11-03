@@ -2,6 +2,9 @@ package module.teamanalyzer;
 
 import core.model.match.IMatchDetails;
 import core.module.config.ModuleConfig;
+import core.playername.Location;
+import core.playername.PlayerNameFormat;
+import core.playername.PlayerNameSettingsManager;
 import core.prediction.engine.TeamData;
 import module.teamanalyzer.manager.MatchManager;
 import module.teamanalyzer.manager.MatchPopulator;
@@ -177,7 +180,7 @@ public class SystemManager {
 		updating = true;
 		List<MatchDetail> matchDetails = MatchManager.getMatchDetails();
 		if (!MatchPopulator.getAnalyzedMatch().isEmpty()) {
-			teamReport = new TeamReport(getActiveTeamId(), matchDetails);
+			teamReport = new TeamReport(getActiveTeamId(), matchDetails, PlayerNameSettingsManager.instance().getFormat(Location.TEAM_ANALYSER_FIELD));
 		} else {
 			teamReport = null;
 		}
@@ -202,15 +205,15 @@ public class SystemManager {
 		}
 	}
 
-	public static TeamReport getTeamReport() {
+	public static TeamReport getTeamReport(PlayerNameFormat playerNameFormat) {
 		if (teamReport == null) {
-			teamReport = new TeamReport(getActiveTeamId(), new ArrayList<>()); // create an empty team report
+			teamReport = new TeamReport(getActiveTeamId(), new ArrayList<>(), playerNameFormat); // create an empty team report
 		}
 		return teamReport;
 	}
 
-	public static void adjustRatingsLineup(TeamData newRatings) {
-		getTeamReport().adjustRatingsLineup(newRatings);
+	public static void adjustRatingsLineup(TeamData newRatings, PlayerNameFormat playerNameFormat) {
+		getTeamReport(playerNameFormat).adjustRatingsLineup(newRatings);
 		updateUI();
 	}
 }

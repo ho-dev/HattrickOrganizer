@@ -10,6 +10,7 @@ import core.gui.model.UserColumnController;
 import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
 import core.module.config.ModuleConfig;
+import core.playername.PlayerNameFormat;
 import core.util.Helper;
 import core.util.chart.HOLinesChart;
 import core.util.chart.LinesChartDataModel;
@@ -39,12 +40,14 @@ public class YouthPlayerView extends JPanel implements Refreshable, ListSelectio
     private final JEditorPane playerScoutCommentField;
     private final YouthPlayerDetailsTableModel playerDetailsTableModel;
     private YouthPlayer selectedPlayer;
+    private final PlayerNameFormat playerNameFormat;
 
-    public YouthPlayerView() {
+    public YouthPlayerView(PlayerNameFormat playerNameFormat) {
         super();
+        this.playerNameFormat = playerNameFormat;
 
         setLayout(new BorderLayout());
-        this.playerOverviewTableModel =  UserColumnController.instance().getYouthPlayerOverviewColumnModel();
+        this.playerOverviewTableModel =  UserColumnController.instance().getYouthPlayerOverviewColumnModel(playerNameFormat);
         playerOverviewTable = new FixedColumnsTable(this.playerOverviewTableModel);
         playerOverviewTable.addListSelectionListener(this);
         this.playerDetailsTableModel = UserColumnController.instance().getYouthPlayerDetailsColumnModel();

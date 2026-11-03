@@ -7,6 +7,7 @@ import core.model.enums.MatchType;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.player.TrainerType;
+import core.model.util.PlayerNameFixupUtils;
 import core.util.HOLogger;
 import module.lineup.Lineup;
 import module.lineup.substitution.model.MatchOrderType;
@@ -241,10 +242,10 @@ public class MatchLineupTeam extends AbstractTable.Storable {
             return TranslationFacility.tr("ls.team.styleofplay.neutral");
         } else {
             var s = (styleOfPlay.isOffensive()) ? TranslationFacility.tr("ls.team.styleofplay.offensive") :
-                TranslationFacility.tr("ls.team.styleofplay.defensive");
+				TranslationFacility.tr("ls.team.styleofplay.defensive");
             return Math.abs(styleOfPlay.getValue() * 10) + "% " + s;
         }
-    }
+	}
 
 	/**
 	 * Setter for property m_iTeamID.
@@ -713,6 +714,8 @@ public class MatchLineupTeam extends AbstractTable.Storable {
 
 	public void loadLineup() {
 		var players = DBManager.instance().getMatchLineupPlayers(this.matchId, this.matchType, this.teamId);
+        // TODO: wrong place to fix the content of the database
+        players.forEach(PlayerNameFixupUtils::fixup);
 		var substitutions = DBManager.instance().getMatchSubstitutionsByMatchTeam(this.matchId, this.matchType, this.teamId);
 		this.lineup.setPlayers(players);
 		this.lineup.setSubstitionList(substitutions);

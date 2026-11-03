@@ -11,6 +11,8 @@ import core.model.misc.Economy;
 import core.model.misc.Verein;
 import core.model.player.Player;
 import core.model.player.TrainerType;
+import core.playername.PlayerNameFormatter;
+import core.playername.PlayerNameFormatterFactory;
 import core.rating.RatingPredictionManager;
 import core.rating.RatingPredictionModel;
 import core.util.HODateTime;
@@ -50,6 +52,7 @@ public class HOModel {
     private Team team;
     private static List<Player> oldPlayers;
     private List<Player> players;
+    private PlayerNameFormatter playerNameFormatter;
     private Verein verein;
     private XtraData xtraData;
     private List<StaffMember> staff;
@@ -186,6 +189,26 @@ public class HOModel {
             players = getPersistenceManager().getSpieler(this.hrf.getHrfId());
         }
         return players;
+    }
+
+    public PlayerNameFormatter getPlayerNameFormatterCurrentPlayers() {
+        ensurePlayerNameFormatter();
+        return playerNameFormatter;
+    }
+
+    private void updatePlayerNameFormatter() {
+        resetPlayerNameFormatter();
+        ensurePlayerNameFormatter();
+    }
+
+    private void ensurePlayerNameFormatter() {
+        if (playerNameFormatter == null) {
+            playerNameFormatter = PlayerNameFormatterFactory.createFromPlayers(players != null ? players : List.of());
+        }
+    }
+
+    private void resetPlayerNameFormatter() {
+        playerNameFormatter = null;
     }
 
     /**
@@ -351,6 +374,7 @@ public class HOModel {
      */
     public final void setCurrentPlayers(List<Player> playerVector) {
         players = playerVector;
+        resetPlayerNameFormatter();
     }
 
     /**
@@ -376,7 +400,7 @@ public class HOModel {
 
         var lineupPos = DBManager.instance().getMatchInserts(objectPlayerID);
         for (var p : lineupPos) {
-            return p.getSpielerName();
+            return p.getLastName();
         }
 
         var teamId = SystemManager.getActiveTeamId();
@@ -538,6 +562,7 @@ public class HOModel {
             players = new ArrayList<>();
         }
         players.add(player);
+        updatePlayerNameFormatter();
     }
 
     public final void addYouthPlayer(YouthPlayer player) {
@@ -592,6 +617,7 @@ public class HOModel {
     public final void removePlayer(Player player) {
         if (players != null) {
             players.remove(player);
+            updatePlayerNameFormatter();
         }
     }
 

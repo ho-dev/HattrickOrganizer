@@ -9,7 +9,9 @@ import core.model.HOVerwaltung;
 import core.model.UserParameter;
 import core.model.match.MatchLineupPosition;
 import core.model.player.Player;
+import core.playername.ConfiguredPlayerNameFormatter;
 import org.jetbrains.annotations.Nullable;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -28,24 +30,24 @@ public class PlayerCBItem implements Comparable<PlayerCBItem>, ComboItem {
         return m_bSetInBestPosition;
     }
 
-    public PlayerCBItem(String text, float positionRating, @Nullable Player player) {
+    public PlayerCBItem(String text, float positionRating, @Nullable Player player, ConfiguredPlayerNameFormatter configuredPlayerNameFormatter) {
         m_sText = text;
         m_clPlayer = player;
         m_fPositionsBewertung = positionRating;
         m_bSetInBestPosition = false;
-        m_clEntry = new PlayerLabelEntry(null, null, 0f, false, true);
+        m_clEntry = new PlayerLabelEntry(null, null, 0f, false, true, configuredPlayerNameFormatter);
     }
 
-    public PlayerCBItem(String text, float positionRating, @Nullable Player player, boolean useCustomText, boolean multiLine) {
+    public PlayerCBItem(String text, float positionRating, @Nullable Player player, boolean useCustomText, boolean multiLine, ConfiguredPlayerNameFormatter configuredPlayerNameFormatter) {
         m_sText = text;
         m_clPlayer = player;
         m_fPositionsBewertung = positionRating;
         m_bSetInBestPosition = false;
         m_bMultiLine = multiLine;
         if (useCustomText) {
-            m_clEntry = new PlayerLabelEntry(null, null, 0f, true, true, true, text, m_bMultiLine);
+            m_clEntry = new PlayerLabelEntry(null, null, 0f, true, true, true, text, m_bMultiLine, configuredPlayerNameFormatter);
         } else {
-            m_clEntry = new PlayerLabelEntry(null, null, 0f, true, true, false, "", m_bMultiLine);
+            m_clEntry = new PlayerLabelEntry(null, null, 0f, true, true, false, "", m_bMultiLine, configuredPlayerNameFormatter);
         }
     }
 
@@ -101,21 +103,19 @@ public class PlayerCBItem implements Comparable<PlayerCBItem>, ComboItem {
 
     @Override
     public final int compareTo(PlayerCBItem obj) {
-
         if ((obj.getPlayer() != null) && (getPlayer() != null)) {
             if (getPositionsEvaluation() > obj.getPositionsEvaluation()) {
                 return -1;
             } else if (getPositionsEvaluation() < obj.getPositionsEvaluation()) {
                 return 1;
             } else {
-                return getPlayer().getLastName().compareTo(obj.getPlayer().getLastName());
+                return getText().compareTo(obj.getText());
             }
         } else if (obj.getPlayer() == null) {
             return -1;
         } else {
             return 1;
         }
-
     }
 
     @Override

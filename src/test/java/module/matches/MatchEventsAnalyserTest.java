@@ -232,8 +232,8 @@ class MatchEventsAnalyserTest {
         final var matchHighlight = oneMatchHighlight.orElseThrow();
         assertThat(matchHighlight.getMatchEventID()).isEqualTo(matchEventID);
         assertThat(matchHighlight.getMinute()).isEqualTo(matchEvent.getMinute());
-        assertThat(matchHighlight.getPlayerName()).isEqualTo(jinxPlayer.playerName());
-        assertThat(matchHighlight.getAssistingPlayerName()).isEqualTo(assistingPlayer.playerName());
+        assertThat(matchHighlight.getPlayerId()).isEqualTo(jinxPlayer.playerId());
+        assertThat(matchHighlight.getAssistingPlayerId()).isEqualTo(assistingPlayer.playerId());
         assertThat(matchHighlight.score()).isEqualTo(expectedResult);
         assertMatchHighlightPreservesMatchEvent(oneMatchHighlight.orElseThrow(), matchEvent);
     }
@@ -264,8 +264,8 @@ class MatchEventsAnalyserTest {
         final var matchHighlight = oneMatchHighlight.orElseThrow();
         assertThat(matchHighlight.getMatchEventID()).isEqualTo(matchEventID);
         assertThat(matchHighlight.getMinute()).isEqualTo(matchEvent.getMinute());
-        assertThat(matchHighlight.getPlayerName()).isEqualTo(player.playerName());
-        assertThat(matchHighlight.getAssistingPlayerName()).isEqualTo("");
+        assertThat(matchHighlight.getPlayerId()).isEqualTo(player.playerId());
+        assertThat(matchHighlight.getAssistingPlayerId()).isEqualTo(0);
         assertThat(matchHighlight.score()).isEqualTo(expectedResult);
         assertMatchHighlightPreservesMatchEvent(oneMatchHighlight.orElseThrow(), matchEvent);
     }
@@ -295,8 +295,8 @@ class MatchEventsAnalyserTest {
         final var matchHighlight = oneMatchHighlight.orElseThrow();
         assertThat(matchHighlight.getMatchEventID()).isEqualTo(matchEventID);
         assertThat(matchHighlight.getMinute()).isEqualTo(matchEvent.getMinute());
-        assertThat(matchHighlight.getPlayerName()).isEqualTo(player.playerName());
-        assertThat(matchHighlight.getAssistingPlayerName()).isEqualTo(assistingPlayer.playerName());
+        assertThat(matchHighlight.getPlayerId()).isEqualTo(player.playerId());
+        assertThat(matchHighlight.getAssistingPlayerId()).isEqualTo(assistingPlayer.playerId());
         assertThat(matchHighlight.score()).isEqualTo(expectedResult);
         assertMatchHighlightPreservesMatchEvent(oneMatchHighlight.orElseThrow(), matchEvent);
     }
