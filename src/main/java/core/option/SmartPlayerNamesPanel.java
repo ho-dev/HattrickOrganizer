@@ -1,15 +1,15 @@
 package core.option;
 
 import core.model.TranslationFacility;
-import core.playername.Location;
-import core.playername.PlayerNameFormat;
-import core.playername.PlayerNameSettings;
+import core.playername.*;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
@@ -21,6 +21,14 @@ import java.util.stream.Stream;
  * Swing components, call its public methods on the Event Dispatch Thread.</p>
  */
 public final class SmartPlayerNamesPanel extends JPanel {
+
+    private static final List<PlayerName> PREVIEW_PLAYER_NAMES = List.of(
+        PlayerNameUtils.createPlayerName(1, "Cristiano", "CR7", "Ronaldo"),
+        PlayerNameUtils.createPlayerName(2, "Jude", "", "Bellingham"),
+        PlayerNameUtils.createPlayerName(3, "Jobe", "", "Bellingham"),
+        PlayerNameUtils.createPlayerName(4, "Erling", "", "Haaland")
+    );
+    private static final PlayerNameFormatter PLAYER_NAME_FORMATTER_PREVIEW = new PlayerNameFormatter(PREVIEW_PLAYER_NAMES);
 
     private static class NameFormatRenderer extends DefaultListCellRenderer {
         @Override
@@ -344,13 +352,9 @@ public final class SmartPlayerNamesPanel extends JPanel {
     }
 
     private void updatePreview() {
-        String example = switch (getDefaultFormat()) {
-            case HATTRICK -> "Cristiano Ronaldo";
-            case FULL_FIRST_LAST -> "Cristiano 'CR7' Ronaldo";
-            case FULL_LAST_FIRST -> "Ronaldo, Cristiano 'CR7'";
-            case SMART_FIRST_LAST -> "C. Ronaldo";
-            case SMART_LAST_FIRST -> "Ronaldo, C.";
-        };
+        final String example = PREVIEW_PLAYER_NAMES.stream()
+            .map(playerName -> PLAYER_NAME_FORMATTER_PREVIEW.format(playerName, getDefaultFormat()))
+            .collect(Collectors.joining("  |  "));
         previewLabel.setText(TranslationFacility.tr("SmartPlayerNamesPanel.Example", example));
         previewLabel.setToolTipText(
             TranslationFacility.tr("SmartPlayerNamesPanel.Smart_names_are_determined_using_the_other_players_in_the_relevant_group"));

@@ -81,4 +81,28 @@ public final class PlayerNameUtils {
             }
         };
     }
+
+    public static PlayerName createPlayerName(int id, String firstName, String nickName, String lastName) {
+        return new PlayerName() {
+            @Override
+            public int getPlayerId() {
+                return id;
+            }
+
+            @Override
+            public String getFirstName() {
+                return firstName;
+            }
+
+            @Override
+            public String getNickName() {
+                return nickName;
+            }
+
+            @Override
+            public String getLastName() {
+                return lastName;
+            }
+        };
+    }
 }
