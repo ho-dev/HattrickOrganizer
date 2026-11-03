@@ -120,7 +120,7 @@ public class HODateTime implements Comparable<HODateTime> {
         return new HODateTime(HT_START.instant.plus(Duration.ofDays(((week.season() - 1) * 16L + week.week() - 1) * 7)));
     }
 
-    public static HODateTime fromLocaleHTWeek(LocaleHTWeek localeHtWeek) {
+    public static HODateTime fromLocaleHTWeek(LocalHTWeek localeHtWeek) {
         return fromHTWeek(HTWeek.fromLocaleHTWeek(localeHtWeek));
     }
 
@@ -321,7 +321,7 @@ public class HODateTime implements Comparable<HODateTime> {
      * training date differs from start of weeks
      * @return local training season/week
      */
-    public LocaleHTWeek toTrainingWeek() {
+    public LocalHTWeek toTrainingWeek() {
         if (durationBetweenWeekStartAndTrainingDate == null) {
             var xtra = HOVerwaltung.instance().getModel().getXtraDaten();
             if (xtra != null) {
@@ -357,9 +357,9 @@ public class HODateTime implements Comparable<HODateTime> {
      *
      * @return HTWeek
      */
-    public LocaleHTWeek toLocaleHTWeek() {
+    public LocalHTWeek toLocaleHTWeek() {
         var htWeek = toHTWeek();
-        return new LocaleHTWeek(htWeek.season() + HOVerwaltung.instance().getModel().getBasics().getSeasonOffset(), htWeek.week());
+        return new LocalHTWeek(htWeek.season() + HOVerwaltung.instance().getModel().getBasics().getSeasonOffset(), htWeek.week());
     }
 
     public static BigDecimal daysFromNow(HODateTime to, int scale) {

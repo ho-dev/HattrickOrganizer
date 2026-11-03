@@ -1,7 +1,7 @@
 package module.training;
 
 import core.constants.player.PlayerSkill;
-import core.util.LocaleHTWeek;
+import core.util.LocalHTWeek;
 
 /**
  * This value object represents a week of training. It contains the last hrf id before a training
@@ -39,7 +39,7 @@ public class TrainWeekEffect {
     private PlayerSkill trainingType;
 
     /** Training week */
-    private final LocaleHTWeek trainweek;
+    private final LocalHTWeek trainweek;
 
     /** Value for total decrease in TSI */
     private int tsiDecrease;
@@ -56,7 +56,7 @@ public class TrainWeekEffect {
      * @param beforeHRF HRF id before training update
      * @param afterHRF HRF id after training update
      */
-    public TrainWeekEffect(LocaleHTWeek week, int beforeHRF, int afterHRF) {
+    public TrainWeekEffect(LocalHTWeek week, int beforeHRF, int afterHRF) {
         this.hrfIdBefore = beforeHRF;
         this.hrfIdAfter = afterHRF;
         this.trainweek = week;
@@ -159,7 +159,7 @@ public class TrainWeekEffect {
      *
      * @return Training HT week
      */
-    public LocaleHTWeek getHattrickWeek() {
+    public LocalHTWeek getHattrickWeek() {
         return trainweek;
     }
 
