@@ -578,6 +578,22 @@ class XMLUtilsTest {
         assertThat(child.getTagName()).isEqualTo(tagName);
     }
 
+    private static Stream<Arguments> test_findChildElement() {
+        return Stream.of(
+            arguments(matchElement, "Scorers", Optional.of(XMLUtils.getChildElement(matchElement, "Scorers"))),
+            arguments(root, "FileName",  Optional.of(XMLUtils.getChildElement(root, "FileName"))),
+            arguments(root, "Version", Optional.of(XMLUtils.getChildElement(root, "Version"))),
+            arguments(root, "ElementNotFound", Optional.empty())
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource
+    void test_findChildElement(Element element, String tagName, Optional<Element> expectedElement) {
+        var child = XMLUtils.findChildElement(element, tagName);
+        assertThat(child).isEqualTo(expectedElement);
+    }
+
     private static Stream<Arguments> test_getElement_throwsXMLParseException() {
         return Stream.of(
             arguments(XMLUtils.getChildElement(matchElement, "Scorers"), "Goal", "More than one element found with name 'Goal'."),

@@ -118,7 +118,7 @@ public class XMLUtils {
      * parent element.
      *
      * @param parent  the parent element
-     * @param tagName the tag name of the element to find.
+     * @param tagName the tag name of the element to find
      * @return Optional<Element> the element found with the specified tag name of empty
      * @throws XMLParseException If more than one element exists
      * @throws NullPointerException If the parent element is null
@@ -134,14 +134,13 @@ public class XMLUtils {
     }
 
     /**
-     * Gets the child elements with the specified tag name from the given
+     * Gets the direct child elements with the specified tag name from the given
      * parent element.
      *
      * @param parent  the parent element
      * @param tagName the tag name of the element to find.
      * @return List of elements found with the specified tag name
      * @throws XMLParseException When the element is not found or more than one exists
-     * @throws NullPointerException When the parent element is null
      */
     public static List<Element> getChildElements(Element parent, String tagName) {
         Objects.requireNonNull(parent);
@@ -159,22 +158,17 @@ public class XMLUtils {
         return elements;
     }
 
-	/**
-	 * Gets the value from the first descendant of a given parent, where the
-	 * descendant has the specified name.
-	 *
-	 * @param parent
-	 *            the parent element
-	 * @param tagName
-	 *            the tag name of the descendant to find.
-	 * @return the value of the descendant
-     * @throws XMLParseException if no descendant
-	 *         with that name could be found or the descendant found has no
-	 *         value.
-     * @throws NullPointerException When the parent element is null
-	 */
+    /**
+     * Returns the text content of the direct child element with the specified tag name.
+     *
+     * @param parent  the parent element
+     * @param tagName the tag name of the child element
+     * @return the text content of the child element, or an empty string if it has no content
+     * @throws XMLParseException if no matching child element exists or more than one is found
+     * @throws NullPointerException if the parent element is null
+     */
 	public static String getStringValue(Element parent, String tagName) {
-        return  getChildElement(parent, tagName).getTextContent();
+        return getChildElement(parent, tagName).getTextContent();
     }
 
 	/**
@@ -251,7 +245,9 @@ public class XMLUtils {
      */
     public static int getAttributeIntValue(Element node, String tagName) {
         var attribute = node.getAttributes().getNamedItem(tagName);
-        if (attribute != null) { return Integer.parseInt(attribute.getNodeValue()); }
+        if (attribute != null) {
+            return Integer.parseInt(attribute.getNodeValue());
+        }
         throw new NoElementXMLParseException(tagName);
     }
 
