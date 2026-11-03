@@ -187,7 +187,7 @@ public final class SmartPlayerNamesPanel extends JPanel {
         add(createLocationsPanel(), BorderLayout.CENTER);
 
         defaultFormatBox.setRenderer(new NameFormatRenderer());
-        defaultFormatBox.setSelectedItem(PlayerNameFormat.HATTRICK);
+        defaultFormatBox.setSelectedItem(PlayerNameSettings.defaults().defaultFormat());
         defaultFormatBox.addActionListener(event -> {
             updatePreview();
             locationBoxes.values().forEach(JComponent::repaint);
