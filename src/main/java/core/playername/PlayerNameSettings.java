@@ -1,11 +1,16 @@
 package core.playername;
 
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
 public record PlayerNameSettings(PlayerNameFormat defaultFormat, Map<Location, PlayerNameFormat> overrides) {
+
+    private static final PlayerNameSettings DEFAULTS = new PlayerNameSettings(
+        PlayerNameFormat.HATTRICK,
+        Map.ofEntries(
+            Map.entry(Location.MATCHES_PLAYER_DETAILS, PlayerNameFormat.FULL_LAST_FIRST)
+        )
+    );
+
     public PlayerNameSettings {
         Objects.requireNonNull(defaultFormat, "defaultFormat");
         Objects.requireNonNull(overrides, "overrides");
@@ -19,14 +24,14 @@ public record PlayerNameSettings(PlayerNameFormat defaultFormat, Map<Location, P
     }
 
     public static PlayerNameSettings defaults() {
-        return new PlayerNameSettings(PlayerNameFormat.HATTRICK, Map.of());
+        return DEFAULTS;
     }
 
     public PlayerNameFormat effectiveFormat(Location location) {
         return overrides.getOrDefault(Objects.requireNonNull(location), defaultFormat);
     }
 
-    public PlayerNameFormat getOverride(Location location) {
-        return overrides.get(Objects.requireNonNull(location));
+    public Optional<PlayerNameFormat> findOverride(Location location) {
+        return Optional.ofNullable(overrides.get(Objects.requireNonNull(location)));
     }
 }

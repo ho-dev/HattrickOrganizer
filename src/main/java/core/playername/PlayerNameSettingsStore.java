@@ -16,15 +16,19 @@ public final class PlayerNameSettingsStore {
     private final EnumMap<Location, HOConfigurationStringParameter> overrideParameters = new EnumMap<>(Location.class);
 
     public PlayerNameSettingsStore() {
-        defaultFormatParameter = new HOConfigurationStringParameter(PREFIX + "defaultFormat", PlayerNameFormat.HATTRICK.name());
+        final var defaults = PlayerNameSettings.defaults();
 
-        Stream.of(Location.values()).forEach(location ->
-            overrideParameters.put(location, new HOConfigurationStringParameter(PREFIX + location.name(), INHERIT))
-        );
+        defaultFormatParameter = new HOConfigurationStringParameter(PREFIX + "defaultFormat", defaults.defaultFormat().name());
+
+        Stream.of(Location.values()).forEach(location -> {
+            final String defaultValue = defaults.findOverride(location).map(Enum::name).orElse(INHERIT);
+            overrideParameters.put(location, new HOConfigurationStringParameter(PREFIX + location.name(), defaultValue));
+        });
     }
 
     public PlayerNameSettings load() {
-        PlayerNameFormat defaultFormat = parseFormat(defaultFormatParameter.getValue()).orElse(PlayerNameFormat.HATTRICK);
+        PlayerNameFormat defaultFormat = parseFormat(defaultFormatParameter.getValue())
+            .orElseGet(() -> PlayerNameSettings.defaults().defaultFormat());
 
         EnumMap<Location, PlayerNameFormat> overrides = new EnumMap<>(Location.class);
 
@@ -42,13 +46,9 @@ public final class PlayerNameSettingsStore {
     public void save(PlayerNameSettings settings) {
         defaultFormatParameter.setValue(settings.defaultFormat().name());
 
-        overrideParameters.forEach((location, parameter) -> {
-            PlayerNameFormat format = settings.getOverride(location);
-
-            parameter.setValue(
-                format != null ? format.name() : INHERIT
-            );
-        });
+        overrideParameters.forEach((location, parameter) ->
+            parameter.setValue(settings.findOverride(location).map(Enum::name).orElse(INHERIT))
+        );
     }
 
     private static Optional<PlayerNameFormat> parseFormat(String value) {
