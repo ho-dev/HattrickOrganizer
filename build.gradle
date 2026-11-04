@@ -286,6 +286,8 @@ tasks.register("media", Install4jTask) {
 
     // 1225 -> macOS Single Bundle
     // 1224 -> macOS Single Bundle JRE
+    // 1400 -> macOS Intel Single Bundle
+    // 1401 -> macOS Intel Single Bundle JRE
 
     // 173 -> Unix Archive
     // 477 -> Unix Archive JRE
