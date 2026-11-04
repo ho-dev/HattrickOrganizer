@@ -45,13 +45,13 @@ public class HallOfFameTableModel extends HOPlayersTableModel {
             new HallOfFameColumn("ImTeamSeit") {
                 @Override
                 public IHOTableCellEntry getTableEntry(HallOfFamePlayer player) {
-                    return new ColorLabelEntry(HODateTime.toEpochSecond(player.getArrivalDate()), HODateTime.toLocaleDateTime(player.getArrivalDate()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                    return new ColorLabelEntry(HODateTime.toEpochSecond(player.getArrivalDate()), HODateTime.toLocalDateTime(player.getArrivalDate()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                 }
             },
             new HallOfFameColumn("ls.hof.arrival") {
                 @Override
                 public IHOTableCellEntry getTableEntry(HallOfFamePlayer player) {
-                    return new ColorLabelEntry(HODateTime.toEpochSecond(player.getHofDate()), HODateTime.toLocaleDateTime(player.getHofDate()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                    return new ColorLabelEntry(HODateTime.toEpochSecond(player.getHofDate()), HODateTime.toLocalDateTime(player.getHofDate()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                 }
             },
             new HallOfFameColumn("ls.hof.experttype") {

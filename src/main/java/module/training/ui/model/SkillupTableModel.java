@@ -32,7 +32,7 @@ public class SkillupTableModel extends HOTableModel {
 						var skillChange = entry.getSkillChange();
 						var text = skillChange.getType().getLanguageString() + ":  " + PlayerAbility.getNameForSkill(skillChange.getValue(), true);
 						var ret = new ColorLabelEntry(entry.getSkillChange().getType().toInt(), text, getForegroundColor(entry), ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
-						ret.setToolTipText(entry.getSkillChange().getDate().toLocaleDateTime());
+						ret.setToolTipText(entry.getSkillChange().getDate().toLocalDateTime());
 						ret.setIcon(TrainingLegendPanel.getSkillupTypeIcon(entry.getSkillChange().getType(), entry.getSkillChange().getChange()));
 						return ret;
 					}
@@ -41,9 +41,9 @@ public class SkillupTableModel extends HOTableModel {
 					@Override
 					public IHOTableCellEntry getTableEntry(PlayerSkillChange entry) {
 						var date = entry.getSkillChange().getDate();
-						var htWeek = date.toLocaleHTWeek();
+						var htWeek = date.toLocalHTWeek();
                         var ret = new ColorLabelEntry(htWeek.weeksSinceLeagueStart(), String.valueOf(htWeek.week()), getForegroundColor(entry), ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
-						ret.setToolTipText(entry.getSkillChange().getDate().toLocaleDateTime());
+						ret.setToolTipText(entry.getSkillChange().getDate().toLocalDateTime());
 						return ret;
 					}
 				},
@@ -51,9 +51,9 @@ public class SkillupTableModel extends HOTableModel {
 					@Override
 					public IHOTableCellEntry getTableEntry(PlayerSkillChange entry) {
 						var date = entry.getSkillChange().getDate();
-						var htWeek = date.toLocaleHTWeek();
+						var htWeek = date.toLocalHTWeek();
 						var ret = new ColorLabelEntry(htWeek.weeksSinceLeagueStart(), String.valueOf(htWeek.season()), getForegroundColor(entry), ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
-						ret.setToolTipText(entry.getSkillChange().getDate().toLocaleDateTime());
+						ret.setToolTipText(entry.getSkillChange().getDate().toLocalDateTime());
 						return ret;
 
 					}
@@ -62,9 +62,9 @@ public class SkillupTableModel extends HOTableModel {
 					@Override
 					public IHOTableCellEntry getTableEntry(PlayerSkillChange entry) {
 						var date = entry.getSkillChange().getDate();
-						var htWeek = date.toLocaleHTWeek();
+						var htWeek = date.toLocalHTWeek();
 						var ret = new ColorLabelEntry(htWeek.weeksSinceLeagueStart(), entry.getPlayer().getAgeWithDaysAsString(date), getForegroundColor(entry), ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
-						ret.setToolTipText(entry.getSkillChange().getDate().toLocaleDateTime());
+						ret.setToolTipText(entry.getSkillChange().getDate().toLocalDateTime());
 						return ret;
 
 					}

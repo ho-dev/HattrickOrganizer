@@ -386,7 +386,7 @@ public class PlayerTransfer extends AbstractTable.Storable {
         } else if (playerId != -1) {
             HODateTime start = HODateTime.now();
             List<Player> playerInfos = loadPLayerInfosAtTransferDate(isPurchase);
-            HOLogger.instance().debug(getClass(), this.getPlayerName() + " loaded candidate count: " + playerInfos.size() + " Started: " + start.toLocaleDateTime() + " Duration: " + HODateTime.between(start, HODateTime.now()).toString());
+            HOLogger.instance().debug(getClass(), this.getPlayerName() + " loaded candidate count: " + playerInfos.size() + " Started: " + start.toLocalDateTime() + " Duration: " + HODateTime.between(start, HODateTime.now()).toString());
             if (playerInfos.size() > 1) {
                 // find most probable candidate
                 if (isPurchase) {

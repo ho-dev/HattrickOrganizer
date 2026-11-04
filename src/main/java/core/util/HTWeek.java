@@ -9,7 +9,7 @@ import core.model.HOVerwaltung;
  * @param week   number [1..16]
  */
 public record HTWeek(int season, int week) {
-    public static HTWeek fromLocaleHTWeek(LocalHTWeek localeHtWeek) {
-        return new HTWeek(localeHtWeek.season() - HOVerwaltung.instance().getModel().getBasics().getSeasonOffset(), localeHtWeek.week());
+    public static HTWeek fromLocalHTWeek(LocalHTWeek localHTWeek) {
+        return new HTWeek(localHTWeek.season() - HOVerwaltung.instance().getModel().getBasics().getSeasonOffset(), localHTWeek.week());
     }
 }

@@ -120,8 +120,8 @@ public class HODateTime implements Comparable<HODateTime> {
         return new HODateTime(HT_START.instant.plus(Duration.ofDays(((week.season() - 1) * 16L + week.week() - 1) * 7)));
     }
 
-    public static HODateTime fromLocaleHTWeek(LocalHTWeek localeHtWeek) {
-        return fromHTWeek(HTWeek.fromLocaleHTWeek(localeHtWeek));
+    public static HODateTime fromLocalHTWeek(LocalHTWeek localHTWeek) {
+        return fromHTWeek(HTWeek.fromLocalHTWeek(localHTWeek));
     }
 
     /**
@@ -152,8 +152,8 @@ public class HODateTime implements Comparable<HODateTime> {
      *
      * @return String
      */
-    public String toLocaleDate() {
-        return toLocaleDate(FormatStyle.MEDIUM);
+    public String toLocalDate() {
+        return toLocalDate(FormatStyle.MEDIUM);
     }
 
     /**
@@ -161,7 +161,7 @@ public class HODateTime implements Comparable<HODateTime> {
      * @param style, FormatStyle
      * @return String
      */
-    public String toLocaleDate(FormatStyle style) {
+    public String toLocalDate(FormatStyle style) {
         var formatter = DateTimeFormatter.ofLocalizedDate(style).withZone(ZoneId.systemDefault());
         return formatter.format(instant);
     }
@@ -171,8 +171,8 @@ public class HODateTime implements Comparable<HODateTime> {
      *
      * @return String
      */
-    public String toLocaleDateTime() {
-        return toLocaleDateTime(FormatStyle.MEDIUM);
+    public String toLocalDateTime() {
+        return toLocalDateTime(FormatStyle.MEDIUM);
     }
 
     /**
@@ -180,8 +180,8 @@ public class HODateTime implements Comparable<HODateTime> {
      * @param in HODateTime
      * @return String
      */
-    public static String toLocaleDateTime(HODateTime in){
-        if ( in != null) return in.toLocaleDateTime(FormatStyle.MEDIUM);
+    public static String toLocalDateTime(HODateTime in){
+        if ( in != null) return in.toLocalDateTime(FormatStyle.MEDIUM);
         return "";
     }
 
@@ -190,7 +190,7 @@ public class HODateTime implements Comparable<HODateTime> {
      * @param style, FormatStyle
      * @return String
      */
-    public String toLocaleDateTime(FormatStyle style) {
+    public String toLocalDateTime(FormatStyle style) {
         var formatter = DateTimeFormatter.ofLocalizedDateTime(style).withZone(ZoneId.systemDefault());
         return formatter.format(instant);
     }
@@ -201,8 +201,8 @@ public class HODateTime implements Comparable<HODateTime> {
      * @param style, FormatStyle
      * @return String
      */
-    public static String toLocaleDateTime(HODateTime in, FormatStyle style){
-        if ( in != null) return in.toLocaleDateTime(style);
+    public static String toLocalDateTime(HODateTime in, FormatStyle style){
+        if ( in != null) return in.toLocalDateTime(style);
         return "";
     }
 
@@ -349,7 +349,7 @@ public class HODateTime implements Comparable<HODateTime> {
         }
 
         var trainingDateRelatedDate = new HODateTime(this.instant.minus(durationBetweenWeekStartAndTrainingDate));
-        return trainingDateRelatedDate.toLocaleHTWeek();
+        return trainingDateRelatedDate.toLocalHTWeek();
     }
 
     /**
@@ -357,7 +357,7 @@ public class HODateTime implements Comparable<HODateTime> {
      *
      * @return HTWeek
      */
-    public LocalHTWeek toLocaleHTWeek() {
+    public LocalHTWeek toLocalHTWeek() {
         var htWeek = toHTWeek();
         return new LocalHTWeek(htWeek.season() + HOVerwaltung.instance().getModel().getBasics().getSeasonOffset(), htWeek.week());
     }

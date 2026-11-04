@@ -30,7 +30,7 @@ public class TrainerCurve extends Curve {
 			HOLogger.instance().debug(
 					this.getClass(),
 					"Trainer for "
-							+ d.toLocaleDateTime() + " has no leadership!");
+							+ d.toLocalDateTime() + " has no leadership!");
 			dRet = 1; // quick hack to fix start problems when there are only
 						// few old datasets
 		}

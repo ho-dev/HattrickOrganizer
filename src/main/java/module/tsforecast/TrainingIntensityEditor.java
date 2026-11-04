@@ -46,7 +46,7 @@ public class TrainingIntensityEditor extends JPanel {
         this.curve = curve;
         this.add(trainingIntensitySlider, BorderLayout.CENTER);
 
-        this.add(trainingIntensityLabel = new JLabel(TranslationFacility.tr("ls.team.trainingintensity") + " " + curve.getDate().toLocaleDateTime()), BorderLayout.NORTH);
+        this.add(trainingIntensityLabel = new JLabel(TranslationFacility.tr("ls.team.trainingintensity") + " " + curve.getDate().toLocalDateTime()), BorderLayout.NORTH);
 
         trainingIntensityLabel = new JLabel("" + curve.getTrainingIntensity());
         this.trainingIntensitySlider.addChangeListener(e -> trainingIntensityLabel.setText("" + trainingIntensitySlider.getValue()));

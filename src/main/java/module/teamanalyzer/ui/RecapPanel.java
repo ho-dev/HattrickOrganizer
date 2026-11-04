@@ -44,7 +44,7 @@ public class RecapPanel extends JPanel {
                     week = lineup.getWeek();
                     season = lineup.getSeason();
                     if (week < 0) {
-                        var htdatetime = HODateTime.now().toLocaleHTWeek();
+                        var htdatetime = HODateTime.now().toLocalHTWeek();
                         week = htdatetime.week();
                         season = htdatetime.season();
                     }

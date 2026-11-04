@@ -85,7 +85,7 @@ public final class XMLParser {
                         HODateTime transferDate = HODateTime.fromHT(deadline);
                         playerTransfer.setDate(transferDate);
 
-                        var htweek = transferDate.toLocaleHTWeek();
+                        var htweek = transferDate.toLocalHTWeek();
                         playerTransfer.setSeason(htweek.season());
                         playerTransfer.setWeek(htweek.week());
 
@@ -206,7 +206,7 @@ public final class XMLParser {
 
                         HODateTime transferDate = HODateTime.fromHT(deadline);
                         playerTranfer.setDate(transferDate);
-                        var htweek = transferDate.toLocaleHTWeek();
+                        var htweek = transferDate.toLocalHTWeek();
                         playerTranfer.setSeason(htweek.season());
                         playerTranfer.setWeek(htweek.week());
 

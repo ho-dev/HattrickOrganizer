@@ -7,7 +7,6 @@ import java.awt.Component;
 import java.awt.Font;
 import java.text.DateFormat;
 import java.text.NumberFormat;
-import java.util.Date;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -48,7 +47,7 @@ public class IfaTableCellRenderer extends DefaultTableCellRenderer {
 				}
 			}
 			case IfaTableModel.COL_LASTMATCH -> {
-				displayValue = ((HODateTime) value).toLocaleDateTime();
+				displayValue = ((HODateTime) value).toLocalDateTime();
 				alignment = SwingConstants.LEFT;
 			}
 			case IfaTableModel.COL_COOLNESS -> displayValue = this.doubleFormat.format(value);

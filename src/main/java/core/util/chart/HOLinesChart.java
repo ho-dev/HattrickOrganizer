@@ -144,7 +144,7 @@ public class HOLinesChart implements IChart {
     private String toDatetimeString(Double x) {
         var seconds = (long) x.doubleValue();
         var datetime = new HODateTime(new Date(seconds).toInstant());
-        return datetime.toHTWeek().toString() + ": " + datetime.toLocaleDate();
+        return datetime.toHTWeek().toString() + ": " + datetime.toLocalDate();
     }
 
     private void reverseTS(){

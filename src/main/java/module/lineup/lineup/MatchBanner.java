@@ -202,7 +202,7 @@ public class MatchBanner extends JPanel implements Refreshable {
             String sDate;
             if ( m_clSelectedMatch != null){
                 var datetime =  m_clSelectedMatch.getMatchSchedule();
-                sDate = datetime.toLocaleDateTime();
+                sDate = datetime.toLocalDateTime();
                 htWeek = datetime.toHTWeek().week();
             }
             else {

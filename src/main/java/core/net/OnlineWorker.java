@@ -306,13 +306,13 @@ public class OnlineWorker {
 							if (!info.getWeatherForecast().isSure()) {
 								Regiondetails regiondetails = getRegionDetails(info.getRegionId());
 								if (regiondetails != null) {
-									var matchDate = info.getMatchSchedule().toLocaleDate();
-									var weatherDate = regiondetails.getFetchDatum().toLocaleDate();
+									var matchDate = info.getMatchSchedule().toLocalDate();
+									var weatherDate = regiondetails.getFetchDatum().toLocalDate();
 									if (matchDate.equals(weatherDate)) {
 										info.setWeatherForecast(Weather.Forecast.TODAY);
 										info.setWeather(regiondetails.getWeather());
 									} else {
-										var forecastDate = regiondetails.getFetchDatum().plus(1, ChronoUnit.DAYS).toLocaleDate();
+										var forecastDate = regiondetails.getFetchDatum().plus(1, ChronoUnit.DAYS).toLocalDate();
 										if (matchDate.equals(forecastDate)) {
 											info.setWeatherForecast(Weather.Forecast.TOMORROW);
 										} else {

@@ -68,7 +68,7 @@ public class Match {
         matchType = matchInfo.getMatchTypeExtended();
         matchDate = matchInfo.getMatchSchedule();
 
-        var htweek = matchDate.toLocaleHTWeek();
+        var htweek = matchDate.toLocalHTWeek();
         week = htweek.week();
         season = htweek.season();
     }

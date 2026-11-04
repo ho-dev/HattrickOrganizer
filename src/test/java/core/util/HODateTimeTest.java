@@ -402,12 +402,10 @@ class HODateTimeTest {
     @ParameterizedTest
     @MethodSource
     void test_toLocalHtWeek(HODateTime date, int seasonOffset, LocalHTWeek expected) {
-
         var model = new HOModelBuilder().hrfId(HRF_MOCK_ID).build();
         HOVerwaltung.instance().setModel(model);
-        var basics =  model.getBasics();
+        var basics = model.getBasics();
         basics.setSeasonOffset(seasonOffset);
-        assertThat(date.toLocaleHTWeek()).isEqualTo(expected);
+        assertThat(date.toLocalHTWeek()).isEqualTo(expected);
     }
-
 }

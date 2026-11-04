@@ -42,7 +42,7 @@ public class MatchDateTableEntry extends AbstractHOTableEntry {
 
         if (t != null) {
             matchDate = t;
-            matchLink.setText(matchDate.toLocaleDateTime());
+            matchLink.setText(matchDate.toLocalDateTime());
             matchIcon = ThemeManager.getIcon(HOIconName.MATCHICONS[matchType.getIconArrayIndex()]);
             matchLink.setIcon(matchIcon);
         }
