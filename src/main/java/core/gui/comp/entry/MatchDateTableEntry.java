@@ -16,10 +16,8 @@ import java.text.SimpleDateFormat;
 
 public class MatchDateTableEntry extends AbstractHOTableEntry {
 
-    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
     private final Color bgColor = ThemeManager.getColor(HOColorName.TABLEENTRY_BG);
     private final JLabel matchLink = new JLabel("");
-    private static Icon matchIcon;
     private HODateTime matchDate;
 
     private JComponent m_clComponent = new JPanel();
@@ -34,16 +32,12 @@ public class MatchDateTableEntry extends AbstractHOTableEntry {
         setMatchInfo(lastMatchDate, matchType);
     }
 
-    public JLabel getMatchLink() {
-        return matchLink;
-    }
-
     public final void setMatchInfo(HODateTime t, IMatchType matchType) {
 
         if (t != null) {
             matchDate = t;
             matchLink.setText(matchDate.toLocalDateTime());
-            matchIcon = ThemeManager.getIcon(HOIconName.MATCHICONS[matchType.getIconArrayIndex()]);
+            Icon matchIcon = ThemeManager.getIcon(HOIconName.MATCHICONS[matchType.getIconArrayIndex()]);
             matchLink.setIcon(matchIcon);
         }
 

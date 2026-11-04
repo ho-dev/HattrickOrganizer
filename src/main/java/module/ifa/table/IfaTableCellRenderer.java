@@ -16,8 +16,6 @@ import javax.swing.table.DefaultTableCellRenderer;
 
 public class IfaTableCellRenderer extends DefaultTableCellRenderer {
 
-	private final DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.MEDIUM,
-			DateFormat.SHORT);
 	private final NumberFormat doubleFormat;
 
 	public IfaTableCellRenderer() {
