@@ -20,15 +20,14 @@ import module.training.ui.model.TrainingProgressColumn;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
 public class TrainingPredictionTableModel  extends HOPlayersTableModel {
 
     private TrainingModel model;
     private HODateTime nextTrainingDate;
+    private int fixedColumns = 0;
 
     public TrainingPredictionTableModel(UserColumnController.ColumnModelId columnModelId) {
         super(columnModelId, "TrainingPrediction");
@@ -36,9 +35,8 @@ public class TrainingPredictionTableModel  extends HOPlayersTableModel {
     }
 
     private void initColumns() {
-        var nextColumnId = 0;
         var newColumns = new ArrayList<UserColumn>(List.of(
-                new TrainingColumn(nextColumnId++, "Spieler", 150) {
+                new TrainingColumn(fixedColumns++, "Spieler", 150) {
                     @Override
                     public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
                         var ret = new ColorLabelEntry(entry.getTrainingSpeed(), entry.getPlayer().getFullName(), ColorLabelEntry.FG_STANDARD, getBackgroundColor(entry), SwingConstants.LEFT);
@@ -53,13 +51,13 @@ public class TrainingPredictionTableModel  extends HOPlayersTableModel {
                         return false;
                     }
                 },
-                new TrainingColumn(nextColumnId++,"ls.player.age", 60) {
+                new TrainingColumn(fixedColumns++,"ls.player.age", 60) {
                     @Override
                     public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
                         return new ColorLabelEntry(entry.getPlayer().getAlterWithAgeDays(), entry.getPlayer().getAgeWithDaysAsString(), ColorLabelEntry.FG_STANDARD, getBackgroundColor(entry), SwingConstants.LEFT);
                     }
                 },
-                new TrainingColumn(nextColumnId++,"BestePosition", 140) {
+                new TrainingColumn(fixedColumns++,"BestePosition", 140) {
                     @Override
                     public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
                         var pos = entry.getPlayer().getIdealPosition();
@@ -67,16 +65,28 @@ public class TrainingPredictionTableModel  extends HOPlayersTableModel {
                     }
                 }
         ));
+        newColumns.addAll(initTrainingProgressColumns());
+        setColumns(newColumns.toArray(new UserColumn[0]));
+    }
 
+    private Collection<? extends UserColumn> initTrainingProgressColumns() {
+        var columnID = fixedColumns;
+        ArrayList<UserColumn> newColumns = new ArrayList<>();
         nextTrainingDate = findDownloadedNextTrainingDate().orElse(HODateTime.now());
         var nextWeek = nextTrainingDate;
         for (int weekIndex = 0; weekIndex < UserParameter.instance().futureWeeks; weekIndex++) {
             var htWeek = nextWeek.toLocaleHTWeek();
-            var column = new TrainingProgressColumn(nextColumnId++, htWeek, weekIndex, 60);
+            var column = new TrainingProgressColumn(columnID++, htWeek, weekIndex, 60);
             newColumns.add(column);
             nextWeek = nextWeek.plusDaysAtSameLocalTime(7);
         }
-        setColumns(newColumns.toArray(new UserColumn[0]));
+        return newColumns;
+    }
+
+    private void refreshTrainingProgressColumns() {
+        var columns = new ArrayList<>(Arrays.stream(this.getColumns()).limit(fixedColumns).toList());
+        columns.addAll(initTrainingProgressColumns());
+        setColumns(columns.toArray(new UserColumn[0]));
     }
 
     private Optional<HODateTime> findDownloadedNextTrainingDate() {
@@ -102,7 +112,7 @@ public class TrainingPredictionTableModel  extends HOPlayersTableModel {
     protected void initData() {
         var headerChanged = isHeaderChanged();
         if (headerChanged) {
-            initColumns();
+            refreshTrainingProgressColumns();
         }
 
         var currentPlayers = getPlayers();
