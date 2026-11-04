@@ -1,11 +1,9 @@
-1. changes proposed in this pull request:
+1. Changes proposed in this pull request:
+    - fixes issue #____
+    - if not fixing an existing issue, comments explaining the purpose of the PR should be provided
 
-   - fixes issue #___
-   - if not fixing an existing issue, comments explaining the purpose of the PR should be provided)
 
+2. Release notes in `../src/main/resources/release_notes/[AFFECTED_VERSION].md` ...
 
-2. `src/main/resources/release_notes.md` ...
-
- - [ ] has been updated
- - [ ] does not require update
-
+    - [ ] have been updated for the affected version
+    - [ ] does not require update
