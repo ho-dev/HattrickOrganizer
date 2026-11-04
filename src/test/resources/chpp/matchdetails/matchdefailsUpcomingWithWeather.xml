@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<HattrickData>
+    <FileName>matchdetails.xml</FileName>
+    <Version>3.0</Version>
+    <UserID>1757369</UserID>
+    <FetchedDate>2026-11-01 15:45:00</FetchedDate>
+    <UserSupporterTier>diamond</UserSupporterTier>
+    <SourceSystem>Hattrick</SourceSystem>
+    <Match>
+        <MatchID>772121209</MatchID>
+        <MatchType>9</MatchType>
+        <MatchContextId>0</MatchContextId>
+        <MatchRuleId>0</MatchRuleId>
+        <CupLevel>0</CupLevel>
+        <CupLevelIndex>0</CupLevelIndex>
+        <MatchDate>2026-11-01 16:00:00</MatchDate>
+        <HomeTeam>
+            <HomeTeamID>574260</HomeTeamID>
+            <HomeTeamName>Nazka United</HomeTeamName>
+        </HomeTeam>
+        <AwayTeam>
+            <AwayTeamID>1242154</AwayTeamID>
+            <AwayTeamName>Juventus Brenk 2</AwayTeamName>
+        </AwayTeam>
+        <Arena>
+            <ArenaID>574260</ArenaID>
+            <ArenaName>High Road</ArenaName>
+            <WeatherID>2</WeatherID>
+        </Arena>
+        <MatchOfficials>
+            <Referee>
+                <RefereeId>0</RefereeId>
+                <RefereeName> </RefereeName>
+                <RefereeCountryId>0</RefereeCountryId>
+                <RefereeCountryName/>
+                <RefereeTeamId>0</RefereeTeamId>
+                <RefereeTeamname/>
+            </Referee>
+            <RefereeAssistant1>
+                <RefereeId>0</RefereeId>
+                <RefereeName> </RefereeName>
+                <RefereeCountryId>0</RefereeCountryId>
+                <RefereeCountryName/>
+                <RefereeTeamId>0</RefereeTeamId>
+                <RefereeTeamname/>
+            </RefereeAssistant1>
+            <RefereeAssistant2>
+                <RefereeId>0</RefereeId>
+                <RefereeName> </RefereeName>
+                <RefereeCountryId>0</RefereeCountryId>
+                <RefereeCountryName/>
+                <RefereeTeamId>0</RefereeTeamId>
+                <RefereeTeamname/>
+            </RefereeAssistant2>
+        </MatchOfficials>
+    </Match>
+</HattrickData>

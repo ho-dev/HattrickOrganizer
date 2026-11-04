@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<HattrickData>
+    <FileName>matches.xml</FileName>
+    <Version>2.8</Version>
+    <UserID>1757369</UserID>
+    <FetchedDate>2026-11-01 15:49:30</FetchedDate>
+    <IsYouth>False</IsYouth>
+    <Team>
+        <TeamID>574260</TeamID>
+        <TeamName>Nazka United</TeamName>
+        <ShortTeamName>United</ShortTeamName>
+        <League>
+            <LeagueID>11</LeagueID>
+            <LeagueName>Dänemark</LeagueName>
+        </League>
+        <LeagueLevelUnit>
+            <LeagueLevelUnitID>1774</LeagueLevelUnitID>
+            <LeagueLevelUnitName>III.1</LeagueLevelUnitName>
+            <LeagueLevel>3</LeagueLevel>
+        </LeagueLevelUnit>
+        <MatchList>
+            <Match>
+                <MatchID>769706164</MatchID>
+                <HomeTeam>
+                    <HomeTeamID>401198</HomeTeamID>
+                    <HomeTeamName>FC Kronhøi</HomeTeamName>
+                    <HomeTeamNameShortName>Kronhøi</HomeTeamNameShortName>
+                </HomeTeam>
+                <AwayTeam>
+                    <AwayTeamID>574260</AwayTeamID>
+                    <AwayTeamName>Nazka United</AwayTeamName>
+                    <AwayTeamNameShortName>United</AwayTeamNameShortName>
+                </AwayTeam>
+                <MatchDate>2026-10-04 16:00:00</MatchDate>
+                <SourceSystem>Hattrick</SourceSystem>
+                <MatchType>1</MatchType>
+                <MatchContextId>1774</MatchContextId>
+                <CupLevel>0</CupLevel>
+                <CupLevelIndex>0</CupLevelIndex>
+                <HomeGoals>6</HomeGoals>
+                <AwayGoals>0</AwayGoals>
+                <Status>FINISHED</Status>
+            </Match>
+            <Match>
+                <MatchID>771741736</MatchID>
+                <HomeTeam>
+                    <HomeTeamID>574260</HomeTeamID>
+                    <HomeTeamName>Nazka United</HomeTeamName>
+                    <HomeTeamNameShortName>United</HomeTeamNameShortName>
+                </HomeTeam>
+                <AwayTeam>
+                    <AwayTeamID>19538</AwayTeamID>
+                    <AwayTeamName>RTL United</AwayTeamName>
+                    <AwayTeamNameShortName>United</AwayTeamNameShortName>
+                </AwayTeam>
+                <MatchDate>2026-10-07 16:30:00</MatchDate>
+                <SourceSystem>Hattrick</SourceSystem>
+                <MatchType>4</MatchType>
+                <MatchContextId>0</MatchContextId>
+                <CupLevel>0</CupLevel>
+                <CupLevelIndex>0</CupLevelIndex>
+                <HomeGoals>0</HomeGoals>
+                <AwayGoals>2</AwayGoals>
+                <Status>FINISHED</Status>
+            </Match>
+            <Match>
+                <MatchID>769706171</MatchID>
+                <HomeTeam>
+                    <HomeTeamID>574260</HomeTeamID>
+                    <HomeTeamName>Nazka United</HomeTeamName>
+                    <HomeTeamNameShortName>United</HomeTeamNameShortName>
+                </HomeTeam>
+                <AwayTeam>
+                    <AwayTeamID>931255</AwayTeamID>
+                    <AwayTeamName>Manic Miner</AwayTeamName>
+                    <AwayTeamNameShortName>Miner</AwayTeamNameShortName>
+                </AwayTeam>
+                <MatchDate>2026-10-11 16:00:00</MatchDate>
+                <SourceSystem>Hattrick</SourceSystem>
+                <MatchType>1</MatchType>
+                <MatchContextId>1774</MatchContextId>
+                <CupLevel>0</CupLevel>
+                <CupLevelIndex>0</CupLevelIndex>
+                <HomeGoals>0</HomeGoals>
+                <AwayGoals>7</AwayGoals>
+                <Status>FINISHED</Status>
+            </Match>
+            <Match>
+                <MatchID>771829628</MatchID>
+                <HomeTeam>
+                    <HomeTeamID>574260</HomeTeamID>
+                    <HomeTeamName>Nazka United</HomeTeamName>
+                    <HomeTeamNameShortName>United</HomeTeamNameShortName>
+                </HomeTeam>
+                <AwayTeam>
+                    <AwayTeamID>2131331</AwayTeamID>
+                    <AwayTeamName>Silly Voices at the Police Station</AwayTeamName>
+                    <AwayTeamNameShortName>SillyVoice</AwayTeamNameShortName>
+                </AwayTeam>
+                <MatchDate>2026-10-14 16:30:00</MatchDate>
+                <SourceSystem>Hattrick</SourceSystem>
+                <MatchType>8</MatchType>
+                <MatchContextId>0</MatchContextId>
+                <CupLevel>0</CupLevel>
+                <CupLevelIndex>0</CupLevelIndex>
+                <HomeGoals>0</HomeGoals>
+                <AwayGoals>4</AwayGoals>
+                <Status>FINISHED</Status>
+            </Match>
+            <Match>
+                <MatchID>769706172</MatchID>
+                <HomeTeam>
+                    <HomeTeamID>402183</HomeTeamID>
+                    <HomeTeamName>Peppers Pepteam</HomeTeamName>
+                    <HomeTeamNameShortName>Peppers</HomeTeamNameShortName>
+                </HomeTeam>
+                <AwayTeam>
+                    <AwayTeamID>574260</AwayTeamID>
+                    <AwayTeamName>Nazka United</AwayTeamName>
+                    <AwayTeamNameShortName>United</AwayTeamNameShortName>
+                </AwayTeam>
+                <MatchDate>2026-10-18 16:00:00</MatchDate>
+                <SourceSystem>Hattrick</SourceSystem>
+                <MatchType>1</MatchType>
+                <MatchContextId>1774</MatchContextId>
+                <CupLevel>0</CupLevel>
+                <CupLevelIndex>0</CupLevelIndex>
+                <HomeGoals>6</HomeGoals>
+                <AwayGoals>1</AwayGoals>
+                <Status>FINISHED</Status>
+            </Match>
+            <Match>
+                <MatchID>771914104</MatchID>
+                <HomeTeam>
+                    <HomeTeamID>574260</HomeTeamID>
+                    <HomeTeamName>Nazka United</HomeTeamName>
+                    <HomeTeamNameShortName>United</HomeTeamNameShortName>
+                </HomeTeam>
+                <AwayTeam>
+                    <AwayTeamID>1657769</AwayTeamID>
+                    <AwayTeamName>FC Vindobona Central</AwayTeamName>
+                    <AwayTeamNameShortName>VC</AwayTeamNameShortName>
+                </AwayTeam>
+                <MatchDate>2026-10-21 16:30:00</MatchDate>
+                <SourceSystem>Hattrick</SourceSystem>
+                <MatchType>8</MatchType>
+                <MatchContextId>0</MatchContextId>
+                <CupLevel>0</CupLevel>
+                <CupLevelIndex>0</CupLevelIndex>
+                <HomeGoals>0</HomeGoals>
+                <AwayGoals>3</AwayGoals>
+                <Status>FINISHED</Status>
+            </Match>
+            <Match>
+                <MatchID>769706176</MatchID>
+                <HomeTeam>
+                    <HomeTeamID>574260</HomeTeamID>
+                    <HomeTeamName>Nazka United</HomeTeamName>
+                    <HomeTeamNameShortName>United</HomeTeamNameShortName>
+                </HomeTeam>
+                <AwayTeam>
+                    <AwayTeamID>201528</AwayTeamID>
+                    <AwayTeamName>FCModer</AwayTeamName>
+                    <AwayTeamNameShortName>FCModer</AwayTeamNameShortName>
+                </AwayTeam>
+                <MatchDate>2026-10-25 16:00:00</MatchDate>
+                <SourceSystem>Hattrick</SourceSystem>
+                <MatchType>1</MatchType>
+                <MatchContextId>1774</MatchContextId>
+                <CupLevel>0</CupLevel>
+                <CupLevelIndex>0</CupLevelIndex>
+                <HomeGoals>0</HomeGoals>
+                <AwayGoals>5</AwayGoals>
+                <Status>FINISHED</Status>
+            </Match>
+            <Match>
+                <MatchID>771999473</MatchID>
+                <HomeTeam>
+                    <HomeTeamID>574260</HomeTeamID>
+                    <HomeTeamName>Nazka United</HomeTeamName>
+                    <HomeTeamNameShortName>United</HomeTeamNameShortName>
+                </HomeTeam>
+                <AwayTeam>
+                    <AwayTeamID>3466629</AwayTeamID>
+                    <AwayTeamName>Negões F.C</AwayTeamName>
+                    <AwayTeamNameShortName>Negões</AwayTeamNameShortName>
+                </AwayTeam>
+                <MatchDate>2026-10-28 16:30:00</MatchDate>
+                <SourceSystem>Hattrick</SourceSystem>
+                <MatchType>9</MatchType>
+                <MatchContextId>0</MatchContextId>
+                <CupLevel>0</CupLevel>
+                <CupLevelIndex>0</CupLevelIndex>
+                <HomeGoals>2</HomeGoals>
+                <AwayGoals>0</AwayGoals>
+                <Status>FINISHED</Status>
+            </Match>
+            <Match>
+                <MatchID>772121209</MatchID>
+                <HomeTeam>
+                    <HomeTeamID>574260</HomeTeamID>
+                    <HomeTeamName>Nazka United</HomeTeamName>
+                    <HomeTeamNameShortName>United</HomeTeamNameShortName>
+                </HomeTeam>
+                <AwayTeam>
+                    <AwayTeamID>1242154</AwayTeamID>
+                    <AwayTeamName>Juventus Brenk 2</AwayTeamName>
+                    <AwayTeamNameShortName>Juventus</AwayTeamNameShortName>
+                </AwayTeam>
+                <MatchDate>2026-11-01 16:00:00</MatchDate>
+                <SourceSystem>Hattrick</SourceSystem>
+                <MatchType>9</MatchType>
+                <MatchContextId>0</MatchContextId>
+                <CupLevel>0</CupLevel>
+                <CupLevelIndex>0</CupLevelIndex>
+                <Status>UPCOMING</Status>
+            </Match>
+            <Match>
+                <MatchID>772187171</MatchID>
+                <HomeTeam>
+                    <HomeTeamID>574260</HomeTeamID>
+                    <HomeTeamName>Nazka United</HomeTeamName>
+                    <HomeTeamNameShortName>United</HomeTeamNameShortName>
+                </HomeTeam>
+                <AwayTeam>
+                    <AwayTeamID>1220589</AwayTeamID>
+                    <AwayTeamName>G-piste</AwayTeamName>
+                    <AwayTeamNameShortName>G-piste</AwayTeamNameShortName>
+                </AwayTeam>
+                <MatchDate>2026-11-04 16:30:00</MatchDate>
+                <SourceSystem>Hattrick</SourceSystem>
+                <MatchType>9</MatchType>
+                <MatchContextId>0</MatchContextId>
+                <CupLevel>0</CupLevel>
+                <CupLevelIndex>0</CupLevelIndex>
+                <Status>UPCOMING</Status>
+            </Match>
+        </MatchList>
+    </Team>
+</HattrickData>

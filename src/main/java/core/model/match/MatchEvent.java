@@ -260,15 +260,15 @@ public class MatchEvent extends AbstractTable.Storable {
         }
     }
 
-    public Matchdetails.eInjuryType getM_eInjuryType() {
+    public Matchdetails.eInjuryType getInjuryType() {
         return m_eInjuryType;
     }
 
-    public void setM_eInjuryType(Matchdetails.eInjuryType m_eInjuryType) {
+    public void setInjuryType(Matchdetails.eInjuryType m_eInjuryType) {
         this.m_eInjuryType = m_eInjuryType;
     }
 
-    public void setM_eInjuryType(Integer i_InjuryType) {
+    public void setInjuryType(Integer i_InjuryType) {
         this.m_eInjuryType = Matchdetails.eInjuryType.fromInteger(i_InjuryType);
     }
 

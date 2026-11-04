@@ -373,7 +373,9 @@ public class MatchAndLineupSelectionPanel extends JPanel implements Refreshable 
         String message;
         try {
             Document doc = XMLUtils.createDocument(result);
-            String successStr = XMLUtils.getAttributeValueFromNode(doc, "MatchData", "OrdersSet");
+            var root = doc.getDocumentElement();
+            var matchDataElement = XMLUtils.getChildElement(root, "MatchData");
+            String successStr = XMLUtils.getAttributeStringValue(matchDataElement, "OrdersSet");
             if (successStr != null) {
                 success = Boolean.parseBoolean(successStr);
                 if (success) {
