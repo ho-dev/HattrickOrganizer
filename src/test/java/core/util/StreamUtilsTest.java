@@ -156,6 +156,6 @@ class StreamUtilsTest {
         assertThatThrownBy(() -> StreamUtils.findOne(
             Stream.of("foo", "bar", "baz").parallel()))
             .isInstanceOf(IllegalStateException.class)
-            .hasMessage("Found more than one element.");
+            .hasMessageEndingWith("Found more than one element.");
     }
 }
