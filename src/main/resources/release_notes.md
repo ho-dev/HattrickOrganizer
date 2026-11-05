@@ -123,6 +123,7 @@
 * Update darklaf to most recent version.
 * Fixed Windows portable ZIP archives not being extractable with Windows Explorer. The archives now contain an `HO`
   subdirectory. (#1642)
+* Add macOS Intel packages with and without bundled JRE. (#2577)
 
 ### Developer Tools
 
