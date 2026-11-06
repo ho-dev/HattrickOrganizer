@@ -1,7 +1,5 @@
 package core.util;
 
-import core.model.HOVerwaltung;
-
 /**
  * Hattrick's absolute season and week (from Swedish league)
  *
@@ -9,7 +7,4 @@ import core.model.HOVerwaltung;
  * @param week   number [1..16]
  */
 public record HTWeek(int season, int week) {
-    public static HTWeek fromLocalHTWeek(LocalHTWeek localHTWeek) {
-        return new HTWeek(localHTWeek.season() - HOVerwaltung.instance().getModel().getBasics().getSeasonOffset(), localHTWeek.week());
-    }
 }

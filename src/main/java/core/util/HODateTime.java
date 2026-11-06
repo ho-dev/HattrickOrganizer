@@ -121,7 +121,8 @@ public class HODateTime implements Comparable<HODateTime> {
     }
 
     public static HODateTime fromLocalHTWeek(LocalHTWeek localHTWeek) {
-        return fromHTWeek(HTWeek.fromLocalHTWeek(localHTWeek));
+        var htWeek =  new HTWeek(localHTWeek.season() - HOVerwaltung.instance().getModel().getBasics().getSeasonOffset(), localHTWeek.week());
+        return fromHTWeek(htWeek);
     }
 
     /**
