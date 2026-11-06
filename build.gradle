@@ -320,6 +320,8 @@ tasks.register("media", Install4jTask) {
 
     // 1225 -> macOS Single Bundle
     // 1224 -> macOS Single Bundle JRE
+    // 1400 -> macOS Intel Single Bundle
+    // 1401 -> macOS Intel Single Bundle JRE
 
     // 173 -> Unix Archive
     // 477 -> Unix Archive JRE
@@ -332,7 +334,7 @@ tasks.register("media", Install4jTask) {
     // 464  -> Linux rpm JRE
     // 471 -> Linux deb JRE
 
-    buildIds = ["60", "485", "64", "481", "1225", "1224", "173", "477", "1062", "1064", "1203", "1206", "1208", "1211"]
+    buildIds = ["60", "485", "64", "481", "1225", "1224", "1400", "1401", "173", "477", "1062", "1064", "1203", "1206", "1208", "1211"]
 
     variables = [HO_version: "$project.version.$buildNumber.$developmentStage", projectDir: projectDir, versionType: project.ext.version_type]
 }
