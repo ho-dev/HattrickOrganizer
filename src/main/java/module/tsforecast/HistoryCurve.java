@@ -86,12 +86,11 @@ public class HistoryCurve extends Curve {
 			// reverse order - loadOfficial loads descending order
 			var matches = dbManager.loadOfficialMatchesBetween(ibasics.getTeamId(), start, ibasics.getDatum()).stream().sorted((i,j)->j.getMatchSchedule().compareTo(i.getMatchSchedule())).toList();
 
-			int matchDay;
 			for ( var match : matches){
 				var details = match.getMatchdetails();
 				if (details != null) {
                     var sortDate = match.getMatchSchedule();
-                    matchDay = sortDate.toHTWeek().week;
+                    var matchDay = sortDate.toHTWeek().week;
                     var isHomeTeam = ibasics.getTeamId() == match.getHomeTeamID();
                     var teamAttitude = (isHomeTeam ? details.getHomeEinstellung() : details.getGuestEinstellung());
                     if  (teamAttitude == EINSTELLUNG_UNBEKANNT) {
