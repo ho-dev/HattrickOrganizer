@@ -50,8 +50,8 @@ public class DownloadFilter extends DefaultMutableTreeNode {
         int firstSeason;
         var activationDate = hov.getModel().getBasics().getActivationDate();
         if ( activationDate != null){
-            var htWeek = activationDate.toLocaleHTWeek();
-            firstSeason = htWeek.season;
+            var htWeek = activationDate.toLocalHTWeek();
+            firstSeason = htWeek.season();
         }
         else {
             firstSeason = 0;

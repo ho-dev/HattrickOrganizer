@@ -85,9 +85,9 @@ public final class XMLParser {
                         HODateTime transferDate = HODateTime.fromHT(deadline);
                         playerTransfer.setDate(transferDate);
 
-                        var htweek = transferDate.toLocaleHTWeek();
-                        playerTransfer.setSeason(htweek.season);
-                        playerTransfer.setWeek(htweek.week);
+                        var htweek = transferDate.toLocalHTWeek();
+                        playerTransfer.setSeason(htweek.season());
+                        playerTransfer.setWeek(htweek.week());
 
                         final Element buyer = (Element) transfer.getElementsByTagName("Buyer").item(0); //$NON-NLS-1$
                         final Element seller = (Element) transfer.getElementsByTagName("Seller").item(0); //$NON-NLS-1$
@@ -206,9 +206,9 @@ public final class XMLParser {
 
                         HODateTime transferDate = HODateTime.fromHT(deadline);
                         playerTranfer.setDate(transferDate);
-                        var htweek = transferDate.toLocaleHTWeek();
-                        playerTranfer.setSeason(htweek.season);
-                        playerTranfer.setWeek(htweek.week);
+                        var htweek = transferDate.toLocalHTWeek();
+                        playerTranfer.setSeason(htweek.season());
+                        playerTranfer.setWeek(htweek.week());
 
                         final Element buyer = (Element) transfer.getElementsByTagName("Buyer").item(0); //$NON-NLS-1$
                         final Element seller = (Element) transfer.getElementsByTagName("Seller").item(0); //$NON-NLS-1$
@@ -249,14 +249,11 @@ public final class XMLParser {
 
     public static boolean updateTeamTransfers(int teamId) {
         var transfers = getAllTeamTransfers(teamId, HODateTime.now().plus(1, ChronoUnit.DAYS));
-        var players =  updateTeamTransfers(transfers);
-        if ( players != null) {
-            for (var player : players) {
-                updatePlayerTransfers(player.getPlayerId());
-            }
-            return true;
+        var players = updateTeamTransfers(transfers);
+        for (var player : players) {
+            updatePlayerTransfers(player.getPlayerId());
         }
-        return false;
+        return true;
     }
 
     /**

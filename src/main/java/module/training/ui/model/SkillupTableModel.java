@@ -7,7 +7,6 @@ import core.gui.comp.table.HOTableModel;
 import core.gui.comp.table.PlayersTable;
 import core.gui.model.UserColumnController;
 import core.model.HOVerwaltung;
-import core.model.player.SkillChange;
 import module.training.PlayerSkillChange;
 import module.training.Skills;
 import module.training.ui.TrainingLegendPanel;
@@ -22,8 +21,7 @@ import java.util.List;
 public class SkillupTableModel extends HOTableModel {
 
     private static int nextId=0;
-	private ArrayList<PlayerSkillChange> skillChanges;
-	private TrainingModel trainingModel;
+    private TrainingModel trainingModel;
 
 	public SkillupTableModel(UserColumnController.@NotNull ColumnModelId id) {
 		super(id, "ls.module.training.skillUps");
@@ -34,7 +32,7 @@ public class SkillupTableModel extends HOTableModel {
 						var skillChange = entry.getSkillChange();
 						var text = skillChange.getType().getLanguageString() + ":  " + PlayerAbility.getNameForSkill(skillChange.getValue(), true);
 						var ret = new ColorLabelEntry(entry.getSkillChange().getType().toInt(), text, getForegroundColor(entry), ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
-						ret.setToolTipText(entry.getSkillChange().getDate().toLocaleDateTime());
+						ret.setToolTipText(entry.getSkillChange().getDate().toLocalDateTime());
 						ret.setIcon(TrainingLegendPanel.getSkillupTypeIcon(entry.getSkillChange().getType(), entry.getSkillChange().getChange()));
 						return ret;
 					}
@@ -43,9 +41,9 @@ public class SkillupTableModel extends HOTableModel {
 					@Override
 					public IHOTableCellEntry getTableEntry(PlayerSkillChange entry) {
 						var date = entry.getSkillChange().getDate();
-						var htWeek = date.toHTWeek();
-                        var ret = new ColorLabelEntry(htWeek.sinceOrigin(), String.valueOf(htWeek.week), getForegroundColor(entry), ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
-						ret.setToolTipText(entry.getSkillChange().getDate().toLocaleDateTime());
+						var htWeek = date.toLocalHTWeek();
+                        var ret = new ColorLabelEntry(htWeek.weeksSinceLeagueStart(), String.valueOf(htWeek.week()), getForegroundColor(entry), ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
+						ret.setToolTipText(entry.getSkillChange().getDate().toLocalDateTime());
 						return ret;
 					}
 				},
@@ -53,9 +51,9 @@ public class SkillupTableModel extends HOTableModel {
 					@Override
 					public IHOTableCellEntry getTableEntry(PlayerSkillChange entry) {
 						var date = entry.getSkillChange().getDate();
-						var htWeek = date.toHTWeek();
-						var ret = new ColorLabelEntry(htWeek.sinceOrigin(), String.valueOf(htWeek.season), getForegroundColor(entry), ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
-						ret.setToolTipText(entry.getSkillChange().getDate().toLocaleDateTime());
+						var htWeek = date.toLocalHTWeek();
+						var ret = new ColorLabelEntry(htWeek.weeksSinceLeagueStart(), String.valueOf(htWeek.season()), getForegroundColor(entry), ColorLabelEntry.BG_STANDARD, SwingConstants.RIGHT);
+						ret.setToolTipText(entry.getSkillChange().getDate().toLocalDateTime());
 						return ret;
 
 					}
@@ -64,9 +62,9 @@ public class SkillupTableModel extends HOTableModel {
 					@Override
 					public IHOTableCellEntry getTableEntry(PlayerSkillChange entry) {
 						var date = entry.getSkillChange().getDate();
-						var htWeek = date.toHTWeek();
-						var ret = new ColorLabelEntry(htWeek.sinceOrigin(), entry.getPlayer().getAgeWithDaysAsString(date), getForegroundColor(entry), ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
-						ret.setToolTipText(entry.getSkillChange().getDate().toLocaleDateTime());
+						var htWeek = date.toLocalHTWeek();
+						var ret = new ColorLabelEntry(htWeek.weeksSinceLeagueStart(), entry.getPlayer().getAgeWithDaysAsString(date), getForegroundColor(entry), ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+						ret.setToolTipText(entry.getSkillChange().getDate().toLocalDateTime());
 						return ret;
 
 					}
@@ -89,28 +87,28 @@ public class SkillupTableModel extends HOTableModel {
 
 	@Override
 	protected void initData() {
-		this.skillChanges = new ArrayList<>();
+        ArrayList<PlayerSkillChange> skillChanges = new ArrayList<>();
         var selectedPlayer = PlayersTable.Companion.getSelectedPlayer();
-		if (selectedPlayer != null) {
-			for ( var skillUp : this.trainingModel.getSkillupManager().getTrainedSkillChanges()){
-				skillChanges.add(new PlayerSkillChange(selectedPlayer, skillUp));
-			}
-			for ( var skillUp : this.trainingModel.getFutureTrainingManager().getFutureSkillChanges()){
-				skillChanges.add(new PlayerSkillChange(selectedPlayer, skillUp));
-			}
-			Collections.reverse(skillChanges);
-		}
+        if (selectedPlayer != null) {
+            for (var skillUp : this.trainingModel.getSkillupManager().getTrainedSkillChanges()) {
+                skillChanges.add(new PlayerSkillChange(selectedPlayer, skillUp));
+            }
+            for (var skillUp : this.trainingModel.getFutureTrainingManager().getFutureSkillChanges()) {
+                skillChanges.add(new PlayerSkillChange(selectedPlayer, skillUp));
+            }
+            Collections.reverse(skillChanges);
+        }
 
-		m_clData = new Object[skillChanges.size()][getDisplayedColumns().length];
-		int rownum = 0;
-		for (var skillChange : skillChanges) {
-			int colnum = 0;
-			for ( var col : getDisplayedColumns()){
-				m_clData[rownum][colnum] = ((TrainingColumn)col).getTableEntry(skillChange);
-				colnum++;
-			}
-			rownum++;
-		}
-		fireTableDataChanged();
-	}
+        m_clData = new Object[skillChanges.size()][getDisplayedColumns().length];
+        int rownum = 0;
+        for (var skillChange : skillChanges) {
+            int colnum = 0;
+            for (var col : getDisplayedColumns()) {
+                m_clData[rownum][colnum] = ((TrainingColumn) col).getTableEntry(skillChange);
+                colnum++;
+            }
+            rownum++;
+        }
+        fireTableDataChanged();
+    }
 }

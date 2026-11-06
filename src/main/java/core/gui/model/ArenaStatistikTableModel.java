@@ -244,7 +244,7 @@ public class ArenaStatistikTableModel extends AbstractTableModel {
 
 			    //Datum
 				var matchDate = match.getMatchDate();
-			    m_clData[i][colIndex++] = new ColorLabelEntry(matchDate.toDbTimestamp().getTime(),matchDate.toLocaleDateTime(), ColorLabelEntry.FG_STANDARD, background, SwingConstants.LEFT);
+			    m_clData[i][colIndex++] = new ColorLabelEntry(matchDate.toDbTimestamp().getTime(),matchDate.toLocalDateTime(), ColorLabelEntry.FG_STANDARD, background, SwingConstants.LEFT);
 			    //Spielart
 			    m_clData[i][colIndex++] = new ColorLabelEntry(ThemeManager.getIcon(HOIconName.MATCHICONS[match.getMatchTyp().getIconArrayIndex()]),match.getMatchTyp().getMatchTypeId(), ColorLabelEntry.FG_STANDARD, background, SwingConstants.CENTER);
 			    //Gast

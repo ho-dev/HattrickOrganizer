@@ -27,7 +27,7 @@ import java.util.Collections;
  */
 
 /**
- * 
+ *
  * @author michael.roux
  */
 
@@ -88,7 +88,7 @@ public class HistoryCurve extends Curve {
 				var details = match.getMatchdetails();
 				if (details != null) {
 					var sortDate = match.getMatchSchedule();
-					i = sortDate.toHTWeek().week;
+					i = sortDate.toHTWeek().week();
 					Curve.Point pNextLeagueMatch = new Point(
 							sortDate,
 							ibasics.getTeamId()==match.getHomeTeamID()?details.getHomeEinstellung():details.getGuestEinstellung(),

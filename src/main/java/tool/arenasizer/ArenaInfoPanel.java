@@ -119,7 +119,7 @@ public class ArenaInfoPanel extends JPanel {
 		currentCapacityPanel.labelPercentageTotal.setText(percentString(stadium.getTotalSize(), stadium.getTotalSize()));
 
 		currentCapacityPanel.label2.setText(Optional.ofNullable(stadium.getRebuiltDate())
-			.map(HODateTime::toLocaleDate)
+			.map(HODateTime::toLocalDate)
 			.orElse(TranslationFacility.tr("ArenaInfoPanel.construction_in_progress")));
 
 		if (stadium.isUnderConstruction()) {
@@ -147,7 +147,7 @@ public class ArenaInfoPanel extends JPanel {
 		}
 
 		expandedCapacityPanel.label2.setText(Optional.ofNullable(stadium.getExpansionDate())
-                                             .map(expansionDate -> expansionDate.toLocaleDateTime())
+                                             .map(expansionDate -> expansionDate.toLocalDateTime())
                                              .orElse(EMPTY));
 
 		// Future
@@ -165,7 +165,7 @@ public class ArenaInfoPanel extends JPanel {
 
 		futureCapacityPanel.label2.setText(Optional.ofNullable(stadium.getExpansionDate())
 			.map(HODateTime::nextLocalDay)
-			.map(HODateTime::toLocaleDate)
+			.map(HODateTime::toLocalDate)
 			.orElse(EMPTY));
 
 		setTranslation();

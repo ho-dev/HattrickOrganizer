@@ -4,7 +4,6 @@ import core.gui.comp.entry.ColorLabelEntry;
 import core.gui.comp.entry.IHOTableCellEntry;
 import core.gui.comp.table.HOTableModel;
 import core.gui.model.UserColumnController;
-import core.util.HODateTime;
 import module.training.EffectDAO;
 import module.training.TrainWeekEffect;
 import module.training.ui.model.TrainingColumn;
@@ -33,17 +32,15 @@ public class EffectTableModel extends HOTableModel {
                 new TrainingColumn(nextId++, "Season", 60) {
                     @Override
                     public IHOTableCellEntry getTableEntry(TrainWeekEffect entry) {
-                        var htWeek = new HODateTime.HTWeek(entry.getHattrickSeason(), entry.getHattrickWeek());
-                        var trainingDate = HODateTime.fromHTWeek(htWeek);
-                        return new ColorLabelEntry(HODateTime.toEpochSecond(trainingDate), String.valueOf(trainingDate.toLocaleHTWeek().season), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        var localHTWeek = entry.getHattrickWeek();
+                        return new ColorLabelEntry(localHTWeek.weeksSinceLeagueStart(), String.valueOf(localHTWeek.season()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
                 new TrainingColumn(nextId++, "Week", 60) {
                     @Override
                     public IHOTableCellEntry getTableEntry(TrainWeekEffect entry) {
-                        var htWeek = new HODateTime.HTWeek(entry.getHattrickSeason(), entry.getHattrickWeek());
-                        var trainingDate = HODateTime.fromHTWeek(htWeek);
-                        return new ColorLabelEntry(HODateTime.toEpochSecond(trainingDate), String.valueOf(trainingDate.toLocaleHTWeek().week), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        var localHTWeek = entry.getHattrickWeek();
+                        return new ColorLabelEntry(localHTWeek.weeksSinceLeagueStart(), String.valueOf(localHTWeek.week()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
                 new TrainingColumn(nextId++, "TotalTSI", 60) {
