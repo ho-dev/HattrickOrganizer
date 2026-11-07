@@ -1,6 +1,5 @@
 package module.teamoftheweek;
 
-import core.model.TranslationFacility;
 import core.module.DefaultModule;
 import module.teamoftheweek.gui.TeamOfTheWeekPanel;
 

@@ -1,6 +1,5 @@
 package module.transfer;
 
-import core.model.TranslationFacility;
 import core.module.DefaultModule;
 
 import javax.swing.*;

@@ -3,7 +3,6 @@ package core.module;
 import javax.swing.JMenu;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
-import java.awt.*;
 import java.awt.event.KeyEvent;
 
 public interface IModule {

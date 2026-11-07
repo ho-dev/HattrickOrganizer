@@ -1,7 +1,6 @@
 package module.tsforecast;
 
 import core.db.DBManager;
-import core.model.TranslationFacility;
 import core.module.DefaultModule;
 
 import javax.swing.*;

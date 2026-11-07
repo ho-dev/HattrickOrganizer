@@ -1,6 +1,5 @@
 package module.specialevents;
 
-import core.model.TranslationFacility;
 import core.module.DefaultModule;
 
 import javax.swing.*;

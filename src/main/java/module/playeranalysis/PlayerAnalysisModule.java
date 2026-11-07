@@ -1,6 +1,5 @@
 package module.playeranalysis;
 
-import core.model.TranslationFacility;
 import core.module.DefaultModule;
 import core.module.config.ModuleConfig;
 

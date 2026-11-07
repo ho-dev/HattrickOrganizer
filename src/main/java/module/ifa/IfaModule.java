@@ -1,6 +1,5 @@
 package module.ifa;
 
-import core.model.TranslationFacility;
 import core.module.DefaultModule;
 import module.ifa.menu.IFAMenu;
 

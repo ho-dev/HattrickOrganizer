@@ -2,7 +2,6 @@ package module.teamanalyzer;
 
 import java.awt.event.KeyEvent;
 
-import core.model.TranslationFacility;
 import core.module.DefaultModule;
 import module.teamanalyzer.ui.TeamAnalyzerPanel;
 import module.teamanalyzer.ui.component.SettingPanel;

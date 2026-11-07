@@ -1,6 +1,5 @@
 package module.lineup;
 
-import core.model.TranslationFacility;
 import core.module.DefaultModule;
 
 import javax.swing.*;

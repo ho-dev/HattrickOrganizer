@@ -92,12 +92,4 @@ public abstract class DefaultModule implements IModule {
 
 	@Override
 	public void storeUserSettings(){}
-
-    public JPanel getModulePanel() {
-        return modulePanel;
-    }
-
-    public void setModulePanel(JPanel modulePanel) {
-        this.modulePanel = modulePanel;
-    }
 }
