@@ -135,13 +135,14 @@
 
 ## Translations
 
-Reports by Contributors - October 19, 2025 - November 06, 2026
+Reports by Contributors - October 19, 2025 - November 07, 2026
 
 * Jösgall 1005
 * Ioannidouefty 459
 * Lukasz 418
 * wsbrenk 178
 * \_KOHb\_ 93
+* Hectormm 73
 * Frankieorabona 73
 * Lidegand 72
 * Baler0 47
@@ -152,4 +153,4 @@ Reports by Contributors - October 19, 2025 - November 06, 2026
 * Mara 3
 * Joeri Roels 1
 
-Total 2433
+Total 2506
