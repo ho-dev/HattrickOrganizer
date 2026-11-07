@@ -6,11 +6,15 @@ import core.model.enums.MatchType;
 import core.model.misc.Basics;
 import core.model.series.Liga;
 import core.util.HODateTime;
+import core.util.HOLogger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
+
+import static core.model.match.IMatchDetails.EINSTELLUNG_NORMAL;
+import static core.model.match.IMatchDetails.EINSTELLUNG_UNBEKANNT;
 
 /*
  * HistoryCurve.java
@@ -27,7 +31,7 @@ import java.util.Collections;
  */
 
 /**
- * 
+ *
  * @author michael.roux
  */
 
@@ -74,7 +78,6 @@ public class HistoryCurve extends Curve {
 		Curve.Point pLastLeagueMatch = null;
 		var start = ibasics.getDatum().minus(WEEKS_BACK*7, ChronoUnit.DAYS);
 
-
 		// Table PAARUNG is required for SPIELTAG but does only include League
 		// matches
 		// Table MATCHESKURZINFO includes all matches but not SPIELTAG
@@ -83,17 +86,23 @@ public class HistoryCurve extends Curve {
 			// reverse order - loadOfficial loads descending order
 			var matches = dbManager.loadOfficialMatchesBetween(ibasics.getTeamId(), start, ibasics.getDatum()).stream().sorted((i,j)->j.getMatchSchedule().compareTo(i.getMatchSchedule())).toList();
 
-			int i;
 			for ( var match : matches){
 				var details = match.getMatchdetails();
 				if (details != null) {
-					var sortDate = match.getMatchSchedule();
-					i = sortDate.toHTWeek().week;
+                    var sortDate = match.getMatchSchedule();
+                    var matchDay = sortDate.toHTWeek().week;
+                    var isHomeTeam = ibasics.getTeamId() == match.getHomeTeamID();
+                    var teamAttitude = (isHomeTeam ? details.getHomeEinstellung() : details.getGuestEinstellung());
+                    if  (teamAttitude == EINSTELLUNG_UNBEKANNT) {
+                        // Unknown team attitude happens if the match details were not downloaded for this match
+                        HOLogger.instance().warning(this.getClass(), "Missing details of match:  %s - %s from %s".formatted(match.getHomeTeamName(), match.getGuestTeamName(), match.getMatchSchedule().toLocaleDateTime()));
+                        teamAttitude = EINSTELLUNG_NORMAL;
+                    }
 					Curve.Point pNextLeagueMatch = new Point(
 							sortDate,
-							ibasics.getTeamId()==match.getHomeTeamID()?details.getHomeEinstellung():details.getGuestEinstellung(),
-							i,
-							details.getMatchType()
+							teamAttitude,
+							matchDay,
+							match.getMatchType()
 					);
 
 					m_clPoints.add(pNextLeagueMatch);
@@ -102,10 +111,8 @@ public class HistoryCurve extends Curve {
 					// matches
 					if (pNextLeagueMatch.m_mtMatchType != MatchType.LEAGUE) {
 						if (pLastLeagueMatch != null) { // first match
-							if (getDiffDays(pLastLeagueMatch, pNextLeagueMatch) <= 7) {// matchday
-																						// stays
-																						// the
-																						// same
+							if (getDiffDays(pLastLeagueMatch, pNextLeagueMatch) <= 7) {
+                                // matchday stays the same
 								continue;
 							}
 							pNextLeagueMatch.m_iMatchDay++;
