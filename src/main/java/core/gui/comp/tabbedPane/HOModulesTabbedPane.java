@@ -5,9 +5,9 @@ import core.module.ModuleManager;
 import java.awt.Component;
 import javax.swing.JPanel;
 
-public final class HOModuleTabbedPane extends HOTabbedPane {
+public final class HOModulesTabbedPane extends HOTabbedPane {
 
-	public HOModuleTabbedPane() {
+	public HOModulesTabbedPane() {
 		super("Modules");
 	}
 
