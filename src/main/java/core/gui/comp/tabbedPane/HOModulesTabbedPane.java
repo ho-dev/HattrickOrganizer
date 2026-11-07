@@ -12,7 +12,7 @@ public final class HOModulesTabbedPane extends HOTabbedPane {
 	}
 
     @Override
-    protected boolean isCloseIcon(){
+    protected boolean haveTabsCloseIcons(){
         return true;
     }
 

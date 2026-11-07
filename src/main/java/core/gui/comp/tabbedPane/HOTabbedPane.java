@@ -41,7 +41,7 @@ public abstract class HOTabbedPane extends DraggableTabbedPane {
         }
         tabs.add(Pair.of(new HOTabInfo(tabbedPaneID, tabID, titleTranslationKey, super.getTabCount()), tabComponent));
         super.addTab(TranslationFacility.tr(titleTranslationKey), tabComponent);
-        if (isCloseIcon()) {
+        if (haveTabsCloseIcons()) {
             var xOffset = 0;
             // Nimbus skin is the only one to put the icon on the right, which
             // we need to move away from title text
@@ -53,7 +53,7 @@ public abstract class HOTabbedPane extends DraggableTabbedPane {
 
     }
 
-    protected boolean isCloseIcon() {
+    protected boolean haveTabsCloseIcons() {
         return false;
     }
 
