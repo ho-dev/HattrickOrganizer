@@ -1,6 +1,5 @@
 package module.training;
 
-import core.model.TranslationFacility;
 import core.module.DefaultModule;
 
 import javax.swing.*;
@@ -12,15 +11,15 @@ public final class TrainingModule extends DefaultModule {
 	public TrainingModule(){
 		super(true);
 	}
-	
+
 	@Override
 	public int getModuleId() {
 		return TRAINING;
 	}
 
 	@Override
-	public String getDescription() {
-		return TranslationFacility.tr("Training");
+	public String getKey() {
+		return "Training";
 	}
 
 	@Override

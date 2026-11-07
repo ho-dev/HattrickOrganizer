@@ -3,6 +3,7 @@ package core
 import core.constants.player.PlayerSkill
 import core.db.PersistenceManager
 import core.file.hrf.HRF
+import core.gui.comp.tabbedPane.HOTabInfo
 import core.model.HOModel
 import core.model.StaffMember
 import core.model.StaffType
@@ -293,6 +294,10 @@ class TestPersistenceManager : PersistenceManager {
             }
         }
         return ret
+    }
+
+    override fun loadHOTabInfo(tabbedPaneID: String?): List<HOTabInfo?>? {
+        return null;
     }
 }
 

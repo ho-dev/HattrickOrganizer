@@ -1,6 +1,5 @@
 package module.transfer;
 
-import core.model.TranslationFacility;
 import core.module.DefaultModule;
 
 import javax.swing.*;
@@ -12,15 +11,15 @@ public final class TransfersModule extends DefaultModule {
 	public TransfersModule(){
 		super(true);
 	}
-	
+
 	@Override
 	public int getModuleId() {
 		return TRANSFERS;
 	}
 
 	@Override
-	public String getDescription() {
-		return TranslationFacility.tr("Transfers");
+	public String getKey() {
+		return "Transfers";
 	}
 
 	@Override

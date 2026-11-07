@@ -1,6 +1,5 @@
 package module.lineup;
 
-import core.model.TranslationFacility;
 import core.module.DefaultModule;
 
 import javax.swing.*;
@@ -20,8 +19,8 @@ public final class LineupModule extends DefaultModule {
 	}
 
 	@Override
-	public String getDescription() {
-		return TranslationFacility.tr("Aufstellung");
+	public String getKey() {
+		return "Aufstellung";
 	}
 
 	@Override

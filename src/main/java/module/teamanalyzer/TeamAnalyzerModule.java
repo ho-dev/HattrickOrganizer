@@ -2,7 +2,6 @@ package module.teamanalyzer;
 
 import java.awt.event.KeyEvent;
 
-import core.model.TranslationFacility;
 import core.module.DefaultModule;
 import module.teamanalyzer.ui.TeamAnalyzerPanel;
 import module.teamanalyzer.ui.component.SettingPanel;
@@ -20,15 +19,15 @@ public final class TeamAnalyzerModule extends DefaultModule {
 	public TeamAnalyzerModule(){
 		super(true);
 	}
-	
+
 	@Override
 	public int getModuleId() {
 		return TEAMANALYZER;
 	}
 
 	@Override
-	public String getDescription() {
-		return TranslationFacility.tr("TeamAnalyzer");
+	public String getKey() {
+		return "TeamAnalyzer";
 	}
 
 	@Override
@@ -51,7 +50,7 @@ public final class TeamAnalyzerModule extends DefaultModule {
 	public KeyStroke getKeyStroke() {
 		return KeyStroke.getKeyStroke(KeyEvent.VK_F10, 0);
 	}
-	
+
 	@Override
 	public boolean hasMenu(){
 		return true;

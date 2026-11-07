@@ -4,7 +4,7 @@ import core.HO;
 import core.db.DBManager;
 import core.file.hrf.HRFImport;
 import core.gui.comp.panel.ImagePanel;
-import core.gui.comp.tabbedPane.HOTabbedPane;
+import core.gui.comp.tabbedPane.HOModulesTabbedPane;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ImageUtilities;
 import core.gui.theme.ThemeManager;
@@ -57,7 +57,7 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 	public static final AtomicBoolean launching = new AtomicBoolean(false);
 
 	// Components
-	private HOTabbedPane hoTabbedPane;
+	private HOModulesTabbedPane hoTabbedPane;
 
 	private final Vector<String> m_vOptionPanelNames = new Vector<>();
 	private final Vector<JPanel> m_vOptionPanels = new Vector<>();
@@ -235,7 +235,7 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 		return ((PlayerOverviewPanel) getTabbedPane().getModulePanel(IModule.PLAYEROVERVIEW));
 	}
 
-	public HOTabbedPane getTabbedPane() {
+	public HOModulesTabbedPane getTabbedPane() {
 		return hoTabbedPane;
 	}
 
@@ -324,7 +324,7 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 
 		getContentPane().setLayout(new BorderLayout());
 
-		hoTabbedPane = new HOTabbedPane();
+		hoTabbedPane = new HOModulesTabbedPane();
 
 		IModule[] activeModules = ModuleManager.instance().getModules(true);
 		for (IModule module : activeModules) {
@@ -672,6 +672,8 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 		for (var module : ModuleManager.instance().getModules(true)) {
 			module.storeUserSettings();
 		}
+
+        getTabbedPane().storeHOTabInfo();
 
 		DBManager.instance().saveUserParameter();
 	}

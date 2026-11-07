@@ -1,6 +1,5 @@
 package module.youth;
 
-import core.model.TranslationFacility;
 import core.module.DefaultModule;
 
 import javax.swing.*;
@@ -19,8 +18,8 @@ public class YouthModule extends DefaultModule {
     }
 
     @Override
-    public String getDescription() {
-        return TranslationFacility.tr("ls.youth");
+    public String getKey() {
+        return "ls.youth";
     }
 
     @Override

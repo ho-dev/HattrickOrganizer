@@ -87,8 +87,10 @@ final class DBUpdater {
                     case 900:
                         updateDBv901(DBVersion);
                     case 901:
-						updateDBv1000(DBVersion);
-					case 1000:
+                        updateDBv1000(DBVersion);
+                    case 1000:
+                        updateDBv1100(DBVersion);
+                    case 1100:
 				}
 
 			} catch (Exception e) {
@@ -99,7 +101,14 @@ final class DBUpdater {
 		}
 	}
 
-	private void updateDBv1000(int dbVersion) throws  SQLException {
+    private void updateDBv1100(int dbVersion) throws SQLException {
+        var hoTabInfoTable = dbManager.getTable(HOTabInfoTable.TABLENAME);
+        hoTabInfoTable.createTable();
+
+        updateDBVersion(dbVersion, 1100);
+    }
+
+    private void updateDBv1000(int dbVersion) throws  SQLException {
 
         var economyTable = dbManager.getTable(EconomyTable.TABLENAME);
         for (var column : economyTable.getColumns()) {

@@ -7,6 +7,7 @@ import core.db.backup.BackupDialog;
 import core.db.user.User;
 import core.db.user.UserManager;
 import core.file.hrf.HRF;
+import core.gui.comp.tabbedPane.HOTabInfo;
 import core.gui.comp.table.HOTableModel;
 import core.gui.model.ArenaStatistikTableModel;
 import core.gui.model.PlayerMatchCBItem;
@@ -310,6 +311,7 @@ public class DBManager implements PersistenceManager {
 		tables.put(SquadInfoTable.TABLENAME, new SquadInfoTable(connectionManager));
 		tables.put(HOColorTable.TABLENAME, new HOColorTable(connectionManager));
         tables.put(HallOfFamePlayersTable.TABLENAME, new HallOfFamePlayersTable(connectionManager));
+        tables.put(HOTabInfoTable.TABLENAME, new HOTabInfoTable(connectionManager));
 	}
 
 	/**
@@ -2498,5 +2500,20 @@ public class DBManager implements PersistenceManager {
             throw new RuntimeException(e);
         }
         return ret;
+    }
+
+    public List<HOTabInfo> loadHOTabInfo(String tabbedPaneID) {
+        var hoTabInfoTable = ((HOTabInfoTable) getTable(HOTabInfoTable.TABLENAME));
+        return hoTabInfoTable.loadHOTabInfo(tabbedPaneID);
+    }
+
+    public void storeHOTabInfo(List<HOTabInfo> tabs) {
+        var hoTabInfoTable = ((HOTabInfoTable) getTable(HOTabInfoTable.TABLENAME));
+        hoTabInfoTable.storeHOTabInfo(tabs);
+    }
+
+    public void deleteHOTabInfo(List<HOTabInfo> tabs) {
+        var hoTabInfoTable = ((HOTabInfoTable) getTable(HOTabInfoTable.TABLENAME));
+        hoTabInfoTable.deleteHOTabInfo(tabs);
     }
 }
