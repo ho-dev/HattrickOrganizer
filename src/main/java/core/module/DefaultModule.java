@@ -80,7 +80,6 @@ public abstract class DefaultModule implements IModule {
 		return STATUS_DEACTIVATED;
 	}
 
-
 	public void setStatus(int statusId){
 		setStartup(false);
 		setActive(false);

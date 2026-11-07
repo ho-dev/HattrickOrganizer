@@ -47,6 +47,4 @@ public class HOTabInfo extends AbstractTable.Storable {
     public void setTranslationKey(String translationKey) {
         this.translationKey = translationKey;
     }
-
-
 }
