@@ -15,8 +15,8 @@ public final class TSForecastModule extends DefaultModule {
 	}
 
 	@Override
-	public String getDescription() {
-		return TranslationFacility.tr("Tab_TSForecast");
+	public String getKey() {
+		return "Tab_TSForecast";
 	}
 
 	@Override

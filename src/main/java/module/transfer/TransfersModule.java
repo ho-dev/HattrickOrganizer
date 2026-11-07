@@ -12,15 +12,15 @@ public final class TransfersModule extends DefaultModule {
 	public TransfersModule(){
 		super(true);
 	}
-	
+
 	@Override
 	public int getModuleId() {
 		return TRANSFERS;
 	}
 
 	@Override
-	public String getDescription() {
-		return TranslationFacility.tr("Transfers");
+	public String getKey() {
+		return "Transfers";
 	}
 
 	@Override

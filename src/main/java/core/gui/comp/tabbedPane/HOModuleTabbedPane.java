@@ -4,7 +4,6 @@ import core.module.IModule;
 import core.module.ModuleManager;
 import java.awt.Component;
 import javax.swing.JPanel;
-import javax.swing.UIManager;
 
 public final class HOModuleTabbedPane extends HOTabbedPane {
 
@@ -12,26 +11,17 @@ public final class HOModuleTabbedPane extends HOTabbedPane {
 		super("Modules");
 	}
 
-	public void addTab(String title, Component component, boolean closeIcon) {
-		int xOffset = 0;
-		super.addTab(title, component);
-		if (closeIcon) {
-			// Nimbus skin is the only one to put the icon on the right, which
-			// we need to move away from title text
-			if (UIManager.getLookAndFeel().getName().equalsIgnoreCase("Nimbus")) {
-				xOffset = 6;
-			}
-			setIconAt(getComponentCount() - 1, new TabCloseIcon(this, xOffset));
-		}
-	}
+    @Override
+    protected boolean isCloseIcon(){
+        return true;
+    }
 
 	public void showTab(int moduleId) {
 		IModule module = ModuleManager.instance().getModule(moduleId);
-        String moduleID = getModuleID(module);
 		if (module.hasMainTab()) {
-			int index = indexOfTab(module.getDescription());
-			if (index == -1) {
-				addTab(module.getDescription(), module.createTabPanel(), true);
+            var index = getIndexOfTab(module.getKey());
+ 			if (index == -1) {
+				addTab(module.getKey(), module.createTabPanel());
 				setSelectedIndex(getTabCount() - 1);
 			} else {
 				setSelectedIndex(index);
@@ -39,16 +29,12 @@ public final class HOModuleTabbedPane extends HOTabbedPane {
 		}
 	}
 
-    private String getModuleID(IModule module) {
-        return "Module_" + module.getModuleId();
-    }
-
     public JPanel getModulePanel(int moduleId) {
 		IModule module = ModuleManager.instance().getModule(moduleId);
 		if (module.hasMainTab()) {
-			int index = indexOfTab(module.getDescription());
+            var index = getIndexOfTab(module.getKey());
 			if (index == -1) {
-				addTab(module.getDescription(), module.createTabPanel(), true);
+				addTab(module.getKey(), module.createTabPanel());
 				setSelectedIndex(getTabCount() - 1);
 				index = getTabCount() - 1;
 			}
@@ -63,7 +49,8 @@ public final class HOModuleTabbedPane extends HOTabbedPane {
 	}
 
     @Override
-    protected Component getTabComponent(String tabID) {
-        return null;
+    protected Component getComponent(String tabID) {
+        var module = ModuleManager.instance().findModule(tabID);
+        return module.<Component>map(IModule::getTabPanel).orElse(null);
     }
 }

@@ -21,8 +21,8 @@ public class SpecialEventsModule extends DefaultModule {
 	}
 
 	@Override
-	public String getDescription() {
-		return TranslationFacility.tr("Tab_SpecialEvents");
+	public String getKey() {
+		return "Tab_SpecialEvents";
 	}
 
 	@Override

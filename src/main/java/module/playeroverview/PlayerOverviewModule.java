@@ -12,15 +12,15 @@ public final class PlayerOverviewModule extends DefaultModule {
 	public PlayerOverviewModule(){
 		super(true);
 	}
-	
+
 	@Override
 	public int getModuleId() {
 		return PLAYEROVERVIEW;
 	}
 
 	@Override
-	public String getDescription() {
-		return TranslationFacility.tr("Spieleruebersicht");
+	public String getKey() {
+		return "Spieleruebersicht";
 	}
 
 	@Override

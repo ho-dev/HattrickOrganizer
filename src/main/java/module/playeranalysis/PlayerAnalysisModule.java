@@ -15,11 +15,11 @@ public final class PlayerAnalysisModule extends DefaultModule {
 		super(true);
 		initialize();
 	}
-	
+
 	private void initialize() {
 		if(! ModuleConfig.instance().containsKey(SHOW_PLAYERCOMPARE))
 			ModuleConfig.instance().setBoolean(SHOW_PLAYERCOMPARE, false);
-		
+
 	}
 
 	@Override
@@ -28,8 +28,8 @@ public final class PlayerAnalysisModule extends DefaultModule {
 	}
 
 	@Override
-	public String getDescription() {
-		return TranslationFacility.tr("SpielerAnalyse");
+	public String getKey() {
+		return "SpielerAnalyse";
 	}
 
 	@Override
@@ -41,7 +41,7 @@ public final class PlayerAnalysisModule extends DefaultModule {
 	public KeyStroke getKeyStroke() {
 		return KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0);
 	}
-	
+
 	@Override
 	public boolean hasConfigPanel() {
 		return true;

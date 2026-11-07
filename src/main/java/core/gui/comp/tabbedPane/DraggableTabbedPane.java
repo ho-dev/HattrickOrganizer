@@ -73,8 +73,10 @@ public class DraggableTabbedPane extends JTabbedPane {
                     if (tabNumber >= 0) {
                         Component comp = getComponentAt(draggedTabIndex);
                         String title = getTitleAt(draggedTabIndex);
+                        var icon = getIconAt(draggedTabIndex);
+                        var tip = getToolTipTextAt(draggedTabIndex);
                         removeTabAt(draggedTabIndex);
-                        insertTab(title, null, comp, null, tabNumber);
+                        insertTab(title, icon, comp, tip, tabNumber);
                     }
                 }
 

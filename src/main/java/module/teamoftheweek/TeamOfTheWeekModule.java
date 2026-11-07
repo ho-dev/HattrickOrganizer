@@ -20,8 +20,8 @@ public class TeamOfTheWeekModule extends DefaultModule {
 	}
 
 	@Override
-	public String getDescription() {
-		return TranslationFacility.tr("Tab_TeamOfTheWeek");
+	public String getKey() {
+		return "Tab_TeamOfTheWeek";
 	}
 
 	@Override

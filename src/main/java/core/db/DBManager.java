@@ -311,6 +311,7 @@ public class DBManager implements PersistenceManager {
 		tables.put(SquadInfoTable.TABLENAME, new SquadInfoTable(connectionManager));
 		tables.put(HOColorTable.TABLENAME, new HOColorTable(connectionManager));
         tables.put(HallOfFamePlayersTable.TABLENAME, new HallOfFamePlayersTable(connectionManager));
+        tables.put(HOTabInfoTable.TABLENAME, new HOTabInfoTable(connectionManager));
 	}
 
 	/**
@@ -2502,17 +2503,17 @@ public class DBManager implements PersistenceManager {
     }
 
     public List<HOTabInfo> loadHOTabInfo(String tabbedPaneID) {
-        var hallOfFamePlayersTable = ((HOTabInfoTable) getTable(HallOfFamePlayersTable.TABLENAME));
-        return hallOfFamePlayersTable.loadHOTabInfo(tabbedPaneID);
+        var hoTabInfoTable = ((HOTabInfoTable) getTable(HOTabInfoTable.TABLENAME));
+        return hoTabInfoTable.loadHOTabInfo(tabbedPaneID);
     }
 
     public void storeHOTabInfo(List<HOTabInfo> tabs) {
-        var hallOfFamePlayersTable = ((HOTabInfoTable) getTable(HallOfFamePlayersTable.TABLENAME));
-        hallOfFamePlayersTable.storeHOTabInfo(tabs);
+        var hoTabInfoTable = ((HOTabInfoTable) getTable(HOTabInfoTable.TABLENAME));
+        hoTabInfoTable.storeHOTabInfo(tabs);
     }
 
     public void deleteHOTabInfo(List<HOTabInfo> tabs) {
-        var hallOfFamePlayersTable = ((HOTabInfoTable) getTable(HallOfFamePlayersTable.TABLENAME));
-        hallOfFamePlayersTable.deleteHOTabInfo(tabs);
+        var hoTabInfoTable = ((HOTabInfoTable) getTable(HOTabInfoTable.TABLENAME));
+        hoTabInfoTable.deleteHOTabInfo(tabs);
     }
 }

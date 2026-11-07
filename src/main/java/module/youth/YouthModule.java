@@ -19,8 +19,8 @@ public class YouthModule extends DefaultModule {
     }
 
     @Override
-    public String getDescription() {
-        return TranslationFacility.tr("ls.youth");
+    public String getKey() {
+        return "ls.youth";
     }
 
     @Override

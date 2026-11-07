@@ -673,6 +673,8 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 			module.storeUserSettings();
 		}
 
+        getTabbedPane().storeHOTabInfo();
+
 		DBManager.instance().saveUserParameter();
 	}
 

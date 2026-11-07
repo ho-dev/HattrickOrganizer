@@ -3,6 +3,7 @@ package core.module;
 import javax.swing.JMenu;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
+import java.awt.*;
 import java.awt.event.KeyEvent;
 
 public interface IModule {
@@ -37,6 +38,8 @@ public interface IModule {
 
     String getDescription();
 
+    String getKey();
+
     boolean hasMainTab();
 
     JPanel createTabPanel();
@@ -67,5 +70,5 @@ public interface IModule {
         return ret;
     }
 
-
+    JPanel getTabPanel();
 }

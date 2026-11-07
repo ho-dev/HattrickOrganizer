@@ -12,15 +12,15 @@ public final class SeriesModule extends DefaultModule {
 	public SeriesModule(){
 		super(true);
 	}
-	
+
 	@Override
 	public int getModuleId() {
 		return SERIES;
 	}
 
 	@Override
-	public String getDescription() {
-		return TranslationFacility.tr("Ligatabelle");
+	public String getKey() {
+		return "Ligatabelle";
 	}
 
 	@Override

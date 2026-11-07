@@ -18,8 +18,8 @@ public final class MatchesModule extends DefaultModule {
 	}
 
 	@Override
-	public String getDescription() {
-		return TranslationFacility.tr("Tab_Title_Matches");
+	public String getKey() {
+		return "Tab_Title_Matches";
 	}
 
 	@Override

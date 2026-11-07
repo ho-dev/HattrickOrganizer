@@ -12,15 +12,15 @@ public final class TrainingModule extends DefaultModule {
 	public TrainingModule(){
 		super(true);
 	}
-	
+
 	@Override
 	public int getModuleId() {
 		return TRAINING;
 	}
 
 	@Override
-	public String getDescription() {
-		return TranslationFacility.tr("Training");
+	public String getKey() {
+		return "Training";
 	}
 
 	@Override

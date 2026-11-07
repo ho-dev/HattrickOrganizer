@@ -20,8 +20,8 @@ public final class LineupModule extends DefaultModule {
 	}
 
 	@Override
-	public String getDescription() {
-		return TranslationFacility.tr("Aufstellung");
+	public String getKey() {
+		return "Aufstellung";
 	}
 
 	@Override

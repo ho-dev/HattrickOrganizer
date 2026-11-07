@@ -11,15 +11,15 @@ public final class StatisticsModule extends DefaultModule {
 	public StatisticsModule(){
 		super(true);
 	}
-	
+
 	@Override
 	public int getModuleId() {
 		return STATISTICS;
 	}
 
 	@Override
-	public String getDescription() {
-		return TranslationFacility.tr("Statistik");
+	public String getKey() {
+		return "Statistik";
 	}
 
 	@Override

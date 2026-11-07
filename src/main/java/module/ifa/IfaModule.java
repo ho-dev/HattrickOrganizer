@@ -20,15 +20,15 @@ public class IfaModule extends DefaultModule {
 	}
 
 	@Override
-	public String getDescription() {
-		return TranslationFacility.tr("Tab_IFA");
-	}
+	public String getKey() {
+        return "Tab_IFA";
+    }
 
 	@Override
 	public JPanel createTabPanel() {
 		return new PluginIfaPanel();
 	}
-	
+
 	@Override
 	public boolean hasMenu(){
 		return true;
