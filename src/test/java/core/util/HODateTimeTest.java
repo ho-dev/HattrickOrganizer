@@ -121,15 +121,15 @@ class HODateTimeTest {
 
     static Stream<Arguments> equals() {
         return Stream.of(
-                Arguments.of(HODateTime.fromHT("2024-10-30 20:00:00"), HODateTime.fromHT("2025-10-30 20:00:00"), false),
-                Arguments.of(HODateTime.fromHT("2024-10-30 20:00:00"), HODateTime.fromHT("2024-11-30 20:00:00"), false),
-                Arguments.of(HODateTime.fromHT("2024-10-30 20:00:00"), HODateTime.fromHT("2024-10-31 20:00:00"), false),
-                Arguments.of(HODateTime.fromHT("2024-10-30 20:00:00"), HODateTime.fromHT("2024-10-30 21:00:00"), false),
-                Arguments.of(HODateTime.fromHT("2024-10-30 20:00:00"), HODateTime.fromHT("2024-10-30 20:01:00"), false),
-                Arguments.of(HODateTime.fromHT("2024-10-30 20:00:00"), HODateTime.fromHT("2024-10-30 20:00:01"), false),
-                Arguments.of(HO_DATE_TIME, HO_DATE_TIME, true),
-                Arguments.of(HODateTime.fromHT("2024-10-30 20:00:00"), HODateTime.fromHT("2024-10-30 20:00:00"), true),
-                Arguments.of(HO_DATE_TIME, null, false)
+            Arguments.of(HODateTime.fromHT("2024-10-30 20:00:00"), HODateTime.fromHT("2025-10-30 20:00:00"), false),
+            Arguments.of(HODateTime.fromHT("2024-10-30 20:00:00"), HODateTime.fromHT("2024-11-30 20:00:00"), false),
+            Arguments.of(HODateTime.fromHT("2024-10-30 20:00:00"), HODateTime.fromHT("2024-10-31 20:00:00"), false),
+            Arguments.of(HODateTime.fromHT("2024-10-30 20:00:00"), HODateTime.fromHT("2024-10-30 21:00:00"), false),
+            Arguments.of(HODateTime.fromHT("2024-10-30 20:00:00"), HODateTime.fromHT("2024-10-30 20:01:00"), false),
+            Arguments.of(HODateTime.fromHT("2024-10-30 20:00:00"), HODateTime.fromHT("2024-10-30 20:00:01"), false),
+            Arguments.of(HO_DATE_TIME, HO_DATE_TIME, true),
+            Arguments.of(HODateTime.fromHT("2024-10-30 20:00:00"), HODateTime.fromHT("2024-10-30 20:00:00"), true),
+            Arguments.of(HO_DATE_TIME, null, false)
         );
     }
 
@@ -312,33 +312,33 @@ class HODateTimeTest {
 
     static Stream<Arguments> getLocalDateTime() {
         return Stream.of(
-                of(LocalDateTime.of(2024, 8, 29, 23, 59, 59)),
-                of(LocalDateTime.of(2024, 8, 30, 0, 1, 0)),
-                of(LocalDateTime.of(2024, 8, 30, 1, 2, 0)),
-                of(LocalDateTime.of(2024, 8, 30, 2, 3, 0)),
-                of(LocalDateTime.of(2024, 8, 30, 3, 4, 0)),
-                of(LocalDateTime.of(2024, 8, 30, 4, 5)),
-                of(LocalDateTime.of(2024, 8, 30, 5, 6, 0)),
-                of(LocalDateTime.of(2024, 8, 30, 6, 7, 0)),
-                of(LocalDateTime.of(2024, 8, 30, 7, 8, 0)),
-                of(LocalDateTime.of(2024, 8, 30, 8, 9, 0)),
-                of(LocalDateTime.of(2024, 8, 30, 9, 10)),
-                of(LocalDateTime.of(2024, 8, 30, 10, 11, 14)),
-                of(LocalDateTime.of(2024, 8, 30, 11, 12, 13)),
-                of(LocalDateTime.of(2024, 8, 30, 12, 13, 12)),
-                of(LocalDateTime.of(2024, 8, 30, 13, 14, 11)),
-                of(LocalDateTime.of(2024, 8, 30, 14, 15, 10)),
-                of(LocalDateTime.of(2024, 8, 30, 15, 16, 9)),
-                of(LocalDateTime.of(2024, 8, 30, 16, 17, 8)),
-                of(LocalDateTime.of(2024, 8, 30, 17, 18, 7)),
-                of(LocalDateTime.of(2024, 8, 30, 18, 19, 6)),
-                of(LocalDateTime.of(2024, 8, 30, 19, 20, 5)),
-                of(LocalDateTime.of(2024, 8, 30, 20, 21, 4)),
-                of(LocalDateTime.of(2024, 8, 30, 21, 22, 3)),
-                of(LocalDateTime.of(2024, 8, 30, 22, 23, 2)),
-                of(LocalDateTime.of(2024, 8, 30, 23, 24, 1)),
-                of(LocalDateTime.of(2024, 8, 30, 23, 59, 59)),
-                of(LocalDateTime.of(2024, 8, 31, 0, 30, 30))
+            of(LocalDateTime.of(2024, 8, 29, 23, 59, 59)),
+            of(LocalDateTime.of(2024, 8, 30, 0, 1, 0)),
+            of(LocalDateTime.of(2024, 8, 30, 1, 2, 0)),
+            of(LocalDateTime.of(2024, 8, 30, 2, 3, 0)),
+            of(LocalDateTime.of(2024, 8, 30, 3, 4, 0)),
+            of(LocalDateTime.of(2024, 8, 30, 4, 5)),
+            of(LocalDateTime.of(2024, 8, 30, 5, 6, 0)),
+            of(LocalDateTime.of(2024, 8, 30, 6, 7, 0)),
+            of(LocalDateTime.of(2024, 8, 30, 7, 8, 0)),
+            of(LocalDateTime.of(2024, 8, 30, 8, 9, 0)),
+            of(LocalDateTime.of(2024, 8, 30, 9, 10)),
+            of(LocalDateTime.of(2024, 8, 30, 10, 11, 14)),
+            of(LocalDateTime.of(2024, 8, 30, 11, 12, 13)),
+            of(LocalDateTime.of(2024, 8, 30, 12, 13, 12)),
+            of(LocalDateTime.of(2024, 8, 30, 13, 14, 11)),
+            of(LocalDateTime.of(2024, 8, 30, 14, 15, 10)),
+            of(LocalDateTime.of(2024, 8, 30, 15, 16, 9)),
+            of(LocalDateTime.of(2024, 8, 30, 16, 17, 8)),
+            of(LocalDateTime.of(2024, 8, 30, 17, 18, 7)),
+            of(LocalDateTime.of(2024, 8, 30, 18, 19, 6)),
+            of(LocalDateTime.of(2024, 8, 30, 19, 20, 5)),
+            of(LocalDateTime.of(2024, 8, 30, 20, 21, 4)),
+            of(LocalDateTime.of(2024, 8, 30, 21, 22, 3)),
+            of(LocalDateTime.of(2024, 8, 30, 22, 23, 2)),
+            of(LocalDateTime.of(2024, 8, 30, 23, 24, 1)),
+            of(LocalDateTime.of(2024, 8, 30, 23, 59, 59)),
+            of(LocalDateTime.of(2024, 8, 31, 0, 30, 30))
         );
     }
 
@@ -351,33 +351,33 @@ class HODateTimeTest {
 
     static Stream<Arguments> nextLocalDay() {
         return Stream.of(
-                of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 29, 23, 59, 59)), NEXT_LOCAL_DAY_1),
-                of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 0, 0, 0)), NEXT_LOCAL_DAY_2),
-                of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 1, 0, 0)), NEXT_LOCAL_DAY_2),
-                of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 2, 0, 0)), NEXT_LOCAL_DAY_2),
-                of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 3, 0, 0)), NEXT_LOCAL_DAY_2),
-                of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 4, 0)), NEXT_LOCAL_DAY_2),
-                of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 5, 0, 0)), NEXT_LOCAL_DAY_2),
-                of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 6, 0, 0)), NEXT_LOCAL_DAY_2),
-                of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 7, 0, 0)), NEXT_LOCAL_DAY_2),
-                of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 8, 0, 0)), NEXT_LOCAL_DAY_2),
-                of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 9, 0)), NEXT_LOCAL_DAY_2),
-                of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 10, 0, 0)), NEXT_LOCAL_DAY_2),
-                of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 11, 0, 0)), NEXT_LOCAL_DAY_2),
-                of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 12, 0, 0)), NEXT_LOCAL_DAY_2),
-                of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 13, 0, 0)), NEXT_LOCAL_DAY_2),
-                of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 14, 0, 0)), NEXT_LOCAL_DAY_2),
-                of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 15, 0, 0)), NEXT_LOCAL_DAY_2),
-                of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 16, 0, 0)), NEXT_LOCAL_DAY_2),
-                of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 17, 0, 0)), NEXT_LOCAL_DAY_2),
-                of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 18, 0, 0)), NEXT_LOCAL_DAY_2),
-                of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 19, 0, 0)), NEXT_LOCAL_DAY_2),
-                of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 20, 0, 0)), NEXT_LOCAL_DAY_2),
-                of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 21, 0, 0)), NEXT_LOCAL_DAY_2),
-                of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 22, 0, 0)), NEXT_LOCAL_DAY_2),
-                of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 23, 0, 0)), NEXT_LOCAL_DAY_2),
-                of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 23, 59, 59)), NEXT_LOCAL_DAY_2),
-                of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 31, 0, 0, 0)), NEXT_LOCAL_DAY_3)
+            of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 29, 23, 59, 59)), NEXT_LOCAL_DAY_1),
+            of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 0, 0, 0)), NEXT_LOCAL_DAY_2),
+            of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 1, 0, 0)), NEXT_LOCAL_DAY_2),
+            of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 2, 0, 0)), NEXT_LOCAL_DAY_2),
+            of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 3, 0, 0)), NEXT_LOCAL_DAY_2),
+            of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 4, 0)), NEXT_LOCAL_DAY_2),
+            of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 5, 0, 0)), NEXT_LOCAL_DAY_2),
+            of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 6, 0, 0)), NEXT_LOCAL_DAY_2),
+            of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 7, 0, 0)), NEXT_LOCAL_DAY_2),
+            of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 8, 0, 0)), NEXT_LOCAL_DAY_2),
+            of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 9, 0)), NEXT_LOCAL_DAY_2),
+            of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 10, 0, 0)), NEXT_LOCAL_DAY_2),
+            of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 11, 0, 0)), NEXT_LOCAL_DAY_2),
+            of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 12, 0, 0)), NEXT_LOCAL_DAY_2),
+            of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 13, 0, 0)), NEXT_LOCAL_DAY_2),
+            of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 14, 0, 0)), NEXT_LOCAL_DAY_2),
+            of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 15, 0, 0)), NEXT_LOCAL_DAY_2),
+            of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 16, 0, 0)), NEXT_LOCAL_DAY_2),
+            of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 17, 0, 0)), NEXT_LOCAL_DAY_2),
+            of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 18, 0, 0)), NEXT_LOCAL_DAY_2),
+            of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 19, 0, 0)), NEXT_LOCAL_DAY_2),
+            of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 20, 0, 0)), NEXT_LOCAL_DAY_2),
+            of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 21, 0, 0)), NEXT_LOCAL_DAY_2),
+            of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 22, 0, 0)), NEXT_LOCAL_DAY_2),
+            of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 23, 0, 0)), NEXT_LOCAL_DAY_2),
+            of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 30, 23, 59, 59)), NEXT_LOCAL_DAY_2),
+            of(localDateTimeToHoDateTime(LocalDateTime.of(2024, 8, 31, 0, 0, 0)), NEXT_LOCAL_DAY_3)
         );
     }
 
@@ -394,8 +394,8 @@ class HODateTimeTest {
 
     private static Stream<Arguments> test_toLocalHtWeek() {
         return Stream.of(
-            Arguments.of(HODateTime.fromHT("2026-11-03 00:00:00"), 0, new LocalHTWeek(95,16)),
-            Arguments.of(HODateTime.fromHT("2026-11-03 01:00:00"), -10, new LocalHTWeek(85,16))
+            Arguments.of(HODateTime.fromHT("2026-11-03 00:00:00"), 0, new LocalHTWeek(95, 16)),
+            Arguments.of(HODateTime.fromHT("2026-11-03 01:00:00"), -10, new LocalHTWeek(85, 16))
         );
     }
 
@@ -418,7 +418,7 @@ class HODateTimeTest {
 
     @ParameterizedTest
     @MethodSource
-    void test_fromLocalHtWeek(int seasonOffset, LocalHTWeek localHTWeek, HODateTime expected ) {
+    void test_fromLocalHtWeek(int seasonOffset, LocalHTWeek localHTWeek, HODateTime expected) {
         var model = new HOModelBuilder().hrfId(HRF_MOCK_ID).build();
         HOVerwaltung.instance().setModel(model);
         var basics = model.getBasics();
