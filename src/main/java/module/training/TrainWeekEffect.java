@@ -6,13 +6,11 @@ import core.util.LocalHTWeek;
 /**
  * This value object represents a week of training. It contains the last hrf id before a training
  * update and the first hrf id after the update. It also contains the effect of the training as a
- * seperate value object.
+ * separate value object.
  *
  * @author NetHyperon
  */
 public class TrainWeekEffect {
-    //~ Instance fields ----------------------------------------------------------------------------
-
     /** Average form */
     private double avgForm;
 
@@ -47,12 +45,10 @@ public class TrainWeekEffect {
     /** Value for total increase in TSI */
     private int tsiIncrease;
 
-    //~ Constructors -------------------------------------------------------------------------------
-
     /**
-     * Creates a new TrainWeek object.
+     * Creates a new TrainWeekEffect object.
      *
-     * @param week Training week
+     * @param week LocalHTWeek
      * @param beforeHRF HRF id before training update
      * @param afterHRF HRF id after training update
      */
@@ -61,8 +57,6 @@ public class TrainWeekEffect {
         this.hrfIdAfter = afterHRF;
         this.trainweek = week;
     }
-
-    //~ Methods ------------------------------------------------------------------------------------
 
     /**
      * Set the amount of skillups

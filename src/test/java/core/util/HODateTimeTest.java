@@ -408,4 +408,21 @@ class HODateTimeTest {
         basics.setSeasonOffset(seasonOffset);
         assertThat(date.toLocalHTWeek()).isEqualTo(expected);
     }
+
+    private static Stream<Arguments> test_fromLocalHtWeek() {
+        return Stream.of(
+            Arguments.of(0, new LocalHTWeek(95, 16), HODateTime.fromHT("2026-11-01 23:00:00")),
+            Arguments.of(-10, new LocalHTWeek(85, 16), HODateTime.fromHT("2026-11-01 23:00:00"))
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource
+    void test_fromLocalHtWeek(int seasonOffset, LocalHTWeek localHTWeek, HODateTime expected ) {
+        var model = new HOModelBuilder().hrfId(HRF_MOCK_ID).build();
+        HOVerwaltung.instance().setModel(model);
+        var basics = model.getBasics();
+        basics.setSeasonOffset(seasonOffset);
+        assertThat(HODateTime.fromLocalHTWeek(localHTWeek)).isEqualTo(expected);
+    }
 }
