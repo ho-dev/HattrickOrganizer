@@ -112,12 +112,12 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
     private int guestRatingIndirectSetPiecesAtt = -1;
     private int guestRatingIndirectSetPiecesDef = -1;
 
-    public ArrayList<Injury> getM_Injuries() {
+    public ArrayList<Injury> getInjuries() {
         return m_Injuries;
     }
 
-    public void setM_Injuries(ArrayList<Injury> m_Injuries) {
-        this.m_Injuries = m_Injuries;
+    public void setInjuries(ArrayList<Injury> injuries) {
+        this.m_Injuries = injuries;
     }
 
     public ArrayList<Injury> m_Injuries = new ArrayList<>();
@@ -340,10 +340,10 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
                     guestGoalsInParts[part]++;
                     totalGuest++;
                 }
-            } else if (eventId == MatchEvent.MatchEventID.HOME_TEAM_WALKOVER.getValue()) {
+            } else if (eventId == MatchEventID.HOME_TEAM_WALKOVER.getValue()) {
                 guestGoalsInParts[0] = 5;
                 totalGuest = 5;
-            } else if (eventId == MatchEvent.MatchEventID.AWAY_TEAM_WALKOVER.getValue()) {
+            } else if (eventId == MatchEventID.AWAY_TEAM_WALKOVER.getValue()) {
                 homeGoalsInParts[0] = 5;
                 totalHome = 5;
             }
@@ -451,8 +451,22 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
         }
 
         int InjuryPlayerID;
+
+        public int getInjuryTeamID() {
+            return InjuryTeamID;
+        }
+
         int InjuryTeamID;
         eInjuryType InjuryType;
+
+        public int getInjuryMinute() {
+            return InjuryMinute;
+        }
+
+        public int getMatchPart() {
+            return MatchPart;
+        }
+
         int InjuryMinute;
         int MatchPart;
 
@@ -850,7 +864,7 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
     /**
      * Setter for property m_iGuestHatStats
      */
-    public void setGuestHatStats() {
+    public void calculateGuestHatStats() {
         int m_iGuestHatStats = this.m_iGuestLeftDef + this.m_iGuestMidDef + this.m_iGuestRightDef;
         m_iGuestHatStats += this.m_iGuestMidfield * 3;
         m_iGuestHatStats += this.m_iGuestLeftAtt + this.m_iGuestMidAtt + this.m_iGuestRightAtt;
@@ -1164,7 +1178,7 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
     /**
      * Setter for property m_iHomeHatStats
      */
-    public void setHomeHatStats() {
+    public void calculateHomeHatStats() {
         int m_iHomeHatStats = this.m_iHomeLeftDef + this.m_iHomeMidDef + this.m_iHomeRightDef;
         m_iHomeHatStats += this.m_iHomeMidfield * 3;
         m_iHomeHatStats += this.m_iHomeLeftAtt + this.m_iHomeMidAtt + this.m_iHomeRightAtt;
@@ -1451,9 +1465,9 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
     }
 
 
-    public void setHatStats() {
-        this.setHomeHatStats();
-        this.setGuestHatStats();
+    public void calculateHatStats() {
+        this.calculateHomeHatStats();
+        this.calculateGuestHatStats();
     }
 
     public final int getHomeHatStats() {
@@ -1557,12 +1571,12 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
             if (getLastMinute() == 0) {
                 // Duration of walk over matches is 0 minutes
                 for (var e : downloadHighlightsIfMissing()) {
-                    if (e.getMatchEventID() == MatchEvent.MatchEventID.AWAY_TEAM_WALKOVER) {
+                    if (e.getMatchEventID() == MatchEventID.AWAY_TEAM_WALKOVER) {
                         if (this.m_iHeimId == teamId) {
                             isWalkoverMatchWin = true;
                         }
                         break;
-                    } else if (e.getMatchEventID() == MatchEvent.MatchEventID.HOME_TEAM_WALKOVER) {
+                    } else if (e.getMatchEventID() == MatchEventID.HOME_TEAM_WALKOVER) {
                         if (this.m_iGastId == teamId) {
                             isWalkoverMatchWin = true;
                         }

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<HattrickData>
+    <FileName>matchlineup.xml</FileName>
+    <Version>2.0</Version>
+    <UserID>1757369</UserID>
+    <FetchedDate>2026-11-01 15:47:21</FetchedDate>
+    <MatchID>772121209</MatchID>
+    <IsYouth>False</IsYouth>
+    <MatchType>9</MatchType>
+    <MatchContextId>0</MatchContextId>
+    <MatchDate>2026-11-01 16:00:00</MatchDate>
+    <HomeTeam>
+        <HomeTeamID>574260</HomeTeamID>
+        <HomeTeamName>Nazka United</HomeTeamName>
+    </HomeTeam>
+    <AwayTeam>
+        <AwayTeamID>1242154</AwayTeamID>
+        <AwayTeamName>Juventus Brenk 2</AwayTeamName>
+    </AwayTeam>
+    <Arena>
+        <ArenaID>574260</ArenaID>
+        <ArenaName>High Road</ArenaName>
+    </Arena>
+</HattrickData>

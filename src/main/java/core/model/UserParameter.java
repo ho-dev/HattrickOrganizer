@@ -472,10 +472,12 @@ public final class UserParameter extends Configuration {
 
         if (ReleaseChannel == null) {
             ReleaseChannel = "Stable";
-            if (HO.getVersionType() != null) {
-                switch (HO.getVersionType()) {
-                    case "DEV" -> ReleaseChannel = "Dev";
-                    case "BETA" -> ReleaseChannel = "Beta";
+            if (HO.getHoBuild() != null) {
+                switch (HO.getHoBuild().stage()) {
+                    case DEV -> ReleaseChannel = "Dev";
+                    case BETA -> ReleaseChannel = "Beta";
+                    case STABLE -> {
+                    }
                 }
             }
         }

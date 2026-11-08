@@ -7,6 +7,7 @@ import core.model.cup.CupLevel;
 import core.model.cup.CupLevelIndex;
 import core.model.enums.MatchType;
 import core.model.enums.MatchTypeExtended;
+import core.model.tournament.TournamentDetails;
 import core.net.OnlineWorker;
 import core.util.HODateTime;
 import core.util.HOLogger;
@@ -483,13 +484,12 @@ public class MatchKurzInfo extends AbstractTable.Storable implements Comparable<
 			if (getDuration() == 0) {
 				// Duration of walk over matches is 0 minutes
 				for (var e : getMatchdetails().downloadHighlightsIfMissing()) {
-					if ( e.getMatchEventID() == MatchEvent.MatchEventID.AWAY_TEAM_WALKOVER ) {
+                    if (e.getMatchEventID() == MatchEventID.AWAY_TEAM_WALKOVER) {
 						if (this.isHomeMatch()) {
 							isWalkoverMatch = true;
 						}
 						break;
-					}
-					else if ( e.getMatchEventID() == MatchEvent.MatchEventID.HOME_TEAM_WALKOVER){
+					} else if (e.getMatchEventID() == MatchEventID.HOME_TEAM_WALKOVER) {
 						if (!this.isHomeMatch()){
 							isWalkoverMatch = true;
 						}
@@ -583,4 +583,14 @@ public class MatchKurzInfo extends AbstractTable.Storable implements Comparable<
 		ret.add(this.getGuestTeamID());
 		return ret;
 	}
+
+    public void loadTournamentDetails() {
+        var tournamentId = getMatchContextId();
+        TournamentDetails oTournamentDetails = DBManager.instance().getTournamentDetailsFromDB(tournamentId);
+        if (oTournamentDetails == null) {
+            oTournamentDetails = OnlineWorker.downloadTournamentDetails(tournamentId); // download info about tournament from HT
+            DBManager.instance().storeTournamentDetailsIntoDB(oTournamentDetails); // store tournament details into DB
+        }
+        setTournamentTypeID(oTournamentDetails.getTournamentType());
+    }
 }
