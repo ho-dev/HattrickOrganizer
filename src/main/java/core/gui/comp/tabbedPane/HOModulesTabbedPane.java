@@ -3,6 +3,7 @@ package core.gui.comp.tabbedPane;
 import core.module.IModule;
 import core.module.ModuleManager;
 import java.awt.Component;
+import java.util.Optional;
 import javax.swing.JPanel;
 
 public final class HOModulesTabbedPane extends HOTabbedPane {
@@ -49,8 +50,8 @@ public final class HOModulesTabbedPane extends HOTabbedPane {
 	}
 
     @Override
-    protected Component getComponent(String tabID) {
+    protected Optional<Component> findComponent(String tabID) {
         var module = ModuleManager.instance().findModule(tabID);
-        return module.<Component>map(IModule::getTabPanel).orElse(null);
+        return module.map(IModule::getTabPanel);
     }
 }

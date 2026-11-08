@@ -8,14 +8,18 @@ public class HOTabInfo extends AbstractTable.Storable {
     private String translationKey;
     private int tabIndex;
 
-    public HOTabInfo(){}
+    /**
+     * constructor is used by AbstractTable
+     */
+    public HOTabInfo() {}
 
-    public HOTabInfo(String paneID, String tabID, String translationKey, int index){
+    public HOTabInfo(String paneID, String tabID, String translationKey, int index) {
         this.tabbedPaneID = paneID;
         this.tabID = tabID;
         this.translationKey = translationKey;
         this.tabIndex = index;
     }
+
     public String getTabbedPaneID() {
         return tabbedPaneID;
     }

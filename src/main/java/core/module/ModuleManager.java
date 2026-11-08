@@ -2,6 +2,7 @@ package core.module;
 
 import core.model.UserParameter;
 import core.module.config.ModuleConfig;
+import core.util.StreamUtils;
 import module.halloffame.HallOfFameModule;
 import module.ifa.IfaModule;
 import module.lineup.LineupModule;
@@ -78,7 +79,7 @@ public final class ModuleManager {
     }
 
     public Optional<IModule> findModule(String key) {
-        return all_modules.values().stream().filter(module -> module.getKey().equals(key)).findFirst();
+        return StreamUtils.findOne(all_modules.values().stream().filter(module -> module.getKey().equals(key)));
     }
 
 	public IModule[] getAllModules() {
