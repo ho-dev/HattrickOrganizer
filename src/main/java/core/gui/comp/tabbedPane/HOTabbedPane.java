@@ -50,7 +50,6 @@ public abstract class HOTabbedPane extends DraggableTabbedPane {
             }
             setIconAt(getComponentCount() - 1, new TabCloseIcon(this, xOffset));
         }
-
     }
 
     protected boolean haveTabsCloseIcons() {
@@ -71,8 +70,10 @@ public abstract class HOTabbedPane extends DraggableTabbedPane {
     }
 
     public void storeHOTabInfo() {
+        // Reset index settings
         tabs.forEach(i -> i.getKey().setTabIndex(-1));
 
+        // Find current index settings
         for (int i = 0; i < getTabCount(); i++) {
             var component = getComponentAt(i);
             var hoTabInfo = tabs.stream().filter(pair -> pair.getValue().equals(component)).findFirst();
