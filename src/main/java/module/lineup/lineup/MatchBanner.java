@@ -9,16 +9,12 @@ import core.model.HOVerwaltung;
 import core.model.enums.MatchType;
 import core.model.match.Weather;
 import core.net.HattrickLink;
-import core.util.HODateTime;
 import core.util.HOLogger;
 import core.util.Helper;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
 
 public class MatchBanner extends JPanel implements Refreshable {
 
@@ -206,8 +202,8 @@ public class MatchBanner extends JPanel implements Refreshable {
             String sDate;
             if ( m_clSelectedMatch != null){
                 var datetime =  m_clSelectedMatch.getMatchSchedule();
-                sDate = datetime.toLocaleDateTime();
-                htWeek = datetime.toHTWeek().week;
+                sDate = datetime.toLocalDateTime();
+                htWeek = datetime.toHTWeek().week();
             }
             else {
                 sDate = "";

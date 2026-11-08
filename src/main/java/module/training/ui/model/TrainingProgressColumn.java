@@ -8,6 +8,7 @@ import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.TranslationFacility;
 import core.util.HODateTime;
+import core.util.LocalHTWeek;
 import module.training.ui.TrainingLegendPanel;
 
 import javax.swing.*;
@@ -20,15 +21,15 @@ public class TrainingProgressColumn extends UserColumn {
     private static final Color FULL_TRAINING_BG = ThemeManager.getColor(HOColorName.TRAINING_FULL_BG);
     private static final Color PARTIAL_TRAINING_BG = ThemeManager.getColor(HOColorName.TRAINING_PARTIAL_BG);
     private static final Color OSMOSIS_TRAINING_BG = ThemeManager.getColor(HOColorName.TRAINING_OSMOSIS_BG);
-    private final HODateTime.HTWeek htWeek;
+    private final LocalHTWeek localHTWeek;
     private final int trainingWeekIndex;
 
-    public TrainingProgressColumn(int id, HODateTime.HTWeek htweek, int trainingWeekIndex, int minWidth) {
-        super(id, htweek.season + " " + htweek.week);
+    public TrainingProgressColumn(int id, LocalHTWeek localHTWeek, int trainingWeekIndex, int minWidth) {
+        super(id, localHTWeek.season() + " " + localHTWeek.week());
         this.trainingWeekIndex = trainingWeekIndex;
         this.translateColumnName = false;
         this.translateColumnTooltip = false;
-        this.htWeek = htweek;
+        this.localHTWeek = localHTWeek;
         this.index = this.getId();
         this.minWidth = minWidth;
         preferredWidth = minWidth;
@@ -38,7 +39,7 @@ public class TrainingProgressColumn extends UserColumn {
     public IHOTableCellEntry getTableEntry(FutureTrainingEntry entry) {
         var colorLabelEntry = new ColorLabelEntry("", ColorLabelEntry.FG_STANDARD, getBackgroundColor(entry), SwingConstants.LEFT);
         colorLabelEntry.setBorderWidth(0);
-        var skillChange = entry.getFutureSkillChanges().stream().filter(s -> s.getDate().toHTWeek().equals(this.htWeek)).findAny();
+        var skillChange = entry.getFutureSkillChanges().stream().filter(s -> s.getDate().toLocalHTWeek().equals(this.localHTWeek)).findAny();
         if (skillChange.isPresent()) {
             var text = PlayerAbility.getNameForSkill(skillChange.get().getValue(), false) + String.format(" (%.2f)", skillChange.get().getValue());
             var icon = TrainingLegendPanel.getSkillupTypeIcon(skillChange.get().getType(), skillChange.get().getChange());
@@ -50,7 +51,7 @@ public class TrainingProgressColumn extends UserColumn {
 
         // Check if player has birthday
         // every row is an additional week
-        var dateWeekBegin = HODateTime.fromHTWeek(this.htWeek);
+        var dateWeekBegin = HODateTime.fromLocalHTWeek(this.localHTWeek);
         int playerAge = (int) entry.getPlayer().getDoubleAgeFromDate(dateWeekBegin);
         int playerAgeUpcomingWeek = (int) entry.getPlayer().getDoubleAgeFromDate(dateWeekBegin.plus(7, ChronoUnit.DAYS));
 

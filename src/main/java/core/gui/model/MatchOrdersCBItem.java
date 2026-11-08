@@ -10,7 +10,6 @@ import core.model.match.MatchKurzInfo;
 
 import javax.swing.*;
 import java.awt.*;
-import java.text.SimpleDateFormat;
 import java.util.Map;
 
 public class MatchOrdersCBItem extends MatchKurzInfo implements ComboItem {
@@ -48,9 +47,9 @@ public class MatchOrdersCBItem extends MatchKurzInfo implements ComboItem {
         constraints.weightx = 1.0;
         constraints.gridx = 0;
 
-        var sDate = getMatchSchedule().toLocaleDateTime();
-        var htWeek  = getMatchSchedule().toLocaleHTWeek();
-        sDate += "(" + htWeek.week + "/" + htWeek.season + ")";
+        var sDate = getMatchSchedule().toLocalDateTime();
+        var htWeek  = getMatchSchedule().toLocalHTWeek();
+        sDate += "(" + htWeek.week() + "/" + htWeek.season() + ")";
         JLabel jlNextGame = new JLabel(this.getOpponentTeamName() + "  " + sDate);
         jlNextGame.setIcon(ThemeManager.getIcon(HOIconName.MATCHICONS[this.getMatchTypeExtended().getIconArrayIndex()]));
         layout.setConstraints(jlNextGame, constraints);
