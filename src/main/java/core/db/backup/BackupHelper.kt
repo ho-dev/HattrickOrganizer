@@ -3,6 +3,7 @@ package core.db.backup
 import core.db.user.UserManager
 import core.util.HODateTime
 import core.util.HOLogger
+import core.util.HTWeek
 import java.io.File
 import java.text.SimpleDateFormat
 import java.time.Instant
@@ -94,7 +95,7 @@ object BackupHelper {
     private fun getBackupFilesToDelete(files: List<File>, numberOfBackups : Int) : List<File> {
         require(numberOfBackups > 0) { "numberOfBackups must be greater than 0" }
         val ret = mutableListOf<File>()
-        var keptBackupFileLastModifiedWeek: HODateTime.HTWeek? = null
+        var keptBackupFileLastModifiedWeek: HTWeek? = null
         var keptFiles = 0
         val currentTimestamp = HODateTime.now()
         files.sortedByDescending { file -> file.lastModified() }

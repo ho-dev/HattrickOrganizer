@@ -1797,7 +1797,7 @@ public class Player extends AbstractTable.Storable {
                             trainingWeekPlayer.addPlayedMinutes(minutes);
                             trainingPerPlayer.addExperience(match.getExperienceIncrease(min(90, minutes)));
                         } else {
-                            HOLogger.instance().error(getClass(), "no lineup found in match " + match.getMatchSchedule().toLocaleDateTime() +
+                            HOLogger.instance().error(getClass(), "no lineup found in match " + match.getMatchSchedule().toLocalDateTime() +
                                     " " + match.getHomeTeamName() + " - " + match.getGuestTeamName()
                             );
                         }

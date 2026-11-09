@@ -3,6 +3,7 @@ package core.db.backup
 import core.db.user.UserManager
 import core.util.HODateTime
 import core.util.HODuration
+import core.util.HTWeek
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
@@ -74,7 +75,7 @@ internal class BackupHelperTest {
         val dbDir = File(testResourcesDir, "db")
         var fileFromPreviousWeek = 0
         val currentDate = HODateTime.now()
-        var htweekFile3 : HODateTime.HTWeek? = null
+        var htweekFile3 : HTWeek? = null
 
         // Create backup files for the last 5 days
         (1..5).forEach { i ->

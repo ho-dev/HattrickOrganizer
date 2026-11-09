@@ -68,9 +68,9 @@ public class Match {
         matchType = matchInfo.getMatchTypeExtended();
         matchDate = matchInfo.getMatchSchedule();
 
-        var htweek = matchDate.toLocaleHTWeek();
-        week = htweek.week;
-        season = htweek.season;
+        var htweek = matchDate.toLocalHTWeek();
+        week = htweek.week();
+        season = htweek.season();
     }
 
     /**
@@ -209,7 +209,7 @@ public class Match {
                 ", matchDate = " + matchDate +
                 "]";
     }
-    
+
     public boolean isHome() {
         return (getHomeId() == SystemManager.getActiveTeamId());
     }

@@ -58,8 +58,8 @@ public class WorldDetailLeague  extends AbstractTable.Storable {
 		if (model == null) return false; // Without model do NOT download world details
 		if (allLeagues == null || allLeagues.isEmpty()) return true;
 		if (latestDownload.getValue() != null) {
-			var latestDownloadSeason = HODateTime.fromHT(latestDownload.getValue()).toHTWeek().season;
-			return HODateTime.now().toHTWeek().season > latestDownloadSeason;
+			var latestDownloadSeason = HODateTime.fromHT(latestDownload.getValue()).toHTWeek().season();
+			return HODateTime.now().toHTWeek().season() > latestDownloadSeason;
 		}
 		return true;
 	}

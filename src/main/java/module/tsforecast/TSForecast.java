@@ -297,7 +297,7 @@ public class TSForecast extends LazyImagePanel implements ActionListener, ItemLi
 						|| (m_LoepiForecast.getMatchType() == MatchType.CUP && bshowCupMatches)
 						|| (m_LoepiForecast.getMatchType() == MatchType.QUALIFICATION && bshowQualMatches)) {
 
-					TeamAttitudeEditor teamAttitudeEditor = new TeamAttitudeEditor(m_LoepiForecast.getDate().toLocaleDate(),
+					TeamAttitudeEditor teamAttitudeEditor = new TeamAttitudeEditor(m_LoepiForecast.getDate().toLocalDate(),
 							m_LoepiForecast.getTooltip(), iCmdID, m_LoepiForecast.getAttitude(),
 							m_LoepiForecast.getMatchType());
 					teamAttitudeEditor.addActionListener(this);
