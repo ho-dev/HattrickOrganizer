@@ -73,7 +73,7 @@ data class AmountOfMoney(var swedishKrona: BigDecimal) {
                 currencyFormatter!!.parse(v)
             } catch (_: Exception) {
                 try {
-                    Helper.getNumberFormat(0).parse(v)
+                    Integer.parseInt(v)
                 } catch (ex: Exception) {
                     HOLogger.instance().error(Helper::class.java, "error parsing currency $ex")
                     return null
