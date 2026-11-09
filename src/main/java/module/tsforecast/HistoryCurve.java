@@ -95,7 +95,7 @@ public class HistoryCurve extends Curve {
                     var teamAttitude = (isHomeTeam ? details.getHomeEinstellung() : details.getGuestEinstellung());
                     if  (teamAttitude == EINSTELLUNG_UNBEKANNT) {
                         // Unknown team attitude happens if the match details were not downloaded for this match
-                        HOLogger.instance().warning(this.getClass(), "Missing details of match:  %s - %s from %s".formatted(match.getHomeTeamName(), match.getGuestTeamName(), match.getMatchSchedule().toLocaleDateTime()));
+                        HOLogger.instance().warning(this.getClass(), "Missing details of match:  %s - %s from %s".formatted(match.getHomeTeamName(), match.getGuestTeamName(), match.getMatchSchedule().toLocalDateTime()));
                         teamAttitude = EINSTELLUNG_NORMAL;
                     }
 					Curve.Point pNextLeagueMatch = new Point(
