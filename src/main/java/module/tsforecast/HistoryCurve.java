@@ -25,7 +25,7 @@ import static core.model.match.IMatchDetails.EINSTELLUNG_UNBEKANNT;
  *history :
  *19.03.06  Version 0.1
  *28.08.06  Version 0.11 rebuilt
- *18.02.07  Version 0.2  optomized SQL-statements
+ *18.02.07  Version 0.2  optimized SQL-statements
  *
  *
  */
