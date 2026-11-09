@@ -319,7 +319,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
         var arrival = m_clPlayer.getArrivalDate();
         if ( arrival != null ) {
             var weeks = HODuration.between(arrival, HODateTime.now()).getTotalWeeks();
-            String arrivalDate = arrival.toLocaleDateTime() + " (" + weeks + " " + TranslationFacility.tr("Wochen") + ")";
+            String arrivalDate = arrival.toLocalDateTime() + " (" + weeks + " " + TranslationFacility.tr("Wochen") + ")";
             m_jlInTeamSince.setText(TranslationFacility.tr("ImTeamSeit") + " " + arrivalDate);
         }
         else {
@@ -1142,7 +1142,7 @@ public final class PlayerDetailsPanel extends ImagePanel implements Refreshable,
 
         public void update(int i, HODateTime matchDate, String matchLabel, Icon matchTypeIcon, String matchPosition,
                            String matchRating, int matchID){
-            lMatchDate.get(i).setText(HODateTime.toLocaleDateTime(matchDate));
+            lMatchDate.get(i).setText(HODateTime.toLocalDateTime(matchDate));
 
             lMatchLabel.get(i).setText(matchLabel);
             lMatchLabel.get(i).setIcon(matchTypeIcon);

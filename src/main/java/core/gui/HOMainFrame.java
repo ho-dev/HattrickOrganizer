@@ -485,7 +485,7 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 			if (JOptionPane.showConfirmDialog(this,
 				TranslationFacility.tr("subskill.Recalc.7w") + "\n" +
 					TranslationFacility.tr("subskill.Recalc.1stTrainingweek") + ": " +
-					from.toLocaleHTWeek().toString() + "\n" +
+					from.toLocalHTWeek().getDisplayString() + "\n" +
 					TranslationFacility.tr("subskill.Recalc.Start"),
 				Helper.getTranslation("ls.menu.file.subskillrecalculation7weeks"), JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
 				HOVerwaltung.instance().recalcSubskills(true, from.toDbTimestamp());

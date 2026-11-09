@@ -90,7 +90,7 @@ public class HistoryCurve extends Curve {
 				var details = match.getMatchdetails();
 				if (details != null) {
                     var sortDate = match.getMatchSchedule();
-                    var matchDay = sortDate.toHTWeek().week;
+                    var matchDay = sortDate.toHTWeek().week();
                     var isHomeTeam = ibasics.getTeamId() == match.getHomeTeamID();
                     var teamAttitude = (isHomeTeam ? details.getHomeEinstellung() : details.getGuestEinstellung());
                     if  (teamAttitude == EINSTELLUNG_UNBEKANNT) {

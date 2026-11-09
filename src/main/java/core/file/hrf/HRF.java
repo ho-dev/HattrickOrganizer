@@ -8,7 +8,7 @@ import core.util.HODateTime;
  * hattrick/HO file information
  */
 public final class HRF extends AbstractTable.Storable {
-	
+
     //~ Instance fields ----------------------------------------------------------------------------
 
 	private int hrfId = -1;
@@ -20,12 +20,12 @@ public final class HRF extends AbstractTable.Storable {
 	 * Creates a new Hrf object.
 	 *
 	 */
-	public HRF() {						
+	public HRF() {
 	}
-	
+
 	/**
 	 * Creates a new Hrf object.
-	 * 
+	 *
 	 * @param _hrfId database key
 	 * @param _datum creation date is used as filename
 	 */
@@ -51,7 +51,7 @@ public final class HRF extends AbstractTable.Storable {
 	}
 
 	public String getName() {
-		return this.datum.toLocaleDateTime();
+		return this.datum.toLocalDateTime();
 	}
 
 	public void setHrfId(int v) {

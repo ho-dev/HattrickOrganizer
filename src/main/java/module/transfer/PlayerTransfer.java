@@ -5,10 +5,7 @@ import core.db.DBManager;
 import core.gui.HOMainFrame;
 import core.model.HOVerwaltung;
 import core.model.player.Player;
-import core.util.AmountOfMoney;
-import core.util.HODateTime;
-import core.util.HOLogger;
-import core.util.Helper;
+import core.util.*;
 
 import java.math.BigDecimal;
 import java.time.temporal.ChronoUnit;
@@ -79,7 +76,7 @@ public class PlayerTransfer extends AbstractTable.Storable {
 
     /** TSI value of the player at transfer date */
     private int tsi = 0;
-    
+
     private AmountOfMoney motherClubFee;
     private AmountOfMoney previousClubFee;
 
@@ -252,7 +249,7 @@ public class PlayerTransfer extends AbstractTable.Storable {
      * @param commission  Commission income of the week from economy download
      * @param htweek HT week of that commission income
      */
-    public static void downloadMissingTransferCommissions(List<PlayerTransfer> soldPlayers, AmountOfMoney commission, HODateTime.HTWeek htweek) {
+    public static void downloadMissingTransferCommissions(List<PlayerTransfer> soldPlayers, AmountOfMoney commission, HTWeek htweek) {
         var startWeek = HODateTime.fromHTWeek(htweek);
         var sum = DBManager.instance().getSumTransferCommissions(startWeek);
         if(!sum.equals( commission)){
@@ -389,7 +386,7 @@ public class PlayerTransfer extends AbstractTable.Storable {
         } else if (playerId != -1) {
             HODateTime start = HODateTime.now();
             List<Player> playerInfos = loadPLayerInfosAtTransferDate(isPurchase);
-            HOLogger.instance().debug(getClass(), this.getPlayerName() + " loaded candidate count: " + playerInfos.size() + " Started: " + start.toLocaleDateTime() + " Duration: " + HODateTime.between(start, HODateTime.now()).toString());
+            HOLogger.instance().debug(getClass(), this.getPlayerName() + " loaded candidate count: " + playerInfos.size() + " Started: " + start.toLocalDateTime() + " Duration: " + HODateTime.between(start, HODateTime.now()).toString());
             if (playerInfos.size() > 1) {
                 // find most probable candidate
                 if (isPurchase) {

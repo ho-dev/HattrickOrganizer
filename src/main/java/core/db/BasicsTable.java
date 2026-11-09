@@ -56,7 +56,7 @@ final class BasicsTable extends AbstractTable {
 		var ret = loadOne(Basics.class, hrfId);
 		if (ret == null) ret = new Basics();
 		else if (ret.getSeasonOffset() == 0) {
-			var season0 = ret.getDatum().toHTWeek().season;
+			var season0 = ret.getDatum().toHTWeek().season();
 			if (season0 != ret.getSeason()) {
 				ret.setSeasonOffset(ret.getSeason() - season0);
 			}

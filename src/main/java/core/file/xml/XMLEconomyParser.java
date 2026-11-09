@@ -23,7 +23,7 @@ public class XMLEconomyParser {
 		// Manually add SponsorsBonus which is missing in version <= 1.3
 		var fetchedDate = HODateTime.fromHT(mapEconomy.get("FetchedDate"));
 		var htWeek = fetchedDate.toHTWeek();
-		var season = htWeek.season;
+		var season = htWeek.season();
 		if (season >= 80){
 			var iSponsorBonusIncome = assessSponsorBonusIncome(mapEconomy, new String[]{"IncomeSpectators", "IncomeSponsors", "IncomeFinancial", "IncomeTemporary", "IncomeSoldPlayers",
 					"IncomeSoldPlayersCommission"}, "IncomeSum");
