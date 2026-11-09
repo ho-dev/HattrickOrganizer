@@ -240,11 +240,11 @@ final class DBUpdater {
 	private void migrateSelectedEscapes(String table, String where, String ... columns){
 		for (var column:columns){
 			var now = HODateTime.now();
-			HOLogger.instance().info(getClass(), "Migrating escapes in column " + column + " of table " + table + " at " + now.toLocaleDateTime()  );
+			HOLogger.instance().info(getClass(), "Migrating escapes in column " + column + " of table " + table + " at " + now.toLocalDateTime()  );
 			connectionManager.executePreparedUpdate(getMigrateEscapesStatement(table, column, where), "§", "\\");
 			var rows = connectionManager.executePreparedUpdate(getMigrateEscapesStatement(table, column, where),    "#", "'");
 			var finished = HODateTime.now();
-			HOLogger.instance().info(getClass(), "Migrating escapes in column " + column + " of table " + table +  " " + rows + " rows finished  at " + finished.toLocaleDateTime() + " duration: " + Duration.between(now.instant, finished.instant).toSeconds() + "sec");
+			HOLogger.instance().info(getClass(), "Migrating escapes in column " + column + " of table " + table +  " " + rows + " rows finished  at " + finished.toLocalDateTime() + " duration: " + Duration.between(now.instant, finished.instant).toSeconds() + "sec");
 		}
 	}
 

@@ -176,7 +176,7 @@ public class ColorLabelEntry extends JLabel implements IHOTableCellEntry {
     }
 
     public ColorLabelEntry(HODateTime date, Color foreground, Color background, int horizontalOrientation){
-        this(date!=null?HODateTime.toEpochSecond(date):Long.MAX_VALUE, date!=null?date.toLocaleDateTime():"", foreground, background, horizontalOrientation);
+        this(date!=null?HODateTime.toEpochSecond(date):Long.MAX_VALUE, date!=null?date.toLocalDateTime():"", foreground, background, horizontalOrientation);
     }
 
     public void setAmountOfMoney (AmountOfMoney amount, boolean switchColor){
@@ -411,7 +411,7 @@ public class ColorLabelEntry extends JLabel implements IHOTableCellEntry {
         return 0;
     }
 
-    //-------------------------------------------------------------    
+    //-------------------------------------------------------------
 
     @Override
     public final void createComponent() {

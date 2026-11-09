@@ -32,7 +32,7 @@ public class YouthTrainingViewTableModel extends HOTableModel {
                 new YouthTrainingColumn(0, "ls.youth.training.date", 200) {
                     @Override
                     public IHOTableCellEntry getTableEntry(YouthTraining youthTraining) {
-                        return new ColorLabelEntry(HODateTime.toEpochSecond(youthTraining.getMatchDate()), HODateTime.toLocaleDateTime(youthTraining.getMatchDate()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        return new ColorLabelEntry(HODateTime.toEpochSecond(youthTraining.getMatchDate()), HODateTime.toLocalDateTime(youthTraining.getMatchDate()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
                 new YouthTrainingColumn(1, "ls.youth.training.hometeam") {

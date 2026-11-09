@@ -12,6 +12,7 @@ import core.model.match.MatchLineupPosition;
 import core.model.match.MatchLineupTeam;
 import core.model.match.Matchdetails;
 import core.util.HODateTime;
+import core.util.HTWeek;
 
 import java.util.Map;
 import java.util.Vector;
@@ -216,7 +217,7 @@ public class YouthTraining extends AbstractTable.Storable {
         if (lineup.getMatchType() == MatchType.YOUTHLEAGUE) {
             return 1.;
         }
-        if (lineup.getMatchDate().isAfter(HODateTime.fromHTWeek(new HODateTime.HTWeek(86,1)))){
+        if (lineup.getMatchDate().isAfter(HODateTime.fromHTWeek(new HTWeek(86, 1)))) {
             return TRAINING_FRIENDLY_FACTOR;
         }
         return TRAINING_FRIENDLY_FACTOR_BEFORE_8601;

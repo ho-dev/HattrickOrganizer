@@ -38,7 +38,7 @@ public class SpecialEventsTableModel extends HOTableModel {
 					public IHOTableCellEntry getTableEntry(MatchRow entry) {
                         var ret = new ColorLabelEntry(
                             HODateTime.toEpochSecond(entry.getMatch().getMatchDate()),
-                            HODateTime.toLocaleDateTime(entry.getMatch().getMatchDate()),
+                            HODateTime.toLocalDateTime(entry.getMatch().getMatchDate()),
                             ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                         Optional.ofNullable(entry.getMatch().getMatchType().getIcon()).ifPresent(ret::setIcon);
 						return ret;

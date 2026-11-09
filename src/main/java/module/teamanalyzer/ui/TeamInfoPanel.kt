@@ -70,14 +70,14 @@ class TeamInfoPanel : JPanel() {
         gbc.gridy++
         val lastLoginDateLabel = JLabel()
         val lastLoginDate = HODateTime.fromHT(details["LastLoginDate"])
-        lastLoginDateLabel.text = if (details["Loginname"].isNullOrBlank()) TranslationFacility.tr("ls.teamanalyzer.na") else lastLoginDate.toLocaleDateTime()
+        lastLoginDateLabel.text = if (details["Loginname"].isNullOrBlank()) TranslationFacility.tr("ls.teamanalyzer.na") else lastLoginDate.toLocalDateTime()
         add(lastLoginDateLabel, gbc)
 
         if (isBot) {
             gbc.gridy++
             val botStatusValueLabel = JLabel()
             val boStatusDate = details["BotSince"]
-            botStatusValueLabel.text = TranslationFacility.tr("ls.teamanalyzer.bot_since", HODateTime.fromHT(boStatusDate).toLocaleDate())
+            botStatusValueLabel.text = TranslationFacility.tr("ls.teamanalyzer.bot_since", HODateTime.fromHT(boStatusDate).toLocalDate())
             add(botStatusValueLabel, gbc)
         }
 

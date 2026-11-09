@@ -1,7 +1,7 @@
 package core.training
 
 import core.util.HODateTime
-import core.util.HODateTime.HTWeek
+import core.util.HTWeek
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 
