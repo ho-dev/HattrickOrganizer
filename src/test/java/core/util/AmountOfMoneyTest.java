@@ -12,7 +12,7 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.params.provider.Arguments.of;
 
-public class AmountOfMoneyTest {
+class AmountOfMoneyTest {
 
     private static Locale originalLocale;
 
