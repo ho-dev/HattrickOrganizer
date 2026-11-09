@@ -72,65 +72,67 @@ public class HistoryCurve extends Curve {
 	}
 
 	private void readPastMatches() {
-		Basics ibasics = HOVerwaltung.instance().getModel().getBasics();
-		Liga iliga = HOVerwaltung.instance().getModel().getLeague();
+        Basics ibasics = HOVerwaltung.instance().getModel().getBasics();
+        Liga iliga = HOVerwaltung.instance().getModel().getLeague();
 
-		Curve.Point pLastLeagueMatch = null;
-		var start = ibasics.getDatum().minus(WEEKS_BACK*7, ChronoUnit.DAYS);
+        Curve.Point pLastLeagueMatch = null;
+        var start = ibasics.getDatum().minus(WEEKS_BACK * 7, ChronoUnit.DAYS);
 
-		// Table PAARUNG is required for SPIELTAG but does only include League
-		// matches
-		// Table MATCHESKURZINFO includes all matches but not SPIELTAG
-		// Table MATCHDETAILS includes EINSTELLUNG
-		if (iliga != null) {
-			// reverse order - loadOfficial loads descending order
-			var matches = dbManager.loadOfficialMatchesBetween(ibasics.getTeamId(), start, ibasics.getDatum()).stream().sorted((i,j)->j.getMatchSchedule().compareTo(i.getMatchSchedule())).toList();
+        // Table PAARUNG is required for SPIELTAG but does only include League
+        // matches
+        // Table MATCHESKURZINFO includes all matches but not SPIELTAG
+        // Table MATCHDETAILS includes EINSTELLUNG
+        if (iliga != null) {
+            // reverse order - loadOfficial loads descending order
+            var matches = dbManager.loadOfficialMatchesBetween(ibasics.getTeamId(), start, ibasics.getDatum()).stream().sorted((i, j) -> j.getMatchSchedule().compareTo(i.getMatchSchedule())).toList();
 
-			for ( var match : matches){
-				var details = match.getMatchdetails();
-				if (details != null) {
-                    var sortDate = match.getMatchSchedule();
-                    var matchDay = sortDate.toHTWeek().week();
-                    var isHomeTeam = ibasics.getTeamId() == match.getHomeTeamID();
-                    var teamAttitude = (isHomeTeam ? details.getHomeEinstellung() : details.getGuestEinstellung());
-                    if  (teamAttitude == EINSTELLUNG_UNBEKANNT) {
+            for (var match : matches) {
+                var sortDate = match.getMatchSchedule();
+                if (sortDate == null) continue; // Corrupt database record (MatchDate IS NOT NULL)
+                var matchDay = sortDate.toHTWeek().week();
+                var isHomeTeam = ibasics.getTeamId() == match.getHomeTeamID();
+                var teamAttitude = EINSTELLUNG_NORMAL;
+                var details = match.getMatchdetails();
+                if (details != null) {
+                    teamAttitude = (isHomeTeam ? details.getHomeEinstellung() : details.getGuestEinstellung());
+                    if (teamAttitude == EINSTELLUNG_UNBEKANNT) {
                         // Unknown team attitude happens if the match details were not downloaded for this match
                         HOLogger.instance().warning(this.getClass(), "Missing details of match:  %s - %s from %s".formatted(match.getHomeTeamName(), match.getGuestTeamName(), match.getMatchSchedule().toLocalDateTime()));
                         teamAttitude = EINSTELLUNG_NORMAL;
                     }
-					Curve.Point pNextLeagueMatch = new Point(
-							sortDate,
-							teamAttitude,
-							matchDay,
-							match.getMatchType()
-					);
+                }
+                Curve.Point pNextLeagueMatch = new Point(
+                    sortDate,
+                    teamAttitude,
+                    matchDay,
+                    match.getMatchType()
+                );
 
-					m_clPoints.add(pNextLeagueMatch);
+                m_clPoints.add(pNextLeagueMatch);
 
-					// correction of matchdays at end of season for non league
-					// matches
-					if (pNextLeagueMatch.m_mtMatchType != MatchType.LEAGUE) {
-						if (pLastLeagueMatch != null) { // first match
-							if (getDiffDays(pLastLeagueMatch, pNextLeagueMatch) <= 7) {
-                                // matchday stays the same
-								continue;
-							}
-							pNextLeagueMatch.m_iMatchDay++;
-							if (getDiffDays(pLastLeagueMatch, pNextLeagueMatch) > 14) {
-								pNextLeagueMatch.m_iMatchDay++;
-							}
-							continue;
-						}
-						if (pNextLeagueMatch.m_iMatchDay == 0) {
-							pNextLeagueMatch.m_iMatchDay = 16;
-						}
-					} else {
-						pLastLeagueMatch = pNextLeagueMatch;
-					}
-				}
-			}
-		}
-	}
+                // correction of matchdays at end of season for non league
+                // matches
+                if (pNextLeagueMatch.m_mtMatchType != MatchType.LEAGUE) {
+                    if (pLastLeagueMatch != null) { // first match
+                        if (getDiffDays(pLastLeagueMatch, pNextLeagueMatch) <= 7) {
+                            // matchday stays the same
+                            continue;
+                        }
+                        pNextLeagueMatch.m_iMatchDay++;
+                        if (getDiffDays(pLastLeagueMatch, pNextLeagueMatch) > 14) {
+                            pNextLeagueMatch.m_iMatchDay++;
+                        }
+                        continue;
+                    }
+                    if (pNextLeagueMatch.m_iMatchDay == 0) {
+                        pNextLeagueMatch.m_iMatchDay = 16;
+                    }
+                } else {
+                    pLastLeagueMatch = pNextLeagueMatch;
+                }
+            }
+        }
+    }
 
 	private void fillupSpirit() {
 		if (!m_clPoints.isEmpty()) {
