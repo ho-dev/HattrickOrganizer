@@ -91,8 +91,8 @@ public class EffectDAO {
                 }
                 while (tDateset.next()) {
                     var trainDate = HODateTime.fromDbTimestamp(tDateset.getTimestamp(3));
-                    var htWeek =trainDate.toLocaleHTWeek();
-                    trainingDates.add(new TrainWeekEffect(htWeek.week, htWeek.season, tDateset.getInt(1), first_in_week));
+                    var htWeek = trainDate.toLocalHTWeek();
+                    trainingDates.add(new TrainWeekEffect(htWeek, tDateset.getInt(1), first_in_week));
                     first_in_week = tDateset.getInt(1);
                 }
 
@@ -150,7 +150,7 @@ public class EffectDAO {
                 }
 
                 // Set amount of skillups for this training week
-                String key = week.getHattrickSeason() + "-" + week.getHattrickWeek(); //$NON-NLS-1$
+                String key = week.getHattrickWeek().season() + "-" + week.getHattrickWeek().week(); //$NON-NLS-1$
 
                 if (weeklySkillups.containsKey(key)) {
 

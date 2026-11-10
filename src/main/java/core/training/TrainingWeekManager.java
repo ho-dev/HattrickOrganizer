@@ -118,8 +118,8 @@ public class TrainingWeekManager {
 
 			// when daylight saving time changes, the interval between two trainings is not exactly 7 days,
 			// so we need to calculate a ht week instance
-			var htWeek = currDate.toLocaleHTWeek();
-			var training = trainingsInDB.get(htWeek.sinceOrigin());
+			var htWeek = currDate.toLocalHTWeek();
+			var training = trainingsInDB.get(htWeek.weeksSinceLeagueStart());
 			if (training != null) {
 				if (includeMatches) {
 					training.loadMatches();
@@ -159,7 +159,7 @@ public class TrainingWeekManager {
 		HashMap<Long, TrainingPerWeek> output = new HashMap<>();
 		var startDate = m_StartDate.plusDaysAtSameLocalTime(7);
 		for (var trainingPerWeek : DBManager.instance().loadTrainingPerWeek(startDate.toDbTimestamp(), true)) {
-			output.put(trainingPerWeek.getTrainingDate().toLocaleHTWeek().sinceOrigin(), trainingPerWeek);
+			output.put(trainingPerWeek.getTrainingDate().toLocalHTWeek().weeksSinceLeagueStart(), trainingPerWeek);
 		}
 		return output;
 	}

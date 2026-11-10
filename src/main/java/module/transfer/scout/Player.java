@@ -429,7 +429,7 @@ public class Player {
     public final int getWing() {
         return wing;
     }
-    
+
     /**
      * Setter for agreeability
      *
@@ -515,7 +515,7 @@ public class Player {
     public final int getLoyalty() {
         return loyalty;
     }
-    
+
     /**
      * Setter for homegrown
      *
@@ -533,7 +533,7 @@ public class Player {
     public final boolean isHomwGrown() {
         return homegrown;
     }
-    
+
     /**
      * Creates a string representation of the object
      *
@@ -549,7 +549,7 @@ public class Player {
         buffer.append(", TSI = ").append(tsi);
         buffer.append(", Age = ").append(age).append(".").append(ageDays);
         buffer.append(", expiryDate = ");
-        if ( expiryDate!= null) buffer.append(expiryDate.toLocaleDateTime());
+        if ( expiryDate!= null) buffer.append(expiryDate.toLocalDateTime());
         buffer.append(", experience = ").append(experience);
         buffer.append(", form = ").append(form);
         buffer.append(", stamina = ").append(stamina);

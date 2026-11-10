@@ -338,7 +338,7 @@ public final class UserColumnFactory {
             @Override
             public IHOTableCellEntry getTableEntry(MatchKurzInfo match) {
                 return new ColorLabelEntry(match.getMatchSchedule().instant.getEpochSecond(),
-                        match.getMatchSchedule().toLocaleDateTime(),
+                        match.getMatchSchedule().toLocalDateTime(),
                         ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD,
                         SwingConstants.LEFT);
             }
@@ -346,7 +346,7 @@ public final class UserColumnFactory {
             @Override
             public IHOTableCellEntry getTableEntry(PlayerMatchCBItem spielerCBItem) {
                 return new ColorLabelEntry(spielerCBItem.getMatchdate().instant.getEpochSecond(),
-                        HODateTime.toLocaleDateTime(spielerCBItem.getMatchdate()),
+                        HODateTime.toLocalDateTime(spielerCBItem.getMatchdate()),
                         ColorLabelEntry.FG_STANDARD,
                         ColorLabelEntry.BG_STANDARD, SwingConstants.CENTER);
             }
@@ -1019,7 +1019,7 @@ public final class UserColumnFactory {
                                 text += "<= ";
                                 break;
                         }
-                        text += player.getWhenHealthy().toLocaleDateTime();
+                        text += player.getWhenHealthy().toLocalDateTime();
                         sortValue += player.getWhenHealthy().getInstant().getEpochSecond();
                     }
                     return new ColorLabelEntry(sortValue, text, ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);

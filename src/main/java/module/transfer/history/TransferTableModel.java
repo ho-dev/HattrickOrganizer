@@ -35,7 +35,7 @@ public class TransferTableModel extends HOTableModel {
                 new TransferTableColumn(id++,"Datum") {
                     @Override
                     public IHOTableCellEntry getTableEntry(PlayerTransfer transfer) {
-                        return new ColorLabelEntry(HODateTime.toEpochSecond(transfer.getDate()), transfer.getDate().toLocaleDateTime(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        return new ColorLabelEntry(HODateTime.toEpochSecond(transfer.getDate()), transfer.getDate().toLocalDateTime(), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
                 new TransferTableColumn(id++,"Season") {

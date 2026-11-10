@@ -4,6 +4,7 @@ import core.db.AbstractTable;
 import core.db.user.UserManager;
 import core.util.HODateTime;
 import core.util.HOLogger;
+import core.util.HTWeek;
 
 import java.time.format.DateTimeParseException;
 import java.util.Properties;
@@ -261,7 +262,7 @@ public final class Basics extends AbstractTable.Storable {
     }
 
     public HODateTime getHattrickWeek() {
-        var week = new HODateTime.HTWeek(this.m_iSeason - this.m_iSeasonOffset, this.m_iSpieltag);
+        var week = new HTWeek(this.m_iSeason - this.m_iSeasonOffset, this.m_iSpieltag);
         return HODateTime.fromHTWeek(week);
     }
 

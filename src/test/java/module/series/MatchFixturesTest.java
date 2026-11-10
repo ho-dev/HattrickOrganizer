@@ -4,6 +4,7 @@ import core.file.xml.TeamStats;
 import core.model.series.LigaTabelle;
 import core.model.series.Paarung;
 import core.util.HODateTime;
+import core.util.HTWeek;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -80,7 +81,7 @@ class MatchFixturesTest {
 
     private static List<Paarung> createFixtures() {
         var teams = create8Teams();
-        return MatchFixtures.createFixtures(HODateTime.fromHTWeek(new HODateTime.HTWeek(89, 1)), teams);
+        return MatchFixtures.createFixtures(HODateTime.fromHTWeek(new HTWeek(89, 1)), teams);
     }
 
     private static void assertTableEquals(List<List<Integer>> expectedTable, LigaTabelle table) {
@@ -181,7 +182,7 @@ class MatchFixturesTest {
     @Test
     void createSeriesFixtures() {
         var teams = create8Teams();
-        var fixtures = MatchFixtures.createFixtures(HODateTime.fromHTWeek(new HODateTime.HTWeek(89, 1)), teams);
+        var fixtures = MatchFixtures.createFixtures(HODateTime.fromHTWeek(new HTWeek(89, 1)), teams);
 
         /*
         Spielplan

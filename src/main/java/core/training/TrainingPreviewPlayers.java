@@ -9,6 +9,7 @@ import core.model.match.MatchStatistics;
 import core.model.player.IMatchRoleID;
 import core.model.player.Player;
 import core.util.HODateTime;
+import core.util.HTWeek;
 import module.lineup.Lineup;
 import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
@@ -108,7 +109,7 @@ public class TrainingPreviewPlayers implements Refreshable {
             } else {
                 nextWeekWeek++;
             }
-            var hattrickDate = HODateTime.fromHTWeek(new HODateTime.HTWeek(nextWeekSaison, nextWeekWeek));
+            var hattrickDate = HODateTime.fromHTWeek(new HTWeek(nextWeekSaison, nextWeekWeek));
             var nextTraining = DBManager.instance().getFutureTraining(HODateTime.toDbTimestamp(hattrickDate));
             if ( nextTraining != null) {
                 nextWeekTraining = nextTraining.getTrainingType();

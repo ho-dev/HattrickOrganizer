@@ -58,13 +58,13 @@ public class YouthPlayerOverviewTableModel extends HOTableModel {
                 new YouthPlayerColumn("ls.youth.player.arrival") {
                     @Override
                     public IHOTableCellEntry getTableEntry(YouthPlayer player) {
-                        return new ColorLabelEntry(HODateTime.toEpochSecond(player.getArrivalDate()), HODateTime.toLocaleDateTime(player.getArrivalDate()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        return new ColorLabelEntry(HODateTime.toEpochSecond(player.getArrivalDate()), HODateTime.toLocalDateTime(player.getArrivalDate()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
                 new YouthPlayerColumn("ls.youth.player.lastmatchdate") {
                     @Override
                     public IHOTableCellEntry getTableEntry(YouthPlayer player) {
-                        return new ColorLabelEntry(HODateTime.toEpochSecond(player.getYouthMatchDate()), HODateTime.toLocaleDateTime(player.getYouthMatchDate()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
+                        return new ColorLabelEntry(HODateTime.toEpochSecond(player.getYouthMatchDate()), HODateTime.toLocalDateTime(player.getYouthMatchDate()), ColorLabelEntry.FG_STANDARD, ColorLabelEntry.BG_STANDARD, SwingConstants.LEFT);
                     }
                 },
                 new YouthPlayerColumn("ls.youth.player.canBePromotedIn") {

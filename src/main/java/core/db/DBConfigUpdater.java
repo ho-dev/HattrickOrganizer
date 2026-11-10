@@ -97,7 +97,7 @@ final class DBConfigUpdater {
 				for(TrainingPerWeek futureTrainingDB : futureTrainingsInDB){
 
 					var trainingWeek = futureTrainingDB.getTrainingDate().toHTWeek();
-					nbDays = ((trainingWeek.season - htWeek.season) * 16 + (trainingWeek.week - htWeek.week)) * 7 ;
+					nbDays = ((trainingWeek.season() - htWeek.season()) * 16 + (trainingWeek.week() - htWeek.week())) * 7 ;
 					if(nbDays <= 0){
 						continue;
 					}
