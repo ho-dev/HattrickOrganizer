@@ -8,45 +8,40 @@ import javax.swing.JPanel;
 
 public final class HOModulesTabbedPane extends HOTabbedPane {
 
-	public HOModulesTabbedPane() {
-		super("Modules");
-	}
+    public HOModulesTabbedPane() {
+        super("Modules");
+    }
 
     @Override
-    protected boolean haveTabsCloseIcons(){
+    protected boolean haveTabsCloseIcons() {
         return true;
     }
 
-	public void showTab(int moduleId) {
-		IModule module = ModuleManager.instance().getModule(moduleId);
-		if (module.hasMainTab()) {
+    public int showTab(int moduleId) {
+        IModule module = ModuleManager.instance().getModule(moduleId);
+        if (module.hasMainTab()) {
             var index = getIndexOfTab(module.getKey());
- 			if (index == -1) {
-				addTab(module.getKey(), module.createTabPanel());
-				setSelectedIndex(getTabCount() - 1);
-			} else {
-				setSelectedIndex(index);
-			}
-		}
-	}
+            if (index == -1) {
+                addTab(module.getKey(), module.createTabPanel());
+                index =  getTabCount() - 1;
+            }
+            setSelectedIndex(index);
+            return index;
+        }
+        return -1;
+    }
 
     public JPanel getModulePanel(int moduleId) {
-		IModule module = ModuleManager.instance().getModule(moduleId);
-		if (module.hasMainTab()) {
-            var index = getIndexOfTab(module.getKey());
-			if (index == -1) {
-				addTab(module.getKey(), module.createTabPanel());
-				setSelectedIndex(getTabCount() - 1);
-				index = getTabCount() - 1;
-			}
-			return (JPanel) getComponent(index);
-		}
-		return null;
-	}
+        var index = showTab(moduleId);
+        if (index != -1) {
+            return (JPanel) getComponent(index);
+        }
+        return null;
+    }
 
 	public boolean isModuleTabVisible(int moduleId) {
 		IModule module = ModuleManager.instance().getModule(moduleId);
-		return indexOfTab(module.getDescription()) != -1;
+		return getIndexOfTab(module.getKey()) != -1;
 	}
 
     @Override

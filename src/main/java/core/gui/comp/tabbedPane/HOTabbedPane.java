@@ -14,35 +14,33 @@ import java.util.Optional;
 
 public abstract class HOTabbedPane extends DraggableTabbedPane {
 
-    private final String tabbedPaneID;
-    private record HOTab(HOTabInfo info, Component component) {}
+    private record HOTab(HOTabInfo info, Component component) {
+    }
+
     private final List<HOTab> tabs = new ArrayList<>();
+    private final String tabbedPaneID;
 
     public HOTabbedPane(String tabbedPaneID) {
         this.tabbedPaneID = tabbedPaneID;
         var dbManager = HOVerwaltung.instance().getPersistenceManager();
         var tabs = dbManager.loadHOTabInfo(tabbedPaneID);
         for (var tab : tabs) {
-            var component =  findComponent(tab.getTabID());
+            var component = findComponent(tab.getTabID());
             if (component.isPresent()) {
-                addTab(tab.getTabID(), component.get(), tab.getTranslationKey());
+                addTab(tab, component.get());
             } else {
                 HOLogger.instance().warning(getClass(), "Component " + tab.getTabID() + " is no longer part of HO!");
             }
         }
     }
 
-    public void addTab(String tabID, Component tabComponent) {
-        addTab(tabID, tabComponent, tabID);
-    }
-
-    public void addTab(String tabID, Component tabComponent, String titleTranslationKey) {
-        if (tabs.stream().anyMatch(i -> i.info().getTabID().equals(tabID))) {
+    private void addTab(HOTabInfo tab, Component tabComponent) {
+        if (tabs.stream().anyMatch(i -> i.info().getTabID().equals(tab.getTabID()))) {
             // already added
             return;
         }
-        tabs.add(new HOTab(new HOTabInfo(tabbedPaneID, tabID, titleTranslationKey, super.getTabCount()), tabComponent));
-        super.addTab(TranslationFacility.tr(titleTranslationKey), tabComponent);
+        tabs.add(new HOTab(tab, tabComponent));
+        super.addTab(TranslationFacility.tr(tab.getTranslationKey()), tabComponent);
         if (haveTabsCloseIcons()) {
             var xOffset = 0;
             // Nimbus skin is the only one to put the icon on the right, which
@@ -54,21 +52,33 @@ public abstract class HOTabbedPane extends DraggableTabbedPane {
         }
     }
 
+    public void addTab(String tabID, Component tabComponent) {
+        addTab(tabID, tabComponent, tabID);
+    }
+
+    public void addTab(String tabID, Component tabComponent, String titleTranslationKey) {
+        addTab(new HOTabInfo(tabbedPaneID, tabID, titleTranslationKey, super.getTabCount()), tabComponent);
+    }
+
     protected boolean haveTabsCloseIcons() {
         return false;
     }
 
     public int getIndexOfTab(String tabID) {
         for (int i = 0; i < getTabCount(); i++) {
-            var component = getComponentAt(i);
-            var tabInfo = StreamUtils.findOne(tabs.stream().filter(tab -> tab.component() == component));
-            if (tabInfo.isPresent()) {
-                if (tabInfo.get().info().getTabID().equals(tabID)) {
+            var hoTab = findHOTab(i);
+            if (hoTab.isPresent()) {
+                if (hoTab.get().info().getTabID().equals(tabID)) {
                     return i;
                 }
             }
         }
         return -1; // Not found
+    }
+
+    private Optional<HOTab> findHOTab(int tabIndex) {
+        var component = getComponentAt(tabIndex);
+        return StreamUtils.findOne(tabs.stream().filter(tab -> tab.component() == component));
     }
 
     public void storeHOTabInfo() {
@@ -77,12 +87,11 @@ public abstract class HOTabbedPane extends DraggableTabbedPane {
 
         // Find current index settings
         for (int i = 0; i < getTabCount(); i++) {
-            var component = getComponentAt(i);
-            var hoTabInfo = StreamUtils.findOne(tabs.stream().filter(tab -> tab.component() == component));
-            if (hoTabInfo.isPresent()) {
-                hoTabInfo.get().info().setTabIndex(i);
+            var hoTab = findHOTab(i);
+            if (hoTab.isPresent()) {
+                hoTab.get().info().setTabIndex(i);
             } else {
-                HOLogger.instance().warning(getClass(), "Component not found " + component);
+                HOLogger.instance().warning(getClass(), "Component not found " + getComponentAt(i));
             }
         }
 
