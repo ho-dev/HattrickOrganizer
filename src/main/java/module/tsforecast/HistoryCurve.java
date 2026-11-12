@@ -88,17 +88,18 @@ public class HistoryCurve extends Curve {
 
             for (var match : matches) {
                 var sortDate = match.getMatchSchedule();
-                if (sortDate == null) continue; // Corrupt database record (MatchDate IS NOT NULL)
+                if (sortDate == null) {
+                    continue;
+                } // Corrupt database record (MatchDate IS NOT NULL)
                 var matchDay = sortDate.toHTWeek().week();
-                var isHomeTeam = ibasics.getTeamId() == match.getHomeTeamID();
+                final boolean isHomeTeam = ibasics.getTeamId() == match.getHomeTeamID();
                 var teamAttitude = EINSTELLUNG_NORMAL;
                 var details = match.getMatchdetails();
                 if (details != null) {
-                    teamAttitude = (isHomeTeam ? details.getHomeEinstellung() : details.getGuestEinstellung());
+                    teamAttitude = isHomeTeam ? details.getHomeEinstellung() : details.getGuestEinstellung();
                     if (teamAttitude == EINSTELLUNG_UNBEKANNT) {
                         // Unknown team attitude happens if the match details were not downloaded for this match
-                        HOLogger.instance().warning(this.getClass(), "Missing details of match:  %s - %s from %s".formatted(match.getHomeTeamName(), match.getGuestTeamName(), match.getMatchSchedule().toLocalDateTime()));
-                        teamAttitude = EINSTELLUNG_NORMAL;
+                        HOLogger.instance().warning(this.getClass(), "Missing details of match (ID=%d): %s - %s from %s".formatted(match.getMatchID(), match.getHomeTeamName(), match.getGuestTeamName(), match.getMatchSchedule().toLocalDateTime()));                        teamAttitude = EINSTELLUNG_NORMAL;
                     }
                 }
                 Curve.Point pNextLeagueMatch = new Point(
