@@ -75,6 +75,7 @@ public class DraggableTabbedPane extends JTabbedPane {
         });
     }
 
+    @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         // Are we dragging?

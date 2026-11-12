@@ -64,16 +64,16 @@ public abstract class HOTabbedPane extends DraggableTabbedPane {
         return false;
     }
 
-    public int getIndexOfTab(String tabID) {
-        for (int i = 0; i < getTabCount(); i++) {
-            var hoTab = findHOTab(i);
+    public Optional<Integer> getIndexOfTab(String tabID) {
+        for (int index = 0; index < getTabCount(); index++) {
+            var hoTab = findHOTab(index);
             if (hoTab.isPresent()) {
                 if (hoTab.get().info().getTabID().equals(tabID)) {
-                    return i;
+                    return Optional.of(index);
                 }
             }
         }
-        return -1; // Not found
+        return Optional.empty(); // Not found
     }
 
     private Optional<HOTab> findHOTab(int tabIndex) {
