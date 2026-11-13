@@ -14,6 +14,8 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 import java.util.zip.ZipFile
+import kotlin.collections.isNotEmpty
+import kotlin.collections.toList
 
 internal class BackupHelperTest {
 
@@ -76,6 +78,17 @@ internal class BackupHelperTest {
         var fileFromPreviousWeek = 0
         val currentDate = HODateTime.now()
         var htweekFile3 : HTWeek? = null
+
+        // Clean the db directory
+        val files = dbDir.listFiles { file: File ->
+            file.isFile && file.extension == HOZip.zipExt
+        }
+        if (files.isNotEmpty()) {
+            val fileList = files.toList()
+            fileList.forEach { file ->
+                file.delete()
+            }
+        }
 
         // Create backup files for the last 5 days
         (1..5).forEach { i ->
