@@ -243,6 +243,7 @@ public class XMLPlayersParser {
     }
 
     private static  List<HallOfFamePlayer> createHallOfFamesPlayerList(Document doc) {
+        if (doc == null) return null;
         var root = doc.getDocumentElement();
         var ret = new ArrayList<HallOfFamePlayer>();
         // <Players> # error in chpp api doc
