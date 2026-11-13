@@ -177,4 +177,8 @@ public interface PersistenceManager {
      * @return List of HOTabInfo (Index of the tab in pane)
      */
     List<HOTabInfo> loadHOTabInfo(String tabbedPaneID);
+
+    void storeHOTabInfo(List<HOTabInfo> list);
+
+    void deleteHOTabInfo(List<HOTabInfo> list);
 }

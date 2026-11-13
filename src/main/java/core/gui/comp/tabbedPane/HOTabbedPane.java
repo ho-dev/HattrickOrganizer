@@ -96,8 +96,9 @@ public abstract class HOTabbedPane extends DraggableTabbedPane {
         }
 
         // Store tab info
-        DBManager.instance().storeHOTabInfo(tabs.stream().map(HOTab::info).filter(info -> info.getTabIndex() != -1).toList());
-        DBManager.instance().deleteHOTabInfo(tabs.stream().map(HOTab::info).filter(info -> info.getTabIndex() == -1).toList());
+        var dbManager = HOVerwaltung.instance().getPersistenceManager();
+        dbManager.storeHOTabInfo(tabs.stream().map(HOTab::info).filter(info -> info.getTabIndex() != -1).toList());
+        dbManager.deleteHOTabInfo(tabs.stream().map(HOTab::info).filter(info -> info.getTabIndex() == -1).toList());
     }
 
     protected abstract Optional<Component> findComponent(String tabID);
