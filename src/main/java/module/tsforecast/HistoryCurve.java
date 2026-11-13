@@ -6,15 +6,11 @@ import core.model.enums.MatchType;
 import core.model.misc.Basics;
 import core.model.series.Liga;
 import core.util.HODateTime;
-import core.util.HOLogger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.temporal.ChronoUnit;
 import java.util.Collections;
-
-import static core.model.match.IMatchDetails.EINSTELLUNG_NORMAL;
-import static core.model.match.IMatchDetails.EINSTELLUNG_UNBEKANNT;
 
 /*
  * HistoryCurve.java
