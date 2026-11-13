@@ -87,49 +87,39 @@ public class HistoryCurve extends Curve {
             var matches = dbManager.loadOfficialMatchesBetween(ibasics.getTeamId(), start, ibasics.getDatum()).stream().sorted((i, j) -> j.getMatchSchedule().compareTo(i.getMatchSchedule())).toList();
 
             for (var match : matches) {
-                var sortDate = match.getMatchSchedule();
-                if (sortDate == null) {
-                    continue;
-                } // Corrupt database record (MatchDate IS NOT NULL)
-                var matchDay = sortDate.toHTWeek().week();
-                final boolean isHomeTeam = ibasics.getTeamId() == match.getHomeTeamID();
-                var teamAttitude = EINSTELLUNG_NORMAL;
                 var details = match.getMatchdetails();
-                if (details != null) {
-                    teamAttitude = isHomeTeam ? details.getHomeEinstellung() : details.getGuestEinstellung();
-                    if (teamAttitude == EINSTELLUNG_UNBEKANNT) {
-                        // Unknown team attitude happens if the match details were not downloaded for this match
-                        HOLogger.instance().warning(this.getClass(), "Missing details of match (ID=%d): %s - %s from %s".formatted(match.getMatchID(), match.getHomeTeamName(), match.getGuestTeamName(), match.getMatchSchedule().toLocalDateTime()));                        teamAttitude = EINSTELLUNG_NORMAL;
-                    }
-                }
-                Curve.Point pNextLeagueMatch = new Point(
-                    sortDate,
-                    teamAttitude,
-                    matchDay,
-                    match.getMatchType()
-                );
+                if (details != null && details.getMatchDate() != null) {
+                    var sortDate = match.getMatchSchedule();
+                    var matchDay = sortDate.toHTWeek().week();
+                    Curve.Point pNextLeagueMatch = new Point(
+                        sortDate,
+                        ibasics.getTeamId() == match.getHomeTeamID() ? details.getHomeEinstellung() : details.getGuestEinstellung(),
+                        matchDay,
+                        match.getMatchType()
+                    );
 
-                m_clPoints.add(pNextLeagueMatch);
+                    m_clPoints.add(pNextLeagueMatch);
 
-                // correction of matchdays at end of season for non league
-                // matches
-                if (pNextLeagueMatch.m_mtMatchType != MatchType.LEAGUE) {
-                    if (pLastLeagueMatch != null) { // first match
-                        if (getDiffDays(pLastLeagueMatch, pNextLeagueMatch) <= 7) {
-                            // matchday stays the same
+                    // correction of matchdays at end of season for non league
+                    // matches
+                    if (pNextLeagueMatch.m_mtMatchType != MatchType.LEAGUE) {
+                        if (pLastLeagueMatch != null) { // first match
+                            if (getDiffDays(pLastLeagueMatch, pNextLeagueMatch) <= 7) {
+                                // matchday stays the same
+                                continue;
+                            }
+                            pNextLeagueMatch.m_iMatchDay++;
+                            if (getDiffDays(pLastLeagueMatch, pNextLeagueMatch) > 14) {
+                                pNextLeagueMatch.m_iMatchDay++;
+                            }
                             continue;
                         }
-                        pNextLeagueMatch.m_iMatchDay++;
-                        if (getDiffDays(pLastLeagueMatch, pNextLeagueMatch) > 14) {
-                            pNextLeagueMatch.m_iMatchDay++;
+                        if (pNextLeagueMatch.m_iMatchDay == 0) {
+                            pNextLeagueMatch.m_iMatchDay = 16;
                         }
-                        continue;
+                    } else {
+                        pLastLeagueMatch = pNextLeagueMatch;
                     }
-                    if (pNextLeagueMatch.m_iMatchDay == 0) {
-                        pNextLeagueMatch.m_iMatchDay = 16;
-                    }
-                } else {
-                    pLastLeagueMatch = pNextLeagueMatch;
                 }
             }
         }

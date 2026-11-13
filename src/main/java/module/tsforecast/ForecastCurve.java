@@ -311,45 +311,45 @@ abstract class ForecastCurve extends Curve {
 	}
 
 	private void readPastMatches() {
-		Basics ibasics = HOVerwaltung.instance().getModel().getBasics();
-		Liga iliga = HOVerwaltung.instance().getModel().getLeague();
-		if (iliga != null) {
-			var start = ibasics.getDatum().minus(WEEKS_BACK*7, ChronoUnit.DAYS).toDbTimestamp();
-			var types = new ArrayList<Integer>();
-			types.add(MatchType.CUP.getId());
-			types.add(MatchType.LEAGUE.getId());
-			var matches = dbManager.getMatchesKurzInfo(ibasics.getTeamId(), MatchKurzInfo.FINISHED, start, types );
+        Basics ibasics = HOVerwaltung.instance().getModel().getBasics();
+        Liga iliga = HOVerwaltung.instance().getModel().getLeague();
+        if (iliga != null) {
+            var start = ibasics.getDatum().minus(WEEKS_BACK * 7, ChronoUnit.DAYS).toDbTimestamp();
+            var types = new ArrayList<Integer>();
+            types.add(MatchType.CUP.getId());
+            types.add(MatchType.LEAGUE.getId());
+            var matches = dbManager.getMatchesKurzInfo(ibasics.getTeamId(), MatchKurzInfo.FINISHED, start, types);
 
-			int iMatchDay;
-			HODateTime maxDate = null;
+            int iMatchDay;
+            HODateTime maxDate = null;
 
-			Curve.Point point;
-			for ( var match : matches){
-				var details = match.getMatchdetails();
-				if ( details != null){
-					var sortDate = match.getMatchSchedule();
-					iMatchDay = sortDate.toLocalHTWeek().week();
-					var attitude = ibasics.getTeamId()==match.getHomeTeamID()?details.getHomeEinstellung():details.getGuestEinstellung();
-					point = new Point(sortDate, attitude, iMatchDay, match.getMatchType(), -1);
-					m_clPoints.add(point);
-					maxDate = point.m_dDate;
-				}
-			}
-			// Add update points
-			// this function reads only league, cup and qualification matches,
-			// therefor has to add all Updatepoints
-			var points = new ArrayList<>(m_clPoints);
-			for ( var p : points){
-				point = p;
-				if (point.m_mtMatchType == MatchType.LEAGUE) {
-					addUpdatePoints(point);
-					if (point.m_iMatchDay == 14) {
-						addEndOfSeasonPoints(point, maxDate);
-					}
-				}
-			}
-		}
-	}
+            Curve.Point point;
+            for (var match : matches) {
+                var details = match.getMatchdetails();
+                if (details != null && details.getMatchDate() != null) {
+                    var sortDate = match.getMatchSchedule();
+                    iMatchDay = sortDate.toLocalHTWeek().week();
+                    var attitude = ibasics.getTeamId() == match.getHomeTeamID() ? details.getHomeEinstellung() : details.getGuestEinstellung();
+                    point = new Point(sortDate, attitude, iMatchDay, match.getMatchType(), -1);
+                    m_clPoints.add(point);
+                    maxDate = point.m_dDate;
+                }
+            }
+            // Add update points
+            // this function reads only league, cup and qualification matches,
+            // therefor has to add all Updatepoints
+            var points = new ArrayList<>(m_clPoints);
+            for (var p : points) {
+                point = p;
+                if (point.m_mtMatchType == MatchType.LEAGUE) {
+                    addUpdatePoints(point);
+                    if (point.m_iMatchDay == 14) {
+                        addEndOfSeasonPoints(point, maxDate);
+                    }
+                }
+            }
+        }
+    }
 
 	private void addUpdatePoints(Point point) {
 		var pointDate=point.m_dDate;
