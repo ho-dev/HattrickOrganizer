@@ -26,7 +26,7 @@ final class BasicsTable extends AbstractTable {
 				ColumnDescriptor.Builder.newInstance().setColumnName("Region").setGetter((b)->((Basics)b).getRegionId()).setSetter((b, v)->((Basics)b).setRegionId((int)v)).setType(Types.INTEGER).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("HasSupporter").setGetter((b)->((Basics)b).isHasSupporter()).setSetter((b, v)->((Basics)b).setHasSupporter((boolean)v)).setType(Types.BOOLEAN).isNullable(false).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("ActivationDate").setGetter((b)-> HODateTime.toDbTimestamp (((Basics)b).getActivationDate())).setSetter((b, v)->((Basics)b).setActivationDate((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(true).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("SeasonOffset").setGetter((b)->((Basics)b).getSeasonOffset()).setSetter((b, v)->((Basics)b).setSeasonOffset((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("SeasonOffset").setGetter(b->((Basics)b).getStoredSeasonOffset()).setSetter((b, v)->((Basics)b).setSeasonOffset((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("YouthTeamName").setGetter((b)->((Basics)b).getYouthTeamName()).setSetter((b, v)->((Basics)b).setYouthTeamName((String)v)).setType(Types.VARCHAR).setLength(127).isNullable(true).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("YouthTeamID").setGetter((b)->((Basics)b).getYouthTeamId()).setSetter((b, v)->((Basics)b).setYouthTeamId((Integer) v)).setType(Types.INTEGER).isNullable(true).build()
 		};
@@ -54,13 +54,20 @@ final class BasicsTable extends AbstractTable {
 	 */
 	Basics loadBasics(int hrfId) {
 		var ret = loadOne(Basics.class, hrfId);
-		if (ret == null) ret = new Basics();
-		else if (ret.getSeasonOffset() == 0) {
-			var season0 = ret.getDatum().toHTWeek().season();
-			if (season0 != ret.getSeason()) {
-				ret.setSeasonOffset(ret.getSeason() - season0);
-			}
-		}
+		if (ret == null) return new Basics();
+		deriveMissingSeasonOffset(ret);
 		return ret;
+	}
+
+	/**
+	 * Rows without a stored season offset (NULL, from before Hattrick reported it) get one
+	 * derived from the download date. A stored 0 is a real offset and stays: deriving it
+	 * from the date is off by one when the download falls between the league's season change
+	 * and HO's fixed Monday changeover (#2587).
+	 */
+	static void deriveMissingSeasonOffset(Basics basics) {
+		if (basics.getStoredSeasonOffset() != null) return;
+		var season0 = basics.getDatum().toHTWeek().season();
+		basics.setSeasonOffset(basics.getSeason() - season0);
 	}
 }
