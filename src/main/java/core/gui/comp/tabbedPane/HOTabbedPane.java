@@ -1,6 +1,5 @@
 package core.gui.comp.tabbedPane;
 
-import core.db.DBManager;
 import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
 import core.util.HOLogger;
@@ -16,6 +15,8 @@ public abstract class HOTabbedPane extends DraggableTabbedPane {
 
     private record HOTab(HOTabInfo info, Component component) {
     }
+
+    public record HOTabComponent(String title, Component component) {}
 
     private final List<HOTab> tabs = new ArrayList<>();
     private final String tabbedPaneID;
@@ -34,13 +35,13 @@ public abstract class HOTabbedPane extends DraggableTabbedPane {
         }
     }
 
-    private void addTab(HOTabInfo tab, Component tabComponent) {
+    private void addTab(HOTabInfo tab, HOTabComponent tabComponent) {
         if (tabs.stream().anyMatch(i -> i.info().getTabID().equals(tab.getTabID()))) {
             // already added
             return;
         }
-        tabs.add(new HOTab(tab, tabComponent));
-        super.addTab(TranslationFacility.tr(tab.getTranslationKey()), tabComponent);
+        tabs.add(new HOTab(tab, tabComponent.component()));
+        super.addTab(tabComponent.title(), tabComponent.component());
         if (haveTabsCloseIcons()) {
             var xOffset = 0;
             // Nimbus skin is the only one to put the icon on the right, which
@@ -57,7 +58,7 @@ public abstract class HOTabbedPane extends DraggableTabbedPane {
     }
 
     public void addTab(String tabID, Component tabComponent, String titleTranslationKey) {
-        addTab(new HOTabInfo(tabbedPaneID, tabID, titleTranslationKey, super.getTabCount()), tabComponent);
+        addTab(new HOTabInfo(tabbedPaneID, tabID, super.getTabCount()), new HOTabComponent(TranslationFacility.tr(titleTranslationKey), tabComponent));
     }
 
     protected boolean haveTabsCloseIcons() {
@@ -101,5 +102,5 @@ public abstract class HOTabbedPane extends DraggableTabbedPane {
         dbManager.deleteHOTabInfo(tabs.stream().map(HOTab::info).filter(info -> info.getTabIndex() == -1).toList());
     }
 
-    protected abstract Optional<Component> findComponent(String tabID);
+    protected abstract Optional<HOTabComponent> findComponent(String tabID);
 }

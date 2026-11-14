@@ -2,21 +2,22 @@ package core.gui.comp.tabbedPane;
 
 import core.db.AbstractTable;
 
+import java.awt.*;
+
 public class HOTabInfo extends AbstractTable.Storable {
     private String tabbedPaneID;
     private String tabID;
-    private String translationKey;
     private int tabIndex;
+    private Component component;
 
     /**
      * constructor is used by AbstractTable
      */
     public HOTabInfo() {}
 
-    public HOTabInfo(String paneID, String tabID, String translationKey, int index) {
+    public HOTabInfo(String paneID, String tabID, int index) {
         this.tabbedPaneID = paneID;
         this.tabID = tabID;
-        this.translationKey = translationKey;
         this.tabIndex = index;
     }
 
@@ -44,11 +45,4 @@ public class HOTabInfo extends AbstractTable.Storable {
         this.tabIndex = tabIndex;
     }
 
-    public String getTranslationKey() {
-        return translationKey;
-    }
-
-    public void setTranslationKey(String translationKey) {
-        this.translationKey = translationKey;
-    }
 }

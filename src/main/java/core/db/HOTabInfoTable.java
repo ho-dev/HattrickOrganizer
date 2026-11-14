@@ -19,7 +19,6 @@ public class HOTabInfoTable extends AbstractTable {
         columns = new ColumnDescriptor[]{
             ColumnDescriptor.Builder.newInstance().setColumnName("tabbedPaneID").setGetter((o) -> ((HOTabInfo) o).getTabbedPaneID()).setSetter((o, v) -> ((HOTabInfo) o).setTabbedPaneID((String) v)).setType(Types.VARCHAR).setLength(256).isPrimaryKey(false).build(),
             ColumnDescriptor.Builder.newInstance().setColumnName("tabID").setGetter((o) -> ((HOTabInfo) o).getTabID()).setSetter((o, v) -> ((HOTabInfo) o).setTabID((String) v)).setType(Types.VARCHAR).setLength(256).isNullable(false).build(),
-            ColumnDescriptor.Builder.newInstance().setColumnName("titleTranslationKey").setGetter((o) -> ((HOTabInfo) o).getTranslationKey()).setSetter((o, v) -> ((HOTabInfo) o).setTranslationKey((String) v)).setType(Types.VARCHAR).setLength(256).isNullable(false).build(),
             ColumnDescriptor.Builder.newInstance().setColumnName("tabIndex").setGetter((o) -> ((HOTabInfo) o).getTabIndex()).setSetter((o, v) -> ((HOTabInfo) o).setTabIndex((int) v)).setType(Types.INTEGER).isNullable(false).build()
         };
     }
