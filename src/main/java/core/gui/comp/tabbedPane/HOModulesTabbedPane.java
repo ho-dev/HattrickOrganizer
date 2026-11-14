@@ -17,7 +17,7 @@ public final class HOModulesTabbedPane extends HOTabbedPane {
         return true;
     }
 
-    private Optional<Integer>  getTab(int moduleId) {
+    private Optional<Integer> getTab(int moduleId) {
         IModule module = ModuleManager.instance().getModule(moduleId);
         if (module.hasMainTab()) {
             var index = getIndexOfTab(module.getKey());
