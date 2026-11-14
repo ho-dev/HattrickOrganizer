@@ -1,6 +1,7 @@
 package core.db;
 
 import core.model.WorldDetailLeague;
+import core.model.enums.Gender;
 import java.sql.Types;
 import java.util.List;
 
@@ -24,6 +25,7 @@ class WorldDetailsTable extends AbstractTable {
 				ColumnDescriptor.Builder.newInstance().setColumnName("CURRENCY_RATE").setGetter((p) -> ((WorldDetailLeague) p).getCurrencyRate()).setSetter((p, v) -> ((WorldDetailLeague) p).setCurrencyRate((String) v)).setType(Types.VARCHAR).setLength(128).isNullable(true).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("DATE_FORMAT").setGetter((p) -> ((WorldDetailLeague) p).getDateFormat()).setSetter((p, v) -> ((WorldDetailLeague) p).setDateFormat((String) v)).setType(Types.VARCHAR).setLength(128).isNullable(true).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("TIME_FORMAT").setGetter((p) -> ((WorldDetailLeague) p).getTimeFormat()).setSetter((p, v) -> ((WorldDetailLeague) p).setTimeFormat((String) v)).setType(Types.VARCHAR).setLength(128).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("LEAGUE_SYSTEM_ID").setGetter(p -> Gender.toId(((WorldDetailLeague) p).getLeagueSystem())).setSetter((p, v) -> ((WorldDetailLeague) p).setLeagueSystem(Gender.fromId((Integer) v))).setType(Types.INTEGER).isNullable(true).build(),
 		};
 	}
 

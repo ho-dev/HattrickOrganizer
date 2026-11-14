@@ -4,6 +4,7 @@ import core.constants.player.PlayerSkill;
 import core.db.AbstractTable;
 import core.db.DBManager;
 import core.file.hrf.HRFStringBuilder;
+import core.model.enums.Gender;
 import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
 import core.model.player.CommentType;
@@ -60,6 +61,12 @@ public class YouthPlayer extends AbstractTable.Storable {
     private int playedMinutes;
     private Double rating;
     private HODateTime youthMatchDate;
+    /**
+     * Hattrick's GenderID. Null for downloads before youthplayerlist 1.3.
+     */
+    @Getter
+    @Setter
+    private Gender gender;
 
     private double progressLastMatch=0;
 
@@ -955,6 +962,7 @@ public class YouthPlayer extends AbstractTable.Storable {
         careerHattricks = getInt(properties, "careerhattricks", 0);
         leagueGoals = getInt(properties, "leaguegoals", 0);
         friendlyGoals = getInt(properties, "friendlygoals", 0);
+        gender = Gender.fromId(getInteger(properties, "genderid"));
         scoutId = getInt(properties, "scoutid", 0);
         scoutingRegionID = getInt(properties, "scoutingregionid", 0);
         scoutName = properties.getProperty("scoutname", "");

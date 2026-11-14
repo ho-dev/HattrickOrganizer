@@ -60,12 +60,12 @@ import java.util.stream.Collectors;
 public class DBManager implements PersistenceManager {
 
 	/** database versions */
-	private static final int DBVersion = 1000; // HO 10.0 version
+	private static final int DB_VERSION = 1100; // HO 11.0 version
 	/**
 	 * Previous db version is used by development versions to ensure that db upgrade will rerun on each
 	 * new installed preliminary version
 	 */
-	private static final int previousDBVersion = 901;
+	private static final int PREVIOUS_DB_VERSION = 1000;
 	private static final double DBConfigVersion = 10d; // HO 10.0 version
 
 	/** 2004-06-14 11:00:00.0 */
@@ -104,8 +104,8 @@ public class DBManager implements PersistenceManager {
 	 * @return the version
 	 */
 	public static int getVersion() {
-		if (HO.isDevelopment()) return previousDBVersion;
-		return DBVersion;
+		if (HO.isDevelopment()) return PREVIOUS_DB_VERSION;
+		return DB_VERSION;
 	}
 
 	/**
@@ -117,34 +117,7 @@ public class DBManager implements PersistenceManager {
 	// INSTANCE ===============================================
 	public static synchronized DBManager instance() {
 		if (m_clInstance == null) {
-
-			String errorMsg = null;
-			try {
-                File dbFolder = getDbFolder();
-				if (!dbFolder.exists()) {
-					File parentFolder = new File(UserManager.instance().getDbParentFolder());
-					boolean dbDirectoryCreated = false;
-					if (!parentFolder.exists() || parentFolder.canWrite()) {
-						dbDirectoryCreated = dbFolder.mkdirs();
-					} else {
-						errorMsg = "Could not initialize the database folder.";
-						errorMsg += "No writing rights to the following directory\n" + parentFolder.getAbsolutePath() + "\n";
-						errorMsg += "You can report this error by opening a new bug ticket on GitHub";
-					}
-					if (!dbDirectoryCreated) {
-						errorMsg = "Could not create the database folder: " + dbFolder.getAbsolutePath();
-					}
-				}
-
-			} catch (Exception e) {
-				errorMsg = "Error encountered during database initialization: \n" + UserManager.instance().getCurrentUser().getDbURL();
-				e.printStackTrace();
-			}
-
-			if (errorMsg != null) {
-				javax.swing.JOptionPane.showMessageDialog(null, errorMsg, "Fatal DB Error", javax.swing.JOptionPane.ERROR_MESSAGE);
-				System.exit(-1);
-			}
+			exitOnDbFolderError();
 
 			// Create new instance
 			m_clInstance = new DBManager();
@@ -154,42 +127,9 @@ public class DBManager implements PersistenceManager {
 			try {
 				m_clInstance.connect();
 			} catch (Exception e) {
-
-				String msg = e.getMessage();
-				boolean recover = true;
-
-				if ((msg.contains("The database is already in use by another process"))	||
-						(e instanceof SQLException &&
-							(((SQLException)e).getErrorCode() == ErrorCode.LOCK_FILE_ACQUISITION_FAILURE ||
-									((SQLException)e).getErrorCode() == ErrorCode.LOCK_FILE_ACQUISITION_FAILURE * -1))) {
-					if ((msg.contains("Permission denied"))
-							|| msg.contains("system cannot find the path")) {
-						msg = "Could not write to database. Make sure you have write access to the HO directory and its sub-directories.\n"
-								+ "If under Windows make sure to stay out of Program Files or similar.";
-					} else {
-						msg = "The database is already in use. You have another HO running\n or the database is still closing. Wait and try again.";
-					}
-					recover = false;
-				} else {
-					msg = "Fatal database error. Exiting HO!\nYou should restore the db-folder from backup or delete that folder.";
-				}
-
-				javax.swing.JOptionPane
-						.showMessageDialog(null, msg, "Fatal DB Error",
-								javax.swing.JOptionPane.ERROR_MESSAGE);
-
-				if (recover) {
-					BackupDialog dialog = new BackupDialog();
-					dialog.setVisible(true);
-					while (dialog.isVisible()) {
-						// wait
-					}
-				}
-
-				HOLogger.instance().error(DBManager.class, msg);
-
-				System.exit(-1);
+				exitOnConnectError(e);
 			}
+
 
 			// Does DB already exists?
 			final boolean existsDB = m_clInstance.checkIfDBExists();
@@ -210,12 +150,85 @@ public class DBManager implements PersistenceManager {
 			}
 			else {
 				// Check if there are any updates on the database to be done.
-				dbUpdater.updateDB(DBVersion);
+				dbUpdater.updateDB(DB_VERSION);
 			}
 
 			HOLogger.instance().info(DBManager.class, "instance " + UserManager.instance().getCurrentUser().getDbURL() + "; parent folder: " + UserManager.instance().getDbParentFolder());
 		}
 		return m_clInstance;
+	}
+
+	/**
+	 * Shows a fatal error and exits if the database folder is missing and cannot be created.
+	 */
+	private static void exitOnDbFolderError() {
+		String errorMsg = null;
+		try {
+			File dbFolder = getDbFolder();
+			if (!dbFolder.exists()) {
+				File parentFolder = new File(UserManager.instance().getDbParentFolder());
+				boolean dbDirectoryCreated = false;
+				if (!parentFolder.exists() || parentFolder.canWrite()) {
+					dbDirectoryCreated = dbFolder.mkdirs();
+				} else {
+					errorMsg = "Could not initialize the database folder.";
+					errorMsg += "No writing rights to the following directory\n" + parentFolder.getAbsolutePath() + "\n";
+					errorMsg += "You can report this error by opening a new bug ticket on GitHub";
+				}
+				if (!dbDirectoryCreated) {
+					errorMsg = "Could not create the database folder: " + dbFolder.getAbsolutePath();
+				}
+			}
+
+		} catch (Exception e) {
+			errorMsg = "Error encountered during database initialization: \n" + UserManager.instance().getCurrentUser().getDbURL();
+			HOLogger.instance().error(DBManager.class, e);
+		}
+
+		if (errorMsg != null) {
+			javax.swing.JOptionPane.showMessageDialog(null, errorMsg, "Fatal DB Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+			System.exit(-1);
+		}
+	}
+
+	/**
+	 * Shows why the database could not be opened, offers to restore a backup where that can help, and exits.
+	 */
+	private static void exitOnConnectError(Exception e) {
+		String msg = e.getMessage();
+		boolean recover = true;
+
+		if ((msg.contains("The database is already in use by another process"))	||
+				(e instanceof SQLException sqlException &&
+					(sqlException.getErrorCode() == ErrorCode.LOCK_FILE_ACQUISITION_FAILURE ||
+							sqlException.getErrorCode() == ErrorCode.LOCK_FILE_ACQUISITION_FAILURE * -1))) {
+			if ((msg.contains("Permission denied"))
+					|| msg.contains("system cannot find the path")) {
+				msg = "Could not write to database. Make sure you have write access to the HO directory and its sub-directories.\n"
+						+ "If under Windows make sure to stay out of Program Files or similar.";
+			} else {
+				msg = "The database is already in use. You have another HO running\n or the database is still closing. Wait and try again.";
+			}
+			recover = false;
+		} else {
+			msg = "Fatal database error. Exiting HO!\nYou should restore the db-folder from backup or delete that folder.";
+		}
+
+		javax.swing.JOptionPane
+				.showMessageDialog(null, msg, "Fatal DB Error",
+						javax.swing.JOptionPane.ERROR_MESSAGE);
+
+		if (recover) {
+			BackupDialog dialog = new BackupDialog();
+			dialog.setVisible(true);
+			while (dialog.isVisible()) {
+				Thread.onSpinWait();
+			}
+		}
+
+		HOLogger.instance().error(DBManager.class, msg);
+
+		System.exit(-1);
 	}
 
     public static File getDbFolder() {

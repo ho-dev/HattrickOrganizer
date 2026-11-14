@@ -31,6 +31,7 @@ import static org.apache.commons.lang3.StringUtils.EMPTY;
 public class HRFStringBuilder {
 
     private static final String HO_DATE_TIME_NOT_SET = EMPTY;
+    private static final String GENDER_ID = "GenderID";
 
     private StringBuilder basicsStringBuilder;
     private StringBuilder clubStringBuilder;
@@ -143,6 +144,8 @@ public class HRFStringBuilder {
         appendKeyValue(basicsStringBuilder, "leagueID", teamdetailsDataMap.get("LeagueID"));
         appendKeyValue(basicsStringBuilder, "regionID", teamdetailsDataMap.get("RegionID"));
         appendKeyValue(basicsStringBuilder, "hasSupporter", teamdetailsDataMap.get("HasSupporter"));
+        appendKeyValue(basicsStringBuilder, "genderID", teamdetailsDataMap.get(GENDER_ID));
+        appendKeyValue(basicsStringBuilder, "leagueSystemID", teamdetailsDataMap.get("LeagueSystemID"));
         appendKeyValue(basicsStringBuilder, "LastLeagueStatisticsMatchRound", 0);        //TODO: fix this
         appendKeyValue(basicsStringBuilder, "LastLeagueStatisticsSeason", 0);        //TODO: fix this
     }
@@ -483,6 +486,7 @@ public class HRFStringBuilder {
             appendKeyValue(playersStringBuilder, "GoalsCurrentTeam", ht.get("GoalsCurrentTeam"));
             appendKeyValue(playersStringBuilder, "CareerAssists", ht.get("CareerAssists"));
             appendKeyValue(playersStringBuilder, "AssistsCurrentTeam", ht.get("AssistsCurrentTeam"));
+            appendKeyValue(playersStringBuilder, GENDER_ID, ht.get(GENDER_ID));
             appendKeyValue(playersStringBuilder, "MatchesCurrentTeam", ht.get("MatchesCurrentTeam"));
             appendKeyValue(playersStringBuilder, "hat", ht.get("CareerHattricks"));
             appendKeyValue(playersStringBuilder, "CountryID", ht.get("CountryID"));
@@ -596,6 +600,7 @@ public class HRFStringBuilder {
             appendHRFLine(youthPlayersStringBuilder, player, "CareerHattricks");
             appendHRFLine(youthPlayersStringBuilder, player, "LeagueGoals");
             appendHRFLine(youthPlayersStringBuilder, player, "FriendlyGoals");
+            appendHRFLine(youthPlayersStringBuilder, player, GENDER_ID);
 
             for (var skillId : YouthPlayer.skillIds) {
                 appendHRFSkillLines(youthPlayersStringBuilder, player, skillId);

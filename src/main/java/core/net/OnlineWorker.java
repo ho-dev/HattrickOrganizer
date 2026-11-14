@@ -1209,8 +1209,8 @@ public class OnlineWorker {
 		return details;
 	}
 
-	public static Player downloadPlayerDetails(String playerID) {
-		var xml = Connector.instance().downloadPlayerDetails(playerID);
+	public static Player downloadPlayerDetails(String playerId) {
+		var xml = Connector.instance().downloadPlayerDetails(playerId);
 		return new XMLPlayersParser().parsePlayerDetailsFromString(xml);
 	}
 

@@ -12,6 +12,17 @@ public class HOProperties  extends Properties {
         return defaultValue;
     }
 
+    /**
+     * @return the value as an Integer, or null if the key is missing or empty
+     */
+    public Integer getInteger(String key) {
+        var result = getProperty(key);
+        if (result != null && !result.isEmpty()){
+            return Integer.parseInt(result);
+        }
+        return null;
+    }
+
     public boolean getBoolean(String key, boolean defaultValue) {
         var result = getProperty(key);
         if (result != null && !result.isEmpty()){
