@@ -1,6 +1,5 @@
 package module.statistics;
 
-import core.model.TranslationFacility;
 import core.module.DefaultModule;
 
 import javax.swing.*;
@@ -11,15 +10,15 @@ public final class StatisticsModule extends DefaultModule {
 	public StatisticsModule(){
 		super(true);
 	}
-	
+
 	@Override
 	public int getModuleId() {
 		return STATISTICS;
 	}
 
 	@Override
-	public String getDescription() {
-		return TranslationFacility.tr("Statistik");
+	public String getKey() {
+		return "Statistik";
 	}
 
 	@Override

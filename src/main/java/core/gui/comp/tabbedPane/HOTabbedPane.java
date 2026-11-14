@@ -1,62 +1,106 @@
 package core.gui.comp.tabbedPane;
 
-import core.module.IModule;
-import core.module.ModuleManager;
+import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
+import core.util.HOLogger;
+import core.util.StreamUtils;
 
-import java.awt.Component;
+import javax.swing.*;
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
-import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-import javax.swing.UIManager;
+public abstract class HOTabbedPane extends DraggableTabbedPane {
 
-public final class HOTabbedPane extends JTabbedPane {
+    private record HOTab(HOTabInfo info, Component component) {
+    }
 
-	public HOTabbedPane() {
-		super();
-	}
+    public record HOTabComponent(String title, Component component) {}
 
-	public void addTab(String title, Component component, boolean closeIcon) {
-		int xOffset = 0;
-		super.addTab(title, component);
-		if (closeIcon) {
-			// Nimbus skin is the only one to put the icon on the right, which
-			// we need to move away from title text
-			if (UIManager.getLookAndFeel().getName().equalsIgnoreCase("Nimbus")) {
-				xOffset = 6;
-			}
-			setIconAt(getComponentCount() - 1, new TabCloseIcon(this, xOffset));
-		}
-	}
+    private final List<HOTab> tabs = new ArrayList<>();
+    private final String tabbedPaneId;
 
-	public void showTab(int moduleId) {
-		IModule module = ModuleManager.instance().getModule(moduleId);
-		if (module.hasMainTab()) {
-			int index = indexOfTab(module.getDescription());
-			if (index == -1) {
-				addTab(module.getDescription(), module.createTabPanel(), true);
-				setSelectedIndex(getTabCount() - 1);
-			} else {
-				setSelectedIndex(index);
-			}
-		}
-	}
+    public HOTabbedPane(String tabbedPaneId) {
+        this.tabbedPaneId = tabbedPaneId;
+        var dbManager = HOVerwaltung.instance().getPersistenceManager();
+        var tabs = dbManager.loadHOTabInfo(tabbedPaneId);
+        for (var tab : tabs) {
+            var component = findComponent(tab.getTabId());
+            if (component.isPresent()) {
+                addTab(tab, component.get());
+            } else {
+                HOLogger.instance().warning(getClass(), "Component " + tab.getTabId() + " is no longer part of HO!");
+            }
+        }
+    }
 
-	public JPanel getModulePanel(int moduleId) {
-		IModule module = ModuleManager.instance().getModule(moduleId);
-		if (module.hasMainTab()) {
-			int index = indexOfTab(module.getDescription());
-			if (index == -1) {
-				addTab(module.getDescription(), module.createTabPanel(), true);
-				setSelectedIndex(getTabCount() - 1);
-				index = getTabCount() - 1;
-			}
-			return (JPanel) getComponent(index);
-		}
-		return null;
-	}
+    private void addTab(HOTabInfo tab, HOTabComponent tabComponent) {
+        if (tabs.stream().anyMatch(i -> i.info().getTabId().equals(tab.getTabId()))) {
+            // already added
+            return;
+        }
+        tabs.add(new HOTab(tab, tabComponent.component()));
+        super.addTab(tabComponent.title(), tabComponent.component());
+        if (haveTabsCloseIcons()) {
+            var xOffset = 0;
+            // Nimbus skin is the only one to put the icon on the right, which
+            // we need to move away from title text
+            if (UIManager.getLookAndFeel().getName().equalsIgnoreCase("Nimbus")) {
+                xOffset = 6;
+            }
+            setIconAt(getComponentCount() - 1, new TabCloseIcon(this, xOffset));
+        }
+    }
 
-	public boolean isModuleTabVisible(int moduleId) {
-		IModule module = ModuleManager.instance().getModule(moduleId);
-		return indexOfTab(module.getDescription()) != -1;
-	}
+    public void addTab(String tabId, Component tabComponent) {
+        addTab(tabId, tabComponent, tabId);
+    }
+
+    public void addTab(String tabId, Component tabComponent, String titleTranslationKey) {
+        addTab(new HOTabInfo(tabbedPaneId, tabId, super.getTabCount()), new HOTabComponent(TranslationFacility.tr(titleTranslationKey), tabComponent));
+    }
+
+    protected boolean haveTabsCloseIcons() {
+        return false;
+    }
+
+    public Optional<Integer> getIndexOfTab(String tabId) {
+        for (int index = 0; index < getTabCount(); index++) {
+            var hoTab = findHOTab(index);
+            if (hoTab.isPresent()) {
+                if (hoTab.get().info().getTabId().equals(tabId)) {
+                    return Optional.of(index);
+                }
+            }
+        }
+        return Optional.empty(); // Not found
+    }
+
+    private Optional<HOTab> findHOTab(int tabIndex) {
+        var component = getComponentAt(tabIndex);
+        return StreamUtils.findOne(tabs.stream().filter(tab -> tab.component() == component));
+    }
+
+    public void storeHOTabInfo() {
+        // Reset index settings
+        tabs.forEach(tab -> tab.info().setTabIndex(-1));
+
+        // Find current index settings
+        for (int i = 0; i < getTabCount(); i++) {
+            var hoTab = findHOTab(i);
+            if (hoTab.isPresent()) {
+                hoTab.get().info().setTabIndex(i);
+            } else {
+                HOLogger.instance().warning(getClass(), "Component not found " + getComponentAt(i));
+            }
+        }
+
+        // Store tab info
+        var dbManager = HOVerwaltung.instance().getPersistenceManager();
+        dbManager.storeHOTabInfo(tabs.stream().map(HOTab::info).filter(info -> info.getTabIndex() != -1).toList());
+        dbManager.deleteHOTabInfo(tabs.stream().map(HOTab::info).filter(info -> info.getTabIndex() == -1).toList());
+    }
+
+    protected abstract Optional<HOTabComponent> findComponent(String tabId);
 }

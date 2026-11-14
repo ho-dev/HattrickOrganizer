@@ -2,6 +2,7 @@ package core.module;
 
 import core.model.UserParameter;
 import core.module.config.ModuleConfig;
+import core.util.StreamUtils;
 import module.halloffame.HallOfFameModule;
 import module.ifa.IfaModule;
 import module.lineup.LineupModule;
@@ -19,10 +20,7 @@ import module.transfer.TransfersModule;
 import module.tsforecast.TSForecastModule;
 import module.youth.YouthModule;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public final class ModuleManager {
 
@@ -76,9 +74,13 @@ public final class ModuleManager {
 		}
 	}
 
-	public IModule getModule(int moduleId) {
-		return all_modules.get(moduleId);
-	}
+    public IModule getModule(int moduleId) {
+        return all_modules.get(moduleId);
+    }
+
+    public Optional<IModule> findModule(String key) {
+        return StreamUtils.findOne(all_modules.values().stream().filter(module -> module.getKey().equals(key)));
+    }
 
 	public IModule[] getAllModules() {
 		return all_modules.values().toArray(new IModule[0]);

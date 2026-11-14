@@ -1,7 +1,6 @@
 package module.tsforecast;
 
 import core.db.DBManager;
-import core.model.TranslationFacility;
 import core.module.DefaultModule;
 
 import javax.swing.*;
@@ -15,8 +14,8 @@ public final class TSForecastModule extends DefaultModule {
 	}
 
 	@Override
-	public String getDescription() {
-		return TranslationFacility.tr("Tab_TSForecast");
+	public String getKey() {
+		return "Tab_TSForecast";
 	}
 
 	@Override

@@ -1,6 +1,7 @@
 package core.db;
 
 import core.file.hrf.HRF;
+import core.gui.comp.tabbedPane.HOTabInfo;
 import core.model.StaffMember;
 import core.model.Team;
 import core.model.XtraData;
@@ -169,4 +170,15 @@ public interface PersistenceManager {
      * @return Player – Player's status before given timestamp.  Null if not found.
      */
     Player getLatestPlayerDownloadBefore(int playerId, Timestamp before);
+
+    /**
+     * Load the tabbed panel information of the JTabbedPane
+     * @param tabbedPaneID Identifier of the JTabbedPane
+     * @return List of HOTabInfo (Index of the tab in pane)
+     */
+    List<HOTabInfo> loadHOTabInfo(String tabbedPaneID);
+
+    void storeHOTabInfo(List<HOTabInfo> list);
+
+    void deleteHOTabInfo(List<HOTabInfo> list);
 }
