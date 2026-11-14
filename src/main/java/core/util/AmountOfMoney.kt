@@ -36,7 +36,6 @@ data class AmountOfMoney(var swedishKrona: BigDecimal) {
                 return field
             }
 
-
         /**
          * Currency formatter
          */
@@ -70,12 +69,11 @@ data class AmountOfMoney(var swedishKrona: BigDecimal) {
          * @return Integer, null on parse error
          */
         fun parse(v: String?): AmountOfMoney? {
-            var amount: Number?
-            amount = try {
-                currencyFormatter?.parse(v)
+            val amount: Number? = try {
+                currencyFormatter!!.parse(v)
             } catch (_: Exception) {
                 try {
-                    Helper.getNumberFormat(0).parse(v)
+                    Integer.parseInt(v)
                 } catch (ex: Exception) {
                     HOLogger.instance().error(Helper::class.java, "error parsing currency $ex")
                     return null
