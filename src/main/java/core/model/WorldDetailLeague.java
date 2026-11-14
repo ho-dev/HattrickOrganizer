@@ -1,6 +1,7 @@
 package core.model;
 
 import core.db.AbstractTable;
+import core.model.enums.Gender;
 import core.util.HODateTime;
 import lombok.Getter;
 import lombok.Setter;
@@ -38,11 +39,11 @@ public class WorldDetailLeague  extends AbstractTable.Storable {
 	private String timeFormat;
 
 	/**
-	 * Hattrick's LeagueSystemID: 1 male, 2 female. Null for downloads before worlddetails 2.0.
+	 * Hattrick's LeagueSystemID. Null for downloads before worlddetails 2.0.
 	 */
 	@Getter
 	@Setter
-	private Integer leagueSystemId;
+	private Gender leagueSystem;
 
 	public static List<WorldDetailLeague> allLeagues;
 

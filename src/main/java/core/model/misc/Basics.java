@@ -2,6 +2,7 @@ package core.model.misc;
 
 import core.db.AbstractTable;
 import core.db.user.UserManager;
+import core.model.enums.Gender;
 import core.util.HODateTime;
 import core.util.HOLogger;
 import core.util.HTWeek;
@@ -66,19 +67,18 @@ public final class Basics extends AbstractTable.Storable {
     private boolean m_bHasSupporter;
 
     /**
-     * Hattrick's GenderID of the team: 1 male, 2 female. Null for downloads before teamdetails 3.8.
+     * Hattrick's GenderID of the team. Null for downloads before teamdetails 3.8.
      */
     @Getter
     @Setter
-    private Integer genderId;
+    private Gender gender;
 
     /**
-     * Hattrick's LeagueSystemID of the team's league: 1 male, 2 female. Null for downloads before
-     * teamdetails 3.9.
+     * Hattrick's LeagueSystemID of the team's league. Null for downloads before teamdetails 3.9.
      */
     @Getter
     @Setter
-    private Integer leagueSystemId;
+    private Gender leagueSystem;
 
     //~ Constructors -------------------------------------------------------------------------------
 
@@ -112,8 +112,8 @@ public final class Basics extends AbstractTable.Storable {
         m_iSpieltag = getInt(properties, "matchround", 0);
         m_iRegionId = getInt(properties, "regionid", 0);
         m_bHasSupporter = getBoolean(properties, "hassupporter", false);
-        genderId = getInteger(properties, "genderid");
-        leagueSystemId = getInteger(properties, "leaguesystemid");
+        gender = Gender.fromId(getInteger(properties, "genderid"));
+        leagueSystem = Gender.fromId(getInteger(properties, "leaguesystemid"));
     }
 
     private Integer getInteger(Properties properties, String key) {

@@ -1,6 +1,7 @@
 package core.db;
 
 import core.constants.player.PlayerSkill;
+import core.model.enums.Gender;
 import core.model.enums.MatchType;
 import core.model.player.Player;
 import core.model.player.PlayerCategory;
@@ -93,7 +94,7 @@ final class SpielerTable extends AbstractTable {
 				ColumnDescriptor.Builder.newInstance().setColumnName("GoalsCurrentTeam").setGetter((p) -> ((Player) p).getCurrentTeamGoals()).setSetter((p, v) -> ((Player) p).setCurrentTeamGoals((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
             ColumnDescriptor.Builder.newInstance().setColumnName("CareerAssists").setGetter((p) -> ((Player) p).getCareerAssists()).setSetter((p, v) -> ((Player) p).setCareerAssists((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
             ColumnDescriptor.Builder.newInstance().setColumnName("AssistsCurrentTeam").setGetter(p -> ((Player) p).getAssistsCurrentTeam()).setSetter((p, v) -> ((Player) p).setAssistsCurrentTeam((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
-            ColumnDescriptor.Builder.newInstance().setColumnName("GenderID").setGetter(p -> ((Player) p).getGenderId()).setSetter((p, v) -> ((Player) p).setGenderId((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+            ColumnDescriptor.Builder.newInstance().setColumnName("GenderID").setGetter(p -> Gender.toId(((Player) p).getGender())).setSetter((p, v) -> ((Player) p).setGender(Gender.fromId((Integer) v))).setType(Types.INTEGER).isNullable(true).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("PlayerCategory").setGetter((p) -> (PlayerCategory.idOf(((Player) p).getPlayerCategory()))).setSetter((p, v) -> ((Player) p).setPlayerCategory(PlayerCategory.fromId((Integer) v))).setType(Types.INTEGER).isNullable(true).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("Statement").setGetter((p) -> ((Player) p).getPlayerStatement()).setSetter((p, v) -> ((Player) p).setPlayerStatement((String) v)).setType(Types.VARCHAR).isNullable(true).setLength(255).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("OwnerNotes").setGetter((p) -> ((Player) p).getOwnerNotes()).setSetter((p, v) -> ((Player) p).setOwnerNotes((String) v)).setType(Types.VARCHAR).isNullable(true).setLength(512).build(),

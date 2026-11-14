@@ -1,5 +1,6 @@
 package core.file.xml;
 
+import core.model.enums.Gender;
 import core.model.misc.Basics;
 import org.junit.jupiter.api.Test;
 
@@ -23,8 +24,8 @@ class GenderLeagueSystemTest {
 
         var basics = new Basics(properties);
 
-        assertThat(basics.getGenderId()).isEqualTo(2);
-        assertThat(basics.getLeagueSystemId()).isEqualTo(2);
+        assertThat(basics.getGender()).isEqualTo(Gender.FEMALE);
+        assertThat(basics.getLeagueSystem()).isEqualTo(Gender.FEMALE);
     }
 
     @Test
@@ -34,7 +35,14 @@ class GenderLeagueSystemTest {
 
         var basics = new Basics(properties);
 
-        assertThat(basics.getGenderId()).isNull();
-        assertThat(basics.getLeagueSystemId()).isNull();
+        assertThat(basics.getGender()).isNull();
+        assertThat(basics.getLeagueSystem()).isNull();
+    }
+
+    @Test
+    void unknownIdsStayUnknown() {
+        assertThat(Gender.fromId(1)).isEqualTo(Gender.MALE);
+        assertThat(Gender.fromId(3)).isNull();
+        assertThat(Gender.toId(Gender.FEMALE)).isEqualTo(2);
     }
 }

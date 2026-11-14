@@ -1,6 +1,7 @@
 package core.db;
 
 import core.constants.player.PlayerSkill;
+import core.model.enums.Gender;
 import core.model.player.PlayerCategory;
 import core.model.player.Specialty;
 import core.util.HODateTime;
@@ -56,7 +57,7 @@ public class YouthPlayerTable  extends AbstractTable {
                 ColumnDescriptor.Builder.newInstance().setColumnName("playedMinutes").setGetter((p) -> ((YouthPlayer) p).getPlayedMinutes()).setSetter((p, v) -> ((YouthPlayer) p).setPlayedMinutes((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
                 ColumnDescriptor.Builder.newInstance().setColumnName("rating").setGetter((p) -> ((YouthPlayer) p).getRating()).setSetter((p, v) -> ((YouthPlayer) p).setRating((Double) v)).setType(Types.DOUBLE).isNullable(true).build(),
                 ColumnDescriptor.Builder.newInstance().setColumnName("YouthMatchDate").setGetter(p -> HODateTime.toDbTimestamp(((YouthPlayer) p).getYouthMatchDate())).setSetter((p, v) -> ((YouthPlayer) p).setYouthMatchDate((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("GenderID").setGetter(p -> ((YouthPlayer) p).getGenderId()).setSetter((p, v) -> ((YouthPlayer) p).setGenderId((Integer) v)).setType(Types.INTEGER).isNullable(true).build()
+                ColumnDescriptor.Builder.newInstance().setColumnName("GenderID").setGetter(p -> Gender.toId(((YouthPlayer) p).getGender())).setSetter((p, v) -> ((YouthPlayer) p).setGender(Gender.fromId((Integer) v))).setType(Types.INTEGER).isNullable(true).build()
         ));
 
         for ( var skillId : YouthPlayer.skillIds) {

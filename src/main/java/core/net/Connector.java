@@ -455,8 +455,8 @@ public class Connector {
 		String url = htUrl + "?file=players&version=2.8&includeMatchInfo=true&teamID=" + teamId;
 		return getCHPPWebFile(url);
 	}
-	public String downloadPlayerDetails(String playerID) {
-		return getCHPPWebFile(htUrl+"?file=playerdetails&version=3.3&includeMatchInfo=true&playerID=" + playerID);
+	public String downloadPlayerDetails(String playerId) {
+		return getCHPPWebFile(htUrl+"?file=playerdetails&version=3.3&includeMatchInfo=true&playerID=" + playerId);
 	}
 
 	public String downloadYouthPlayers(int youthteamId) {

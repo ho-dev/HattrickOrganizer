@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Vector;
 
 import core.constants.player.PlayerSkill;
+import core.model.enums.Gender;
 import core.db.user.UserManager;
 import core.model.HOVerwaltung;
 import core.model.match.MatchKurzInfo;
@@ -481,7 +482,7 @@ public class XMLPlayersParser {
         player.setCurrentTeamGoals(xmlIntValue(root, "GoalsCurrentTeam"));
         player.setCareerAssists(xmlIntValue(root, "CareerAssists"));
         player.setAssistsCurrentTeam(xmlIntValue(root, "AssistsCurrentTeam"));
-        player.setGenderId(xmlIntegerValue(root, GENDER_ID));
+        player.setGender(Gender.fromId(xmlIntegerValue(root, GENDER_ID)));
         player.setNationalTeamId(xmlIntegerValue(root, "NationalTeamID"));
 
 //        NationalTeamName : String*

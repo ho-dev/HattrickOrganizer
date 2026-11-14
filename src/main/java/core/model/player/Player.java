@@ -7,6 +7,7 @@ import core.db.AbstractTable;
 import core.db.DBManager;
 import core.file.hrf.HRFStringBuilder;
 import core.model.*;
+import core.model.enums.Gender;
 import core.model.enums.MatchType;
 import core.model.match.MatchLineupPosition;
 import core.model.match.MatchLineupTeam;
@@ -189,11 +190,11 @@ public class Player extends AbstractTable.Storable {
     private Integer assistsCurrentTeam;
 
     /**
-     * Hattrick's GenderID: 1 male, 2 female. Null for downloads before players 2.8.
+     * Hattrick's GenderID. Null for downloads before players 2.8.
      */
     @Getter
     @Setter
-    private Integer genderId;
+    private Gender gender;
 
     /**
      * Home Grown
@@ -426,7 +427,7 @@ public class Player extends AbstractTable.Storable {
         currentTeamMatches = properties.getInt("matchescurrentteam", 0);
         setCareerAssists(properties.getInt("careerassists", 0));
         setAssistsCurrentTeam(properties.getInt("assistscurrentteam", 0));
-        genderId = properties.getInteger("genderid");
+        gender = Gender.fromId(properties.getInteger("genderid"));
 
         this.isExternallyRecruitedCoach = properties.getBoolean("lineupdisabled", false);
         this.rating = properties.getInt("rating", 0);
