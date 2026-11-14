@@ -122,6 +122,10 @@
 
 * Fix exception in ManMarkingOrderDisplay (#2555)
 
+### Team Spirit Prediction
+
+* Fix exception in forecast curve if match details were not downloaded (#2580)
+
 ### Misc
 
 * Fix download error for negative Swedish money amounts (#2588)
@@ -133,13 +137,14 @@
 
 ## Translations
 
-Reports by Contributors - October 19, 2025 - October 22, 2026
+Reports by Contributors - October 19, 2025 - November 07, 2026
 
 * Jösgall 1005
 * Ioannidouefty 459
 * Lukasz 418
 * wsbrenk 178
-* \_KOHb\_ 91
+* \_KOHb\_ 93
+* Hectormm 73
 * Frankieorabona 73
 * Lidegand 72
 * Baler0 47
@@ -150,4 +155,4 @@ Reports by Contributors - October 19, 2025 - October 22, 2026
 * Mara 3
 * Joeri Roels 1
 
-Total 2431
+Total 2506
