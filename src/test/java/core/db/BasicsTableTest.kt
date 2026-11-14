@@ -1,6 +1,7 @@
 package core.db
 
 import core.model.misc.Basics
+import core.util.HODateTime
 import org.junit.jupiter.api.*
 import java.sql.Connection
 import java.sql.DriverManager
@@ -44,6 +45,31 @@ internal class BasicsTableTest {
         }
         rs?.close()
         stmt.close()
+    }
+
+    /** #2587: Sunday of the season break - the league is in season 96, HO's calendar still in 95. */
+    private fun seasonBreakBasics(seasonOffset: Int?): Basics {
+        val basics = Basics()
+        basics.datum = HODateTime.fromHT("2026-11-08 12:00:00")
+        basics.season = 96
+        basics.setSeasonOffset(seasonOffset)
+        return basics
+    }
+
+    @Test
+    fun testLoadBasicsKeepsStoredZeroSeasonOffset() {
+        basicsTable.saveBasics(43, seasonBreakBasics(0))
+
+        val loaded = basicsTable.loadBasics(43)
+        Assertions.assertEquals(0, loaded.storedSeasonOffset)
+    }
+
+    @Test
+    fun testLoadBasicsDerivesMissingSeasonOffset() {
+        basicsTable.saveBasics(44, seasonBreakBasics(null))
+
+        val loaded = basicsTable.loadBasics(44)
+        Assertions.assertEquals(1, loaded.storedSeasonOffset)
     }
 
     companion object {

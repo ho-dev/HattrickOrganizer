@@ -5,6 +5,7 @@ import core.db.user.UserManager;
 import core.util.HODateTime;
 import core.util.HOLogger;
 import core.util.HTWeek;
+import lombok.Setter;
 
 import java.time.format.DateTimeParseException;
 import java.util.Properties;
@@ -49,8 +50,11 @@ public final class Basics extends AbstractTable.Storable {
     /**
      * The season offset to swedish's season.
      * (it is a negative number for leagues which started after swedish leagues)
+     * null: unknown (old HRF or database row without the value). 0 is a real offset
+     * (Sweden, Germany, ...), so it must not be read as "unknown".
      */
-    private int m_iSeasonOffset;
+    @Setter
+    private Integer seasonOffset;
 
     /** The current match round of the league. */
     private int m_iSpieltag;
@@ -91,7 +95,7 @@ public final class Basics extends AbstractTable.Storable {
         countryId = getInt(properties, "countryid", 0);
         m_iLiga = getInt(properties, "leagueid", 0);
         m_iSeason = getInt(properties, "season", 0);
-        m_iSeasonOffset = getInt(properties, "seasonoffset", 0);
+        seasonOffset = getInteger(properties, "seasonoffset");
         m_iSpieltag = getInt(properties, "matchround", 0);
         m_iRegionId = getInt(properties, "regionid", 0);
         m_bHasSupporter = getBoolean(properties, "hassupporter", false);
@@ -262,7 +266,7 @@ public final class Basics extends AbstractTable.Storable {
     }
 
     public HODateTime getHattrickWeek() {
-        var week = new HTWeek(this.m_iSeason - this.m_iSeasonOffset, this.m_iSpieltag);
+        var week = new HTWeek(this.m_iSeason - getSeasonOffset(), this.m_iSpieltag);
         return HODateTime.fromHTWeek(week);
     }
 
@@ -328,13 +332,20 @@ public final class Basics extends AbstractTable.Storable {
     	return m_iRegionId;
     }
 
+    /**
+     * @return the season offset, 0 while it is unknown
+     */
     public int getSeasonOffset() {
-        return m_iSeasonOffset;
+        return seasonOffset == null ? 0 : seasonOffset;
     }
 
-    public void setSeasonOffset(int seasonOffset) {
-        this.m_iSeasonOffset = seasonOffset;
+    /**
+     * @return the season offset as stored, null while it is unknown
+     */
+    public Integer getStoredSeasonOffset() {
+        return seasonOffset;
     }
+
 
     public Integer getYouthTeamId() {
         return youthTeamId;
