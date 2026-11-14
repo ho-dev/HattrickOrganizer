@@ -55,7 +55,8 @@ public class YouthPlayerTable  extends AbstractTable {
                 ColumnDescriptor.Builder.newInstance().setColumnName("positionCode").setGetter((p) -> ((YouthPlayer) p).getPositionCode()).setSetter((p, v) -> ((YouthPlayer) p).setPositionCode((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
                 ColumnDescriptor.Builder.newInstance().setColumnName("playedMinutes").setGetter((p) -> ((YouthPlayer) p).getPlayedMinutes()).setSetter((p, v) -> ((YouthPlayer) p).setPlayedMinutes((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
                 ColumnDescriptor.Builder.newInstance().setColumnName("rating").setGetter((p) -> ((YouthPlayer) p).getRating()).setSetter((p, v) -> ((YouthPlayer) p).setRating((Double) v)).setType(Types.DOUBLE).isNullable(true).build(),
-                ColumnDescriptor.Builder.newInstance().setColumnName("YouthMatchDate").setGetter((p) -> HODateTime.toDbTimestamp(((YouthPlayer) p).getYouthMatchDate())).setSetter((p, v) -> ((YouthPlayer) p).setYouthMatchDate((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(true).build()
+                ColumnDescriptor.Builder.newInstance().setColumnName("YouthMatchDate").setGetter(p -> HODateTime.toDbTimestamp(((YouthPlayer) p).getYouthMatchDate())).setSetter((p, v) -> ((YouthPlayer) p).setYouthMatchDate((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(true).build(),
+                ColumnDescriptor.Builder.newInstance().setColumnName("GenderID").setGetter(p -> ((YouthPlayer) p).getGenderId()).setSetter((p, v) -> ((YouthPlayer) p).setGenderId((Integer) v)).setType(Types.INTEGER).isNullable(true).build()
         ));
 
         for ( var skillId : YouthPlayer.skillIds) {

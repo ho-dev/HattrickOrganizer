@@ -42,6 +42,8 @@ class XMLTeamDetailsParserTest {
         ret.put("RegionID", "238");
         ret.put("IsBot", "False");
         ret.put("BotSince", "");
+        ret.put("GenderID", "1");
+        ret.put("LeagueSystemID", "1");
         ret.put("GlobalRanking", "17151");
         ret.put("LeagueRanking", "1203");
         ret.put("RegionRanking", "52");
@@ -77,6 +79,8 @@ class XMLTeamDetailsParserTest {
         ret.put("RegionID", "238");
         ret.put("IsBot", "False");
         ret.put("BotSince", "");
+        ret.put("GenderID", "1");
+        ret.put("LeagueSystemID", "1");
         ret.put("GlobalRanking", "14867");
         ret.put("LeagueRanking", "1022");
         ret.put("RegionRanking", "42");
@@ -112,6 +116,8 @@ class XMLTeamDetailsParserTest {
         ret.put("RegionID", "238");
         ret.put("IsBot", "False");
         ret.put("BotSince", "");
+        ret.put("GenderID", "1");
+        ret.put("LeagueSystemID", "1");
         ret.put("GlobalRanking", "3054");
         ret.put("LeagueRanking", "161");
         ret.put("RegionRanking", "8");
@@ -147,6 +153,8 @@ class XMLTeamDetailsParserTest {
         ret.put("RegionID", "238");
         ret.put("IsBot", "False");
         ret.put("BotSince", "");
+        ret.put("GenderID", "1");
+        ret.put("LeagueSystemID", "1");
         ret.put("GlobalRanking", "105260");
         ret.put("LeagueRanking", "8407");
         ret.put("RegionRanking", "372");

@@ -189,6 +189,13 @@ public class Player extends AbstractTable.Storable {
     private Integer assistsCurrentTeam;
 
     /**
+     * Hattrick's GenderID: 1 male, 2 female. Null for downloads before players 2.8.
+     */
+    @Getter
+    @Setter
+    private Integer genderId;
+
+    /**
      * Home Grown
      */
     private boolean homeGrown = false;
@@ -419,6 +426,7 @@ public class Player extends AbstractTable.Storable {
         currentTeamMatches = properties.getInt("matchescurrentteam", 0);
         setCareerAssists(properties.getInt("careerassists", 0));
         setAssistsCurrentTeam(properties.getInt("assistscurrentteam", 0));
+        genderId = properties.getInteger("genderid");
 
         this.isExternallyRecruitedCoach = properties.getBoolean("lineupdisabled", false);
         this.rating = properties.getInt("rating", 0);

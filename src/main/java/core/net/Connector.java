@@ -452,15 +452,15 @@ public class Connector {
 	 * Download Players
 	 */
 	public String downloadPlayers(int teamId) {
-		String url = htUrl + "?file=players&version=2.7&includeMatchInfo=true&teamID=" + teamId;
+		String url = htUrl + "?file=players&version=2.8&includeMatchInfo=true&teamID=" + teamId;
 		return getCHPPWebFile(url);
 	}
 	public String downloadPlayerDetails(String playerID) {
-		return getCHPPWebFile(htUrl+"?file=playerdetails&version=3.0&includeMatchInfo=true&playerID=" + playerID);
+		return getCHPPWebFile(htUrl+"?file=playerdetails&version=3.3&includeMatchInfo=true&playerID=" + playerID);
 	}
 
 	public String downloadYouthPlayers(int youthteamId) {
-		String url = htUrl + "?file=youthplayerlist&version=1.1&actionType=unlockskills&showScoutCall=true&showLastMatch=true&youthTeamID=" + youthteamId;
+		String url = htUrl + "?file=youthplayerlist&version=1.4&actionType=unlockskills&showScoutCall=true&showLastMatch=true&youthTeamID=" + youthteamId;
 		var silent = setSilentDownload(true);
 		// try unlock skills
 		var ret = getCHPPWebFile(url);
@@ -490,7 +490,7 @@ public class Connector {
 	 */
 	public String getTeamDetails(int teamId) {
 		try {
-			String url = htUrl + "?file=teamdetails&version=3.6";
+			String url = htUrl + "?file=teamdetails&version=4.0";
 			if (teamId > 0) {
 				url += ("&teamID=" + teamId);
 			}
@@ -544,14 +544,14 @@ public class Connector {
 	 * holt die Weltdaten
 	 */
 	public String getWorldDetails(int leagueId) throws IOException {
-		String url = htUrl + "?file=worlddetails&version=1.9";
+		String url = htUrl + "?file=worlddetails&version=2.1";
 		if (leagueId > 0)
 			url += "&leagueID=" + leagueId;
 		return getCHPPWebFile(url);
 	}
 
 	public String getWorldDetailsByCountryId(int countryId) {
-		String url = htUrl + "?file=worlddetails&version=1.9&countryID=" + countryId;
+		String url = htUrl + "?file=worlddetails&version=2.1&countryID=" + countryId;
 		return getCHPPWebFile(url);
 	}
 

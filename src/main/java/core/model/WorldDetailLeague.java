@@ -2,6 +2,8 @@ package core.model;
 
 import core.db.AbstractTable;
 import core.util.HODateTime;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
@@ -34,6 +36,13 @@ public class WorldDetailLeague  extends AbstractTable.Storable {
 	//	TimeFormat : String
 	//  The time format for users of this country using ISO_8601
 	private String timeFormat;
+
+	/**
+	 * Hattrick's LeagueSystemID: 1 male, 2 female. Null for downloads before worlddetails 2.0.
+	 */
+	@Getter
+	@Setter
+	private Integer leagueSystemId;
 
 	public static List<WorldDetailLeague> allLeagues;
 

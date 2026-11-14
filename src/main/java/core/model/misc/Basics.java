@@ -5,6 +5,8 @@ import core.db.user.UserManager;
 import core.util.HODateTime;
 import core.util.HOLogger;
 import core.util.HTWeek;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.format.DateTimeParseException;
 import java.util.Properties;
@@ -63,6 +65,21 @@ public final class Basics extends AbstractTable.Storable {
 
     private boolean m_bHasSupporter;
 
+    /**
+     * Hattrick's GenderID of the team: 1 male, 2 female. Null for downloads before teamdetails 3.8.
+     */
+    @Getter
+    @Setter
+    private Integer genderId;
+
+    /**
+     * Hattrick's LeagueSystemID of the team's league: 1 male, 2 female. Null for downloads before
+     * teamdetails 3.9.
+     */
+    @Getter
+    @Setter
+    private Integer leagueSystemId;
+
     //~ Constructors -------------------------------------------------------------------------------
 
     /**
@@ -95,6 +112,8 @@ public final class Basics extends AbstractTable.Storable {
         m_iSpieltag = getInt(properties, "matchround", 0);
         m_iRegionId = getInt(properties, "regionid", 0);
         m_bHasSupporter = getBoolean(properties, "hassupporter", false);
+        genderId = getInteger(properties, "genderid");
+        leagueSystemId = getInteger(properties, "leaguesystemid");
     }
 
     private Integer getInteger(Properties properties, String key) {

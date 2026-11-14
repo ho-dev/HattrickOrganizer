@@ -24,6 +24,7 @@ class WorldDetailsTable extends AbstractTable {
 				ColumnDescriptor.Builder.newInstance().setColumnName("CURRENCY_RATE").setGetter((p) -> ((WorldDetailLeague) p).getCurrencyRate()).setSetter((p, v) -> ((WorldDetailLeague) p).setCurrencyRate((String) v)).setType(Types.VARCHAR).setLength(128).isNullable(true).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("DATE_FORMAT").setGetter((p) -> ((WorldDetailLeague) p).getDateFormat()).setSetter((p, v) -> ((WorldDetailLeague) p).setDateFormat((String) v)).setType(Types.VARCHAR).setLength(128).isNullable(true).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("TIME_FORMAT").setGetter((p) -> ((WorldDetailLeague) p).getTimeFormat()).setSetter((p, v) -> ((WorldDetailLeague) p).setTimeFormat((String) v)).setType(Types.VARCHAR).setLength(128).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("LEAGUE_SYSTEM_ID").setGetter(p -> ((WorldDetailLeague) p).getLeagueSystemId()).setSetter((p, v) -> ((WorldDetailLeague) p).setLeagueSystemId((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
 		};
 	}
 

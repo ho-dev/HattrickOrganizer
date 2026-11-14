@@ -57,6 +57,7 @@ public class XMLWorldDetailsParser {
 				tmp.setLeagueId(xmlIntValue(root, "LeagueID", -1));
 				tmp.setCountryName( xmlValue(root, "EnglishName"));
 				tmp.setActiveUsers(xmlIntValue(root, "ActiveTeams", -1));
+				tmp.setLeagueSystemId(xmlIntegerValue(root, "LeagueSystemID"));
 
 				root = (Element) root.getElementsByTagName("Country").item(0);
 				ele = (Element) root.getElementsByTagName("CountryID").item(0);
