@@ -51,8 +51,8 @@ public final class HOModulesTabbedPane extends HOTabbedPane {
     }
 
     @Override
-    protected Optional<HOTabComponent> findComponent(String tabID) {
-        var module = ModuleManager.instance().findModule(tabID);
+    protected Optional<HOTabComponent> findComponent(String tabId) {
+        var module = ModuleManager.instance().findModule(tabId);
         return module.map(iModule -> new HOTabComponent(iModule.getDescription(), iModule.getTabPanel()));
     }
 }

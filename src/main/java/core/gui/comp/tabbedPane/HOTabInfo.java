@@ -5,8 +5,8 @@ import core.db.AbstractTable;
 import java.awt.*;
 
 public class HOTabInfo extends AbstractTable.Storable {
-    private String tabbedPaneID;
-    private String tabID;
+    private String tabbedPaneId;
+    private String tabId;
     private int tabIndex;
     private Component component;
 
@@ -15,26 +15,26 @@ public class HOTabInfo extends AbstractTable.Storable {
      */
     public HOTabInfo() {}
 
-    public HOTabInfo(String paneID, String tabID, int index) {
-        this.tabbedPaneID = paneID;
-        this.tabID = tabID;
+    public HOTabInfo(String tabbedPaneId, String tabId, int index) {
+        this.tabbedPaneId = tabbedPaneId;
+        this.tabId = tabId;
         this.tabIndex = index;
     }
 
-    public String getTabbedPaneID() {
-        return tabbedPaneID;
+    public String getTabbedPaneId() {
+        return tabbedPaneId;
     }
 
-    public void setTabbedPaneID(String tabbedPaneID) {
-        this.tabbedPaneID = tabbedPaneID;
+    public void setTabbedPaneId(String tabbedPaneId) {
+        this.tabbedPaneId = tabbedPaneId;
     }
 
-    public String getTabID() {
-        return tabID;
+    public String getTabId() {
+        return tabId;
     }
 
-    public void setTabID(String tabID) {
-        this.tabID = tabID;
+    public void setTabId(String tabId) {
+        this.tabId = tabId;
     }
 
     public int getTabIndex() {

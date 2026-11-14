@@ -19,24 +19,24 @@ public abstract class HOTabbedPane extends DraggableTabbedPane {
     public record HOTabComponent(String title, Component component) {}
 
     private final List<HOTab> tabs = new ArrayList<>();
-    private final String tabbedPaneID;
+    private final String tabbedPaneId;
 
-    public HOTabbedPane(String tabbedPaneID) {
-        this.tabbedPaneID = tabbedPaneID;
+    public HOTabbedPane(String tabbedPaneId) {
+        this.tabbedPaneId = tabbedPaneId;
         var dbManager = HOVerwaltung.instance().getPersistenceManager();
-        var tabs = dbManager.loadHOTabInfo(tabbedPaneID);
+        var tabs = dbManager.loadHOTabInfo(tabbedPaneId);
         for (var tab : tabs) {
-            var component = findComponent(tab.getTabID());
+            var component = findComponent(tab.getTabId());
             if (component.isPresent()) {
                 addTab(tab, component.get());
             } else {
-                HOLogger.instance().warning(getClass(), "Component " + tab.getTabID() + " is no longer part of HO!");
+                HOLogger.instance().warning(getClass(), "Component " + tab.getTabId() + " is no longer part of HO!");
             }
         }
     }
 
     private void addTab(HOTabInfo tab, HOTabComponent tabComponent) {
-        if (tabs.stream().anyMatch(i -> i.info().getTabID().equals(tab.getTabID()))) {
+        if (tabs.stream().anyMatch(i -> i.info().getTabId().equals(tab.getTabId()))) {
             // already added
             return;
         }
@@ -53,23 +53,23 @@ public abstract class HOTabbedPane extends DraggableTabbedPane {
         }
     }
 
-    public void addTab(String tabID, Component tabComponent) {
-        addTab(tabID, tabComponent, tabID);
+    public void addTab(String tabId, Component tabComponent) {
+        addTab(tabId, tabComponent, tabId);
     }
 
-    public void addTab(String tabID, Component tabComponent, String titleTranslationKey) {
-        addTab(new HOTabInfo(tabbedPaneID, tabID, super.getTabCount()), new HOTabComponent(TranslationFacility.tr(titleTranslationKey), tabComponent));
+    public void addTab(String tabId, Component tabComponent, String titleTranslationKey) {
+        addTab(new HOTabInfo(tabbedPaneId, tabId, super.getTabCount()), new HOTabComponent(TranslationFacility.tr(titleTranslationKey), tabComponent));
     }
 
     protected boolean haveTabsCloseIcons() {
         return false;
     }
 
-    public Optional<Integer> getIndexOfTab(String tabID) {
+    public Optional<Integer> getIndexOfTab(String tabId) {
         for (int index = 0; index < getTabCount(); index++) {
             var hoTab = findHOTab(index);
             if (hoTab.isPresent()) {
-                if (hoTab.get().info().getTabID().equals(tabID)) {
+                if (hoTab.get().info().getTabId().equals(tabId)) {
                     return Optional.of(index);
                 }
             }
@@ -102,5 +102,5 @@ public abstract class HOTabbedPane extends DraggableTabbedPane {
         dbManager.deleteHOTabInfo(tabs.stream().map(HOTab::info).filter(info -> info.getTabIndex() == -1).toList());
     }
 
-    protected abstract Optional<HOTabComponent> findComponent(String tabID);
+    protected abstract Optional<HOTabComponent> findComponent(String tabId);
 }
