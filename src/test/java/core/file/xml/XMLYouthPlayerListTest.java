@@ -3,8 +3,11 @@ package core.file.xml;
 import core.util.ResourceUtils;
 import module.youth.YouthPlayer;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Properties;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -25,6 +28,20 @@ class XMLYouthPlayerListTest {
                 .containsEntry(XMLPlayersParser.YOUTH_NATIVE_COUNTRY_NAME, "Deutschland")
                 .containsEntry("GenderID", "1")
                 .containsEntry("YouthMatchID", "146086858");
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {"ScoutId", "ScoutID"})
+    void scoutIdIsReadInBothSpellings(String tag) throws IOException {
+        final var xml = Objects.requireNonNull(
+                        ResourceUtils.getResourceFileAsString("chpp/youth/youthplayerlist_1.4.xml"))
+                .replace("<ScoutId>", "<" + tag + ">")
+                .replace("</ScoutId>", "</" + tag + ">");
+
+        final var players = new XMLPlayersParser().parseYouthPlayersFromString(xml);
+
+        assertThat(players).hasSize(1);
+        assertThat(players.get(0)).containsEntry("ScoutId", "382876");
     }
 
     @Test

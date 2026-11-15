@@ -26,7 +26,7 @@ import static core.file.xml.XMLManager.*;
 
 public class XMLPlayersParser {
     private static final String GENDER_ID = "GenderID";
-    /** youthplayerlist 1.2; OwningYouthTeam/UserId (1.4) is the team's and lives in YouthTeamDetails. */
+    /** youthplayerlist 1.4; OwningYouthTeam/UserId (1.4) is the team's and lives in YouthTeamDetails. */
     public static final String YOUTH_NATIVE_COUNTRY_ID = "NativeCountryID";
     public static final String YOUTH_NATIVE_COUNTRY_NAME = "NativeCountryName";
     //~ Constructors -------------------------------------------------------------------------------
@@ -350,7 +350,10 @@ public class XMLPlayersParser {
                 //        <Scout>
                 var scout = (Element)scoutCall.getElementsByTagName("Scout").item(0);
                 //          <ScoutId>382876</ScoutId>
-                xmlValue2Hash(hash, scout, "ScoutId");
+                // CHPP spells it ScoutId for actionType=details and ScoutID for unlockskills
+                if (xmlValue2Hash(hash, scout, "ScoutId").isEmpty()) {
+                    xmlValue2Hash(hash, scout, "ScoutID", "ScoutId");
+                }
                 //          <ScoutName>Joerg Hopfen</ScoutName>
                 xmlValue2Hash(hash, scout, "ScoutName");
                 //        </Scout>
