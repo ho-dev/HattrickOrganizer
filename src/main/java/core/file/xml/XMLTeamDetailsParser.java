@@ -102,6 +102,10 @@ public class XMLTeamDetailsParser {
 			xmlValue2Hash(hash, team, "IsBot");
 			xmlValue2Hash(hash, team, "BotSince");
 
+			// #2429: women's league system, 1 male, 2 female (teamdetails 3.8 and 3.9)
+			xmlValue2Hash(hash, team, "GenderID");
+			xmlValue2Hash(hash, team, "LeagueSystemID");
+
 			// Power Rating
 			var powerRating = (Element)team.getElementsByTagName("PowerRating").item(0);
 			xmlValue2Hash(hash, powerRating, "GlobalRanking");

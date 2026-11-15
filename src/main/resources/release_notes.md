@@ -10,7 +10,7 @@
 
 
 ### Download
-
+* Store gender and league system of teams, players, youth players and leagues for Hattrick's women's leagues (#2429)
 
 ### Player Overview
 

@@ -1,5 +1,6 @@
 package core.db;
 
+import core.model.enums.Gender;
 import core.model.misc.Basics;
 import core.util.HODateTime;
 import java.sql.Types;
@@ -28,7 +29,9 @@ final class BasicsTable extends AbstractTable {
 				ColumnDescriptor.Builder.newInstance().setColumnName("ActivationDate").setGetter((b)-> HODateTime.toDbTimestamp (((Basics)b).getActivationDate())).setSetter((b, v)->((Basics)b).setActivationDate((HODateTime) v)).setType(Types.TIMESTAMP).isNullable(true).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("SeasonOffset").setGetter((b)->((Basics)b).getSeasonOffset()).setSetter((b, v)->((Basics)b).setSeasonOffset((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
 				ColumnDescriptor.Builder.newInstance().setColumnName("YouthTeamName").setGetter((b)->((Basics)b).getYouthTeamName()).setSetter((b, v)->((Basics)b).setYouthTeamName((String)v)).setType(Types.VARCHAR).setLength(127).isNullable(true).build(),
-				ColumnDescriptor.Builder.newInstance().setColumnName("YouthTeamID").setGetter((b)->((Basics)b).getYouthTeamId()).setSetter((b, v)->((Basics)b).setYouthTeamId((Integer) v)).setType(Types.INTEGER).isNullable(true).build()
+				ColumnDescriptor.Builder.newInstance().setColumnName("YouthTeamID").setGetter(b -> ((Basics)b).getYouthTeamId()).setSetter((b, v)->((Basics)b).setYouthTeamId((Integer) v)).setType(Types.INTEGER).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("GenderID").setGetter(b -> Gender.toId(((Basics)b).getGender())).setSetter((b, v) -> ((Basics)b).setGender(Gender.fromId((Integer) v))).setType(Types.INTEGER).isNullable(true).build(),
+				ColumnDescriptor.Builder.newInstance().setColumnName("LeagueSystemID").setGetter(b -> Gender.toId(((Basics)b).getLeagueSystem())).setSetter((b, v) -> ((Basics)b).setLeagueSystem(Gender.fromId((Integer) v))).setType(Types.INTEGER).isNullable(true).build()
 		};
 	}
 
