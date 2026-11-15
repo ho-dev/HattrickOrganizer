@@ -718,13 +718,15 @@ public class MatchFixtures extends AbstractTable.Storable {
             calculatePreviousTablePositions(ligaTabelle, teamSlots);
         } else {
             var seriesDetails = OnlineWorker.getSeriesDetails(this.getLigaId());
-            for (var t : ligaTabelle.getEntries()) {
-                var details = seriesDetails.get(String.valueOf(t.getTeamId()));
-                var position = details.getPosition();
-                t.setPosition(position);
-                t.setAltePosition(position);
+            if (!seriesDetails.isEmpty()) {
+                for (var t : ligaTabelle.getEntries()) {
+                    var details = seriesDetails.get(String.valueOf(t.getTeamId()));
+                    var position = details.getPosition();
+                    t.setPosition(position);
+                    t.setAltePosition(position);
+                }
+                ligaTabelle.sortByPosition();
             }
-            ligaTabelle.sortByPosition();
         }
         return ligaTabelle;
     }
