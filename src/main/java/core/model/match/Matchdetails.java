@@ -76,6 +76,7 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
      * MatchContextId
      */
     private int iMatchContextId;
+    private HODateTime finishedDate;
 
     public int getMatchContextId() {
         return iMatchContextId;
@@ -1338,6 +1339,12 @@ public class Matchdetails extends AbstractTable.Storable implements core.model.m
     public final void setSpielDatumFromString(String date) {
         m_clSpielDatum = HODateTime.fromHT(date);
     }
+
+    public void setFinishedDateFromString(String date) {
+        finishedDate = HODateTime.fromHT(date);
+    }
+
+    public HODateTime getFinishedDate() { return finishedDate; }
 
     private MatchLineupTeam teamLineup;
 

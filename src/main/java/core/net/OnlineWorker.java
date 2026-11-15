@@ -297,6 +297,9 @@ public class OnlineWorker {
 						info.setArenaId(details.getArenaID());
 						info.setMatchSchedule(details.getMatchDate());
 						info.setMatchType(details.getMatchType());
+                        if (details.getFinishedDate() != null) {
+                            info.setMatchStatus(MatchKurzInfo.FINISHED);
+                        }
 						int wetterId = details.getWetterId();
 						if (wetterId != -1 && info.getMatchStatus() == MatchKurzInfo.FINISHED) {
 							info.setWeather(Weather.getById(details.getWetterId()));
