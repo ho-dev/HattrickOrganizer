@@ -1,8 +1,9 @@
 package module.training;
 
 import core.gui.comp.panel.LazyPanel;
+import core.gui.comp.tabbedPane.HOTabbedPane;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
-import core.util.Helper;
 import module.training.ui.AnalyzerPanel;
 import module.training.ui.EffectPanel;
 import module.training.ui.OutputPanel;
@@ -11,10 +12,13 @@ import module.training.ui.TrainingDevelopmentPanel;
 import module.training.ui.TrainingPanel;
 import module.training.ui.TrainingPredictionPanel;
 import module.training.ui.model.TrainingModel;
-import java.awt.BorderLayout;
+
+import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JTabbedPane;
 
 public class TrainingModulePanel extends LazyPanel {
 
@@ -26,13 +30,20 @@ public class TrainingModulePanel extends LazyPanel {
     private TrainingPanel trainingPanel;
     private TrainingDevelopmentPanel trainingDevelopmentPanel;
 
+    private final Map<String, Component> tabComponents = new HashMap<>();
+    private HOTabbedPane tabbedPane;
+
     @Override
 	protected void initialize() {
-		this.model = new TrainingModel();
-		this.trainingProgressPanel = new OutputPanel(this.model);
-        this.trainingPredictionPanel =  new TrainingPredictionPanel(this.model);
-        this.trainingAnalyzerPanel =  new AnalyzerPanel();
-        this.trainingEffectPanel =  new EffectPanel();
+		model = new TrainingModel();
+        trainingProgressPanel = new OutputPanel(this.model);
+        trainingPredictionPanel = new TrainingPredictionPanel(this.model);
+        trainingAnalyzerPanel = new AnalyzerPanel();
+        trainingEffectPanel = new EffectPanel();
+		tabComponents.put("Training", trainingProgressPanel);
+        tabComponents.put("MainPanel.Prediction", trainingPredictionPanel);
+        tabComponents.put("MainPanel.Analyzer", trainingAnalyzerPanel);
+        tabComponents.put("MainPanel.Effect",  trainingEffectPanel);
         initComponents();
 		registerRefreshable(true);
 	}
@@ -50,11 +61,19 @@ public class TrainingModulePanel extends LazyPanel {
 				new JScrollPane(new PlayerDetailPanel(this.model)));
 		UserParameter.instance().training_bottomSplitPane.init(bottomPanel);
 
-		JTabbedPane tabbedPane = new JTabbedPane();
-		tabbedPane.addTab(Helper.getTranslation("Training"), this.trainingProgressPanel);
-		tabbedPane.addTab(Helper.getTranslation("MainPanel.Prediction"), this.trainingPredictionPanel);
-		tabbedPane.addTab(Helper.getTranslation("MainPanel.Analyzer"), this.trainingAnalyzerPanel);
-		tabbedPane.addTab(Helper.getTranslation("MainPanel.Effect"), this.trainingEffectPanel);
+		tabbedPane = new HOTabbedPane("Training") {
+            @Override
+            protected Optional<HOTabComponent> findComponent(String tabId) {
+                if(tabComponents.containsKey(tabId)) {
+                    return Optional.of(new HOTabComponent(TranslationFacility.tr(tabId), tabComponents.get(tabId)));
+                }
+                return Optional.empty();
+            }
+        };
+
+        for (Map.Entry<String, Component> entry : tabComponents.entrySet()) {
+            tabbedPane.addTab(entry.getKey(), entry.getValue());
+        }
 
 		JSplitPane splitPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT, tabbedPane, bottomPanel);
 		UserParameter.instance().training_mainSplitPane.init(splitPanel);
@@ -83,5 +102,7 @@ public class TrainingModulePanel extends LazyPanel {
         if (this.trainingDevelopmentPanel != null){
             this.trainingDevelopmentPanel.storeUserSettings();
         }
+
+        tabbedPane.storeHOTabInfo();
 	}
 }
