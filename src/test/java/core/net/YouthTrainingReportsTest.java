@@ -31,22 +31,34 @@ class YouthTrainingReportsTest {
         return player;
     }
 
+    /** A download in the days after the 2026-11-21 match. */
+    private static final HODateTime NOW = HODateTime.fromHT("2026-11-22 10:00:00");
+
     @Test
     void aPlayerWithoutMatchNeedsNoRequest() {
-        assertThat(OnlineWorker.needsTrainingReports(player(910_000_001, null))).isFalse();
+        assertThat(OnlineWorker.needsTrainingReports(player(910_000_001, null), NOW)).isFalse();
     }
 
     @Test
     void aPlayerWhoPlayedButHasNoReportNeedsOne() {
-        assertThat(OnlineWorker.needsTrainingReports(player(910_000_002, "2026-11-14 19:15:00"))).isTrue();
+        assertThat(OnlineWorker.needsTrainingReports(player(910_000_002, "2026-11-21 19:15:00"), NOW)).isTrue();
     }
 
     @Test
     void onlyAMatchAfterTheNewestReportAsksAgain() {
-        DBManager.instance().storeYouthTrainerComments(List.of(report(910_000_003, "2026-11-14 21:00:00", 18)));
+        DBManager.instance().storeYouthTrainerComments(List.of(report(910_000_003, "2026-11-21 21:00:00", 18)));
 
-        assertThat(OnlineWorker.needsTrainingReports(player(910_000_003, "2026-11-14 19:15:00"))).isFalse();
-        assertThat(OnlineWorker.needsTrainingReports(player(910_000_003, "2026-11-21 19:15:00"))).isTrue();
+        assertThat(OnlineWorker.needsTrainingReports(player(910_000_003, "2026-11-21 19:15:00"), NOW)).isFalse();
+        assertThat(OnlineWorker.needsTrainingReports(player(910_000_003, "2026-11-28 19:15:00"),
+                HODateTime.fromHT("2026-11-29 10:00:00"))).isTrue();
+    }
+
+    @Test
+    void aMatchWithoutReportIsAskedForOnlyWithinTheWindow() {
+        final var player = player(910_000_005, "2026-11-21 19:15:00");
+
+        assertThat(OnlineWorker.needsTrainingReports(player, HODateTime.fromHT("2026-11-28 19:00:00"))).isTrue();
+        assertThat(OnlineWorker.needsTrainingReports(player, HODateTime.fromHT("2026-11-28 19:30:00"))).isFalse();
     }
 
     @Test
