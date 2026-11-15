@@ -73,6 +73,14 @@ dependencies {
 
 test {
     useJUnitPlatform()
+    // Tests that open DBManager get a fresh database of their own, never the user's HO database
+    def testHome = layout.buildDirectory.dir("test-home").get().asFile
+    systemProperty "user.home", testHome.absolutePath
+    environment "AppData", testHome.absolutePath
+    doFirst {
+        delete testHome
+        testHome.mkdirs()
+    }
 }
 
 //  configure application plugin --------------------------------

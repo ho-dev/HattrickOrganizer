@@ -26,6 +26,9 @@ import static core.file.xml.XMLManager.*;
 
 public class XMLPlayersParser {
     private static final String GENDER_ID = "GenderID";
+    /** youthplayerlist 1.2; OwningYouthTeam/UserId (1.4) is the team's and lives in YouthTeamDetails. */
+    public static final String YOUTH_NATIVE_COUNTRY_ID = "NativeCountryID";
+    public static final String YOUTH_NATIVE_COUNTRY_NAME = "NativeCountryName";
     //~ Constructors -------------------------------------------------------------------------------
 
     /**
@@ -319,6 +322,10 @@ public class XMLPlayersParser {
                 xmlValue2Hash(hash, root, "FriendlyGoals");
                 //      <GenderID>1</GenderID>
                 xmlValue2Hash(hash, root, GENDER_ID);
+                //      <NativeCountryID>3</NativeCountryID> (1.2)
+                xmlValue2Hash(hash, root, YOUTH_NATIVE_COUNTRY_ID);
+                //      <NativeCountryName>Deutschland</NativeCountryName> (1.2), in the manager's language
+                xmlValue2Hash(hash, root, YOUTH_NATIVE_COUNTRY_NAME);
                 //      <OwningYouthTeam>
                 //        <YouthTeamID>2325763</YouthTeamID>
                 //        <YouthTeamName>Brenk Street Boys 2</YouthTeamName>

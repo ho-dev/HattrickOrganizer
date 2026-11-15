@@ -190,7 +190,7 @@ public class XMLManager {
 
         return doc;
     }
-    
+
     /**
      * Parse XML from input stream.
      */
@@ -242,9 +242,14 @@ public class XMLManager {
         int indexComm = inputString.indexOf("<!--");
 
         while (indexComm > -1) {
-            final int endComm = inputString.indexOf("-->");
-            final String comment = inputString.substring(indexComm, endComm + 3);
-            inputString = inputString.replaceAll(comment, "");
+            // Cut the comment out literally: used as a regex (replaceAll), a comment holding
+            // "(", "." or the like never matched itself and this loop never ended.
+            final int endComm = inputString.indexOf("-->", indexComm);
+            if (endComm < 0) {
+                // unclosed comment: leave it to the parser to reject
+                break;
+            }
+            inputString = inputString.substring(0, indexComm) + inputString.substring(endComm + 3);
             indexComm = inputString.indexOf("<!--");
         }
 

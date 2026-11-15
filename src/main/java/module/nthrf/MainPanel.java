@@ -36,18 +36,25 @@ public class MainPanel extends JPanel implements ActionListener {
      */
     private void buildGui() {
     	setLayout(new BorderLayout());
-    	JTextArea ta = new JTextArea();
-    	ta.append(TranslationFacility.tr("nthrf.hint1")+"\n");
-    	ta.append(TranslationFacility.tr("nthrf.hint2")+"\n");
-    	ta.append(TranslationFacility.tr("nthrf.hint3")+"\n");
-    	ta.append(TranslationFacility.tr("nthrf.hint4")+" '");
-    	ta.append(TranslationFacility.tr("Start")+"' ");
-    	ta.append(TranslationFacility.tr("nthrf.hint5"));
-    	ta.setEditable(false);
-    	add(new JScrollPane(ta), BorderLayout.CENTER);
+    	add(new JScrollPane(createHintArea()), BorderLayout.CENTER);
     	btnStart = new JButton(TranslationFacility.tr("Start"));
     	btnStart.addActionListener(this);
     	add(btnStart, BorderLayout.SOUTH);
+    }
+
+    /**
+     * The hints for national team coaches, read-only.
+     */
+    public static JTextArea createHintArea() {
+    	var hints = new JTextArea();
+    	hints.append(TranslationFacility.tr("nthrf.hint1") + "\n");
+    	hints.append(TranslationFacility.tr("nthrf.hint2") + "\n");
+    	hints.append(TranslationFacility.tr("nthrf.hint3") + "\n");
+    	hints.append(TranslationFacility.tr("nthrf.hint4") + " '");
+    	hints.append(TranslationFacility.tr("Start") + "' ");
+    	hints.append(TranslationFacility.tr("nthrf.hint5"));
+    	hints.setEditable(false);
+    	return hints;
     }
 
     /*

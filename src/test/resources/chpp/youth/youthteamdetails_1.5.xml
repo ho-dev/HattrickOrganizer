@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Not a captured response: built from the CHPP output tree of youthteamdetails 1.5
+     (docs/raw/chpp/youthteamdetails.md), with UserId spelled as the real 1.5 response of
+     2026-11-15 spells it (youthteamdetails_1.5_noTeam.xml). Replace with a real capture once
+     one exists. -->
+<HattrickData>
+  <FileName>youthteam.xml</FileName>
+  <Version>1.5</Version>
+  <UserID>1357154</UserID>
+  <FetchedDate>2026-11-15 10:00:00</FetchedDate>
+  <YouthTeam>
+    <YouthTeamID>3256333</YouthTeamID>
+    <YouthTeamName>JFC Akademie</YouthTeamName>
+    <ShortTeamName>JFC A</ShortTeamName>
+    <CreatedDate>2024-03-02 11:20:00</CreatedDate>
+    <UserId>1357154</UserId>
+    <GenderID>1</GenderID>
+    <LeagueSystemID>1</LeagueSystemID>
+    <IsPlayingMatch>False</IsPlayingMatch>
+    <Country>
+      <CountryID>3</CountryID>
+      <CountryName>Deutschland</CountryName>
+    </Country>
+    <Region>
+      <RegionID>229</RegionID>
+      <RegionName>Berlin</RegionName>
+    </Region>
+    <YouthArena>
+      <YouthArenaID>3236247</YouthArenaID>
+      <YouthArenaName>JFC-Zentrale</YouthArenaName>
+    </YouthArena>
+    <YouthLeague>
+      <YouthLeagueID>685791</YouthLeagueID>
+      <YouthLeagueName>Berliner Jugendliga</YouthLeagueName>
+      <YouthLeagueStatus>1</YouthLeagueStatus>
+    </YouthLeague>
+    <OwningTeam>
+      <MotherTeamID>2168446</MotherTeamID>
+      <MotherTeamName>JFC</MotherTeamName>
+    </OwningTeam>
+    <YouthTrainer>
+      <YouthPlayerID>364643130</YouthPlayerID>
+    </YouthTrainer>
+    <NextTrainingMatchDate>2026-11-18 00:00:00</NextTrainingMatchDate>
+    <ScoutList>
+      <Scout>
+        <YouthScoutID>382876</YouthScoutID>
+        <ScoutName>Joerg Hopfen</ScoutName>
+        <Age>41</Age>
+        <Country>
+          <CountryID>3</CountryID>
+          <CountryName>Deutschland</CountryName>
+        </Country>
+        <Region>
+          <RegionID>229</RegionID>
+          <RegionName>Berlin</RegionName>
+        </Region>
+        <InCountry>
+          <CountryID>46</CountryID>
+          <CountryName>Schweiz</CountryName>
+        </InCountry>
+        <InRegion>
+          <RegionID>511</RegionID>
+          <RegionName>Zürich</RegionName>
+        </InRegion>
+        <HiredDate>2025-01-05 12:00:00</HiredDate>
+        <LastCalled>2026-11-10 08:30:00</LastCalled>
+        <PlayerTypeSearch>3</PlayerTypeSearch>
+        <HofPlayerId>0</HofPlayerId>
+        <Travel>
+          <TravelStartDate>2026-11-12 09:00:00</TravelStartDate>
+          <TravelLength>650</TravelLength>
+          <TravelType>2</TravelType>
+        </Travel>
+      </Scout>
+      <Scout>
+        <YouthScoutID>382877</YouthScoutID>
+        <ScoutName>Anna Weiss</ScoutName>
+        <Age>35</Age>
+        <Country>
+          <CountryID>3</CountryID>
+          <CountryName>Deutschland</CountryName>
+        </Country>
+        <Region>
+          <RegionID>230</RegionID>
+          <RegionName>Brandenburg</RegionName>
+        </Region>
+        <InCountry>
+          <CountryID>3</CountryID>
+          <CountryName>Deutschland</CountryName>
+        </InCountry>
+        <InRegion>
+          <RegionID>230</RegionID>
+          <RegionName>Brandenburg</RegionName>
+        </InRegion>
+        <HiredDate>2025-06-01 12:00:00</HiredDate>
+        <LastCalled>2026-11-03 08:30:00</LastCalled>
+        <PlayerTypeSearch>0</PlayerTypeSearch>
+        <HofPlayerId>123456</HofPlayerId>
+        <Travel />
+      </Scout>
+    </ScoutList>
+  </YouthTeam>
+</HattrickData>
