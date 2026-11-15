@@ -22,6 +22,7 @@
 
 * Fix null pointer exception in nt team download (#2314)
 * Download can replace database of old team automatically (#2310)
+* Fix HO crash when chpp is not reachable (#2591)
 
 ### Player Overview
 
