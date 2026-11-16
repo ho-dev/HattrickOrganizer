@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Timeout;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-/** XMLManager.parseString drops comments; one holding regex characters once hung it forever. */
 class XMLManagerCommentTest {
 
     @Test
