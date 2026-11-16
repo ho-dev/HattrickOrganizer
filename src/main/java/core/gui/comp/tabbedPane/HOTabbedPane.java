@@ -67,7 +67,7 @@ public abstract class HOTabbedPane extends DraggableTabbedPane {
 
     @Override
     public void remove(int tabIndex) {
-        var hoTab = tabs.stream().filter(i -> i.info().getTabIndex() == tabIndex).findFirst();
+        var hoTab = findHOTab(tabIndex);
         if (hoTab.isPresent()) {
             tabs.remove(hoTab.get());
             var dbManager = HOVerwaltung.instance().getPersistenceManager();
@@ -106,7 +106,7 @@ public abstract class HOTabbedPane extends DraggableTabbedPane {
 
         // Store tab info
         var dbManager = HOVerwaltung.instance().getPersistenceManager();
-        dbManager.storeHOTabInfo(tabs.stream().map(HOTab::info).filter(info -> info.getTabIndex() != -1).toList());
+        dbManager.storeHOTabInfo(tabs.stream().map(HOTab::info).toList());
     }
 
     protected abstract Optional<HOTabComponent> findComponent(String tabId);
