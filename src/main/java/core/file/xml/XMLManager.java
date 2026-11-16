@@ -10,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -175,14 +176,10 @@ public class XMLManager {
      * Parse XM from file name.
      */
     public static Document parseFile(String fileName) {
-        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder;
         Document doc = null;
 
         try {
-            builder = factory.newDocumentBuilder();
-
-            doc = builder.parse(new File(fileName));
+            doc = newDocumentBuilder().parse(new File(fileName));
         } catch (Exception e) {
             HOLogger.instance().log(XMLManager.class,"Parser error: " + e);
             HOLogger.instance().log(XMLManager.class,e);
@@ -194,14 +191,11 @@ public class XMLManager {
     /**
      * Parse XML from input stream.
      */
-	public static Document parseFile(InputStream xmlStream) {
-		final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder;
-		Document doc = null;
+		public static Document parseFile(InputStream xmlStream) {
+			Document doc = null;
 
-		try {
-			builder = factory.newDocumentBuilder();
-			doc = builder.parse(xmlStream);
+			try {
+				doc = newDocumentBuilder().parse(xmlStream);
 		} catch (Exception e) {
 			HOLogger.instance().log(XMLManager.class, "Parser error: " + e);
 			HOLogger.instance().log(XMLManager.class, e);
@@ -214,17 +208,10 @@ public class XMLManager {
      * Parse XML fro file.
      */
     public static Document parseFile(File datei) {
-        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder;
         Document doc = null;
 
         try {
-            //Validierung, Namensräume einschalten
-            //factory.setValidating ( false );
-            //factory.setNamespaceAware ( true );
-            builder = factory.newDocumentBuilder();
-
-            doc = builder.parse(datei);
+            doc = newDocumentBuilder().parse(datei);
         } catch (Exception e) {
             HOLogger.instance().log(XMLManager.class,"Parser fehler: " + e);
             HOLogger.instance().log(XMLManager.class,e);
@@ -237,29 +224,12 @@ public class XMLManager {
      * parsed eine übergebene Datei
      */
     public static Document parseString(String inputString) {
-        //Fix to remove commented tag
         if ( inputString == null || inputString.isEmpty()) return null;
-        int indexComm = inputString.indexOf("<!--");
-
-        while (indexComm > -1) {
-            // Cut the comment out literally: used as a regex (replaceAll), a comment holding
-            // "(", "." or the like never matched itself and this loop never ended.
-            final int endComm = inputString.indexOf("-->", indexComm);
-            if (endComm < 0) {
-                // unclosed comment: leave it to the parser to reject
-                break;
-            }
-            inputString = inputString.substring(0, indexComm) + inputString.substring(endComm + 3);
-            indexComm = inputString.indexOf("<!--");
-        }
 
         Document doc = null;
         try {
             final java.io.ByteArrayInputStream input = new java.io.ByteArrayInputStream(inputString.getBytes(StandardCharsets.UTF_8));
-            final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder;
-            builder = factory.newDocumentBuilder();
-            doc = builder.parse(input);
+            doc = newDocumentBuilder().parse(input);
         } catch (Exception e) {
             HOLogger.instance().log(XMLManager.class,"Parser fehler: " + e);
             HOLogger.instance().log(XMLManager.class,e);
@@ -271,6 +241,15 @@ public class XMLManager {
         }
 
         return doc;
+    }
+
+    /**
+     * Comments are dropped by the parser, so a comment never shows up as the first child of an element.
+     */
+    private static DocumentBuilder newDocumentBuilder() throws ParserConfigurationException {
+        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        factory.setIgnoringComments(true);
+        return factory.newDocumentBuilder();
     }
 
     /**
