@@ -2,6 +2,7 @@ package core.db
 
 import core.model.misc.Basics
 import core.util.HODateTime
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.*
 import java.sql.Connection
 import java.sql.DriverManager
@@ -25,9 +26,9 @@ internal class BasicsTableTest {
     @Test
     fun testCreateIndexStatementCreatesCorrectStatement() {
         val indices = basicsTable.createIndexStatement
-        Assertions.assertNotNull(indices)
-        Assertions.assertEquals(1, indices.size)
-        Assertions.assertEquals("CREATE INDEX IBASICS_2 ON BASICS(Datum)", indices[0])
+        assertThat(indices).isNotNull()
+        assertThat(indices.size).isEqualTo(1)
+        assertThat(indices[0]).isEqualTo("CREATE INDEX IBASICS_2 ON BASICS(Datum)")
     }
 
     @Test
@@ -61,7 +62,7 @@ internal class BasicsTableTest {
         basicsTable.saveBasics(43, seasonBreakBasics(0))
 
         val loaded = basicsTable.loadBasics(43)
-        Assertions.assertEquals(0, loaded.storedSeasonOffset)
+        assertThat(loaded.storedSeasonOffset).isEqualTo(0)
     }
 
     @Test
@@ -69,7 +70,7 @@ internal class BasicsTableTest {
         basicsTable.saveBasics(44, seasonBreakBasics(null))
 
         val loaded = basicsTable.loadBasics(44)
-        Assertions.assertEquals(1, loaded.storedSeasonOffset)
+        assertThat(loaded.storedSeasonOffset).isEqualTo(1)
     }
 
     companion object {
