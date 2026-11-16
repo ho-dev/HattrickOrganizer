@@ -65,6 +65,17 @@ public abstract class HOTabbedPane extends DraggableTabbedPane {
         return false;
     }
 
+    @Override
+    public void remove(int tabIndex) {
+        var hoTab = tabs.stream().filter(i -> i.info().getTabIndex() == tabIndex).findFirst();
+        if (hoTab.isPresent()) {
+            tabs.remove(hoTab.get());
+            var dbManager = HOVerwaltung.instance().getPersistenceManager();
+            dbManager.deleteHOTabInfo(List.of(hoTab.get().info()));
+        }
+        removeTabAt(tabIndex);
+    }
+
     public Optional<Integer> getIndexOfTab(String tabId) {
         for (int index = 0; index < getTabCount(); index++) {
             var hoTab = findHOTab(index);
@@ -74,7 +85,7 @@ public abstract class HOTabbedPane extends DraggableTabbedPane {
                 }
             }
         }
-        return Optional.empty(); // Not found
+        return Optional.empty();
     }
 
     private Optional<HOTab> findHOTab(int tabIndex) {
@@ -83,9 +94,6 @@ public abstract class HOTabbedPane extends DraggableTabbedPane {
     }
 
     public void storeHOTabInfo() {
-        // Reset index settings
-        tabs.forEach(tab -> tab.info().setTabIndex(-1));
-
         // Find current index settings
         for (int i = 0; i < getTabCount(); i++) {
             var hoTab = findHOTab(i);
@@ -99,7 +107,6 @@ public abstract class HOTabbedPane extends DraggableTabbedPane {
         // Store tab info
         var dbManager = HOVerwaltung.instance().getPersistenceManager();
         dbManager.storeHOTabInfo(tabs.stream().map(HOTab::info).filter(info -> info.getTabIndex() != -1).toList());
-        dbManager.deleteHOTabInfo(tabs.stream().map(HOTab::info).filter(info -> info.getTabIndex() == -1).toList());
     }
 
     protected abstract Optional<HOTabComponent> findComponent(String tabId);

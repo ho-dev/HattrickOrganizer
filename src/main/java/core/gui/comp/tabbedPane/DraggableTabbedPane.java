@@ -59,7 +59,7 @@ public class DraggableTabbedPane extends JTabbedPane {
         addMouseListener(new MouseAdapter() {
             public void mouseReleased(MouseEvent e) {
                 if (dragging) {
-                    int tabNumber = getUI().tabForCoordinate(DraggableTabbedPane.this, e.getX(), 10);
+                    int tabNumber = getUI().tabForCoordinate(DraggableTabbedPane.this, e.getX(), e.getY());
                     if (tabNumber >= 0) {
                         Component comp = getComponentAt(draggedTabIndex);
                         String title = getTitleAt(draggedTabIndex);

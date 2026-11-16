@@ -14,7 +14,7 @@ import module.training.ui.TrainingPredictionPanel;
 import module.training.ui.model.TrainingModel;
 
 import java.awt.*;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 import javax.swing.JScrollPane;
@@ -30,7 +30,7 @@ public class TrainingModulePanel extends LazyPanel {
     private TrainingPanel trainingPanel;
     private TrainingDevelopmentPanel trainingDevelopmentPanel;
 
-    private final Map<String, Component> tabComponents = new HashMap<>();
+    private final Map<String, Component> tabComponents = new LinkedHashMap<>();
     private HOTabbedPane tabbedPane;
 
     @Override
@@ -103,6 +103,8 @@ public class TrainingModulePanel extends LazyPanel {
             this.trainingDevelopmentPanel.storeUserSettings();
         }
 
-        tabbedPane.storeHOTabInfo();
+        if (this.tabbedPane != null){
+            tabbedPane.storeHOTabInfo();
+        }
 	}
 }

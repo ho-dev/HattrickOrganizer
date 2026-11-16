@@ -2,13 +2,10 @@ package core.gui.comp.tabbedPane;
 
 import core.db.AbstractTable;
 
-import java.awt.*;
-
 public class HOTabInfo extends AbstractTable.Storable {
     private String tabbedPaneId;
     private String tabId;
     private int tabIndex;
-    private Component component;
 
     /**
      * constructor is used by AbstractTable
