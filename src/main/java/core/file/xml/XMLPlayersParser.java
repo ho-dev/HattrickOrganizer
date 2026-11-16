@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Vector;
 
 import core.constants.player.PlayerSkill;
+import core.model.enums.Gender;
 import core.db.user.UserManager;
 import core.model.HOVerwaltung;
 import core.model.match.MatchKurzInfo;
@@ -24,6 +25,7 @@ import static core.file.xml.XMLManager.*;
 
 
 public class XMLPlayersParser {
+    private static final String GENDER_ID = "GenderID";
     //~ Constructors -------------------------------------------------------------------------------
 
     /**
@@ -162,6 +164,7 @@ public class XMLPlayersParser {
         xmlValue2Hash(hash, root, "GoalsCurrentTeam");
         xmlValue2Hash(hash, root, "CareerAssists");
         xmlValue2Hash(hash, root, "AssistsCurrentTeam");
+        xmlValue2Hash(hash, root, GENDER_ID);
         ele = (Element) root.getElementsByTagName("Specialty").item(0);
         hash.put("Specialty", (XMLManager.getFirstChildNodeValue(ele)));
         ele = (Element) root.getElementsByTagName("TransferListed").item(0);
@@ -243,11 +246,14 @@ public class XMLPlayersParser {
     }
 
     private static  List<HallOfFamePlayer> createHallOfFamesPlayerList(Document doc) {
+        if (doc == null) {
+            return null;
+        }
         var root = doc.getDocumentElement();
         var ret = new ArrayList<HallOfFamePlayer>();
         // <Players> # error in chpp api doc
         root = (Element) root.getElementsByTagName("PlayerList").item(0);
-        if ( root != null) {
+        if (root != null) {
             // <Player>
             var list = root.getElementsByTagName("Player");
             for (int i = 0; i < list.getLength(); i++) {
@@ -314,6 +320,8 @@ public class XMLPlayersParser {
                 xmlValue2Hash(hash, root, "LeagueGoals");
                 //      <FriendlyGoals>1</FriendlyGoals>
                 xmlValue2Hash(hash, root, "FriendlyGoals");
+                //      <GenderID>1</GenderID>
+                xmlValue2Hash(hash, root, GENDER_ID);
                 //      <OwningYouthTeam>
                 //        <YouthTeamID>2325763</YouthTeamID>
                 //        <YouthTeamName>Brenk Street Boys 2</YouthTeamName>
@@ -477,6 +485,7 @@ public class XMLPlayersParser {
         player.setCurrentTeamGoals(xmlIntValue(root, "GoalsCurrentTeam"));
         player.setCareerAssists(xmlIntValue(root, "CareerAssists"));
         player.setAssistsCurrentTeam(xmlIntValue(root, "AssistsCurrentTeam"));
+        player.setGender(Gender.fromId(xmlIntegerValue(root, GENDER_ID)));
         player.setNationalTeamId(xmlIntegerValue(root, "NationalTeamID"));
 
 //        NationalTeamName : String*

@@ -8,6 +8,7 @@ package core.file.xml;
 
 import core.model.HOVerwaltung;
 import core.model.WorldDetailLeague;
+import core.model.enums.Gender;
 import core.util.HODateTime;
 import core.util.HOLogger;
 
@@ -57,6 +58,7 @@ public class XMLWorldDetailsParser {
 				tmp.setLeagueId(xmlIntValue(root, "LeagueID", -1));
 				tmp.setCountryName( xmlValue(root, "EnglishName"));
 				tmp.setActiveUsers(xmlIntValue(root, "ActiveTeams", -1));
+				tmp.setLeagueSystem(Gender.fromId(xmlIntegerValue(root, "LeagueSystemID")));
 
 				root = (Element) root.getElementsByTagName("Country").item(0);
 				ele = (Element) root.getElementsByTagName("CountryID").item(0);

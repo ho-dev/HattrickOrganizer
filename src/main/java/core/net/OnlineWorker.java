@@ -297,6 +297,9 @@ public class OnlineWorker {
 						info.setArenaId(details.getArenaID());
 						info.setMatchSchedule(details.getMatchDate());
 						info.setMatchType(details.getMatchType());
+                        if (details.getFinishedDate() != null) {
+                            info.setMatchStatus(MatchKurzInfo.FINISHED);
+                        }
 						int wetterId = details.getWetterId();
 						if (wetterId != -1 && info.getMatchStatus() == MatchKurzInfo.FINISHED) {
 							info.setWeather(Weather.getById(details.getWetterId()));
@@ -1209,8 +1212,8 @@ public class OnlineWorker {
 		return details;
 	}
 
-	public static Player downloadPlayerDetails(String playerID) {
-		var xml = Connector.instance().downloadPlayerDetails(playerID);
+	public static Player downloadPlayerDetails(String playerId) {
+		var xml = Connector.instance().downloadPlayerDetails(playerId);
 		return new XMLPlayersParser().parsePlayerDetailsFromString(xml);
 	}
 

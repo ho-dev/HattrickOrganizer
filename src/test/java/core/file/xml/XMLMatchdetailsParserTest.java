@@ -30,6 +30,7 @@ class XMLMatchdetailsParserTest {
         assertThat(matchdetails.getMatchreport()).isEqualTo("");
         assertThat(matchdetails.getFetchDatum()).isEqualTo(HODateTime.fromHT("2026-10-08 12:36:42"));
         assertThat(matchdetails.getMatchDate()).isEqualTo(HODateTime.fromHT("2026-10-06 18:15:00"));
+        assertThat(matchdetails.getFinishedDate()).isEqualTo(HODateTime.fromHT("2026-10-06 20:03:00"));
         assertThat(matchdetails.getArenaID()).isEqualTo(2154092);
         assertThat(matchdetails.getGuestTeamId()).isEqualTo(128206);
         assertThat(matchdetails.getGuestEinstellung()).isEqualTo(IMatchDetails.EINSTELLUNG_UNBEKANNT);
@@ -91,6 +92,7 @@ class XMLMatchdetailsParserTest {
         assertThat(matchdetails.getMatchreport()).isEqualTo("");
         assertThat(matchdetails.getFetchDatum()).isEqualTo(HODateTime.fromHT("2026-11-02 23:56:03"));
         assertThat(matchdetails.getMatchDate()).isEqualTo(HODateTime.fromHT("2026-09-08 18:00:00"));
+        assertThat(matchdetails.getFinishedDate()).isEqualTo(HODateTime.fromHT("2026-09-08 20:32:00"));
         assertThat(matchdetails.getArenaID()).isEqualTo(1242154);
         assertThat(matchdetails.getGuestTeamId()).isEqualTo(334857);
         assertThat(matchdetails.getGuestEinstellung()).isEqualTo(IMatchDetails.EINSTELLUNG_UNBEKANNT);
@@ -169,6 +171,7 @@ class XMLMatchdetailsParserTest {
         assertThat(matchdetails.getMatchreport()).isEqualTo("");
         assertThat(matchdetails.getFetchDatum()).isEqualTo(HODateTime.fromHT("2026-11-01 15:45:00"));
         assertThat(matchdetails.getMatchDate()).isEqualTo(HODateTime.fromHT("2026-11-01 16:00:00"));
+        assertThat(matchdetails.getFinishedDate()).isNull();
         assertThat(matchdetails.getArenaID()).isEqualTo(574260);
         assertThat(matchdetails.getGuestTeamId()).isEqualTo(1242154);
         assertThat(matchdetails.getGuestEinstellung()).isEqualTo(IMatchDetails.EINSTELLUNG_UNBEKANNT);
@@ -231,6 +234,7 @@ class XMLMatchdetailsParserTest {
         matchLineup.setGuestTeam(XMLMatchLineupParser.parseMatchLineupFromString(xmlFileMatchLineupTeam2).getGuestTeam());
 
         final var expectedMatchDate = HODateTime.fromHT("2026-10-06 18:15:00");
+        final var expectedFinishedDate = HODateTime.fromHT("2026-10-06 20:03:00");
 
         final var expectedMatchEvents = new ArrayList<MatchEvent>();
         expectedMatchEvents.add(createExpectedMatchEvent(0, Matchdetails.eInjuryType.NA, 50000, 31, 5, 0, 0, 2154092, true, 1648, true, "<a href=\"/Club/Stadium/?stadiumId=2154092\">Alte Rösterei</a> - 1648 ZuschauerInnen blickten angesichts der dunklen Wolken besorgt in den Himmel, aber der befürchtete Regen blieb aus. <a href=\"/Club/HallOfFame/Player.aspx?playerId=455444108\">Sultan Hafeeth Al-Buayqy</a> wurde als Schiedsrichter angesetzt, Unterstützung erhielt er von seinen Assistenten <a href=\"/Club/HallOfFame/Player.aspx?playerId=474275056\">Bill Matthews</a> und <a href=\"/Club/HallOfFame/Player.aspx?playerId=459237940\">Idar Åkesson</a>."));
@@ -294,6 +298,7 @@ class XMLMatchdetailsParserTest {
             "                    Ein wichtiger Pass zum richtigen Zeitpunkt: <a href=\"/Club/Players/Player.aspx?playerId=503221197\" title=\"Leonardo &#39;Leo&#39; Bittencourt\" class=\"homeplayer\">Leonardo 'Leo' Bittencourt</a> bereitete das Tor exzellent vor. Die Nachspielzeit beträgt 3 Minute(n). Die Begegnung endete 7 - 0.  <span class=\"hometeam\">KJH</span> erreichte laut HT-Datenbank 53 Prozent Ballbesitz.<br ><br > Der beste Spieler von <span class=\"hometeam\">KJH</span> war ohne jeden Zweifel <a href=\"/Club/Players/Player.aspx?playerId=462788780\" title=\"Daniel Stendel\" class=\"homeplayer\">Daniel Stendel</a>. Nach diesem Spiel forderten die Fans von <span class=\"awayteam\">Napoli-Köpenick</span> eine \"<a href=\"/Club/Players/Player.aspx?playerId=483281921\" title=\"Cesare Parmendola\" class=\"awayplayer\">Cesare Parmendola</a>-Straße\" - er hatte eine herausragende Leistung abgeliefert. ");
         assertThat(matchdetails.getFetchDatum()).isEqualTo(HODateTime.fromHT("2026-10-08 12:36:42"));
         assertThat(matchdetails.getMatchDate()).isEqualTo(expectedMatchDate);
+        assertThat(matchdetails.getFinishedDate()).isEqualTo(expectedFinishedDate);
         assertThat(matchdetails.getHighlights()).hasSize(expectedMatchEvents.size());
 
         for (var i = 0; i < matchdetails.getHighlights().size(); i++) {
@@ -381,6 +386,7 @@ class XMLMatchdetailsParserTest {
         assertThat(matchEvent.getEventText()).isEqualTo(other.getEventText());
         assertThat(matchEvent.getMatchId()).isEqualTo(other.getMatchId());
         assertThat(matchEvent.getMatchType()).isEqualTo(other.getMatchType());
+        assertThat(matchEvent.getMatchDate()).isEqualTo(other.getMatchDate());
         assertThat(matchEvent.getMatchDate()).isEqualTo(other.getMatchDate());
         assertThat(matchEvent.getMatchPartId()).isEqualTo(other.getMatchPartId());
         assertThat(matchEvent.getTeamID()).isEqualTo(other.getTeamID());

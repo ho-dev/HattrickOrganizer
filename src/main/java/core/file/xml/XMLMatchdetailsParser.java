@@ -14,6 +14,7 @@ import core.util.XMLUtils;
 import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 /**
  * @author thomas.werth
@@ -299,6 +300,11 @@ public class XMLMatchdetailsParser {
             md.setMatchID(XMLUtils.getIntValue(matchElement, "MatchID"));
             md.setSpielDatumFromString(XMLUtils.getStringValue(matchElement, "MatchDate"));
             md.setMatchContextId(XMLUtils.getIntValue(matchElement, "MatchContextId"));
+
+            final String finishedDateStr = XMLUtils.getStringValue(matchElement, "FinishedDate");
+            if (!finishedDateStr.isEmpty()) {
+                md.setFinishedDateFromString(finishedDateStr);
+            }
         } catch (Exception e) {
             HOLogger.instance().log(XMLMatchdetailsParser.class, e);
         }
