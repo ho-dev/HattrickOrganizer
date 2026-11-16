@@ -72,6 +72,7 @@ public class DraggableTabbedPane extends JTabbedPane {
                 }
                 dragging = false;
                 tabImage = null;
+                repaint();
             }
         });
     }
