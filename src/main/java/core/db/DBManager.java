@@ -66,7 +66,7 @@ public class DBManager implements PersistenceManager {
 	 * Previous db version is used by development versions to ensure that db upgrade will rerun on each
 	 * new installed preliminary version
 	 */
-	private static final int previousDBVersion = 1000;
+	private static final int PREVIOUS_DB_VERSION = 1000;
 	private static final double DBConfigVersion = 11d; // HO 11.0 version
 
 	/** 2004-06-14 11:00:00.0 */
