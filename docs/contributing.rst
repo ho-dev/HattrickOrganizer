@@ -20,6 +20,38 @@ Eclipse make sure to add all the relevant filters in the .ignore accordingly.
 In case of problems to set the development environment up, please consult our :ref:`faq` page to see 
 the list of the most common issues.
 
+Branches and releases
+---------------------------------
+
+HO always has two lines of development:
+
+- ``master`` holds the next major version: new features, improvements and database changes. It builds
+  the **dev** release.
+- ``release/<N>`` (e.g. ``release/10``) holds major version N from its beta on and takes bug fixes only.
+  It builds the **beta** and **stable** releases of N.x. The current release branch is the newest
+  ``release/<N>``. It can be in its beta phase while the latest stable HO is still N-1.
+
+Which branch your pull request goes to:
+
+- **New feature, improvement, refactoring, new translation key or database schema change:** ``master``.
+  It ships with the next major version.
+- **Fix for a bug that is already in the newest release branch:** that ``release/<N>``, also when the bug
+  was reported against an older version. Keep the change to the fix itself and reference the issue it
+  fixes. A bug in code that only exists on ``master`` is fixed on ``master``. A fix that needs a database change or a new translation key goes to
+  ``master``. Start the branch from the release branch, not from your master, for example
+  ``git checkout -b fix-1234-short-description upstream/release/10``, and pick ``release/10`` as the
+  base branch of the pull request.
+- **Not sure:** ``master``. Say in the pull request that it may be worth backporting, and the
+  maintainers decide.
+
+You never open the same fix twice. The maintainers merge ``release/<N>`` into ``master`` regularly, so a
+fix on the release branch reaches ``master`` by itself. Nothing is merged the other way.
+
+When major version N enters its beta phase, ``release/<N>`` is branched off ``master``: it builds the
+beta releases of N, and ``master`` moves on to N+1. Once N is declared stable, the same branch builds the
+stable N.0, N.1, … releases. When the beta of N+1 starts, ``release/<N+1>`` takes over and
+``release/<N>`` gets no further changes.
+
 Contributing to the Codebase
 ---------------------------------
 
