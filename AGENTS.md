@@ -29,16 +29,36 @@ For the project overview, contribution workflow and developer tips, read
 - **Translations:** all UI text goes through `TranslationFacility.tr(key)`. Add new keys to
   `src/main/resources/language/English.properties` only; POEditor owns the other languages and
   overwrites them.
-- **Swing:** touch components only on the Event Dispatch Thread, and keep long work (downloads,
-  DB scans) off it. Update panels through `RefreshManager`.
-- **Themes:** HO has light and dark themes. Never hard-code colours, fonts or icons; use
-  `ThemeManager` with `HOColorName` / `HOIconName`.
-- **Table columns** are saved per user. Give new columns new ids; never reuse an old one.
 - **Legacy German names** (`HOVerwaltung`, `Spieler…`, `Liga…`) stay as they are. Renaming
   them breaks DB columns and saved settings.
 - Log with `HOLogger.instance()`, not `System.out`.
 - Follow the existing style: singletons via `X.instance()`, no dependency injection. Java and
   Kotlin share `src/main/java`; write in the language of the file you change.
+
+## Swing
+
+- **The database is not thread-safe.** There is one JDBC connection with a shared `Statement`
+  and cached `PreparedStatement`s, and no locking. That is why downloads (`OnlineWorker`) and DB
+  access run on the Event Dispatch Thread, with `InfoPanel` repainting the progress bar
+  immediately. Don't move DB or download work into a `SwingWorker` or thread while the UI can
+  still read the DB. Only touch Swing components on the Event Dispatch Thread.
+- **New tabs extend `LazyPanel`:** `initialize()` runs when the tab is first shown, `update()`
+  only when it is shown and the data changed. Call `registerRefreshable(true)` to get updates.
+  Don't load data in the constructor; HO creates every module at startup.
+- **After data changes,** call `RefreshManager.instance().doRefresh()` (or `doReInit()` after a
+  new download) instead of updating panels one by one. `RefreshManager` keeps a strong reference
+  to every registered object: only long-lived panels register, and dialogs that register must
+  unregister when closed.
+- **Option changes** call `OptionManager.instance().setRestartNeeded()` or `setReInitNeeded()`;
+  HO does not rebuild its UI live, e.g. after a theme change.
+- **Themes:** never hard-code colours, fonts or icons. Use `ThemeManager.getColor(HOColorName.X)`,
+  `HOIconName` / `ImageUtilities` and `FontUtil`; a new colour needs a value in every theme.
+  Older panels still use `new Color(...)` and `new Font(...)`; don't copy that.
+- **Dialogs** get a parent window (usually `HOMainFrame.instance()`), not `null`, so they open
+  over HO and stay in front of it.
+- **Layouts:** use layout managers, not `setLayout(null)`/`setBounds`; translated labels are
+  often much longer than the English ones.
+- **Table columns** are saved per user. Give new columns new ids; never reuse an old one.
 
 ## Java style
 
