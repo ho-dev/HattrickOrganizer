@@ -47,6 +47,9 @@ For the project overview, contribution workflow and developer tips, read
 - In new code, use what Java 17 offers: `var` when the type is obvious from the right-hand side,
   `switch` expressions with `->`, pattern matching `instanceof`, records for simple data classes,
   and text blocks for multi-line strings.
+- Make everything `final` that isn't reassigned: fields, parameters and local variables (`final var`
+  included). Java has no immutable-by-default variables, so `final` is how the code shows what stays
+  unchanged.
 - Use `ArrayList`/`HashMap` rather than `Vector`/`Hashtable`, and `HODateTime` rather than
   `java.util.Date`.
 - Only modernise the code you are changing anyway. Don't rewrite unrelated code in the same pull
