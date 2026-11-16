@@ -38,6 +38,7 @@ public class DraggableTabbedPane extends JTabbedPane {
                         Graphics totalGraphics = totalImage.getGraphics();
                         totalGraphics.setClip(bounds);
                         // Don't be double buffered when painting to a static image.
+                        var doubleBuffered = isDoubleBuffered();
                         setDoubleBuffered(false);
                         paintComponent(totalGraphics);
                         // Paint just the dragged tab to the buffer
@@ -45,13 +46,12 @@ public class DraggableTabbedPane extends JTabbedPane {
                         Graphics graphics = tabImage.getGraphics();
                         graphics.drawImage(totalImage, 0, 0, bounds.width, bounds.height, bounds.x, bounds.y, bounds.x + bounds.width, bounds.y + bounds.height, DraggableTabbedPane.this);
                         dragging = true;
-                        repaint();
+                        setDoubleBuffered(doubleBuffered);
                     }
                 } else {
                     currentMouseLocation = e.getPoint();
-                    // Need to repaint
-                    repaint();
                 }
+                repaint();
                 super.mouseDragged(e);
             }
         });
@@ -67,6 +67,7 @@ public class DraggableTabbedPane extends JTabbedPane {
                         var tip = getToolTipTextAt(draggedTabIndex);
                         removeTabAt(draggedTabIndex);
                         insertTab(title, icon, comp, tip, tabNumber);
+                        setSelectedIndex(tabNumber);
                     }
                 }
                 dragging = false;
