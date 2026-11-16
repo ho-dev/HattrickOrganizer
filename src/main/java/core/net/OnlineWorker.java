@@ -23,6 +23,8 @@ import module.halloffame.HallOfFamePlayer;
 import module.lineup.Lineup;
 import module.nthrf.NtTeamDetails;
 import module.series.MatchFixtures;
+import module.youth.YouthPlayer;
+import module.youth.YouthTeamDetails;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.jetbrains.annotations.Nullable;
@@ -1146,6 +1148,126 @@ public class OnlineWorker {
 			HOLogger.instance().error(OnlineWorker.class,"downloadMatchData:  Error in downloading matches of season: " + exception);
 		}
 		return null;
+	}
+
+	/**
+	 * The youth files beyond the player list and the matches: the coach's training reports, the
+	 * youth team with its scouts, its league and the players' avatars. Storage only. Each part is
+	 * guarded: a failure is logged and neither the other youth parts nor the rest of the download
+	 * are skipped.
+	 */
+	public static void downloadYouthTeamData(HOModel model) {
+		guarded("youth training reports", () -> downloadYouthTrainingReports(model));
+		guarded("youth team details and league", () -> {
+			final var youthTeam = downloadYouthTeamDetails(model);
+			if (youthTeam != null && youthTeam.getYouthLeagueId() != null) {
+				downloadYouthLeague(youthTeam.getYouthLeagueId());
+			}
+		});
+		guarded("youth avatars", () -> downloadYouthAvatars(model.getBasics().getYouthTeamId()));
+	}
+
+	private static void guarded(String part, Runnable download) {
+		try {
+			download.run();
+		} catch (RuntimeException e) {
+			HOLogger.instance().error(OnlineWorker.class, "Download of " + part + " failed: " + e);
+		}
+	}
+
+	/**
+	 * The coach's training reports (youthplayerdetails 1.4). One request per player, so only for a
+	 * player who has played a youth match since his newest stored report, or has none yet. Stops
+	 * at the first answer that shows the club below Gold supporter: Hattrick sends it no reports.
+	 */
+	public static void downloadYouthTrainingReports(HOModel model) {
+		final var now = HODateTime.now();
+		for (var player : model.getCurrentYouthPlayers()) {
+			if (needsTrainingReports(player, now) && !downloadTrainingReports(player)) {
+				return;
+			}
+		}
+	}
+
+	/** @return false when the club gets no reports at all, so the other players need no request */
+	private static boolean downloadTrainingReports(YouthPlayer player) {
+		final var reports = XMLYouthPlayerDetailsParser.parseTrainingReports(
+				Connector.instance().downloadYouthPlayerDetails(player.getId()));
+		if (reports == null) {
+			// logged by the connector (e.g. error 62, promoted meanwhile)
+			return true;
+		}
+		if (!reports.reportsAvailable()) {
+			HOLogger.instance().info(OnlineWorker.class,
+					"No youth training reports below Gold supporter (" + reports.supporterTier() + ")");
+			return false;
+		}
+		DBManager.instance().storeYouthTrainerComments(reports.reports());
+		player.resetTrainerComments();
+		return true;
+	}
+
+	/**
+	 * The youth team and its scouts (youthteamdetails 1.5), stored with the model's HRF.
+	 *
+	 * @return the team, null when the download failed or the club has none
+	 */
+	public static YouthTeamDetails downloadYouthTeamDetails(HOModel model) {
+		final var details = XMLYouthTeamDetailsParser.parse(
+				Connector.instance().downloadYouthTeamDetails(model.getBasics().getYouthTeamId()), model.getHrfId());
+		if (details != null) {
+			DBManager.instance().storeYouthTeamDetails(details);
+		}
+		return details;
+	}
+
+	/**
+	 * The youth league's standings (youthleaguedetails 1.1) and fixtures (youthleaguefixtures 1.0)
+	 * of the current season. Two requests; stored only when both answers belong together.
+	 */
+	public static void downloadYouthLeague(int youthLeagueId) {
+		final var mc = Connector.instance();
+		final var silent = mc.setSilentDownload(true);
+		try {
+			final var league = XMLYouthLeagueParser.parseDetails(mc.downloadYouthLeagueDetails(youthLeagueId));
+			if (league != null && XMLYouthLeagueParser.parseFixtures(mc.downloadYouthLeagueFixtures(youthLeagueId), league)) {
+				DBManager.instance().storeYouthLeague(league);
+			}
+		} finally {
+			mc.setSilentDownload(silent);
+		}
+	}
+
+	/** The youth players' avatars (youthavatars 1.2); only missing images are fetched. */
+	public static void downloadYouthAvatars(int youthTeamId) {
+		final var mc = Connector.instance();
+		final var silent = mc.setSilentDownload(true);
+		try {
+			ThemeManager.instance().generateAllYouthPlayerAvatar(
+					XMLAvatarsParser.parseYouthAvatarsFromString(mc.getYouthAvatars(youthTeamId)), 0);
+		} finally {
+			mc.setSilentDownload(silent);
+		}
+	}
+
+	/**
+	 * How long after a youth match its report is still asked for. The coach may write none (or not
+	 * yet), and without this limit every download would ask again until the next report. CHPP sends
+	 * the player's whole report history, so a report missed here comes with the next match's.
+	 */
+	static final int TRAINING_REPORT_WINDOW_DAYS = 7;
+
+	/**
+	 * A youth match within the last {@link #TRAINING_REPORT_WINDOW_DAYS} days that is newer than
+	 * the newest stored report, or no report yet for a player who played then.
+	 */
+	static boolean needsTrainingReports(YouthPlayer player, HODateTime now) {
+		final var lastMatch = player.getYouthMatchDate();
+		if (lastMatch == null || lastMatch.isBefore(now.minus(TRAINING_REPORT_WINDOW_DAYS, ChronoUnit.DAYS))) {
+			return false;
+		}
+		final var stored = player.getTrainerComments();
+		return stored.isEmpty() || stored.get(0).getReportDate().isBefore(lastMatch);
 	}
 
 	public static void downloadMissingYouthMatchData(HOModel model, HODateTime dateSince) {

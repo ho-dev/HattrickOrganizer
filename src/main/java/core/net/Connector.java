@@ -472,6 +472,44 @@ public class Connector {
 		return ret;
 	}
 
+	/**
+	 * One youth player's details, read for the coach's TrainingReports (1.4). Silent: error 62
+	 * (promoted meanwhile) and the like are logged and come back empty, never as a dialog.
+	 */
+	public String downloadYouthPlayerDetails(int youthPlayerId) {
+		final var silent = setSilentDownload(true);
+		try {
+			return getCHPPWebFile(htUrl + "?file=youthplayerdetails&version=1.4&actionType=details&youthPlayerId=" + youthPlayerId);
+		} finally {
+			setSilentDownload(silent);
+		}
+	}
+
+	/** The youth team with its scouts (1.5). Silent: a missing team is logged, not a dialog. */
+	public String downloadYouthTeamDetails(int youthTeamId) {
+		final var silent = setSilentDownload(true);
+		try {
+			return getCHPPWebFile(htUrl + "?file=youthteamdetails&version=1.5&showScouts=true&youthTeamId=" + youthTeamId);
+		} finally {
+			setSilentDownload(silent);
+		}
+	}
+
+	/** The youth players' avatars (1.2). */
+	public String getYouthAvatars(int youthTeamId) {
+		return getCHPPWebFile(htUrl + "?file=youthavatars&version=1.2&youthTeamId=" + youthTeamId);
+	}
+
+	/** The youth league and its standings (1.1). */
+	public String downloadYouthLeagueDetails(int youthLeagueId) {
+		return getCHPPWebFile(htUrl + "?file=youthleaguedetails&version=1.1&youthleagueid=" + youthLeagueId);
+	}
+
+	/** The youth league's matches of the current season (1.0, the only version). */
+	public String downloadYouthLeagueFixtures(int youthLeagueId) {
+		return getCHPPWebFile(htUrl + "?file=youthleaguefixtures&version=1.0&youthleagueid=" + youthLeagueId);
+	}
+
     public String downloadHallOfFamePlayers(int teamId) {
         String url = htUrl + "?file=hofplayers&version=1.2&teamID=" + teamId;
         return  getCHPPWebFile(url);

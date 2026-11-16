@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Not a captured response: built from the CHPP output tree of youthavatars 1.2
+     (docs/raw/chpp/youthavatars.md). Replace with a real capture once one exists. -->
+<HattrickData>
+  <FileName>youthavatars.xml</FileName>
+  <Version>1.2</Version>
+  <UserID>1357154</UserID>
+  <FetchedDate>2026-11-15 10:00:00</FetchedDate>
+  <YouthTeam>
+    <YouthTeamId>3256333</YouthTeamId>
+    <YouthPlayers>
+      <YouthPlayer>
+        <YouthPlayerID>364643130</YouthPlayerID>
+        <Avatar>
+          <BackgroundImage>/Img/Avatar/backgrounds/card1.png</BackgroundImage>
+          <Layer x="9" y="10">
+            <Image>/Img/Avatar/backgrounds/bg_blue.png</Image>
+          </Layer>
+          <Layer x="25" y="40">
+            <Image>/Img/Avatar/bodies/bd1s.png</Image>
+          </Layer>
+          <Layer x="60" y="12">
+            <Image>/Img/Avatar/misc/t3.png</Image>
+          </Layer>
+        </Avatar>
+      </YouthPlayer>
+      <YouthPlayer>
+        <YouthPlayerID>364643131</YouthPlayerID>
+        <Avatar>
+          <BackgroundImage>/Img/Avatar/backgrounds/card1.png</BackgroundImage>
+          <Layer x="9" y="10">
+            <Image>/Img/Avatar/backgrounds/bg_red.png</Image>
+          </Layer>
+        </Avatar>
+      </YouthPlayer>
+    </YouthPlayers>
+  </YouthTeam>
+</HattrickData>
