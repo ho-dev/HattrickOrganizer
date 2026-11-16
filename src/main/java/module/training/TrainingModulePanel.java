@@ -13,7 +13,8 @@ import module.training.ui.TrainingPanel;
 import module.training.ui.TrainingPredictionPanel;
 import module.training.ui.model.TrainingModel;
 
-import java.awt.*;
+import java.awt.Component;
+import java.awt.BorderLayout;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;

@@ -20,7 +20,11 @@ import module.transfer.TransfersModule;
 import module.tsforecast.TSForecastModule;
 import module.youth.YouthModule;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.ArrayList;
+import java.util.Collection;
 
 public final class ModuleManager {
 

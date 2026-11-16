@@ -296,8 +296,8 @@ class TestPersistenceManager : PersistenceManager {
         return ret
     }
 
-    override fun loadHOTabInfo(tabbedPaneID: String?): List<HOTabInfo?>? {
-        return null;
+    override fun loadHOTabInfo(tabbedPaneID: String?): List<HOTabInfo?> {
+        return emptyList()
     }
 
     override fun storeHOTabInfo(list: List<HOTabInfo?>?) {
