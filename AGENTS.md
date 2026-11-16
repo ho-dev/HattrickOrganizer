@@ -40,6 +40,18 @@ For the project overview, contribution workflow and developer tips, read
 - Follow the existing style: singletons via `X.instance()`, no dependency injection. Java and
   Kotlin share `src/main/java`; write in the language of the file you change.
 
+## Java style
+
+- The limit is Java 17. Java 21 features don't compile here: no pattern matching in `switch`, no
+  record patterns, no `getFirst()`/`getLast()` on lists.
+- In new code, use what Java 17 offers: `var` when the type is obvious from the right-hand side,
+  `switch` expressions with `->`, pattern matching `instanceof`, records for simple data classes,
+  and text blocks for multi-line strings.
+- Use `ArrayList`/`HashMap` rather than `Vector`/`Hashtable`, and `HODateTime` rather than
+  `java.util.Date`.
+- Only modernise the code you are changing anyway. Don't rewrite unrelated code in the same pull
+  request.
+
 ## Testing
 
 Tests (JUnit 5, AssertJ, Mockito) cover logic only. They run headless, so they must not open
