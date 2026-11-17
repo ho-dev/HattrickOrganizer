@@ -10,7 +10,8 @@ public class HOTabInfo extends AbstractTable.Storable {
     /**
      * constructor is used by AbstractTable
      */
-    public HOTabInfo() {}
+    public HOTabInfo() {
+    }
 
     public HOTabInfo(String tabbedPaneId, String tabId, int index) {
         this.tabbedPaneId = tabbedPaneId;
@@ -41,5 +42,4 @@ public class HOTabInfo extends AbstractTable.Storable {
     public void setTabIndex(int tabIndex) {
         this.tabIndex = tabIndex;
     }
-
 }

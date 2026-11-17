@@ -36,7 +36,7 @@ public abstract class HOTabbedPane extends DraggableTabbedPane {
     }
 
     private void addTab(HOTabInfo tab, HOTabComponent tabComponent) {
-        if (tabs.stream().anyMatch(i -> i.info().getTabId().equals(tab.getTabId()))) {
+        if (tabs.stream().anyMatch(hotab -> hotab.info().getTabId().equals(tab.getTabId()))) {
             // already added
             return;
         }
@@ -76,7 +76,7 @@ public abstract class HOTabbedPane extends DraggableTabbedPane {
         removeTabAt(tabIndex);
     }
 
-    public Optional<Integer> getIndexOfTab(String tabId) {
+    public Optional<Integer> findIndexOfTab(String tabId) {
         for (int index = 0; index < getTabCount(); index++) {
             var hoTab = findHOTab(index);
             if (hoTab.isPresent()) {

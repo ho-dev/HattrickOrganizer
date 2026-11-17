@@ -29,14 +29,10 @@ public class HOTabInfoTable extends AbstractTable {
     }
 
     public void storeHOTabInfo(List<HOTabInfo> tabs) {
-        for (var tab : tabs) {
-            store(tab);
-        }
+        tabs.forEach(this::store);
     }
 
     public void deleteHOTabInfo(List<HOTabInfo> tabs) {
-        for (var tab : tabs) {
-            delete(tab);
-        }
+        tabs.forEach(this::delete);
     }
 }
