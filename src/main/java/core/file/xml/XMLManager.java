@@ -10,6 +10,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -175,14 +176,10 @@ public class XMLManager {
      * Parse XM from file name.
      */
     public static Document parseFile(String fileName) {
-        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder;
         Document doc = null;
 
         try {
-            builder = factory.newDocumentBuilder();
-
-            doc = builder.parse(new File(fileName));
+            doc = newDocumentBuilder().parse(new File(fileName));
         } catch (Exception e) {
             HOLogger.instance().log(XMLManager.class,"Parser error: " + e);
             HOLogger.instance().log(XMLManager.class,e);
@@ -190,18 +187,15 @@ public class XMLManager {
 
         return doc;
     }
-    
+
     /**
      * Parse XML from input stream.
      */
-	public static Document parseFile(InputStream xmlStream) {
-		final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		DocumentBuilder builder;
-		Document doc = null;
+		public static Document parseFile(InputStream xmlStream) {
+			Document doc = null;
 
-		try {
-			builder = factory.newDocumentBuilder();
-			doc = builder.parse(xmlStream);
+			try {
+				doc = newDocumentBuilder().parse(xmlStream);
 		} catch (Exception e) {
 			HOLogger.instance().log(XMLManager.class, "Parser error: " + e);
 			HOLogger.instance().log(XMLManager.class, e);
@@ -214,17 +208,10 @@ public class XMLManager {
      * Parse XML fro file.
      */
     public static Document parseFile(File datei) {
-        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder;
         Document doc = null;
 
         try {
-            //Validierung, Namensräume einschalten
-            //factory.setValidating ( false );
-            //factory.setNamespaceAware ( true );
-            builder = factory.newDocumentBuilder();
-
-            doc = builder.parse(datei);
+            doc = newDocumentBuilder().parse(datei);
         } catch (Exception e) {
             HOLogger.instance().log(XMLManager.class,"Parser fehler: " + e);
             HOLogger.instance().log(XMLManager.class,e);
@@ -237,24 +224,12 @@ public class XMLManager {
      * parsed eine übergebene Datei
      */
     public static Document parseString(String inputString) {
-        //Fix to remove commented tag
         if ( inputString == null || inputString.isEmpty()) return null;
-        int indexComm = inputString.indexOf("<!--");
-
-        while (indexComm > -1) {
-            final int endComm = inputString.indexOf("-->");
-            final String comment = inputString.substring(indexComm, endComm + 3);
-            inputString = inputString.replaceAll(comment, "");
-            indexComm = inputString.indexOf("<!--");
-        }
 
         Document doc = null;
         try {
             final java.io.ByteArrayInputStream input = new java.io.ByteArrayInputStream(inputString.getBytes(StandardCharsets.UTF_8));
-            final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-            DocumentBuilder builder;
-            builder = factory.newDocumentBuilder();
-            doc = builder.parse(input);
+            doc = newDocumentBuilder().parse(input);
         } catch (Exception e) {
             HOLogger.instance().log(XMLManager.class,"Parser fehler: " + e);
             HOLogger.instance().log(XMLManager.class,e);
@@ -266,6 +241,13 @@ public class XMLManager {
         }
 
         return doc;
+    }
+
+    private static DocumentBuilder newDocumentBuilder() throws ParserConfigurationException {
+        final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        // Ensure getFirstChildNodeValue() does not encounter comment nodes.
+        factory.setIgnoringComments(true);
+        return factory.newDocumentBuilder();
     }
 
     /**
