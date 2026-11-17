@@ -23,8 +23,8 @@ import javax.swing.JSplitPane;
 
 public class TrainingModulePanel extends LazyPanel {
 
-	private TrainingModel model;
-	private OutputPanel trainingProgressPanel;
+    private TrainingModel model;
+    private OutputPanel trainingProgressPanel;
     private TrainingPredictionPanel trainingPredictionPanel;
     private AnalyzerPanel trainingAnalyzerPanel;
     private EffectPanel trainingEffectPanel;
@@ -35,34 +35,34 @@ public class TrainingModulePanel extends LazyPanel {
     private HOTabbedPane tabbedPane;
 
     @Override
-	protected void initialize() {
-		model = new TrainingModel();
+    protected void initialize() {
+        model = new TrainingModel();
         trainingProgressPanel = new OutputPanel(this.model);
         trainingPredictionPanel = new TrainingPredictionPanel(this.model);
         trainingAnalyzerPanel = new AnalyzerPanel();
         trainingEffectPanel = new EffectPanel();
-		tabComponents.put("Training", trainingProgressPanel);
+        tabComponents.put("Training", trainingProgressPanel);
         tabComponents.put("MainPanel.Prediction", trainingPredictionPanel);
         tabComponents.put("MainPanel.Analyzer", trainingAnalyzerPanel);
-        tabComponents.put("MainPanel.Effect",  trainingEffectPanel);
+        tabComponents.put("MainPanel.Effect", trainingEffectPanel);
         initComponents();
-		registerRefreshable(true);
-	}
+        registerRefreshable(true);
+    }
 
-	@Override
-	protected void update() {
-		this.model.resetFutureTrainings();
-	}
+    @Override
+    protected void update() {
+        this.model.resetFutureTrainings();
+    }
 
-	private void initComponents() {
-		setLayout(new BorderLayout());
+    private void initComponents() {
+        setLayout(new BorderLayout());
 
-		this.trainingDevelopmentPanel = new TrainingDevelopmentPanel(this.model);
-		JSplitPane bottomPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, trainingDevelopmentPanel,
-				new JScrollPane(new PlayerDetailPanel(this.model)));
-		UserParameter.instance().training_bottomSplitPane.init(bottomPanel);
+        this.trainingDevelopmentPanel = new TrainingDevelopmentPanel(this.model);
+        JSplitPane bottomPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, trainingDevelopmentPanel,
+            new JScrollPane(new PlayerDetailPanel(this.model)));
+        UserParameter.instance().training_bottomSplitPane.init(bottomPanel);
 
-		tabbedPane = new HOTabbedPane("Training") {
+        tabbedPane = new HOTabbedPane("Training") {
             @Override
             protected Optional<HOTabComponent> findComponent(String tabId) {
                 if (tabComponents.containsKey(tabId)) {
@@ -74,36 +74,40 @@ public class TrainingModulePanel extends LazyPanel {
 
         tabComponents.forEach((key, value) -> tabbedPane.addTab(key, value));
 
-		JSplitPane splitPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT, tabbedPane, bottomPanel);
-		UserParameter.instance().training_mainSplitPane.init(splitPanel);
+        JSplitPane splitPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT, tabbedPane, bottomPanel);
+        UserParameter.instance().training_mainSplitPane.init(splitPanel);
 
         this.trainingPanel = new TrainingPanel(this.model);
-		JSplitPane mainPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, splitPanel, trainingPanel);
-		UserParameter.instance().training_rightSplitPane.init(mainPanel);
-		mainPanel.setResizeWeight(0.8);
+        JSplitPane mainPanel = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, splitPanel, trainingPanel);
+        UserParameter.instance().training_rightSplitPane.init(mainPanel);
+        mainPanel.setResizeWeight(0.8);
 
-		mainPanel.setOpaque(false);
-		add(mainPanel, BorderLayout.CENTER);
-	}
+        mainPanel.setOpaque(false);
+        add(mainPanel, BorderLayout.CENTER);
+    }
 
-	public void storeUserSettings() {
-        if (this.trainingProgressPanel != null)
+    public void storeUserSettings() {
+        if (this.trainingProgressPanel != null) {
             this.trainingProgressPanel.storeUserSettings();
-        if (this.trainingAnalyzerPanel != null)
+        }
+        if (this.trainingAnalyzerPanel != null) {
             this.trainingAnalyzerPanel.storeUserSettings();
-        if (this.trainingPredictionPanel != null)
+        }
+        if (this.trainingPredictionPanel != null) {
             this.trainingPredictionPanel.storeUserSettings();
-        if (this.trainingEffectPanel != null)
+        }
+        if (this.trainingEffectPanel != null) {
             this.trainingEffectPanel.storeUserSettings();
-        if (this.trainingPanel != null){
+        }
+        if (this.trainingPanel != null) {
             this.trainingPanel.storeUserSettings();
         }
-        if (this.trainingDevelopmentPanel != null){
+        if (this.trainingDevelopmentPanel != null) {
             this.trainingDevelopmentPanel.storeUserSettings();
         }
 
-        if (this.tabbedPane != null){
+        if (this.tabbedPane != null) {
             tabbedPane.storeHOTabInfo();
         }
-	}
+    }
 }
