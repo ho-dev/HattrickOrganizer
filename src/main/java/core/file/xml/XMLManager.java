@@ -243,11 +243,9 @@ public class XMLManager {
         return doc;
     }
 
-    /**
-     * Comments are dropped by the parser, so a comment never shows up as the first child of an element.
-     */
     private static DocumentBuilder newDocumentBuilder() throws ParserConfigurationException {
         final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+        // Ensure getFirstChildNodeValue() does not encounter comment nodes.
         factory.setIgnoringComments(true);
         return factory.newDocumentBuilder();
     }
