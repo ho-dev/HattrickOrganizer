@@ -65,14 +65,14 @@ public class TrainingModulePanel extends LazyPanel {
         tabbedPane = new HOTabbedPane("Training") {
             @Override
             protected Optional<HOTabComponent> findComponent(String tabId) {
-                if (tabComponents.containsKey(tabId)) {
-                    return Optional.of(new HOTabComponent(TranslationFacility.tr(tabId), tabComponents.get(tabId)));
-                }
-                return Optional.empty();
+                var tabComponent = tabComponents.get(tabId);
+                if (tabComponent == null) return Optional.empty();
+                return Optional.of(new HOTabComponent(TranslationFacility.tr(tabId), tabComponent));
             }
         };
+        tabbedPane.restoreTabs();
 
-        tabComponents.forEach((key, value) -> tabbedPane.addTab(key, value));
+        tabComponents.forEach((key, value) -> tabbedPane.addHOTab(key, value));
 
         JSplitPane splitPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT, tabbedPane, bottomPanel);
         UserParameter.instance().training_mainSplitPane.init(splitPanel);

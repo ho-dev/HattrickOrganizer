@@ -22,7 +22,7 @@ public final class HOModulesTabbedPane extends HOTabbedPane {
         if (module.hasMainTab()) {
             var index = findIndexOfTab(module.getKey());
             if (index.isEmpty()) {
-                addTab(module.getKey(), module.getTabPanel());
+                addHOTab(module.getKey(), module.getTabPanel());
                 index = Optional.of(getTabCount() - 1);
             }
             return index;

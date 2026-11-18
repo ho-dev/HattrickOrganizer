@@ -17,9 +17,16 @@ public class HOTabInfoTable extends AbstractTable {
     @Override
     protected void initColumns() {
         columns = new ColumnDescriptor[]{
-            ColumnDescriptor.Builder.newInstance().setColumnName("tabbedPaneId").setGetter((o) -> ((HOTabInfo) o).getTabbedPaneId()).setSetter((o, v) -> ((HOTabInfo) o).setTabbedPaneId((String) v)).setType(Types.VARCHAR).setLength(256).isPrimaryKey(false).build(),
+            ColumnDescriptor.Builder.newInstance().setColumnName("tabbedPaneId").setGetter((o) -> ((HOTabInfo) o).getTabbedPaneId()).setSetter((o, v) -> ((HOTabInfo) o).setTabbedPaneId((String) v)).setType(Types.VARCHAR).setLength(256).build(),
             ColumnDescriptor.Builder.newInstance().setColumnName("tabId").setGetter((o) -> ((HOTabInfo) o).getTabId()).setSetter((o, v) -> ((HOTabInfo) o).setTabId((String) v)).setType(Types.VARCHAR).setLength(256).isNullable(false).build(),
             ColumnDescriptor.Builder.newInstance().setColumnName("tabIndex").setGetter((o) -> ((HOTabInfo) o).getTabIndex()).setSetter((o, v) -> ((HOTabInfo) o).setTabIndex((int) v)).setType(Types.INTEGER).isNullable(false).build()
+        };
+    }
+
+    @Override
+    protected  String[] getConstraintStatements() {
+        return new String[]{
+            "  PRIMARY KEY (tabbedPaneId, tabId)"
         };
     }
 

@@ -81,12 +81,7 @@ internal class BackupHelperTest {
         val files = dbDir.listFiles { file: File ->
             file.isFile && file.extension == HOZip.zipExt
         }
-        if (files.isNotEmpty()) {
-            val fileList = files.toList()
-            fileList.forEach { file ->
-                file.delete()
-            }
-        }
+        files?.forEach { it.delete() }
 
         // Create backup files for the last 5 days
         (1..5).forEach { i ->

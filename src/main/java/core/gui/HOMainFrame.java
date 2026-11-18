@@ -325,6 +325,7 @@ public final class HOMainFrame extends JFrame implements Refreshable {
 		getContentPane().setLayout(new BorderLayout());
 
 		hoTabbedPane = new HOModulesTabbedPane();
+        hoTabbedPane.restoreTabs();
 
 		IModule[] activeModules = ModuleManager.instance().getModules(true);
 		for (IModule module : activeModules) {
