@@ -641,6 +641,34 @@ class XMLUtilsTest {
         assertThat(XMLUtils.getStringValue(element, tagName, "default")).isEqualTo(expected);
     }
 
+    private static Stream<Arguments> test_findStringValue() {
+        return Stream.of(
+            arguments(root, "FileName", "matchdetails.xml"),
+            arguments(matchElement, "Bookings", ""),
+            arguments(root, "_FileName", null)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource
+    void test_findStringValue(Element element, String tagName, String expected) {
+        assertThat(XMLUtils.findStringValue(element, tagName)).isEqualTo(Optional.ofNullable(expected));
+    }
+
+    private static Stream<Arguments> test_findHODateTimeValue() {
+        return Stream.of(
+            arguments(matchElement, "MatchDate", HODateTime.fromHT("2026-10-10 18:00:00")),
+            arguments(matchElement, "Bookings", null),
+            arguments(matchElement, "_MatchDate", null)
+        );
+    }
+
+    @ParameterizedTest
+    @MethodSource
+    void test_findHODateTimeValue(Element element, String tagName, HODateTime expected) {
+        assertThat(XMLUtils.findHODateTimeValue(element, tagName)).isEqualTo(Optional.ofNullable(expected));
+    }
+
     private static Stream<Arguments> test_getStringValue_throwsXMLParseException() {
         return Stream.of(
             arguments(root, " FileName", "No element with tag name ' FileName'."),

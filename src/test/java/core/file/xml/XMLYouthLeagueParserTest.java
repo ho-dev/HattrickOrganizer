@@ -14,15 +14,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 /** youthleaguedetails 1.1 and youthleaguefixtures 1.0 (fixtures built from the CHPP docs). */
 class XMLYouthLeagueParserTest {
 
-    /** The fixtures lie in a folder per CHPP file, named like the file before its version. */
-    private static String resource(String name) throws IOException {
-        final var file = name.substring(0, name.indexOf('_'));
-        return Objects.requireNonNull(ResourceUtils.getResourceFileAsString("chpp/" + file + "/" + name));
+    private static final String DETAILS = "chpp/youthleaguedetails/youthleaguedetails_1.1.xml";
+    private static final String FIXTURES = "chpp/youthleaguefixtures/youthleaguefixtures_1.0.xml";
+
+    private static String resource(String path) throws IOException {
+        return Objects.requireNonNull(ResourceUtils.getResourceFileAsString(path));
     }
 
     @Test
     void leagueAndStandings() throws IOException {
-        final var league = XMLYouthLeagueParser.parseDetails(resource("youthleaguedetails_1.1.xml"));
+        final var league = XMLYouthLeagueParser.parseDetails(resource(DETAILS));
 
         assertThat(league).isNotNull();
         assertThat(league.getYouthLeagueId()).isEqualTo(685791);
@@ -48,14 +49,14 @@ class XMLYouthLeagueParserTest {
     }
 
     private static YouthLeague league() throws IOException {
-        return Objects.requireNonNull(XMLYouthLeagueParser.parseDetails(resource("youthleaguedetails_1.1.xml")));
+        return Objects.requireNonNull(XMLYouthLeagueParser.parseDetails(resource(DETAILS)));
     }
 
     @Test
     void fixtures() throws IOException {
         final var league = league();
 
-        assertThat(XMLYouthLeagueParser.parseFixtures(resource("youthleaguefixtures_1.0.xml"), league)).isTrue();
+        assertThat(XMLYouthLeagueParser.parseFixtures(resource(FIXTURES), league)).isTrue();
 
         assertThat(league.getFixtures()).hasSize(2);
         final var played = league.getFixtures().get(0);
@@ -75,7 +76,7 @@ class XMLYouthLeagueParserTest {
     @Test
     void fixturesOfAnotherSeasonAreRefused() throws IOException {
         final var league = league();
-        final var otherSeason = resource("youthleaguefixtures_1.0.xml").replace("<Season>94</Season>", "<Season>95</Season>");
+        final var otherSeason = resource(FIXTURES).replace("<Season>94</Season>", "<Season>95</Season>");
 
         assertThat(XMLYouthLeagueParser.parseFixtures(otherSeason, league)).isFalse();
         assertThat(league.getFixtures()).isEmpty();
@@ -85,7 +86,7 @@ class XMLYouthLeagueParserTest {
     @Test
     void storedAndLoadedAsTheNewestSeason() throws IOException {
         final var league = league();
-        XMLYouthLeagueParser.parseFixtures(resource("youthleaguefixtures_1.0.xml"), league);
+        XMLYouthLeagueParser.parseFixtures(resource(FIXTURES), league);
         final var db = DBManager.instance();
 
         db.storeYouthLeague(league);

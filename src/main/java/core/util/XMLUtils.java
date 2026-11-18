@@ -187,8 +187,22 @@ public class XMLUtils {
 	 *         with that name could be found or the descendant found has no
 	 *         value.
 	 */
-	public static String getStringValue(Element parent, String tagName, String defaultString) {
+		public static String getStringValue(Element parent, String tagName, String defaultString) {
         return findChildElement(parent, tagName).map(Element::getTextContent).orElse(defaultString);
+    }
+
+    /**
+     * Gets the optional text content of the direct child element with the specified tag name.
+     * A missing element gives an empty Optional, an element without content an empty string.
+     *
+     * @param parent  the parent element
+     * @param tagName the tag name of the child element
+     * @return the text content of the child element, or empty if there is no such element
+     * @throws XMLParseException if more than one matching child element exists
+     * @throws NullPointerException if the parent element is null
+     */
+    public static Optional<String> findStringValue(Element parent, String tagName) {
+        return findChildElement(parent, tagName).map(Element::getTextContent);
     }
 
     /**
@@ -220,6 +234,19 @@ public class XMLUtils {
      */
     public static HODateTime getHODateTimeValue(Element ancestor, String tagName){
         return HODateTime.fromHT(getStringValue(ancestor, tagName));
+    }
+
+    /**
+     * Gets the optional HODateTime value of the direct child element with the specified tag name.
+     *
+     * @param parent  the parent element
+     * @param tagName the tag name of the child element
+     * @return the date, or empty if there is no such element or it has no content
+     * @throws XMLParseException if more than one matching child element exists
+     * @throws NullPointerException if the parent element is null
+     */
+    public static Optional<HODateTime> findHODateTimeValue(Element parent, String tagName) {
+        return findStringValue(parent, tagName).map(HODateTime::fromHT);
     }
 
     /**

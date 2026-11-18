@@ -287,7 +287,7 @@ public final class ThemeManager {
 	 *
 	 * @param youthPlayersAvatar the parsed youthavatars answer
 	 */
-	public void generateAllYouthPlayerAvatar(List<PlayerAvatar> youthPlayersAvatar, int progress){
+		public void generateAllYouthPlayerAvatar(List<PlayerAvatar> youthPlayersAvatar, int progress) {
 		generateMissingAvatars(youthPlayersAvatar, progress, youthPlayerAvatarPath);
 	}
 

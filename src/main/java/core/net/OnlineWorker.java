@@ -42,10 +42,16 @@ import java.util.List;
  */
 public class OnlineWorker {
 
+		/**
+		 * How long after a youth match its report is still asked for. The coach may write none (or not
+		 * yet), and without this limit every download would ask again until the next report. CHPP sends
+		 * the player's whole report history, so a report missed here comes with the next match's.
+		 */
+		private static final int TRAINING_REPORT_WINDOW_DAYS = 7;
 
-	/**
-	 * Utility class - private constructor enforces noninstantiability.
-	 */
+		/**
+		 * Utility class - private constructor enforces noninstantiability.
+		 */
 	private OnlineWorker() {
 	}
 
@@ -1250,17 +1256,12 @@ public class OnlineWorker {
 		}
 	}
 
-	/**
-	 * How long after a youth match its report is still asked for. The coach may write none (or not
-	 * yet), and without this limit every download would ask again until the next report. CHPP sends
-	 * the player's whole report history, so a report missed here comes with the next match's.
-	 */
-	static final int TRAINING_REPORT_WINDOW_DAYS = 7;
-
-	/**
-	 * A youth match within the last {@link #TRAINING_REPORT_WINDOW_DAYS} days that is newer than
-	 * the newest stored report, or no report yet for a player who played then.
-	 */
+		/**
+		 * A youth match within the last {@link #TRAINING_REPORT_WINDOW_DAYS} days that is newer than
+		 * the newest stored report, or no report yet for a player who played then.
+		 * <p>
+		 * Package-private so that {@code OnlineWorkerTest} can test it directly.
+		 */
 	static boolean needsTrainingReports(YouthPlayer player, HODateTime now) {
 		final var lastMatch = player.getYouthMatchDate();
 		if (lastMatch == null || lastMatch.isBefore(now.minus(TRAINING_REPORT_WINDOW_DAYS, ChronoUnit.DAYS))) {

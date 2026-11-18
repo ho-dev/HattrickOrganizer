@@ -1,6 +1,5 @@
 package core.file.xml;
 
-import core.util.HODateTime;
 import core.util.HOLogger;
 import core.util.XMLUtils;
 import module.youth.YouthPlace;
@@ -8,8 +7,6 @@ import module.youth.YouthScout;
 import module.youth.YouthTeamDetails;
 import org.jetbrains.annotations.Nullable;
 import org.w3c.dom.Element;
-
-import java.util.Optional;
 
 /**
  * youthteamdetails 1.5 with {@code showScouts=true}. Hattrick answers a club without a youth team
@@ -39,39 +36,43 @@ public final class XMLYouthTeamDetailsParser {
                 return null;
             }
             final var t = team.get();
-            final var youthTeamId = optInt(t, "YouthTeamID");
-            if (youthTeamId == null || youthTeamId == 0) {
+            final int youthTeamId = XMLUtils.findIntegerValue(t, "YouthTeamID").orElse(0);
+            if (youthTeamId == 0) {
                 return null;
             }
             final var details = new YouthTeamDetails();
             details.setHrfId(hrfId);
             details.setYouthTeamId(youthTeamId);
-            details.setYouthTeamName(optString(t, "YouthTeamName"));
-            details.setShortTeamName(optString(t, "ShortTeamName"));
-            details.setCreatedDate(optDate(t, "CreatedDate"));
+            XMLUtils.findStringValue(t, "YouthTeamName").ifPresent(details::setYouthTeamName);
+            XMLUtils.findStringValue(t, "ShortTeamName").ifPresent(details::setShortTeamName);
+            XMLUtils.findHODateTimeValue(t, "CreatedDate").ifPresent(details::setCreatedDate);
             // the docs say UserID, the real 1.5 response sends UserId
-            details.setUserId(Optional.ofNullable(optInt(t, "UserId")).orElse(optInt(t, "UserID")));
-            details.setGenderId(optInt(t, "GenderID"));
-            details.setLeagueSystemId(optInt(t, "LeagueSystemID"));
-            details.setPlayingMatch(Optional.ofNullable(optString(t, "IsPlayingMatch")).map(Boolean::parseBoolean).orElse(null));
+            XMLUtils.findIntegerValue(t, "UserId")
+                    .or(() -> XMLUtils.findIntegerValue(t, "UserID"))
+                    .ifPresent(details::setUserId);
+            XMLUtils.findIntegerValue(t, "GenderID").ifPresent(details::setGenderId);
+            XMLUtils.findIntegerValue(t, "LeagueSystemID").ifPresent(details::setLeagueSystemId);
+            XMLUtils.findStringValue(t, "IsPlayingMatch").map(Boolean::parseBoolean).ifPresent(details::setPlayingMatch);
             readPlace(t, details);
-            idName(t, "YouthArena", "YouthArenaID", "YouthArenaName").ifPresent(a -> {
-                details.setYouthArenaId(a.id());
-                details.setYouthArenaName(a.name());
+            XMLUtils.findChildElement(t, "YouthArena").ifPresent(a -> {
+                XMLUtils.findIntegerValue(a, "YouthArenaID").ifPresent(details::setYouthArenaId);
+                XMLUtils.findStringValue(a, "YouthArenaName").ifPresent(details::setYouthArenaName);
             });
-            child(t, "YouthLeague").ifPresent(l -> {
-                details.setYouthLeagueId(optInt(l, "YouthLeagueID"));
-                details.setYouthLeagueName(optString(l, "YouthLeagueName"));
-                details.setYouthLeagueStatus(optInt(l, "YouthLeagueStatus"));
+            XMLUtils.findChildElement(t, "YouthLeague").ifPresent(l -> {
+                XMLUtils.findIntegerValue(l, "YouthLeagueID").ifPresent(details::setYouthLeagueId);
+                XMLUtils.findStringValue(l, "YouthLeagueName").ifPresent(details::setYouthLeagueName);
+                XMLUtils.findIntegerValue(l, "YouthLeagueStatus").ifPresent(details::setYouthLeagueStatus);
             });
-            child(t, "OwningTeam").ifPresent(o -> {
-                details.setMotherTeamId(optInt(o, "MotherTeamID"));
-                details.setMotherTeamName(optString(o, "MotherTeamName"));
+            XMLUtils.findChildElement(t, "OwningTeam").ifPresent(o -> {
+                XMLUtils.findIntegerValue(o, "MotherTeamID").ifPresent(details::setMotherTeamId);
+                XMLUtils.findStringValue(o, "MotherTeamName").ifPresent(details::setMotherTeamName);
             });
-            child(t, "YouthTrainer").ifPresent(trainer -> details.setTrainerYouthPlayerId(optInt(trainer, "YouthPlayerID")));
-            details.setNextTrainingMatchDate(optDate(t, "NextTrainingMatchDate"));
-            child(t, "ScoutList").ifPresent(list -> {
-                for (var s : XMLUtils.getChildElements(list, "Scout")) {
+            XMLUtils.findChildElement(t, "YouthTrainer")
+                    .flatMap(trainer -> XMLUtils.findIntegerValue(trainer, "YouthPlayerID"))
+                    .ifPresent(details::setTrainerYouthPlayerId);
+            XMLUtils.findHODateTimeValue(t, "NextTrainingMatchDate").ifPresent(details::setNextTrainingMatchDate);
+            XMLUtils.findChildElement(t, "ScoutList").ifPresent(list -> {
+                for (final var s : XMLUtils.getChildElements(list, "Scout")) {
                     details.getScouts().add(scout(s, hrfId));
                 }
             });
@@ -86,65 +87,38 @@ public final class XMLYouthTeamDetailsParser {
         final var scout = new YouthScout();
         scout.setHrfId(hrfId);
         scout.setYouthScoutId(XMLUtils.getIntValue(s, "YouthScoutID"));
-        scout.setScoutName(optString(s, "ScoutName"));
-        scout.setAge(optInt(s, "Age"));
+        XMLUtils.findStringValue(s, "ScoutName").ifPresent(scout::setScoutName);
+        XMLUtils.findIntegerValue(s, "Age").ifPresent(scout::setAge);
         readPlace(s, scout);
-        idName(s, "InCountry", COUNTRY_ID, COUNTRY_NAME).ifPresent(c -> {
-            scout.setInCountryId(c.id());
-            scout.setInCountryName(c.name());
+        XMLUtils.findChildElement(s, "InCountry").ifPresent(c -> {
+            XMLUtils.findIntegerValue(c, COUNTRY_ID).ifPresent(scout::setInCountryId);
+            XMLUtils.findStringValue(c, COUNTRY_NAME).ifPresent(scout::setInCountryName);
         });
-        idName(s, "InRegion", REGION_ID, REGION_NAME).ifPresent(r -> {
-            scout.setInRegionId(r.id());
-            scout.setInRegionName(r.name());
+        XMLUtils.findChildElement(s, "InRegion").ifPresent(r -> {
+            XMLUtils.findIntegerValue(r, REGION_ID).ifPresent(scout::setInRegionId);
+            XMLUtils.findStringValue(r, REGION_NAME).ifPresent(scout::setInRegionName);
         });
-        scout.setHiredDate(optDate(s, "HiredDate"));
-        scout.setLastCalled(optDate(s, "LastCalled"));
-        scout.setPlayerTypeSearch(optInt(s, "PlayerTypeSearch"));
-        scout.setHofPlayerId(optInt(s, "HofPlayerId"));
-        child(s, "Travel").ifPresent(travel -> {
-            scout.setTravelStartDate(optDate(travel, "TravelStartDate"));
-            scout.setTravelLength(optInt(travel, "TravelLength"));
-            scout.setTravelType(optInt(travel, "TravelType"));
+        XMLUtils.findHODateTimeValue(s, "HiredDate").ifPresent(scout::setHiredDate);
+        XMLUtils.findHODateTimeValue(s, "LastCalled").ifPresent(scout::setLastCalled);
+        XMLUtils.findIntegerValue(s, "PlayerTypeSearch").ifPresent(scout::setPlayerTypeSearch);
+        XMLUtils.findIntegerValue(s, "HofPlayerId").ifPresent(scout::setHofPlayerId);
+        XMLUtils.findChildElement(s, "Travel").ifPresent(travel -> {
+            XMLUtils.findHODateTimeValue(travel, "TravelStartDate").ifPresent(scout::setTravelStartDate);
+            XMLUtils.findIntegerValue(travel, "TravelLength").ifPresent(scout::setTravelLength);
+            XMLUtils.findIntegerValue(travel, "TravelType").ifPresent(scout::setTravelType);
         });
         return scout;
     }
 
-    private static Optional<Element> child(Element parent, String tagName) {
-        return XMLUtils.findChildElement(parent, tagName);
-    }
-
-    private record IdName(@Nullable Integer id, @Nullable String name) {
-    }
-
     /** Country and Region of a team or a scout. */
     private static void readPlace(Element parent, YouthPlace place) {
-        idName(parent, COUNTRY, COUNTRY_ID, COUNTRY_NAME).ifPresent(c -> {
-            place.setCountryId(c.id());
-            place.setCountryName(c.name());
+        XMLUtils.findChildElement(parent, COUNTRY).ifPresent(c -> {
+            XMLUtils.findIntegerValue(c, COUNTRY_ID).ifPresent(place::setCountryId);
+            XMLUtils.findStringValue(c, COUNTRY_NAME).ifPresent(place::setCountryName);
         });
-        idName(parent, REGION, REGION_ID, REGION_NAME).ifPresent(r -> {
-            place.setRegionId(r.id());
-            place.setRegionName(r.name());
+        XMLUtils.findChildElement(parent, REGION).ifPresent(r -> {
+            XMLUtils.findIntegerValue(r, REGION_ID).ifPresent(place::setRegionId);
+            XMLUtils.findStringValue(r, REGION_NAME).ifPresent(place::setRegionName);
         });
-    }
-
-    /** A container of an id and a name, such as Country with CountryID and CountryName. */
-    private static Optional<IdName> idName(Element parent, String container, String idTag, String nameTag) {
-        return child(parent, container).map(c -> new IdName(optInt(c, idTag), optString(c, nameTag)));
-    }
-
-    static @Nullable String optString(Element parent, String tagName) {
-        final var text = XMLUtils.getStringValue(parent, tagName, "").trim();
-        return text.isEmpty() ? null : text;
-    }
-
-    static @Nullable Integer optInt(Element parent, String tagName) {
-        final var text = optString(parent, tagName);
-        return text == null ? null : Integer.valueOf(text);
-    }
-
-    static @Nullable HODateTime optDate(Element parent, String tagName) {
-        final var text = optString(parent, tagName);
-        return text == null ? null : HODateTime.fromHT(text);
     }
 }

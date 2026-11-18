@@ -5,9 +5,7 @@ import core.util.XMLUtils;
 import module.youth.YouthLeague;
 import org.jetbrains.annotations.Nullable;
 
-import static core.file.xml.XMLYouthTeamDetailsParser.optDate;
-import static core.file.xml.XMLYouthTeamDetailsParser.optInt;
-import static core.file.xml.XMLYouthTeamDetailsParser.optString;
+import java.util.Optional;
 
 /** youthleaguedetails 1.1 (league and standings) and youthleaguefixtures 1.0 (the season's matches). */
 public final class XMLYouthLeagueParser {
@@ -26,36 +24,36 @@ public final class XMLYouthLeagueParser {
         }
         try {
             final var root = doc.getDocumentElement();
-            final var leagueId = optInt(root, YOUTH_LEAGUE_ID);
-            final var season = optInt(root, SEASON);
-            if (leagueId == null || season == null) {
+            final var leagueId = XMLUtils.findIntegerValue(root, YOUTH_LEAGUE_ID);
+            final var season = XMLUtils.findIntegerValue(root, SEASON);
+            if (leagueId.isEmpty() || season.isEmpty()) {
                 return null;
             }
             final var league = new YouthLeague();
-            league.setYouthLeagueId(leagueId);
-            league.setSeason(season);
-            league.setYouthLeagueName(optString(root, "YouthLeagueName"));
-            league.setYouthLeagueType(optInt(root, "YouthLeagueType"));
-            league.setLastMatchRound(optInt(root, "LastMatchRound"));
-            league.setNrOfTeamsInLeague(optInt(root, "NrOfTeamsInLeague"));
-            league.setLeagueSystemId(optInt(root, "LeagueSystemID"));
+            league.setYouthLeagueId(leagueId.get());
+            league.setSeason(season.get());
+            XMLUtils.findStringValue(root, "YouthLeagueName").ifPresent(league::setYouthLeagueName);
+            XMLUtils.findIntegerValue(root, "YouthLeagueType").ifPresent(league::setYouthLeagueType);
+            XMLUtils.findIntegerValue(root, "LastMatchRound").ifPresent(league::setLastMatchRound);
+            XMLUtils.findIntegerValue(root, "NrOfTeamsInLeague").ifPresent(league::setNrOfTeamsInLeague);
+            XMLUtils.findIntegerValue(root, "LeagueSystemID").ifPresent(league::setLeagueSystemId);
             XMLUtils.findChildElement(root, "Teams").ifPresent(teams -> {
-                for (var t : XMLUtils.getChildElements(teams, "Team")) {
+                for (final var t : XMLUtils.getChildElements(teams, "Team")) {
                     final var team = new YouthLeague.Team();
-                    team.setYouthLeagueId(leagueId);
-                    team.setSeason(season);
+                    team.setYouthLeagueId(leagueId.get());
+                    team.setSeason(season.get());
                     team.setTeamId(XMLUtils.getIntValue(t, "TeamID"));
                     // the docs type it unsigned Integer; it is the name
-                    team.setTeamName(optString(t, "TeamName"));
-                    team.setPosition(optInt(t, "Position"));
-                    team.setPositionChange(optInt(t, "PositionChange"));
-                    team.setMatches(optInt(t, "Matches"));
-                    team.setGoalsFor(optInt(t, "GoalsFor"));
-                    team.setGoalsAgainst(optInt(t, "GoalsAgainst"));
-                    team.setPoints(optInt(t, "Points"));
-                    team.setWon(optInt(t, "Won"));
-                    team.setDraws(optInt(t, "Draws"));
-                    team.setLost(optInt(t, "Lost"));
+                    XMLUtils.findStringValue(t, "TeamName").ifPresent(team::setTeamName);
+                    XMLUtils.findIntegerValue(t, "Position").ifPresent(team::setPosition);
+                    XMLUtils.findIntegerValue(t, "PositionChange").ifPresent(team::setPositionChange);
+                    XMLUtils.findIntegerValue(t, "Matches").ifPresent(team::setMatches);
+                    XMLUtils.findIntegerValue(t, "GoalsFor").ifPresent(team::setGoalsFor);
+                    XMLUtils.findIntegerValue(t, "GoalsAgainst").ifPresent(team::setGoalsAgainst);
+                    XMLUtils.findIntegerValue(t, "Points").ifPresent(team::setPoints);
+                    XMLUtils.findIntegerValue(t, "Won").ifPresent(team::setWon);
+                    XMLUtils.findIntegerValue(t, "Draws").ifPresent(team::setDraws);
+                    XMLUtils.findIntegerValue(t, "Lost").ifPresent(team::setLost);
                     league.getTeams().add(team);
                 }
             });
@@ -78,31 +76,31 @@ public final class XMLYouthLeagueParser {
         }
         try {
             final var root = doc.getDocumentElement();
-            final var leagueId = optInt(root, YOUTH_LEAGUE_ID);
-            final var season = optInt(root, SEASON);
-            if (leagueId == null || leagueId != league.getYouthLeagueId() || season == null || season != league.getSeason()) {
+            final var leagueId = XMLUtils.findIntegerValue(root, YOUTH_LEAGUE_ID);
+            final var season = XMLUtils.findIntegerValue(root, SEASON);
+            if (!leagueId.equals(Optional.of(league.getYouthLeagueId())) || !season.equals(Optional.of(league.getSeason()))) {
                 return false;
             }
             league.getFixtures().clear();
             XMLUtils.findChildElement(root, "Matches").ifPresent(matches -> {
-                for (var m : XMLUtils.getChildElements(matches, "Match")) {
+                for (final var m : XMLUtils.getChildElements(matches, "Match")) {
                     final var fixture = new YouthLeague.Fixture();
                     fixture.setMatchId(XMLUtils.getIntValue(m, "MatchID"));
-                    fixture.setYouthLeagueId(leagueId);
-                    fixture.setSeason(season);
-                    fixture.setMatchRound(optInt(m, "MatchRound"));
-                    fixture.setStatus(optString(m, "Status"));
+                    fixture.setYouthLeagueId(league.getYouthLeagueId());
+                    fixture.setSeason(league.getSeason());
+                    XMLUtils.findIntegerValue(m, "MatchRound").ifPresent(fixture::setMatchRound);
+                    XMLUtils.findStringValue(m, "Status").ifPresent(fixture::setStatus);
                     XMLUtils.findChildElement(m, "HomeTeam").ifPresent(h -> {
-                        fixture.setHomeTeamId(optInt(h, "HomeTeamID"));
-                        fixture.setHomeTeamName(optString(h, "HomeTeamName"));
+                        XMLUtils.findIntegerValue(h, "HomeTeamID").ifPresent(fixture::setHomeTeamId);
+                        XMLUtils.findStringValue(h, "HomeTeamName").ifPresent(fixture::setHomeTeamName);
                     });
                     XMLUtils.findChildElement(m, "AwayTeam").ifPresent(a -> {
-                        fixture.setAwayTeamId(optInt(a, "AwayTeamID"));
-                        fixture.setAwayTeamName(optString(a, "AwayTeamName"));
+                        XMLUtils.findIntegerValue(a, "AwayTeamID").ifPresent(fixture::setAwayTeamId);
+                        XMLUtils.findStringValue(a, "AwayTeamName").ifPresent(fixture::setAwayTeamName);
                     });
-                    fixture.setMatchDate(optDate(m, "MatchDate"));
-                    fixture.setHomeGoals(optInt(m, "HomeGoals"));
-                    fixture.setAwayGoals(optInt(m, "AwayGoals"));
+                    XMLUtils.findHODateTimeValue(m, "MatchDate").ifPresent(fixture::setMatchDate);
+                    XMLUtils.findIntegerValue(m, "HomeGoals").ifPresent(fixture::setHomeGoals);
+                    XMLUtils.findIntegerValue(m, "AwayGoals").ifPresent(fixture::setAwayGoals);
                     league.getFixtures().add(fixture);
                 }
             });
