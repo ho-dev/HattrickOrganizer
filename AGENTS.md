@@ -67,19 +67,34 @@ For the project overview, contribution workflow and developer tips, read
 - In new code, use what Java 17 offers: `var` when the type is obvious from the right-hand side,
   `switch` expressions with `->`, pattern matching `instanceof`, records for simple data classes,
   and text blocks for multi-line strings.
-- Make everything `final` that isn't reassigned: fields, parameters and local variables (`final var`
-  included). Java has no immutable-by-default variables, so `final` is how the code shows what stays
-  unchanged.
+- Make fields and local variables `final` when they aren't reassigned (`final var` included). Don't
+  add `final` to method parameters; the maintainers see it as clutter, especially in short methods.
+- Constants are `private static final` with an `UPPER_SNAKE_CASE` name, at the top of the class,
+  not next to the method that uses them.
+- Format with IntelliJ IDEA's default code style: keep the file's indentation (tabs or spaces) and
+  align wrapped parameter lists under the first parameter.
+- Return `Optional<T>` for values that may be missing, not a `@Nullable` type.
+- Use the existing helpers before writing your own. For CHPP XML that is `XMLUtils`
+  (`findChildElement`, `findIntegerValue`, …). If a helper is missing, add it to `XMLUtils` with a
+  unit test instead of a private method in one parser. Keep a missing element apart from an
+  element with an empty value.
 - Use `ArrayList`/`HashMap` rather than `Vector`/`Hashtable`, and `HODateTime` rather than
   `java.util.Date`.
 - Only modernise the code you are changing anyway. Don't rewrite unrelated code in the same pull
-  request.
+  request. Mention duplication you notice in existing code and refactor it in a separate pull request.
 
 ## Testing
 
 Tests (JUnit 5, AssertJ, Mockito) cover logic only. They run headless, so they must not open
 windows. There are no UI tests: check UI changes by hand with `./gradlew run`, in a light and a
 dark theme, and say what you checked in the pull request.
+
+- Put tests in the test class of the class under test (`OnlineWorker` → `OnlineWorkerTest`).
+- A method that is package-private only so a test can call it gets a short comment saying so.
+- Write test resource paths out in full (`"/chpp/youthleaguedetails/youthleaguedetails_1.1.xml"`), don't build
+  them from parts, so they can be opened from the IDE.
+- CHPP parser tests use real CHPP responses. The CHPP documentation does not always match what the
+  API returns. If you could only build a fixture from the documentation, say so in the pull request.
 
 ## Pull requests
 
