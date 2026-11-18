@@ -52,7 +52,7 @@ public abstract class LazyPanel extends JPanel {
 	 *            {@link RefreshManager}. If <code>false</code> the panel is
 	 *            unregistered if it was already registerd.
 	 */
-	public void registerRefreshable(final boolean register) {
+	public void registerRefreshable(boolean register) {
 		if (register) {
 			if (this.refreshable == null) {
 				this.refreshable = () -> {

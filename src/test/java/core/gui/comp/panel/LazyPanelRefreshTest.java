@@ -34,9 +34,9 @@ class LazyPanelRefreshTest {
         assertDoubleRegisterKeepsRefresh(panel::registerRefreshable, panel::needsRefresh, panel::setNeedsRefresh);
     }
 
-    private static void assertUnregisterStopsRefresh(final Consumer<Boolean> register,
-                                                     final Supplier<Boolean> needsRefresh,
-                                                     final Consumer<Boolean> setNeedsRefresh) {
+    private static void assertUnregisterStopsRefresh(Consumer<Boolean> register,
+                                                     Supplier<Boolean> needsRefresh,
+                                                     Consumer<Boolean> setNeedsRefresh) {
         register.accept(true);
         RefreshManager.instance().doRefresh();
         assertThat(needsRefresh.get()).isTrue();
@@ -47,9 +47,9 @@ class LazyPanelRefreshTest {
         assertThat(needsRefresh.get()).isFalse();
     }
 
-    private static void assertDoubleRegisterKeepsRefresh(final Consumer<Boolean> register,
-                                                         final Supplier<Boolean> needsRefresh,
-                                                         final Consumer<Boolean> setNeedsRefresh) {
+    private static void assertDoubleRegisterKeepsRefresh(Consumer<Boolean> register,
+                                                         Supplier<Boolean> needsRefresh,
+                                                         Consumer<Boolean> setNeedsRefresh) {
         register.accept(true);
         register.accept(true);
         setNeedsRefresh.accept(false);
