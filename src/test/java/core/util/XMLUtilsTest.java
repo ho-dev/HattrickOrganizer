@@ -767,6 +767,7 @@ class XMLUtilsTest {
     private static Stream<Arguments> test_findIntegerValue() {
         return Stream.of(
             arguments(root, "UserID", Optional.of(1757369)),
+            arguments(matchElement, "Bookings", Optional.empty()),
             arguments(root, "_FileName", Optional.empty()),
             arguments(root, "_Version", Optional.empty())
         );
