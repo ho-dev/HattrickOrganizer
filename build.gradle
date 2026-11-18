@@ -73,9 +73,9 @@ dependencies {
 
 test {
     useJUnitPlatform()
-    // Tests that open DBManager get a fresh database of their own, never the user's HO database
+    // HO.main() never runs in tests, so UserManager always resolves the DB folder from AppData:
+    // the user's real HO database on Windows, a stray null/HO folder elsewhere. Point it at the build dir.
     def testHome = layout.buildDirectory.dir("test-home").get().asFile
-    systemProperty "user.home", testHome.absolutePath
     environment "AppData", testHome.absolutePath
     doFirst {
         delete testHome
