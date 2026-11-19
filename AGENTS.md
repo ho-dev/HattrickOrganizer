@@ -93,6 +93,8 @@ windows. There are no UI tests: check UI changes by hand with `./gradlew run`, i
 dark theme, and say what you checked in the pull request.
 
 - Put tests in the test class of the class under test (`OnlineWorker` → `OnlineWorkerTest`).
+- Test code explains itself through its names: no Javadoc or explanatory comments in test
+  classes. If a test or helper needs a comment, rename or split it instead.
 - A method that is package-private only so a test can call it gets a short comment saying so.
 - Write test resource paths out in full (`"/chpp/youthleaguedetails/youthleaguedetails_1.1.xml"`), don't build
   them from parts, so they can be opened from the IDE.
