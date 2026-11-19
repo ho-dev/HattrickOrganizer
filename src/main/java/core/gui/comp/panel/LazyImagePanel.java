@@ -52,21 +52,18 @@ public abstract class LazyImagePanel extends ImagePanel {
 	public void registerRefreshable(boolean register) {
 		if (register) {
 			if (this.refreshable == null) {
-				this.refreshable = new IRefreshable() {
-
-					@Override
-					public void refresh() {
-						if (isShowing()) {
-							callUpdate();
-						} else {
-							needsRefresh = true;
-						}
+				this.refreshable = () -> {
+					if (isShowing()) {
+						callUpdate();
+					} else {
+						needsRefresh = true;
 					}
 				};
 				RefreshManager.instance().registerRefreshable(this.refreshable);
-			} else {
-				RefreshManager.instance().unregisterRefreshable(this.refreshable);
 			}
+		} else if (this.refreshable != null) {
+			RefreshManager.instance().unregisterRefreshable(this.refreshable);
+			this.refreshable = null;
 		}
 	}
 
