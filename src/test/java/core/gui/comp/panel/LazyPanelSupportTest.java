@@ -18,18 +18,10 @@ import javax.swing.RootPaneContainer;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-/**
- * Covers {@link LazyPanelSupport} directly: initialization on first show, reaction to hierarchy
- * changes, and immediate versus deferred refreshes.
- * <p>
- * The tests run headless, where no window can be shown. The component therefore reports its
- * showing state itself, hands {@link core.gui.CursorToolkit} a lightweight root pane container
- * as its top-level ancestor, and receives its hierarchy events directly.
- */
 class LazyPanelSupportTest {
 
     private final List<String> calls = new ArrayList<>();
-    private final FakeComponent component = new FakeComponent();
+    private final ShowablePanel component = new ShowablePanel();
     private boolean failInitialize = false;
     private final LazyPanelSupport support = new LazyPanelSupport(component, this::initialize, this::update);
 
@@ -141,11 +133,16 @@ class LazyPanelSupportTest {
         support.registerRefreshable(true);
 
         RefreshManager.instance().doRefresh();
-        assertThat(support.needsRefresh()).isTrue();
 
-        // one unregister must be enough: the second register did not add a second listener
+        assertThat(support.needsRefresh()).isTrue();
+    }
+
+    @Test
+    void oneUnregisterUndoesARepeatedRegister() {
+        support.registerRefreshable(true);
+        support.registerRefreshable(true);
+
         support.registerRefreshable(false);
-        support.setNeedsRefresh(false);
         RefreshManager.instance().doRefresh();
 
         assertThat(support.needsRefresh()).isFalse();
@@ -170,7 +167,7 @@ class LazyPanelSupportTest {
     @Test
     void waitCursorIsActiveWhileTheCallbacksRun() {
         final List<Boolean> glassPaneVisible = new ArrayList<>();
-        final var probed = new FakeComponent();
+        final var probed = new ShowablePanel();
         final var probing = new LazyPanelSupport(probed,
                 () -> glassPaneVisible.add(probed.topLevel.getGlassPane().isVisible()),
                 () -> glassPaneVisible.add(probed.topLevel.getGlassPane().isVisible()));
@@ -193,11 +190,8 @@ class LazyPanelSupportTest {
         calls.add("update");
     }
 
-    /**
-     * A component that is "showing" when the test says so, inside a fake top-level container.
-     */
-    private static final class FakeComponent extends JPanel {
-        private final FakeTopLevel topLevel = new FakeTopLevel();
+    private static final class ShowablePanel extends JPanel {
+        private final HeadlessWindow topLevel = new HeadlessWindow();
         private boolean showing = false;
 
         @Override
@@ -228,10 +222,7 @@ class LazyPanelSupportTest {
         }
     }
 
-    /**
-     * Stands in for the window: headless, no real {@link java.awt.Window} can be created.
-     */
-    private static final class FakeTopLevel extends Container implements RootPaneContainer {
+    private static final class HeadlessWindow extends Container implements RootPaneContainer {
         private final JRootPane rootPane = new JRootPane();
 
         @Override
