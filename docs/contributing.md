@@ -14,6 +14,38 @@ The code is hosted on GitHub, so you will need to use Git to clone the project a
 It is also suggested to use IntelliJ IDEA as the main IDE. In case you decide to use Eclipse make sure to add all the relevant filters in the .ignore accordingly.
 
 
+## Branches and releases
+
+HO always has two lines of development:
+
+| Branch                          | What it holds                                                         | What it builds                  |
+|---------------------------------|-----------------------------------------------------------------------|---------------------------------|
+| `master`                        | the next major version: new features, improvements, database changes  | the **dev** release             |
+| `release/<N>` (e.g. `release/10`) | major version N, from its beta on: bug fixes only                   | the **beta** and **stable** releases of N.x |
+
+Every push to one of these branches builds a new release on GitHub under the matching tag.
+The current release branch is the newest `release/<N>`. It can be in its beta phase while the latest stable HO is
+still N-1.
+
+### Which branch does my pull request go to?
+
+- **New feature, improvement, refactoring, new translation key or database schema change: `master`.**
+  It ships with the next major version.
+- **Fix for a bug that is already in the newest `release/<N>`: that branch**, also when the bug was reported
+  against an older version. Keep the change to the fix itself, and reference the issue it fixes. A bug in code
+  that only exists on `master` is fixed on `master`. A fix that needs a database change or a new translation key goes to `master`.
+- **Not sure: `master`.** Say in the pull request that it may be worth backporting, and the maintainers decide.
+
+You never open the same fix twice. The maintainers merge `release/<N>` into `master` regularly, so a fix on the
+release branch reaches `master` by itself. Nothing is merged the other way.
+
+The life of a release branch:
+
+1. When major version N enters its beta phase, `release/<N>` is branched off `master`. It builds the beta
+   releases of N, and `master` moves on to N+1.
+2. Once N is declared stable, the same branch builds the stable N.0, N.1, … releases.
+3. When the beta of N+1 starts, `release/<N+1>` takes over and `release/<N>` gets no further changes.
+
 ## Contributing to the Codebase
 
 HO follow the following principle:
@@ -62,6 +94,17 @@ git pull upstream master --ff-only
 ~~~
 
 *When you want to update the feature branch with changes in master after you created the branch, check the section on [updating a PR](#update-your-pull-request)*
+
+A bug fix starts from the newest release branch instead of master
+(see [Branches and releases](#branches-and-releases)), for example:
+
+~~~
+git fetch upstream
+git checkout -b fix-1234-short-description upstream/release/10
+~~~
+
+Do not start it from your master: the pull request would then carry everything master has on top of the release branch.
+When you update such a branch, merge `upstream/release/10` instead of `upstream/master`.
 
 Before submitting your changes for review, make sure to pull latest version of master and check that HO builds with your changes. 
 Once your changes are ready to be submitted, make sure to push your changes to GitHub before creating a pull request. 
@@ -123,14 +166,14 @@ When you’re ready to ask for a code review, file a pull request. Before you do
     -Navigate to your repository on GitHub: https://github.com/your-user-name/ho
     -Click on Branches
     -Click on the Compare button for your feature branch
-    -Select the base and compare branches, if necessary. This will be master and shiny-new-feature, respectively.
+    -Select the base and compare branches, if necessary. This will be master (or release/<N> for a bug fix) and shiny-new-feature, respectively.
 
 ### 7. Make the pull request
 
 If everything looks good, you are ready to make a pull request. A pull request is how code from a local repository becomes available to the GitHub community and can be looked at and eventually merged into the master version. This pull request and its associated changes will eventually be committed to the master branch and available in the next release. To submit a pull request:
 
     1. Navigate to your repository on GitHub
-    2. Click on the Pull Request button
+    2. Click on the Pull Request button and choose the base branch: master, or release/<N> for a bug fix
     3. You can then click on Commits and Files Changed to make sure everything looks okay one last time
     4. Write a description of your changes in the Preview Discussion tab
     5. Click Send Pull Request.
