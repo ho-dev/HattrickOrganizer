@@ -73,8 +73,9 @@ For the project overview, contribution workflow and developer tips, read
   add `final` to method parameters; the maintainers see it as clutter, especially in short methods.
 - Constants are `private static final` with an `UPPER_SNAKE_CASE` name, at the top of the class,
   not next to the method that uses them.
-- Format with IntelliJ IDEA's default code style: keep the file's indentation (tabs or spaces) and
-  align wrapped parameter lists under the first parameter.
+- Format the lines you change with IntelliJ IDEA's formatter, which applies `.editorconfig`
+  (4 spaces, no tabs). Don't reformat lines you don't change. Align wrapped parameter lists under
+  the first parameter.
 - Return `Optional<T>` for values that may be missing, not a `@Nullable` type.
 - Use the existing helpers before writing your own. For CHPP XML that is `XMLUtils`
   (`findChildElement`, `findIntegerValue`, …). If a helper is missing, add it to `XMLUtils` with a
