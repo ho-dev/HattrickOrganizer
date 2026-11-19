@@ -114,10 +114,13 @@ final class DBUpdater {
 		dbManager.getTable(YouthPlayerTable.TABLENAME).tryAddColumn(GENDER_ID, SQL_INTEGER);
 		dbManager.getTable(WorldDetailsTable.TABLENAME).tryAddColumn("LEAGUE_SYSTEM_ID", SQL_INTEGER);
 
-		updateDBVersion(dbVersion, 1100);
-	}
+        var hoTabInfoTable = dbManager.getTable(HOTabInfoTable.TABLENAME);
+        hoTabInfoTable.createTable();
 
-	private void updateDBv1000(int dbVersion) throws  SQLException {
+        updateDBVersion(dbVersion, 1100);
+    }
+
+    private void updateDBv1000(int dbVersion) throws  SQLException {
 
         var economyTable = dbManager.getTable(EconomyTable.TABLENAME);
         for (var column : economyTable.getColumns()) {

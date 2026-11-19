@@ -1,10 +1,13 @@
 ## Highlights
 
+* The order of the module tabs can be customized by drag and drop
+
 
 ## [Detailed Changelog](https://github.com/ho-dev/HattrickOrganizer/milestone/28)
 
 ### Application shell
 
+* The order of the module tabs can be customized by drag and drop (#2554)
 
 ### Database
 

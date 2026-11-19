@@ -77,6 +77,12 @@ internal class BackupHelperTest {
         val currentDate = HODateTime.now()
         var htweekFile3 : HTWeek? = null
 
+        // Clean the db directory
+        val files = dbDir.listFiles { file: File ->
+            file.isFile && file.extension == HOZip.zipExt
+        }
+        files?.forEach { it.delete() }
+
         // Create backup files for the last 5 days
         (1..5).forEach { i ->
             val date = currentDate.minus(i, ChronoUnit.DAYS)

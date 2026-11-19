@@ -1,6 +1,5 @@
 package module.halloffame;
 
-import core.model.TranslationFacility;
 import core.module.DefaultModule;
 
 import javax.swing.*;
@@ -20,8 +19,8 @@ public class HallOfFameModule extends DefaultModule {
     }
 
     @Override
-    public String getDescription() {
-        return TranslationFacility.tr("ls.hof");
+    public String getKey() {
+        return "ls.hof";
     }
 
     @Override

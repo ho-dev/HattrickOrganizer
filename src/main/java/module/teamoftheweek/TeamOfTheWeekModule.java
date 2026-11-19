@@ -1,6 +1,5 @@
 package module.teamoftheweek;
 
-import core.model.TranslationFacility;
 import core.module.DefaultModule;
 import module.teamoftheweek.gui.TeamOfTheWeekPanel;
 
@@ -20,8 +19,8 @@ public class TeamOfTheWeekModule extends DefaultModule {
 	}
 
 	@Override
-	public String getDescription() {
-		return TranslationFacility.tr("Tab_TeamOfTheWeek");
+	public String getKey() {
+		return "Tab_TeamOfTheWeek";
 	}
 
 	@Override

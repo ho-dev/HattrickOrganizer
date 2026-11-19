@@ -1,6 +1,5 @@
 package module.playeroverview;
 
-import core.model.TranslationFacility;
 import core.module.DefaultModule;
 
 import javax.swing.*;
@@ -12,15 +11,15 @@ public final class PlayerOverviewModule extends DefaultModule {
 	public PlayerOverviewModule(){
 		super(true);
 	}
-	
+
 	@Override
 	public int getModuleId() {
 		return PLAYEROVERVIEW;
 	}
 
 	@Override
-	public String getDescription() {
-		return TranslationFacility.tr("Spieleruebersicht");
+	public String getKey() {
+		return "Spieleruebersicht";
 	}
 
 	@Override

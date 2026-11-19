@@ -1,6 +1,5 @@
 package module.specialevents;
 
-import core.model.TranslationFacility;
 import core.module.DefaultModule;
 
 import javax.swing.*;
@@ -21,8 +20,8 @@ public class SpecialEventsModule extends DefaultModule {
 	}
 
 	@Override
-	public String getDescription() {
-		return TranslationFacility.tr("Tab_SpecialEvents");
+	public String getKey() {
+		return "Tab_SpecialEvents";
 	}
 
 	@Override
