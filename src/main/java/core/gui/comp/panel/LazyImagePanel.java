@@ -1,39 +1,30 @@
 package core.gui.comp.panel;
 
-import core.gui.CursorToolkit;
-import core.gui.IRefreshable;
 import core.gui.RefreshManager;
 
-import java.awt.event.HierarchyEvent;
-import java.awt.event.HierarchyListener;
+import java.awt.LayoutManager;
 
 /**
  * ImagePanel subclass which provides lazy initialization/refresh.
  */
 public abstract class LazyImagePanel extends ImagePanel {
 
-	private boolean initialized = false;
-	private boolean needsRefresh = false;
-	private IRefreshable refreshable;
+	private final LazyPanelSupport lazySupport = new LazyPanelSupport(this, this::initialize, this::update);
 
-	public LazyImagePanel() {
+	protected LazyImagePanel() {
 		super();
-		addHierarchyListener();
 	}
 
-	public LazyImagePanel(java.awt.LayoutManager layout) {
+	protected LazyImagePanel(LayoutManager layout) {
 		super(layout);
-		addHierarchyListener();
 	}
 
-	public LazyImagePanel(boolean forprint) {
+	protected LazyImagePanel(boolean forprint) {
 		super(forprint);
-		addHierarchyListener();
 	}
 
-	public LazyImagePanel(java.awt.LayoutManager layout, boolean forprint) {
+	protected LazyImagePanel(LayoutManager layout, boolean forprint) {
 		super(layout, forprint);
-		addHierarchyListener();
 	}
 
 	/**
@@ -50,21 +41,7 @@ public abstract class LazyImagePanel extends ImagePanel {
 	 *            unregistered if it was already registerd.
 	 */
 	public void registerRefreshable(boolean register) {
-		if (register) {
-			if (this.refreshable == null) {
-				this.refreshable = () -> {
-					if (isShowing()) {
-						callUpdate();
-					} else {
-						needsRefresh = true;
-					}
-				};
-				RefreshManager.instance().registerRefreshable(this.refreshable);
-			}
-		} else if (this.refreshable != null) {
-			RefreshManager.instance().unregisterRefreshable(this.refreshable);
-			this.refreshable = null;
-		}
+		lazySupport.registerRefreshable(register);
 	}
 
 	/**
@@ -74,7 +51,7 @@ public abstract class LazyImagePanel extends ImagePanel {
 	 *         <code>false</code> otherwise.
 	 */
 	public boolean isInitialized() {
-		return this.initialized;
+		return lazySupport.isInitialized();
 	}
 
 	/**
@@ -84,7 +61,7 @@ public abstract class LazyImagePanel extends ImagePanel {
 	 *         <code>false</code> otherwise.
 	 */
 	public boolean needsRefresh() {
-		return this.needsRefresh;
+		return lazySupport.needsRefresh();
 	}
 
 	/**
@@ -95,10 +72,7 @@ public abstract class LazyImagePanel extends ImagePanel {
 	 * @param needsRefresh
 	 */
 	public void setNeedsRefresh(boolean needsRefresh) {
-		this.needsRefresh = needsRefresh;
-		if (needsRefresh && isShowing()) {
-			callUpdate();
-		}
+		lazySupport.setNeedsRefresh(needsRefresh);
 	}
 
 	/**
@@ -117,42 +91,4 @@ public abstract class LazyImagePanel extends ImagePanel {
 	 * the method was called by this class).
 	 */
 	protected abstract void update();
-
-	private void addHierarchyListener() {
-		addHierarchyListener(new HierarchyListener() {
-
-			@Override
-			public void hierarchyChanged(HierarchyEvent e) {
-				if ((HierarchyEvent.SHOWING_CHANGED == (e.getChangeFlags() & HierarchyEvent.SHOWING_CHANGED) && isShowing())) {
-					if (!initialized) {
-						callInitialize();
-					}
-					if (needsRefresh) {
-						callUpdate();
-					}
-				}
-			}
-		});
-	}
-
-	private void callInitialize() {
-		CursorToolkit.startWaitCursor(this);
-		try {
-			initialize();
-			this.initialized = true;
-		} finally {
-			CursorToolkit.stopWaitCursor(this);
-		}
-	}
-
-	private void callUpdate() {
-		CursorToolkit.startWaitCursor(this);
-		try {
-			update();
-			this.needsRefresh = false;
-		} finally {
-			CursorToolkit.stopWaitCursor(this);
-		}
-	}
-
 }
