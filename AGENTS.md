@@ -34,6 +34,8 @@ For the project overview, contribution workflow and developer tips, read
 - Log with `HOLogger.instance()`, not `System.out`.
 - Follow the existing style: singletons via `X.instance()`, no dependency injection. Java and
   Kotlin share `src/main/java`; write in the language of the file you change.
+- **Dependencies:** don't add a new library without agreeing on it in an issue first. Use the JDK
+  and the libraries HO already has before reaching for a new one.
 
 ## Swing
 
@@ -100,3 +102,10 @@ dark theme, and say what you checked in the pull request.
 
 Use `.github/pull_request_template.md`. User-visible changes need a line in
 `src/main/resources/release_notes.md`.
+
+- **Every pull request refers to an issue** that says what it is about. If there is none, ask for
+  the issue number instead of starting without one.
+- **One topic per pull request.** Split large changes into several pull requests that can be
+  reviewed one at a time.
+- **Humans merge.** Agents don't merge, approve or push to `master`. A maintainer reviews every
+  pull request and merges it.
