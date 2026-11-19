@@ -10,7 +10,7 @@ If you notice a bug in the code or in docs or have suggestions for how we can im
 
 ## Getting Started
 
-The code is hosted on GitHub, so you will need to use Git to clone the project and make changes to the codebase. 
+The code is hosted on GitHub, so you will need to use Git to clone the project and make changes to the codebase.
 It is also suggested to use IntelliJ IDEA as the main IDE. In case you decide to use Eclipse make sure to add all the relevant filters in the .ignore accordingly.
 
 
@@ -24,14 +24,14 @@ In case you are not familiar with project contribution on GitHub, we suggest you
 
 ### 1. Fork HO
 
-You will need your own fork to work on the code. Go to the HO project page and hit the Fork button. 
+You will need your own fork to work on the code. Go to the HO project page and hit the Fork button.
 
 ### 2. Clone your fork to your machine:
 
 ~~~
 git clone https://github.com/your-user-name/HO.git HO-yourname
 cd HO-yourname
-git remote add upstream https://github.com/ho-dev/HattrickOrganizer.git 
+git remote add upstream https://github.com/ho-dev/HattrickOrganizer.git
 ~~~
 
 This creates the directory HO-yourname and connects your repository to the upstream (main project) HO repository.
@@ -63,9 +63,9 @@ git pull upstream master --ff-only
 
 *When you want to update the feature branch with changes in master after you created the branch, check the section on [updating a PR](#update-your-pull-request)*
 
-Before submitting your changes for review, make sure to pull latest version of master and check that HO builds with your changes. 
-Once your changes are ready to be submitted, make sure to push your changes to GitHub before creating a pull request. 
-You will most likely be asked to make additional changes before it is finally ready to merge. 
+Before submitting your changes for review, make sure to pull latest version of master and check that HO builds with your changes.
+Once your changes are ready to be submitted, make sure to push your changes to GitHub before creating a pull request.
+You will most likely be asked to make additional changes before it is finally ready to merge.
 However, once it's ready, we will merge it, and you will have successfully contributed to the codebase!
 
 
@@ -165,7 +165,25 @@ After the feature branch has been update locally, you can now update your pull r
 
 ```git push origin shiny-new-feature```
 
-### 9. Delete your merged branch (optional)
+### 9. Merge your pull request
+
+Regular pull requests targeting either `master` or `release/<N>` should be integrated using **Squash and merge** to
+maintain a clean and readable commit history.
+
+Before merging:
+
+- Ensure the pull request has been reviewed and approved.
+- Ensure all required checks have passed.
+- Rebase the source branch onto the latest target branch if necessary.
+
+**Rebase and merge** may be used in exceptional cases when individual commits are intentionally structured and worth
+preserving. However, this should be a conscious decision rather than the default approach.
+
+**Merge commits are reserved for merging `release/<N>` back into `master`** to preserve the release history.
+
+Avoid regular merge commits for other pull requests.
+
+### 10. Delete your merged branch (optional)
 
 Once your feature branch is accepted into upstream, you’ll probably want to get rid of the branch. First, merge upstream master into your branch so git knows it is safe to delete your branch:
 
