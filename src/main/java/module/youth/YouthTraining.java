@@ -13,6 +13,7 @@ import core.model.match.MatchLineupTeam;
 import core.model.match.Matchdetails;
 import core.util.HODateTime;
 import core.util.HTWeek;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Map;
 import java.util.Vector;
@@ -87,8 +88,13 @@ public class YouthTraining extends AbstractTable.Storable {
         return this.youthMatchId;
     }
 
-    public MatchLineupTeam getTeam(Integer youthTeamId) {
-        return this.getMatchLineup().getTeam(youthTeamId);
+    /**
+     * The given team's side of this match, or null when it did not play it or the lineup is not
+     * stored.
+     */
+    public @Nullable MatchLineupTeam getTeam(Integer youthTeamId) {
+        final MatchLineup lineup = this.getMatchLineup();
+        return lineup != null ? lineup.getTeam(youthTeamId) : null;
     }
 
     MatchLineup getMatchLineup() {
@@ -227,6 +233,9 @@ public class YouthTraining extends AbstractTable.Storable {
         var ret = new StringBuilder();
         var hov = HOVerwaltung.instance();
         var lineupTeam = this.getTeam(hov.getModel().getBasics().getYouthTeamId());
+        if (lineupTeam == null) {
+            return "";
+        }
         var sectors = lineupTeam.getTrainMinutesPlayedInSectors(playerId);
         for ( var s : sectors.entrySet()){
             ret.append(TranslationFacility.tr("ls.youth.training.sector." + s.getKey()))
@@ -285,7 +294,8 @@ public class YouthTraining extends AbstractTable.Storable {
     );
 
     public double getRating(int playerId) {
-        var player = this.getTeam(HOVerwaltung.instance().getModel().getBasics().getYouthTeamId()).getPlayerByID(playerId);
+        final var team = this.getTeam(HOVerwaltung.instance().getModel().getBasics().getYouthTeamId());
+        final var player = team != null ? team.getPlayerByID(playerId) : null;
         if ( player != null ) return player.getRating();
         return 0;
     }
