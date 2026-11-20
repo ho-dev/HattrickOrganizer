@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<HattrickData>
+  <FileName>youthteam.xml</FileName>
+  <Version>1.5</Version>
+  <UserID>1357154</UserID>
+  <FetchedDate>2026-11-15 03:01:14</FetchedDate>
+  <YouthTeam>
+    <YouthTeamID>0</YouthTeamID>
+    <YouthTeamName />
+    <ShortTeamName />
+    <CreatedDate>2007-04-02 00:00:00</CreatedDate>
+    <UserId>0</UserId>
+    <GenderID>1</GenderID>
+    <LeagueSystemID>0</LeagueSystemID>
+    <IsPlayingMatch>False</IsPlayingMatch>
+    <Country>
+      <CountryID>0</CountryID>
+      <CountryName />
+    </Country>
+    <Region>
+      <RegionID>0</RegionID>
+      <RegionName />
+    </Region>
+    <YouthArena>
+      <YouthArenaID>0</YouthArenaID>
+      <YouthArenaName />
+    </YouthArena>
+    <YouthLeague />
+    <OwningTeam />
+    <YouthTrainer>
+      <YouthPlayerID>0</YouthPlayerID>
+    </YouthTrainer>
+    <NextTrainingMatchDate>2007-04-09 00:00:00</NextTrainingMatchDate>
+    <ScoutList />
+  </YouthTeam>
+</HattrickData>

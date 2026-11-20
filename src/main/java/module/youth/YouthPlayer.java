@@ -67,6 +67,14 @@ public class YouthPlayer extends AbstractTable.Storable {
     @Getter
     @Setter
     private Gender gender;
+    /** youthplayerlist 1.2: the country of birth. Null for downloads before. */
+    @Getter
+    @Setter
+    private Integer nativeCountryId;
+    /** The country's name in the manager's language at download time. */
+    @Getter
+    @Setter
+    private String nativeCountryName;
 
     private double progressLastMatch=0;
 
@@ -82,7 +90,7 @@ public class YouthPlayer extends AbstractTable.Storable {
     private List<ScoutComment> scoutComments;
 
     /**
-     * Comments of the trainer after training matches (not available yet)
+     * The coach's training comments (youthplayerdetails 1.4), newest first; loaded on first use.
      */
     private List<YouthTrainerComment> trainerComments;
 
@@ -424,20 +432,20 @@ public class YouthPlayer extends AbstractTable.Storable {
         this.promotionDate = promotionDate;
     }
 
-    public void addComment(YouthTrainerComment comment) {
-        var count = this.getTrainerComments().stream()
-                .filter(c -> c.getYouthPlayerId() == this.id &&
-                        c.getYouthMatchId() == comment.getYouthMatchId() &&
-                        c.getIndex() == comment.getIndex())
-                .count();
-        if (count == 0) this.trainerComments.add(comment);
-    }
-
-    private List<YouthTrainerComment> getTrainerComments() {
+    /**
+     * The coach's training comments about this player, newest first. Empty for a club below Gold
+     * supporter, which Hattrick sends none for.
+     */
+    public List<YouthTrainerComment> getTrainerComments() {
         if (this.trainerComments == null) {
             this.trainerComments = DBManager.instance().loadYouthTrainerComments(this.id);
         }
         return this.trainerComments;
+    }
+
+    /** Forgets the loaded comments, so the next read sees what a download just stored. */
+    public void resetTrainerComments() {
+        this.trainerComments = null;
     }
 
     /**
@@ -963,6 +971,8 @@ public class YouthPlayer extends AbstractTable.Storable {
         leagueGoals = getInt(properties, "leaguegoals", 0);
         friendlyGoals = getInt(properties, "friendlygoals", 0);
         gender = Gender.fromId(getInteger(properties, "genderid"));
+        nativeCountryId = getInteger(properties, "nativecountryid");
+        nativeCountryName = properties.getProperty("nativecountryname");
         scoutId = getInt(properties, "scoutid", 0);
         scoutingRegionID = getInt(properties, "scoutingregionid", 0);
         scoutName = properties.getProperty("scoutname", "");

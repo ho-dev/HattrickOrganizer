@@ -55,7 +55,6 @@ public class ConvertXml2Hrf {
 		HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.connection"), progressIncrement);
 		final Connector mc = Connector.instance();
 		int teamId = HOVerwaltung.instance().getModel().getBasics().getTeamId();
-		Integer youthTeamId = HOVerwaltung.instance().getModel().getBasics().getYouthTeamId();
 
 		String teamDetails = mc.getTeamDetails(-1);
 
@@ -67,40 +66,33 @@ public class ConvertXml2Hrf {
 		var usersPremierTeamInfo = teamInfoList.stream().filter(TeamInfo::isPrimaryTeam).findFirst().orElse(teamInfoList.stream().findFirst().orElseThrow());
 		var usersPremierTeamId = usersPremierTeamInfo.getTeamId();
         teamId = checkDatabase(parent, teamId, teamInfoList);
-        var initTeamId = teamId <= 0;
-		if (initTeamId || youthTeamId == null) {
-			// We have no team selected or the youth team information is never downloaded before
+		if (teamId <= 0) {
+			// We have no team selected
 			if (teamInfoList.size() == 1) {
 				// user has only one single team
 				teamId = teamInfoList.get(0).getTeamId();
-				youthTeamId = teamInfoList.get(0).getYouthTeamId();
 			} else if (teamInfoList.size() >= 2) {
-				// user has more than one team
-				if (teamId <= 0) {
-					// Select one of user's teams, if not done before
-					CursorToolkit.stopWaitCursor(HOMainFrame.instance().getRootPane());
-					TeamSelectionDialog selection = new TeamSelectionDialog(HOMainFrame.instance(), teamInfoList);
-					selection.setVisible(true);
-					if (selection.getCancel()) {
-						return null;
-					}
-					teamId = selection.getSelectedTeam().getTeamId();
-					youthTeamId = selection.getSelectedTeam().getYouthTeamId();
-				} else {
-					// team id is in DB and this is the first time we download youth team information
-					int finalTeamId = teamId;
-					var teaminfo = teamInfoList.stream()
-							.filter(x -> x.getTeamId() == finalTeamId)
-							.findAny()
-							.orElse(null);
-					if (teaminfo != null) {
-						youthTeamId = teaminfo.getYouthTeamId();
-					}
+				// user has more than one team: select one, if not done before
+				CursorToolkit.stopWaitCursor(HOMainFrame.instance().getRootPane());
+				final TeamSelectionDialog selection = new TeamSelectionDialog(HOMainFrame.instance(), teamInfoList);
+				selection.setVisible(true);
+				if (selection.getCancel()) {
+					return null;
 				}
+				teamId = selection.getSelectedTeam().getTeamId();
 			} else {
 				return null;
 			}
 		}
+
+		// Always take the youth team id from the fresh team details, never from the database:
+		// a youth academy that was closed and reopened gets a new id.
+		final int selectedTeamId = teamId;
+		final Integer youthTeamId = teamInfoList.stream()
+				.filter(x -> x.getTeamId() == selectedTeamId)
+				.findAny()
+				.map(TeamInfo::getYouthTeamId)
+				.orElse(null);
 
 		Map<String, String> teamdetailsDataMap = XMLTeamDetailsParser.parseTeamDetailsFromString(teamDetails, teamId);
 		if (teamdetailsDataMap.isEmpty()) return null;

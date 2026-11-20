@@ -49,6 +49,8 @@ public final class ThemeManager {
     private static final Path stadiumImagesPath = tempImgPath.resolve("stadiumImages");
     private static final Path teamLogoPath = tempImgPath.resolve("clubLogos");
     private static final Path playerAvatarPath = tempImgPath.resolve("playersAvatar");
+    /** Youth player ids are a separate id range, so their avatars get their own folder. */
+    private static final Path youthPlayerAvatarPath = tempImgPath.resolve("youthPlayersAvatar");
 	private static final Map<String, Theme> themes = new LinkedHashMap<>();
 	private static final ThemeManager MANAGER = new ThemeManager();
 
@@ -78,6 +80,7 @@ public final class ThemeManager {
         createNonExistingDir(stadiumImagesPath);
         createNonExistingDir(teamLogoPath);
         createNonExistingDir(playerAvatarPath);
+        createNonExistingDir(youthPlayerAvatarPath);
 
         IconLoader.updateThemeStatus(new Object());
     }
@@ -275,18 +278,25 @@ public final class ThemeManager {
 	 * @param playersAvatar list of player avatars fetched avatars CSV
 	 */
 	public void generateAllPlayerAvatar(List<PlayerAvatar> playersAvatar, int progress){
+		generateMissingAvatars(playersAvatar, progress, playerAvatarPath);
+	}
 
-		String avatarPath;
-		File avatarImg;
+	/**
+	 * The youth players' avatars (youthavatars 1.2), written next to the senior ones in their own
+	 * folder. Nothing displays them yet.
+	 *
+	 * @param youthPlayersAvatar the parsed youthavatars answer
+	 */
+		public void generateAllYouthPlayerAvatar(List<PlayerAvatar> youthPlayersAvatar, int progress) {
+		generateMissingAvatars(youthPlayersAvatar, progress, youthPlayerAvatarPath);
+	}
 
+	private void generateMissingAvatars(List<PlayerAvatar> playersAvatar, int progress, Path folder) {
 		//1. estimate number of avatar to download
 		List<PlayerAvatar> missingAvatars = new ArrayList<>();
 
 		for (var avatar : playersAvatar){
-
-			avatarPath = playerAvatarPath.resolve(avatar.getPlayerID() + ".png").toString();
-			avatarImg = new File(avatarPath);
-
+			var avatarImg = new File(folder.resolve(avatar.getPlayerID() + ".png").toString());
 			if (!avatarImg.exists()) {
 				missingAvatars.add(avatar);
 			}
@@ -300,7 +310,7 @@ public final class ThemeManager {
 			HOLogger.instance().info(this.getClass(), "Downloading player's avatar: %s/%s".formatted(i, iMax));
 			HOMainFrame.instance().setInformation("Downloading player's avatar: %s/%s".formatted(i, iMax), progress);
 			try {
-				avatar.generateAvatar(playerAvatarPath);
+				avatar.generateAvatar(folder);
 			} catch (IOException e) {
 				HOLogger.instance().error(ThemeManager.class, "Error processing Player Avatar for player: " + avatar.getPlayerID());
 			}

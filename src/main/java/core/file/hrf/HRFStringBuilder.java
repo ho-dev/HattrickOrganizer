@@ -6,6 +6,7 @@ import core.constants.TeamSpirit;
 import core.constants.TrainingType;
 import core.constants.player.*;
 import core.file.xml.SafeInsertMap;
+import core.file.xml.XMLPlayersParser;
 import core.model.enums.MatchType;
 import core.model.match.MatchLineupTeam;
 import core.model.match.MatchTacticType;
@@ -601,6 +602,8 @@ public class HRFStringBuilder {
             appendHRFLine(youthPlayersStringBuilder, player, "LeagueGoals");
             appendHRFLine(youthPlayersStringBuilder, player, "FriendlyGoals");
             appendHRFLine(youthPlayersStringBuilder, player, GENDER_ID);
+            appendHRFLine(youthPlayersStringBuilder, player, XMLPlayersParser.YOUTH_NATIVE_COUNTRY_ID);
+            appendHRFLine(youthPlayersStringBuilder, player, XMLPlayersParser.YOUTH_NATIVE_COUNTRY_NAME);
 
             for (var skillId : YouthPlayer.skillIds) {
                 appendHRFSkillLines(youthPlayersStringBuilder, player, skillId);

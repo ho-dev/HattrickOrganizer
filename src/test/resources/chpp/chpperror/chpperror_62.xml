@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The shape of a real CHPP error response (error 54 of 2026-11-15), with error 62:
+     "Youth player is now a senior" (youthplayerdetails 1.2). -->
+<HattrickData>
+  <FileName>chpperror.xml</FileName>
+  <Version>1.1</Version>
+  <UserID>1357154</UserID>
+  <FetchedDate>2026-11-15 10:00:00</FetchedDate>
+  <Error> (62) Additional Info: null</Error>
+  <ErrorCode>62</ErrorCode>
+  <ErrorGUID>00000000-0000-0000-0000-000000000000</ErrorGUID>
+  <Server>chpp83.hattrick.org</Server>
+  <Request>/chppxml.ashx?file=youthplayerdetails&amp;version=1.4&amp;actionType=details&amp;youthPlayerId=364643130</Request>
+  <LineNumber>63</LineNumber>
+</HattrickData>
