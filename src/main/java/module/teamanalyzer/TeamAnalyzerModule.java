@@ -26,7 +26,7 @@ public final class TeamAnalyzerModule extends DefaultModule {
 	}
 
 	@Override
-	public String getKey() {
+	public String getTranslationKey() {
 		return "TeamAnalyzer";
 	}
 

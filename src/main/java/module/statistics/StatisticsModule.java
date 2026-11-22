@@ -17,7 +17,7 @@ public final class StatisticsModule extends DefaultModule {
 	}
 
 	@Override
-	public String getKey() {
+	public String getTranslationKey() {
 		return "Statistik";
 	}
 

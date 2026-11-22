@@ -20,7 +20,7 @@ public class SpecialEventsModule extends DefaultModule {
 	}
 
 	@Override
-	public String getKey() {
+	public String getTranslationKey() {
 		return "Tab_SpecialEvents";
 	}
 

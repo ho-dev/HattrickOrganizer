@@ -11,8 +11,13 @@ public abstract class DefaultModule implements IModule {
 	private boolean isStartUp = false;
 	private boolean isActive = false;
 	public abstract int getModuleId();
-	public abstract String getKey();
+	public abstract String getTranslationKey();
 	public abstract JPanel createTabPanel();
+
+    @Override
+    public String getTabId() {
+        return getTranslationKey();
+    }
 
     @Override
     public JPanel getTabPanel() {
@@ -23,7 +28,7 @@ public abstract class DefaultModule implements IModule {
     }
 
     public String getDescription() {
-        return TranslationFacility.tr(getKey());
+        return TranslationFacility.tr(getTranslationKey());
     }
 
 	protected DefaultModule(){}

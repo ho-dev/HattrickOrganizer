@@ -37,13 +37,14 @@ public class PlayerAnalysisModulePanel extends LazyImagePanel {
 
 	private JTabbedPane getTabbedPane() {
 		if (tabbedPane == null) {
-			tabbedPane = new JTabbedPane();
-			tabbedPane.add(getSpielerAnalyseMainPanel(),
-					TranslationFacility.tr("Spiele"));
-			if (ModuleConfig.instance().getBoolean(PlayerAnalysisModule.SHOW_PLAYERCOMPARE))
-				tabbedPane.add(getPlayerComparePanel(),
-						TranslationFacility.tr("PlayerCompare"));
-		}
+            tabbedPane = new JTabbedPane();
+            tabbedPane.add(getSpielerAnalyseMainPanel(),
+                TranslationFacility.tr("Spiele"));
+            if (PlayerAnalysisModule.isShowPlayerCompare()) {
+                tabbedPane.add(getPlayerComparePanel(),
+                    TranslationFacility.tr("PlayerCompare"));
+            }
+        }
 		return tabbedPane;
 	}
 

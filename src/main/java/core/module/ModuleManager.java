@@ -83,7 +83,7 @@ public final class ModuleManager {
     }
 
     public Optional<IModule> findModule(String key) {
-        return StreamUtils.findOne(all_modules.values().stream().filter(module -> module.getKey().equals(key)));
+        return StreamUtils.findOne(all_modules.values().stream().filter(module -> module.getTranslationKey().equals(key)));
     }
 
 	public IModule[] getAllModules() {
@@ -170,7 +170,7 @@ public final class ModuleManager {
 
 		if (!p.tempTabSpieleranalyse) {
 			getModule(IModule.PLAYERANALYSIS).setStatus(IModule.STATUS_STARTUP);
-			ModuleConfig.instance().setBoolean(PlayerAnalysisModule.SHOW_PLAYERCOMPARE, true);
+            PlayerAnalysisModule.setShowPlayerCompare(true);
 		}
 
 		if (!p.tempTabSpieleruebersicht) {

@@ -8,18 +8,22 @@ import java.awt.event.KeyEvent;
 
 public final class PlayerAnalysisModule extends DefaultModule {
 	static final String SHOW_GAMEANALYSIS = "PA_PlayerAnalysis";
-	public static final String SHOW_PLAYERCOMPARE = "PA_PlayerCompare";
+	private static final String SHOW_PLAYERCOMPARE = "PA_PlayerCompare";
 
 	public PlayerAnalysisModule(){
 		super(true);
-		initialize();
 	}
 
-	private void initialize() {
-		if(! ModuleConfig.instance().containsKey(SHOW_PLAYERCOMPARE))
-			ModuleConfig.instance().setBoolean(SHOW_PLAYERCOMPARE, false);
+	public static boolean isShowPlayerCompare() {
+        if (ModuleConfig.instance().containsKey(SHOW_PLAYERCOMPARE)) {
+            return ModuleConfig.instance().getBoolean(SHOW_PLAYERCOMPARE);
+        }
+        return false;
+    }
 
-	}
+    public static void setShowPlayerCompare(boolean showPlayerCompare) {
+        ModuleConfig.instance().setBoolean(SHOW_PLAYERCOMPARE, showPlayerCompare);
+    }
 
 	@Override
 	public int getModuleId() {
@@ -27,7 +31,7 @@ public final class PlayerAnalysisModule extends DefaultModule {
 	}
 
 	@Override
-	public String getKey() {
+	public String getTranslationKey() {
 		return "SpielerAnalyse";
 	}
 

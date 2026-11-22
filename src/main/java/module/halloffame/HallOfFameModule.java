@@ -19,7 +19,7 @@ public class HallOfFameModule extends DefaultModule {
     }
 
     @Override
-    public String getKey() {
+    public String getTranslationKey() {
         return "ls.hof";
     }
 

@@ -18,7 +18,7 @@ public final class TrainingModule extends DefaultModule {
 	}
 
 	@Override
-	public String getKey() {
+	public String getTranslationKey() {
 		return "Training";
 	}
 

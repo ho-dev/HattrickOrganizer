@@ -18,7 +18,7 @@ public final class SeriesModule extends DefaultModule {
 	}
 
 	@Override
-	public String getKey() {
+	public String getTranslationKey() {
 		return "Ligatabelle";
 	}
 

@@ -19,7 +19,7 @@ public final class LineupModule extends DefaultModule {
 	}
 
 	@Override
-	public String getKey() {
+	public String getTranslationKey() {
 		return "Aufstellung";
 	}
 

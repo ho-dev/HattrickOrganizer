@@ -17,7 +17,7 @@ public final class MatchesModule extends DefaultModule {
 	}
 
 	@Override
-	public String getKey() {
+	public String getTranslationKey() {
 		return "Tab_Title_Matches";
 	}
 

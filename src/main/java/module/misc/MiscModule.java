@@ -18,7 +18,7 @@ public final class MiscModule extends DefaultModule {
 	}
 
 	@Override
-	public String getKey() {
+	public String getTranslationKey() {
 		return "Verschiedenes";
 	}
 

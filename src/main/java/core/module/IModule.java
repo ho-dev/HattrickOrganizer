@@ -37,7 +37,9 @@ public interface IModule {
 
     String getDescription();
 
-    String getKey();
+    String getTranslationKey();
+
+    String getTabId();
 
     boolean hasMainTab();
 

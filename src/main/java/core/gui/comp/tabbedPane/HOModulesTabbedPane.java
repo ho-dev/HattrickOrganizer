@@ -20,9 +20,9 @@ public final class HOModulesTabbedPane extends HOTabbedPane {
     private Optional<Integer> findTab(int moduleId) {
         IModule module = ModuleManager.instance().getModule(moduleId);
         if (module.hasMainTab()) {
-            var index = findIndexOfTab(module.getKey());
+            var index = findIndexOfTab(module.getTabId());
             if (index.isEmpty()) {
-                addHOTab(module.getKey(), module.getTabPanel());
+                addHOTab(module.getTabId(), module.getTabPanel());
                 index = Optional.of(getTabCount() - 1);
             }
             return index;
@@ -42,7 +42,7 @@ public final class HOModulesTabbedPane extends HOTabbedPane {
 
     public boolean isModuleTabVisible(int moduleId) {
         IModule module = ModuleManager.instance().getModule(moduleId);
-        return findIndexOfTab(module.getKey()).isPresent();
+        return findIndexOfTab(module.getTabId()).isPresent();
     }
 
     @Override

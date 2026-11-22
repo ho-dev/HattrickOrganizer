@@ -18,7 +18,7 @@ public class YouthModule extends DefaultModule {
     }
 
     @Override
-    public String getKey() {
+    public String getTranslationKey() {
         return "ls.youth";
     }
 
