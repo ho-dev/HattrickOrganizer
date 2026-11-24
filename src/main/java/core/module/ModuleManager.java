@@ -82,8 +82,8 @@ public final class ModuleManager {
         return all_modules.get(moduleId);
     }
 
-    public Optional<IModule> findModule(String key) {
-        return StreamUtils.findOne(all_modules.values().stream().filter(module -> module.getTranslationKey().equals(key)));
+    public Optional<IModule> findModule(String tabId) {
+        return StreamUtils.findOne(all_modules.values().stream().filter(module -> module.getTabId().equals(tabId)));
     }
 
 	public IModule[] getAllModules() {

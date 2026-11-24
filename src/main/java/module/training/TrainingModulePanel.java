@@ -31,6 +31,9 @@ public class TrainingModulePanel extends LazyPanel {
     private TrainingPanel trainingPanel;
     private TrainingDevelopmentPanel trainingDevelopmentPanel;
 
+    /**
+     * Mapping translation key (which is also used as tabId) to the JPanel
+     */
     private final Map<String, Component> tabComponents = new LinkedHashMap<>();
     private HOTabbedPane tabbedPane;
 
@@ -41,6 +44,7 @@ public class TrainingModulePanel extends LazyPanel {
         trainingPredictionPanel = new TrainingPredictionPanel(this.model);
         trainingAnalyzerPanel = new AnalyzerPanel();
         trainingEffectPanel = new EffectPanel();
+
         tabComponents.put("Training", trainingProgressPanel);
         tabComponents.put("MainPanel.Prediction", trainingPredictionPanel);
         tabComponents.put("MainPanel.Analyzer", trainingAnalyzerPanel);
@@ -66,13 +70,15 @@ public class TrainingModulePanel extends LazyPanel {
             @Override
             protected Optional<HOTabComponent> findComponent(String tabId) {
                 var tabComponent = tabComponents.get(tabId);
-                if (tabComponent == null) return Optional.empty();
+                if (tabComponent == null) {
+                    return Optional.empty();
+                }
                 return Optional.of(new HOTabComponent(TranslationFacility.tr(tabId), tabComponent));
             }
         };
         tabbedPane.restoreTabs();
 
-        tabComponents.forEach((key, value) -> tabbedPane.addHOTab(key, value));
+        tabComponents.forEach((tabId, value) -> tabbedPane.addHOTab(tabId, value));
 
         JSplitPane splitPanel = new JSplitPane(JSplitPane.VERTICAL_SPLIT, tabbedPane, bottomPanel);
         UserParameter.instance().training_mainSplitPane.init(splitPanel);
