@@ -1,6 +1,7 @@
 package module.youth;
 
 import core.db.AbstractTable;
+import core.model.misc.HOPlace;
 import core.util.HODateTime;
 import lombok.Getter;
 import lombok.Setter;
@@ -8,7 +9,7 @@ import lombok.Setter;
 /** One of the youth team's scouts (youthteamdetails ScoutList), one snapshot per HRF. */
 @Getter
 @Setter
-public class YouthScout extends AbstractTable.Storable implements YouthPlace {
+public class YouthScout extends AbstractTable.Storable implements HOPlace {
 
     private int hrfId;
     private int youthScoutId;

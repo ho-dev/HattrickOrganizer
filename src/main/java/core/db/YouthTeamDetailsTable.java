@@ -1,7 +1,7 @@
 package core.db;
 
 import core.util.HODateTime;
-import module.youth.YouthPlace;
+import core.model.misc.HOPlace;
 import module.youth.YouthTeamDetails;
 
 import java.sql.Types;
@@ -62,8 +62,8 @@ final class YouthTeamDetailsTable extends AbstractTable {
                 text("RegionName", o -> place(o).getRegionName(), (o, v) -> place(o).setRegionName((String) v)));
     }
 
-    private static YouthPlace place(Object o) {
-        return (YouthPlace) o;
+    private static HOPlace place(Object o) {
+        return (HOPlace) o;
     }
 
     static ColumnDescriptor integer(String name, UnaryOperator<Object> getter, BiConsumer<Object, Object> setter) {

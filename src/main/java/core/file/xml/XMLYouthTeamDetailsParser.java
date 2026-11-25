@@ -2,7 +2,7 @@ package core.file.xml;
 
 import core.util.HOLogger;
 import core.util.XMLUtils;
-import module.youth.YouthPlace;
+import core.model.misc.HOPlace;
 import module.youth.YouthScout;
 import module.youth.YouthTeamDetails;
 import org.jetbrains.annotations.Nullable;
@@ -111,7 +111,7 @@ public final class XMLYouthTeamDetailsParser {
     }
 
     /** Country and Region of a team or a scout. */
-    private static void readPlace(Element parent, YouthPlace place) {
+    private static void readPlace(Element parent, HOPlace place) {
         XMLUtils.findChildElement(parent, COUNTRY).ifPresent(c -> {
             XMLUtils.findIntegerValue(c, COUNTRY_ID).ifPresent(place::setCountryId);
             XMLUtils.findStringValue(c, COUNTRY_NAME).ifPresent(place::setCountryName);

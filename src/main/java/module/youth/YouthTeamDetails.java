@@ -1,6 +1,7 @@
 package module.youth;
 
 import core.db.AbstractTable;
+import core.model.misc.HOPlace;
 import core.util.HODateTime;
 import lombok.Getter;
 import lombok.Setter;
@@ -14,7 +15,7 @@ import java.util.List;
  */
 @Getter
 @Setter
-public class YouthTeamDetails extends AbstractTable.Storable implements YouthPlace {
+public class YouthTeamDetails extends AbstractTable.Storable implements HOPlace {
 
     private int hrfId;
     private int youthTeamId;
