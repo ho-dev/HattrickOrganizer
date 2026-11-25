@@ -10,7 +10,7 @@ If you notice a bug in the code or in docs or have suggestions for how we can im
 
 ## Getting Started
 
-The code is hosted on GitHub, so you will need to use Git to clone the project and make changes to the codebase. 
+The code is hosted on GitHub, so you will need to use Git to clone the project and make changes to the codebase.
 It is also suggested to use IntelliJ IDEA as the main IDE. In case you decide to use Eclipse make sure to add all the relevant filters in the .ignore accordingly.
 
 
@@ -29,15 +29,18 @@ still N-1.
 
 ### Which branch does my pull request go to?
 
-- **New feature, improvement, refactoring, new translation key or database schema change: `master`.**
-  It ships with the next major version.
+- **New feature, improvement or refactoring: `master`.** It ships with the next major version.
 - **Fix for a bug that is already in the newest `release/<N>`: that branch**, also when the bug was reported
   against an older version. Keep the change to the fix itself, and reference the issue it fixes. A bug in code
-  that only exists on `master` is fixed on `master`. A fix that needs a database change or a new translation key goes to `master`.
+  that only exists on `master` is fixed on `master`. A fix may add a translation key (add it to POEditor; until translated, the English text is the
+  fallback) or a database change, if the bug needs it. What decides is whether the change is a bug fix
+  for the current release, not which files it touches.
 - **Not sure: `master`.** Say in the pull request that it may be worth backporting, and the maintainers decide.
 
 You never open the same fix twice. The maintainers merge `release/<N>` into `master` regularly, so a fix on the
-release branch reaches `master` by itself. Nothing is merged the other way.
+release branch reaches `master` by itself. `master` is never merged into `release/<N>`. A fix that is already
+on `master` but is also needed in the current release can be cherry-picked into a regular pull request that
+targets `release/<N>`. When the release branch is merged back, that fix should need no further change on `master`.
 
 The life of a release branch:
 
@@ -56,14 +59,14 @@ In case you are not familiar with project contribution on GitHub, we suggest you
 
 ### 1. Fork HO
 
-You will need your own fork to work on the code. Go to the HO project page and hit the Fork button. 
+You will need your own fork to work on the code. Go to the HO project page and hit the Fork button.
 
 ### 2. Clone your fork to your machine:
 
 ~~~
 git clone https://github.com/your-user-name/HO.git HO-yourname
 cd HO-yourname
-git remote add upstream https://github.com/ho-dev/HattrickOrganizer.git 
+git remote add upstream https://github.com/ho-dev/HattrickOrganizer.git
 ~~~
 
 This creates the directory HO-yourname and connects your repository to the upstream (main project) HO repository.
@@ -106,9 +109,9 @@ git checkout -b fix-1234-short-description upstream/release/10
 Do not start it from your master: the pull request would then carry everything master has on top of the release branch.
 When you update such a branch, merge `upstream/release/10` instead of `upstream/master`.
 
-Before submitting your changes for review, make sure to pull latest version of master and check that HO builds with your changes. 
-Once your changes are ready to be submitted, make sure to push your changes to GitHub before creating a pull request. 
-You will most likely be asked to make additional changes before it is finally ready to merge. 
+Before submitting your changes for review, make sure to pull latest version of master and check that HO builds with your changes.
+Once your changes are ready to be submitted, make sure to push your changes to GitHub before creating a pull request.
+You will most likely be asked to make additional changes before it is finally ready to merge.
 However, once it's ready, we will merge it, and you will have successfully contributed to the codebase!
 
 
