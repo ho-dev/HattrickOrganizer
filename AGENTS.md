@@ -78,9 +78,9 @@ For the project overview, contribution workflow and developer tips, read
   the first parameter.
 - Return `Optional<T>` for values that may be missing, not a `@Nullable` type.
 - Use the existing helpers before writing your own. For CHPP XML that is `XMLUtils`
-  (`findChildElement`, `findIntegerValue`, …). If a helper is missing, add it to `XMLUtils` with a
-  unit test instead of a private method in one parser. Keep a missing element apart from an
-  element with an empty value.
+  (`findChildElement`, `findIntegerValue`, …). If a helper is missing and general-purpose and
+  reusable across parsers, add it to `XMLUtils` with a unit test. Parser-specific helpers stay in
+  their parser, with tests. Keep a missing element apart from an element with an empty value.
 - Use `ArrayList`/`HashMap` rather than `Vector`/`Hashtable`, and `HODateTime` rather than
   `java.util.Date`.
 - Only modernise the code you are changing anyway. Don't rewrite unrelated code in the same pull
@@ -93,8 +93,9 @@ windows. There are no UI tests: check UI changes by hand with `./gradlew run`, i
 dark theme, and say what you checked in the pull request.
 
 - Put tests in the test class of the class under test (`OnlineWorker` → `OnlineWorkerTest`).
-- Test code explains itself through its names: no Javadoc or explanatory comments in test
-  classes. If a test or helper needs a comment, rename or split it instead.
+- Prefer descriptive test names and a clear test structure. Avoid comments and Javadoc that merely
+  repeat what the code already expresses. Use a comment when it adds context or explains
+  non-obvious behavior, such as unusual test data or an edge case.
 - A method that is package-private only so a test can call it gets a short comment saying so.
 - Write test resource paths out in full (`"/chpp/youthleaguedetails/youthleaguedetails_1.1.xml"`), don't build
   them from parts, so they can be opened from the IDE.
@@ -106,8 +107,9 @@ dark theme, and say what you checked in the pull request.
 Use `.github/pull_request_template.md`. User-visible changes need a line in
 `src/main/resources/release_notes.md`.
 
-- **Every pull request refers to an issue** that says what it is about. If there is none, ask for
-  the issue number instead of starting without one.
+- **Every pull request clearly describes its purpose and scope.** Non-trivial changes are discussed
+  in an issue before implementation. Small, self-contained changes may be described directly in the
+  pull request.
 - **One topic per pull request.** Split large changes into several pull requests that can be
   reviewed one at a time.
 - **Humans merge.** Agents don't merge, approve or push to `master`. A maintainer reviews every
