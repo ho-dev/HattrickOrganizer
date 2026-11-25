@@ -1,6 +1,7 @@
 package core.db;
 
 import core.constants.player.PlayerSkill;
+import core.file.xml.XMLPlayersParser;
 import core.model.enums.Gender;
 import core.model.player.PlayerCategory;
 import core.model.player.Specialty;
@@ -20,8 +21,8 @@ public class YouthPlayerTable  extends AbstractTable {
      **/
     static final String TABLENAME = "YOUTHPLAYER";
     /** youthplayerlist 1.4 native country, added by DB step 1100. */
-    static final String NATIVE_COUNTRY_ID = "NativeCountryID";
-    static final String NATIVE_COUNTRY_NAME = "NativeCountryName";
+    static final String NATIVE_COUNTRY_ID = XMLPlayersParser.YOUTH_NATIVE_COUNTRY_ID;
+    static final String NATIVE_COUNTRY_NAME = XMLPlayersParser.YOUTH_NATIVE_COUNTRY_NAME;
     static final int NATIVE_COUNTRY_NAME_LENGTH = 127;
     /** Statement and OwnerNotes: free text, widened from 255 by DB step 1100 and cut, never refused. */
     static final int FREE_TEXT_LENGTH = 2048;

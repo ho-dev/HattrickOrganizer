@@ -295,8 +295,8 @@ public class DBManager implements PersistenceManager {
 		tables.put(YouthTeamDetailsTable.TABLENAME, new YouthTeamDetailsTable(connectionManager));
 		tables.put(YouthScoutTable.TABLENAME, new YouthScoutTable(connectionManager));
 		tables.put(YouthLeagueTable.TABLENAME, new YouthLeagueTable(connectionManager));
-		tables.put(YouthLeagueTable.StandingsTable.TABLENAME, new YouthLeagueTable.StandingsTable(connectionManager));
-		tables.put(YouthLeagueTable.FixtureTable.TABLENAME, new YouthLeagueTable.FixtureTable(connectionManager));
+		tables.put(YouthLeagueTable.YouthLeagueTeamTable.TABLENAME, new YouthLeagueTable.YouthLeagueTeamTable(connectionManager));
+		tables.put(YouthLeagueTable.YouthLeagueFixtureTable.TABLENAME, new YouthLeagueTable.YouthLeagueFixtureTable(connectionManager));
 		tables.put(YouthTrainingTable.TABLENAME, new YouthTrainingTable(connectionManager));
 		tables.put(TeamsLogoTable.TABLENAME, new TeamsLogoTable(connectionManager));
 		tables.put(ScoutTable.TABLENAME, new ScoutTable(connectionManager));
@@ -2287,8 +2287,8 @@ public class DBManager implements PersistenceManager {
 		final int id = league.getYouthLeagueId();
 		final int season = league.getSeason();
 		((YouthLeagueTable) getTable(YouthLeagueTable.TABLENAME)).store(league);
-		((YouthLeagueTable.StandingsTable) getTable(YouthLeagueTable.StandingsTable.TABLENAME)).store(id, season, league.getTeams());
-		((YouthLeagueTable.FixtureTable) getTable(YouthLeagueTable.FixtureTable.TABLENAME)).store(id, season, league.getFixtures());
+		((YouthLeagueTable.YouthLeagueTeamTable) getTable(YouthLeagueTable.YouthLeagueTeamTable.TABLENAME)).store(id, season, league.getTeams());
+		((YouthLeagueTable.YouthLeagueFixtureTable) getTable(YouthLeagueTable.YouthLeagueFixtureTable.TABLENAME)).store(id, season, league.getFixtures());
 	}
 
 	/**
@@ -2299,14 +2299,14 @@ public class DBManager implements PersistenceManager {
 	 */
 	public YouthLeague loadYouthLeague(int youthLeagueId) {
 		final var table = (YouthLeagueTable) getTable(YouthLeagueTable.TABLENAME);
-		final var season = table.newestSeason(youthLeagueId);
+		final var season = table.findNewestSeasonId(youthLeagueId);
 		if (season == null) {
 			return null;
 		}
 		final var league = table.load(youthLeagueId, season);
 		if (league != null) {
-			league.setTeams(((YouthLeagueTable.StandingsTable) getTable(YouthLeagueTable.StandingsTable.TABLENAME)).load(youthLeagueId, season));
-			league.setFixtures(((YouthLeagueTable.FixtureTable) getTable(YouthLeagueTable.FixtureTable.TABLENAME)).load(youthLeagueId, season));
+			league.setTeams(((YouthLeagueTable.YouthLeagueTeamTable) getTable(YouthLeagueTable.YouthLeagueTeamTable.TABLENAME)).load(youthLeagueId, season));
+			league.setFixtures(((YouthLeagueTable.YouthLeagueFixtureTable) getTable(YouthLeagueTable.YouthLeagueFixtureTable.TABLENAME)).load(youthLeagueId, season));
 		}
 		return league;
 	}

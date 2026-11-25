@@ -144,8 +144,8 @@ final class DBUpdater {
 		dbManager.getTable(YouthTeamDetailsTable.TABLENAME).createTable();
 		dbManager.getTable(YouthScoutTable.TABLENAME).createTable();
 		dbManager.getTable(YouthLeagueTable.TABLENAME).createTable();
-		dbManager.getTable(YouthLeagueTable.StandingsTable.TABLENAME).createTable();
-		dbManager.getTable(YouthLeagueTable.FixtureTable.TABLENAME).createTable();
+		dbManager.getTable(YouthLeagueTable.YouthLeagueTeamTable.TABLENAME).createTable();
+		dbManager.getTable(YouthLeagueTable.YouthLeagueFixtureTable.TABLENAME).createTable();
 	}
 
 	private void updateDBv1000(int dbVersion) throws  SQLException {

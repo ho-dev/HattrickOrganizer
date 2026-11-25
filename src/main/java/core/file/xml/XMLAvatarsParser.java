@@ -3,6 +3,7 @@ package core.file.xml;
 import core.model.player.Layer;
 import core.model.player.PlayerAvatar;
 import core.util.HOLogger;
+import core.util.XMLUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -52,17 +53,15 @@ public class XMLAvatarsParser {
     }
 
     private static PlayerAvatar avatar(Element player, String playerIdTag) {
-        final int playerID = Integer.parseInt(player.getElementsByTagName(playerIdTag).item(0).getTextContent());
-        final String bgImage = player.getElementsByTagName("BackgroundImage").item(0).getTextContent();
+        final int playerID = XMLUtils.getIntValue(player, playerIdTag);
+        final Element avatar = XMLUtils.getChildElement(player, "Avatar");
+        final String bgImage = XMLUtils.getStringValue(avatar, "BackgroundImage");
         final List<Layer> layers = new ArrayList<>();
-        final NodeList nlLayers = player.getElementsByTagName("Layer");
-        for (int j = 0; j < nlLayers.getLength(); j++) {
-            if (nlLayers.item(j) instanceof Element layer) {
-                final String urlImage = layer.getElementsByTagName("Image").item(0).getTextContent();
-                if (!OVERLAYS.matcher(urlImage).find()) {
-                    layers.add(new Layer(Integer.parseInt(layer.getAttribute("x")),
-                            Integer.parseInt(layer.getAttribute("y")), urlImage));
-                }
+        for (final Element layer : XMLUtils.getChildElements(avatar, "Layer")) {
+            final String urlImage = XMLUtils.getStringValue(layer, "Image");
+            if (!OVERLAYS.matcher(urlImage).find()) {
+                layers.add(new Layer(XMLUtils.getAttributeIntValue(layer, "x"),
+                        XMLUtils.getAttributeIntValue(layer, "y"), urlImage));
             }
         }
         return new PlayerAvatar(playerID, bgImage, layers);
