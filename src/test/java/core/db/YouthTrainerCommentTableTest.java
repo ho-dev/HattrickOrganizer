@@ -24,7 +24,7 @@ class YouthTrainerCommentTableTest {
     }
 
     @Test
-    void aRedownloadAddsOnlyTheNewReports() {
+    void storingAgainAddsOnlyTheNewReports() {
         DBManager.instance().storeYouthTrainerComments(List.of(report("2026-11-07 21:00:00", 3)));
         DBManager.instance().storeYouthTrainerComments(List.of(
                 report("2026-11-14 21:00:00", 18), report("2026-11-07 21:00:00", 3)));
