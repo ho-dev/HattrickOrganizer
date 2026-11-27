@@ -37,6 +37,10 @@ public interface IModule {
 
     String getDescription();
 
+    String getTranslationKey();
+
+    String getTabId();
+
     boolean hasMainTab();
 
     JPanel createTabPanel();
@@ -67,5 +71,5 @@ public interface IModule {
         return ret;
     }
 
-
+    JPanel getTabPanel();
 }

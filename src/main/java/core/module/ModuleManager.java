@@ -2,6 +2,7 @@ package core.module;
 
 import core.model.UserParameter;
 import core.module.config.ModuleConfig;
+import core.util.StreamUtils;
 import module.halloffame.HallOfFameModule;
 import module.ifa.IfaModule;
 import module.lineup.LineupModule;
@@ -19,10 +20,11 @@ import module.transfer.TransfersModule;
 import module.tsforecast.TSForecastModule;
 import module.youth.YouthModule;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
+import java.util.ArrayList;
+import java.util.Collection;
 
 public final class ModuleManager {
 
@@ -76,9 +78,13 @@ public final class ModuleManager {
 		}
 	}
 
-	public IModule getModule(int moduleId) {
-		return all_modules.get(moduleId);
-	}
+    public IModule getModule(int moduleId) {
+        return all_modules.get(moduleId);
+    }
+
+    public Optional<IModule> findModule(String tabId) {
+        return StreamUtils.findOne(all_modules.values().stream().filter(module -> module.getTabId().equals(tabId)));
+    }
 
 	public IModule[] getAllModules() {
 		return all_modules.values().toArray(new IModule[0]);
@@ -164,7 +170,7 @@ public final class ModuleManager {
 
 		if (!p.tempTabSpieleranalyse) {
 			getModule(IModule.PLAYERANALYSIS).setStatus(IModule.STATUS_STARTUP);
-			ModuleConfig.instance().setBoolean(PlayerAnalysisModule.SHOW_PLAYERCOMPARE, true);
+            PlayerAnalysisModule.setShowPlayerCompare(true);
 		}
 
 		if (!p.tempTabSpieleruebersicht) {

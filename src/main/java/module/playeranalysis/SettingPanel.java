@@ -16,7 +16,7 @@ class SettingPanel extends JPanel {
 
 	SettingPanel() {
 		super();
-		skillsCheckbox.setSelected(config.getBoolean(PlayerAnalysisModule.SHOW_PLAYERCOMPARE));
+		skillsCheckbox.setSelected(PlayerAnalysisModule.isShowPlayerCompare());
 		skillsCheckbox.setOpaque(false);
 		jbInit();
 	}
@@ -52,8 +52,7 @@ class SettingPanel extends JPanel {
 		skillsCheckbox.addActionListener(new java.awt.event.ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				config.setBoolean(PlayerAnalysisModule.SHOW_PLAYERCOMPARE,
-						skillsCheckbox.isSelected());
+				PlayerAnalysisModule.setShowPlayerCompare(skillsCheckbox.isSelected());
 			}
 		});
 	}
