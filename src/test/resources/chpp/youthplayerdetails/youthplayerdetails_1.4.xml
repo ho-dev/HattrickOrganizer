@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Not a captured response: built from the CHPP output tree of youthplayerdetails 1.4
+     (docs/raw/chpp/youthplayerdetails.md); UserSupporterTier as in the real matchdetails 3.2
+     responses of 2026-11-15. The ReportType values are placeholders: CHPP does not document
+     them, and no real report was available. Replace with a real capture once one exists. -->
+<HattrickData>
+  <FileName>youthplayerdetails.xml</FileName>
+  <Version>1.4</Version>
+  <UserID>1357154</UserID>
+  <FetchedDate>2026-11-15 10:00:00</FetchedDate>
+  <UserSupporterTier>gold</UserSupporterTier>
+  <YouthPlayer>
+    <YouthPlayerID>364643130</YouthPlayerID>
+    <FirstName>Claudio</FirstName>
+    <NickName />
+    <LastName>Dattenfeld</LastName>
+    <Age>16</Age>
+    <AgeDays>50</AgeDays>
+    <GenderID>1</GenderID>
+    <ArrivalDate>2026-10-18 09:11:00</ArrivalDate>
+    <CanBePromotedIn>85</CanBePromotedIn>
+    <PlayerNumber>7</PlayerNumber>
+    <Statement />
+    <NativeCountryID>3</NativeCountryID>
+    <NativeCountryName>Deutschland</NativeCountryName>
+    <OwnerNotes />
+    <PlayerCategoryID>0</PlayerCategoryID>
+    <Cards>0</Cards>
+    <InjuryLevel>-1</InjuryLevel>
+    <Specialty>3</Specialty>
+    <CareerGoals>3</CareerGoals>
+    <CareerHattricks>0</CareerHattricks>
+    <LeagueGoals>2</LeagueGoals>
+    <FriendlyGoals>1</FriendlyGoals>
+    <OwningYouthTeam>
+      <YouthTeamID>3256333</YouthTeamID>
+      <YouthTeamName>JFC Akademie</YouthTeamName>
+      <YouthTeamLeagueID>685791</YouthTeamLeagueID>
+      <UserId>1357154</UserId>
+      <SeniorTeam>
+        <SeniorTeamID>2168446</SeniorTeamID>
+        <SeniorTeamName>JFC</SeniorTeamName>
+      </SeniorTeam>
+    </OwningYouthTeam>
+    <TrainingReports>
+      <TrainingReport>
+        <ReportText>Claudio hat im Spielaufbau ein beachtliches Niveau erreicht.</ReportText>
+        <ReportDate>2026-11-14 21:00:00</ReportDate>
+        <ReportType>18</ReportType>
+        <ReportSkillType>4</ReportSkillType>
+        <ReportSkillLevel>5</ReportSkillLevel>
+      </TrainingReport>
+      <TrainingReport>
+        <ReportText>Claudio hat sich im Training gut eingefügt.</ReportText>
+        <ReportDate>2026-11-07 21:00:00</ReportDate>
+        <ReportType>3</ReportType>
+        <ReportSkillType>0</ReportSkillType>
+        <ReportSkillLevel>0</ReportSkillLevel>
+      </TrainingReport>
+    </TrainingReports>
+  </YouthPlayer>
+</HattrickData>

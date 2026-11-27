@@ -40,7 +40,9 @@ import module.teamanalyzer.vo.SquadInfo;
 import module.transfer.PlayerTransfer;
 import module.transfer.TransferType;
 import module.transfer.scout.ScoutEintrag;
+import module.youth.YouthLeague;
 import module.youth.YouthPlayer;
+import module.youth.YouthTeamDetails;
 import module.youth.YouthTrainerComment;
 import module.youth.YouthTraining;
 import org.hsqldb.error.ErrorCode;
@@ -277,7 +279,6 @@ public class DBManager implements PersistenceManager {
 	}
 
 	private void initAllTables() {
-		var connectionManager = this.connectionManager;
 		tables.put(BasicsTable.TABLENAME, new BasicsTable(connectionManager));
 		tables.put(TeamTable.TABLENAME, new TeamTable(connectionManager));
 		tables.put(NtTeamTable.TABLENAME, new NtTeamTable(connectionManager));
@@ -290,6 +291,12 @@ public class DBManager implements PersistenceManager {
 		tables.put(EconomyTable.TABLENAME, new EconomyTable(connectionManager));
 		tables.put(YouthPlayerTable.TABLENAME, new YouthPlayerTable(connectionManager));
 		tables.put(YouthScoutCommentTable.TABLENAME, new YouthScoutCommentTable(connectionManager));
+		tables.put(YouthTrainerCommentTable.TABLENAME, new YouthTrainerCommentTable(connectionManager));
+		tables.put(YouthTeamDetailsTable.TABLENAME, new YouthTeamDetailsTable(connectionManager));
+		tables.put(YouthScoutTable.TABLENAME, new YouthScoutTable(connectionManager));
+		tables.put(YouthLeagueTable.TABLENAME, new YouthLeagueTable(connectionManager));
+		tables.put(YouthLeagueTable.YouthLeagueTeamTable.TABLENAME, new YouthLeagueTable.YouthLeagueTeamTable(connectionManager));
+		tables.put(YouthLeagueTable.YouthLeagueFixtureTable.TABLENAME, new YouthLeagueTable.YouthLeagueFixtureTable(connectionManager));
 		tables.put(YouthTrainingTable.TABLENAME, new YouthTrainingTable(connectionManager));
 		tables.put(TeamsLogoTable.TABLENAME, new TeamsLogoTable(connectionManager));
 		tables.put(ScoutTable.TABLENAME, new ScoutTable(connectionManager));
@@ -2242,13 +2249,80 @@ public class DBManager implements PersistenceManager {
 	}
 
 	/**
-	 * Load youth trainer comments list.
+	 * The coach's training comments about a youth player, newest first.
 	 *
-	 * @param id the id
+	 * @param id the youth player id
 	 * @return the list
 	 */
 	public List<YouthTrainerComment> loadYouthTrainerComments(int id) {
 		return ((YouthTrainerCommentTable) getTable(YouthTrainerCommentTable.TABLENAME)).loadYouthTrainerComments(id);
+	}
+
+	/**
+	 * Adds the coach's training comments not stored yet (youthplayerdetails 1.4).
+	 *
+	 * @param reports the reports of one download
+	 */
+	public void storeYouthTrainerComments(List<YouthTrainerComment> reports) {
+		((YouthTrainerCommentTable) getTable(YouthTrainerCommentTable.TABLENAME)).storeYouthTrainerComments(reports);
+	}
+
+	/**
+	 * Stores the youth team and its scouts as the snapshot of {@code details.getHrfId()},
+	 * replacing what that HRF had.
+	 *
+	 * @param details the youth team (youthteamdetails 1.5)
+	 */
+	public void storeYouthTeamDetails(YouthTeamDetails details) {
+		((YouthTeamDetailsTable) getTable(YouthTeamDetailsTable.TABLENAME)).store(details);
+		((YouthScoutTable) getTable(YouthScoutTable.TABLENAME)).store(details.getHrfId(), details.getScouts());
+	}
+
+	/**
+	 * Stores a youth league season with its standings and fixtures, replacing what that season had.
+	 *
+	 * @param league youthleaguedetails 1.1 plus youthleaguefixtures 1.0
+	 */
+	public void storeYouthLeague(YouthLeague league) {
+		final int id = league.getYouthLeagueId();
+		final int season = league.getSeason();
+		((YouthLeagueTable) getTable(YouthLeagueTable.TABLENAME)).store(league);
+		((YouthLeagueTable.YouthLeagueTeamTable) getTable(YouthLeagueTable.YouthLeagueTeamTable.TABLENAME)).store(id, season, league.getTeams());
+		((YouthLeagueTable.YouthLeagueFixtureTable) getTable(YouthLeagueTable.YouthLeagueFixtureTable.TABLENAME)).store(id, season, league.getFixtures());
+	}
+
+	/**
+	 * The newest stored season of a youth league, with standings and fixtures.
+	 *
+	 * @param youthLeagueId the league
+	 * @return the league, null when none is stored
+	 */
+	public YouthLeague loadYouthLeague(int youthLeagueId) {
+		final var table = (YouthLeagueTable) getTable(YouthLeagueTable.TABLENAME);
+		final var season = table.findNewestSeasonId(youthLeagueId);
+		if (season == null) {
+			return null;
+		}
+		final var league = table.load(youthLeagueId, season);
+		if (league != null) {
+			league.setTeams(((YouthLeagueTable.YouthLeagueTeamTable) getTable(YouthLeagueTable.YouthLeagueTeamTable.TABLENAME)).load(youthLeagueId, season));
+			league.setFixtures(((YouthLeagueTable.YouthLeagueFixtureTable) getTable(YouthLeagueTable.YouthLeagueFixtureTable.TABLENAME)).load(youthLeagueId, season));
+		}
+		return league;
+	}
+
+	/**
+	 * The youth team of an HRF with its scouts.
+	 *
+	 * @param hrfId the snapshot
+	 * @return the team, null when that download had none
+	 */
+	public YouthTeamDetails loadYouthTeamDetails(int hrfId) {
+		final var details = ((YouthTeamDetailsTable) getTable(YouthTeamDetailsTable.TABLENAME)).load(hrfId);
+		if (details != null) {
+			details.setScouts(((YouthScoutTable) getTable(YouthScoutTable.TABLENAME)).load(hrfId));
+		}
+		return details;
 	}
 
 	public List<MatchLineup> getYouthMatchLineups() {

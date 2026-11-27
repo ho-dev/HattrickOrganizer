@@ -20,6 +20,7 @@ import java.time.temporal.WeekFields;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 
 final class DBUpdater {
@@ -114,7 +115,37 @@ final class DBUpdater {
 		dbManager.getTable(YouthPlayerTable.TABLENAME).tryAddColumn(GENDER_ID, SQL_INTEGER);
 		dbManager.getTable(WorldDetailsTable.TABLENAME).tryAddColumn("LEAGUE_SYSTEM_ID", SQL_INTEGER);
 
+		updateYouthTables();
+
 		updateDBVersion(dbVersion, 1100);
+	}
+
+	/**
+	 * Every youth file on its latest CHPP version: youthplayerlist 1.4 (native country),
+	 * youthplayerdetails 1.4 (the coach's reports), youthteamdetails 1.5 (team and scouts),
+	 * youthleaguedetails 1.1 and youthleaguefixtures 1.0.
+	 */
+	private void updateYouthTables() throws SQLException {
+		var youthPlayerTable = dbManager.getTable(YouthPlayerTable.TABLENAME);
+		youthPlayerTable.tryAddColumn(YouthPlayerTable.NATIVE_COUNTRY_ID, SQL_INTEGER);
+		youthPlayerTable.tryAddColumn(YouthPlayerTable.NATIVE_COUNTRY_NAME,
+				"VARCHAR(" + YouthPlayerTable.NATIVE_COUNTRY_NAME_LENGTH + ")");
+		// Free text the owner writes: 255 cut long notes. Widening keeps the rows, and re-runs.
+		for (var column : List.of(YouthPlayerTable.STATEMENT, YouthPlayerTable.OWNER_NOTES)) {
+			youthPlayerTable.tryChangeColumn(column, "VARCHAR(" + YouthPlayerTable.FREE_TEXT_LENGTH + ")");
+		}
+		// Declared long ago but never registered, so no database should have it. Should an old
+		// build have created it in its first shape (MATCH_ID/INDEX, never filled), replace it.
+		var trainerComments = dbManager.getTable(YouthTrainerCommentTable.TABLENAME);
+		if (!trainerComments.columnExistsInTable("REPORT_DATE")) {
+			trainerComments.tryDropTable();
+		}
+		trainerComments.createTable();
+		dbManager.getTable(YouthTeamDetailsTable.TABLENAME).createTable();
+		dbManager.getTable(YouthScoutTable.TABLENAME).createTable();
+		dbManager.getTable(YouthLeagueTable.TABLENAME).createTable();
+		dbManager.getTable(YouthLeagueTable.YouthLeagueTeamTable.TABLENAME).createTable();
+		dbManager.getTable(YouthLeagueTable.YouthLeagueFixtureTable.TABLENAME).createTable();
 	}
 
 	private void updateDBv1000(int dbVersion) throws  SQLException {

@@ -58,9 +58,9 @@ Updates to a newer version should be documented here in the `Used Version` colum
 | worldcup               | World cup groups and matches                                                                | 1.1                      | -            |
 | worlddetails           | General Information about all countries in HT World                                         | 1.9 (2022-03-03)         | 1.9          |
 | worldlanguages         | Available languages                                                                         | 1.2                      | -            |
-| youthavatars           | Avatars for all players of user's youthteam                                                 | 1.2 (2021-01-19)         | -            |
-| youthleaguedetails     | The youth league information.                                                               | 1.0 (2013-12-02)         | -            |
-| youthleaguefixtures    | Fixtures for a Youthe League (series).                                                      | 1.0 (2013-12-02)         | -            |
-| youthplayerdetails     | Detailed information for a youth player                                                     | 1.2 (2022-03-03)         | -            |
-| youthplayerlist        | Youth Players.                                                                              | 1.2 (2022-03-03)         | 1.1          |
-| youthteamdetails       | Youth team information.                                                                     | 1.2 (2022-03-03)         | -            |
+| youthavatars           | Avatars for all players of user's youthteam                                                 | 1.2 (2021-01-19)         | 1.2          |
+| youthleaguedetails     | The youth league information.                                                               | 1.1 (2026-02-26)         | 1.1          |
+| youthleaguefixtures    | Fixtures for a Youthe League (series).                                                      | 1.0 (2013-12-02)         | 1.0          |
+| youthplayerdetails     | Detailed information for a youth player                                                     | 1.4 (2026-11-10)         | 1.4          |
+| youthplayerlist        | Youth Players.                                                                              | 1.4 (2026-11-10)         | 1.4          |
+| youthteamdetails       | Youth team information.                                                                     | 1.5 (2026-11-10)         | 1.5          |

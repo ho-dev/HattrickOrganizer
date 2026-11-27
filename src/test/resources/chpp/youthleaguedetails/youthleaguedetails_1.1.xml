@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Not a captured response: built from the CHPP output tree of youthleaguedetails 1.1
+     (docs/raw/chpp/youthleaguedetails.md). Replace with a real capture once one exists. -->
+<HattrickData>
+  <FileName>youthleaguedetails.xml</FileName>
+  <Version>1.1</Version>
+  <UserID>1357154</UserID>
+  <FetchedDate>2026-11-15 10:00:00</FetchedDate>
+  <YouthLeagueID>685791</YouthLeagueID>
+  <YouthLeagueName>Berliner Jugendliga</YouthLeagueName>
+  <YouthLeagueType>1</YouthLeagueType>
+  <Season>94</Season>
+  <LastMatchRound>9</LastMatchRound>
+  <NrOfTeamsInLeague>8</NrOfTeamsInLeague>
+  <LeagueSystemID>1</LeagueSystemID>
+  <Teams>
+    <Team>
+      <TeamID>3271684</TeamID>
+      <TeamName>Spree Talente</TeamName>
+      <Position>1</Position>
+      <PositionChange>0</PositionChange>
+      <Matches>9</Matches>
+      <GoalsFor>31</GoalsFor>
+      <GoalsAgainst>8</GoalsAgainst>
+      <Points>24</Points>
+      <Won>8</Won>
+      <Draws>0</Draws>
+      <Lost>1</Lost>
+    </Team>
+    <Team>
+      <TeamID>3256333</TeamID>
+      <TeamName>JFC Akademie</TeamName>
+      <Position>2</Position>
+      <PositionChange>1</PositionChange>
+      <Matches>9</Matches>
+      <GoalsFor>22</GoalsFor>
+      <GoalsAgainst>12</GoalsAgainst>
+      <Points>19</Points>
+      <Won>6</Won>
+      <Draws>1</Draws>
+      <Lost>2</Lost>
+    </Team>
+  </Teams>
+</HattrickData>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Not a captured response: built from the CHPP output tree of youthplayerlist 1.4
+     (docs/raw/chpp/youthplayerlist.md) and the real samples in XMLPlayersParser, because the
+     club HO is developed with has had no youth academy since 2026-09-22. Replace with a real
+     capture once one exists. -->
+<HattrickData>
+  <FileName>youthplayerlist.xml</FileName>
+  <Version>1.4</Version>
+  <UserID>1357154</UserID>
+  <FetchedDate>2026-11-15 10:00:00</FetchedDate>
+  <ActionType>details</ActionType>
+  <YouthTeamId>3256333</YouthTeamId>
+  <PlayerList>
+    <YouthPlayer>
+      <YouthPlayerID>364643130</YouthPlayerID>
+      <FirstName>Claudio</FirstName>
+      <NickName />
+      <LastName>Dattenfeld</LastName>
+      <Age>16</Age>
+      <GenderID>1</GenderID>
+      <AgeDays>50</AgeDays>
+      <ArrivalDate>2026-10-18 09:11:00</ArrivalDate>
+      <CanBePromotedIn>85</CanBePromotedIn>
+      <PlayerNumber>7</PlayerNumber>
+      <Statement />
+      <NativeCountryID>3</NativeCountryID>
+      <NativeCountryName>Deutschland</NativeCountryName>
+      <OwnerNotes />
+      <PlayerCategoryID>0</PlayerCategoryID>
+      <Cards>0</Cards>
+      <InjuryLevel>-1</InjuryLevel>
+      <Specialty>3</Specialty>
+      <CareerGoals>3</CareerGoals>
+      <CareerHattricks>0</CareerHattricks>
+      <LeagueGoals>2</LeagueGoals>
+      <FriendlyGoals>1</FriendlyGoals>
+      <OwningYouthTeam>
+        <YouthTeamID>3256333</YouthTeamID>
+        <YouthTeamName>JFC Akademie</YouthTeamName>
+        <YouthTeamLeagueID>685791</YouthTeamLeagueID>
+        <UserId>1357154</UserId>
+        <SeniorTeam>
+          <SeniorTeamID>2168446</SeniorTeamID>
+          <SeniorTeamName>JFC</SeniorTeamName>
+        </SeniorTeam>
+      </OwningYouthTeam>
+      <PlayerSkills>
+        <KeeperSkill IsAvailable="False" IsMaxReached="False" MayUnlock="False" />
+        <KeeperSkillMax IsAvailable="True" MayUnlock="False">2</KeeperSkillMax>
+        <DefenderSkill IsAvailable="False" IsMaxReached="False" MayUnlock="False" />
+        <DefenderSkillMax IsAvailable="False" MayUnlock="False" />
+        <PlaymakerSkill IsAvailable="True" IsMaxReached="False" MayUnlock="False">4</PlaymakerSkill>
+        <PlaymakerSkillMax IsAvailable="True" MayUnlock="False">7</PlaymakerSkillMax>
+        <WingerSkill IsAvailable="False" IsMaxReached="False" MayUnlock="False" />
+        <WingerSkillMax IsAvailable="False" MayUnlock="False" />
+        <ScorerSkill IsAvailable="False" IsMaxReached="False" MayUnlock="False" />
+        <ScorerSkillMax IsAvailable="False" MayUnlock="False" />
+        <PassingSkill IsAvailable="False" IsMaxReached="False" MayUnlock="False" />
+        <PassingSkillMax IsAvailable="False" MayUnlock="False" />
+        <SetPiecesSkill IsAvailable="False" IsMaxReached="False" MayUnlock="False" />
+        <SetPiecesSkillMax IsAvailable="False" MayUnlock="False" />
+      </PlayerSkills>
+      <ScoutCall>
+        <Scout>
+          <ScoutId>382876</ScoutId>
+          <ScoutName>Joerg Hopfen</ScoutName>
+        </Scout>
+        <ScoutingRegionID>229</ScoutingRegionID>
+        <ScoutComments>
+          <ScoutComment>
+            <CommentText>Wir haben einen aussichtsreichen Kandidaten zu beurteilen.</CommentText>
+            <CommentType>1</CommentType>
+            <CommentVariation>1</CommentVariation>
+            <CommentSkillType>364643130</CommentSkillType>
+            <CommentSkillLevel>16</CommentSkillLevel>
+          </ScoutComment>
+        </ScoutComments>
+      </ScoutCall>
+      <LastMatch>
+        <YouthMatchID>146086858</YouthMatchID>
+        <Date>2026-11-14 19:15:00</Date>
+        <PositionCode>105</PositionCode>
+        <PlayedMinutes>90</PlayedMinutes>
+        <Rating>5</Rating>
+      </LastMatch>
+    </YouthPlayer>
+  </PlayerList>
+</HattrickData>

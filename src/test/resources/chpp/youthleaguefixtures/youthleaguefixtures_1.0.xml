@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Not a captured response: built from the CHPP output tree of youthleaguefixtures 1.0
+     (docs/raw/chpp/youthleaguefixtures.md). Replace with a real capture once one exists. -->
+<HattrickData>
+  <FileName>youthleaguefixtures.xml</FileName>
+  <Version>1.0</Version>
+  <UserID>1357154</UserID>
+  <FetchedDate>2026-11-15 10:00:00</FetchedDate>
+  <YouthLeagueID>685791</YouthLeagueID>
+  <YouthLeagueName>Berliner Jugendliga</YouthLeagueName>
+  <YouthLeagueType>1</YouthLeagueType>
+  <Season>94</Season>
+  <LastMatchRound>9</LastMatchRound>
+  <NrOfTeamsInLeague>8</NrOfTeamsInLeague>
+  <Matches>
+    <Match>
+      <MatchID>146086858</MatchID>
+      <MatchRound>9</MatchRound>
+      <Status>2</Status>
+      <HomeTeam>
+        <HomeTeamID>3271684</HomeTeamID>
+        <HomeTeamName>Spree Talente</HomeTeamName>
+      </HomeTeam>
+      <AwayTeam>
+        <AwayTeamID>3256333</AwayTeamID>
+        <AwayTeamName>JFC Akademie</AwayTeamName>
+      </AwayTeam>
+      <MatchDate>2026-11-14 19:15:00</MatchDate>
+      <HomeGoals>2</HomeGoals>
+      <AwayGoals>1</AwayGoals>
+    </Match>
+    <Match>
+      <MatchID>146086901</MatchID>
+      <MatchRound>10</MatchRound>
+      <Status>0</Status>
+      <HomeTeam>
+        <HomeTeamID>3256333</HomeTeamID>
+        <HomeTeamName>JFC Akademie</HomeTeamName>
+      </HomeTeam>
+      <AwayTeam>
+        <AwayTeamID>3271690</AwayTeamID>
+        <AwayTeamName>Havel Kickers</AwayTeamName>
+      </AwayTeam>
+      <MatchDate>2026-11-21 19:15:00</MatchDate>
+    </Match>
+  </Matches>
+</HattrickData>
