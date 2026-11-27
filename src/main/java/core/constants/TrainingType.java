@@ -1,7 +1,7 @@
 package core.constants;
 
 import core.datatype.CBItem;
-import core.util.Helper;
+import core.model.TranslationFacility;
 
 public final class TrainingType {
 	public static final int SET_PIECES 			= 2;
@@ -17,17 +17,17 @@ public final class TrainingType {
     public static final int WING_ATTACKS 		= 12;
 
     public static CBItem[] ITEMS = {
-		new CBItem(Helper.getTranslation("ls.team.trainingtype.setpieces"), SET_PIECES),
-		new CBItem(Helper.getTranslation("ls.team.trainingtype.defending"), DEFENDING),
-		new CBItem(Helper.getTranslation("ls.team.trainingtype.scoring"), SCORING),
-		new CBItem(Helper.getTranslation("ls.team.trainingtype.crossing"), CROSSING_WINGER),
-		new CBItem(Helper.getTranslation("ls.team.trainingtype.shooting"), SHOOTING),
-		new CBItem(Helper.getTranslation("ls.team.trainingtype.shortpasses"), SHORT_PASSES),
-		new CBItem(Helper.getTranslation("ls.team.trainingtype.playmaking"), PLAYMAKING),
-		new CBItem(Helper.getTranslation("ls.team.trainingtype.goalkeeping"), GOALKEEPING),
-		new CBItem(Helper.getTranslation("ls.team.trainingtype.throughpasses"), THROUGH_PASSES),
-		new CBItem(Helper.getTranslation("ls.team.trainingtype.defensivepositions"), DEF_POSITIONS),
-		new CBItem(Helper.getTranslation("ls.team.trainingtype.wingattacks"), WING_ATTACKS)
+		new CBItem(TranslationFacility.tr("ls.team.trainingtype.setpieces"), SET_PIECES),
+		new CBItem(TranslationFacility.tr("ls.team.trainingtype.defending"), DEFENDING),
+		new CBItem(TranslationFacility.tr("ls.team.trainingtype.scoring"), SCORING),
+		new CBItem(TranslationFacility.tr("ls.team.trainingtype.crossing"), CROSSING_WINGER),
+		new CBItem(TranslationFacility.tr("ls.team.trainingtype.shooting"), SHOOTING),
+		new CBItem(TranslationFacility.tr("ls.team.trainingtype.shortpasses"), SHORT_PASSES),
+		new CBItem(TranslationFacility.tr("ls.team.trainingtype.playmaking"), PLAYMAKING),
+		new CBItem(TranslationFacility.tr("ls.team.trainingtype.goalkeeping"), GOALKEEPING),
+		new CBItem(TranslationFacility.tr("ls.team.trainingtype.throughpasses"), THROUGH_PASSES),
+		new CBItem(TranslationFacility.tr("ls.team.trainingtype.defensivepositions"), DEF_POSITIONS),
+		new CBItem(TranslationFacility.tr("ls.team.trainingtype.wingattacks"), WING_ATTACKS)
 	};
 
     private TrainingType(){}
@@ -36,6 +36,6 @@ public final class TrainingType {
     	if(trainingType >= SET_PIECES && trainingType <= WING_ATTACKS)
     		return ITEMS[trainingType-SET_PIECES].getText();
     	else
-    		return Helper.getTranslation("Unbestimmt");
+    		return TranslationFacility.tr("Unbestimmt");
     }
 }

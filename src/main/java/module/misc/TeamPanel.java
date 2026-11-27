@@ -12,8 +12,6 @@ import core.model.series.Liga;
 import javax.swing.*;
 import java.awt.*;
 
-import static core.util.Helper.getTranslation;
-
 
 /**
  * Display basics
@@ -72,7 +70,7 @@ class TeamPanel extends JPanel {
 		constraints.insets = new Insets(4, 4, 4, 4);
 
 		this.setBackground(ThemeManager.getColor(HOColorName.PANEL_BG));
-		var title = getTranslation("Allgemein");
+		var title = TranslationFacility.tr("Allgemein");
 		var titledBorder = BorderFactory.createTitledBorder(title);
 		titledBorder.setTitleColor(ThemeManager.getColor(HOColorName.LINEUP_HIGHLIGHT_FG));
 		setBorder(titledBorder);

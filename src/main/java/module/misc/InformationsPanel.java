@@ -5,11 +5,10 @@ import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyImagePanel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
+import core.model.TranslationFacility;
 
-import java.awt.*;
 import javax.swing.*;
-
-import static core.util.Helper.getTranslation;
+import java.awt.*;
 
 /**
  * Zeigt die allgemeinen Informationen
@@ -87,7 +86,7 @@ public class InformationsPanel extends LazyImagePanel {
 		constraints.gridy = 0;
 		constraints.gridwidth = 2;
 		constraints.fill = GridBagConstraints.HORIZONTAL;
-		JLabel label = new JLabel(getTranslation("Finanzen"),SwingConstants.CENTER);
+		JLabel label = new JLabel(TranslationFacility.tr("Finanzen"),SwingConstants.CENTER);
 		label.setFont(label.getFont().deriveFont(Font.BOLD));
 		label.setBackground(ColorLabelEntry.BG_STANDARD.darker());
 		label.setOpaque(true);

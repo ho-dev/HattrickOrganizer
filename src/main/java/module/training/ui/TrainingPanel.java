@@ -12,7 +12,6 @@ import core.model.UserParameter;
 import core.model.constants.TrainingConstants;
 import core.training.TrainingManager;
 import core.training.TrainingPerWeek;
-import core.util.Helper;
 import module.training.ui.comp.FutureTrainingsEditionPanel;
 import module.training.ui.comp.TrainingComboBox;
 import module.training.ui.comp.TrainingParametersEditor;
@@ -75,7 +74,7 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
                 "trainingColor1", ThemeManager.getColor(HOColorName.TRAINING_ICON_COLOR_1),
                 "trainingColor2", ThemeManager.getColor(HOColorName.TRAINING_ICON_COLOR_2));
 
-        Object[] options = {Helper.getTranslation("ls.button.close")};
+        Object[] options = {TranslationFacility.tr("ls.button.close")};
 
         var futureTrainingsTableModel = UserColumnController.instance().getTrainingSettingsFutureTableModel();
         futureTrainingsTableModel.addTableModelListener(this::saveFutureTrainingSetting);
@@ -92,7 +91,7 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 
             JOptionPane.showOptionDialog(getTopLevelAncestor(),
                     new FutureTrainingsEditionPanel(model, futureTrainingsTableModel, m_lsm),
-                    Helper.getTranslation("ls.module.training.edit_selected_future_trainings.tt"),
+                TranslationFacility.tr("ls.module.training.edit_selected_future_trainings.tt"),
                     JOptionPane.YES_NO_CANCEL_OPTION,
                     JOptionPane.PLAIN_MESSAGE, ImageUtilities.getSvgIcon(TRAINING_ICON, colorMap, 25, 25),
                     options, options[0]);
@@ -107,7 +106,7 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
 
             JOptionPane.showOptionDialog(getTopLevelAncestor(),
                     new FutureTrainingsEditionPanel(model, futureTrainingsTableModel),
-                    Helper.getTranslation("ls.module.training.edit_all_future_trainings.tt"),
+                TranslationFacility.tr("ls.module.training.edit_all_future_trainings.tt"),
                     JOptionPane.YES_NO_CANCEL_OPTION,
                     JOptionPane.PLAIN_MESSAGE, ImageUtilities.getSvgIcon(TRAINING_ICON, colorMap, 25, 25),
                     options, options[0]);
@@ -213,9 +212,9 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
                     TrainingPerWeek tpw = histoTraining.get(modelRow);
                     var source = tpw.getSource();
                     tip = switch (source) {
-                        case MANUAL -> Helper.getTranslation("ls.module.training.manual_entry.tt");
-                        case GUESS -> Helper.getTranslation("ls.module.training.guess_entry.tt");
-                        default -> Helper.getTranslation("ls.module.training.hrf_entry.tt");
+                        case MANUAL -> TranslationFacility.tr("ls.module.training.manual_entry.tt");
+                        case GUESS -> TranslationFacility.tr("ls.module.training.guess_entry.tt");
+                        default -> TranslationFacility.tr("ls.module.training.hrf_entry.tt");
                     };
 
                 } catch (RuntimeException e1) {
@@ -238,23 +237,23 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
         lGbc.insets = new Insets(3, 3, 3, 3);
 
         JLabel futureTrainingLabel = new JLabel();
-        futureTrainingLabel.setText(Helper.getTranslation("FutureTrainings"));
+        futureTrainingLabel.setText(TranslationFacility.tr("FutureTrainings"));
         futureTrainingLabel.setForeground(TITLE_FG);
         futureTrainingLabel.setFont(getFont().deriveFont(Font.BOLD));
         lGbc.gridx = 0;
         lGbc.gridy = 0;
         futureTrainingsPanel.add(futureTrainingLabel, lGbc);
 
-        m_jbEditSelectedFutureTrainings = new JButton(Helper.getTranslation("ls.button.edit_selected"));
-        m_jbEditSelectedFutureTrainings.setToolTipText(Helper.getTranslation("ls.module.training.edit_selected_future_trainings.tt"));
+        m_jbEditSelectedFutureTrainings = new JButton(TranslationFacility.tr("ls.button.edit_selected"));
+        m_jbEditSelectedFutureTrainings.setToolTipText(TranslationFacility.tr("ls.module.training.edit_selected_future_trainings.tt"));
         m_jbEditSelectedFutureTrainings.setEnabled(false);
         lGbc.gridx = 1;
         lGbc.anchor = GridBagConstraints.EAST;
         lGbc.weightx = 1;
         futureTrainingsPanel.add(this.m_jbEditSelectedFutureTrainings, lGbc);
 
-        m_jbEditAllFutureTrainings = new JButton(Helper.getTranslation("ls.button.edit_all"));
-        m_jbEditAllFutureTrainings.setToolTipText(Helper.getTranslation("ls.module.training.edit_all_future_trainings.tt"));
+        m_jbEditAllFutureTrainings = new JButton(TranslationFacility.tr("ls.button.edit_all"));
+        m_jbEditAllFutureTrainings.setToolTipText(TranslationFacility.tr("ls.module.training.edit_all_future_trainings.tt"));
         lGbc.gridx = 2;
         lGbc.weightx = 0;
         futureTrainingsPanel.add(this.m_jbEditAllFutureTrainings, lGbc);
@@ -292,9 +291,9 @@ public class TrainingPanel extends JPanel implements TrainingConstants {
                     TrainingPerWeek tpw = model.getFutureTrainings().get(modelRow);
                     var source = tpw.getSource();
                     tip = switch (source) {
-                        case MANUAL -> Helper.getTranslation("ls.module.training.manual_entry.tt");
-                        case GUESS -> Helper.getTranslation("ls.module.training.guess_entry.tt");
-                        default -> Helper.getTranslation("ls.module.training.hrf_entry.tt");
+                        case MANUAL -> TranslationFacility.tr("ls.module.training.manual_entry.tt");
+                        case GUESS -> TranslationFacility.tr("ls.module.training.guess_entry.tt");
+                        default -> TranslationFacility.tr("ls.module.training.hrf_entry.tt");
                     };
 
                 } catch (RuntimeException e1) {

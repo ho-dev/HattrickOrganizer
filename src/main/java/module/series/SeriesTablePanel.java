@@ -9,17 +9,20 @@ import core.gui.model.VAPTableModel;
 import core.gui.theme.HOColorName;
 import core.gui.theme.ThemeManager;
 import core.model.HOVerwaltung;
+import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.model.enums.RatingsStatistics;
 import core.model.series.SerieTableEntry;
 import core.util.HOLogger;
 import core.util.Helper;
+
 import javax.swing.*;
-import javax.swing.border.*;
-import javax.swing.event.*;
-import javax.swing.table.*;
+import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionListener;
+import javax.swing.table.TableColumnModel;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseListener;
 import java.util.Map;
 import java.util.Vector;
 
@@ -38,20 +41,20 @@ class SeriesTablePanel extends ImagePanel {
 	private final String[] COLUMNNAMES = {
 			"",
 			"",
-			Helper.getTranslation("Punkte_kurz"),
-			Helper.getTranslation("Spiele_kurz"),
-			Helper.getTranslation("SerieAuswaertsSieg"),
-			Helper.getTranslation("SerieAuswaertsUnendschieden"),
-			Helper.getTranslation("SerieAuswaertsNiederlage"),
-			Helper.getTranslation("ls.match.gf"),
-			Helper.getTranslation("ls.match.ga"),
-			Helper.getTranslation("ls.match.gd"),
-			Helper.getTranslation("Serie.Last5"),
-			Helper.getTranslation("ls.module.statistics.club.power_rating_short"),
-			Helper.getTranslation("ls.match.ratingtype.hatstats"),
-			Helper.getTranslation("ls.match.ratingsector.defense"),
-			Helper.getTranslation("ls.match.ratingsector.midfield"),
-			Helper.getTranslation("ls.match.ratingsector.attack")
+        TranslationFacility.tr("Punkte_kurz"),
+        TranslationFacility.tr("Spiele_kurz"),
+        TranslationFacility.tr("SerieAuswaertsSieg"),
+        TranslationFacility.tr("SerieAuswaertsUnendschieden"),
+        TranslationFacility.tr("SerieAuswaertsNiederlage"),
+        TranslationFacility.tr("ls.match.gf"),
+        TranslationFacility.tr("ls.match.ga"),
+        TranslationFacility.tr("ls.match.gd"),
+        TranslationFacility.tr("Serie.Last5"),
+        TranslationFacility.tr("ls.module.statistics.club.power_rating_short"),
+        TranslationFacility.tr("ls.match.ratingtype.hatstats"),
+        TranslationFacility.tr("ls.match.ratingsector.defense"),
+        TranslationFacility.tr("ls.match.ratingsector.midfield"),
+        TranslationFacility.tr("ls.match.ratingsector.attack")
 	};
 	private final JTable seriesTable = new JTable();
 	private Object[][] tableValues;

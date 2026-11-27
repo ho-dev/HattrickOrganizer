@@ -40,10 +40,7 @@ import java.util.Collections;
 import java.util.Objects;
 import java.util.Optional;
 
-import static core.gui.theme.HOIconName.GOTOANALYSEBOTTOM;
-import static core.gui.theme.HOIconName.GOTOANALYSETOP;
-import static core.gui.theme.HOIconName.GOTOSTATISTIK;
-import static core.gui.theme.HOIconName.SMILEYS;
+import static core.gui.theme.HOIconName.*;
 import static core.gui.theme.ImageUtilities.getSvgIcon;
 import static core.model.player.IMatchRoleID.UNKNOWN;
 import static core.model.player.IMatchRoleID.UNSELECTABLE;

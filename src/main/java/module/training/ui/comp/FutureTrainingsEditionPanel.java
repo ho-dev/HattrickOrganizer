@@ -7,7 +7,6 @@ import core.model.constants.TrainingConstants;
 import core.model.enums.DBDataSource;
 import core.training.TrainingPerWeek;
 import core.util.HODateTime;
-import core.util.Helper;
 import module.training.ui.model.TrainingModel;
 import module.training.ui.model.TrainingSettingsTableModel;
 
@@ -163,61 +162,61 @@ public class FutureTrainingsEditionPanel extends JPanel {
 
         gbc.gridx = 0;
         gbc.gridy = 0;
-        JLabel jlTrainingType = new JLabel(Helper.getTranslation("ls.team.trainingtype.short"));
+        JLabel jlTrainingType = new JLabel(TranslationFacility.tr("ls.team.trainingtype.short"));
         customizeLabel(jlTrainingType);
-        jlTrainingType.setToolTipText(Helper.getTranslation("ls.team.trainingtype"));
+        jlTrainingType.setToolTipText(TranslationFacility.tr("ls.team.trainingtype"));
         add(jlTrainingType, gbc);
 
         m_jcbTrainingType = new TrainingComboBox(true);
-        m_jcbTrainingType.setToolTipText(Helper.getTranslation("ls.team.trainingtype"));
+        m_jcbTrainingType.setToolTipText(TranslationFacility.tr("ls.team.trainingtype"));
         gbc.gridy = 1;
         add(m_jcbTrainingType, gbc);
 
         gbc.gridx = 1;
         gbc.gridy = 0;
-        JLabel jlTrainingIntensity = new JLabel(Helper.getTranslation("ls.team.trainingintensity.short"));
+        JLabel jlTrainingIntensity = new JLabel(TranslationFacility.tr("ls.team.trainingintensity.short"));
         customizeLabel(jlTrainingIntensity);
-        jlTrainingIntensity.setToolTipText(Helper.getTranslation("ls.team.trainingintensity"));
+        jlTrainingIntensity.setToolTipText(TranslationFacility.tr("ls.team.trainingintensity"));
         add(jlTrainingIntensity, gbc);
 
         m_jcbIntensity = new TrainingParametersEditor(TrainingConstants.MIN_TRAINING_INTENSITY, true);
-        m_jcbIntensity.setToolTipText(Helper.getTranslation("ls.team.trainingintensity"));
+        m_jcbIntensity.setToolTipText(TranslationFacility.tr("ls.team.trainingintensity"));
         gbc.gridy = 1;
         add(m_jcbIntensity, gbc);
 
         gbc.gridx = 2;
         gbc.gridy = 0;
-        JLabel jlStaminatrainingshare = new JLabel(Helper.getTranslation("ls.team.staminatrainingshare.short"));
+        JLabel jlStaminatrainingshare = new JLabel(TranslationFacility.tr("ls.team.staminatrainingshare.short"));
         customizeLabel(jlStaminatrainingshare);
-        jlStaminatrainingshare.setToolTipText(Helper.getTranslation("ls.team.staminatrainingshare"));
+        jlStaminatrainingshare.setToolTipText(TranslationFacility.tr("ls.team.staminatrainingshare"));
         add(jlStaminatrainingshare, gbc);
 
         m_jcbStaminaTrainingPart = new TrainingParametersEditor(TrainingConstants.MIN_STAMINA_SHARE, true);
-        m_jcbStaminaTrainingPart.setToolTipText(Helper.getTranslation("ls.team.staminatrainingshare"));
+        m_jcbStaminaTrainingPart.setToolTipText(TranslationFacility.tr("ls.team.staminatrainingshare"));
         gbc.gridy = 1;
         add(m_jcbStaminaTrainingPart, gbc);
 
         gbc.gridx = 3;
         gbc.gridy = 0;
-        JLabel jlCoachingSkill = new JLabel(Helper.getTranslation("ls.team.coachingskill.short"));
+        JLabel jlCoachingSkill = new JLabel(TranslationFacility.tr("ls.team.coachingskill.short"));
         customizeLabel(jlCoachingSkill);
-        jlCoachingSkill.setToolTipText(Helper.getTranslation("ls.team.coachingskill"));
+        jlCoachingSkill.setToolTipText(TranslationFacility.tr("ls.team.coachingskill"));
         add(jlCoachingSkill, gbc);
 
         m_jcbCoachSkillEditor  = new TrainingParametersEditor(TrainingConstants.MIN_COACH_SKILL, TrainingConstants.MAX_COACH_SKILL, true);
-        m_jcbCoachSkillEditor.setToolTipText(Helper.getTranslation("ls.team.coachingskill"));
+        m_jcbCoachSkillEditor.setToolTipText(TranslationFacility.tr("ls.team.coachingskill"));
         gbc.gridy = 1;
         add(m_jcbCoachSkillEditor, gbc);
 
         gbc.gridx = 4;
         gbc.gridy = 0;
-        JLabel jlAssistantsTrainerLevel = new JLabel(Helper.getTranslation("ls.module.statistics.club.assistant_trainers_level.short"));
+        JLabel jlAssistantsTrainerLevel = new JLabel(TranslationFacility.tr("ls.module.statistics.club.assistant_trainers_level.short"));
         customizeLabel(jlAssistantsTrainerLevel);
-        jlAssistantsTrainerLevel.setToolTipText(Helper.getTranslation("ls.module.statistics.club.assistant_trainers_level"));
+        jlAssistantsTrainerLevel.setToolTipText(TranslationFacility.tr("ls.module.statistics.club.assistant_trainers_level"));
         add(jlAssistantsTrainerLevel, gbc);
 
         m_jcbAssitantsTotalLevelEditor  = new TrainingParametersEditor(TrainingConstants.MIN_ASSISTANTS_COACH_LEVEL, TrainingConstants.MAX_ASSISTANTS_COACH_LEVEL, true);
-        m_jcbAssitantsTotalLevelEditor.setToolTipText(Helper.getTranslation("ls.module.statistics.club.assistant_trainers_level"));
+        m_jcbAssitantsTotalLevelEditor.setToolTipText(TranslationFacility.tr("ls.module.statistics.club.assistant_trainers_level"));
         gbc.gridy = 1;
         add(m_jcbAssitantsTotalLevelEditor, gbc);
 

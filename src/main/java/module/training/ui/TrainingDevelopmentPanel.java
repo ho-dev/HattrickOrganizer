@@ -5,16 +5,15 @@ import core.gui.comp.panel.LazyPanel;
 import core.gui.comp.table.FixedColumnsTable;
 import core.gui.comp.table.PlayersTable;
 import core.gui.model.UserColumnController;
-import core.util.Helper;
+import core.model.TranslationFacility;
 import module.training.ui.model.ModelChange;
 import module.training.ui.model.SkillupTableModel;
 import module.training.ui.model.TrainingModel;
-import java.awt.BorderLayout;
+
+import javax.swing.*;
+import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 
 public class TrainingDevelopmentPanel extends LazyPanel implements PropertyChangeListener {
 
@@ -58,7 +57,7 @@ public class TrainingDevelopmentPanel extends LazyPanel implements PropertyChang
 	private void loadFromModel() {
         var selectedPlayer = PlayersTable.Companion.getSelectedPlayer();
 		if (selectedPlayer != null) {
-			this.title.setText(Helper.getTranslation("ls.module.training.training_development")+ " " + selectedPlayer.getFullName());
+			this.title.setText(TranslationFacility.tr("ls.module.training.training_development") + " " + selectedPlayer.getFullName());
 		}
 		((SkillupTableModel) this.table.getModel()).setTrainingModel(this.model);
 	}

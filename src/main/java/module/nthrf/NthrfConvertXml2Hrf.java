@@ -1,24 +1,31 @@
 package module.nthrf;
 
 import core.file.hrf.HRFStringBuilder;
-import core.file.xml.*;
+import core.file.xml.SafeInsertMap;
+import core.file.xml.XMLManager;
+import core.file.xml.XMLMatchesParser;
+import core.file.xml.XMLWorldDetailsParser;
 import core.gui.HOMainFrame;
-import core.model.match.*;
+import core.model.TranslationFacility;
+import core.model.match.MatchLineupTeam;
 import core.net.Connector;
 import core.net.OnlineWorker;
 import core.util.HOLogger;
-import core.util.Helper;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 import static core.net.OnlineWorker.downloadLastLineup;
 import static core.net.OnlineWorker.downloadNextMatchOrder;
 
@@ -30,7 +37,7 @@ class NthrfConvertXml2Hrf {
 	final String createHrf(long teamId, Connector dh) throws Exception {
 		try {
 			int progressIncrement = 5;
-			HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.connection"), progressIncrement);
+			HOMainFrame.instance().setInformation(TranslationFacility.tr("ls.update_status.connection"), progressIncrement);
 
 			// leagueId / countryId
 
@@ -40,13 +47,13 @@ class NthrfConvertXml2Hrf {
 			var detailsMap = details.parseDetails(xml);
 
 			// world details
-			HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.world_details"), progressIncrement);
+			HOMainFrame.instance().setInformation(TranslationFacility.tr("ls.update_status.world_details"), progressIncrement);
 			xml = dh.getHattrickXMLFile("/chppxml.axd?file=worlddetails");
 			Map<String, String> world = XMLWorldDetailsParser.parseWorldDetailsFromString(xml, String.valueOf(details.getLeagueId()));
 			var hrfStringBuilder = new HRFStringBuilder();
 			hrfStringBuilder.createBasics(detailsMap, world);
 
-			HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.team_logo"), progressIncrement);
+			HOMainFrame.instance().setInformation(TranslationFacility.tr("ls.update_status.team_logo"), progressIncrement);
 			OnlineWorker.downloadTeamLogo(detailsMap);
 
 			// nt matches
@@ -55,13 +62,13 @@ class NthrfConvertXml2Hrf {
 			xml = dh.getHattrickXMLFile("/chppxml.axd?file=matches&version=2.9&teamID=" + teamId + "&LastMatchDate=" + new SimpleDateFormat("yyyy-MM-dd").format(cal.getTime()));
 			var matches = XMLMatchesParser.parseMatchesFromString(xml);
 //			// last lineup
-			HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.match_lineup"), progressIncrement);
+			HOMainFrame.instance().setInformation(TranslationFacility.tr("ls.update_status.match_lineup"), progressIncrement);
 			MatchLineupTeam matchLineupTeam = downloadLastLineup(matches, (int) teamId);
 
 			// TODO nt orders download gives no match data available
 			var nextLineupDataMap = downloadNextMatchOrder(matches, (int)teamId);
 
-			HOMainFrame.instance().setInformation(Helper.getTranslation("ls.update_status.players_information"), progressIncrement);
+			HOMainFrame.instance().setInformation(TranslationFacility.tr("ls.update_status.players_information"), progressIncrement);
 			xml = dh.getHattrickXMLFile("/chppxml.axd?file=nationalplayers&teamid=" + teamId);
 			List<SafeInsertMap> playersData = NtPlayersParser.parsePlayersFromString(xml);
 

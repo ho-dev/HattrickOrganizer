@@ -4,7 +4,6 @@ import core.gui.comp.panel.ImagePanel;
 import core.model.TranslationFacility;
 import core.model.UserParameter;
 import core.training.SkillDrops;
-import core.util.Helper;
 import org.apache.commons.text.WordUtils;
 
 import javax.swing.*;
@@ -133,7 +132,7 @@ public final class TrainingPreferencesPanel extends ImagePanel implements Change
 //        		WeeklyTrainingType.BASE_INTENSITY_FACTOR, UserParameter.temp().TRAINING_OFFSET_INTENSITY, this);
 //        add(m_jtapIntensityFactor);
 
-        var label = new JLabel(WordUtils.capitalize(Helper.getTranslation("ls.general_label.miscellaneous")));
+        var label = new JLabel(WordUtils.capitalize(TranslationFacility.tr("ls.general_label.miscellaneous")));
         label.setForeground(TITLE_FG);
         label.setFont(getFont().deriveFont(Font.BOLD));
         add(label);

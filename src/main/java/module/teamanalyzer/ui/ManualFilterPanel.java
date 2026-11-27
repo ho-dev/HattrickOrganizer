@@ -4,35 +4,33 @@ import core.db.DBManager;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.theme.HOIconName;
 import core.gui.theme.ThemeManager;
+import core.model.TranslationFacility;
 import core.model.enums.MatchType;
 import core.net.OnlineWorker;
-import core.util.Helper;
 import module.teamanalyzer.ht.HattrickManager;
 import module.teamanalyzer.manager.MatchManager;
 import module.teamanalyzer.ui.model.UiFilterTableModel;
 import module.teamanalyzer.vo.Match;
-import java.awt.BorderLayout;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.ScrollPaneConstants;
-import javax.swing.table.DefaultTableModel;
 
 
 public class ManualFilterPanel extends JPanel {
 
 	private static final Vector<String> COLUMN_NAMES = new Vector<>(Arrays.asList("",
-			Helper.getTranslation("RecapPanel.Game"),
-			Helper.getTranslation("Type"),
-			Helper.getTranslation("ls.match.result"),
-			Helper.getTranslation("Week"),
-			Helper.getTranslation("Season"), "", ""));
+        TranslationFacility.tr("RecapPanel.Game"),
+        TranslationFacility.tr("Type"),
+        TranslationFacility.tr("ls.match.result"),
+        TranslationFacility.tr("Week"),
+        TranslationFacility.tr("Season"), "", ""));
 
 	List<Match> availableMatches = new ArrayList<>();
 	private DefaultTableModel tableModel;
