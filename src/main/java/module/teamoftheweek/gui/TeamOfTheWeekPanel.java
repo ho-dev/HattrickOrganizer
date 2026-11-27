@@ -5,21 +5,27 @@ import core.db.DBManager;
 import core.gui.comp.panel.ImagePanel;
 import core.gui.comp.panel.LazyPanel;
 import core.gui.comp.panel.RasenPanel;
+import core.gui.theme.HOColorName;
+import core.gui.theme.ThemeManager;
+import core.model.HOModel;
 import core.model.HOVerwaltung;
 import core.model.TranslationFacility;
 import core.model.match.MatchLineupPosition;
+import core.model.misc.Basics;
 import core.model.player.IMatchRoleID;
 import core.model.player.MatchRoleID;
 import core.model.series.Paarung;
 import module.series.MatchFixtures;
 
 import javax.swing.*;
+import javax.swing.border.EtchedBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
+import java.util.Optional;
 
 public class TeamOfTheWeekPanel extends LazyPanel implements ChangeListener, ActionListener {
 
@@ -70,13 +76,21 @@ public class TeamOfTheWeekPanel extends LazyPanel implements ChangeListener, Act
 		return  getPlayers(week, plan, best);
 	}
 
-	private JLabel createLabel(String text, Color farbe, int Bordertype) {
-		JLabel bla = new JLabel(text);
-		bla.setHorizontalAlignment(0);
-		bla.setForeground(farbe);
-		bla.setBorder(BorderFactory.createEtchedBorder(Bordertype));
-		return bla;
+	private static JLabel createLabel(String text, Color color, int etchedBorder) {
+		return createLabel(text, color, null, etchedBorder);
 	}
+
+    private static JLabel createLabel(String text, Color color, Color bgColor, int etchedBorder) {
+        JLabel label = new JLabel(text);
+        label.setHorizontalAlignment(0);
+        label.setForeground(color);
+        if (bgColor != null) {
+            label.setBackground(bgColor);
+            label.setOpaque(true);
+        }
+        label.setBorder(BorderFactory.createEtchedBorder(etchedBorder));
+        return label;
+    }
 
 	private void fillLineup(LineupPanel lineupPanel, MatchLineupPosition[] sl, boolean noStars) {
 		if (!noStars) {
@@ -120,9 +134,11 @@ public class TeamOfTheWeekPanel extends LazyPanel implements ChangeListener, Act
 
 		panel.removeAll();
 
-		JLabel spielername = createLabel(mlp.getSpielerName(), Color.black, 1);
-		JLabel teamname = createLabel(getTeamName(mlp.getTeamId()), Color.black, 1);
-		JLabel position = createLabel(posi, Color.black, 0);
+        final var homeTeamColor = isCurrentTeam(mlp) ? ThemeManager.getColor(HOColorName.HOME_TEAM_FG) : null;
+
+		JLabel spielername = createLabel(mlp.getSpielerName(), Color.black, homeTeamColor, EtchedBorder.LOWERED);
+		JLabel teamname = createLabel(getTeamName(mlp.getTeamId()), Color.black, homeTeamColor, EtchedBorder.LOWERED);
+		JLabel position = createLabel(posi, Color.black, EtchedBorder.RAISED);
 		position.setOpaque(false);
 
 		playerDetailsPanel.setLayout(new GridBagLayout());
@@ -295,4 +311,13 @@ public class TeamOfTheWeekPanel extends LazyPanel implements ChangeListener, Act
 		return null;
 	}
 
+    private static boolean isCurrentTeam(MatchLineupPosition matchLineupPosition) {
+        final var currentTeamId =
+            Optional.ofNullable(HOVerwaltung.instance())
+                .map(HOVerwaltung::getModel)
+                .map(HOModel::getBasics)
+                .map(Basics::getTeamId);
+
+        return currentTeamId.map(teamId -> teamId.equals(matchLineupPosition.getTeamId())).orElse(false);
+    }
 }
